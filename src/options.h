@@ -153,7 +153,7 @@ extern "C" {
 
 
 /* for non win32 environments see the macro in xsldebugger/Makefile.am
-   Win32 tupe systems see  macro in libxslt/xsltwin32config.h
+   Win32 type systems see macro in libxslt/xsltwin32config.h
 */
 #ifdef __riscos
 /* The environment variable name we are going to use is the readable version

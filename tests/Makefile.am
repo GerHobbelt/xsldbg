@@ -96,6 +96,9 @@ install-data-local:
 
 install:
 
+install-binPROGRAMS:
+
+
 clean:
 	rm -f ../results/*.script
 	rm -f ../results/*.pl

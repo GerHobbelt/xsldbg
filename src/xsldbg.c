@@ -405,31 +405,33 @@ usage(const char *name)
                      "Without any parameters xsldbg starts in command mode, ready"
                      "for the source and data to be select\n");
     xsltGenericError(xsltGenericErrorContext, "   Options:\n");
+   /* Options help format is --<option>: <description>
+                           or --<option> <para>: <description> */
     xsltGenericError(xsltGenericErrorContext,
-                     "      --version or -V: show the version of libxml and libxslt used\n");
+                     "      --version or -V : show the version of libxml and libxslt used\n");
     xsltGenericError(xsltGenericErrorContext,
-                     "      --verbose or -v: show logs of what's happening\n");
+                     "      --verbose or -v : show logs of what's happening\n");
     xsltGenericError(xsltGenericErrorContext,
                      "      --output file or -o file: save to a given file\n");
     xsltGenericError(xsltGenericErrorContext,
                      "      --timing: display the time used\n");
     xsltGenericError(xsltGenericErrorContext,
-                     "      --repeat: run the transformation 20 times\n");
+                     "      --repeat : run the transformation 20 times\n");
     xsltGenericError(xsltGenericErrorContext,
                      "      --debug: dump the tree of the result instead\n");
     xsltGenericError(xsltGenericErrorContext,
-                     "      --novalid: skip the DTD loading phase\n");
+                     "      --novalid : skip the DTD loading phase\n");
     xsltGenericError(xsltGenericErrorContext,
-                     "      --noout: do not dump the result\n");
+                     "      --noout : do not dump the result\n");
     xsltGenericError(xsltGenericErrorContext,
                      "      --maxdepth val : increase the maximum depth\n");
 #ifdef LIBXML_HTML_ENABLED
     xsltGenericError(xsltGenericErrorContext,
-                     "      --html: the input document is(are) an HTML file(s)\n");
+                     "      --html : the input document is(are) an HTML file(s)\n");
 #endif
 #ifdef LIBXML_DOCB_ENABLED
     xsltGenericError(xsltGenericErrorContext,
-                     "      --docbook: the input document is SGML docbook\n");
+                     "      --docbook : the input document is SGML docbook\n");
 #endif
     xsltGenericError(xsltGenericErrorContext,
                      "      --param name value : pass a (parameter,value) pair\n");
@@ -453,7 +455,7 @@ usage(const char *name)
     xsltGenericError(xsltGenericErrorContext,
                      "      --profile or --norman : dump profiling informations \n");
     xsltGenericError(xsltGenericErrorContext,
-                     "      --cd <PATH>: change to specfied working directory\n");
+                     "      --cd <PATH> : change to specfied working directory\n");
     xsltGenericError(xsltGenericErrorContext,
                      "      --shell : start xsldebugger \n");
     xsltGenericError(xsltGenericErrorContext,
@@ -611,14 +613,14 @@ main(int argc, char **argv)
             const char *catalogs;
 
 #ifdef __riscos
-            catalogs = getenv("SGMLCatalog$Files");
+            catalogs = getenv("SGML$CatalogFiles");
 #else
             catalogs = getenv("SGML_CATALOG_FILES");
 #endif
             if (catalogs == NULL) {
 #ifdef __riscos
                 xsltGenericError(xsltGenericErrorContext,
-                                 "Variable SGMLCatalog$Files not set\n");
+                                 "Variable SGML$CatalogFiles not set\n");
 #else
                 xsltGenericError(xsltGenericErrorContext,
                                  "Variable $SGML_CATALOG_FILES not set\n");

@@ -214,7 +214,7 @@ openTerminal(xmlChar * device)
          */
         terminalIO = fopen(device, "w");
         if (terminalIO != NULL) {
-            termName = xmlMemStrdup(device);
+            termName = xmlMemStrdup((char *)device);
             /*
              * dup2(fileno(terminalIO), fileno(stdin));
              * dup2(fileno(terminalIO), fileno(stderr));

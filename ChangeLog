@@ -1,4 +1,9 @@
 Keith Isdale 12 Dec 2001 <k_isdale@tpg.com.au>
+  Version 0.9.3
+  Applied a small set of patches my Justin
+	
+Keith Isdale 12 Dec 2001 <k_isdale@tpg.com.au>
+  version 0.9.2
   Applied patches for risc os from Justin, 
 	mainly risc os specific, but does include some typos he found and missing casts
 	added the definition of  XSLDBG_DOCS_DIR_VARIABLE to options.[ch] to handle different names 
@@ -13,6 +18,7 @@ Keith Isdale 12 Dec 2001 <k_isdale@tpg.com.au>
 	
 	
 Keith Isdale 12 Dec 2001 <k_isdale@tpg.com.au>
+ version 0.9.1
   Fixed GNOME docs again!
   Synchronized function comments in header and source (mainly GNOME doc comments)
 	Gnome API docs now look Ok, horay!!

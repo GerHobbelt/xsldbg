@@ -326,7 +326,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
             while (templ) {
                 if (templ->elem && templ->elem->doc
                     && templ->elem->doc->URL) {
-                    url = templ->elem->doc->URL;
+                    url = (xmlChar *)templ->elem->doc->URL;
                 } else {
                     url = defaultUrl;
                 }

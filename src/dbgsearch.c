@@ -14,7 +14,6 @@
 #include "options.h"
 
 #ifdef __riscos
-
 /* Include for filename conversions */
 #include "libxml/riscos.h"
 #endif

@@ -47,7 +47,7 @@ int
 xslDbgShellSearch(xsltTransformContextPtr styleCtxt,
                   xsltStylesheetPtr style, xmlChar * arg)
 {
-  int result;
+  int result = 0;
     xmlChar buff[DEBUG_BUFFER_SIZE];
     const xmlChar *sortOption = (xmlChar *) "-sort ";
     int sortOptionLen = xmlStrLen(sortOption);
@@ -64,7 +64,7 @@ xslDbgShellSearch(xsltTransformContextPtr styleCtxt,
                          "Required environment variable %s not set " \
 			 "to the directory of xsldbg documentation\n", XSLDBG_DOCS_DIR_VARIABLE);
 #endif
-	return;
+	return result; /* failed*/
       }
       
     result = updateSearchData(styleCtxt, style, NULL, DEBUG_ANY_VAR);

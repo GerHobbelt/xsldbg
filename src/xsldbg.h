@@ -107,7 +107,7 @@
 /* what char is use to separate directories in an URI*/
 #define URISEPARATORCHAR '/'
 
-    /* Handle the differnces in path and quote character between
+    /* Handle the differences in path and quote character between
      * win32 and *nix systems */
 #ifdef WIN32
 #define  QUOTECHAR ' '
