@@ -158,7 +158,7 @@ else
 
  Warning! Using a environment variable for specifiying location of documentation. 
      On non risc os systems :  XSLDBG_DOCS_DIR
-     On risc os system : XSLDebugDocs\$Dir
+     On risc os systems : XSLDebugDocs\$Dir
  See --enable-docs-macro in ./configure
 )
 fi
