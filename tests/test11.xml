@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<!-- 
+     File : test11.xml     
+     Author: Keith Isdale <k_isdale@tpg.com.au>
+     Description: xml data for stylesheet for test "test11"
+     Copyright Reserved Under GPL     
+-->
+
+<result>
+  <data name="fred"/>
+  <data name="barney"/>
+  <data name="pebbles"/>
+  <extra type="man" name="fred"/>
+  <extra type="man" name="barney"/>
+  <extra type="child" name="pebbles"/>
+  <extra type="child" name="bambam"/>
+  <item><bill>Item 1</bill></item> 
+  <item><ben>Item 2</ben></item>
+  <item><fox>Item 3</fox></item>
+</result>
+
+
+
+<!-- initialization code for xemacs -->
+<!--
+Local Variables:
+mode: sgml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+-->

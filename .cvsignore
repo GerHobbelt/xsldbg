@@ -1,0 +1,9 @@
+config.h
+config.cache
+config.log
+configure
+config.status
+archive
+search.data
+flags.txt
+aclocal.m4
