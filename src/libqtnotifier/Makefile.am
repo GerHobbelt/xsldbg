@@ -32,16 +32,10 @@ install-exec-hook:
 endif
 
 
-noinst_HEADERS = \
-	qtnotifier2.h		\
-	xsldbgevent.h		\
-	xsldbgdebuggerbase.h	
-
 SOURCES = \
 	qtnotifier2.cpp        	\
 	xsldbgnotifier.cpp  	\
 	xsldbgevent.cpp	    	\
 	xsldbgdebuggerbase.cpp	\
-	xsldbgthread.cpp	\
-	$(noinst_HEADERS)
+	xsldbgthread.cpp
 
