@@ -1,4 +1,7 @@
-Keith Isdale 9th March Feb 2003 <k_isdale@tpg.com.au>
+Keith Isdale 25th March 2003 <k_isdale@tpg.com.au>
+   Update configure.in to support newer versions of auto* by getting rid of acconfig.h and friends
+ 		
+Keith Isdale 9th March 2003 <k_isdale@tpg.com.au>
   Be more descriptive about QTDIR and KDEDIR   
   
 Keith Isdale 16th  Feb 2003 <k_isdale@tpg.com.au>

@@ -1,12 +1,12 @@
 
 AC_INIT(src/main.c)
 
-timestamp='2002-12-07'
+timestamp='2003-04-25'
 
 
 XSLDBG_MAJOR_VERSION=3
 XSLDBG_MINOR_VERSION=1
-XSLDBG_MICRO_VERSION=1
+XSLDBG_MICRO_VERSION=2
 PACKAGE=xsldbg
 
 dnl
@@ -70,6 +70,33 @@ AC_LANG_C
 AC_PROG_CC
 AC_PROG_CXX
 AM_PROG_LIBTOOL
+
+dnl
+dnl Declare all templates used to keep autoheader happy
+dnl
+
+AH_TEMPLATE(HAVE_BOOL)
+AH_TEMPLATE(VERSION)
+AH_TEMPLATE(PACKAGE)
+AH_TEMPLATE(USE_DOCS_MACRO)
+AH_TEMPLATE(TIMESTAMP)
+AH_TEMPLATE(WITH_DEBUG_HELP)
+AH_TEMPLATE(WITH_XSLDBG_DEBUG)
+AH_TEMPLATE(XSLDBG_BIN)
+AH_TEMPLATE(USE_XSLDBG_AS_THREAD)
+AH_TEMPLATE(HAVE_INCLUDE_FIX)
+AH_TEMPLATE(_GNU_SOURCE)
+AH_TEMPLATE(HAVE_ISINF)
+AH_TEMPLATE(HAVE_ISNAN)
+AH_TEMPLATE(HAVE_POW)
+AH_TEMPLATE(HAVE_FLOOR)
+AH_TEMPLATE(HAVE_FABS)
+AH_TEMPLATE(HAVE_READLINE)
+AH_TEMPLATE(HAVE_HISTORY)
+AH_TEMPLATE(HAVE_QT)
+AH_TEMPLATE(HAVE_PTHREAD)
+AH_TEMPLATE(HAVE_GNOME)
+
 
 dnl
 dnl Math detection
@@ -230,44 +257,42 @@ HAVE_PTHREAD=0
 HAVE_GNOME=0
 THREAD_LIBS=""
 AC_ARG_ENABLE(xsldbgthread, 
-[  --enable-xsldbgthread     Enable xsldbg as a thread (off)],
-[case "${enableval}" in 
-	yes) xsldbgthread="true"
-       AC_MSG_RESULT(
- Enabling xsldbg as a thread
-)
-	     AC_CHECK_HEADERS(pthread.h,
-	     AC_DEFINE(HAVE_PTHREAD)
-	     havepthread="true"
-	     HAVE_PTHREAD=1
-	    THREAD_LIBS=" -lpthread "
-	    USE_XSLDBG_AS_THREAD=1
-  	     AC_DEFINE(USE_XSLDBG_AS_THREAD),
-	     AC_MSG_ERROR(PThread library not found))
+	[  --enable-xsldbgthread     Enable xsldbg as a thread (off)],
+	[case "${enableval}" in 
+	   yes) xsldbgthread="true"
+		AC_MSG_RESULT(Enabling xsldbg as a thread)
+		AC_CHECK_HEADERS(pthread.h,
+		AC_DEFINE(HAVE_PTHREAD)
+		havepthread="true"
+		HAVE_PTHREAD=1
+		THREAD_LIBS=" -lpthread "
+		USE_XSLDBG_AS_THREAD=1
+		AC_DEFINE(USE_XSLDBG_AS_THREAD),
+		AC_MSG_ERROR(PThread library not found))
 
-	    AC_MSG_RESULT(Checking for QT library)
-	    if test -f "${QTDIR}/include/qt.h"
-	    then
-		    AC_DEFINE(HAVE_QT)
-		    haveqt="true"		
-		    HAVE_QT=1
-			  if test "x${HAVE_PTHREAD}" = "x0"
-        then
-				  THREAD_LIBS=" -lqt-mt "
-   	      USE_XSLDBG_AS_THREAD=1
-	        AC_DEFINE(USE_XSLDBG_AS_THREAD)
-        fi
-	      AC_MSG_RESULT(Ok)
-	    else
-	    	AC_MSG_ERROR("QT library not found, has QTDIR been set?")
-      fi
+		AC_MSG_RESULT(Checking for Qt library)
+	    	if test -f "${QTDIR}/include/qt.h"
+	    	then
+			AC_DEFINE(HAVE_QT)
+		    	haveqt="true"		
+		    	HAVE_QT=1
+		  	if test "x${HAVE_PTHREAD}" = "x0"
+        		then
+				THREAD_LIBS=" -lqt-mt "
+   	      			USE_XSLDBG_AS_THREAD=1
+	        		AC_DEFINE(USE_XSLDBG_AS_THREAD)
+        		fi
+	      		AC_MSG_RESULT(Ok)
+	    	else
+	    		AC_MSG_ERROR([QT library not found, has QTDIR been set])
+      		fi
 			;;
 
-	*) xsldbgthread="false";;
+	   *) xsldbgthread="false";;
 	esac],
 	[ 
- AC_MSG_RESULT(Disabling xsldbg as a thread) 
-  	  xsldbgthread="false"
+		AC_MSG_RESULT(Disabling xsldbg as a thread) 
+  	  	xsldbgthread="false"
 	])
 
 AC_SUBST(USE_XSLDBG_AS_THREAD)
