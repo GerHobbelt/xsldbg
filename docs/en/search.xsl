@@ -24,7 +24,7 @@
         </xsl:apply-templates>
        </xsl:when>
        <xsl:otherwise>
-         <!- disable sorting it does't always work anyhow 
+         <!-- disable sorting it does't always work anyhow 
              need to fix section attriute for xsl:sort
              -->
          <xsl:apply-templates select="$query">
