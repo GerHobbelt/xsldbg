@@ -1232,10 +1232,10 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     xslBreakPointPtr breakPoint = NULL;
 
                     if (ctxt->node->doc && ctxt->node->doc->URL)
-                        breakPoint = xslGetBreakPoint(ctxt->node->doc->URL,
+                        breakPoint = getBreakPoint(ctxt->node->doc->URL,
                                                       xmlGetLineNo(ctxt->
                                                                    node));
-                    if (!breakPoint || !xslDeleteBreakPoint(breakPoint))
+                    if (!breakPoint || !deleteBreakPoint(breakPoint))
                         xsltGenericError(xsltGenericErrorContext,
                                          "Unable to add delete point");
                 }
@@ -1253,12 +1253,12 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     xslBreakPointPtr breakPoint = NULL;
 
                     if (ctxt->node->doc && ctxt->node->doc->URL)
-                        breakPoint = xslGetBreakPoint(ctxt->node->doc->URL,
+                        breakPoint = getBreakPoint(ctxt->node->doc->URL,
                                                       xmlGetLineNo(ctxt->
                                                                    node));
                     if (!breakPoint
                         ||
-                        (!xslEnableBreakPoint
+                        (!enableBreakPoint
                          (breakPoint, !breakPoint->enabled)))
                         xsltGenericError(xsltGenericErrorContext,
                                          "Unable to add enable/disable point\n");
@@ -1272,12 +1272,12 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     xslBreakPointPtr breakPoint = NULL;
 
                     if (ctxt->node->doc && ctxt->node->doc->URL)
-                        breakPoint = xslGetBreakPoint(ctxt->node->doc->URL,
+                        breakPoint = getBreakPoint(ctxt->node->doc->URL,
                                                       xmlGetLineNo(ctxt->
                                                                    node));
                     if (!breakPoint
                         ||
-                        (!xslEnableBreakPoint
+                        (!enableBreakPoint
                          (breakPoint, !!breakPoint->enabled)))
                         xsltGenericError(xsltGenericErrorContext,
                                          "Unable to add enable/disable point\n");

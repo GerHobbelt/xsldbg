@@ -236,8 +236,8 @@ xslDbgShellDelete(xmlChar * arg)
                                      "\n%s\tUnable to read line number \n",
                                      errorPrompt);
                 } else {
-                    breakPoint = xslGetBreakPoint(opts[0], lineNo);
-                    if (!breakPoint || !xslDeleteBreakPoint(breakPoint))
+                    breakPoint = getBreakPoint(opts[0], lineNo);
+                    if (!breakPoint || !deleteBreakPoint(breakPoint))
                         xsltGenericError(xsltGenericErrorContext,
                                          "\n%s\tBreak point to '%s' doesn't exist\n",
                                          errorPrompt, arg);
@@ -257,7 +257,7 @@ xslDbgShellDelete(xmlChar * arg)
     } else if (sscanf((char *) arg, "%d", &breakPointId)) {
         breakPoint = xslFindBreakPointById(breakPointId);
         if (breakPoint) {
-            result = xslDeleteBreakPoint(breakPoint);
+            result = deleteBreakPoint(breakPoint);
             if (!result) {
                 xsltGenericError(xsltGenericErrorContext,
                                  "\nUnable to delete breakpoint %d\n",
@@ -271,7 +271,7 @@ xslDbgShellDelete(xmlChar * arg)
     } else {
         breakPoint = xslFindBreakPointByName(arg);
         if (breakPoint) {
-            result = xslDeleteBreakPoint(breakPoint);
+            result = deleteBreakPoint(breakPoint);
             if (!result) {
                 xsltGenericError(xsltGenericErrorContext,
                                  "\nDelete breakpoint to template %s failed\n",
@@ -302,7 +302,7 @@ xslDbgEnableBreakPoint(void *payload, void *data,
                        xmlChar * name ATTRIBUTE_UNUSED)
 {
     if (payload && data) {
-        xslEnableBreakPoint((xslBreakPointPtr) payload, *(int *) data);
+        enableBreakPoint((xslBreakPointPtr) payload, *(int *) data);
     }
 }
 
@@ -334,10 +334,10 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
                                      "\n%s\tUnable to read line number \n",
                                      errorPrompt);
                 } else {
-                    breakPoint = xslGetBreakPoint(opts[0], lineNo);
+                    breakPoint = getBreakPoint(opts[0], lineNo);
                     if (breakPoint)
                         result =
-                            xslEnableBreakPoint(breakPoint, enableType);
+                            enableBreakPoint(breakPoint, enableType);
                     else
                         xsltGenericError(xsltGenericErrorContext, "\n%s",
                                          errorPrompt);
@@ -356,7 +356,7 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
     } else if (sscanf((char *) arg, "%d", &breakPointId)) {
         breakPoint = xslFindBreakPointById(breakPointId);
         if (breakPoint) {
-            result = xslEnableBreakPoint(breakPoint, enableType);
+            result = enableBreakPoint(breakPoint, enableType);
             if (!result) {
                 xsltGenericError(xsltGenericErrorContext,
                                  "\nUnable to enable breakpoint %d\n",
@@ -370,7 +370,7 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
     } else {
         breakPoint = xslFindBreakPointByName(arg);
         if (breakPoint) {
-            result = xslEnableBreakPoint(breakPoint, enableType);
+            result = enableBreakPoint(breakPoint, enableType);
         } else
             xsltGenericError(xsltGenericErrorContext,
                              "\n%s\tBreakpoint to template '%s' doesn't exist\n",
@@ -395,7 +395,7 @@ xslDbgPrintBreakPoint(void *payload, void *data ATTRIBUTE_UNUSED,
     if (payload) {
         printCount++;
         xsltGenericError(xsltGenericErrorContext, " ");
-        xslPrintBreakPoint(stderr, (xslBreakPointPtr) payload);
+        printBreakPoint(stderr, (xslBreakPointPtr) payload);
         xsltGenericError(xsltGenericErrorContext, "\n");
     }
 }

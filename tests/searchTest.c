@@ -49,3 +49,15 @@ int main(void){
   searchFree();
   return !result;
 }
+
+/**
+ * changeDir:
+ * @path : path to adopt as new working directory
+ *
+ * Change working directory to path 
+ */
+int
+changeDir(const xmlChar * path)
+{
+  return 0;
+}

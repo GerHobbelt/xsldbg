@@ -187,7 +187,7 @@ xmlChar *guessStyleSheetName(xmlChar* name)
   xmlChar *result = NULL;
   FileSearch searchData = {name, NULL, NULL};
   if (name){
-    xslWalkStylesheets((xmlHashScanner)guessStyleSheetHelper, &searchData,
+    walkStylesheets((xmlHashScanner)guessStyleSheetHelper, &searchData,
 		     getStylesheet());    
     if (searchData.absoluteNameMatch)
       result = searchData.absoluteNameMatch;

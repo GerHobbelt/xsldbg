@@ -170,7 +170,7 @@ void xslDbgShellPrintStylesheetsHelper(void *payload ATTRIBUTE_UNUSED,
 void xslDbgPrintStyleSheets(xmlChar * arg)
 {
   printCount = 0;
-  xslWalkStylesheets((xmlHashScanner)xslDbgShellPrintStylesheetsHelper, NULL,
+  walkStylesheets((xmlHashScanner)xslDbgShellPrintStylesheetsHelper, NULL,
 		     getStylesheet());  
   if (printCount != 0)
        xsltGenericError(xsltGenericErrorContext,

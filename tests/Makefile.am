@@ -32,8 +32,15 @@ bin_PROGRAMS = listTest searchTest
 # Define some tests on arraylist 
 listTest_SOURCES = listTest.c 
 
+XSLDBG_OBJECTS = \
+	../src/options.o 	../src/dbgsearch.o \
+	../src/dbgarraylist.o 	../src/dbgbreakpoint.o \
+	../src/dbgmain.o 	../src/dbgcallstack.o \
+	../src/os_cmds.o	
+
 # use of configure defined libraries
-listTest_LDADD = $(XSLDBG_LIBS) ../src/options.o ../src/dbgsearch.o 
+listTest_LDADD = $(XSLDBG_LIBS) $(XSLDBG_OBJECTS)
+
 
 # the library search path.
 searchTest_LDFLAGS = $(all_libraries) 
@@ -42,7 +49,7 @@ searchTest_LDFLAGS = $(all_libraries)
 searchTest_SOURCES = searchTest.c
 
 # use of configure defined libraries
-searchTest_LDADD = $(XSLDBG_LIBS)
+searchTest_LDADD = $(XSLDBG_LIBS) $(XSLDBG_OBJECTS)
 
 # the library search path.
 searchTest_LDFLAGS = $(all_libraries) 

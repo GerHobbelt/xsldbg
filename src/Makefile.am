@@ -7,6 +7,8 @@ EXTRA_DIST = \
 	help.c help.h 		\
 	debugXSL.c debugXSL.h 	\
 	dbgmain.c		\
+	dbgarraylist.c		\
+	dbgcallstack.c		\
 	dbgsearch.c		\
 	dbgbreakpoint.c	\
 	breakpoint_cmds.c	\
@@ -26,6 +28,8 @@ xsldbg_SOURCES = \
 	files.c		\
 	options.c	\
 	dbgmain.c	\
+	dbgarraylist.c	\
+	dbgcallstack.c	\
 	dbgsearch.c		\
 	dbgbreakpoint.c 	\
 	breakpoint_cmds.c 	\

@@ -119,7 +119,7 @@ xslHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
     case DEBUG_CONT:
       {
 	xslBreakPointPtr breakPoint =  
-	  xslGetBreakPoint(cur->doc->URL, xmlGetLineNo(cur));
+	  getBreakPoint(cur->doc->URL, xmlGetLineNo(cur));
 
 	if (breakPoint) {
 	  if (breakPoint->enabled) {
@@ -128,7 +128,7 @@ xslHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
 	  }
 	} else {
 	  breakPoint =  
-	    xslGetBreakPoint(node->doc->URL, xmlGetLineNo(node));
+	    getBreakPoint(node->doc->URL, xmlGetLineNo(node));
 	  if (breakPoint){
 	    if (breakPoint->enabled){
 	     setActiveBreakPoint(breakPoint);

@@ -96,7 +96,7 @@ int main(void){
   list = createBreakPointList();
   if (list){
     int index;
-    xslBreakPointPtr breakPoint = xslGetBreakPoint("index.html", 1);
+    xslBreakPointPtr breakPoint = getBreakPoint("index.html", 1);
     if (breakPoint){
       fprintf(stdout, "Added breakPoint :");
       xslPrintBreakPoint(stdout, breakPoint);
@@ -106,50 +106,50 @@ int main(void){
       result = 1;
     }
 
-    breakPoint = xslGetBreakPoint("index2.html", 2);
+    breakPoint = getBreakPoint("index2.html", 2);
     if (breakPoint){
       fprintf(stdout, "Added breakPoint :");
-      xslPrintBreakPoint(stdout, breakPoint);
+      printBreakPoint(stdout, breakPoint);
       fprintf(stdout, "\n");
     }else{
       fprintf(stdout,"\nBreakpoint #2 not found!\n");
       result = 1;
     }
 
-    breakPoint = xslGetBreakPoint("index3.html", 3);
+    breakPoint = getBreakPoint("index3.html", 3);
     if (breakPoint){
       fprintf(stdout, "Added breakPoint :");
-      xslPrintBreakPoint(stdout, breakPoint);
+      printBreakPoint(stdout, breakPoint);
       fprintf(stdout, "\n");
     }else{
       fprintf(stdout,"\nBreakpoint #3 not found!\n");
       result = 1;
     }
 
-    breakPoint = xslGetBreakPoint("index2.html", 1);
+    breakPoint = getBreakPoint("index2.html", 1);
     if (breakPoint){
       fprintf(stdout, "Added breakPoint :");
-      xslPrintBreakPoint(stdout, breakPoint);
+      printBreakPoint(stdout, breakPoint);
       fprintf(stdout, "\n");
     }else{
       fprintf(stdout,"\nBreakpoint #4 not found!\n");
       result = 1;
     }
 
-    breakPoint = xslGetBreakPoint("index2.html", 3);
+    breakPoint = getBreakPoint("index2.html", 3);
     if (breakPoint){
       fprintf(stdout, "Added breakPoint :");
-      xslPrintBreakPoint(stdout, breakPoint);
+      printBreakPoint(stdout, breakPoint);
       fprintf(stdout, "\n");
     }else{
       fprintf(stdout,"\nBreakpoint #5 not found!\n");
       result = 1;
     }
 
-    breakPoint = xslGetBreakPoint("index2.html", 4);
+    breakPoint = getBreakPoint("index2.html", 4);
     if (breakPoint){
       fprintf(stdout, "Added breakPoint :");
-      xslPrintBreakPoint(stdout, breakPoint);
+      printBreakPoint(stdout, breakPoint);
       fprintf(stdout, "\n");
     }else{
       fprintf(stdout,"\nBreakpoint #6 not found!\n");
@@ -161,10 +161,10 @@ int main(void){
     walkBreakPoints((xmlHashScanner)myWalker, NULL);
 
     fprintf(stdout,"\nLooking for breakpoint with id of 2\n");
-    breakPoint = xslFindBreakPointById(2);
+    breakPoint = findBreakPointById(2);
     if (breakPoint){
       fprintf(stdout,"Found it! Here it is!\n");
-      xslPrintBreakPoint(stdout, breakPoint);   
+      printBreakPoint(stdout, breakPoint);   
       fprintf(stdout,"\n");   
     }else{
       fprintf(stdout,"Not found!\n");
@@ -172,10 +172,10 @@ int main(void){
     }     
 
     fprintf(stdout,"\nLooking for breakpoint with template name of 'three'\n");
-    breakPoint = xslFindBreakPointByName("three");
+    breakPoint = findBreakPointByName("three");
     if (breakPoint){
       fprintf(stdout,"Found it! Here it is!\n");
-      xslPrintBreakPoint(stdout, breakPoint);   
+      printBreakPoint(stdout, breakPoint);   
       fprintf(stdout,"\n");   
     }else{
       fprintf(stdout,"Not found!\n");
@@ -257,7 +257,7 @@ ArrayListPtr createBreakPointList(void){
 */
 void myWalker(void *payload, void *data ATTRIBUTE_UNUSED, xmlChar *name ATTRIBUTE_UNUSED){
   if (payload){
-     xslPrintBreakPoint(stdout, (xslBreakPointPtr)payload);
+     printBreakPoint(stdout, (xslBreakPointPtr)payload);
     fprintf(stdout, "\n");   
   }
 }
@@ -276,15 +276,13 @@ void xslDebugBreak(xmlNodePtr templ ATTRIBUTE_UNUSED, xmlNodePtr nod ATTRIBUTE_U
 
 
 /**
- * xslDbgShellExecute:
- * @name: name of command string to be executed by operating system shell
- * @verbose : if 1 then print extra debugging messages,
- *            normal messages otherwise
+ * changeDir:
+ * @path : path to adopt as new working directory
  *
- * Return 1 on success,
- *        0 otherwise
+ * Change working directory to path 
  */
-int xslDbgShellExecute(xmlChar * name ATTRIBUTE_UNUSED, int verbose ATTRIBUTE_UNUSED){
-  fprintf(stdout, "List test's xslDbgShellExecute has been reached!\n");
+int
+changeDir(const xmlChar * path)
+{
   return 0;
 }

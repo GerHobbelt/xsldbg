@@ -319,7 +319,7 @@ xslFindTemplateNode (xsltStylesheetPtr style, const xmlChar * name)
  *          0 otherwise
 */
 xslBreakPointPtr
-xslFindBreakPointByName (const xmlChar * templateName)
+findBreakPointByName (const xmlChar * templateName)
 {
   xslBreakPointSearch searchData;
 
@@ -351,7 +351,7 @@ xslFindBreakPointByName (const xmlChar * templateName)
  *          0 otherwise 
  */
 xslBreakPointPtr
-xslFindBreakPointById (int id)
+findBreakPointById (int id)
 {
   xslBreakPointSearch searchData;
 
