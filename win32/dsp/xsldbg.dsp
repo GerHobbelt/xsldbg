@@ -64,7 +64,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /Zi /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
-# ADD CPP /nologo /MD /W3 /Gm /GX /Zi /Od /I "../.." /I "../../../gnome-xml/include" /I "../../../libxslt/" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "WITH_DEBUGGER" /FD /I /GZ /c
+# ADD CPP /nologo /W3 /Gm /GX /Zi /Od /I "..\..\src" /I "..\..\..\..\..\gnome\libxslt" /I "..\..\..\..\..\gnome\gnome-xml\include" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "WITH_DEBUGGER" /FD /I /GZ /c
 # ADD BASE RSC /l 0xc09 /d "_DEBUG"
 # ADD RSC /l 0xc09 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -72,7 +72,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 libexslt.lib libxslt.lib libxml2.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /pdb:"xsltproc/xsltproc.pdb" /debug /machine:I386 /pdbtype:sept /libpath:"../../../gnome-xsl/win32/dsp/libexslt_a" /libpath:"../../../gnome-xsl/win32/dsp//libxslt_a" /libpath:"../../../gnome-xml/win32/dsp/libxml2_a"
+# ADD LINK32 libxsldbg.lib libexslt.lib libxslt.lib libxml2.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /pdb:"xsltproc/xsltproc.pdb" /debug /machine:I386 /pdbtype:sept /libpath:"..\libxsldbg_a" /libpath:"..\..\..\..\..\gnome\libxslt\win32\dsp\libxslt" /libpath:"..\..\..\..\..\gnome\libxslt\win32\dsp\libexslt" /libpath:"..\..\..\..\..\gnome\gnome-xml\win32\dsp\libxml2"
 # SUBTRACT LINK32 /pdb:none
 
 !ENDIF 
@@ -86,71 +86,11 @@ LINK32=link.exe
 # PROP Default_Filter "*.c"
 # Begin Source File
 
-SOURCE=..\..\src\breakpoint_cmds.c
+SOURCE=..\..\src\main.c
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\dbgarraylist.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\dbgbreakpoint.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\dbgcallstack.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\dbgmain.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\dbgsearch.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\debugXSL.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\files.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\help.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\nodeview_cmds.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\options.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\os_cmds.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\param_cmds.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\search_cmds.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\template_cmds.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\trace_cmds.c
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\xsldbg.c
+SOURCE=..\..\src\simpleio.c
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -158,56 +98,16 @@ SOURCE=..\..\src\xsldbg.c
 # PROP Default_Filter "*.h"
 # Begin Source File
 
-SOURCE=..\..\src\arraylist.h
+SOURCE="..\..\..\..\..\gnome\gnome-xml\include\libxml\tree.h"
 # End Source File
 # Begin Source File
 
-SOURCE=..\..\src\breakpoint.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\breakpointInternals.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\debugXSL.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\files.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\help.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\options.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\win32conf.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\xslbreakpoint.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\xslcallpoint.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\xsldbg.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\xsldbgwin32conf.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\src\xslsearch.h
+SOURCE=..\..\..\..\..\gnome\libxslt\libxslt\xsltutils.h
 # End Source File
 # End Group
+# Begin Source File
+
+SOURCE=..\..\..\..\..\gnome\libxslt\win32\dsp\libxslt\libxslt.lib
+# End Source File
 # End Target
 # End Project

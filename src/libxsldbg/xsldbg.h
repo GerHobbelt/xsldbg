@@ -79,7 +79,7 @@
 #ifndef WIN32
 #include "config.h"
 #else
-#include "xsldbgwin32conf.h"
+#include "xsldbgwin32config.h"
 #endif
 #else
 #include "config_riscos.h"

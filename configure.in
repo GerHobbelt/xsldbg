@@ -1,12 +1,12 @@
 
 AC_INIT(src/main.c)
 
-timestamp='2002-02-02'
+timestamp='2002-02-07'
 
 
 XSLDBG_MAJOR_VERSION=2
 XSLDBG_MINOR_VERSION=0
-XSLDBG_MICRO_VERSION=1
+XSLDBG_MICRO_VERSION=3
 PACKAGE=xsldbg
 
 dnl
@@ -21,7 +21,7 @@ LIBXSLT_REQUIRED_VERSION=1.0.10
 
 XSLDBG_VERSION=$XSLDBG_MAJOR_VERSION.$XSLDBG_MINOR_VERSION.$XSLDBG_MICRO_VERSION
 XSLDBG_VERSION_INFO=`expr $XSLDBG_MAJOR_VERSION + \
-        $XSLDBG_MINOR_VERSION`:$XSLDBG_MICRO_VERSION:$XSLDBG_MICRO_VERSION
+        $XSLDBG_MINOR_VERSION`:$XSLDBG_MICRO_VERSION:$XSLDBG_MINOR_VERSION
 
 XSLDBG_VERSION_NUMBER=`expr $XSLDBG_MAJOR_VERSION \* 10000 + \
         $XSLDBG_MINOR_VERSION \* 100 + $XSLDBG_MICRO_VERSION`
@@ -581,8 +581,7 @@ AM_CONDITIONAL(RISC_OS, test "1" = "0" )
 AC_OUTPUT(
         Makefile     	
         src/Makefile  	
-	src/xsldbgwin32conf.h
-	src/libxsldbg/xsldbgconfig.h
+	src/libxsldbg/xsldbgwin32config.h
 	xsldbg-config
 	src/libxsldbg/Makefile
 	src/libqtnotifier/Makefile

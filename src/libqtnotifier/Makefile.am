@@ -1,16 +1,20 @@
+libqtnotifier_la_LDFLAGS= -version-info @XSLDBG_VERSION_INFO@
+
 if USE_XSLDBG_AS_THREAD
 
 INCLUDES= -I $(QTDIR)/include -I .. $(XSLDBG_CFLAGS)
 
 libqtnotifier_la_SOURCES =\
-	qtnotifier.cpp        	\
-	xsldbgnotifier.cpp  	 \
+	qtnotifier2.cpp        	\
+	xsldbgnotifier.cpp  	\
 	xsldbgevent.cpp	    	\
 	xsldbgdebuggerbase.cpp	\
 	xsldbgthread.cpp			
 
 noinst_HEADERS = \
-	qtnotifier.h
+	qtnotifier2.h		\
+	xsldbgevent.h		\
+	xsldbgdebuggerbase.h	
 
 SOURCES = \
 	$(libqtnotifier_la_SOURCES) \
@@ -21,11 +25,11 @@ SOURCES = \
 lib_LTLIBRARIES = libqtnotifier.la
 
 libqtnotifier_la_LIBADD =
-libqtnotifier_la_DEPENDENCIES=qtnotifier.moc
+libqtnotifier_la_DEPENDENCIES=xsldbgdebuggerbase.moc
 
-qtnotifier.cpp : qtnotifier.moc
-qtnotifier.moc : qtnotifier.h
-	$(QTDIR)/bin/moc -o qtnotifier.moc qtnotifier.h
+xsldbgdebuggerbase.cpp: xsldbgdebuggerbase.moc
+xsldbgdebuggerbase.moc: xsldbgdebuggerbase.h
+	$(QTDIR)/bin/moc xsldbgdebuggerbase.h -o xsldbgdebuggerbase.moc
 
 
 install-exec-hook:

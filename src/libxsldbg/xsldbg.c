@@ -802,6 +802,9 @@ xsldbgMain(int argc, char **argv)
     exsltRegisterAll();
     xsltRegisterTestModule();
 
+    /* copy the volitile options over to xsldbg */
+    optionsCopyVolitleOptions();
+
     /*
      * shell interraction
      */

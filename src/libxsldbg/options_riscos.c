@@ -16,7 +16,7 @@
  ***************************************************************************/
 
 #include <libxml/parser.h>
-#include "stdlib.h"
+#include <stdlib.h>
 #include "xsldbg.h"
 #include "options.h"
 

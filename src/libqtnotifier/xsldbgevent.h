@@ -27,25 +27,67 @@
 
 class XsldbgDebuggerBase;
 
-/* how many column do we have */
+/* how many columns do we have */
 #define XSLDBGEVENT_COLUMNS 3
+
+/**
+ * This class is used to convert a message from xsldbg into a simple data type
+ *
+ * @short convertor of xsldbg message to a data class
+ *
+ * @author Keith Isdale <k_isdale@tpg.com.au> 
+ */
 class XsldbgEventData {
 
  public:
   XsldbgEventData();
   ~XsldbgEventData();
 
+
+  /**
+   * Set the text for the column specified
+   *
+   * @param column 0 =< @p column < XSLDBGEVENT_COLUMNS 
+   * @param text The text value to store in column indicated
+   */
   void setText(int column, QString text);
+
+
+  /**
+   * Get the text from the column specified
+   * 
+   * @returns QString::null if invalid column number
+   *
+   * @param column 0 =< @p column < XSLDBGEVENT_COLUMNS   
+   *  
+   */
   QString getText(int column);
 
+
+  /**
+   * Set the integer value for the column specified
+   *
+   * @param column 0 =< @p column < XSLDBGEVENT_COLUMNS 
+   * @param value The value to store in column indicated
+   */
   void setInt(int column, int value);
+
+
+  /**
+   * Get the integer value from the column specified
+   *
+   * @returns -1 if invalid column number
+   *
+   * @param column 0 =< @p column < XSLDBGEVENT_COLUMNS 
+   *
+   */
   int  getInt(int column);
 
  private:
-  /** Below are the messages that this class will suport 
-      Values are mapped left to right ie the first QString value mapps
+  /** Below are the messages that this class will support 
+      Values are mapped left to right ie the first QString value maps
       to textValues[0], the second mapps to textValues[1] 
-      the third mapps s to textValues[2] etc.. */
+      the third maps to textValues[2] etc.. */
   QString textValues[XSLDBGEVENT_COLUMNS];
 
   /**
@@ -53,6 +95,7 @@ class XsldbgEventData {
      stated above */
   int intValues[XSLDBGEVENT_COLUMNS];
 
+  /** - - - - - - The message/signal types supported   - - - - - - */
   // /** line number and/or file name changed */
   //  void lineNoChanged(QString /* fileName */, int /* lineNumber */, bool /* breakpoint */);
   // These data items are mapped to attributes of this class with the same name
@@ -117,49 +160,75 @@ class XsldbgEventData {
 };
 
 
+/**
+ * This class is posted to the applications event queue. When the application
+ *  has time to process the event this class then aids in emitting 
+ *   the relavant signals for the event.    
+ *
+ * @short Emit signals to QT application via debugger base class
+ *
+ * @author Keith Isdale <k_isdale@tpg.com.au> 
+ */
 class XsldbgEvent : public QEvent {
 
  public:  
-  XsldbgEvent(XsldbgMessageEnum type, void *data);
+  XsldbgEvent(XsldbgMessageEnum type, const void *data);
   ~XsldbgEvent();
 
-  /** main control for emitting messages */
+  /** Main control for emitting messages, use this from the application
+      inside its event processing function */
   void emitMessage(XsldbgDebuggerBase *debugger);
 
-  /** emit a single message */
+  /** Emit a single message. It uses handleXXX to do the actual emitting
+     of signal from debugger */
   void emitMessage(XsldbgEventData *eventData);
 
  private:
-  XsldbgEventData * createEventData(XsldbgMessageEnum type, void *msgData);
-  void handleLineNoChanged(XsldbgEventData *eventData, void *msgData);
-  void handleShowMessage(XsldbgEventData *eventData, void *msgData);
-  void handleBreakpointItem(XsldbgEventData *eventData, void *msgData);
-  void handleGlobalVariableItem(XsldbgEventData *eventData, void *msgData);
-  void handleLocalVariableItem(XsldbgEventData *eventData, void *msgData);
-  void handleTemplateItem(XsldbgEventData *eventData, void *msgData);
-  void handleSourceItem(XsldbgEventData *eventData, void *msgData);
-  void handleIncludedSourceItem(XsldbgEventData *eventData, void *msgData);
-  void handleParameterItem(XsldbgEventData *eventData, void *msgData);
-  void handleCallStackItem(XsldbgEventData *eventData, void *msgData);
-  void handleEntityItem(XsldbgEventData *eventData, void *msgData);
-  void handleResolveItem(XsldbgEventData *eventData, void *msgData);
-  void handleIntOptionItem(XsldbgEventData *eventData, void *msgData);
-  void handleStringOptionItem(XsldbgEventData *eventData, void *msgData);
+  /** Create the XsldbgEventData for this message. Is used by our constructor  
+     it uses handleXXX function to fill in the approriate values in
+     the XsldbgEventData provided */
+  XsldbgEventData * createEventData(XsldbgMessageEnum type, const  void *msgData);
+
+  /** The following functions are directly related to the eventual signals that
+      will be emitted ie the signal 
+             lineNoChanged(QString, int bool)  
+	is mapped to 
+	      handleLineNoChanged(XsldbgEventData *, void *)
+    */
+  void handleLineNoChanged(XsldbgEventData *eventData, const  void *msgData);
+  void handleShowMessage(XsldbgEventData *eventData, const  void *msgData);
+  void handleBreakpointItem(XsldbgEventData *eventData, const  void *msgData);
+  void handleGlobalVariableItem(XsldbgEventData *eventData, const  void *msgData);
+  void handleLocalVariableItem(XsldbgEventData *eventData, const  void *msgData);
+  void handleTemplateItem(XsldbgEventData *eventData, const  void *msgData);
+  void handleSourceItem(XsldbgEventData *eventData, const  void *msgData);
+  void handleIncludedSourceItem(XsldbgEventData *eventData, const  void *msgData);
+  void handleParameterItem(XsldbgEventData *eventData, const  void *msgData);
+  void handleCallStackItem(XsldbgEventData *eventData, const  void *msgData);
+  void handleEntityItem(XsldbgEventData *eventData, const  void *msgData);
+  void handleResolveItem(XsldbgEventData *eventData, const  void *msgData);
+  void handleIntOptionItem(XsldbgEventData *eventData, const  void *msgData);
+  void handleStringOptionItem(XsldbgEventData *eventData, const  void *msgData);
 
 
  private:
 
-  XsldbgMessageEnum type;
+  /** What type is the items in list */
+  XsldbgMessageEnum itemType;
 
-  /* this is a volitile value that is only valid for the duration 
-    of the constuctor. It will be set to 0L imedediately after*/
-  void *data; 
+  /** A flag that gets set once the list has been filled with approriate
+    XsldbgEventData */
+  bool beenCreated;
 
-  /* This is a volitile value only valid for duration of emitMessage 
-     frunction. It will be set to 0L imedediately after */
+  /** This is a volitile value that is only valid for the duration 
+    of the constuctor. It will be set to 0L immediately after */
+  const void *data; 
+
+  /** This is a volitile value only valid for duration of emitMessage 
+     function. It will be set to 0L imedediately after */
   XsldbgDebuggerBase *debugger;
 
-  /** this is the data associated with this event 
+  /** This is the data associated with this event 
       each data item in the list will be of the type required
       by the "type" this event
    */

@@ -447,7 +447,7 @@ int
 callStackGetDepth(void)
 {
     callPointPtr cur = callStackBot;
-    int result = 0;
+    int depthCount = 0;
 
     if (!callStackBot) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
@@ -455,13 +455,13 @@ callStackGetDepth(void)
                          "calldepth failed invalid call stack:"
                          " dbgcallstack.c");
 #endif
-        return result;
+        return depthCount;
     }
 
 
     while (cur->next) {
-        result = 1;
+        depthCount++;
         cur = cur->next;
     }
-    return result;
+    return depthCount;
 }

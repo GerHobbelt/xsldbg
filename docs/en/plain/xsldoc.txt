@@ -1,5 +1,5 @@
 
-         xsldbg version 2.0.0
+         xsldbg version 2.0.3
          ====================
    
     xsldbg help
@@ -40,6 +40,7 @@ On systems with readline library available you can use the back/forward keys to 
      Expression viewing(xpath) :cat
      Node viewing :ls,dir,du,cat,pwd
      Variable viewing :globals,locals,cat
+     Variable setting:set
      Node selection :source,data,cd
      Searching :search
      Operating system related :chdir,shell,tty
@@ -377,6 +378,14 @@ Usage:
 - - - - - - - - - - - - - - - - - - - - 
 
 
+Command : Set  
+Summary : Set the value of a variable
+Usage:
+ 
+     set <VARIABLE_NAME> <XPATH>
+- - - - - - - - - - - - - - - - - - - - 
+
+
 Command : Setoption  
 Summary : Set an option for execution of stylesheet
  
@@ -393,6 +402,7 @@ Usage:
      xinclude   (If <INTEGER_VALUE> is true do XInclude processing on document intput)
      preferhtml   (If <INTEGER_VALUE> is true the prefer html output for search results. : See search command)
      autoencode   (Try to use the encoding from the stylesheet)
+     utf8input   (All input from user is in UTF-8.This is normaly used when xsldbg is running as a thread)
      nonet   (If <INTEGER_VALUE> is true refuse to fetch DTDs or entities over network)
      novalid   (If <INTEGER_VALUE> is true skip the DTD loading phase)
      repeat   (If <INTEGER_VALUE> is true run the transformation 20 times)

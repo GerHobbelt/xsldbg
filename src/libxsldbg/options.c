@@ -62,6 +62,7 @@ const char *optionNames[] = {
     "catalogs",                 /* do we use catalogs in SGML_CATALOG_FILES */
     "preferhtml",               /* Prefer html output for search results */
     "autoencode",               /* Try to use the encoding from the stylesheet */
+    "utf8input",                /* All input from "user" will be in UTF-8 */
     "verbose",                  /* Be verbose with messages */
     "output",                   /* what is the output file name */
     "source",                   /* The stylesheet source to use */
@@ -169,38 +170,25 @@ optionsSetIntOption(OptionTypeEnum optionType, int value)
 {
     int type = optionType, result = 1;
 
-    switch (type) {
-        case OPTIONS_XINCLUDE:
-        case OPTIONS_DOCBOOK:
-        case OPTIONS_TIMING:
-        case OPTIONS_PROFILING:
-        case OPTIONS_NOVALID:
-        case OPTIONS_NOOUT:
-        case OPTIONS_HTML:
-        case OPTIONS_DEBUG:
-        case OPTIONS_SHELL:
-        case OPTIONS_GDB:
-        case OPTIONS_REPEAT:
-        case OPTIONS_CATALOGS:
-        case OPTIONS_PREFER_HTML:
-        case OPTIONS_AUTOENCODE:
-        case OPTIONS_VERBOSE:
+    if ((type >= OPTIONS_XINCLUDE) && (type <= OPTIONS_VERBOSE)){
             /* make sure that use of options are safe by only copying
              * critical values from intVolitleOptions just before 
              * stylesheet is started
              */
             intVolitileOptions[type - OPTIONS_XINCLUDE] = value;
-            result = 1;
-            break;
+
+	    /* the following types must be activated imediately*/
+	 switch (type){
 
         case OPTIONS_TRACE:
         case OPTIONS_WALK_SPEED:
-            intVolitileOptions[type - OPTIONS_XINCLUDE] = value;
             intOptions[type - OPTIONS_XINCLUDE] = value;
-            result = 1;
-            break;
+	    break;
 
-        default:
+	 default:
+            break;
+	 }
+    }else{
             xsltGenericError(xsltGenericErrorContext,
                              "Not a valid boolean/integer xsldbg option %d\n",
                              type);
@@ -224,28 +212,9 @@ optionsGetIntOption(OptionTypeEnum optionType)
 {
     int type = optionType, result = 0;
 
-    switch (type) {
-        case OPTIONS_XINCLUDE:
-        case OPTIONS_DOCBOOK:
-        case OPTIONS_TIMING:
-        case OPTIONS_PROFILING:
-        case OPTIONS_NOVALID:
-        case OPTIONS_NOOUT:
-        case OPTIONS_HTML:
-        case OPTIONS_DEBUG:
-        case OPTIONS_SHELL:
-        case OPTIONS_GDB:
-        case OPTIONS_REPEAT:
-        case OPTIONS_TRACE:
-        case OPTIONS_VERBOSE:
-        case OPTIONS_CATALOGS:
-        case OPTIONS_PREFER_HTML:
-        case OPTIONS_AUTOENCODE:
-        case OPTIONS_WALK_SPEED:
+    if ((type >= OPTIONS_XINCLUDE) && (type <= OPTIONS_VERBOSE)){   
             result = intOptions[type - OPTIONS_XINCLUDE];
-            break;
-
-        default:
+    }else{
             xsltGenericError(xsltGenericErrorContext,
                              "Not a valid boolean/integer xsldbg option %d\n",
                              type);

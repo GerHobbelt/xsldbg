@@ -3,43 +3,7 @@ Microsoft Developer Studio Workspace File, Format Version 5.00
 
 ###############################################################################
 
-Project: "libexslt_a"="..\..\..\gnome-xsl\win32\dsp\libexslt_a.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "libxml2_a"="..\..\..\gnome-xml\win32\dsp\libxml2_a.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "libxslt_a"="..\..\..\gnome-xsl\win32\dsp\libxslt_a.dsp" - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
-Project: "xmlcatalog"="..\..\..\gnome-xml\win32\dsp\xmlcatalog.dsp" - Package Owner=<4>
+Project: "libxsldbg_a"=.\libxsldbg_a\libxsldbg_a.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -52,27 +16,6 @@ Package=<4>
 ###############################################################################
 
 Project: "xsldbg"=.\xsldbg.dsp - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-    Begin Project Dependency
-    Project_Dep_Name libexslt_a
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name libxml2_a
-    End Project Dependency
-    Begin Project Dependency
-    Project_Dep_Name libxslt_a
-    End Project Dependency
-}}}
-
-###############################################################################
-
-Project: "xsltproc"="..\..\..\gnome-xsl\win32\dsp\xsltproc.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{

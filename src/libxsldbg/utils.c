@@ -121,3 +121,30 @@ splitString(xmlChar * textIn, int maxStrings, xmlChar ** out)
         wordCount = 0;             /* We have not processed all the text givent to us */
     return wordCount;
 }
+
+
+
+/**
+ * lookupName:
+ * @name : Is valid
+ * @matchList : A NULL terminated list of names to use as lookup table
+ *
+ * Lookup and name in a list
+ *
+ * Returns The id of name found in @matchList,
+ *         0 otherwise
+*/
+int
+lookupName(xmlChar * name, xmlChar ** matchList)
+{
+    int result = -1, nameIndex;
+
+    for (nameIndex = 0; matchList[nameIndex]; nameIndex++) {
+        if (!xmlStrCmp(name, matchList[nameIndex])) {
+            result = nameIndex;
+            break;
+        }
+    }
+
+    return result;
+}

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <libxsldbg/arraylist.h>
-#include <libxsldbg/xslbreakpoint.h>
-#include <libxsldbg/xslsearch.h>
+#include <libxsldbg/breakpoint.h>
+#include <libxsldbg/search.h>
 #include <libxsldbg/options.h>
 
 
@@ -32,21 +32,21 @@ int main(void){
 int breakPointSearchTest(void)
 {
   int result = 0;
-  xslBreakPointPtr breakPoint = breakPointItemNew();
+  breakPointPtr breakItem = breakPointItemNew();
   xmlNodePtr node = NULL;
   xmlDocPtr doc = NULL;
 
    printf( "Search for breakpoints in search dataBase\n");
-  if (!breakPoint){
+  if (!breakItem){
     printf( "Create of breakPoint item failed\n");
     return result;
   }
 
-  breakPoint->url = xmlStrdup((xmlChar*)"index.xsl");
-  breakPoint->lineNo = 10;
-  breakPoint->templateName = xmlStrdup((xmlChar*)"/");
-  breakPoint->id = 1;
-  node = searchBreakPointNode(breakPoint);
+  breakItem->url = xmlStrdup((xmlChar*)"index.xsl");
+  breakItem->lineNo = 10;
+  breakItem->templateName = xmlStrdup((xmlChar*)"/");
+  breakItem->id = 1;
+  node = searchBreakPointNode(breakItem);
   if(node){
     xmlShellPrintNode(node);
     result++;
@@ -57,11 +57,11 @@ int breakPointSearchTest(void)
   doc = searchDoc();
   if ((result == 1) && doc){
     searchAdd(node);
-    breakPoint->lineNo = 12;
-    node = searchBreakPointNode(breakPoint);      
+    breakItem->lineNo = 12;
+    node = searchBreakPointNode(breakItem);      
     searchAdd(node);
-    breakPoint->lineNo = 13;
-    node = searchBreakPointNode(breakPoint);      
+    breakItem->lineNo = 13;
+    node = searchBreakPointNode(breakItem);      
     searchAdd(node);
     xmlShellPrintNode(node);
     searchSave((xmlChar*)"search.data");
@@ -72,7 +72,7 @@ int breakPointSearchTest(void)
       xmlFreeNode(node); 
   }
 
-  breakPointItemFree(breakPoint, NULL); 
+  breakPointItemFree(breakItem, NULL); 
   return result;
 }
 

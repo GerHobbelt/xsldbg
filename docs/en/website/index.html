@@ -38,8 +38,8 @@
 <p>xsldbg is a text based tool to debug stylesheets and it is similar to the Unix/Linux debugger gdb. It uses using the libxslt library by <a href="http://www.xmlsoft.org/XSLT">http://www.xmlsoft.org/XSLT</a> </p>
 
 <ul>
-<li>It is in the pre-beta stage of development with functionality now frozen until the start of the next beta cycle. Comments about feature set provided are welcome. </li>
-<li>Only simple simple XSL commands are supported as yet.: Fixed!. But yet to verify that all commands work as expected </li></ul>
+<li>It is in the second beta stage of development with functionality now frozen until the start of the next beta cycle. Comments about feature set provided are welcome. </li>
+</ul>
 
 
 <!--  - - - - - - - - - -  Todo - - - - - - - - - -->
@@ -50,7 +50,6 @@
 <li>perform testing, add more test case descriptions&nbsp; </li>
 <li>improve the appearance of documentation and ensure it is up to date </li>
 <li>create project files to build as MSVC project. Being looked at by&nbsp; <a href="http://www.fh-frankfurt.de/%7Eigor/projects/libxml/"><i>Igor Zlatkovic</i></a></li>
-<li>add ability to change variables&nbsp; </li>
 </ul>
 
 <p><a href="#Completed%20TODO%27s"><b>See also completed TODO'S</b></a><b> </p>
@@ -58,12 +57,12 @@
 
 <!--  - - - - - - - - - -  Author - - - - - - - - - -->
 <h2><a name="Requirements">Requirements</a> </h2>
-&nbsp;&nbsp; <a href="http://www.xmlsoft.org/#Downloads">libxml2-2.4.10  (libxml2-2.4.12 recommended)</a> &nbsp; or greater <br />
-&nbsp;&nbsp; <a href="http://xmlsoft.org/XSLT/#Downloads">libxslt-1.0.9 <font color="red">from GNOME cvs</font> </a> &nbsp; or greater <br />
+&nbsp;&nbsp; <a href="http://www.xmlsoft.org/#Downloads">libxml2-2.4.13 <font color="red">from GNOME cvs</font> </a> &nbsp; or greater <br />
+&nbsp;&nbsp; <a href="http://xmlsoft.org/XSLT/#Downloads">libxslt-1.0.10 <font color="red">from GNOME cvs</font> </a> &nbsp; or greater <br />
 
 <p><font size=5 color="red">Warning!</font>&nbsp; libxslt may not compile with shared library enabled as it is has been configured
-for compilation tools that support prelinking. I recommend that libxslt be configured using at least these options <br />
-<b>&nbsp;&nbsp;&nbsp;&nbsp;--with-debugger &nbsp;&nbsp; --enable-shared=no </b>
+for compilation tools that support prelinking. Configure libxslt with the at least following option<br />
+<b>&nbsp;&nbsp;&nbsp;&nbsp;--with-debugger=yes</b>
 <p>      I recommend you get the latest available for your distribution. Try <br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="http://rpmfind.net/linux/rpm2html/search.php?query=libxslt&amp;submit=Search+..">libxslt rpmfind search.</a> <br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="http://rpmfind.net/linux/rpm2html/search.php?query=libxml&amp;submit=Search+..">libxml rpmfind search.</a><br />
@@ -140,7 +139,7 @@ Below is the installation instructions for a default *nix system <br />
 <p>
 <b>
 &nbsp;&nbsp;&nbsp;&nbsp;make -f&nbsp; Makefile.cvs <br />
-&nbsp;&nbsp;&nbsp; ./configure --enable-shared=no <br />
+&nbsp;&nbsp;&nbsp; ./configure<br />
 &nbsp;&nbsp; make <br />
 &nbsp;&nbsp; make install <br /></b>
 <br />
@@ -155,7 +154,7 @@ for details of other options to configuring xsldbg
 <ol>
 <li>xsldbg has been added to your PATH of system commands. </li>
 <li>libxml AND libxslt have been fully installed and are available to xsldbg.</li>
-<li>xsldbg's DTD's (search.dtd, xmldoc.dtd) have been added to your XML catalog file. </li>
+<li>xsldbg's DTD's (search.dtd, xmldoc.dtd, config.dtd) have been added to your SGML/XML catalog file. </li>
 </ol>
 The default *nix installation will do these things for you (for the the assumed default *nix configuration) but other operating systems
 have thier own installation requirements.
@@ -255,11 +254,11 @@ To exit xsldbg just type &quot;exit&quot; <br />
 <h1><a name="Version__notes">Version&nbsp; notes</a> </h1>
 <p>&nbsp;See release notes associated with package.&nbsp; </p>
 <h4>These issues are still current</h4>
-<blockquote>1) The File related commands are disabled for the moment.</blockquote>
+<blockquote>1) Several of the File related commands are disabled for the moment.</blockquote>
 <blockquote>2) When you do a cat on the style source the output is white space stripped so it will look different to
 your original source files. This is NOT a "bug"! This is the default behaviour of the stylesheet processor of libxslt. This
 tool is intended to be used by other programs which can handle formatting the output. </blockquote>
-<blockquote>3) The xsldebugger can be built on windows given correct project files. <i><font color="#008000">See TODO's</i></font></blockquote>
+<blockquote>3) xsldbg can be built on windows given correct project files. <i><font color="#008000">See TODO's</i></font></blockquote>
 <br />
 <br />
 <br />
@@ -270,8 +269,8 @@ tool is intended to be used by other programs which can handle formatting the ou
 <h2>Libxslt doesn't compile</h2>
 <ul>
 <li>Check http://xmlsoft.org/XSLT/ and mail.gnome.org/archives/xslt/ for current issues</li>
-<li>Ensure that libxslt was configured with <br />
-   <b>&nbsp;&nbsp;--with-debugger &nbsp;&nbsp; --enable-shared=no</b>
+<li>Ensure that libxslt was configured with at least <br />
+   <b>&nbsp;&nbsp;--with-debugger=yes</b>
 </li>
 </ul>
 <h2>Where can I find a binary distribution for xsldbg</h2>
@@ -297,8 +296,32 @@ directory. You can generate either KDE or GNOME style during a compile of xsldbg
 </li>
 </ul>
 
-<h2>How big is this program</h2> At last count there was over twenty thousand lines of human generated text.
-Which is about the same size as the libxslt directory in the libxslt distribution.
+<h2>Why do I get a message about Breakpoint @ text node</h2>
+xsldbg tries to find a line number near the current node. But sometimes it is
+unable to find a "parent" for the current node. This normally means the node is part of
+the document preamble, a comment node or text node.
+
+
+<h2>In the Quanta+ plugin why to I get messages about text being too big to display</h2>
+The plugin for Quanta+ is in its first beta. It is expected that future development will
+re-organise the "inspector" windows.
+
+
+<h2>Why does xsldbg restart when I reload the configuration</h2>
+This is unavoidable because of the way xsldbg interupts libxslt execution.
+
+
+<h2>Why is the text/html output when searching not better formmated</h2>
+It is left up to the user to provide a stylsheet to replace
+docs/en/searchhtml.xsl and docs/en/search.xsl. Contributions of better XSL for
+search database formatting would be appreciated
+
+
+<h2>How big is this program</h2>
+At last count there was over twenty thousand lines of text in xsldbg, some of this is
+automaticaly generated. This is about the same size as the libxslt directory in the
+libxslt distribution.
+
 
 <h2> Why do I get a strange prompt </h2>
 If the prompt looks like: <br /><br />
@@ -306,6 +329,7 @@ If the prompt looks like: <br /><br />
 &nbsp;&nbsp;&nbsp;&nbsp;For some reason xsldbg could not load or use the specified stylesheet or xml data file.</b>
 <br /><br />
 Try using the &quot;source&quot; or &quot;data&quot; commands and then &quot;run&quot;.
+
 
 <h2>What's the deal with all those USE_KDE_DOCS, USE_GNOME_DOCS, BUILD_DOCS</h2>
 They are a mechanism used by docs/en/KDE/Makefile.am and docs/en/GNOME/Makefile.am
@@ -353,6 +377,9 @@ to generate API documenation in the style of KDE and GNOME respectively.
 <li>Does not allow libxslt parameters to be passed at xsldbg command prompt. Done! </li>
 <li>redo implemention of src/dbgbreakpoint.c to use hash tables not a fixed array of breakpoints&nbsp; Done!</li>
 <li>add new search functions&nbsp; Done!</li>
+<li>add ability to change variables&nbsp; Done!</li>
+<li>Only simple simple XSL commands are supported as yet.: Fixed!. But yet to verify that all commands work as expected </li>
+<li>Allow xsldbg's configuration to be loaded/saved . Done!</li>
 </ul>
 
 <br />

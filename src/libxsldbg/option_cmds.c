@@ -81,6 +81,7 @@ int xslDbgShellSetOption(xmlChar *arg){
 		     "Error: Expected two arguments to setoption command\n");
   }
 
+  return result;
 }
 
 

@@ -54,3 +54,6 @@ QString XsldbgDebuggerBase::fromUTF8(const xmlChar *text)
     result = QString::fromUtf8((const char*)text);
   return result;
 }
+
+
+#include "xsldbgdebuggerbase.moc"

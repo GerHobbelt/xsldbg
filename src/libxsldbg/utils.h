@@ -142,6 +142,39 @@ extern "C" {
 #endif
     int splitString(xmlChar * textIn, int maxStrings, xmlChar ** out);
 
+
+
+#ifdef USE_GNOME_DOCS
+
+/**
+ * lookupName:
+ * @name : Is valid
+ * @matchList : A NULL terminated list of names to use as lookup table
+ *
+ * Lookup and name in a list
+ *
+ * Returns The id of name found in @matchList,
+ *         0 otherwise
+*/
+#else
+#ifdef USE_KDE_DOCS
+
+/** 
+ * Lookup and name in a list
+ *
+ *
+ * @returns The id of name found in @p matchList
+ *         0 otherwise
+ *
+ * @param name Is valid
+ * @param matchList A NULL terminated list of names to use as lookup table
+ *
+*/
+#endif
+#endif
+int lookupName(xmlChar * name, xmlChar ** matchList);
+
+
 #ifdef __cplusplus
 }
 #endif

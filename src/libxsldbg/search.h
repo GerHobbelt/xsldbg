@@ -537,7 +537,7 @@ extern "C" {
  */
 #endif
 #endif
-    xmlNodePtr findTemplateNode(const xsltStylesheetPtr style,
+    xmlNodePtr findTemplateNode(xsltStylesheetPtr style,
                                 const xmlChar * name);
 
 

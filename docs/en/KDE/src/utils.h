@@ -98,3 +98,24 @@
 
 
 
+
+
+
+/** 
+ * Lookup and name in a list
+ *
+ *
+ * @returns The id of name found in @p matchList
+ *         0 otherwise
+ *
+ * @param name Is valid
+ * @param matchList A NULL terminated list of names to use as lookup table
+ *
+*/
+
+
+int lookupName(xmlChar * name, xmlChar ** matchList);
+
+
+
+

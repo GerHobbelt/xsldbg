@@ -16,11 +16,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifdef __riscos
-#include "config_riscos.h"
-#else
-#include "config.h"
-#endif
+#include "./libxsldbg/xsldbg.h"
 
 #include <libxslt/xsltutils.h>
 

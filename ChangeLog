@@ -1,3 +1,55 @@
+Keith Isdale 7 Feb 2002 <k_isdale@tpg.com.au
+ Version 2.0.3
+ Added OPTONS_UTF8_INPUT, Made decoding input optional which allows a program
+	to send UTF-8 to xsldbg. Added "utf8input" to list of known options
+ Simplified functions optionsSetIntOption. functions optionsGetIntOption
+ Fixed cause of compile warning when linking (programs don't require version info)
+ Fixed notification of globals and locals (missed sending an empty list when there
+		are no variables present)
+ Changed notification of stylesheets to make use of notify list (a bit faster)
+	
+Keith Isdale 6 Feb 2002 <k_isdale@tpg.com.au
+  Version 2.0.2
+  Fixed includes for libqtnotifier  (missed moc file)
+  Fixed Makefile.am for libqtnotifier (missed generation of moc file)
+  Fixed notification to send an "empty" XsldbgEventData at start of list
+  Fixed introduced bug (caused by wholesale replacement of result++ with result =1)
+	in callStackGetDepth.
+  Notification system is now in a stable and is beta quality. Quanta+ plugin
+	should now also be beta. Notification system is now easier to maintain
+	and understand.
+	
+	
+Keith Isdale 5 Feb 2002 <k_isdale@tpg.com.au
+  Fixed printing of local and globals to have a space before them
+	ie " Local <VARIABLE_NAME>"
+  Fixed set command to be consistant with "setoption" command
+	Fixed error messages for "set" command top be consistant with
+	other error messages
+ Updated xsldoc.xml to include definition of "set" command
+ Fixed usage of --gdb option. Added optionsCopyVolitleOption before
+	testing for presence of that option
+ Changed output of "cat" command when running xsldbg normaly to
+	print only the value of XPath. Ie removed XX is a XX <XPath>.
+	This is to make it easier to use in KDbg
+ Fixed tests/searchTest.c to make use of new header files
+ Fixed set command to properly calculate the result of a node set and
+	assign it to a variable. Updated test11.xsl to check this change -OK.
+ Fixed the usage of version info to create properly versioned libraries
+ Changed added to meaning of gdb mode, when locals command is issued
+	both local and global variables will be printed (for KDbg)
+	
+	
+Keith Isdale 2 Feb 2002 <k_isdale@tpg.com.au>
+  Created win32 project file for MSVC  (still broken)
+  Added src/libxsldbg/xsldbgwin32config.h.in
+	src/xsldbgwin32* is to be removed from cvs
+  Move lookupName to utils.[ch]
+  Fixed missing return statement in xslDbgShellSetOption
+  Added missing #include <string.h> to options_*.c
+  Fixed typo of #include "stdlib.h" to #include <stdlib.h>
+  Made first argument in findTemplateNode to be non const 
+	
 Keith Isdale 1 Feb 2002 <k_isdale@tpg.com.au>
   Version 2.0.1		
   Continue source code clean up 	
@@ -24,9 +76,10 @@ Keith Isdale 1 Feb 2002 <k_isdale@tpg.com.au>
  Copied optionsLoad, optionsSave from options_unix.c to 
 		options_win32.c and options_riscos.c
 
-  Need to update cvs 
-	o add 	docs/en/config.dtd
-	o remove src/libxsldbg/dbg*.c
+  Updated cvs 
+	o added docs/en/config.dtd, utils.[ch] arraylist.c debug.[ch]
+		help_*.c options_*.c files_*.c option_cmds.c
+	o removed src/libxsldbg/dbg*.c
 	
 Keith Isdale 31 Jan 2002 <k_isdale@tpg.com.au>
   Version 2.0.0
@@ -42,6 +95,8 @@ Keith Isdale 31 Jan 2002 <k_isdale@tpg.com.au>
 	Fixed the name of structure xslBreakPoint to be breakPoint
 	Removed private "lineNo" functions from breakpoint.h 
   Changed required version of libxslt to 1.0.10 
+  Replaced "result++" with "result = 1" to give better meaning. If result++
+	is being used as a counter replace it with another name eg wordCounter
 	
 	
 	

@@ -81,30 +81,42 @@ int XsldbgEventData::getInt(int column)
 }
 
 
-XsldbgEvent::XsldbgEvent(XsldbgMessageEnum type, void *data)
+XsldbgEvent::XsldbgEvent(XsldbgMessageEnum type, const void *data)
   : QEvent(QEvent::User)
 {
   XsldbgEventData *eventData;
-  this->type = type;
   this->data = data;
   debugger = 0L;
+  beenCreated = false;
 
   if (type == XSLDBG_MSG_LIST){             /* 23 : As list of messages  */
     notifyMessageListPtr msgList = (notifyMessageListPtr)data;
     void *msgData;
+    /* If this is an included source message, which just continues a source message,
+       we don't need to add an empty XsldbgEventData */
+    if (msgList->type != XSLDBG_MSG_INCLUDED_SOURCE_CHANGED){
+      /* add an empty event data item which indicates the start of a list */
+      eventData  = new XsldbgEventData();
+      if (eventData != 0L)
+	list.append(eventData);
+    }
     for (int index = 0; index < arrayListCount(msgList->list); index++){
       msgData = arrayListGet(msgList->list, index);
       eventData = createEventData(msgList->type, msgData);
       if (eventData != 0L)
-	list.append(eventData);
+	list.append(eventData);      
     }
-
+    arrayListFree(msgList->list);
+    msgList->list = 0L;
+    itemType = msgList->type;
   }else{
     eventData = createEventData(type, data);
     if (eventData != 0L)
       list.append(eventData);
+    itemType = type;
   }
 
+  beenCreated = true;
   /* remove any knowledge of orginal data */
   this->data = 0L;
 }
@@ -115,7 +127,7 @@ XsldbgEvent::~XsldbgEvent()
 }
 
 
-XsldbgEventData *XsldbgEvent::createEventData(XsldbgMessageEnum type, void *msgData)
+XsldbgEventData *XsldbgEvent::createEventData(XsldbgMessageEnum type, const void *msgData)
 {
   XsldbgEventData *result = new XsldbgEventData();
 
@@ -224,6 +236,10 @@ XsldbgEventData *XsldbgEvent::createEventData(XsldbgMessageEnum type, void *msgD
                                  * public command */
       handleResolveItem(result, msgData);
     break;
+
+    default:
+      qDebug("Unhandled type in createEventData %d", type);
+
     }  
  return result;
 }
@@ -239,15 +255,21 @@ void XsldbgEvent::emitMessage(XsldbgDebuggerBase *debugger)
   }
 
   /* make sure that we only temporarily set the value for debugger*/
-  debugger = 0L;
+  this->debugger = 0L;
 }
 
 
 void XsldbgEvent::emitMessage(XsldbgEventData *eventData)
 {
   
-  if ((eventData == 0L) || (debugger == 0L))
+  if ((eventData == 0L) || (debugger == 0L)){
+    qDebug("emitMessage failed");
+    if (eventData == 0L)
+      qDebug("Event data == NULL");
+    if (debugger == 0L)
+      qDebug("Debugger == NULL");
     return;
+  }
 
   /* 
      Method use will end up like 
@@ -256,7 +278,7 @@ void XsldbgEvent::emitMessage(XsldbgEventData *eventData)
 
   */
 
- switch (type){
+ switch (itemType){
 
     case XSLDBG_MSG_THREAD_NOTUSED:  /* 0:  Thread are not to be used */
     case XSLDBG_MSG_THREAD_INIT:     /* 1: The xsldbg thread is initializing */
@@ -388,14 +410,17 @@ void XsldbgEvent::emitMessage(XsldbgEventData *eventData)
                                  * public command */
       handleResolveItem(eventData, 0L);
     break;
+
+    default:
+      qDebug("Unhandled type in emitMessage %d", itemType);
     } 
 }
 
 
-void XsldbgEvent::handleLineNoChanged(XsldbgEventData *eventData, void *msgData)
+void XsldbgEvent::handleLineNoChanged(XsldbgEventData *eventData, const  void *msgData)
 {
   if (eventData != 0L){
-    if (debugger == 0L){
+    if (beenCreated == false){
       /* add our specific data to eventData*/
       if (xsldbgUrl() != 0L){
 	eventData->setText(0, XsldbgDebuggerBase::fromUTF8(xsldbgUrl())); 
@@ -411,10 +436,10 @@ void XsldbgEvent::handleLineNoChanged(XsldbgEventData *eventData, void *msgData)
 }
 
 
-void XsldbgEvent::handleShowMessage(XsldbgEventData *eventData, void *msgData)
+void XsldbgEvent::handleShowMessage(XsldbgEventData *eventData, const  void *msgData)
 {
   if (eventData != 0L){
-    if (debugger == 0L){
+    if (beenCreated == false){
       /* add our specific data to eventData*/
       if (msgData != 0L){
 	eventData->setText(0, XsldbgDebuggerBase::fromUTF8((xmlChar*)msgData));
@@ -427,10 +452,10 @@ void XsldbgEvent::handleShowMessage(XsldbgEventData *eventData, void *msgData)
 }
 
 
-void XsldbgEvent::handleBreakpointItem(XsldbgEventData *eventData, void *msgData)
+void XsldbgEvent::handleBreakpointItem(XsldbgEventData *eventData, const  void *msgData)
 {
   if (eventData != 0L){
-    if (debugger == 0L){
+    if (beenCreated == false){
       /* add our specific data to eventData*/
       if (msgData != 0L){
 	breakPointPtr breakItem = (breakPointPtr)msgData;
@@ -457,10 +482,10 @@ void XsldbgEvent::handleBreakpointItem(XsldbgEventData *eventData, void *msgData
 }
 
 
-void XsldbgEvent::handleGlobalVariableItem(XsldbgEventData *eventData, void *msgData)
+void XsldbgEvent::handleGlobalVariableItem(XsldbgEventData *eventData, const  void *msgData)
 {
   if (eventData != 0L){
-    if (debugger == 0L){
+    if (beenCreated == false){
       /* add our specific data to eventData*/
       if (msgData != 0L){
 	xsltStackElemPtr item = (xsltStackElemPtr)msgData;
@@ -493,10 +518,10 @@ void XsldbgEvent::handleGlobalVariableItem(XsldbgEventData *eventData, void *msg
 }
 
 
-void XsldbgEvent::handleLocalVariableItem(XsldbgEventData *eventData, void *msgData)
+void XsldbgEvent::handleLocalVariableItem(XsldbgEventData *eventData, const  void *msgData)
 {
   if (eventData != 0L){
-    if (debugger == 0L){
+    if (beenCreated == false){
       /* add our specific data to eventData*/
       if (msgData != 0L){
 	xsltStackElemPtr item = (xsltStackElemPtr)msgData;
@@ -550,9 +575,10 @@ void XsldbgEvent::handleLocalVariableItem(XsldbgEventData *eventData, void *msgD
 }
 
 
-void XsldbgEvent::handleTemplateItem(XsldbgEventData *eventData, void *msgData)
-{  if (eventData != 0L){
-    if (debugger == 0L){
+void XsldbgEvent::handleTemplateItem(XsldbgEventData *eventData, const  void *msgData)
+{  
+if (eventData != 0L){
+    if (beenCreated == false){
       /* add our specific data to eventData*/
       if(msgData != 0L){
 	xsltTemplatePtr item = (xsltTemplatePtr)msgData;
@@ -590,10 +616,10 @@ void XsldbgEvent::handleTemplateItem(XsldbgEventData *eventData, void *msgData)
 }
 
 
-void XsldbgEvent::handleIncludedSourceItem(XsldbgEventData *eventData, void *msgData)
+void XsldbgEvent::handleIncludedSourceItem(XsldbgEventData *eventData, const  void *msgData)
 {
   if (eventData != 0L){
-    if (debugger == 0L){
+    if (beenCreated == false){
       /* add our specific data to eventData*/
       if (msgData != 0L){
 	xmlNodePtr item = (xmlNodePtr)msgData;			   	
@@ -620,10 +646,10 @@ void XsldbgEvent::handleIncludedSourceItem(XsldbgEventData *eventData, void *msg
   }
 }
 
-void XsldbgEvent::handleSourceItem(XsldbgEventData *eventData, void *msgData)
+void XsldbgEvent::handleSourceItem(XsldbgEventData *eventData, const  void *msgData)
 {
   if (eventData != 0L){
-    if (debugger == 0L){
+    if (beenCreated == false){
       /* add our specific data to eventData*/
       if (msgData != 0L){
 	xsltStylesheetPtr item = (xsltStylesheetPtr)msgData;
@@ -651,10 +677,10 @@ void XsldbgEvent::handleSourceItem(XsldbgEventData *eventData, void *msgData)
   }
 }
 
-void XsldbgEvent::handleParameterItem(XsldbgEventData *eventData, void *msgData)
+void XsldbgEvent::handleParameterItem(XsldbgEventData *eventData, const  void *msgData)
 {
   if (eventData != 0L){
-    if (debugger == 0L){
+    if (beenCreated == false){
       /* add our specific data to eventData*/
       if (msgData != 0L){
 	parameterItemPtr paramItem = (parameterItemPtr)msgData;
@@ -675,10 +701,10 @@ void XsldbgEvent::handleParameterItem(XsldbgEventData *eventData, void *msgData)
 }
 
 
-void XsldbgEvent::handleCallStackItem(XsldbgEventData *eventData, void *msgData)
+void XsldbgEvent::handleCallStackItem(XsldbgEventData *eventData, const  void *msgData)
 {
   if (eventData != 0L){
-    if (debugger == 0L){
+    if (beenCreated == false){
       /* add our specific data to eventData*/
       if (msgData != 0L){
 	callPointPtr item = (callPointPtr)msgData;
@@ -706,10 +732,10 @@ void XsldbgEvent::handleCallStackItem(XsldbgEventData *eventData, void *msgData)
 }
 
 
-void XsldbgEvent::handleEntityItem(XsldbgEventData *eventData, void *msgData)
+void XsldbgEvent::handleEntityItem(XsldbgEventData *eventData, const  void *msgData)
 {
   if (eventData != 0L){
-    if (debugger == 0L){
+    if (beenCreated == false){
       /* add our specific data to eventData*/
       if (msgData != 0L){
 	QString SystemID, PublicID;
@@ -730,10 +756,10 @@ void XsldbgEvent::handleEntityItem(XsldbgEventData *eventData, void *msgData)
 }
 
 
-void XsldbgEvent::handleResolveItem(XsldbgEventData *eventData, void *msgData)
+void XsldbgEvent::handleResolveItem(XsldbgEventData *eventData, const  void *msgData)
 {
   if (eventData != 0L){
-    if (debugger == 0L){
+    if (beenCreated == false){
       /* add our specific data to eventData*/
       if (msgData != 0L){
 	QString URI = XsldbgDebuggerBase::fromUTF8((const xmlChar*)msgData);
@@ -748,10 +774,10 @@ void XsldbgEvent::handleResolveItem(XsldbgEventData *eventData, void *msgData)
 }
 
 
-void XsldbgEvent::handleIntOptionItem(XsldbgEventData *eventData, void *msgData)
+void XsldbgEvent::handleIntOptionItem(XsldbgEventData *eventData, const  void *msgData)
 {
   if (eventData != 0L){
-    if (debugger == 0L){
+    if (beenCreated == false){
       /* add our specific data to eventData*/
       if (msgData != 0L){
 	parameterItemPtr paramItem = (parameterItemPtr)msgData;
@@ -767,10 +793,10 @@ void XsldbgEvent::handleIntOptionItem(XsldbgEventData *eventData, void *msgData)
 }
 
 
-void XsldbgEvent::handleStringOptionItem(XsldbgEventData *eventData, void *msgData)
+void XsldbgEvent::handleStringOptionItem(XsldbgEventData *eventData, const  void *msgData)
 {
   if (eventData != 0L){
-    if (debugger == 0L){
+    if (beenCreated == false){
       /* add our specific data to eventData*/
       if (msgData != 0L){
 	parameterItemPtr paramItem = (parameterItemPtr)msgData;
@@ -778,7 +804,7 @@ void XsldbgEvent::handleStringOptionItem(XsldbgEventData *eventData, void *msgDa
 	eventData->setText(1, XsldbgDebuggerBase::fromUTF8(paramItem->value));	
       }
     }else{
-      /* emit the event data via debugger*/
+      /* emit the event data via debugger*/      
       emit debugger->stringOptionItem(eventData->getText(0), /* option name*/
 				   eventData->getText(1) /* value*/);
     }

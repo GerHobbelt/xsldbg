@@ -37,11 +37,11 @@ A:link, A:visited, A:active { text-decoration: underline }
 
 --></style>
 <title>
-           xsldbg 2.0.1 documentation
+           xsldbg 2.0.3 documentation
          </title>
 </head>
 <body bgcolor="#8b7765" text="#000000" link="#000000" vlink="#000000"><table class="listbody"><tr><td>
-<h1 class="cmdth">xsldbg 2.0.1</h1>
+<h1 class="cmdth">xsldbg 2.0.3</h1>
 <h2 class="cmdth">Overview</h2>
 <h3>xsldbg help</h3>
 
@@ -115,6 +115,7 @@ the &lt;ENTER&gt; key.
 <tr><td>Variable viewing : <a href="#globals">globals</a>, 
 <a href="#locals">locals</a>, 
 <a href="#cat">cat</a>    </td></tr>
+<tr><td>Variable setting: <a href="#set">set</a>    </td></tr>
 <tr><td>Node selection : <a href="#source">source</a>, 
 <a href="#data">data</a>, <a href="#cd">cd</a>    </td></tr>
 <tr><td>Searching :<a href="#search">search</a>    </td></tr>
@@ -619,6 +620,17 @@ use searchresults.html.</p>
 </tr>
 </table></tr>
 </table>
+<br><br><a name="set"></a><table width="100%" class="cmd">
+<th class="cmdth">Set</th>
+<tr class="cmdsummary"><td>Set the value of a variable</td></tr>
+<tr class="cmdtr"><table class="usage" width="100%">
+<th class="cmdth">Usage</th>
+<tr>
+<td width="10"></td>
+<td><table class="listbody"><tr><td>set &lt;VARIABLE_NAME&gt; &lt;XPATH&gt;    </td></tr></table></td>
+</tr>
+</table></tr>
+</table>
 <br><br><a name="setoption"></a><table width="100%" class="cmd">
 <th class="cmdth">Setoption</th>
 <tr class="cmdsummary"><td>Set an option for execution of stylesheet</td></tr>
@@ -643,6 +655,7 @@ use searchresults.html.</p>
 <tr><td>xinclude&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true do XInclude processing on document intput)</i>    </td></tr>
 <tr><td>preferhtml&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true the prefer html output for search results. : See search command)</i>    </td></tr>
 <tr><td>autoencode&nbsp;&nbsp;&nbsp;&nbsp;<i>(Try to use the encoding from the stylesheet)</i>    </td></tr>
+<tr><td>utf8input&nbsp;&nbsp;&nbsp;&nbsp;<i>(All input from user is in UTF-8.This is normaly used when xsldbg is running as a thread)</i>    </td></tr>
 <tr><td>nonet&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true refuse to fetch DTDs or entities over network)</i>    </td></tr>
 <tr><td>novalid&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true skip the DTD loading phase)</i>    </td></tr>
 <tr><td>repeat&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true run the transformation 20 times)</i>    </td></tr>

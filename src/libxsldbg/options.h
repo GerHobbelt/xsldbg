@@ -65,7 +65,9 @@ extern "C" {
         OPTIONS_CATALOGS,       /* Get the catalogs from SGML_CATALOG_FILES and
                                  * store it in OPTIONS_CATALOG_NAMES */
         OPTIONS_PREFER_HTML,    /* Prefer html output for search results */
-        OPTIONS_AUTOENCODE,     /* try to use the encoding from the stylesheet */
+        OPTIONS_AUTOENCODE,     /* Try to use the encoding from the stylesheet */
+	OPTIONS_UTF8_INPUT,     /* All input from user is in UTF-8.This is normaly 
+				   used when xsldbg is running as a thread*/
         OPTIONS_VERBOSE,        /* Be verbose with messages */
         OPTIONS_OUTPUT_FILE_NAME,       /* what is the output file name */
         OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */
@@ -124,6 +126,8 @@ extern "C" {
                                  * store it in OPTIONS_CATALOG_NAMES */
         OPTIONS_PREFER_HTML,    /* Prefer html output for search results */
         OPTIONS_AUTOENCODE,     /* try to use the encoding from the stylesheet */
+	OPTIONS_UTF8_INPUT,     /* All input from user is in UTF-8.This normaly 
+				   used when xsldbg is running as a thread*/
         OPTIONS_VERBOSE,        /* Be verbose with messages */
         OPTIONS_OUTPUT_FILE_NAME,       /* what is the output file name */
         OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */

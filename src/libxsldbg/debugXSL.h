@@ -832,7 +832,7 @@ extern "C" {
  * xslDbgShellSetVariable:
  * @styleCtxt : Is valid
  * @arg : Is valid must be in the format of 
- *         <NAME> = <VALUE>
+ *         <VARIABLE_NAME> <XPATH>
  * 
  * Change the value of a global or local variable
  *
@@ -847,7 +847,7 @@ extern "C" {
  *
  * @param styleCtxt Is valid
  * @param arg Is valid must be in the format of 
- *         <NAME> = <VALUE>
+ *         <VARIABLE_NAME> <XPATH>
  * 
  * @returns 1 on success,
  *          0 otherwise

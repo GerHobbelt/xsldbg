@@ -84,6 +84,8 @@ the &lt;ENTER&gt; key.
 <link href="cat">cat</link>
 </li>
 
+<li>Variable setting: <link href="set">set</link> </li>
+
 <li>Node selection : <link href="source">source</link>, 
 <link href="data">data</link>, <link href="cd">cd</link>
 </li>
@@ -316,6 +318,10 @@ the &lt;ENTER&gt; key.
 <li>
 <text>autoencode</text>
 <comment>(Try to use the encoding from the stylesheet)</comment>
+</li>
+<li>
+<text>utf8input</text>
+<comment>(All input from user is in UTF-8.This is normaly used when xsldbg is running as a thread)</comment>
 </li>
 <li><text>nonet</text>
 <comment>(If &lt;INTEGER_VALUE&gt; is true refuse to fetch DTDs or entities over network)</comment>
@@ -663,6 +669,13 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <text>locals &lt;QNAME&gt;</text>
 <comment>(Print the value of variable specified)</comment>
 </li>
+</usage>
+</cmd>
+
+<cmd name="set" title="Set">
+<summary>Set the value of a variable</summary>
+<usage>
+<li>set &lt;VARIABLE_NAME&gt; &lt;XPATH&gt;</li>
 </usage>
 </cmd>
 

@@ -24,39 +24,6 @@
 #include "debugXSL.h"
 #include "search.h"
 
-/*
-void setGlobalVarHelper(void **payload, void *data ATTRIBUTE_UNUSED,
-                xmlChar * name ATTRIBUTE_UNUSED);
-
-void setGlobalVarHelper(void **payload, void *data ATTRIBUTE_UNUSED,
-                xmlChar * name ATTRIBUTE_UNUSED)
-{
-   xsltStylesheetPtr style = (xsltStylesheetPtr)payload;
-   int error = 0;
-  searchInfoPtr info = (searchInfoPtr)data;
-  if (style && info && (info->found == 0)){
-    variableSearchDataPtr globalVarInfo = (variableSearchDataPtr)info->data;
-    xsltStackElemPtr variable = style->variables;
-    while (variable){
-      if ((xmlStrCmp(globalVarInfo->name, variable->name) == 0) && 
-	 (variable->nameURI == NULL || (xmlStrCmp(globalVarInfo->name, variable->nameURI) == 0 ))){
-	if (variable->select && variable->comp && variable->comp->inst ){
-                if (xmlSetProp(variable->comp->inst, (xmlChar *) "select",
-			       globalVarInfo->select ) != NULL){
-		  xsltVariableComp(style, variable->comp->inst);
-		  xsltParseGlobalVariable(style, variable->comp->inst);
-		}else
-		  info->error = 1;
-	}
-	info->found = 1;
-	break;
-      }else
-	variable= variable->next;
-    } 
-  }
-
-}
-*/
 
 int
 xslDbgShellSetVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg)
@@ -65,71 +32,67 @@ xslDbgShellSetVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg)
     xmlChar *name, *nameURI, *selectExpr, *opts[3];
 
     if (xmlStrLen(arg) > 1) {
-        if (splitString(arg, 3, opts) == 3) {
-            if (opts[1][0] == '=') {
-                nameURI = NULL;
-                name = xmlSplitQName2(opts[0], &nameURI);
-                if (name == NULL)
-                    name = xmlStrdup(opts[0]);
-                selectExpr = xmlStrdup(opts[2]);
-                if (name && selectExpr) {
-                    xsltStackElemPtr def = NULL;
+      if (splitString(arg, 2, opts) == 2) {
+	nameURI = NULL;
+	name = xmlSplitQName2(opts[0], &nameURI);
+	if (name == NULL)
+	  name = xmlStrdup(opts[0]);
+	selectExpr = xmlStrdup(opts[1]);
+	if (name && selectExpr) {
+	  xsltStackElemPtr def = NULL;
 
-                    if (styleCtxt->varsBase) {
-                        /* try finding varaible in stack */
-                        xsltStackElemPtr item =
-                            styleCtxt->varsTab[styleCtxt->varsBase];
-                        while (item) {
-                            if ((xmlStrCmp(name, item->name) == 0) &&
-                                (item->nameURI == NULL
-                                 || (xmlStrCmp(name, item->nameURI) ==
-                                     0))) {
-                                def = item;
-                                break;
-                            }
-                            item = item->next;
-                        }
-                    }
+	  if (styleCtxt->varsBase) {
+	    /* try finding varaible in stack */
+	    xsltStackElemPtr item =
+	      styleCtxt->varsTab[styleCtxt->varsBase];
+	    while (item) {
+	      if ((xmlStrCmp(name, item->name) == 0) &&
+		  (item->nameURI == NULL
+		   || (xmlStrCmp(name, item->nameURI) ==
+		       0))) {
+		def = item;
+		break;
+	      }
+	      item = item->next;
+	    }
+	  }
 
-                    if (def == NULL)
-                        def = (xsltStackElemPtr)
-                            xmlHashLookup2(styleCtxt->globalVars,
-                                           name, nameURI);
-                    if (def != NULL) {
-                        if (def->select) {
-                            /* we've found the variable so change it */
-                            xmlFree(def->select);
-                            def->select = selectExpr;
-                            if (def->comp->comp)
-                                xmlXPathFreeCompExpr(def->comp->comp);
-                            def->comp->comp = xmlXPathCompile(def->select);
-                            if (def->value)
-                                xmlXPathFreeObject(def->value);
-                            def->value = xmlXPathNewString(def->select);
-                            result = 1;
-                        } else {
-                            xmlFree(selectExpr);
-                            xsltGenericError(xsltGenericErrorContext,
-                                             "Can't change a variable " \
-					     "that doesn't use the select attribute\n");
-                        }
-                    } else
-                        xsltGenericError(xsltGenericErrorContext,
-                                         "Variable %s not found\n", name);
-                    xmlFree(name);
-                } else
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "Internal error set failed\n");
-            } else {
-                showUsage = 1;
-            }
-        } else {
-            showUsage = 1;
-        }
+	  if (def == NULL)
+	    def = (xsltStackElemPtr)
+	      xmlHashLookup2(styleCtxt->globalVars,
+			     name, nameURI);
+	  if (def != NULL) {
+	    if (def->select) {
+	      /* we've found the variable so change it */
+	      xmlFree(def->select);
+	      def->select = selectExpr;
+	      if (def->comp->comp)
+		xmlXPathFreeCompExpr(def->comp->comp);
+	      def->comp->comp = xmlXPathCompile(def->select);
+	      if (def->value)
+		xmlXPathFreeObject(def->value);
+	      def->value = xmlXPathEval(def->select, styleCtxt->xpathCtxt);
+	      result = 1;
+	    } else {
+	      xmlFree(selectExpr);
+	      xsltGenericError(xsltGenericErrorContext,
+			       "Error: Can't change a variable " \
+			       "that doesn't use the select attribute\n");
+	    }
+	  } else
+	    xsltGenericError(xsltGenericErrorContext,
+			     "Error: Variable %s not found\n", name);
+	  xmlFree(name);
+	} else
+	  xsltGenericError(xsltGenericErrorContext,
+			   "Error: Internal error set failed\n");
+      } else {
+	showUsage = 1;
+      }
 
-        if (showUsage == 1)
-            xsltGenericError(xsltGenericErrorContext,
-                             "Invalid format, expected\n set <NAME> = <VALUE>\n");
+      if (showUsage == 1)
+	xsltGenericError(xsltGenericErrorContext,
+			 "Error: Invalid format, expected\n set <VARIABLE_NAME> <XPATH>\n");
     }
     return result;
 }

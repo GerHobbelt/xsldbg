@@ -330,16 +330,6 @@ void xslDbgSleep(long delay);
 int xslDbgWalkContinue(void);
 
 
-/**
- * lookupName:
- * @name : is valid
- * @matchList : a NULL terminated list of names to use as lookup table
- *
- * Returns The id of name found in @matchList
- *        0 otherwise
-*/
-int lookupName(xmlChar * name, xmlChar ** matchList);
-
 
 /**
  * addBreakPointNode:
@@ -838,30 +828,6 @@ xslDbgWalkContinue(void)
 
 
 /**
- * lookupName:
- * @name : is valid
- * @matchList : a NULL terminated list of names to use as lookup table
- *
- * Returns The id of name found in @matchList
- *        0 otherwise
-*/
-int
-lookupName(xmlChar * name, xmlChar ** matchList)
-{
-    int result = -1, nameIndex;
-
-    for (nameIndex = 0; matchList[nameIndex]; nameIndex++) {
-        if (!xmlStrCmp(name, matchList[nameIndex])) {
-            result = nameIndex;
-            break;
-        }
-    }
-
-    return result;
-}
-
-
-/**
  * addBreakPointNode:
  * @payload : valid breakPointPtr
  * @data : not used
@@ -1294,8 +1260,8 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
              * Get a new command line
              */
             cmdline = (xmlChar *) ctxt->input((char *) prompt);
-            if (cmdline) {
-                /* we get encoded characters from the command line
+            if (cmdline && (optionsGetIntOption(OPTIONS_UTF8_INPUT) == 0)) {
+                /* we are getting encoded characters from the command line
                  * so decode them into UTF-8 */
                 xmlChar *tempResult = filesDecode(cmdline);
 
@@ -1649,8 +1615,17 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
             case DEBUG_LOCALS_CMD:
                 if (loadedFiles == 0)
-                    cmdResult = xslDbgShellPrintVariable(styleCtxt, arg,
+		  /* if gdb compatability mode is enable print the globals then 
+		     the locals */
+		  if (optionsGetIntOption(OPTIONS_GDB) == 1){
+		    cmdResult = xslDbgShellPrintVariable(styleCtxt, arg,
+                                                         DEBUG_GLOBAL_VAR);
+		    if (cmdResult == 1)
+		      cmdResult = xslDbgShellPrintVariable(styleCtxt, arg,
                                                          DEBUG_LOCAL_VAR);
+		  }else
+                    cmdResult = xslDbgShellPrintVariable(styleCtxt, arg,
+							  DEBUG_LOCAL_VAR);
                 else {
                     xsltGenericError(xsltGenericErrorContext,
                                      "Error: Need to use run command first\n");

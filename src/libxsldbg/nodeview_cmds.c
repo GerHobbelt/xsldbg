@@ -30,6 +30,7 @@
 #include "xsldbgmsg.h"
 #include "xsldbgthread.h" /* for getThreadStatus */
 #include "files.h"
+#include "options.h"
 
 
 /* -----------------------------------------
@@ -267,7 +268,8 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                                 if (!file) {
                                     xsltGenericError
                                         (xsltGenericErrorContext,
-                                         "Error: Unable to save temporary results to %s\n",
+                                         "Error: Unable to save temporary" \
+					 "results to %s\n",
                                          fileName);
                                     break;
                                 } else {
@@ -289,7 +291,7 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                                     if (i > 0)
                                         xsltGenericError
                                             (xsltGenericErrorContext,
-                                             " -------\n");
+                                             "-------\n", arg);
                                     xmlShellCat(ctxt, NULL,
                                                 list->nodesetval->
                                                 nodeTab[indx], NULL);
@@ -298,7 +300,8 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                             }
                         } else {
                             xsltGenericError(xmlGenericErrorContext,
-                                             "Error: xpath %s results an in empty set\n",
+                                             "Error: xpath %s results an " \
+					     "in empty set\n",
                                              arg);
                         }
                         result = 1;
@@ -307,21 +310,21 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
 
                 case XPATH_BOOLEAN:
                     xsltGenericError(xsltGenericErrorContext,
-                                     "%s is a Boolean:%s\n", arg,
-                                     xmlBoolToText(list->boolval));
+                                     "%s\n", 
+				     xmlBoolToText(list->boolval));
                     result = 1;
                     break;
+
                 case XPATH_NUMBER:
                     xsltGenericError(xsltGenericErrorContext,
-                                     "%s is a number:%0g\n", arg,
-                                     list->floatval);
+                                     "%0g\n", list->floatval);
                     result = 1;
                     break;
+
                 case XPATH_STRING:
 		  if (list->stringval) {
 		    xsltGenericError(xsltGenericErrorContext,
-				     "%s is a string:%s\n",
-				     arg, list->stringval);
+				     "%s\n", list->stringval);
 		    result = 1;
 		  }
 		  break;
@@ -358,7 +361,7 @@ xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
     if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
         notifyListQueue(payload);
     } else if (name) {
-      xsltGenericError(xsltGenericErrorContext, "Global %s\n",
+      xsltGenericError(xsltGenericErrorContext, " Global %s\n",
 		       name);
             varCount++;
     }
@@ -407,13 +410,23 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
                     xmlHashScan(styleCtxt->globalVars,
                                 (xmlHashScanner)xslDbgShellPrintNames, NULL);
                 result = 1;
+		/* ensure that the locals follow imediately after the 
+		   globals when in gdb mode */
+		if (optionsGetIntOption(OPTIONS_GDB) == 0)
+		  xsltGenericError(xsltGenericErrorContext, "\n");
             } else {
-                if (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)
+	      if (getThreadStatus() != XSLDBG_MSG_THREAD_RUN){
                     /* Don't show this message when running as a thread as it 
                      * is annoying */
                     xsltGenericError(xsltGenericErrorContext,
                                      "Error: Libxslt has not initialize variables yet"
                                      " try stepping to a template");
+	      }else{
+		/* send an empty list */
+		notifyListStart(XSLDBG_MSG_GLOBALVAR_CHANGED);
+		notifyListSend();
+		result = 1;
+	      }
             }
         } else {
             /* list local variables */
@@ -431,22 +444,28 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
                     while (item) {
 		      if (item->name){
 			xsltGenericError(xsltGenericErrorContext,
-					 "Local %s \n", item->name);
+					 " Local %s \n", item->name);
 		      }
                         item = item->next;
                     }
                 }
                 result = 1;
+		xsltGenericError(xsltGenericErrorContext, "\n");
             } else {
-                if (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)
+	      if (getThreadStatus() != XSLDBG_MSG_THREAD_RUN){
                     /* Don't show this message when running as a thread as it 
                      * is annoying */
                     xsltGenericError(xsltGenericErrorContext,
                                      "Error: Libxslt has not initialize variables yet"
                                      " try stepping past the xsl:param elements in template");
+	      }else{
+		/* send an empty list */
+		notifyListStart(XSLDBG_MSG_LOCALVAR_CHANGED);
+		notifyListSend();
+		result = 1;
+	      }
             }
         }
-        xsltGenericError(xsltGenericErrorContext, "\n");
     } else {
         /* Display the value of variable */
         if (arg[0] == '$')

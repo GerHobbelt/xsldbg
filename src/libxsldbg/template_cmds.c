@@ -259,7 +259,7 @@ xslDbgShellPrintStylesheetsHelper(void *payload,
 
     if (style && style->doc && style->doc->URL) {
         if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN)
-            notifyXsldbgApp(XSLDBG_MSG_SOURCE_CHANGED, payload);
+	  notifyListQueue(payload);
         else
             xsltGenericError(xsltGenericErrorContext,
                              " Stylesheet %s\n", style->doc->URL);
@@ -286,7 +286,7 @@ xslDbgShellPrintStylesheetsHelper2(void *payload,
 
     if (node && node->doc && node->doc->URL) {
         if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN)
-            notifyXsldbgApp(XSLDBG_MSG_INCLUDED_SOURCE_CHANGED, payload);
+	  notifyListQueue(payload);
         else
             xsltGenericError(xsltGenericErrorContext,
                              " Stylesheet %s\n", node->doc->URL);
@@ -309,11 +309,14 @@ xslDbgShellPrintStyleSheets(xmlChar * arg)
 {
     printCounter = 0;
     if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
-        notifyXsldbgApp(XSLDBG_MSG_SOURCE_CHANGED, NULL);
+        notifyListStart(XSLDBG_MSG_SOURCE_CHANGED);
         walkStylesheets((xmlHashScanner) xslDbgShellPrintStylesheetsHelper,
                         NULL, filesGetStylesheet());
+        notifyListSend();
+	notifyListStart(XSLDBG_MSG_INCLUDED_SOURCE_CHANGED);
         walkIncludes((xmlHashScanner) xslDbgShellPrintStylesheetsHelper2,
                      NULL, filesGetStylesheet());
+	notifyListSend();
     } else {
         walkStylesheets((xmlHashScanner) xslDbgShellPrintStylesheetsHelper,
                         NULL, filesGetStylesheet());

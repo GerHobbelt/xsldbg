@@ -118,6 +118,7 @@ SOURCES = \
 	files_riscos.c		\
 	help_riscos.c	
 
+libxsldbg_la_LDFLAGS= -version-info @XSLDBG_VERSION_INFO@
 
 
 EXTRA_DIST=\
