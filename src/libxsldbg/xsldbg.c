@@ -1264,8 +1264,11 @@ int
 xsldbgInit()
 {
     int result = 0;
+    int xmlVer = 0;
 
     if (!initialized) {
+        sscanf(xmlParserVersion, "%d", &xmlVer);
+        xsldbgHasLineNumberFix = (xmlVer >= 20508);
         if (!debugInit()) {
             xsltGenericError(xsltGenericErrorContext,
                              "Init of debug module failed\n");
@@ -1301,10 +1304,10 @@ xsldbgInit()
 	 */
 	xmlDefaultSAXHandlerInit();
 	xmlDefaultSAXHandler.cdataBlock = NULL;
-#if (LIBXML_VERSION >= 20508)
+if (xsldbgHasLineNumberFix){
 	oldGetEntity = xmlDefaultSAXHandler.getEntity;
 	xmlDefaultSAXHandler.getEntity = xsldbgGetEntity;
-#endif
+}
 
         if (getThreadStatus() != XSLDBG_MSG_THREAD_NOTUSED) {
             initialized = 1;

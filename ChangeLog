@@ -1,3 +1,7 @@
+Keith Isdale 26 July 2003 <k_isdale@tpg.com.au>
+ Detect the lixbml version at run time rather than compile time, so that can use different
+    XML entity handling code to suit the installed libxml
+
 Keith Isdale 19 July 2003 <k_isdale@tpg.com.au>
   Vesion 3.1.7
   Remove old method of finding line numbers from XML documents as it causes conflicts  

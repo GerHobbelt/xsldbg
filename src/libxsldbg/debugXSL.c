@@ -77,6 +77,7 @@ extern FILE *terminalIO;
 
 int xsldbgStop = 0;
 int xsldbgValidateBreakpoints = BREAKPOINTS_NEED_VALIDATION;
+int xsldbgHasLineNumberFix;  
 
 /* valid commands of xslDbgShell */
 const char *commandNames[] = {
