@@ -1,5 +1,6 @@
 TEMPLATE	= app
 CONFIG	+= warn_on release console thread
+CONFIG -= qt
 
 
 unix:INCLUDEPATH += $(LIBXSLT_PREFIX)/include
