@@ -1,4 +1,9 @@
 Keith Isdale 18 Dec 2001 <k_isdale@tpg.com.au>
+   Fixed configure.in to enable/disable xsldbg helpsystem
+   Created email about problems with xmlcatalog for WIN32
+   Small updates to docs/en/website/win32_install.html	
+	
+Keith Isdale 18 Dec 2001 <k_isdale@tpg.com.au>
   Version 0.9.5
   First try at a win32 build, does not use dll's because not 
 	all exports required are in libxslt.def and libxmldef.src

@@ -1,7 +1,7 @@
 
 AC_INIT(src/xsldbg.c)
 
-timestamp='2001-12-18'
+timestamp='2001-12-19'
 
 
 XSLDBG_MAJOR_VERSION=0
@@ -206,15 +206,16 @@ dnl
 dnl Do you want to use the help system
 dnl
 
-AC_ARG_ENABLE(helpsystem, [  --enable-helpsystem     Enable the xsldbg help system (on)])
-if test "x${enableval}" = "xno" ; then
+AC_ARG_ENABLE(helpsystem, [  --enable-helpsystem     Enable the xsldbg help system (on)],
+[if test "x${enableval}" = "xno" ; then
     AC_MSG_RESULT(Disabling the xsldbg help system)
     WITH_DEBUG_HELP=0
-else
-    AC_MSG_RESULT(Enabling the xsldbg help system)
+fi]
+,
+[
+   AC_MSG_RESULT(Enabling the xsldbg help system)
     AC_DEFINE(WITH_DEBUG_HELP)
-    WITH_DEBUG_HELP=1
-fi
+    WITH_DEBUG_HELP=1])
 
 
 dnl 
