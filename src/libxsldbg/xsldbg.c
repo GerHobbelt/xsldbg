@@ -863,6 +863,10 @@ xsldbgMain(int argc, char **argv)
                 }
             } else {
                 if (xslDebugStatus != DEBUG_QUIT) {
+		     /*walk through breakpoints and print warnings for
+		       those that are invalid */
+		     walkBreakPoints((xmlHashScanner)
+			    xslDbgShellValidateBreakPoint, NULL);
                     xsltProcess(doc, cur);
                     result = 1;
                 }
@@ -1071,7 +1075,7 @@ xsldbgLoadXmlData(void)
                            optionsGetStringOption(OPTIONS_DATA_FILE_NAME));
     if (doc == NULL) {
         xsltGenericError(xsltGenericErrorContext,
-                         "unable to parse %s\n",
+                         "Error: Unable to parse %s\n",
                          optionsGetStringOption(OPTIONS_DATA_FILE_NAME));
         if (!optionsGetIntOption(OPTIONS_SHELL)) {
             xsltGenericError(xsltGenericErrorContext,

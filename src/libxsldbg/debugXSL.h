@@ -307,6 +307,31 @@ extern "C" {
 
 
 
+#ifdef USE_GNOME_DOCS
+
+/**
+ * xslDbgShellValidateBreakPoint:
+ * @payload: A valid xslBreakPointPtr
+ * @data: Not used
+ * @name: Not used
+ *
+ * Print an warning if a breakpoint is invalid
+*/
+#else
+#ifdef USE_KDE_DOCS
+
+/**
+ * Print an warning if a breakpoint is invalid
+ *
+ * @param payload Is valid xslBreakPointPtr
+ * @param data Not used
+ * @param name Not used
+*/
+#endif
+#endif
+    void xslDbgShellValidateBreakPoint(void *payload, void *data,
+                                    xmlChar * name);
+
 
 /* -----------------------------------------
    Template related commands

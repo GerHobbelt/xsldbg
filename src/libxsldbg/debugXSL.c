@@ -1646,14 +1646,11 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
                     if (expandedName) {
                         xsltGenericError(xsltGenericErrorContext,
-                                         "Load of source deferred use run command\n"
-                                         "Removing all breakpoints\n");
+                                         "Load of source deferred use run command\n");
 
                         optionsSetStringOption(OPTIONS_SOURCE_FILE_NAME,
                                                expandedName);
                         loadedFiles = 1;
-                        /* clear all break points , what else makes sense? */
-                        breakPointEmpty();
                         xmlFree(expandedName);
                         cmdResult = 1;
                     } else {
@@ -1686,14 +1683,11 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
                     if (expandedName) {
                         xsltGenericError(xsltGenericErrorContext,
-                                         "Load of data file deferred use run command\n"
-                                         "Removing all breakpoints\n");
+                                         "Load of data file deferred use run command\n");
 
                         optionsSetStringOption(OPTIONS_DATA_FILE_NAME,
                                                expandedName);
                         loadedFiles = 1;
-                        /* clear all break points , what else makes sense? */
-                        breakPointEmpty();
                         xmlFree(expandedName);
                         cmdResult = 1;
                     } else {

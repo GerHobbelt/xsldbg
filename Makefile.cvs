@@ -1,7 +1,7 @@
 default: all
 
 all:
-	rm -f config.guess config.sub ltmain.sh
+	rm -f aclocal.m4 config.guess config.sub ltmain.sh
 	libtoolize --automake
 	aclocal
 	autoheader

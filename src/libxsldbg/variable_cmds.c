@@ -46,6 +46,11 @@ xslDbgShellSetVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg)
     if (xmlStrLen(arg) > 1) {
         if (splitString(arg, 2, opts) == 2) {
             nameURI = NULL;
+	    /* ignore any "$" prefix as user probably didn't mean that 
+	       "$" is part of variable name*/
+	    if (*opts[0] =='$'){
+	      opts[0] = opts[0] + 1;
+	    }
             name = xmlSplitQName2(opts[0], &nameURI);
             if (name == NULL)
                 name = xmlStrdup(opts[0]);

@@ -60,6 +60,19 @@ xslDbgShellAddParam(xmlChar * arg)
         return result;
     }
     if ((xmlStrLen(arg) > 1) && splitString(arg, 2, opts) == 2) {
+        int count;
+	for (count = 0; count < arrayListCount(optionsGetParamItemList()); count++){
+	  paramItem = arrayListGet(optionsGetParamItemList(), count);
+	  if (paramItem != NULL){
+	    if (strcmp(opts[0], paramItem->name) == 0){
+	      // parameter exist just update its value
+	      if (paramItem->value)
+		  xmlFree(paramItem->value);
+	      paramItem->value = xmlStrdup(opts[1]); 
+	      return 1;
+	    }
+	  }
+	}
         paramItem = optionsParamItemNew(opts[0], opts[1]);
         result = arrayListAdd(optionsGetParamItemList(), paramItem);
     } else {

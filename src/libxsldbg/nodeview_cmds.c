@@ -37,6 +37,7 @@
    Private function declarations for nodeview_cmds.c
  -------------------------------------------*/
 static xmlChar buffer[500];
+static int printVariableValue = 0;
 
 /*
  * xslDbgShellPrintNames:
@@ -57,6 +58,19 @@ void *xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
  * Send the results of cat command in @node to @file
  */
 void xslShellCat(xmlNodePtr node, FILE * file);
+
+
+/**
+ * printXPathObject:
+ * @item :  XPath object to print
+ * @xPath : The XPath used to find item
+ *
+ * Print an XPath object
+ *
+ * Returns 1 on success,
+ *         0 otherwise
+ */
+static int printXPathObject(xmlXPathObjectPtr item, xmlChar* xPath);
 
 /* ------------------------------------- 
     End private functions
@@ -174,55 +188,26 @@ xslShellCat(xmlNodePtr node, FILE * file)
 }
 
 
-/** 
- * xslDbgShellCat:
- * @styleCtxt: the current stylesheet context
- * @ctxt: The current shell context
- * @arg: The xpath to print (in UTF-8)
+/**
+ * printXPathObject:
+ * @item :  XPath object to print
+ * @xPath : The XPath used to find item
  *
- * Print the result of an xpath expression. This can include variables
- *        if styleCtxt is not NULL
+ * Print an XPath object
  *
  * Returns 1 on success,
  *         0 otherwise
  */
 
-int
-xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
-               xmlChar * arg)
-{
-    xmlXPathObjectPtr list;
-    int result = 0;
-
-    if (!styleCtxt || !ctxt || !ctxt->node) {
-        xsltGenericError(xsltGenericErrorContext,
-                         "Error: Unable to cat/print expression, No stylesheet properly loaded\n");
-        return result;
-    }
-
-    if ((arg == NULL) || (xmlStrLen(arg) == 0))
-        arg = (xmlChar *) ".";
-
-    ctxt->pctxt->node = ctxt->node;
-    if (!styleCtxt) {
-        list = xmlXPathEval((xmlChar *) arg, ctxt->pctxt);
-    } else {
-        xmlNodePtr savenode = styleCtxt->xpathCtxt->node;
-
-        ctxt->pctxt->node = ctxt->node;
-        styleCtxt->xpathCtxt->node = ctxt->node;
-        if (!xmlXPathNsLookup(styleCtxt->xpathCtxt, (xmlChar *) "xsl"))
-            xmlXPathRegisterNs(styleCtxt->xpathCtxt, (xmlChar *) "xsl",
-                               XSLT_NAMESPACE);
-        list = xmlXPathEval((xmlChar *) arg, styleCtxt->xpathCtxt);
-        styleCtxt->xpathCtxt->node = savenode;
-    }
-    if (list != NULL) {
-        switch (list->type) {
-            case XPATH_NODESET:{
+static int
+printXPathObject(xmlXPathObjectPtr item, xmlChar* xPath){
+  int result = 0;
+  if (item){ 
+    switch (item->type) {
+       case XPATH_NODESET:{
                     int indx;
 
-                    if (list->nodesetval) {
+                    if (item->nodesetval) {
                         const char *fileName = filesTempFileName(0);
                         FILE *file;
 
@@ -236,10 +221,10 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                                  "results to %s\n", fileName);
                             break;
                         } else {
-                            fprintf(file, "= %s\n", arg);
+                            fprintf(file, "= %s\n", xPath);
                             for (indx = 0;
-                                 indx < list->nodesetval->nodeNr; indx++) {
-                                xslShellCat(list->nodesetval->
+                                 indx < item->nodesetval->nodeNr; indx++) {
+                                xslShellCat(item->nodesetval->
                                             nodeTab[indx], file);
                             }
 
@@ -285,36 +270,86 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                     } else {
                         xsltGenericError(xmlGenericErrorContext,
                                          "Error: xpath %s results an "
-                                         "in empty set\n", arg);
+                                         "in empty set\n", xPath);
                     }
                     result = 1;
                     break;
-                }
+               }
 
             case XPATH_BOOLEAN:
                 xsltGenericError(xsltGenericErrorContext,
-                                 "= %s\n%s\n", arg,
-                                 xmlBoolToText(list->boolval));
+                                 "= %s\n%s\n", xPath,
+                                 xmlBoolToText(item->boolval));
                 result = 1;
                 break;
 
             case XPATH_NUMBER:
                 xsltGenericError(xsltGenericErrorContext,
-                                 "= %s\n%0g\n", arg, list->floatval);
+                                 "= %s\n%0g\n", xPath, item->floatval);
                 result = 1;
                 break;
 
             case XPATH_STRING:
-                if (list->stringval) {
+                if (item->stringval) {
                     xsltGenericError(xsltGenericErrorContext,
-                                     "= %s\n%s\n", arg, list->stringval);
+                                     "= %s\n%s\n", xPath, item->stringval);
                     result = 1;
                 }
                 break;
 
             default:
-                xmlShellPrintXPathError(list->type, (char *) arg);
-        }
+                xmlShellPrintXPathError(item->type, (char *) xPath);
+            }
+  }
+  return result;
+}
+
+
+/** 
+ * xslDbgShellCat:
+ * @styleCtxt: the current stylesheet context
+ * @ctxt: The current shell context
+ * @arg: The xpath to print (in UTF-8)
+ *
+ * Print the result of an xpath expression. This can include variables
+ *        if styleCtxt is not NULL
+ *
+ * Returns 1 on success,
+ *         0 otherwise
+ */
+
+int
+xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
+               xmlChar * arg)
+{
+    xmlXPathObjectPtr list;
+    int result = 0;
+
+    if (!styleCtxt || !ctxt || !ctxt->node) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error: Unable to cat/print expression, No stylesheet properly loaded\n");
+        return result;
+    }
+
+    if ((arg == NULL) || (xmlStrLen(arg) == 0))
+        arg = (xmlChar *) ".";
+
+    ctxt->pctxt->node = ctxt->node;
+    if (!styleCtxt) {
+        list = xmlXPathEval((xmlChar *) arg, ctxt->pctxt);
+    } else {
+        xmlNodePtr savenode = styleCtxt->xpathCtxt->node;
+
+        ctxt->pctxt->node = ctxt->node;
+        styleCtxt->xpathCtxt->node = ctxt->node;
+        if (!xmlXPathNsLookup(styleCtxt->xpathCtxt, (xmlChar *) "xsl"))
+            xmlXPathRegisterNs(styleCtxt->xpathCtxt, (xmlChar *) "xsl",
+                               XSLT_NAMESPACE);
+        list = xmlXPathEval((xmlChar *) arg, styleCtxt->xpathCtxt);
+        styleCtxt->xpathCtxt->node = savenode;
+    }
+    if (list != NULL) {
+        result = printXPathObject(list, arg);
         xmlXPathFreeObject(list);
     } else {
         xsltGenericError(xsltGenericErrorContext,
@@ -331,7 +366,7 @@ static int varCount;
  * xslDbgShellPrintNames:
  * Print a name of variable found by scanning variable table
  * It is used by print_variable function.
- * @payload : not used
+ * @payload : Global variable of type xsltStackElemPtr
  * @data : not used
  * @name : the variable name 
  */
@@ -341,8 +376,31 @@ xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
 {
     if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
         notifyListQueue(payload);
-    } else if (name) {
-        xsltGenericError(xsltGenericErrorContext, " Global %s\n", name);
+    } else if (payload && name) {
+        xmlChar * fullQualifiedName = buffer;
+        xsltStackElemPtr item = (xsltStackElemPtr)payload;
+	if (item->nameURI == NULL){
+	    snprintf(fullQualifiedName, sizeof(buffer), "$%s", item->name);
+	}else{
+	    snprintf(fullQualifiedName, sizeof(buffer), "$%s:%s",
+		     item->nameURI, item->name);
+	}
+        if (printVariableValue == 0){
+	    xsltGenericError(xsltGenericErrorContext, " Global %s\n", 
+			     fullQualifiedName);
+        }else{
+	      if (item->computed == 1){
+	         xsltGenericError(xsltGenericErrorContext, " Global ");
+		 printXPathObject(item->value, fullQualifiedName);
+	         xsltGenericError(xsltGenericErrorContext, "\032\032");
+	      }else if (item->tree){
+	         xsltGenericError(xsltGenericErrorContext, " Global = %s\n", 
+				  fullQualifiedName);
+		 xslShellCat(item->tree, stderr);
+	         xsltGenericError(xsltGenericErrorContext, "\032\032");
+	      }
+	    xsltGenericError(xsltGenericErrorContext, "\n");
+        }
         varCount++;
     }
     return NULL;
@@ -366,6 +424,8 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
                          VariableTypeEnum type)
 {
     int result = 0;
+    /* command argument to include both name and its value */
+    static const char * FULLNAME_STR = "-f";
 
     varCount = 0;
     if (!styleCtxt) {
@@ -381,6 +441,14 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
         return result;
     }
 
+    /* Do we include the name as well as its value */
+    if (strncasecmp(arg, FULLNAME_STR, strlen(FULLNAME_STR)) == 0){
+      printVariableValue = 1;
+      arg = arg + strlen(FULLNAME_STR);
+      while (isspace(*arg)){
+	arg++;
+      }
+    }
     if (arg[0] == 0) {
         /* list variables of type requested */
         if (type == DEBUG_GLOBAL_VAR) {
@@ -429,11 +497,34 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
                     }
                     notifyListSend();
                 } else {
-                    while (item) {
-                        if (item->name) {
-                            xsltGenericError(xsltGenericErrorContext,
-                                             " Local %s \n", item->name);
-                        }
+		    xmlChar * fullQualifiedName = buffer;
+                    while (item) {		      
+                        if (item->name) {			     
+			    if (item->nameURI == NULL){
+				snprintf(fullQualifiedName, sizeof(buffer), "$%s",
+					 item->name);
+			    }else{
+
+				snprintf(fullQualifiedName, sizeof(buffer), "$%s:%s",
+					 item->nameURI, item->name);
+			    }
+			    if (printVariableValue == 0){
+				xsltGenericError(xsltGenericErrorContext, " Local %s", 
+					       fullQualifiedName);
+			    }else{
+			        if (item->computed == 1){
+			           xsltGenericError(xsltGenericErrorContext, " Local ");
+			           printXPathObject(item->value, fullQualifiedName);
+			           xsltGenericError(xsltGenericErrorContext, "\032\032");
+			        }else if (item->tree){
+			           xsltGenericError(xsltGenericErrorContext, " Local = %s\n", 
+					       fullQualifiedName);
+			           xslShellCat(item->tree, stderr);
+			           xsltGenericError(xsltGenericErrorContext, "\032\032");
+			        }
+			    }
+			}
+			xsltGenericError(xsltGenericErrorContext, "\n");
                         item = item->next;
                     }
                 }
@@ -457,19 +548,18 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
     } else {
         /* Display the value of variable */
         if (arg[0] == '$') {
-            xsltGenericError(xsltGenericErrorContext, "= %s\n", arg);
-            xmlShellPrintXPathResult(xmlXPathEval
-                                     (arg, styleCtxt->xpathCtxt));
+            printXPathObject(xmlXPathEval(arg, styleCtxt->xpathCtxt), arg);
+	    xsltGenericError(xsltGenericErrorContext, "\032\032\n");
         } else {
-            xmlChar tempbuff[100];
-
-            xmlStrCpy(tempbuff, "$");
-            xmlStrCat(tempbuff, arg);
-            xsltGenericError(xsltGenericErrorContext, "= %s\n", tempbuff);
-            xmlShellPrintXPathResult(xmlXPathEval(tempbuff,
-                                                  styleCtxt->xpathCtxt));
+            xmlStrCpy(buffer, "$");
+            xmlStrCat(buffer, arg);
+	    printXPathObject(xmlXPathEval((xmlChar*)buffer,styleCtxt->xpathCtxt),
+			     (xmlChar*)buffer);
+	    xsltGenericError(xsltGenericErrorContext, "\032\032\n");
         }
-        result = 1;
+
     }
+
+    printVariableValue = 0;
     return result;
 }

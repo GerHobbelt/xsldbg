@@ -1,10 +1,126 @@
 - add the ability to list documents created by xsl:document instruction
 - improve the appearance of documentation and ensure it is up to date
-- fix profiling output when running xsldbg as a thread 
+- fix profiling output when running xsldbg as a thread
 
-Copies of emails about TODO's
+Copies of emails about TODO's/Bugs
 
 ----------------------------
+
+Hi Keith,
+
+ I added a page t omy web site :
+ http://elbobby.free.fr/xslt/xsldbg-en.html in english and
+ http://elbobby.free.fr/xslt/xsldbg.html in french.
+
+ the xsldbg package has a little problem since in the xsldbg shell, it search
+ html file in /opt/kde3 and not in /usr/docs. Try to correct that ASAP.
+
+ Regard.
+
+ Robert Jacolin
+-------------------------
+
+Hi Robert,
+
+ Thanks I'll look at the problem mentioned (docs not copying to $(KDEDIR), though I'm not sure which
+ file(s) are the problem in what directory. I've intended that the docs
+ ge installed using either the macro variable $(HTML_DIR) or $(KDEDIR)
+ see
+ http://cvs.sourceforge.net/cgi-
+ bin/viewcvs.cgi/xsldbg/xsldbg/configure.in?rev=1.52&content-
+ type=text/vnd.viewcvs-markup
+
+ and
+
+ http://cvs.sourceforge.net/cgi-
+ bin/viewcvs.cgi/xsldbg/xsldbg/docs/en/KDE/Makefile.am?rev=1.12&content-
+ type=text/vnd.viewcvs-markup
+
+ A screen dump of when the error occured would be appreciated and help
+ clarify where things are going wrong.
+
+ I'm puzzled by the comment on your site about xsldbg
+
+ >2. xsldbg
+ >xsldbg is a tool in command line. You need to install libxslt1,
+ >libxml2 (because of libxslt1) and liqt3 even if it don't use it (use --
+ >nodeps param). Be carreful help, while they are installed in /usr/doc,
+ >is not usable from the xsldbg shell. xsldbg accept the
+
+ This should not be the case. Only if you want to build qxsldbg do you
+ need qt2/qt3. If you don't specify --enable-xsldbgthread when
+ configuring xsldbg, there is/should not be a requirement to have
+ qt2/qt3.
+
+ Also
+ >My opinion about this tools: plenty of promises. Nevertheless, I don't
+ >understand why all informations (for the configuration of the
+ >application and for debug) are brought togheter in one dialog box
+ >which is more confuse. But quiclky I get used and I don't be a GUI
+ >lover tought
+
+ I agree this needs rework but I'm not sure how better to present this
+ information. The only other way I can think of is use lots of little
+ windows which I find annoying. (ie one window for each). I guess I
+ could have a separate window to contain xsldbg/libxslt configuration.
+
+ And
+ >An other regret, the breakpoints are not displayed in the window and
+ >it's the text cursor which show the line where the processor is
+ >stopped, the line is not in an other color, it's not very visual.
+
+ This is resolved in qxsldbg-0.6 which is a cvs only release (very alpha
+ software). It is hoped to have a beta version of qxsldbg which has this
+ feature some time in August (after my final exams)
+
+ And
+ >Finally, I didn't understand quickly why it refuses to display my xslt
+ >sheet before to understand which it wanted too the data file before to
+ >begin whatever.
+
+ Yes this could to be fixed with an error mesage displayed in a popup
+ window. There would have been an error mesaged printed to the data
+ inspector's text area (this text area captures all of the text output
+ from xsldbg). This is because libxslt can't run without a data file and
+ xsldbg interupts the operation of libxslt. Try the same thing with
+ xsldbg and you'll see what I mean.
+
+ I'll hold off updating my site with the links mention until I'm sure
+ issues that you are aware of, that can be quickly fixed, of have been
+ fixed. It is my intention to make a new cvs release for xsldbg to fix
+ the bugs indentified.
+
+ Regards,
+
+ Keith Isdale
+
+ --
+ Keith Isdale
+ xsldbg : Helping to understand stylesheets |
+ http://xsldbg.sourceforge.net
+ email: k_isdale@tpg.com.au
+
+ ----- Original Message -----
+ From: Robert Jacolin <robert.jacolin@anyware-tech.com>
+ Date: Thursday, May 2, 2002 10:02 pm
+ Subject: Re: xslDbg
+
+ > Hi Keith,
+ >
+ > I added a page t omy web site :
+ > http://elbobby.free.fr/xslt/xsldbg-en.html in english and
+ > http://elbobby.free.fr/xslt/xsldbg.html in french.
+ >
+ > the xsldbg package has a little problem since in the xsldbg shell,
+ > it search
+ > html file in /opt/kde3 and not in /usr/docs. Try to correct that ASAP.
+ >
+ > Regard.
+ >
+ > Robert Jacolin
+ >
+
+ ---------------------------
 
 
 On Mon, Oct 29, 2001 at 04:42:52PM +1000, Keith Isdale wrote:

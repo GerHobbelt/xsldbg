@@ -1,4 +1,16 @@
-Keith Isdale 21st April 2002 <k_isdale@tpg.au>
+Keith Isdale 7th July 2002 <k_isdale@tpg.com.au>
+	Version 2.2.2
+	Fixed addparam command to update parameter value if it
+	   already has been added
+	Fixed typos in error messages
+	
+Keith Isdale 26th June 2002 <k_isdale@tpg.com.au>
+	Added "-f" option to globals and locals command that when used ot 
+	  will  print out the values as well as variable names.
+	Fixed globals and locals command to print fully qualified 
+	  variable names eg "xsl:myvar"
+	
+Keith Isdale 21st April 2002 <k_isdale@tpg.com.au>
   Version 2.1.9 
   Win32 specific udates:
 	o  Added win32/Makefile.msvc, a  make file for building under MSVC 

@@ -200,10 +200,15 @@ validateSource(xmlChar ** url, long *lineNo)
                 *url = xmlStrdup(searchData->url);
                 result = 1;
             }
-        } else
+        } else{
             xsltGenericError(xsltGenericErrorContext,
                              "Error: Unable to find a stylesheet file whose name contains %s\n",
                              *url);
+	    xsltGenericError(xsltGenericErrorContext,
+			     "Warning: Breakpoint at file %s : line %ld doesn't "
+			     "seem to be valid.\n",
+			     *url, *lineNo);
+	}
     }
 
     if (searchInf)
@@ -290,7 +295,7 @@ validateData(xmlChar ** url, long *lineNo)
                              "Warning: Breakpoint at file %s : line %ld doesn't "
                              "seem to be valid.\n", *url, *lineNo);
 	  } else{
-            xsltGenericError(xsltGenericErrorContext,
+             xsltGenericError(xsltGenericErrorContext,
                              "Error: Unable to find a data file whose name contains %s\n",
                              *url);	       
 	  }
@@ -723,4 +728,35 @@ xslDbgShellPrintBreakPoint(void *payload, void *data ATTRIBUTE_UNUSED,
             xsltGenericError(xsltGenericErrorContext, "\n");
         }
     }
+}
+
+/**
+ * xslDbgShellValidateBreakPoint:
+ * @payload: A valid breakPointPtr
+ * @data: Not used
+ * @name: Not used
+ *
+ * Print an warning if a breakpoint is invalid
+*/
+void xslDbgShellValidateBreakPoint(void *payload, void *data ATTRIBUTE_UNUSED,
+                           xmlChar * name ATTRIBUTE_UNUSED)
+{
+  int result = 0;
+  if (payload){
+    breakPointPtr breakPtr =  (breakPointPtr) payload;
+    if (filesIsSourceFile(breakPtr->url)) {
+      result = validateSource(&breakPtr->url, &breakPtr->lineNo);
+    } else {
+      result = validateData(&breakPtr->url, &breakPtr->lineNo);
+    }    
+    /*
+    if (result == 0){
+      xsltGenericError(xsltGenericErrorContext,
+		       "Warning invalid ");
+      xslDbgShellPrintBreakPoint(payload, NULL, NULL);
+    }
+    */
+  }
+  
+
 }

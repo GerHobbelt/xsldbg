@@ -1,7 +1,7 @@
-# Generated automatically from Makefile.in by configure.
-# Makefile.in generated automatically by automake 1.4 from Makefile.am
+# Makefile.in generated automatically by automake 1.5 from Makefile.am.
 
-# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
+# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
+# Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -11,14 +11,16 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
+
+
 # we have no targets just the defintion of the distribution files for win32 when
 # using  VC6.0
-
 
 SHELL = /bin/sh
 
 srcdir = .
 top_srcdir = ../..
+
 prefix = /usr/local
 exec_prefix = ${prefix}
 
@@ -34,193 +36,222 @@ infodir = ${prefix}/info
 mandir = ${prefix}/man
 includedir = ${prefix}/include
 oldincludedir = /usr/include
-
-DESTDIR =
-
 pkgdatadir = $(datadir)/xsldbg
 pkglibdir = $(libdir)/xsldbg
 pkgincludedir = $(includedir)/xsldbg
-
 top_builddir = ../..
 
-ACLOCAL = aclocal
-AUTOCONF = autoconf
-AUTOMAKE = automake
-AUTOHEADER = autoheader
+ACLOCAL = ${SHELL} /home/keith/lang/c/xsldbg/missing --run aclocal
+AUTOCONF = ${SHELL} /home/keith/lang/c/xsldbg/missing --run autoconf
+AUTOMAKE = ${SHELL} /home/keith/lang/c/xsldbg/missing --run automake
+AUTOHEADER = ${SHELL} /home/keith/lang/c/xsldbg/missing --run autoheader
 
 INSTALL = /usr/bin/ginstall -c
-INSTALL_PROGRAM = ${INSTALL} $(AM_INSTALL_PROGRAM_FLAGS)
+INSTALL_PROGRAM = ${INSTALL}
 INSTALL_DATA = ${INSTALL} -m 644
-INSTALL_SCRIPT = ${INSTALL_PROGRAM}
+INSTALL_SCRIPT = ${INSTALL}
+INSTALL_HEADER = $(INSTALL_DATA)
 transform = s,x,x,
-
 NORMAL_INSTALL = :
 PRE_INSTALL = :
 POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-host_alias = i686-pc-linux
+host_alias = 
 host_triplet = i686-pc-linux-gnu
+AMTAR = ${SHELL} /home/keith/lang/c/xsldbg/missing --run tar
 AS = @AS@
+AWK = gawk
 CC = gcc
 CFLAGS = -g -O2
 CPPFLAGS = 
-CXX = c++
+CXX = g++
+DEPDIR = .deps
 DLLTOOL = @DLLTOOL@
 DOCBOOK_PREFIX = /usr/share/xml/docbook/
 DOCBOOK_VERSION = 4.1.2
+EXEEXT = 
 EXTRA_LIBS = 
 HAVE_GNOME = 0
-HAVE_PTHREAD = 1
-HAVE_QT = 1
+HAVE_PTHREAD = 0
+HAVE_QT = 0
 HTML_DIR = $(prefix)/doc
+INSTALL_STRIP_PROGRAM = ${SHELL} $(install_sh) -c -s
 LDFLAGS = 
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
-LIBXML_CFLAGS = -I/usr/local/include/libxml2/libxml -I/usr/local/include/libxml2
-LIBXML_LIBS = -L/usr/local/lib -lxml2 -lz -lm
-LIBXML_PREFIX = /usr/local
+LIBXML_CFLAGS = -I/usr/include/libxml2 -I/usr/include/libxml2/libxml
+LIBXML_LIBS = -L/usr/lib -lxml2 -lz -lm -L/usr/X11R6/lib
+LIBXML_PREFIX = xml2-config --prefix
 LIBXML_REQUIRED_VERSION = 2.4.13
-LIBXSLT_CFLAGS = -I/usr/local/include -I/usr/local/include/libxml2/libxml -I/usr/local/include/libxml2
-LIBXSLT_LIBS = -L/usr/local/lib -lxslt -lxml2 -lz -lm
-LIBXSLT_PREFIX = /usr/local
+LIBXSLT_CFLAGS = -I/usr/include/libxml2 -I/usr/include/libxml2/libxml
+LIBXSLT_LIBS = -L/usr/lib -L/usr/X11R6/lib -lxslt -lxml2 -lz -lm
+LIBXSLT_PREFIX = xslt-config --prefix
 LIBXSLT_REQUIRED_VERSION = 1.0.10
 LN_S = ln -s
 MAINT = #
-MAKEINFO = makeinfo
 OBJDUMP = @OBJDUMP@
+OBJEXT = o
 PACKAGE = xsldbg
 PERL = perl
 RANLIB = ranlib
-THREAD_LIBS =  -lpthread 
+THREAD_LIBS = 
 TIMESTAMP = 
-USE_XSLDBG_AS_THREAD = 1
-VERSION = 2.1.8
+USE_XSLDBG_AS_THREAD = 0
+VERSION = 2.2.2
 WITH_MEM_DEBUG = 0
-XML_CONFIG = /usr/local/bin/xml2-config
-XSLDBG_CFLAGS = -I/usr/local/include -I/usr/local/include -I/usr/local/include/libxml2/libxml -I/usr/local/include/libxml2 
+XML_CONFIG = xml2-config
+XSLDBG_CFLAGS = -I/usr/local/include -I/usr/include/libxml2 -I/usr/include/libxml2/libxml 
 XSLDBG_INCLUDEDIR = -I/usr/local/include
 XSLDBG_LIBDIR = /usr/local/lib
-XSLDBG_LIBS =  -L/usr/local/lib -lxsldbg -L/usr/local/lib -lxslt -lxml2 -lz -lm -lexslt -lreadline -lncurses -lhistory
+XSLDBG_LIBS =  -L/usr/local/lib -lxsldbg -L/usr/lib -L/usr/X11R6/lib -lxslt -lxml2 -lz -lm -lexslt -lreadline -lncurses -lhistory
 XSLDBG_MAJOR_VERSION = 2
-XSLDBG_MICRO_VERSION = 8
-XSLDBG_MINOR_VERSION = 1
+XSLDBG_MICRO_VERSION = 2
+XSLDBG_MINOR_VERSION = 2
 XSLDBG_STATIC_FLAGS =  -static
-XSLDBG_TEST_LIBS =  -L/usr/local/lib -lxslt -lxml2 -lz -lm -lexslt -lreadline -lncurses -lhistory
-XSLDBG_VERSION = 2.1.8
-XSLDBG_VERSION_INFO = 3:8:1
-XSLDBG_VERSION_NUMBER = 20108
-XSLT_CONFIG = /usr/local/bin/xslt-config
+XSLDBG_TEST_LIBS =  -L/usr/lib -L/usr/X11R6/lib -lxslt -lxml2 -lz -lm -lexslt -lreadline -lncurses -lhistory
+XSLDBG_VERSION = 2.2.2
+XSLDBG_VERSION_INFO = 4:2:2
+XSLDBG_VERSION_NUMBER = 20202
+XSLT_CONFIG = xslt-config
+am__include = include
+am__quote = 
+install_sh = /home/keith/lang/c/xsldbg/install-sh
 
-EXTRA_DIST =  xsldbg.dsp 		libqtnotifier_so.dsp 	libxsldbg.dsp 		xsldbg.dsw 		createcatalog.bat
+EXTRA_DIST = \
+xsldbg.dsp 		\
+libqtnotifier_so.dsp 	\
+libxsldbg.dsp 		\
+xsldbg.dsw 		\
+createcatalog.bat
 
+subdir = win32/dsp_6_0
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
-CONFIG_HEADER = ../../config.h
-CONFIG_CLEAN_FILES = 
-DIST_COMMON =  Makefile.am Makefile.in
+CONFIG_HEADER = $(top_builddir)/config.h
+CONFIG_CLEAN_FILES =
+DIST_SOURCES =
+DIST_COMMON = Makefile.am Makefile.in
+all: all-am
 
-
-DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
-
-TAR = tar
-GZIP_ENV = --best
-all: all-redirect
 .SUFFIXES:
-$(srcdir)/Makefile.in: # Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --gnu win32/dsp_6_0/Makefile
 
-Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
-	cd $(top_builddir) \
-	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+mostlyclean-libtool:
+	-rm -f *.lo
 
+clean-libtool:
+	-rm -rf .libs _libs
+
+distclean-libtool:
+	-rm -f libtool
+$(srcdir)/Makefile.in: # Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
+	cd $(top_srcdir) && \
+	  $(AUTOMAKE) --gnu  win32/dsp_6_0/Makefile
+Makefile: # $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) && \
+	  CONFIG_HEADERS= CONFIG_LINKS= \
+	  CONFIG_FILES=$(subdir)/$@ $(SHELL) ./config.status
+uninstall-info-am:
 tags: TAGS
 TAGS:
 
 
-distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
-subdir = win32/dsp_6_0
+top_distdir = ../..
+distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
 
 distdir: $(DISTFILES)
-	here=`cd $(top_builddir) && pwd`; \
-	top_distdir=`cd $(top_distdir) && pwd`; \
-	distdir=`cd $(distdir) && pwd`; \
-	cd $(top_srcdir) \
-	  && $(AUTOMAKE) --include-deps --build-dir=$$here --srcdir-name=$(top_srcdir) --output-dir=$$top_distdir --gnu win32/dsp_6_0/Makefile
 	@for file in $(DISTFILES); do \
-	  d=$(srcdir); \
+	  if test -f $$file; then d=.; else d=$(srcdir); fi; \
+	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
+	  if test "$$dir" != "$$file" && test "$$dir" != "."; then \
+	    $(mkinstalldirs) "$(distdir)/$$dir"; \
+	  fi; \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$/$$file $(distdir)/$$file; \
+	    cp -pR $$d/$$file $(distdir) \
+	    || exit 1; \
 	  else \
 	    test -f $(distdir)/$$file \
-	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
-	    || cp -p $$d/$$file $(distdir)/$$file || :; \
+	    || cp -p $$d/$$file $(distdir)/$$file \
+	    || exit 1; \
 	  fi; \
 	done
-info-am:
-info: info-am
-dvi-am:
-dvi: dvi-am
 check-am: all-am
 check: check-am
-installcheck-am:
-installcheck: installcheck-am
-install-exec-am:
-install-exec: install-exec-am
+all-am: Makefile
 
-install-data-am:
+installdirs:
+
+install: install-am
+install-exec: install-exec-am
 install-data: install-data-am
+uninstall: uninstall-am
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
-install: install-am
-uninstall-am:
-uninstall: uninstall-am
-all-am: Makefile
-all-redirect: all-am
+
+installcheck: installcheck-am
 install-strip:
-	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
-installdirs:
-
-
+	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
+	  `test -z '$(STRIP)' || \
+	    echo "INSTALL_PROGRAM_ENV=STRIPPROG='$(STRIP)'"` install
 mostlyclean-generic:
 
 clean-generic:
 
 distclean-generic:
-	-rm -f Makefile $(CONFIG_CLEAN_FILES)
-	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+	-rm -f Makefile $(CONFIG_CLEAN_FILES) stamp-h stamp-h[0-9]*
 
 maintainer-clean-generic:
-mostlyclean-am:  mostlyclean-generic
-
-mostlyclean: mostlyclean-am
-
-clean-am:  clean-generic mostlyclean-am
-
+	@echo "This command is intended for maintainers to use"
+	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-distclean-am:  distclean-generic clean-am
-	-rm -f libtool
+clean-am: clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-am
 
-maintainer-clean-am:  maintainer-clean-generic distclean-am
-	@echo "This command is intended for maintainers to use;"
-	@echo "it deletes files that may require special tools to rebuild."
+distclean-am: clean-am distclean-generic distclean-libtool
+
+dvi: dvi-am
+
+dvi-am:
+
+info: info-am
+
+info-am:
+
+install-data-am:
+
+install-exec-am:
+
+install-info: install-info-am
+
+install-man:
+
+installcheck-am:
 
 maintainer-clean: maintainer-clean-am
 
-.PHONY: tags distdir info-am info dvi-am dvi check check-am \
-installcheck-am installcheck install-exec-am install-exec \
-install-data-am install-data install-am install uninstall-am uninstall \
-all-redirect all-am all installdirs mostlyclean-generic \
-distclean-generic clean-generic maintainer-clean-generic clean \
-mostlyclean distclean maintainer-clean
+maintainer-clean-am: distclean-am maintainer-clean-generic
+
+mostlyclean: mostlyclean-am
+
+mostlyclean-am: mostlyclean-generic mostlyclean-libtool
+
+uninstall-am: uninstall-info-am
+
+.PHONY: all all-am check check-am clean clean-generic clean-libtool \
+	distclean distclean-generic distclean-libtool distdir dvi \
+	dvi-am info info-am install install-am install-data \
+	install-data-am install-exec install-exec-am install-info \
+	install-info-am install-man install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-generic \
+	mostlyclean-libtool uninstall uninstall-am uninstall-info-am
 
 
 all:
-
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
