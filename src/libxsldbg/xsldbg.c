@@ -17,10 +17,12 @@
  ***************************************************************************/
 
 /*
- * Based on Original file xslproc.c:
+ * Based on file xsltproc.c
  *
  * by  Daniel Veillard 
  *     daniel@veillard.com
+ *
+ *  xsltproc.c is part of libxslt
  *
  *
  */
@@ -426,72 +428,76 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
         }
 #ifdef LIBXML_DEBUG_ENABLED
         if (optionsGetIntOption(OPTIONS_DEBUG)) {
-            if (terminalIO != NULL)
-                xmlDebugDumpDocument(terminalIO, res);
-            else if ((optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME) ==
-                      NULL) || (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)
-                     || (filesTempFileName(1) == NULL))
-                xmlDebugDumpDocument(stdout, res);
-            else {
-                FILE *tempFile = fopen(filesTempFileName(1), "w");
+	    if (xslDebugStatus != DEBUG_RUN_RESTART){
+		if (terminalIO != NULL)
+		    xmlDebugDumpDocument(terminalIO, res);
+		else if ((optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME) ==
+			    NULL) || (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)
+			|| (filesTempFileName(1) == NULL))
+		    xmlDebugDumpDocument(stdout, res);
+		else {
+		    FILE *tempFile = fopen(filesTempFileName(1), "w");
 
-                if (tempFile) {
-                    xmlDebugDumpDocument(tempFile, res);
-                    fclose(tempFile);
-                    /* send the data to application */
-                    notifyXsldbgApp(XSLDBG_MSG_FILEOUT,
-                                    filesTempFileName(1));
-                } else {
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "Unable to dump temporary results to %s\n",
-                                     filesTempFileName(1));
-                    xmlDebugDumpDocument(stdout, res);
-                }
+		    if (tempFile) {
+			xmlDebugDumpDocument(tempFile, res);
+			fclose(tempFile);
+			/* send the data to application */
+			notifyXsldbgApp(XSLDBG_MSG_FILEOUT,
+				filesTempFileName(1));
+		    } else {
+			xsltGenericError(xsltGenericErrorContext,
+				"Unable to dump temporary results to %s\n",
+				filesTempFileName(1));
+			xmlDebugDumpDocument(stdout, res);
+		    }
 
-            }
+		}
+	    }
         } else {
 #endif
-            if (cur->methodURI == NULL) {
-                if (optionsGetIntOption(OPTIONS_TIMING))
-                    startTimer();
-                if (xslDebugStatus != DEBUG_QUIT) {
-                    if (terminalIO != NULL)
-                        xsltSaveResultToFile(terminalIO, res, cur);
-                    else if (optionsGetStringOption
-                             (OPTIONS_OUTPUT_FILE_NAME) == NULL)
-                        xsltSaveResultToFile(stdout, res, cur);
-                    else
-                        xsltSaveResultToFilename((const char *)
-                                                 optionsGetStringOption
-                                                 (OPTIONS_OUTPUT_FILE_NAME),
-                                                 res, cur, 0);
-                }
-                if (optionsGetIntOption(OPTIONS_TIMING))
-                    endTimer("Saving result");
-            } else {
-                if (xmlStrEqual(cur->method, (const xmlChar *) "xhtml")) {
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "non standard output xhtml\n");
-                    if (optionsGetIntOption(OPTIONS_TIMING))
-                        startTimer();
-                    if (terminalIO != NULL)
-                        xsltSaveResultToFile(terminalIO, res, cur);
-                    else if (optionsGetStringOption
-                             (OPTIONS_OUTPUT_FILE_NAME) == NULL)
-                        xsltSaveResultToFile(stdout, res, cur);
-                    else
-                        xsltSaveResultToFilename((const char *)
-                                                 optionsGetStringOption
-                                                 (OPTIONS_OUTPUT_FILE_NAME),
-                                                 res, cur, 0);
-                    if (optionsGetIntOption(OPTIONS_TIMING))
-                        endTimer("Saving result");
-                } else {
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "Unsupported non standard output %s\n",
-                                     cur->method);
-                }
-            }
+	    if (xslDebugStatus != DEBUG_RUN_RESTART){
+		if (cur->methodURI == NULL) {
+		    if (optionsGetIntOption(OPTIONS_TIMING))
+			startTimer();
+		    if (xslDebugStatus != DEBUG_QUIT) {
+			if (terminalIO != NULL)
+			    xsltSaveResultToFile(terminalIO, res, cur);
+			else if (optionsGetStringOption
+				(OPTIONS_OUTPUT_FILE_NAME) == NULL)
+			    xsltSaveResultToFile(stdout, res, cur);
+			else
+			    xsltSaveResultToFilename((const char *)
+				    optionsGetStringOption
+				    (OPTIONS_OUTPUT_FILE_NAME),
+				    res, cur, 0);
+		    }
+		    if (optionsGetIntOption(OPTIONS_TIMING))
+			endTimer("Saving result");
+		} else {
+		    if (xmlStrEqual(cur->method, (const xmlChar *) "xhtml")) {
+			xsltGenericError(xsltGenericErrorContext,
+				"non standard output xhtml\n");
+			if (optionsGetIntOption(OPTIONS_TIMING))
+			    startTimer();
+			if (terminalIO != NULL)
+			    xsltSaveResultToFile(terminalIO, res, cur);
+			else if (optionsGetStringOption
+				(OPTIONS_OUTPUT_FILE_NAME) == NULL)
+			    xsltSaveResultToFile(stdout, res, cur);
+			else
+			    xsltSaveResultToFilename((const char *)
+				    optionsGetStringOption
+				    (OPTIONS_OUTPUT_FILE_NAME),
+				    res, cur, 0);
+			if (optionsGetIntOption(OPTIONS_TIMING))
+			    endTimer("Saving result");
+		    } else {
+			xsltGenericError(xsltGenericErrorContext,
+				"Unsupported non standard output %s\n",
+				cur->method);
+		    }
+		}
+	    }
 #ifdef LIBXML_DEBUG_ENABLED
         }
 #endif
@@ -926,7 +932,7 @@ xsldbgMain(int argc, char **argv)
                                 break;
                         }
                     }
-		    if (!optionsGetIntOption(OPTIONS_AUTORESTART)){ 
+		    if (!optionsGetIntOption(OPTIONS_AUTORESTART) && (xslDebugStatus != DEBUG_RUN_RESTART)){ 
 		    /* pass control to user they won't be able to do much
 		      other than add breakpoints, quit, run, continue */
 		    debugXSLBreak((xmlNodePtr) cur->doc, (xmlNodePtr) doc,
@@ -1071,18 +1077,6 @@ xmlDocPtr
 xsldbgLoadXmlData(void)
 {
     xmlDocPtr doc = NULL;
-
-    /*
-     * disable CDATA from being built in the document tree
-     */
-    xmlDefaultSAXHandlerInit();
-    xmlDefaultSAXHandler.cdataBlock = NULL;
-    if (xmlDefaultSAXHandler.getEntity != xsldbgGetEntity){
-	oldGetEntity = xmlDefaultSAXHandler.getEntity;
-    	xmlDefaultSAXHandler.getEntity = xsldbgGetEntity;
-    }
-
-
     doc = NULL;
 
     if (optionsGetIntOption(OPTIONS_TIMING))
@@ -1101,8 +1095,8 @@ xsldbgLoadXmlData(void)
                             NULL);
     else
 #endif
-        doc = xmlParseFile((char *)
-                           optionsGetStringOption(OPTIONS_DATA_FILE_NAME));
+        doc = xmlSAXParseFile(&xmlDefaultSAXHandler,
+			     (char *) optionsGetStringOption(OPTIONS_DATA_FILE_NAME), 0);
     if (doc == NULL) {
         xsltGenericError(xsltGenericErrorContext,
                          "Error: Unable to parse %s\n",
@@ -1136,15 +1130,8 @@ xmlDocPtr
 xsldbgLoadXmlTemporary(const xmlChar * path)
 {
     xmlDocPtr doc = NULL;
-
-    /*
-     * disable CDATA from being built in the document tree
-     */
-    xmlDefaultSAXHandlerInit();
-    xmlDefaultSAXHandler.cdataBlock = NULL;
-
-
     doc = NULL;
+
     if (optionsGetIntOption(OPTIONS_TIMING))
         startTimer();
 #ifdef LIBXML_HTML_ENABLED
@@ -1276,7 +1263,6 @@ static int initialized = 0;
 int
 xsldbgInit()
 {
-
     int result = 0;
 
     if (!initialized) {
@@ -1303,12 +1289,20 @@ xsldbgInit()
             return result;
         }
 
-
+	
 
         /* set up the parser */
         xmlInitParser();
         xmlSetGenericErrorFunc(0, xsldbgGenericErrorFunc);
         xsltSetGenericErrorFunc(0, xsldbgGenericErrorFunc);
+
+	/*
+	 * disable CDATA from being built in the document tree
+	 */
+	xmlDefaultSAXHandlerInit();
+	xmlDefaultSAXHandler.cdataBlock = NULL;
+	oldGetEntity = xmlDefaultSAXHandler.getEntity;
+	xmlDefaultSAXHandler.getEntity = xsldbgGetEntity;
 
         if (getThreadStatus() != XSLDBG_MSG_THREAD_NOTUSED) {
             initialized = 1;

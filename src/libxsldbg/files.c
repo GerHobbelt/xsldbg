@@ -753,9 +753,6 @@ filesInit(void)
     tempDocument = NULL;
     topStylesheet = NULL;
     entityNameList = arrayListNew(4, (freeItemFunc) filesFreeEntityInfo);
-#ifdef  HAVE_INCLUDE_FIX
-    xmlSetEntityReferenceFunc(filesEntityRef);
-#endif
 
     /* setup the encoding */
     encodeInBuff = xmlBufferCreate();

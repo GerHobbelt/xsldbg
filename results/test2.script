@@ -13,7 +13,7 @@ enable -l
 enable -l test2.xsl
 enable -l test2.xsl a23
 enable BAD_TEMPLATENAME
- delete *
+delete *
 break /
 enable /
 showbreak

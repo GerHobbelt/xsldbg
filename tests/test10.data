@@ -15,8 +15,7 @@
 break -l test2.xml 9
 break -l test3.xml 9
 break -l test4.xml 9
-showbreak
-</test>
+showbreak</test>
 <result>
 <row>
 <breakpointlist file="test1.xml" line="8" />	
@@ -34,8 +33,7 @@ Try to stop at text2.xml line 9-->
 break -l test2.xml 9
 data
 run
-continue
-</test>
+continue</test>
 <result>
 <row>
 <breakpoint file="test2.xml" line="9"/>
@@ -46,11 +44,10 @@ continue
 <!-- at the end of this xsldbg will be stopped at test10.xsl line 24-->
 <cmd>
 <test>delete *
-run
-source
 break -l test10.xsl 24
-continue
-</test>
+source
+run
+continue</test>
 <result>
 <row>
 <breakpoint file="test10.xsl" line="13"/>
@@ -63,8 +60,7 @@ continue
 <cmd>
 <test>cat $item
 set item 5678
-cat $item
-</test>
+cat $item</test>
 <result>
 <row>
 <matchtext>1234</matchtext>

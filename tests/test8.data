@@ -46,7 +46,7 @@
 </result>
 </cmd>
 <cmd>
-<test>d *</test> <!-- clear any breakpoints present -->
+<test>delete *</test> <!-- clear any breakpoints present -->
 </cmd>
 <cmd>
 <test>run</test>

@@ -292,7 +292,7 @@ break /</test>
 
 <!-- Clear all breakpoints and create a disabled breakpoint at template "/" -->
 <cmd>
-<test> delete *
+<test>delete *
 break /
 enable /
 showbreak</test>
