@@ -774,6 +774,9 @@ splitString(xmlChar * textIn, int maxStrings, xmlChar ** out)
 }
 
 
+void addBreakPointNode(void *payload, void *data ATTRIBUTE_UNUSED,
+                  xmlChar * name ATTRIBUTE_UNUSED);
+
 void
 addBreakPointNode(void *payload, void *data ATTRIBUTE_UNUSED,
                   xmlChar * name ATTRIBUTE_UNUSED)
@@ -782,6 +785,10 @@ addBreakPointNode(void *payload, void *data ATTRIBUTE_UNUSED,
 
     xslSearchAdd(node);
 }
+
+
+void addSourceNode(void *payload, void *data ATTRIBUTE_UNUSED,
+		   xmlChar * name ATTRIBUTE_UNUSED);
 
 void
 addSourceNode(void *payload, void *data ATTRIBUTE_UNUSED,
@@ -792,6 +799,11 @@ addSourceNode(void *payload, void *data ATTRIBUTE_UNUSED,
     xslSearchAdd(node);
 }
 
+
+void
+addTemplateNode(void *payload, void *data ATTRIBUTE_UNUSED,
+                xmlChar * name ATTRIBUTE_UNUSED);
+
 void
 addTemplateNode(void *payload, void *data ATTRIBUTE_UNUSED,
                 xmlChar * name ATTRIBUTE_UNUSED)
@@ -800,6 +812,11 @@ addTemplateNode(void *payload, void *data ATTRIBUTE_UNUSED,
         searchTemplateNode(((xsltTemplatePtr) payload)->elem);
     xslSearchAdd(node);
 }
+
+
+void
+addGlobalNode(void *payload, void *data ATTRIBUTE_UNUSED,
+              xmlChar * name ATTRIBUTE_UNUSED);
 
 void
 addGlobalNode(void *payload, void *data ATTRIBUTE_UNUSED,
@@ -812,12 +829,20 @@ addGlobalNode(void *payload, void *data ATTRIBUTE_UNUSED,
 
 void
 addLocalNode(void *payload, void *data ATTRIBUTE_UNUSED,
+             xmlChar * name ATTRIBUTE_UNUSED);
+
+void
+addLocalNode(void *payload, void *data ATTRIBUTE_UNUSED,
              xmlChar * name ATTRIBUTE_UNUSED)
 {
     xmlNodePtr node = searchLocalNode((xmlNodePtr) payload);
 
     xslSearchAdd(node);
 }
+
+
+void addIncludeNode(void *payload, void *data ATTRIBUTE_UNUSED,
+               xmlChar * name ATTRIBUTE_UNUSED);
 
 void
 addIncludeNode(void *payload, void *data ATTRIBUTE_UNUSED,
@@ -827,6 +852,9 @@ addIncludeNode(void *payload, void *data ATTRIBUTE_UNUSED,
 
     xslSearchAdd(node);
 }
+
+
+void addCallStackItems(void);
 
 void
 addCallStackItems(void)
@@ -865,7 +893,8 @@ updateSearchData(xsltTransformContextPtr styleCtxt,
     xsltGenericError(xsltGenericErrorContext,
                      "  Looking for imports and top level stylesheets \n");
     walkStylesheets((xmlHashScanner) addSourceNode, data, style);
-    xsltGenericError(xsltGenericErrorContext, "  Looking for xsl:includes \n");
+    xsltGenericError(xsltGenericErrorContext,
+                     "  Looking for xsl:includes \n");
     walkIncludeInst((xmlHashScanner) addIncludeNode, data, style);
     xsltGenericError(xsltGenericErrorContext,
                      "  Looking for templates \n");
@@ -1256,7 +1285,8 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                                  ctxt->node->doc->URL,
                                  xmlGetLineNo(ctxt->node));
                     if (styleCtxt)
-                        xslDbgShellBreak(buff, styleCtxt->style, styleCtxt);
+                        xslDbgShellBreak(buff, styleCtxt->style,
+                                         styleCtxt);
                     else
                         xslDbgShellBreak(buff, NULL, styleCtxt);
                 }

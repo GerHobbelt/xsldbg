@@ -155,14 +155,14 @@ xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
 
 
 void xslDbgShellPrintStylesheetsHelper2(void *payload,
-                                       void *data ATTRIBUTE_UNUSED,
-                                       xmlChar * name ATTRIBUTE_UNUSED);
+                                        void *data ATTRIBUTE_UNUSED,
+                                        xmlChar * name ATTRIBUTE_UNUSED);
 
 /* our payload is a xmlNodePtr to a included stylesheet */
 void
 xslDbgShellPrintStylesheetsHelper2(void *payload,
-                                  void *data ATTRIBUTE_UNUSED,
-                                  xmlChar * name ATTRIBUTE_UNUSED)
+                                   void *data ATTRIBUTE_UNUSED,
+                                   xmlChar * name ATTRIBUTE_UNUSED)
 {
     xmlNodePtr node = (xmlNodePtr) payload;
 
@@ -177,6 +177,7 @@ xslDbgShellPrintStylesheetsHelper2(void *payload,
 void xslDbgShellPrintStylesheetsHelper(void *payload,
                                        void *data ATTRIBUTE_UNUSED,
                                        xmlChar * name ATTRIBUTE_UNUSED);
+
 /* our payload is a stylesheet */
 void
 xslDbgShellPrintStylesheetsHelper(void *payload,
@@ -206,7 +207,7 @@ xslDbgPrintStyleSheets(xmlChar * arg)
     walkStylesheets((xmlHashScanner) xslDbgShellPrintStylesheetsHelper,
                     NULL, getStylesheet());
     walkIncludes((xmlHashScanner) xslDbgShellPrintStylesheetsHelper2,
-                    NULL, getStylesheet());
+                 NULL, getStylesheet());
     if (printCounter != 0)
         xsltGenericError(xsltGenericErrorContext,
                          "\n\tTotal of %d stylesheets found\n",

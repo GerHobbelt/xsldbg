@@ -8,7 +8,7 @@ $(XSLDBG):
 	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
 
 index.docbook : xsldoc2kde.xsl $(DATADIR)/xsldoc.xml 
-	$(XSLDBG) --cd $(DATADIR) --param xsldbg_version "'$(VERSION)'"  -o $(XSLDIR)/index.docbook $(XSLDIR)/xsldoc2kde.xsl xsldoc.xml
+	$(XSLDBG_EXPORTS) $(XSLDBG) --cd $(DATADIR) --param xsldbg_version "'$(VERSION)'"  -o $(XSLDIR)/index.docbook $(XSLDIR)/xsldoc2kde.xsl xsldoc.xml
 
 index.cache.bz2 : index.docbook $(DATADIR)/xsldoc.xml 
 	meinproc index.docbook

@@ -37,13 +37,13 @@ void myWalker(void *payload, void *data, xmlChar *name);
 
 
 int main(void){
-  int index, result = 0;
+  int itemIndex, result = 0;
   ArrayListPtr list = createTestList();
   xmlInitMemory();
   if (list){
   fprintf(stdout, "\nTest free all items. List size now %d\n", xslArrayListCount(list));    
-    for (index = 0; index < xslArrayListCount(list); index++)
-      printf("%s\n", (char*)xslArrayListGet(list, index));
+    for (itemIndex = 0; itemIndex < xslArrayListCount(list); itemIndex++)
+      printf("%s\n", (char*)xslArrayListGet(list, itemIndex));
     fprintf(stdout, "Freeing list now\n");
     xslArrayListFree(list);
     fprintf(stdout, "Done!\n");
@@ -54,22 +54,22 @@ int main(void){
   if (list){
     fprintf(stdout, "\nTest removing item2\n");
     xslArrayListDelete(list, 1);
-    for (index = 0; index < xslArrayListCount(list); index++)
-      fprintf(stdout, "%s\n", (char*)xslArrayListGet(list, index));
+    for (itemIndex = 0; itemIndex < xslArrayListCount(list); itemIndex++)
+      fprintf(stdout, "%s\n", (char*)xslArrayListGet(list, itemIndex));
   
     fprintf(stdout, "Size now %d\nDone!\n", xslArrayListCount(list));
 
     fprintf(stdout, "\nTest removing item1\n");
     xslArrayListDelete(list, 0);
-    for (index = 0; index < xslArrayListCount(list); index++)
-      fprintf(stdout, "%s\n", (char*)xslArrayListGet(list, index));
+    for (itemIndex = 0; itemIndex < xslArrayListCount(list); itemIndex++)
+      fprintf(stdout, "%s\n", (char*)xslArrayListGet(list, itemIndex));
   
     fprintf(stdout, "Size now %d\nDone!\n", xslArrayListCount(list));
 
     fprintf(stdout, "\nTest removing last item in list\n");
     xslArrayListDelete(list, xslArrayListCount(list) -1 );
-    for (index = 0; index < xslArrayListCount(list); index++)
-      fprintf(stdout, "%s\n", (char*)xslArrayListGet(list, index));
+    for (itemIndex = 0; itemIndex < xslArrayListCount(list); itemIndex++)
+      fprintf(stdout, "%s\n", (char*)xslArrayListGet(list, itemIndex));
   
     fprintf(stdout, "Size now %d\nDone!\n", xslArrayListCount(list));
     xslArrayListFree(list);
@@ -80,8 +80,8 @@ int main(void){
   list = createParamList();
   if (list){
     ParameterItemPtr item;
-    for (index = 0; index < xslArrayListCount(list); index++){
-      item = xslArrayListGet(list, index);
+    for (itemIndex = 0; itemIndex < xslArrayListCount(list); itemIndex++){
+      item = xslArrayListGet(list, itemIndex);
       if (item){
 	fprintf(stdout, "Parameter name :%s  value %s\n", item->name, item->value);
       }
@@ -95,8 +95,7 @@ int main(void){
   breakPointInit();
   list = createBreakPointList();
   if (list){
-    int index;
-    xslBreakPointPtr breakPoint = getBreakPoint("index.html", 1);
+    xslBreakPointPtr breakPoint = getBreakPoint((xmlChar*)"index.html", 1);
     if (breakPoint){
       fprintf(stdout, "Added breakPoint :");
       printBreakPoint(stdout, breakPoint);
@@ -106,7 +105,7 @@ int main(void){
       result = 1;
     }
 
-    breakPoint = getBreakPoint("index2.html", 2);
+    breakPoint = getBreakPoint((xmlChar*)"index2.html", 2);
     if (breakPoint){
       fprintf(stdout, "Added breakPoint :");
       printBreakPoint(stdout, breakPoint);
@@ -116,7 +115,7 @@ int main(void){
       result = 1;
     }
 
-    breakPoint = getBreakPoint("index3.html", 3);
+    breakPoint = getBreakPoint((xmlChar*)"index3.html", 3);
     if (breakPoint){
       fprintf(stdout, "Added breakPoint :");
       printBreakPoint(stdout, breakPoint);
@@ -126,7 +125,7 @@ int main(void){
       result = 1;
     }
 
-    breakPoint = getBreakPoint("index2.html", 1);
+    breakPoint = getBreakPoint((xmlChar*)"index2.html", 1);
     if (breakPoint){
       fprintf(stdout, "Added breakPoint :");
       printBreakPoint(stdout, breakPoint);
@@ -136,7 +135,7 @@ int main(void){
       result = 1;
     }
 
-    breakPoint = getBreakPoint("index2.html", 3);
+    breakPoint = getBreakPoint((xmlChar*)"index2.html", 3);
     if (breakPoint){
       fprintf(stdout, "Added breakPoint :");
       printBreakPoint(stdout, breakPoint);
@@ -146,7 +145,7 @@ int main(void){
       result = 1;
     }
 
-    breakPoint = getBreakPoint("index2.html", 4);
+    breakPoint = getBreakPoint((xmlChar*)"index2.html", 4);
     if (breakPoint){
       fprintf(stdout, "Added breakPoint :");
       printBreakPoint(stdout, breakPoint);
@@ -172,7 +171,7 @@ int main(void){
     }     
 
     fprintf(stdout,"\nLooking for breakpoint with template name of 'three'\n");
-    breakPoint = findBreakPointByName("three");
+    breakPoint = findBreakPointByName((xmlChar*)"three");
     if (breakPoint){
       fprintf(stdout,"Found it! Here it is!\n");
       printBreakPoint(stdout, breakPoint);   
@@ -184,8 +183,8 @@ int main(void){
     fprintf(stdout,"Done!\n");
 
     fprintf(stdout, "\nTest for adding two duplicate breakpoints these should fail\n");
-    xslAddBreakPoint("index.html", 1, "one", DEBUG_BREAK_SOURCE);
-    xslAddBreakPoint("index2.html", 4, NULL, DEBUG_BREAK_SOURCE);
+    xslAddBreakPoint((xmlChar*)"index.html", 1, (xmlChar*)"one", DEBUG_BREAK_SOURCE);
+    xslAddBreakPoint((xmlChar*)"index2.html", 4, NULL, DEBUG_BREAK_SOURCE);
     fprintf(stdout,"Done!\n");
 
     
@@ -225,27 +224,26 @@ ArrayListPtr createTestList(void){
 ArrayListPtr createParamList(void){
   ArrayListPtr list = xslArrayListNew(3, (freeItemFunc)paramItemFree);
   if (list){
-    xslArrayListAdd(list, paramItemNew("param1", "'value1'"));
-    xslArrayListAdd(list, paramItemNew("param2", "'value2'"));
-    xslArrayListAdd(list, paramItemNew("param3", "'value3'"));
+    xslArrayListAdd(list, paramItemNew((xmlChar*)"param1", (xmlChar*)"'value1'"));
+    xslArrayListAdd(list, paramItemNew((xmlChar*)"param2", (xmlChar*)"'value2'"));
+    xslArrayListAdd(list, paramItemNew((xmlChar*)"param3", (xmlChar*)"'value3'"));
   }
   return list;
 }
 
 ArrayListPtr createBreakPointList(void){
   ArrayListPtr list;
-  xslBreakPointPtr breakPoint;
   fprintf(stdout, "Creating breakPoint list\n");
   list = xslBreakPointLineList();
   if (list){
     /*    xslAddBreakPoint(const xmlChar * url, long lineNumber,
 	  const xmlChar * templateName, int type) */
-    xslAddBreakPoint("index.html", 1, "one", DEBUG_BREAK_SOURCE);
-    xslAddBreakPoint("index2.html", 2, "two", DEBUG_BREAK_SOURCE);
-    xslAddBreakPoint("index3.html", 3, "three", DEBUG_BREAK_SOURCE); 
-    xslAddBreakPoint("index2.html", 1, "four", DEBUG_BREAK_SOURCE); 
-    xslAddBreakPoint("index2.html", 3, NULL, DEBUG_BREAK_SOURCE); 
-    xslAddBreakPoint("index2.html", 4, NULL, DEBUG_BREAK_SOURCE); 
+    xslAddBreakPoint((xmlChar*)"index.html", 1, (xmlChar*)"one", DEBUG_BREAK_SOURCE);
+    xslAddBreakPoint((xmlChar*)"index2.html", 2, (xmlChar*)"two", DEBUG_BREAK_SOURCE);
+    xslAddBreakPoint((xmlChar*)"index3.html", 3, (xmlChar*)"three", DEBUG_BREAK_SOURCE); 
+    xslAddBreakPoint((xmlChar*)"index2.html", 1, (xmlChar*)"four", DEBUG_BREAK_SOURCE); 
+    xslAddBreakPoint((xmlChar*)"index2.html", 3, NULL, DEBUG_BREAK_SOURCE); 
+    xslAddBreakPoint((xmlChar*)"index2.html", 4, NULL, DEBUG_BREAK_SOURCE); 
   }
   fprintf(stdout, "Done!\n");
   return list;
@@ -274,6 +272,8 @@ void xslDebugBreak(xmlNodePtr templ ATTRIBUTE_UNUSED, xmlNodePtr nod ATTRIBUTE_U
   fprintf(stdout, "List test's xslDebugBreak has reached!\n");
 }
 
+
+int changeDir(const xmlChar * path);
 
 /**
  * changeDir:

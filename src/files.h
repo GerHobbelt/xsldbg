@@ -55,13 +55,20 @@ int
   selectNormalIO(void);
 
 /**
+ * getTemplate:
+ * 
+ * Returns the last template node found, if any
+ */
+xsltTemplatePtr getTemplate(void);
+
+/**
  * guessStyleSheetName:
  *
  * Try to find a matching stylesheet name
- * Returns non-NULL if found,
- *          NULL otherwise
+ * Sets the values in @searchinf depending on outcome of search
+ * 
  */
-xmlChar *guessStyleSheetName(xmlChar * name);
+void guessStylesheetName(searchInfoPtr searchInf);
 
 
 /**

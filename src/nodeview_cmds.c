@@ -20,6 +20,7 @@
 #undef VERSION
 #endif
 
+#include <libxml/xpathInternals.h>
 #include "xsldbg.h"
 #include "debugXSL.h"
 #include "arraylist.h"
@@ -186,7 +187,9 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
 /* only used by xslDbgPrintNames and xslDbgPrintVariable cound number of variables */
 int varCount;
 
-
+/* seems like a dead functon don't remove it yet!*/
+void *xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
+                      void *data ATTRIBUTE_UNUSED, xmlChar * name);
 /*
  * xslDbgShellPrintNames:
  * Print a name of variable found by scanning variable table

@@ -183,14 +183,14 @@ guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
                       void *data ATTRIBUTE_UNUSED, xmlChar * name)
 {
     xsltStylesheetPtr style = (xsltStylesheetPtr) payload;
-    searchInfoPtr searchInf  = (searchInfoPtr)data;
+    searchInfoPtr searchInf = (searchInfoPtr) data;
     nodeSearchDataPtr searchData = NULL;
 
     if (!style || !style->doc || !searchInf || !searchInf->data ||
-	(searchInf->type != SEARCH_NODE))
-      return;
+        (searchInf->type != SEARCH_NODE))
+        return;
 
-    searchData = (nodeSearchDataPtr)searchInf->data;
+    searchData = (nodeSearchDataPtr) searchInf->data;
     if (searchData->nameInput && (searchData->absoluteNameMatch == NULL)) {
         /* at this point we know that we have not made an absolute match 
          * but we may have made a relative match */
@@ -198,7 +198,8 @@ guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
             /* absolute path match great! */
             searchData->absoluteNameMatch =
                 (xmlChar *) xmlMemStrdup((char *) style->doc->URL);
-	    searchData->node = (xmlNodePtr)style->doc;
+            searchData->node = (xmlNodePtr) style->doc;
+	    searchInf->found = 1;
             return;
         }
 
@@ -214,7 +215,8 @@ guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
             /* guessed right! */
             searchData->guessedNameMatch =
                 (xmlChar *) xmlMemStrdup((char *) buffer);
-	    searchData->node = (xmlNodePtr)style->doc;
+            searchData->node = (xmlNodePtr) style->doc;
+	    searchInf->found = 1;
             return;
         }
 
@@ -227,7 +229,8 @@ guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
             /* guessed right! */
             searchData->guessedNameMatch =
                 (xmlChar *) xmlMemStrdup((char *) buffer);
-	    searchData->node = (xmlNodePtr)style->doc;
+            searchData->node = (xmlNodePtr) style->doc;
+	    searchInf->found = 1;
             return;
         }
 
@@ -242,7 +245,8 @@ guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
                     /* guessed right! */
                     searchData->guessedNameMatch =
                         (xmlChar *) xmlMemStrdup((char *) style->doc->URL);
-		    searchData->node = (xmlNodePtr)style->doc;
+                    searchData->node = (xmlNodePtr) style->doc;
+		    searchInf->found = 1;
                 }
             }
         }
@@ -250,21 +254,24 @@ guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
 }
 
 
+void guessStyleSheetHelper2(void *payload ATTRIBUTE_UNUSED,
+                       void *data ATTRIBUTE_UNUSED, xmlChar * name);
+
 /* our payload is a xmlNodePtr of the included stylesheet 
   found by walkIncludes */
 void
 guessStyleSheetHelper2(void *payload ATTRIBUTE_UNUSED,
-                      void *data ATTRIBUTE_UNUSED, xmlChar * name)
+                       void *data ATTRIBUTE_UNUSED, xmlChar * name)
 {
     xmlNodePtr node = (xmlNodePtr) payload;
-    searchInfoPtr searchInf  = (searchInfoPtr)data;
+    searchInfoPtr searchInf = (searchInfoPtr) data;
     nodeSearchDataPtr searchData = NULL;
 
     if (!node || !node->doc || !searchInf || !searchInf->data ||
-	(searchInf->type != SEARCH_NODE))
-      return;
+        (searchInf->type != SEARCH_NODE))
+        return;
 
-    searchData = (nodeSearchDataPtr)searchInf->data;
+    searchData = (nodeSearchDataPtr) searchInf->data;
     if (searchData->nameInput && (searchData->absoluteNameMatch == NULL)) {
         /* at this point we know that we have not made an absolute match 
          * but we may have made a relative match */
@@ -272,7 +279,8 @@ guessStyleSheetHelper2(void *payload ATTRIBUTE_UNUSED,
             /* absolute path match great! */
             searchData->absoluteNameMatch =
                 (xmlChar *) xmlMemStrdup((char *) node->doc->URL);
-	    searchData->node = node;
+            searchData->node = node;
+	    searchInf->found = 1;
             return;
         }
 
@@ -288,7 +296,8 @@ guessStyleSheetHelper2(void *payload ATTRIBUTE_UNUSED,
             /* guessed right! */
             searchData->guessedNameMatch =
                 (xmlChar *) xmlMemStrdup((char *) buffer);
-	    searchData->node = node;
+            searchData->node = node;
+	    searchInf->found = 1;
             return;
         }
 
@@ -301,7 +310,8 @@ guessStyleSheetHelper2(void *payload ATTRIBUTE_UNUSED,
             /* guessed right! */
             searchData->guessedNameMatch =
                 (xmlChar *) xmlMemStrdup((char *) buffer);
-	    searchData->node = node;
+            searchData->node = node;
+	    searchInf->found = 1;
             return;
         }
 
@@ -316,7 +326,8 @@ guessStyleSheetHelper2(void *payload ATTRIBUTE_UNUSED,
                     /* guessed right! */
                     searchData->guessedNameMatch =
                         (xmlChar *) xmlMemStrdup((char *) node->doc->URL);
-		    searchData->node = node;
+                    searchData->node = node;
+		    searchInf->found = 1;
                 }
             }
         }
@@ -336,18 +347,18 @@ guessStylesheetName(searchInfoPtr searchInf)
     nodeSearchDataPtr searchData;
 
     if (!searchInf)
-      return;
+        return;
 
-    searchData = (nodeSearchDataPtr)searchInf->data;
+    searchData = (nodeSearchDataPtr) searchInf->data;
     if (searchData->nameInput == NULL)
-      return; /* must supply name of file to look for */
+        return;                 /* must supply name of file to look for */
 
     walkStylesheets((xmlHashScanner) guessStyleSheetHelper,
-		    searchInf, getStylesheet());
-    if (!searchInf->found){
-      /* try looking in the included stylesheets */
-      walkIncludes((xmlHashScanner) guessStyleSheetHelper2,
-		   searchInf, getStylesheet());
+                    searchInf, getStylesheet());
+    if (!searchInf->found) {
+        /* try looking in the included stylesheets */
+        walkIncludes((xmlHashScanner) guessStyleSheetHelper2,
+                     searchInf, getStylesheet());
     }
 }
 
@@ -448,10 +459,9 @@ loadXmlFile(const xmlChar * path, enum File_type file_type)
             top_style = loadStylesheet();
             if (top_style && top_style->doc) {
                 /* look for last slash (or baskslash) of URL */
-                char *lastSlash =
-                    xmlStrrChr(top_style->doc->URL,
-                                              PATHCHAR);
-                const char *docUrl = top_style->doc->URL;
+                char *lastSlash = xmlStrrChr(top_style->doc->URL,
+                                             PATHCHAR);
+                const char *docUrl = (const char*)top_style->doc->URL;
 
                 result++;
                 if (docUrl && lastSlash) {

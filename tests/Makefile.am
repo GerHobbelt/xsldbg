@@ -69,14 +69,14 @@ $(XSLDBG):
 	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
 
 ../results/%.script ../results/%.pl : %.data testgenerator.xsl
-	$(XSLDBG) --param baseFileName \'../results/$(*F)\' testgenerator.xsl $(*F).data
+	$(XSLDBG_EXPORTS) $(XSLDBG) --param baseFileName \'../results/$(*F)\' testgenerator.xsl $(*F).data
 
 runtests : $(TESTS) $(TEST_RESULTS) $(XSLDBG)
 
 ../results/%.results : $(TESTS) %.xsl %.xml xsldbgmatch.pl $(XSLDBG)
 	@echo "Running test $(*F)"
 	@echo "Running test $(*F)" > $@
-	$(XSLDBG) --shell  $(*F).xsl  $(*F).xml <  ../results/$(*F).script &> ../results/$(*F).log
+	$(XSLDBG_EXPORTS) $(XSLDBG) --shell  $(*F).xsl  $(*F).xml <  ../results/$(*F).script &> ../results/$(*F).log
 	perl ../results/$(*F).pl  &>  $@ < ../results/$(*F).log
 	@echo "Test $(*F) succeeded"
 	@echo "Test $(*F) succeeded">> $@
@@ -84,8 +84,8 @@ runtests : $(TESTS) $(TEST_RESULTS) $(XSLDBG)
 if WITH_PERL
 
 all: $(XSLDBG) listTest searchTest runtests
-	./listTest
-	./searchTest
+	$(XSLDBG_EXPORTS) ./listTest
+	$(XSLDBG_EXPORTS) ./searchTest
 
 clean:
 	rm -f ../results/*.script

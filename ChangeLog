@@ -1,8 +1,37 @@
+* Keith Isdale 4 Dec 2001
+* Fixed configure.in and all Makefile.am's so that they setup and 
+*   use LIBXSLT_PREFIX, LIBXML_PREFIX. and that all executions
+*   of xsldbg use these libraries at theses locations 
+*	
+* Compiled with pandantic compiler settings and find errors reported	
+* Fixed listTest.c and searchTest.c so that only minor warnings are 	
+*   generated upon thier compilation
+* Fixed minor issues mostly to do with casts to (char*) or (xmlChar*)
+*   	
+	
+* *************************************
+* Keith Isdale 4 Dec 2001	
+* Feature freeze active 	
+*     o no new features are to be added
+*     o bug and documentation updates only until after beta release 	
+* *************************************	
+	 	
 * Keith Isdale 3 Dec 2001
 * Added validation of file:line number for stylesheet breakpoints
-*   It now generates a warningif a stylsheeet breakPoint appears to be invalid
+*   It now generates a warning if a stylsheeet breakPoint appears to be invalid
 * Changed to version 0.8.5
-	
+* Added validation of file:line number for xml data
+*   It tries to will try appending the prefix of topmost xml data file
+*     to url if an absolute match has not been made 	
+*   It now generates a warning if a xml data breakPoint appears to be invalid
+* Re-organised xmlDbgShellBreak and broke it up using new functions 
+*	addSourceBreakPoint and addDataBreakPoint (see breakpoint_cmds.c)		
+* re-organised searching to make it consistant accross project
+*	got rid of FileSearchPtr structure ..
+* Added walkIncludeInst which is now used instead of walkIncluded when adding
+*    xsl:includes to search dataBase
+* Added walkIncludes to walk though all included stylesheets 	
+
 * Keith Isdale 1 Dec 2001
 * Added	--with-libxslt-prefix to configure.in
 * Changed to version 0.8.4

@@ -1,12 +1,12 @@
 
 AC_INIT(src/xsldbg.c)
 
-timestamp='2001-12-02'
+timestamp='2001-12-04'
 
 
 XSLDBG_MAJOR_VERSION=0
 XSLDBG_MINOR_VERSION=8
-XSLDBG_MICRO_VERSION=4
+XSLDBG_MICRO_VERSION=5
 PACKAGE=xsldbg
 
 LIBXML_REQUIRED_VERSION=2.4.10
@@ -228,6 +228,12 @@ then
 		LIBXML_LIBS="`$XML_CONFIG --libs`"
 		LIBXML_CFLAGS="`$XML_CONFIG --cflags`"
 		AC_MSG_RESULT(found)
+	        if test "x$LIBXML_PREFIX" != "x"
+	 	then
+		   AC_MSG_RESULT(
+Don't forget to make sure that ${LIBXML_PREFIX}/lib has been added 
+	to your LD_LIBRARY_PATH environment variable)
+	        fi		
 	else
 		AC_MSG_ERROR(You need at least libxml2 $LIBXML_REQUIRED_VERSION for this
  version of xsldbg)
@@ -235,6 +241,8 @@ then
 else
 	AC_MSG_ERROR(Could not find libxml2 anywhere, check ftp://xmlsoft.org/.)
 fi
+
+LIBXML_PREFIX_DIR="`$XML_CONFIG --prefix`"
 
 AC_SUBST(XML_CONFIG)
 AC_SUBST(LIBXML_PREFIX)
@@ -287,7 +295,6 @@ else
  ftp://xmlsoft.org/XSLT/.) fi
 
 
-
 AC_SUBST(XSLT_CONFIG)
 AC_SUBST(LIBXSLT_PREFIX)
 AC_SUBST(LIBXSLT_LIBS)
@@ -318,17 +325,50 @@ AC_SUBST(XSLDBG_LIBS)
 
 
 dnl
-dnl Check for debug support in libxslt
+dnl Check for debugger support in libxslt
 dnl
-dnl if test "x`$XSLT_CONFIG --libs | grep breakpoint`" != "x"
-dnl then
-dnl    AC_MSG_RESULT(Found debugger support in libxslt)
-    WITH_DEBUGGER=1
-    AC_DEFINE(WITH_DEBUGGER)
-dnl else
-dnl    AC_ERROR(Debugger support not built into libxslt use --with-debugger=yes as option when configuring libxslt)
-dnl fi
+LIBXSLT_PREFIX_DIR="`$XSLT_CONFIG --prefix`"
+AC_MSG_RESULT(Looking for WITH_DEBUGGER enabled in ${LIBXSLT_PREFIX_DIR}/include/libxslt/xsltconfig.h)
+if test "x$LIBXSLT_PREFIX_DIR" != "x"
+then   	
+   if test "x`grep \"#define.*WITH_XSLT_DEBUG\" ${LIBXSLT_PREFIX_DIR}/include/libxslt/xsltconfig.h`" != "x"
+   then 
+  	 AC_MSG_RESULT(Found debugger support in libxslt)
+   	WITH_DEBUGGER=1	
+   	AC_DEFINE(WITH_DEBUGGER)
+   else
+	AC_ERROR(Debugger support not built into libxslt use --with-debugger as option 
+	when configuring libxslt)
+   fi
+   AC_MSG_RESULT(Don't forget to make sure that ${LIBXSLT_PREFIX_DIR}/lib has been added 
+	to your LD_LIBRARY_PATH environment variable)
+else
+   AC_ERROR(Unable to find libxslt prefix directory, or load xsltconfig.h)
+fi
 
+
+dnl
+dnl what environment variables must be exported for xsldbg to work?
+dnl  We only LD_LIBRARY_PATH set at the moment
+dnl  I assume that /bin/sh will be used to compile xsldbg
+dnl
+
+if test "x`ls -l /bin/sh | grep bash`" != "x" -o "x`ls -l /bin/sh | grep pdksh`" != "x"
+then
+  AC_MSG_RESULT(Noting values for required variables for the bash/pdksh shell)
+  XSLDBG_EXPORTS="export LD_LIBRARY_PATH=${LIBXSLT_PREFIX_DIR}/lib:${LIBXML_PREFIX_DIR}/lib:$LD_LIBRARY_PATH;"
+else
+  if test "x`ls -l /bin/sh | grep tcsh`" != "x"
+  then
+	AC_MSG_RESULT(Noting values for required variables for the tcsh shell)
+  	XSLDBG_EXPORTS="setenv LD_LIBRARY_PATH=${LIBXSLT_PREFIX_DIR}/lib:${LIBXML_PREFIX_DIR}/lib:$LD_LIBRARY_PATH;"
+  else
+	AC_MSG_RESULT(Warning!! Unable to set up exports needed by xsldbg. 
+Tests may not be run nor documentation be built)
+	XSLDBG_EXPORTS=""
+  fi 	
+fi	
+AC_SUBST(XSLDBG_EXPORTS)
 
 AC_OUTPUT(
         Makefile     	

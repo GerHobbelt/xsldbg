@@ -6,7 +6,7 @@ $(XSLDBG):
 	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
 
 xsldoc.txt:
-	$(XSLDBG) --param alldocs "1" --param xsldbg_version "'$(VERSION)'" xsldoc.xsl xsldoc.xml > xsldoc.txt
+	$(XSLDBG_EXPORTS) $(XSLDBG) --param alldocs "1" --param xsldbg_version "'$(VERSION)'" xsldoc.xsl xsldoc.xml > xsldoc.txt
 	cp xsldoc.txt ./plain/xsldoc.txt
 
 EXTRA_DIST= xsldoc.xsl xsldoc.xml xsldoc.dtd search.xsl xsldoc.txt

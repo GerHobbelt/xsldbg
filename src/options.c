@@ -81,14 +81,14 @@ int
 optionsInit(void)
 {
     int optionId;
-    xmlChar *docsPath = NULL;
+    const xmlChar *docsPath = NULL;
 
 /* for non win32 environments see the macro in xsldebugger/Makefile.am
    Win32 tupe systems see  macro in libxslt/xsltwin32config.h
    For definition of USE_DOCS_MACRO see options.h */
 
 #ifdef USE_DOCS_MACRO
-    docsPath = DOCS_PATH;
+    docsPath = (xmlChar*)DOCS_PATH;
 #else
 #ifndef __riscos
     docsPath = getenv("XSLDBG_DOCS_DIR");

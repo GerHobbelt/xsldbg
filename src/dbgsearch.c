@@ -51,8 +51,7 @@ searchNewInfo(enum SearchEnum type)
                 breakPointSearchDataPtr searchData;
 
                 result->type = SEARCH_BREAKPOINT;
-                searchData =
-                    (breakPointSearchDataPtr)
+                searchData = (breakPointSearchDataPtr)
                     xmlMalloc(sizeof(breakPointSearchData));
                 if (searchData) {
                     searchData->id = -1;
@@ -78,9 +77,9 @@ searchNewInfo(enum SearchEnum type)
                     searchData->node = NULL;
                     searchData->lineNo = -1;
                     searchData->url = NULL;
-		    searchData->nameInput = NULL;
-		    searchData->guessedNameMatch = NULL;
-		    searchData->absoluteNameMatch = NULL;
+                    searchData->nameInput = NULL;
+                    searchData->guessedNameMatch = NULL;
+                    searchData->absoluteNameMatch = NULL;
                     result->data = searchData;
                 } else {
                     xmlFree(result);
@@ -109,45 +108,45 @@ void
 searchFreeInfo(searchInfoPtr info)
 {
     if (info) {
-      if (info->data){
-          switch (info->type) {
-	  case SEARCH_BREAKPOINT:
-	    {
-             breakPointSearchDataPtr  searchData = 
-	       (breakPointSearchDataPtr)info->data;
+        if (info->data) {
+            switch (info->type) {
+                case SEARCH_BREAKPOINT:
+                    {
+                        breakPointSearchDataPtr searchData =
+                            (breakPointSearchDataPtr) info->data;
 
-	     if (searchData->templateName)
-	       xmlFree(searchData->templateName);
-	    }	    
-	    break;  
-	    
-	  case SEARCH_NODE:
-	    {
-	    nodeSearchDataPtr searchData =
-	      (nodeSearchDataPtr)info->data;
+                        if (searchData->templateName)
+                            xmlFree(searchData->templateName);
+                    }
+                    break;
 
-	    if (searchData->url)
-	      xmlFree(searchData->url);
+                case SEARCH_NODE:
+                    {
+                        nodeSearchDataPtr searchData =
+                            (nodeSearchDataPtr) info->data;
 
-	    if (searchData->nameInput)
-	      xmlFree(searchData->nameInput);
+                        if (searchData->url)
+                            xmlFree(searchData->url);
 
-	    if (searchData->guessedNameMatch)
-	      xmlFree(searchData->guessedNameMatch);
-	    
-	    if (searchData->absoluteNameMatch)
-	      xmlFree(searchData->absoluteNameMatch);
+                        if (searchData->nameInput)
+                            xmlFree(searchData->nameInput);
 
-	    /* we never free searchData->node as we did not create it!*/
-	    }
-	    break;
+                        if (searchData->guessedNameMatch)
+                            xmlFree(searchData->guessedNameMatch);
 
-	  case SEARCH_XSL:
-	    break;
+                        if (searchData->absoluteNameMatch)
+                            xmlFree(searchData->absoluteNameMatch);
 
-	  }
-	  xmlFree(info->data);
-      }	  
+                        /* we never free searchData->node as we did not create it! */
+                    }
+                    break;
+
+                case SEARCH_XSL:
+                    break;
+
+            }
+            xmlFree(info->data);
+        }
         xmlFree(info);
     }
 }
@@ -336,53 +335,57 @@ scanForBreakPoint(void *payload, void *data,
  *     otherwise @data is unchanged
  *
 */
-void 
-scanForNode(void *payload, void *data,
-                       xmlChar * name ATTRIBUTE_UNUSED){
-  searchInfoPtr searchInf = (searchInfoPtr)data;
-  nodeSearchDataPtr searchData = NULL;
-  xmlNodePtr node = (xmlNodePtr)payload;
-  int match = 1;
+void
+scanForNode(void *payload, void *data, xmlChar * name ATTRIBUTE_UNUSED)
+{
+    searchInfoPtr searchInf = (searchInfoPtr) data;
+    nodeSearchDataPtr searchData = NULL;
+    xmlNodePtr node = (xmlNodePtr) payload;
+    int match = 1;
 
-  if (!node || !node->doc || !node->doc->URL || 
-      !searchInf || (searchInf->type != SEARCH_NODE))
-    return;
+    if (!node || !node->doc || !node->doc->URL ||
+        !searchInf || (searchInf->type != SEARCH_NODE))
+        return;
 
-  searchData = (nodeSearchDataPtr)searchInf->data;
+    searchData = (nodeSearchDataPtr) searchInf->data;
 
-  if (searchData->lineNo >= 0)
-      match = searchData->lineNo == xmlGetLineNo(node);
+    if (searchData->lineNo >= 0)
+        match = searchData->lineNo == xmlGetLineNo(node);
 
-  if ( searchData->url )
-	match = match && (strcmp((char*)searchData->url, (char*)node->doc->URL) == 0);
+    if (searchData->url)
+        match = match
+            && (strcmp((char *) searchData->url, (char *) node->doc->URL)
+                == 0);
 
-  if (match){
-    searchData->node = node;
-    searchInf->found = 1;
-  }
+    if (match) {
+        searchData->node = node;
+        searchInf->found = 1;
+    }
 
 }
 
 void findNodeByLineNoHelper(void *payload, void *data,
-			    xmlChar * name ATTRIBUTE_UNUSED);
+                            xmlChar * name ATTRIBUTE_UNUSED);
 
 /* we are walking through stylesheets looking for a match 
  our payload is a xmlStylesheetPtr
 */
-void 
+void
 findNodeByLineNoHelper(void *payload, void *data,
-                       xmlChar * name ATTRIBUTE_UNUSED){
-  xsltStylesheetPtr style =   (xsltStylesheetPtr)payload;
-  searchInfoPtr searchInf = (searchInfoPtr)data;
+                       xmlChar * name ATTRIBUTE_UNUSED)
+{
+    xsltStylesheetPtr style = (xsltStylesheetPtr) payload;
+    searchInfoPtr searchInf = (searchInfoPtr) data;
 
-  if (!payload || !searchInf || !style->doc)
-    return;
+    if (!payload || !searchInf || !style->doc)
+        return;
 
-  walkChildNodes((xmlHashScanner)scanForNode, searchInf, (xmlNodePtr)style->doc);
+    walkChildNodes((xmlHashScanner) scanForNode, searchInf,
+                   (xmlNodePtr) style->doc);
 
-  /* try the included stylesheets */
-  if (!searchInf->found)
-    walkIncludes((xmlHashScanner)scanForNode, searchInf, style);
+    /* try the included stylesheets */
+    if (!searchInf->found)
+        walkIncludes((xmlHashScanner) scanForNode, searchInf, style);
 }
 
 /**
@@ -404,10 +407,10 @@ xslFindNodeByLineNo(xsltTransformContextPtr ctxt,
     searchInfoPtr searchInf = searchNewInfo(SEARCH_NODE);
     nodeSearchDataPtr searchData = NULL;
 
-    if (!searchInf){
-      xsltGenericError(xsltGenericErrorContext,
-		       "Unable to create searchInfo in xslFindNodeByLineNo\n");
-      return result;
+    if (!searchInf) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Unable to create searchInfo in xslFindNodeByLineNo\n");
+        return result;
     }
 
     if (!ctxt || !url || (lineNumber == -1)) {
@@ -419,18 +422,20 @@ xslFindNodeByLineNo(xsltTransformContextPtr ctxt,
         return result;
     }
 
-    searchData = (nodeSearchDataPtr)searchInf->data;
-    searchData->url = (xmlChar*)xmlMemStrdup(url);
+    searchData = (nodeSearchDataPtr) searchInf->data;
+    searchData->url = (xmlChar *) xmlMemStrdup((char*)url);
     searchData->lineNo = lineNumber;
-    walkStylesheets((xmlHashScanner)findNodeByLineNoHelper, searchInf, ctxt->style);
-    if (!searchInf->found){
-      /* try searching the document set */
-      xsltDocumentPtr document = ctxt->document;
+    walkStylesheets((xmlHashScanner) findNodeByLineNoHelper, searchInf,
+                    ctxt->style);
+    if (!searchInf->found) {
+        /* try searching the document set */
+        xsltDocumentPtr document = ctxt->document;
 
-      while (document && !searchInf->found){
-	walkChildNodes((xmlHashScanner) scanForNode, searchInf, (xmlNodePtr)document->doc);
-	document = document->next;
-      }
+        while (document && !searchInf->found) {
+            walkChildNodes((xmlHashScanner) scanForNode, searchInf,
+                           (xmlNodePtr) document->doc);
+            document = document->next;
+        }
     }
     result = searchData->node;
     searchFreeInfo(searchInf);
@@ -514,7 +519,7 @@ findBreakPointByName(const xmlChar * templateName)
         return result;
 
     searchData = (breakPointSearchDataPtr) searchInf->data;
-    searchData->templateName = (xmlChar*)xmlStrdup(templateName);
+    searchData->templateName = (xmlChar *) xmlStrdup(templateName);
     if (templateName) {
         walkBreakPoints((xmlHashScanner) scanForBreakPoint, searchInf);
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
@@ -826,23 +831,24 @@ walkLocals(xmlHashScanner walkFunc, void *data, xsltStylesheetPtr style)
 void
 walkIncludes(xmlHashScanner walkFunc, void *data, xsltStylesheetPtr style)
 {
-    xmlNodePtr node = NULL, styleChild = NULL;
-    xsltDocumentPtr document; /* included xslt documents */
+  xmlNodePtr node = NULL;
+    xsltDocumentPtr document;   /* included xslt documents */
+
     if (!walkFunc || !style)
         return;
 
     while (style) {
-      document = style->docList;
-      /* look at included documents */
-      while (document) {
-	  (*walkFunc) ((xmlNodePtr)document->doc, data, NULL);
-	  document = document->next;
-      }
-      /* try next stylesheet */
-      if (style->next)
-	style = style->next;
-      else
-	style = style->imports;
+        document = style->docList;
+        /* look at included documents */
+        while (document) {
+            (*walkFunc) ((xmlNodePtr) document->doc, data, NULL);
+            document = document->next;
+        }
+        /* try next stylesheet */
+        if (style->next)
+            style = style->next;
+        else
+            style = style->imports;
     }
 }
 
@@ -857,40 +863,40 @@ walkIncludes(xmlHashScanner walkFunc, void *data, xsltStylesheetPtr style)
  *   of walkFunc is of type xmlNodePtr
  */
 void
-walkIncludeInst (xmlHashScanner walkFunc, void *data,
-		  xsltStylesheetPtr style)
+walkIncludeInst(xmlHashScanner walkFunc, void *data,
+                xsltStylesheetPtr style)
 {
-  xmlNodePtr node = NULL, styleChild = NULL;
+    xmlNodePtr node = NULL, styleChild = NULL;
 
-  if (!walkFunc || !style)
-    return;
+    if (!walkFunc || !style)
+        return;
 
-  while (style)
-    {
-      /*look for stylesheet node */
-      if (style->doc){
-	node = (xmlNodePtr)style->doc->children;
-	while (node){
-	  /* not need but just in case :) */
-	  if (IS_XSLT_NAME(node, "stylesheet") || IS_XSLT_NAME(node, "transform")){
-	    styleChild = node->children; /* get the topmost elements */
-	    break;
-	  }else
-	    node = node->next;
-	}
+    while (style) {
+        /*look for stylesheet node */
+        if (style->doc) {
+            node = (xmlNodePtr) style->doc->children;
+            while (node) {
+                /* not need but just in case :) */
+                if (IS_XSLT_NAME(node, "stylesheet")
+                    || IS_XSLT_NAME(node, "transform")) {
+                    styleChild = node->children;        /* get the topmost elements */
+                    break;
+                } else
+                    node = node->next;
+            }
 
-	/* look for includes */
-	while(styleChild){
-	  if (IS_XSLT_NAME(styleChild, "include"))
-	    (*walkFunc)(styleChild, data, NULL);
-	styleChild = styleChild ->next;
-	}
-      }
-      /* try next stylesheet */
-      if (style->next)
-	style = style->next;
-      else
-	style = style->imports;
+            /* look for includes */
+            while (styleChild) {
+                if (IS_XSLT_NAME(styleChild, "include"))
+                    (*walkFunc) (styleChild, data, NULL);
+                styleChild = styleChild->next;
+            }
+        }
+        /* try next stylesheet */
+        if (style->next)
+            style = style->next;
+        else
+            style = style->imports;
     }
 }
 
@@ -914,7 +920,7 @@ walkChildNodes(xmlHashScanner walkFunc, void *data, xmlNodePtr node)
         return;
 
     while (node && !searchInf->found) {
-      (walkFunc)(node, data, NULL);
+        (walkFunc) (node, data, NULL);
         child = node->children;
         while (child && !searchInf->found) {
             walkChildNodes(walkFunc, data, child);

@@ -41,9 +41,9 @@ int breakPointSearchTest(void)
     return result;
   }
 
-  breakPoint->url = xmlStrdup("index.xsl");
+  breakPoint->url = xmlStrdup((xmlChar*)"index.xsl");
   breakPoint->lineNo = 10;
-  breakPoint->templateName = xmlStrdup("/");
+  breakPoint->templateName = xmlStrdup((xmlChar*)"/");
   breakPoint->id = 1;
   node = searchBreakPointNode(breakPoint);
   if(node){
@@ -64,7 +64,7 @@ int breakPointSearchTest(void)
     node = searchBreakPointNode(breakPoint);      
     xslSearchAdd(node);
     xmlShellPrintNode(node);
-    xslSearchSave("search.data");
+    xslSearchSave((xmlChar*)"search.data");
     /* no need to free doc as it will be done by searchFree function*/
     result++;
   }else{
@@ -93,7 +93,7 @@ int nodeSearchTest(void)
   if (searchDoc && searchInf && searchInf->data){
     searchData = (nodeSearchDataPtr)searchInf->data;
     searchData->lineNo = 11;
-    searchData->url = (xmlChar*)xmlMemStrdup((xmlChar*)"test1.xsl");
+    searchData->url = (xmlChar*)xmlMemStrdup("test1.xsl");
     walkChildNodes((xmlHashScanner) testNodeScan, searchInf, (xmlNodePtr)searchDoc);
     if (searchInf->found){
       /* success !*/
@@ -132,6 +132,7 @@ int nodeSearchTest(void)
 }
 
 
+int changeDir(const xmlChar * path);
 
 /**
  * changeDir:
