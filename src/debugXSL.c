@@ -599,6 +599,8 @@ xsldbgSleep(long delay)
 
 
 /**
+ * xslDbgWalkContinue:
+ *
  * Delay execution for time as indicated by OPTION_WALK_SPEED
  * Can only be called from within xslDbgShell!
  * OPTION_WALK_SPEED != WALKSPEED_STOP

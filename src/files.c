@@ -132,7 +132,8 @@ openTerminal(xmlChar * device)
 
 /**
  * selectTerminal:
- * Return 1 if able to use prevously opened terminal 
+ *
+ * Returns 1 if able to use prevously opened terminal 
  *        0 otherwise
 */
 int
@@ -366,7 +367,7 @@ guessStylesheetName(searchInfoPtr searchInf)
 /**
  * stylePath:
  *
- * Return the base path for the top stylesheet ie
+ * Returns the base path for the top stylesheet ie
  *        ie URL minus the actual file name
  */
 xmlChar *
@@ -378,7 +379,7 @@ stylePath(void)
 /**
  * workingPath:
  *
- * Return the working directory as set by changeDir function
+ * Returns the working directory as set by changeDir function
  */
 xmlChar *
 workingPath(void)
@@ -538,8 +539,7 @@ freeXmlFile(enum File_type file_type)
 /**
  * getStylesheet:
  *
- * Return the topmost stylesheet 
- * Returns non-null on success,
+ * Returns the topmost stylesheet non-null on success,
  *         NULL otherwise
  */
 xsltStylesheetPtr

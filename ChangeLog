@@ -1,246 +1,283 @@
-* Keith Isdale 4 Dec 2001
-* Fixed configure.in and all Makefile.am's so that they setup and 
-*   use LIBXSLT_PREFIX, LIBXML_PREFIX. and that all executions
-*   of xsldbg use these libraries at theses locations 
-*	
-* Compiled with pandantic compiler settings and find errors reported	
-* Fixed listTest.c and searchTest.c so that only minor warnings are 	
-*   generated upon thier compilation
-* Fixed minor issues mostly to do with casts to (char*) or (xmlChar*)
-*   	
+Keith Isdale 5 Dec 2001 <k_isdale@tpg.com.au>
+Updated docs/en/website/index.html
+Fixed configure.in to generated GNOME docs if asked
+Updated docs/en/GNOME/Makefile.am to generate gtkdoc style docs 	
 	
-* *************************************
-* Keith Isdale 4 Dec 2001	
-* Feature freeze active 	
-*     o no new features are to be added
-*     o bug and documentation updates only until after beta release 	
-* *************************************	
+	
+Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>
+ Fixed configure.in and all Makefile.am's so that they setup and 
+   use LIBXSLT_PREFIX, LIBXML_PREFIX. and that all executions
+   of xsldbg use these libraries at theses locations 
+	
+ Compiled with pandantic compiler settings and find errors reported	
+ Fixed listTest.c and searchTest.c so that only minor warnings are 	
+   generated upon thier compilation
+ Fixed minor issues mostly to do with casts to (char*) or (xmlChar*)
+   	
+ Fix docs/en/Makefile.am so that xsldoc.txt is generated
+ Commit to cvs	
+ Fix ChangeLog so that is is consistant	
+	
+	
+
+	
+ *************************************
+ Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>	
+ Feature freeze active 	
+     o no new features are to be added
+     o bug and documentation updates only until after beta release 	
+ *************************************	
+
+ 	
+
+ Keith Isdale 3 Dec 2001 <k_isdale@tpg.com.au>
+ Version 0.8.5		
+ Added validation of file:line number for stylesheet breakpoints
+   It now generates a warning if a stylsheeet breakPoint appears to be invalid
+ Added validation of file:line number for xml data
+   It tries to will try appending the prefix of topmost xml data file
+     to url if an absolute match has not been made 	
+   It now generates a warning if a xml data breakPoint appears to be invalid
+ Re-organised xmlDbgShellBreak and broke it up using new functions 
+	addSourceBreakPoint and addDataBreakPoint (see breakpoint_cmds.c)		
+ re-organised searching to make it consistant accross project
+	got rid of FileSearchPtr structure ..
+ Added walkIncludeInst which is now used instead of walkIncluded when adding
+    xsl:includes to search dataBase
+ Added walkIncludes to walk though all included stylesheets 	
+
+	
+
+	
+ Keith Isdale 1 Dec 2001 <k_isdale@tpg.com.au>
+ Version 0.8.4	
+ Added	--with-libxslt-prefix to configure.in
+ Changed source and data commands so that they clear any breakpoints present 	
+ Changed xsldbg.c so that it when running a stylesheet you get output
+ Fixed transform.c (double entry to text nodes)
+	variables.c (no entry to variable node)
+     Sent diff to xslt@gnome.org	
+ Remove any depndance on old breakpoint API file in libxslt
+   now fully using callbackmechanism	
+
+
+	
+ Keith Isdale 30 Nov 2001 <k_isdale@tpg.com.au>
+ Version 0.8.3	
+ Applied fixes as suggested by Justin
+ Fixed configure.in, acconfig.h, breakpointInternals.h so that
+   debugging is disable when asked , awful hack but it works	
+
+	
+	
+ Keith Isdale 29 Nov 2001 <k_isdale@tpg.com.au>
+ Change help so that is can either display static text file or respond to 
+   queries, added docs/en/xsldoc.txt
+   Removed #include "config.h" from*.c files and replace with 
+	#include "xsldbg.h", and change xsldbg.h to have
+	    #include "config" or equivalent. This is to suit risc os
+       config_risc.h for risc os as supplied by Justin Fletcher
+ Updated tests to suit patch for variables and double debugging of
+   text nodes	
+
+	
+	
+ Keith Isdale 28 Nov 2001 <k_isdale@tpg.com.au>
+ Applied patches by Justin Fletcher to suit risc os	
+
+	
+	
+ Keith Isdale 27 Nov 2001 <k_isdale@tpg.com.au>
+ Converted all functions to work under libxslt-1.0.7	
+ Added OPTIONS_DOCS_PATH to options.[ch] and set help.c and dbgsearch.c 
+	to use this new option 	
+ Changed all printing to use  xsltGenericError(xsltGenericErrorContext, ..)
+ Fixed logic for printing out preamble and change of source|data|directory  messages	
+ Updated the guess of full stylesheet name to include partial match in file name
+    see guessStylesheetNameHelper, in files.c	
+
+	
 	 	
-* Keith Isdale 3 Dec 2001
-* Added validation of file:line number for stylesheet breakpoints
-*   It now generates a warning if a stylsheeet breakPoint appears to be invalid
-* Changed to version 0.8.5
-* Added validation of file:line number for xml data
-*   It tries to will try appending the prefix of topmost xml data file
-*     to url if an absolute match has not been made 	
-*   It now generates a warning if a xml data breakPoint appears to be invalid
-* Re-organised xmlDbgShellBreak and broke it up using new functions 
-*	addSourceBreakPoint and addDataBreakPoint (see breakpoint_cmds.c)		
-* re-organised searching to make it consistant accross project
-*	got rid of FileSearchPtr structure ..
-* Added walkIncludeInst which is now used instead of walkIncluded when adding
-*    xsl:includes to search dataBase
-* Added walkIncludes to walk though all included stylesheets 	
+ Keith Isdale 26 Nov 2001 <k_isdale@tpg.com.au>
+ Fixed errors, and inconsistancies in xsldoc.xml
+   Changes needed for the xsldbg mode for kdbg
+          Changed templates command to accept a template name to look for 
+          Added --gdb option to command line so xsldbg print marker after each command is entered
+              Added OPTIIONS_GDB to options.h
+              Added gdbMode to options.c and updated isOptionEnabled and enableOption functions
+          Added a tty command to send i/o to a terminal device	
+ Added stylesheet command to print out a list of stylesheets loaded
 
-* Keith Isdale 1 Dec 2001
-* Added	--with-libxslt-prefix to configure.in
-* Changed to version 0.8.4
-* Changed source and data commands so that they clear any breakpoints present 	
-* Changed xsldbg.c so that it when running a stylesheet you get output
-* Fixed transform.c (double entry to text nodes)
-*	variables.c (no entry to variable node)
-*     Sent diff to xslt@gnome.org	
-* Remove any depndance on old breakpoint API file in libxslt
-*   now fully using callbackmechanism	
-	
-* Keith Isdale 30 Nov 2001
-* Applied fixes as suggested by Justin
-* Fixed configure.in, acconfig.h, breakpointInternals.h so that
-*   debugging is disable when asked , awful hack but it works	
-* Changed version 0.8.3
-	
-	
-* Keith Isdale 29 Nov 2001
-* Change help so that is can either display static text file or respond to 
-*   queries, added docs/en/xsldoc.txt
-*   Removed #include "config.h" from*.c files and replace with 
-*	#include "xsldbg.h", and change xsldbg.h to have
-*	    #include "config" or equivalent. This is to suit risc os
-*       config_risc.h for risc os as supplied by Justin Fletcher
-* Updated tests to suit patch for variables and double debugging of
-*   text nodes	
-	
-	
-* Keith Isdale 28 Nov 2001
-* Applied patches by Justin Fletcher to suit risc os	
-	
-* Keith Isdale 27 Nov 2001
-* Converted all functions to work under libxslt-1.0.7	
-* Added OPTIONS_DOCS_PATH to options.[ch] and set help.c and dbgsearch.c 
-*	to use this new option 	
-* Changed all printing to use  xsltGenericError(xsltGenericErrorContext, ..)
-* Fixed logic for printing out preamble and change of source|data|directory  messages	
-* Updated the guess of full stylesheet name to include partial match in file name
-*    see guessStylesheetNameHelper, in files.c	
-
-	 	
-* Keith Isdale 26 Nov 2001
-* Fixed errors, and inconsistancies in xsldoc.xml
-*   Changes needed for the xsldbg mode for kdbg
-*          Changed templates command to accept a template name to look for 
-*          Added --gdb option to command line so xsldbg print marker after each command is entered
-*              Added OPTIIONS_GDB to options.h
-*              Added gdbMode to options.c and updated isOptionEnabled and enableOption functions
-*          Added a tty command to send i/o to a terminal device	
-* Added stylesheet command to print out a list of stylesheets loaded
 
 	
-* Keith Isdale 25 Nov 2001
-*   Changes needed for the xsldbg mode for kdbg
-*         Added prefix of #<frame_no> to output where of command	
-*         Added frame command 
-*         Added XSLDBG <version> to prelude of xsldbg	
+ Keith Isdale 25 Nov 2001 <k_isdale@tpg.com.au>
+   Changes needed for the xsldbg mode for kdbg
+         Added prefix of #<frame_no> to output where of command	
+         Added frame command 
+         Added XSLDBG <version> to prelude of xsldbg	
+
+
 	
-* Keith Isdale 21 Nov 2001
-* Changed searching
-*     removed xslWalkVariables, searchVariableNode
-*     added xslWalkGlobals, xslWalkLocals, searchGlobalNode, searchLocalNode
-*     implemented searching for callstack entries
-*     updated breakpoints.h breakpointInternals.h to suit	
-*     Revised the format generated by docs/en/search.xsl 	
-* Changed version to 0.7.9 any further changes will be as needed by Igor 
-*    and getting xsldbg working in win32 environments
+ Keith Isdale 21 Nov 2001 <k_isdale@tpg.com.au>
+ Version 0.7.9
+ Changed searching
+     removed xslWalkVariables, searchVariableNode
+     added xslWalkGlobals, xslWalkLocals, searchGlobalNode, searchLocalNode
+     implemented searching for callstack entries
+     updated breakpoints.h breakpointInternals.h to suit	
+     Revised the format generated by docs/en/search.xsl 	
+     Any further changes will be as needed by Igor (ed note : didn't happen that way)
+    and getting xsldbg working in win32 environments
 
 	
 
 	
-* Fixed xslHandleDebugger (transform.c of libxslt) to handle DEBUG_WALK status
-*    properly, 
-* Fixed logic of walk function so it does not restart the stylesheet 
+ Fixed xslHandleDebugger (transform.c of libxslt) to handle DEBUG_WALK status
+    properly, 
+ Fixed logic of walk function so it does not restart the stylesheet 
 	
 	
-* Keith Isdale 20 Nov 2001
-* moved as many of the xsldbg commands from debugXSL.c that were possible
-*  into files of related commands and placed their declaratons into debugXSL.h
-*   Added files 
-*      breakpoint_cmds.c, nodeview_cms.c, trace_cmds.c param_cmds.c
-*        search_cmds.c, os_cmds.c, template_cmds.c
-*   Updated src/Makefile.am to suit 	
-* Fixed bug in logic in the main function xsldbg.c
-*     If unexpected events occur it now aborts after printing 
-*      a message	
+ Keith Isdale 20 Nov 2001 <k_isdale@tpg.com.au>
+ moved as many of the xsldbg commands from debugXSL.c that were possible
+  into files of related commands and placed their declaratons into debugXSL.h
+   Added files 
+      breakpoint_cmds.c, nodeview_cms.c, trace_cmds.c param_cmds.c
+        search_cmds.c, os_cmds.c, template_cmds.c
+   Updated src/Makefile.am to suit 	
+ Fixed bug in logic in the main function xsldbg.c
+     If unexpected events occur it now aborts after printing 
+      a message	
+
+
 	
-* Keith Isdale 20 Nov 2001
-* Added file breakpoint/breakpointInternals.h to libxslt
-*   Put all the declarations of potential useful internal breakpoint functions 
-*   in 	breakpointInternals.h
-* Added to the breakpoint API (breakpoint/breakpointInternals.h) the internal search 
-*	functions of :
-*  	     searchInit, searchFree, searchDoc, seachRootNode, 
-*	    searchBreakPointNode,  searchTemplateNode, searchCallStackNode
-* Added to the breakpoint API (breakpoint/breakpoint.h)the public search 
-*	functions of :
-	    xslSeachEmpty, xslSearchSave, xslSeachAdd, xslFindNodesByQuery
-* Changed Makefile.am in the root dir of libxslt so
-*     that the breakpoint API is only built if needed.
-*     Removed the usage of the WITH_DEBUGGER #defines in
-*	breakpoint directory.
-* Fix many errors detected by even more pandatic compiler settings
-* Added macros :
-*	    xmlStrLen, xmlStrCat, xmlStrCpy
-*   to xsldbg.h to handle (xmlChar*) input instead of (char*)
-*     They still end up calling  the standard string functions
-* Removed the "root" command line parameter instead xsldbg automatically 
-*	stops and first xsl node found after stepping into stylesheet
-* Fixed errors in logic for recovering when files can't be loaded
-*       in xsldbg.c main	
+ Keith Isdale 20 Nov 2001 <k_isdale@tpg.com.au>
+ Added file breakpoint/breakpointInternals.h to libxslt
+   Put all the declarations of potential useful internal breakpoint functions 
+   in 	breakpointInternals.h
+ Added to the breakpoint API (breakpoint/breakpointInternals.h) the internal search 
+	functions of :
+  	     searchInit, searchFree, searchDoc, seachRootNode, 
+	    searchBreakPointNode,  searchTemplateNode, searchCallStackNode
+ Added to the breakpoint API (breakpoint/breakpoint.h)the public search 
+	functions of :
+   	 xslSeachEmpty, xslSearchSave, xslSeachAdd, xslFindNodesByQuery
+ Changed Makefile.am in the root dir of libxslt so
+     that the breakpoint API is only built if needed.
+     Removed the usage of the WITH_DEBUGGER #defines in
+	breakpoint directory.
+ Fix many errors detected by even more pandatic compiler settings
+ Added macros :
+	    xmlStrLen, xmlStrCat, xmlStrCpy
+   to xsldbg.h to handle (xmlChar*) input instead of (char*)
+     They still end up calling  the standard string functions
+ Removed the "root" command line parameter instead xsldbg automatically 
+	stops and first xsl node found after stepping into stylesheet
+ Fixed errors in logic for recovering when files can't be loaded
+       in xsldbg.c main	
 	
 
 	
-* Keith Isdale 19 Nov 2001
-* Added automatic replacement of '~' for $HOME environment variable value
-*         when using source and data commands
-* Added xslEmptyBreakPoint to breakpoint API
-* Did a trial run of importing breakpoint API implementation into 
-*    libxslt. Made small changes to header imports.
-*    Fixed xslHandleDebugger so it doesn't crash if its preconditions 
-*       are not met	
-*   Ported new xsltproc code into xsldbg.c
-*   Added xslDebugBreak to dbgmain.c 	
-*   Fix many minor errors detected by setting pandantic compiler flags
-* Changed source and data commands so that a "run" is required after
-*      changing files, this makes if much simpler and more reliable
-* Added test8 to run xsldbg on docbook.xsl
-* Cleaned up breakpoint API source
-	
-* Keith Isdale 18 Nov 2001
-* Implemented  new breakpoint API changed 
-*	in libxslt breakpoint/dbgbreakpoint.c
-*	in libxslt breakpoint/breakpoint.h	
-* Fixed crash when using arraylist
-	
-* Keith Isdale 17 Nov 2001
-* Add libxslt parameter commands ie addparam, delparam, showparam
-* Added shell, chdir commands
-* Added trace, walk commands
-* Added catch of SIGINT to xsldbg.c to stop execution upon receiving SIGINT
-* Fixed help.c to pass right parameters when looking for commmand provided 
-*	if provided	
-* Upated xsldoc.xml
-* Fixed libxslt/attributes.c so that xsl:attribute, and xsl:attribute-set works	
-* Added test 5, 6, 7 all libxst intructions able to be stepped into are now covered	
+ Keith Isdale 19 Nov 2001 <k_isdale@tpg.com.au>
+ Added automatic replacement of '~' for $HOME environment variable value
+         when using source and data commands
+ Added xslEmptyBreakPoint to breakpoint API
+ Did a trial run of importing breakpoint API implementation into 
+    libxslt. Made small changes to header imports.
+    Fixed xslHandleDebugger so it doesn't crash if its preconditions 
+       are not met	
+   Ported new xsltproc code into xsldbg.c
+   Added xslDebugBreak to dbgmain.c 	
+   Fix many minor errors detected by setting pandantic compiler flags
+ Changed source and data commands so that a "run" is required after
+      changing files, this makes if much simpler and more reliable
+ Added test8 to run xsldbg on docbook.xsl
+ Cleaned up breakpoint API source
 
 	
-* Keith Isdale 11 Nov 2001
-* Separated parameter storage from xsldbg.c and put into options.[ch]
-* Added files.[ch] 
+	
+ Keith Isdale 18 Nov 2001 <k_isdale@tpg.com.au>
+ Implemented  new breakpoint API changed 
+	in libxslt breakpoint/dbgbreakpoint.c
+	in libxslt breakpoint/breakpoint.h	
+ Fixed crash when using arraylist
+
+	
+	
+ Keith Isdale 17 Nov 2001 <k_isdale@tpg.com.au>
+ Add libxslt parameter commands ie addparam, delparam, showparam
+ Added shell, chdir commands
+ Added trace, walk commands
+ Added catch of SIGINT to xsldbg.c to stop execution upon receiving SIGINT
+ Fixed help.c to pass right parameters when looking for commmand provided 
+	if provided	
+ Upated xsldoc.xml
+ Fixed libxslt/attributes.c so that xsl:attribute, and xsl:attribute-set works	
+ Added test 5, 6, 7 all libxst intructions able to be stepped into are now covered	
+
+	
+ Keith Isdale 11 Nov 2001 <k_isdale@tpg.com.au>
+ Separated parameter storage from xsldbg.c and put into options.[ch]
+ Added files.[ch] 
 	 handles file interaction. But still uses xsldbg.c to do
-*        actual file parsing and loading	
-* Added options.[ch] 
-*        handles storage and retrieval of xsldbg options such as stylesheet 
-*	 file name 
-* Added	implementation for array list via arraylist.h, dbgarraylist.c
-* Added tests for array list
-* Added support for an unlimited number of libxslt parameters. But still
-*       use the hard limit of 8 parameters  for the moment	
-* Added the ability to choose xml and stylesheet file from xsldbg prompt
-* Made debugging default, if no parameters are given to xsldbg than it
-*      goes straight to xsldbg command prompt	
-*
-	
-* Keith Isdale 10 Nov 2001
-* Reverted to orginal name for XSL_DEBUGGER definition
-	
-* Keith Isdale 9 Nov 2001
-* Checked cvs -ok
-* taged repository to rel-0-6-5
+        actual file parsing and loading	
+ Added options.[ch] 
+        handles storage and retrieval of xsldbg options such as stylesheet 
+	 file name 
+ Added	implementation for array list via arraylist.h, dbgarraylist.c
+ Added tests for array list
+ Added support for an unlimited number of libxslt parameters. But still
+       use the hard limit of 8 parameters  for the moment	
+ Added the ability to choose xml and stylesheet file from xsldbg prompt
+ Made debugging default, if no parameters are given to xsldbg than it
+      goes straight to xsldbg command prompt	
 
-* Keith Isdale 8 Nov 2001
-* Fixed typos in cvs log messages to spell Daniel's name correctly
-* taged repository to rel-0-6-4
 
-*Keith Isdale 7 Nov 2001
-* Applied Daniel's patch see
-*	http://mail.gnome.org/archives/xslt/2001-November/msg00015.html
-* Added patch_history directory and stored Daniel's patch in it
-* Change to version 0.6.5
-* Added problem_analysis directory to keep record of analysies performed
 	
-* Keith Isdale  6 Nov 2001
-*	fix of stray '/' in line 54 , found by Justin Fletcher  in help.c
+ Keith Isdale 10 Nov 2001 <k_isdale@tpg.com.au>
+ Reverted to orginal name for XSL_DEBUGGER definition
+
 	
-* Keith Isdale 3 Nov 2001
-* k_isdale@tpg.com.au
-* Version 0.6.4	
-* Ported xsldbg to use  xmlNoNetExternalEntityLoader in libxml 
-*	(xsldbg.c is a rehash of /xsltproc/xsltproc.c in libxslt)
-*	
-* Split breakpoint API into several small files of cohesive functions
-*	
-* Change libxslt to supply blank implementation of breakpoint API which I 
-*   then override in xsldbg (see files src/dbg*.c)
-*   files affected in libxslt are
-* 	/configure.in, /Makefile.am, /breakpoints/*.[ch]  	
-*
-*	Adapt /configure.in to abort if debugger support not built into libxslt
-*	
-* Keith Isdale 1 Nov 2001
-* k_isdale@tpg.com.au
-* Version 0.6.3	
-* Changed xslDbgPrintTemplateNames so that the order of printing templates so
+ Keith Isdale 9 Nov 2001 <k_isdale@tpg.com.au>
+ Checked cvs -ok
+ taged repository to rel-0-6-5
+
+	
+ Keith Isdale 8 Nov 2001 <k_isdale@tpg.com.au>
+ Fixed typos in cvs log messages to spell Daniel's name correctly
+ taged repository to rel-0-6-4
+
+ Keith Isdale 7 Nov 2001 <k_isdale@tpg.com.au>
+ Version 0.6.5 	
+ Applied Daniel's patch see
+	http://mail.gnome.org/archives/xslt/2001-November/msg00015.html
+ Added patch_history directory and stored Daniel's patch in it
+ Added problem_analysis directory to keep record of analysies performed
+
+	
+ Keith Isdale  6 Nov 2001 <k_isdale@tpg.com.au>
+	fix of stray '/' in line 54 , found by Justin Fletcher  in help.c
+	
+ Keith Isdale 3 Nov 2001< k_isdale@tpg.com.au>
+ Version 0.6.4	
+ Ported xsldbg to use  xmlNoNetExternalEntityLoader in libxml 
+	(xsldbg.c is a rehash of /xsltproc/xsltproc.c in libxslt)
+	
+ Split breakpoint API into several small files of cohesive functions
+	
+ Change libxslt to supply blank implementation of breakpoint API which I 
+   then override in xsldbg (see files src/dbg*.c)
+   files affected in libxslt are
+ 	/configure.in, /Makefile.am, /breakpoints/*.[ch]  	
+
+	Adapt /configure.in to abort if debugger support not built into libxslt
+
+	
+ Keith Isdale 1 Nov 2001 <k_isdale@tpg.com.au>
+ Version 0.6.3	
+ Changed xslDbgPrintTemplateNames so that the order of printing templates so
 	it matches the order it is in file 
-*
-* Added tests directory and build a framework for automated testing
-*	see results directory for the intermediate outputs of testing
-* Added function xslDebugGotControl to breakpoint API (see /breakpoint/dbgmain.c)	
+
+ Added tests directory and build a framework for automated testing
+	see results directory for the intermediate outputs of testing
+ Added function xslDebugGotControl to breakpoint API (see /breakpoint/dbgmain.c)	
 

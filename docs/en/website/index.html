@@ -1,187 +1,281 @@
-<HTML>
-<HEAD>
-<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=windows-1252">
-<META NAME="Generator" CONTENT="Microsoft Word 97">
-<TITLE>Xsl Debugger</TITLE>
-<META NAME="Template" CONTENT="\\ASPIS\APPS\APPLICATIONS\OFF97\MSOFFICE\OFFICE\html.dot">
-<!--  saved from url=(0030)http://xsldbg.sourceforge.net/ --></HEAD>
-<BODY LINK="#0000ff" VLINK="#800080">
+<!DOCTYPE HTML PUBliC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>Xsl Debugger</title>
+</head>
+<body link="#0000ff" vlink="#800080">
 
-<P><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN"><!-- saved from url=(0061)ftp://k_isdale:Smoking@www4.tpg.com.au/xsldebugger/index.html --></P>
-<H1>Table of Contents&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <A HREF="http://sourceforge.net/"><IMG SRC="sflogo-88-1.png" BORDER=0 WIDTH=88 HEIGHT=31 ALT="SourceForge Logo"></A></H1>
+<h1>Table of Contents&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="http://sourceforge.net/"><IMG SRC="sflogo-88-1.png" BORDER=0 WIDTH=88 HEIGHT=31 ALT="SourceForge Logo"></a></h1>
 
-<UL>
-<LI><A HREF="#Introduction">Introduction</A> </LI>
+<ul>
+<li><a href="#Introduction">Introduction</a> </li>
 
-<UL>
-<LI><A HREF="#Todo">Todo</A> </LI>
-<LI><A HREF="#Requirements">Requirements</A> </LI>
-<LI><A HREF="#Limitations">Limitations</A> </LI>
-<LI><A HREF="#Author">Author</A> </LI>
-<LI><A HREF="#Licence">Licence</A> </LI>
-<LI><A HREF="#Documentation">Documention</A> </LI>
-<LI><A HREF="#Web%20site">Web site</A> </LI>
-<LI><A HREF="#Email%20lists">Email lists</A> </LI></UL>
+<ul>
+<li><a href="#Todo">Todo</a> </li>
+<li><a href="#Requirements">Requirements</a> </li>
+<li><a href="#Limitations">Limitations</a> </li>
+<li><a href="#Author">Author</a> </li>
+<li><a href="#Licence">Licence</a> </li>
+<li><a href="#Documentation">Documention</a> </li>
+<li><a href="#Web%20site">Web site</a> </li>
+<li><a href="#Email%20lists">Email lists</a> </li></ul>
 
-<LI><A HREF="#Installation">Installation</A> </LI>
-<LI><A HREF="#Testing">Testing</A> </LI>
-<LI><A HREF="#Help%20system">Help system</A> </LI>
-<LI><A HREF="#Version%20%20notes">Version notes</A> </LI>
-<LI><A HREF="#Feedback">Feedback</A> </LI>
-<LI><A HREF="#Download">Download</A> </LI>
-<LI><A HREF="#Completed%20TODO%27s">Completed TODO'S</A> </LI></UL>
+<li><a href="#Installation">Installation</a> </li>
+<li><a href="#Testing">Testing</a> </li>
+<li><a href="#Help%20system">Help system</a> </li>
+<li><a href="#Version%20%20notes">Version notes</a> </li>
+<li><a href="#FAQ">FAQ</a></li>
+<li><a href="#Feedback">Feedback</a> </li>
+<li><a href="#Download">Download</a> </li>
+<li><a href="#Completed%20TODO%27s">Completed TODO'S</a> </li></ul>
+<br />
+<br />
+<!--  - - - - - - - - - -  Introduction - - - - - - - - - -->
+<h1><a name="Introduction">Introduction</a> </h1>
+<p>xsldbg is a text based tool to debug stylesheets and it is similar to the Unix/Linux debugger gdb. It uses using the libxslt library by <a href="http://www.xmlsoft.org/XSLT">http://www.xmlsoft.org/XSLT</a> </p>
 
-<P>&nbsp;</P>
-<H1><A NAME="Introduction">Introduction</A> </H1>
-<P>xsldbg is a text based tool to debug stylesheets and it is similar to the Unix/Linux debugger gdb. It uses using the libxslt library by <A HREF="http://www.xmlsoft.org/XSLT">http://www.xmlsoft.org/XSLT</A> </P>
+<ul>
+<li>It is in the pre-beta stage of development with functionality now frozen until the start of the next beta cycle. Comments about feature set provided are welcome. </li>
+<li>Only simple simple XSL commands are supported as yet.: Fixed!. But yet to verify that all commands work as expected </li></ul>
 
-<UL>
-<LI>It is in the pre-beta stage of development. Comments about feature set provided are welcome. </LI>
-<LI>Only simple simple XSL commands are supported as yet.: Fixed!. But yet to verify that all commands work as expected </LI></UL>
 
-<H2>&nbsp;</H2>
-<H2><A NAME="Todo">Todo</A> </H2>
+<!--  - - - - - - - - - -  Todo - - - - - - - - - -->
+<h2><a name="Todo">Todo</a> </h2>
+<ul>
+<li>add the ability to list documents created by xsl:document instruction</li>
+<li>complete support all XSL commands : Done? Needs more testing</li>
+<li>perform testing, add more test case descriptions&nbsp; </li>
+<li>improve the appearance of documentation and ensure it is up to date </li>
+<li>create project files to build as MSVC project. Being looked at by&nbsp; <a href="http://www.fh-frankfurt.de/%7Eigor/projects/libxml/"><i>Igor Zlatkovic</i></a></li>
+<li>add ability to change variables&nbsp; </li>
+</ul>
 
-<UL>
-<LI>Update xsldbg when debugger support is built into libxslt. May take a while for developer of libxslt to have a chance to get to doing this. </LI>
-<LI>add the ability to validate file and line number (Daniel is working on this)&nbsp; </LI>
-<LI>add the ability to list documents created by xsl:document instruction&nbsp; </LI>
-<LI>validate the breakpoint API is complete&nbsp; </LI>
-<LI>Complete support all XSL commands : Done? Needs more testing</LI>
-<LI>perform testing, add more test case descriptions&nbsp; </LI>
-<LI>improve the appearance of documentation and ensure it is up to date </LI>
-<LI>Create project files to build&nbsp; as MSVC project. Being looked at by&nbsp; <A HREF="http://www.fh-frankfurt.de/%7Eigor/projects/libxml/"><I>Igor Zlatkovic</I></A><EM> </LI>
-</EM><LI>Look at feasibility of patching kdbg to support xsldbg. Shouldn't be impossible :-) Planned </LI>
-<LI>add ability to change variables&nbsp; </LI>
-</UL>
+<p><a href="#Completed%20TODO%27s"><b>See also completed TODO'S</b></a><b> </p>
+</b><p>&nbsp;</p>
 
-<P><A HREF="#Completed%20TODO%27s"><B>See also completed TODO'S</B></A><B> </P>
-</B><P>&nbsp;</P>
-<H2><A NAME="Requirements">Requirements</A> </H2>
-<P>&nbsp;&nbsp; <A HREF="http://www.xmlsoft.org/#Downloads">libxml2-2.4.7</A> &nbsp; or greater</P>
-<P>&nbsp;&nbsp; <A HREF="http://xmlsoft.org/XSLT/#Downloads">libxslt-1.0.6</A> &nbsp;&nbsp;&nbsp;&nbsp;or greater </P>
-<P>      But I recommend you get the latest available for your distribution. Try </P><DIR>
-<DIR>
+<!--  - - - - - - - - - -  Author - - - - - - - - - -->
+<h2><a name="Requirements">Requirements</a> </h2>
+&nbsp;&nbsp; <a href="http://www.xmlsoft.org/#Downloads">libxml2-2.4.10</a> &nbsp; or greater <br />
+&nbsp;&nbsp; <a href="http://xmlsoft.org/XSLT/#Downloads">libxslt-1.0.9</a> &nbsp; or greater <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; or <br />
+&nbsp;&nbsp; <a href="ftp://xmlsoft.org/test/libxslt-1.0.8.tar.gz">libxslt-1.0.8 snapshot that has been patched with libxslt-1.0.8_ki_0.8.4.diff from website</a><br />
 
-<P><A HREF="http://rpmfind.net/linux/rpm2html/search.php?query=libxslt&amp;submit=Search+..">libxslt rpmfind search.</A> </P>
-<P><A HREF="http://rpmfind.net/linux/rpm2html/search.php?query=libxml&amp;submit=Search+..">libxml rpmfind search.</A></P></DIR>
-</DIR>
+<p><font size=5 color="#ff0000">Warning!</font>&nbsp; libxslt may not compile with shared library enabled.
+I recommend that libxslt be configured using at least these options <br />
+<b>&nbsp;&nbsp;&nbsp;&nbsp;--with-debugger &nbsp;&nbsp; --enable-shared=no </b>
+<p>      I recommend you get the latest available for your distribution. Try <br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://rpmfind.net/linux/rpm2html/search.php?query=libxslt&amp;submit=Search+..">libxslt rpmfind search.</a> <br />
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://rpmfind.net/linux/rpm2html/search.php?query=libxml&amp;submit=Search+..">libxml rpmfind search.</a><br />
 
-<P>  A system with&nbsp;&nbsp;GNU&nbsp;compatible make and build tools</P>
-<P>&nbsp; The "more" system command is available (need by internal help system) </P>
-<H2>&nbsp;</H2>
-<H2><A NAME="Limitations">Limitations</A> </H2>
 
-<UL>
+<p>  A system with&nbsp;&nbsp;GNU&nbsp;compatible make and build tools</p>
+<p>&nbsp; The "more" system command is available (need by internal help system) </p>
+
+<br />
+<!--  - - - - - - - - - -  Limitations - - - - - - - - - -->
+<h2><a name="Limitations">Limitations</a> </h2>
+
+<ul>
         <li>The format of search results needs to be fixed</li>
         <li>Searching can take a while with large documents ie when debugging docbook.xsl</li>
-</UL>
+        <li>Both the stylesheet and xml data file will be reloaded each time xsldbg starts a "run".
+        It is too complex to complex considering keeping track of which files are out of date</li>
+</ul>
 
-<P>&nbsp; </P>
-<H2><A NAME="Author">Author</A> </H2>
-<P>The author for the debugging specific code is <A HREF="mailto:k_isdale@tpg.com.au">Keith Isdale</A> </P>
-<P>&nbsp;</P>
-<H2><A NAME="Licence">Licence</A> </H2>
-<P>This tool is available under the <A HREF="http://www.gnu.org/licenses/licenses.html#GPL">GPL licence</A> </P>
-<P>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </P>
-<H2><A NAME="Documentation">Documentation</A> </H2>
-<P>&nbsp;&nbsp;&nbsp; <A HREF="http://xsldbg.sourceforge.net/docs/index.html">Program usage and commands</A> </P>
-<H2>&nbsp;</H2>
-<H2><A NAME="Web_site">Web site</A> s</H2>
-<P>&nbsp;&nbsp;&nbsp; <A HREF="http://sourceforge.net/projects/xsldbg">http://xsldbg.sourceforge.net/</A> </P>
-<P>&nbsp;&nbsp;&nbsp; <A HREF="http://sourceforge.net/projects/xsldbg">http://sourceforge.net/projects/xsldbg</A> </P>
-<P>&nbsp;</P>
-<H2><A NAME="Email_lists">Email lists</A> </H2>
-<P>&nbsp;&nbsp;  <A HREF="http://lists.sourceforge.net/lists/listinfo/xsldbg-announce">http://lists.sourceforge.net/lists/listinfo/xsldbg-announce</A> </P>
-<P>&nbsp;   <A HREF="http://lists.sourceforge.net/lists/listinfo/xsldbg-users">http://lists.sourceforge.net/lists/listinfo/xsldbg-users</A> </P>
-<P>&nbsp;   <A HREF="http://lists.sourceforge.net/lists/listinfo/xsldbg-devel">http://lists.sourceforge.net/lists/listinfo/xsldbg-devel</A> </P>
-<P>&nbsp;</P>
-<H1><A NAME="Installation">Installation</A> </H1>
-<FONT SIZE=5 COLOR="#ff0000"><P>Warning!</FONT><FONT COLOR="#008000">Ensure that libxslt has NOT been configured with&nbsp; the "--with-debugger=no" option otherwise you will get lots of errors </P>
-<P>               when xsldbg is compiled. </FONT>&nbsp;&nbsp; </P>
-<P>&nbsp;</P>
-<P>Extract the latest version of&nbsp; from <A HREF="http://sourceforge.net/project/showfiles.php?group_id=35673">http://sourceforge.net/project/showfiles.php?group_id=35673</A> </P>
-<P>&nbsp;&nbsp;&nbsp;&nbsp;make -f&nbsp; Makefile.cvs </P>
-<P>&nbsp;&nbsp;&nbsp; ./configure </P>
-<P>&nbsp;&nbsp; make </P>
-<P>&nbsp;&nbsp; make install </P>
-<P>&nbsp;&nbsp;&nbsp;&nbsp; </P>
-<H1><A NAME="Testing">Testing</A> </H1>
-<PRE>     To test installation of xsldbg<BR>
-<BR>
-         <B>cd xsldbg/docs/en
-</B>
-<B>         xsldbg --shell --root / xsldoc.xsl xsldoc.xml
-</B>
-      And you should get a prompt like
-<B>            Starting stylesheet<BR>
-<BR>
-<BR>
-            Reached template :"/"<BR>
-<BR>
-            Breakpoint 1 in file xsldoc.xsl : line 21<BR>
+<p>&nbsp; </p>
+
+
+<!--  - - - - - - - - - -  Author - - - - - - - - - -->
+<h2><a name="Author">Author</a> </h2>
+<p>The author for the debugging specific code is <a href="mailto:k_isdale@tpg.com.au">Keith Isdale</a> </p>
+<p>&nbsp;</p>
+
+
+<!--  - - - - - - - - - -  Licence- - - - - - -->
+<h2><a name="Licence">Licence</a> </h2>
+<p>This tool is available under the <a href="http://www.gnu.org/licenses/licenses.html#GPL">GPL licence</a> </p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
+
+
+<!--  - - - - - - - - - -  Documentation - - - - - - - - - -->
+<h2><a name="Documentation">Documentation</a> </h2>
+<p>&nbsp;&nbsp;&nbsp; <a href="http://xsldbg.sourceforge.net/docs/index.html">Program usage and commands</a> </p>
+
+
+<!--  - - - - - - - - - -  Website - - - - - - - - - -->
+<h2><a name="Web_site">Web site</a> s</h2>
+<p>&nbsp;&nbsp;&nbsp; <a href="http://sourceforge.net/projects/xsldbg">http://xsldbg.sourceforge.net/</a> </p>
+<p>&nbsp;&nbsp;&nbsp; <a href="http://sourceforge.net/projects/xsldbg">http://sourceforge.net/projects/xsldbg</a> </p>
+
+
+<!--  - - - - - - - - - -  Email lists  - - - - - - - - - -->
+<h2><a name="Email_lists">Email lists</a> </h2>
+<p>&nbsp;&nbsp;  <a href="http://lists.sourceforge.net/lists/listinfo/xsldbg-announce">http://lists.sourceforge.net/lists/listinfo/xsldbg-announce</a> </p>
+<p>&nbsp;   <a href="http://lists.sourceforge.net/lists/listinfo/xsldbg-users">http://lists.sourceforge.net/lists/listinfo/xsldbg-users</a> </p>
+<p>&nbsp;   <a href="http://lists.sourceforge.net/lists/listinfo/xsldbg-devel">http://lists.sourceforge.net/lists/listinfo/xsldbg-devel</a> </p>
+
+<br />
+<br />
+<br />
+
+<!--  - - - - - - - - - -  Installation  - - - - - - - - - -->
+<h1><a name="Installation">Installation</a> </h1>
+Extract the latest stable version of xsldbg from <a href="http://sourceforge.net/project/showfiles.php?group_id=35673">http://sourceforge.net/project/showfiles.php?group_id=35673</a>
+In cvs , for example, the 0.8.4 release is tagged &quot;rel-0-8-4&quot; in cvs. See website for details of the latest stable release.<br />
+<b>
+&nbsp;&nbsp;&nbsp;&nbsp;make -f&nbsp; Makefile.cvs <br />
+&nbsp;&nbsp;&nbsp; ./configure --enable-shared=no <br />
+&nbsp;&nbsp; make <br />
+&nbsp;&nbsp; make install <br /></b>
+<br />
+<br /> Do a<br />
+&nbsp;&nbsp; <b>./configure --help </b><br />
+for details of other options to configuring xsldbg
+<br />
+<br />
+<br />
+
+
+<!--  - - - - - - - - - -  Testing  - - - - - - - - - -->
+<h1><a name="Testing">Testing</a> </h1>
+<pre>     To test installation of xsldbg<br />
+<br />
+         <b>cd xsldbg/docs/en
+
+         xsldbg --shell xsldoc.xsl xsldoc.xml</b>
+
+
+      And you should get the xsldbg prompt like
+
+
+<b>            Starting stylesheet
+
+
+            Reached template :"/"
+            Breakpoint 1 in file xsldoc.xsl : line 21
             (xsldbg) xsl:template &gt;
-</B>You then can see the results of continued running through stylesheet by using "cont" command and pressing &lt;ENTER&gt; a few times<BR>
-<BR>
-<B><I>                     cont
-                     &lt;ENTER&gt;
-                     &lt;ENTER&gt;
-                     &lt;ENTER&gt;
-                     &lt;ENTER&gt;
-</B></I>
- The overview section of the help file should have printed out.</PRE>
-<H1>&nbsp;</H1>
-<H1><A NAME="Help_system">Help system</A> </H1>
-<PRE>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xsldbg is has built using xml/xslt. To help an overview of commands type
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <B><I>help
-</B></I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; You can use "help" to get a more detailed information about a command eg
-<B><I>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; help help
-&nbsp;</PRE>
-</B></I><P>&nbsp; </P>
-<H1><A NAME="Version__notes">Version&nbsp; notes</A> </H1>
-<P>&nbsp;See release notes associated with package.&nbsp; </P>
-<H4>These issues are still current</H4>
-<BLOCKQUOTE>1) The File related commands are disable for the moment.</BLOCKQUOTE>
-<BLOCKQUOTE>2) When you do a cat on the style source the output is white space stripped so it will look different to your original source files. This is not a "bug"! This is the default behaviour of the stylesheet processor of libxslt. This tool is intended to be used by other programs which can handle formatting the output. </BLOCKQUOTE>
-<BLOCKQUOTE>3) The xsldebugger can be built on windows given correct project files. <I><FONT COLOR="#008000">See TODO's</I></FONT> <BR>
-&nbsp; <BR>
-&nbsp; <BR>
-&nbsp; <BR>
-&nbsp; </BLOCKQUOTE>
-<H1><A NAME="Feedback">Feedback</A> </H1>
-<P>For problems with this project or web site please use the bug tracking system provided by <A HREF="http://sourceforge.net/tracker/?group_id=35673&amp;atid=415039">Source Forge</A> <BR>
-&nbsp; <BR>
-&nbsp; <BR>
-&nbsp; </P>
-<H1><A NAME="Download">Download</A> </H1>
-<P>&nbsp;See <A HREF="https://sourceforge.net/project/showfiles.php?group_id=35673">sourceforge file downloads</A> <BR>
-&nbsp; </P>
-<P>&nbsp;</P>
-<H1><A NAME="Completed_TODO">Completed Todo's</A> </H1>
 
-<UL>
-<LI>Redo configure and build scripts : Done! </LI>
-<LI>Track down all sources of the crashes :-( : Done! </LI>
-<LI>Complete line break points : Done! </LI>
-<LI>Update documentation : Done! </LI>
-<LI>Work on a patch for the xemacs module xslt-process to support debugging from within xemacs : Done! (modified gdb.el) </LI>
-<LI>Create new functions to handle lists that are implemented as arrays. Done! </LI>
-<LI>Break points to a specific line in the stylesheet are yet made stable : Done! </LI>
-<LI>The debugger suffers from crashes "segmentation faults" which is being looked into : Fixed </LI>
-<LI>The configure/build scripts need to be redone because they expect KDE to be installed : Done! </LI>
-<LI>Confirmed that only the basic XSL/XSLT commands work. Which means that it may not stop where expected. Done!</LI>
-<LI>Can only handle a fixed number of breakpoints. Done!</LI>
-<LI>Does not handle a large number of variables/templates well. Done! </LI>
-<LI>Does not allow libxslt parameters to be passed at xsldbg command prompt. Done! </LI>
-<LI>redo implemention of src/dbgbreakpoint.c to use hash tables not a fixed array of breakpoints&nbsp; Done!</LI>
-<LI>add new search functions&nbsp; Done!</LI>
-</UL>
+</b>     You then can see the results of continued running through stylesheet by using "cont" command and pressing &lt;ENTER&gt; a few times<br />
 
-<P>&nbsp;</P>
-<P>&nbsp;</P>
-<P>&nbsp;</P>
-<P><BR>
-&nbsp;</P>
-<P>&nbsp;</P>
-<P><A HREF="http://sourceforge.net/projects/xsldbg">http://xsldbg.sourceforge.net/</A> &nbsp; :&nbsp; Helping understand stylesheets</P></BODY>
-</HTML>
+<b>                     cont
+<i>                     &lt;ENTER&gt;
+                     &lt;ENTER&gt;
+                     &lt;ENTER&gt;
+                     &lt;ENTER&gt;
+</i>
+</b>
+       The overview section of the help file should have printed out on the screen.</pre>
+<br />
+<br />
+<br />
+
+
+<!--  - - - - - - - - - -  Help system  - - - - - - - - - -->
+<h1><a name="Help_system">Help system</a> </h1>
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xsldbg is has built using xml/xslt. To help an overview of commands type
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b><i>help
+</b></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; You can use "help" to get a more detailed information about a command eg
+<b><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; help help
+&nbsp;</pre>
+</b></i><p>&nbsp; </p>
+<br />
+<br />
+<br />
+
+
+<!--  - - - - - - - - - -  Version Notes - - - - - - - - - -->
+<h1><a name="Version__notes">Version&nbsp; notes</a> </h1>
+<p>&nbsp;See release notes associated with package.&nbsp; </p>
+<h4>These issues are still current</h4>
+<blockquote>1) The File related commands are disabled for the moment.</blockquote>
+<blockquote>2) When you do a cat on the style source the output is white space stripped so it will look different to your original source files. This is not a "bug"! This is the default behaviour of the stylesheet processor of libxslt. This tool is intended to be used by other programs which can handle formatting the output. </blockquote>
+<blockquote>3) The xsldebugger can be built on windows given correct project files. <i><font color="#008000">See TODO's</i></font></blockquote>
+<br />
+<br />
+<br />
+
+
+<!--  - - - - - - - - - -  FAQ - - - - - - - - - -->
+<h1><a name="FAQ">FAQ</a> </h1>
+<p>Libxslt doesn't compile:
+<ul>
+<li>Check http://xmlsoft.org/XSLT/ and mail.gnome.org/archives/xslt/ for current issues</li>
+<li>Ensure that libxslt was configured with <br />
+   <b>&nbsp;&nbsp;--with-debugger &nbsp;&nbsp; --enable-shared=no</b>
+</li>
+</ul>
+</p>
+<p>xsldbg compiles ok but doesn't run when used from command line:
+<ul>
+<li>Make sure that you set and exported the correct LD_LIBRARY_PATH</li>
+<li>Make sure that you've configure the correct libxml and libxslt prefix in libxslt, and xsldbg. Check the values supplied to <br />
+<b>&nbsp;&nbsp; --with-libxslt-prefix <br />
+&nbsp;&nbsp; --with-libxml-prefix <br /></b>
+</li>
+</ul>
+</p>
+<p>How big is this program: At last count there was over twenty thousand lines of human generated text.
+Which is about the same size as the libxslt directory in the libxslt distribution.
+</p>
+<p> Why do I get a prompt that looks like: <br /><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<b>(xsldbg) xsldbg_default_node &gt;</b><br /><br />
+&nbsp;&nbsp;&nbsp;&nbsp;For some reason xsldbg could not load or use the specified stylesheet or xml data file.
+Try using the &quot;source&quot; or &quot;data&quot; commands and then &quot;run&quot;.
+</p>
+<br />
+<br />
+
+
+<!--  - - - - - - - - - -  Feedback - - - - - - - - - -->
+<h1><a name="Feedback">Feedback</a> </h1>
+<p>For problems with this project or web site please use the bug tracking system provided by <a href="http://sourceforge.net/tracker/?group_id=35673&amp;atid=415039">Source Forge</a>
+<br />
+<br />
+<br />
+</p>
+
+<!--  - - - - - - - - - -  Download  - - - - - - - - - -->
+<h1><a name="Download">Download</a> </h1>
+<p>&nbsp;See <a href="https://sourceforge.net/project/showfiles.php?group_id=35673">sourceforge file downloads</a> <br />
+&nbsp; </p>
+<p>&nbsp;</p>
+<br />
+<br />
+<br />
+
+<!--  - - - - - - - - - -  Completed Todo's  - - - - - - - - - -->
+<h1><a name="Completed_TODO">Completed Todo's</a> </h1>
+<ul>
+<li>Create a patch for kDbg to support xsldbg. Done! Prototype available on web site</li>
+<li>validate the breakpoint API is complete :Done!</li>
+<li>Update xsldbg when debugger support is built into libxslt. Done! libxslt only contains the code needed to call xsldbg. No further review by libxslt@gnome.org needed but may be done :-)</li>
+<li>add the ability to validate file and line number</li>
+<li>Redo configure and build scripts : Done! </li>
+<li>Track down all sources of the crashes :-( : Done! </li>
+<li>Complete line break points : Done! </li>
+<li>Update documentation : Done! </li>
+<li>Work on a patch for the xemacs module xslt-process to support debugging from within xemacs : Done! (modified gdb.el) </li>
+<li>Create new functions to handle lists that are implemented as arrays. Done! </li>
+<li>Break points to a specific line in the stylesheet are yet made stable : Done! </li>
+<li>The debugger suffers from crashes "segmentation faults" which is being looked into : Fixed </li>
+<li>The configure/build scripts need to be redone because they expect KDE to be installed : Done! </li>
+<li>Confirmed that only the basic XSL/XSLT commands work. Which means that it may not stop where expected. Done!</li>
+<li>Can only handle a fixed number of breakpoints. Done!</li>
+<li>Does not handle a large number of variables/templates well. Done! </li>
+<li>Does not allow libxslt parameters to be passed at xsldbg command prompt. Done! </li>
+<li>redo implemention of src/dbgbreakpoint.c to use hash tables not a fixed array of breakpoints&nbsp; Done!</li>
+<li>add new search functions&nbsp; Done!</li>
+</ul>
+
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+
+<p><a href="http://sourceforge.net/projects/xsldbg">http://xsldbg.sourceforge.net/</a> &nbsp; :&nbsp; Helping understand stylesheets</p>
+
+</body>
+</html>

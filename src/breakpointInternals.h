@@ -87,7 +87,7 @@ extern "C" {
  * lineNoItemGet:
  * @lineNo : lineNo >= 0
  *
- * Return the hash table for this line if successful, 
+ * Returns the hash table for this line if successful, 
  *        NULL otherwise
  */
     xmlHashTablePtr lineNoItemGet(long lineNo);
@@ -135,7 +135,7 @@ extern "C" {
 /**
  * xslBreakPointCount:
  *
- * Return the number of hash tables of breakPoints with the same line number
+ * Returns the number of hash tables of breakPoints with the same line number
  */
     int xslBreakPointLinesCount(void);
 
@@ -143,7 +143,7 @@ extern "C" {
 /**
  * xslBreakPointLinesList:
  *
- * Return the list of hash tables for breakpoints
+ * Returns the list of hash tables for breakpoints
  *        Dangerous function to use!! 
  */
     ArrayListPtr xslBreakPointLineList(void);
@@ -178,7 +178,7 @@ extern "C" {
  * callStackInit:
  *
  * Perform a once only initization of the call stack structures
- * Return 1 if successful ,
+ * Returns 1 if successful ,
  *        0 otherwise
  */
     int callStackInit(void);
@@ -237,7 +237,7 @@ extern "C" {
  * searchNewInfo:
  * @type: what type of search is required
  * 
- * Return valid search info ptr is succssfull
+ * Returns valid search info ptr is succssfull
  *        NULL otherwise
  */
     searchInfoPtr searchNewInfo(enum SearchEnum type);
@@ -284,7 +284,7 @@ extern "C" {
  * xslSearchAdd:
  * @node : a valid node to be added to the topmost node in search dataBase
  *
- * Return 1 if able to add @node to top node in search dataBase,
+ * Returns 1 if able to add @node to top node in search dataBase,
  *        0 otherwise
  */
     int searchAdd(xmlNodePtr node);
@@ -293,7 +293,7 @@ extern "C" {
  * searchSave:
  * @fileName : valid fileName to save search dataBase to 
  *
- * Return 1 on success,
+ * Returns 1 on success,
  *        0 otherwise
  */
     int searchSave(const xmlChar * fileName);
@@ -306,7 +306,7 @@ extern "C" {
    * 
    * Send query as parameter for execution of search.xsl using
    *    data stored in @tempFile 
-   * Return 1 on success,
+   * Returns 1 on success,
    *        0 otherwise   
    */
     int searchQuery(const xmlChar * tempFile, const xmlChar * query);
@@ -315,7 +315,7 @@ extern "C" {
 /**
  * searchDoc:
  *
- * Return the document used for searching
+ * Returns the document used for searching
  *         Dangerous function to use! Does NOT return a copy of 
  *             searchData  so don't free it
  */
@@ -325,7 +325,7 @@ extern "C" {
 /**
  * searchRootNode:
  *
- * Return the topmost xml node in search dataBase.
+ * Returns the topmost xml node in search dataBase.
  *         Dangerous function to use! Does NOT return a copy of 
  *             searchRootNode  so don't free it
  */
@@ -336,7 +336,7 @@ extern "C" {
  * searchBreakPointNode:
  * @breakPoint : valid breakPoint 
  *
- * Return breakpoint as a new xmlNode in search dataBase format if successful,
+ * Returns breakpoint as a new xmlNode in search dataBase format if successful,
  *        NULL otherwise
  */
     xmlNodePtr searchBreakPointNode(xslBreakPointPtr breakPoint);
@@ -489,13 +489,13 @@ void scanForNode(void *payload, void *data,
     /* fix me ! */
 
   /**
-   *updateSearchData:
+   * updateSearchData:
    * @styleCtxt:
    * @style:
    * @data:
    * @variableTypes
    *
-   * Return 1 on success,
+   * Returns 1 on success,
    *        0 otherwis
    */
     int updateSearchData(xsltTransformContextPtr styleCtxt,

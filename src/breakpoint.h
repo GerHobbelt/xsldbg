@@ -88,7 +88,7 @@ extern "C" {
 /**
  * activeBreakPoint;
  *
- * Return the last breakPoint that we stoped at
+ * Returns the last breakPoint that we stoped at
  */
     xslBreakPointPtr activeBreakPoint(void);
 
@@ -156,7 +156,7 @@ extern "C" {
 /**
  * xslBreakPointCount:
  *
- * Return the number of hash tables of breakPoints with the same line number
+ * Returns the number of hash tables of breakPoints with the same line number
  */
     int xslBreakPointLinesCount(void);
 
@@ -347,7 +347,7 @@ extern "C" {
  *
  * Retrieve the call point at specified call depth 
 
- * Return non-null a if depth is valid,
+ * Returns non-null a if depth is valid,
  *        NULL otherwise 
  */
     xslCallPointPtr xslGetCall(int depth);
@@ -390,7 +390,7 @@ extern "C" {
  * xslSearchAdd:
  * @node : a valid node to be added to the topmost node in search dataBase
  *
- * Return 1 if able to add @node to top node in search dataBase,
+ * Returns 1 if able to add @node to top node in search dataBase,
  *        0 otherwise
  */
     int xslSearchAdd(xmlNodePtr node);
@@ -399,7 +399,7 @@ extern "C" {
  * xslSearchSave:
  * @fileName : valid fileName to save search dataBase to 
  *
- * Return 1 on success,
+ * Returns 1 on success,
  *        0 otherwise
  */
     int xslSearchSave(const xmlChar * fileName);
@@ -412,7 +412,7 @@ extern "C" {
    * 
    * Send query as parameter for execution of search.xsl using
    *    data stored in @tempFile 
-   * Return 1 on success,
+   * Returns 1 on success,
    *        0 otherwise   
    */
     int xslSearchQuery(const xmlChar * tempFile, const xmlChar * query);
@@ -469,7 +469,7 @@ extern "C" {
  * xslFindNodesByQuery:
  * @query: xpath query to run, see dbgsearch.c for more details
  * 
- * Return the nodes that match the given query on success,
+ * Returns the nodes that match the given query on success,
  *        NULL otherwise 
  */
     xmlXPathObjectPtr xslFindNodesByQuery(const xmlChar * query);

@@ -1,7 +1,7 @@
 
 AC_INIT(src/xsldbg.c)
 
-timestamp='2001-12-04'
+timestamp='2001-12-05'
 
 
 XSLDBG_MAJOR_VERSION=0
@@ -137,7 +137,7 @@ AC_ARG_ENABLE(kde_docs,
 		AC_MSG_RESULT(Disabling kde style documentation);;
 	*) AC_MSG_ERROR(bad value ${enableval} for --enable-kde-docs) ;;
 	esac],[kde_docs=false])
-AM_CONDITIONAL(USE_KDEDOCS, test x$kde_docs = xtrue)
+AM_CONDITIONAL(USE_KDEDOCS, test "x$kde_docs" = "xtrue")
 
 dnl 
 dnl Do we generate GNOME style help documention ?
@@ -146,13 +146,13 @@ dnl
 AC_ARG_ENABLE(gnome_docs,
 	[  --enable-gnome-docs    Turn on generation of gnome style documentation],
 	[case "${enableval}" in
-	yes) gnome_html=true 
+	yes) gnome_docs=true 
 		AC_MSG_RESULT(Enabling gnome style documentation);;
 	no)  gnome_docs=false 
 		AC_MSG_RESULT(Disabling gnome style documentation);;
 	*) AC_MSG_ERROR(bad value ${enableval} for --enable-gnome-docs) ;;
 	esac],[gnome_docs=false])
-AM_CONDITIONAL(USE_GNOMEDOCS, test x$gnome_docs = xtrue)
+AM_CONDITIONAL(USE_GNOMEDOCS, test "x$gnome_docs" = "xtrue")
 
 
 dnl
@@ -194,6 +194,20 @@ AC_ARG_WITH(libxml-prefix,
 	 LIBXML_PREFIX="$withval"
 )
 
+if test "x${LIBXML_PREFIX}" = "x"
+then
+  if test "x${prefix}" != "x"
+  then
+	LIBXML_PREFIX="${prefix}"
+  fi	
+fi
+
+if test "x${LIBXML_PREFIX}" != "x"
+then
+  AC_MSG_RESULT(Using a libxml prefix of ${LIBXML_PREFIX})
+fi
+
+
 AC_SUBST(LIBXML_LIBS)
 
 
@@ -203,12 +217,14 @@ dnl
 XML_CONFIG="xml2-config"
 AC_SUBST(LIBXML_REQUIRED_VERSION)
 AC_MSG_CHECKING(for libxml libraries >= $LIBXML_REQUIRED_VERSION)
+XML_WARNING=""
 if test "x$LIBXML_PREFIX" != "x"
 then
 	if ${LIBXML_PREFIX}/bin/xml2-config --libs print > /dev/null 2>&1
 	then
 		XML_CONFIG=${LIBXML_PREFIX}/bin/xml2-config
 	else
+	        XML_WARNING="1"
 		XML_CONFIG=xml2-config
 	fi
 fi
@@ -242,6 +258,11 @@ else
 	AC_MSG_ERROR(Could not find libxml2 anywhere, check ftp://xmlsoft.org/.)
 fi
 
+if test "x${XML_WARNING}" != "x"
+then
+   AC_MSG_RESULT(Warning using xml2-config in default path)
+fi
+
 LIBXML_PREFIX_DIR="`$XML_CONFIG --prefix`"
 
 AC_SUBST(XML_CONFIG)
@@ -255,10 +276,24 @@ AC_ARG_WITH(libxslt-prefix,
 	 LIBXSLT_PREFIX="$withval"
 )
 
+if test "x${LIBXSLT_PREFIX}" = "x"
+then
+  if test "x${prefix}" != "x"
+  then
+	LIBXSLT_PREFIX="${prefix}"
+  fi	
+fi
+
+if test "x${LIBXSLT_PREFIX}" != "x"
+then
+  AC_MSG_RESULT(Using a libxslt prefix of ${LIBXSLT_PREFIX})
+fi
+
 dnl
 dnl find libxslt
 dnl
 XSLT_CONFIG="xslt-config"
+XSLT_WARNING=""
 AC_SUBST(LIBXSLT_REQUIRED_VERSION)
 AC_MSG_CHECKING(for libxslt libraries >= $LIBXSLT_REQUIRED_VERSION)
 if test "x$LIBXSLT_PREFIX" != "x"
@@ -267,9 +302,11 @@ then
 	then
 		XSLT_CONFIG=${LIBXSLT_PREFIX}/bin/xslt-config
 	else
+	        XSLT_WARNING="1"
 		XSLT_CONFIG=xslt-config
 	fi
 fi
+
 
 AC_DEFUN(VERSION_TO_NUMBER,
 [`$1 | sed -e 's/libxslt //' | awk 'BEGIN { FS = "."; } { printf "%d",
@@ -292,8 +329,13 @@ then
 	fi
 else
 	AC_MSG_ERROR(Could not find libxslt anywhere, check
- ftp://xmlsoft.org/XSLT/.) fi
+ ftp://xmlsoft.org/XSLT/.) 
+fi
 
+if test "x${XSLT_WARNING}" != "x"
+then
+   AC_MSG_RESULT(Warning using xslt-config in default path)
+fi
 
 AC_SUBST(XSLT_CONFIG)
 AC_SUBST(LIBXSLT_PREFIX)

@@ -345,7 +345,7 @@ xslStepdownToDepth(int depth)
  *
  * Retrieve the call point at specified call depth 
 
- * Return  non-null if depth is valid,
+ * Returns  non-null if depth is valid,
  *         NULL otherwise 
  */
 xslCallPointPtr
@@ -403,7 +403,7 @@ xslGetCallStackTop(void)
 /** 
  * xslCallDepth :
  *
- * Return the depth of call stack
+ * Returns the depth of call stack
  */
 int
 xslCallDepth(void)

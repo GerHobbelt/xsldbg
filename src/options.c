@@ -423,7 +423,7 @@ paramItemFree(ParameterItemPtr item)
 /**
  * getParamItemList:
  *
- * Return the list of parameters to provide to libxslt when doing 
+ * Returns the list of parameters to provide to libxslt when doing 
  *   stylesheet transformation
  */
 ArrayListPtr

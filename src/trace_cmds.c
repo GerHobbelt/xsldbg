@@ -49,7 +49,7 @@
  * @arg : not used
  *
  * Start the tracing of the stylesheet. First need to restart it.
- * Return 1 on success,
+ * Returns 1 on success,
  *        0 otherwise
  */
 int
@@ -66,7 +66,7 @@ xslDbgShellTrace(xmlChar * arg ATTRIBUTE_UNUSED)
  * @arg : an interger between 0 and 9 indicate the speed of walk
  *
  * Start walking through the stylesheet.
- * Return 1 on success,
+ * Returns 1 on success,
  *        0 otherwise
  */
 int

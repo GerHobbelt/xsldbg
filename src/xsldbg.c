@@ -806,7 +806,7 @@ main(int argc, char **argv)
 /**
  * loadStylesheet:
  *
- * Return the stylesheet after reloading it if successful
+ * Returns the stylesheet after reloading it if successful
  *         NULL otherwise
  */
 xsltStylesheetPtr
@@ -860,7 +860,7 @@ loadStylesheet(void)
 /**
  * loadXmlData:
  *
- * Return the data file after reloading it if successful
+ * Returns the data file after reloading it if successful
  *         NULL otherwise
  */
 xmlDocPtr
@@ -917,7 +917,7 @@ loadXmlData(void)
 /**
  * loadXmlTemporary:
  *
- * Return the temporary file after reloading it if successful,
+ * Returns the temporary file after reloading it if successful,
  *         NULL otherwise
  */
 xmlDocPtr

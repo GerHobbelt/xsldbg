@@ -36,7 +36,7 @@ static char buff[BUFFER_SIZE];
  * searchNewInfo:
  * @type: what type of search is required
  * 
- * Return valid search info ptr is succssfull
+ * Returns valid search info ptr is succssfull
  *        NULL otherwise
  */
 searchInfoPtr
@@ -227,7 +227,7 @@ xslSearchEmpty(void)
 /**
  * searchDoc:
  *
- * Return the document used for searching
+ * Returns the document used for searching
  *         Dangerous function to use! Does NOT return a copy of 
  *             searchData  so don't free it.
  */
@@ -241,7 +241,7 @@ searchDoc(void)
 /**
  * searchRootNode:
  *
- * Return the topmost xml node in search dataBase.
+ * Returns the topmost xml node in search dataBase.
  *         Dangerous function to use! Does NOT return a copy of 
  *             searchRootNode  so don't free it
  */
@@ -256,7 +256,7 @@ searchRootNode(void)
  * xslSearchSave:
  * @fileName : valid fileName to save search dataBase to 
  *
- * Return 1 on success,
+ * Returns 1 on success,
  *        0 otherwise
  */
 int
@@ -269,7 +269,7 @@ xslSearchSave(const xmlChar * fileName)
  * xslSearchAdd:
  * @node : a valid node to be added to the topmost node in search dataBase
  *
- * Return 1 on success,
+ * Returns 1 on success,
  *        0 otherwise
  */
 int
@@ -290,7 +290,7 @@ xslSearchAdd(xmlNodePtr node)
  * @payload : a valid xslBreakPointPtr 
  * @data : the criteria to look for and a valid searchInfo of
  *          type SEARCH_BREAKPOINT 
- * @name
+ * @name: not used
  *
 */
 void
@@ -580,7 +580,7 @@ findBreakPointById(int id)
  * xslFindNodesByQuery:
  * @query: xpath query to run, see dbgsearch.c for more details
  * 
- * Return the nodes that match the given query on success,
+ * Returns the nodes that match the given query on success,
  *        NULL otherwise 
  */
 xmlXPathObjectPtr
@@ -599,7 +599,7 @@ xslFindNodesByQuery(const xmlChar * query ATTRIBUTE_UNUSED)
  * 
  * Send query as parameter for execution of search.xsl using
  *    data stored in @tempFile 
- * Return 1 on success,
+ * Returns 1 on success,
  *        0 otherwise   
  */
 int
@@ -750,7 +750,7 @@ globalVarHelper(void **payload, void *data ATTRIBUTE_UNUSED,
  * walkGlobals:
  * @walkFunc: function to callback for each variable of type @type found
  * @data : the extra data to pass onto walker
- * @styleCtxt : the stylesheet to start from
+ * @style : the stylesheet to start from
  *
  * Call walkFunc for each global variable. The payload
  *   sent to walkFunc is of type xmlNodePtr
@@ -935,7 +935,7 @@ walkChildNodes(xmlHashScanner walkFunc, void *data, xmlNodePtr node)
  * searchBreakPointNode:
  * @breakPoint : valid breakPoint 
  *
- * Return breakpoint as a new xmlNode in search dataBase format if successful,
+ * Returns breakpoint as a new xmlNode in search dataBase format if successful,
  *        NULL otherwise
  */
 xmlNodePtr

@@ -118,7 +118,7 @@ lineNoItemAdd(xmlHashTablePtr breakPointHash, xslBreakPointPtr breakPoint)
  * lineNoItemGet:
  * @lineNo : lineNo >= 0
  *
- * Return the hash table for this line if successful, 
+ * Returns the hash table for this line if successful, 
  *        NULL otherwise
  */
 xmlHashTablePtr
@@ -247,7 +247,7 @@ breakPointItemFree(void *payload, xmlChar * name ATTRIBUTE_UNUSED)
 /**
  * activeBreakPoint(void);
  *
- * Return the last breakPoint that we stoped at
+ * Returns the last breakPoint that we stoped at
  */
 xslBreakPointPtr
 activeBreakPoint(void)
@@ -459,7 +459,7 @@ enableBreakPoint(xslBreakPointPtr breakPoint, int enable)
 /**
  * xslBreakPointCount:
  *
- * Return the number of hash tables of breakPoints with the same line number
+ * Returns the number of hash tables of breakPoints with the same line number
  */
 int
 xslBreakPointLinesCount(void)
@@ -478,7 +478,7 @@ xslBreakPointLinesCount(void)
 /**
  * xslBreakPointLinesList:
  *
- * Return the list of hash tables for breakpoints
+ * Returns the list of hash tables for breakpoints
  *        Dangerous function to use!! 
  */
 ArrayListPtr

@@ -44,7 +44,7 @@ static xmlChar buff[DEBUG_BUFFER_SIZE];
  *@stepup : if != 1 then we step up, otherwise step down
  *
  * Set a "frame" breakpoint either up or down from here
- * Return 1 on success,
+ * Returns 1 on success,
  *        0 otherwise
  */
 int
@@ -205,7 +205,7 @@ addDataBreakPoint(xmlChar * url, long lineNo)
  * @ctxt : non-null
  * 
  * Add break point specified by arg
- * Return 1 on success,
+ * Returns 1 on success,
  *        0 otherwise
  */
 int
@@ -336,7 +336,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
  * @arg : non-null
  * 
  * Delete break point specified by arg
- * Return 1 on success,
+ * Returns 1 on success,
  *        0 otherwise
  */
 int

@@ -58,7 +58,7 @@ xslDbgShellChangeWd(const xmlChar * path)
  * @verbose : if 1 then print extra debugging messages,
  *            normal messages otherwise
  *
- * Return 1 on success,
+ * Returns 1 on success,
  *        0 otherwise
  */
 int

@@ -16,5 +16,5 @@ install-data-local: all
 	@INSTALL@ -m 0644 $(EXTRA_DIST) $(HTML_DIR)/xsldbg/plain
 
 clean:
-	rm index.html	
+	rm -f index.html	
 
