@@ -11,7 +11,7 @@
 #include "xslbreakpoint.h"
 #include "arraylist.h"
 #include "xslcallpoint.h"
-
+#include "xsldbgmsg.h"
 
 /*
 ------------------------------------------------------

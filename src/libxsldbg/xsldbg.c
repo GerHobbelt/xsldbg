@@ -172,6 +172,18 @@ void catchSigInt(int value ATTRIBUTE_UNUSED);
 void
   catchSigTerm(int value ATTRIBUTE_UNUSED);
 
+/**
+ * xsldbgGenericErrorFunc:
+ * @ctx:  Is Valid
+ * @msg:  Is valid
+ * @...:  other parameters to use
+ * 
+ * Handles print output from xsldbg and passes it to the application if 
+ *  running as a thread otherwise send to stderr
+ */
+void
+xsldbgGenericErrorFunc(void *ctx, const char *msg, ...);
+
 
 /* ------------------------------------- 
    End private functions
@@ -492,8 +504,8 @@ xsldbgMain(int argc, char **argv)
     LIBXML_TEST_VERSION xmlLineNumbersDefault(1);
 
     if (!xsldbgInit()) {
-        printf
-            ("Internal error, maybe ran out of memory aborting xsldbg\n");
+        fprintf(stderr, 
+		"Internal error, maybe ran out of memory aborting xsldbg\n");
         xsldbgFree();
         xsltCleanupGlobals();
         xmlCleanupParser();
@@ -752,7 +764,6 @@ xsldbgMain(int argc, char **argv)
         showPrompt = 0;
         cur = NULL;
         doc = NULL;
-        fileEmptyEntities();
 
         if (isOptionEnabled(OPTIONS_SHELL)) {
             debugGotControl(0);
@@ -949,7 +960,6 @@ loadStylesheet(void)
             xslDebugStatus = DEBUG_STOP;
         }
     } else {
-        fixEntities(style);
         cur = xsltLoadStylesheetPI(style);
         if (cur != NULL) {
             /* it is an embedded stylesheet */
@@ -1027,7 +1037,6 @@ loadXmlData(void)
         endTimer("Parsing document %s",
                  getStringOption(OPTIONS_DATA_FILE_NAME));
 
-    fixEntities(doc);
     return doc;
 }
 
@@ -1198,6 +1207,12 @@ xsldbgInit()
         if (result)
             result = searchInit();
 
+	/* set up the parser */
+	xmlInitParser();
+	xmlSetGenericErrorFunc(0, xsldbgGenericErrorFunc);	
+	xsltSetGenericErrorFunc(0, xsldbgGenericErrorFunc);	
+
+
 #ifndef WIN32
         /* catch SIGINT */
         oldHandler = signal(SIGINT, catchSigInt);
@@ -1233,7 +1248,6 @@ xsldbgFree()
     debugFree();
     filesFree();
     optionsFree();
-    breakPointFree();
     searchFree();
 #ifndef WIN32
     if (oldHandler != SIG_ERR)
@@ -1242,4 +1256,30 @@ xsldbgFree()
     SetConsoleCtrlHandler(handler_routine, FALSE);
 #endif
 
+}
+
+
+char msgBuffer[4000];
+
+/**
+ * xsldbgGenericErrorFunc:
+ * @ctx:  Is Valid
+ * @msg:  Is valid
+ * @...:  other parameters to use
+ * 
+ * Handles print output from xsldbg and passes it to the application if 
+ *  running as a thread otherwise send to stderr
+ */
+void
+xsldbgGenericErrorFunc(void *ctx, const char *msg, ...) {
+    va_list args;
+
+    va_start(args, msg);
+    if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
+      vsnprintf(msgBuffer, sizeof(msgBuffer), msg, args);
+      notifyTextXsldbgApp(XSLDBG_MSG_TEXTOUT, msgBuffer);
+    }else{
+      vfprintf(stderr, msg, args);
+    }
+    va_end(args);
 }

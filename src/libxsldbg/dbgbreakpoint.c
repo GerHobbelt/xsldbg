@@ -61,10 +61,12 @@ lineNoItemFree(void *item)
     xmlHashTablePtr hash = (xmlHashTablePtr) item;
 
     if (item) {
+#if 0
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
                          "Freeing breakpoint line hash"
                          " with %d elements \n", xmlHashSize(item));
+#endif
 #endif
         xmlHashFree(hash, breakPointItemFree);
     }
@@ -231,10 +233,12 @@ breakPointItemFree(void *payload, xmlChar * name ATTRIBUTE_UNUSED)
     if (payload) {
         xslBreakPointPtr breakPoint = (xslBreakPointPtr) payload;
 
+#if 0
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext, "Freeing breakpoint: ");
         printBreakPoint(stderr, breakPoint);
         xsltGenericError(xsltGenericErrorContext, "\n");
+#endif
 #endif
         if (breakPoint->url)
             xmlFree(breakPoint->url);
@@ -355,9 +359,11 @@ addBreakPoint(const xmlChar * url, long lineNumber,
 
 
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
+		/*
                 xsltGenericError(xsltGenericErrorContext,
                                  "Size of line list was %d adding %d entries\n",
                                  breakList->count, newEntries);
+		*/
 #endif
                 lineIndex = 0;
                 while ((lineIndex < newEntries) && result) {

@@ -20,6 +20,7 @@
 #include "xsldbg.h"
 #include "options.h"
 #include "arraylist.h"
+#include "xsldbgmsg.h"
 
 /* Enable the use of xinclude during file parsing*/
 static int xinclude = 0;
@@ -146,6 +147,7 @@ optionsFree(void)
 
     /* Free up memory used by parameters */
     arrayListFree(parameterList);
+    parameterList = NULL;
 }
 
 
@@ -502,6 +504,13 @@ printParamList(void)
     int paramIndex = 0;
     int itemCount = arrayListCount(getParamItemList());
 
+    if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
+      if (itemCount > 0){
+        while (result && (paramIndex < itemCount)) {
+            result = printParam(paramIndex++);
+        }	
+      }
+    }else{
     if (itemCount > 0) {
         xsltGenericError(xsltGenericErrorContext, "\n");
         while (result && (paramIndex < itemCount)) {
@@ -510,6 +519,6 @@ printParamList(void)
     } else
         xsltGenericError(xsltGenericErrorContext,
                          "\nNo parameters present\n");
-
+    } 
     return result;
 }

@@ -1,6 +1,6 @@
 if USE_XSLDBG_AS_THREAD
 
-INCLUDES= -I $(QTDIR)/include -I ..
+INCLUDES= -I $(QTDIR)/include -I .. $(XSLDBG_CFLAGS)
 
 libqtnotifier_la_SOURCES =\
 	qtnotifier.cpp        \

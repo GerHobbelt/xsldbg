@@ -641,6 +641,15 @@ xslDbgPrintCallStack(const xmlChar * arg)
     xslCallPointPtr callPoint;
 
     if (arg == NULL) {
+      if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
+	notifyXsldbgApp(XSLDBG_MSG_CALLSTACK_CHANGED, NULL);
+        for (depth = 1; depth <= callDepth(); depth++) {
+            callPoint = getCall(depth);
+            if (callPoint && callPoint->info) {
+	      notifyXsldbgApp(XSLDBG_MSG_CALLSTACK_CHANGED, callPoint);	       
+	    }
+	}
+      }else{
         for (depth = 1; depth <= callDepth(); depth++) {
             callPoint = getCall(depth);
             if (callPoint && callPoint->info) {
@@ -671,8 +680,18 @@ xslDbgPrintCallStack(const xmlChar * arg)
                              "No items on call stack\n");
         else
             xsltGenericError(xsltGenericErrorContext, "\n");
+      }
     } else {
         long templateDepth = atol((char *) arg);
+
+
+	if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
+	  /* should never happen but just in case, when running as a 
+	   thread always provide NO params to the where command */
+	  xsltGenericError(xsltGenericErrorContext,
+			   "Notification of a frame not supported\n");
+	  return result;
+	}
 
         if (templateDepth >= 0) {
             callPoint = getCall(templateDepth + 1);
@@ -1164,6 +1183,8 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
     int shortCutId = -1;        /* used by cd command */
     int i;
     static int showSource = 1;  /* Do we first show source or data ? */
+    xmlChar *baseUri = NULL; /* for used for included xml entities */
+    const xmlChar *breakUri;
 
     /* for convenience keep track of which node was last 
      * selected of source and doc */
@@ -1207,15 +1228,22 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 #endif
     }
 
-    /* let any listener know that we got to a new line */
-#ifdef USE_XSLDBG_AS_THREAD
-    notifyXsldbgApp(XSLDBG_MSG_LINE_CHANGED, NULL);
-#endif
-
     ctxt->input = input;
     ctxt->output = output;
     ctxt->filename = (char *) xmlStrdup((xmlChar *) filename);
 
+    /* let any listener know that we got to a new line */
+#ifdef USE_XSLDBG_AS_THREAD
+    {
+      int breakpoint = 1;
+      notifyXsldbgApp(XSLDBG_MSG_LINE_CHANGED, &breakpoint);
+    }
+#endif
+
+
+    /* If using a thread and the thread is running then we don't need to 
+       send this as the application will see the XSLDBG_MSG_LINE_CHANGED message*/
+    if (getThreadStatus() == XSLDBG_MSG_THREAD_NOTUSED){
     if (ctxt->node && ctxt->node && ctxt->node->doc
         && ctxt->node->doc->URL) {
         if (activeBreakPoint() != NULL) {
@@ -1225,18 +1253,31 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                              "Breakpoint in file %s : line %ld \n",
                              breakPtr->url, breakPtr->lineNo);
         } else {
+	  if (!showSource){
+	    baseUri = filesGetBaseUri(ctxt->node);
+	    if (baseUri != NULL)
+	      breakUri = baseUri;
+	    else
+	      breakUri = ctxt->node->doc->URL;
+	  }else
+	    breakUri = ctxt->node->doc->URL;
+
             if (xmlGetLineNo(ctxt->node) != -1)
                 xsltGenericError(xsltGenericErrorContext,
                                  "Breakpoint at file %s : line %ld \n",
-                                 ctxt->node->doc->URL,
+                                 breakUri,
                                  xmlGetLineNo(ctxt->node));
             else
                 xsltGenericError(xsltGenericErrorContext,
                                  "Breakpoint @ text node in file %s\n",
-                                 ctxt->node->doc->URL);
+                                 breakUri);
+	    if (baseUri != NULL){
+	      xmlFree(baseUri);
+	      baseUri = NULL;
+	    }	      
         }
     }
-
+    }
     if (xslDebugStatus == DEBUG_TRACE) {
         xmlFree(ctxt);
         return;
@@ -1255,6 +1296,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
     }
 
     while (!exitShell) {
+      if (getThreadStatus() != XSLDBG_MSG_THREAD_RUN){
         if (ctxt->node == (xmlNodePtr) ctxt->doc)
             snprintf((char *) prompt, DEBUG_BUFFER_SIZE - 1,
                      "(xsldbg) %s > ", "/");
@@ -1269,19 +1311,22 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
         else
             snprintf((char *) prompt, DEBUG_BUFFER_SIZE - 1,
                      "(xsldbg) ? > ");
+	
         prompt[sizeof(prompt) - 1] = 0;
-
 
         /*
          * Get a new command line
          */
         cmdline = (xmlChar *) ctxt->input((char *) prompt);
+      }else
+	 /* don't need a prompt for running as when running as a thread */
+	cmdline = (xmlChar *) ctxt->input(""); 
+		  	  
         if (cmdline == NULL)
             break;
 
-#ifdef USE_XSLDBG_AS_THREAD
         notifyXsldbgApp(XSLDBG_MSG_PROCESSING_INPUT, NULL);
-#endif
+
         /* remove leading/trailing blanks */
         trimString(cmdline);
 
@@ -1415,26 +1460,28 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             case DEBUG_WHERE_CMD:
                 /* Print the current working directory as well */
                 xslDbgPrintCallStack(NULL);
-                if (!xmlShellPwd(ctxt, (char *) dir, ctxt->node, NULL))
+		if (getThreadStatus() != XSLDBG_MSG_THREAD_RUN){
+		  if (!xmlShellPwd(ctxt, (char *) dir, ctxt->node, NULL))
                     xsltGenericError(xsltGenericErrorContext, "%s", dir);
-                if (ctxt->node && ctxt->node && ctxt->node->doc
+		  if (ctxt->node && ctxt->node && ctxt->node->doc
                     && ctxt->node->doc->URL)
                     if (activeBreakPoint() != NULL) {
-                        xsltGenericError(xsltGenericErrorContext,
-                                         " in file %s : line %ld \n",
-                                         ctxt->node->doc->URL,
-                                         xmlGetLineNo(ctxt->node));
-                        cmdResult = 1;
+		      xsltGenericError(xsltGenericErrorContext,
+				       " in file %s : line %ld \n",
+				       ctxt->node->doc->URL,
+				       xmlGetLineNo(ctxt->node));
+		      cmdResult = 1;
                     } else {
-                        xsltGenericError(xsltGenericErrorContext,
-                                         " at file %s : line %ld \n",
-                                         ctxt->node->doc->URL,
-                                         xmlGetLineNo(ctxt->node));
-                        cmdResult = 1;
+		      xsltGenericError(xsltGenericErrorContext,
+				       " at file %s : line %ld \n",
+				       ctxt->node->doc->URL,
+				       xmlGetLineNo(ctxt->node));
+		      cmdResult = 1;
                 } else {
-                    xsltGenericError(xsltGenericErrorContext, "\n");
-                    cmdResult = 0;
+		  xsltGenericError(xsltGenericErrorContext, "\n");
+		  cmdResult = 0;
                 }
+		}
                 break;
 
             case DEBUG_FRAME_CMD:
@@ -1474,13 +1521,16 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 break;
 
             case DEBUG_SHOWBREAK_CMD:
+      if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
+                /* notify the app of the start of breakpoint list */
+                notifyXsldbgApp(XSLDBG_MSG_BREAKPOINT_CHANGED, NULL);
+                walkBreakPoints((xmlHashScanner) xslDbgPrintBreakPoint,
+                                NULL);
+      }else{
                 xsltGenericError(xsltGenericErrorContext, "\n");
                 printCount = 0; /* printCount will get updated by
                                  * xslDbgPrintBreakPoint */
-#ifdef USE_XSLDBG_AS_THREAD
-                /* notify the app of the start of breakpoint list */
-                notifyXsldbgApp(XSLDBG_MSG_BREAKPOINT_CHANGED, NULL);
-#endif
+
                 walkBreakPoints((xmlHashScanner) xslDbgPrintBreakPoint,
                                 NULL);
                 if (printCount == 0)
@@ -1490,6 +1540,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     xsltGenericError(xsltGenericErrorContext,
                                      "\n\t Total of %d break points present\n",
                                      printCount);
+      }
                 cmdResult = 1;
                 break;
 
@@ -1921,11 +1972,8 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
         /* notify any listeners of that the command failed */
         if (cmdResult == 0) {
-            xmlStrnCpy(messageBuffer, cmdline, sizeof(messageBuffer));
-            notifyStateXsldbgApp(XSLDBG_MSG_PROCESSING_RESULT,
-                                 commandId + DEBUG_HELP_CMD,
-                                 XSLDBG_COMMAND_FAILED, messageBuffer);
-
+	  snprintf(messageBuffer, sizeof(messageBuffer), "\nRequest to xsldbg failed:%s\n", cmdline);
+            notifyTextXsldbgApp(XSLDBG_MSG_TEXTOUT, messageBuffer);
         }
 
         xmlFree(cmdline);

@@ -107,6 +107,9 @@ xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
                 /* empty */
             } else {
                 *printCount = *printCount + 1;
+                if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
+		  notifyXsldbgApp(XSLDBG_MSG_TEMPLATE_CHANGED, templ);
+		}else{
                 if (verbose)
                     xsltGenericError(xsltGenericErrorContext,
                                      " template :\"%s\" in file %s : line %ld\n",
@@ -114,6 +117,7 @@ xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
                 else
                     xsltGenericError(xsltGenericErrorContext, "\"%s\" ",
                                      name);
+		}
             }
         }
         templ = templ->next;
@@ -172,26 +176,40 @@ xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
             curStyle = NULL;
     }
 
-    xsltGenericError(xsltGenericErrorContext, "\n");
-    while (curStyle) {
+    if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
+      notifyXsldbgApp(XSLDBG_MSG_TEMPLATE_CHANGED, NULL);
+      while (curStyle) {
+        templ = curStyle->templates;
+        /* print them out in the order their in the file */
+        xslDbgPrintTemplateHelper(templ, verbose, &templateCount,
+                                  &printCount, arg);
+        if (curStyle->next)
+	  curStyle = curStyle->next;
+        else
+	  curStyle = curStyle->imports;
+      }
+    }else{
+      xsltGenericError(xsltGenericErrorContext, "\n");
+      while (curStyle) {
         templ = curStyle->templates;
         /* print them out in the order their in the file */
         xslDbgPrintTemplateHelper(templ, verbose, &templateCount,
                                   &printCount, arg);
         xsltGenericError(xsltGenericErrorContext, "\n");
         if (curStyle->next)
-            curStyle = curStyle->next;
+	  curStyle = curStyle->next;
         else
-            curStyle = curStyle->imports;
-    }
-    if (templateCount == 0) {
+	  curStyle = curStyle->imports;
+      }
+      if (templateCount == 0) {
         xsltGenericError(xsltGenericErrorContext, "No templates found\n ");
-    } else {
+      } else {
         xsltGenericError(xsltGenericErrorContext,
                          "\t Total of %d templates found\n",
                          templateCount);
         xsltGenericError(xsltGenericErrorContext,
                          "\t Total of %d templates printed\n", printCount);
+      }
     }
 
     result++;
@@ -201,7 +219,7 @@ xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
 
 /**
  * xslDbgShellPrintStylesheetsHelper:
- * @payload :valid xxsltStylesheetPtr
+ * @payload :valid xsltStylesheetPtr
  * @data :  not used
  * name : not used
  *
@@ -216,6 +234,9 @@ xslDbgShellPrintStylesheetsHelper(void *payload,
     xsltStylesheetPtr style = (xsltStylesheetPtr) payload;
 
     if (style && style->doc && style->doc->URL) {
+      if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN)
+	notifyXsldbgApp(XSLDBG_MSG_SOURCE_CHANGED, payload);
+       else
         xsltGenericError(xsltGenericErrorContext,
                          " Stylesheet %s\n", style->doc->URL);
         printCounter++;
@@ -240,6 +261,9 @@ xslDbgShellPrintStylesheetsHelper2(void *payload,
     xmlNodePtr node = (xmlNodePtr) payload;
 
     if (node && node->doc && node->doc->URL) {
+      if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN)
+	notifyXsldbgApp(XSLDBG_MSG_INCLUDED_SOURCE_CHANGED, payload);
+       else
         xsltGenericError(xsltGenericErrorContext,
                          " Stylesheet %s\n", node->doc->URL);
         printCounter++;
@@ -260,17 +284,25 @@ int
 xslDbgPrintStyleSheets(xmlChar * arg)
 {
     printCounter = 0;
-    walkStylesheets((xmlHashScanner) xslDbgShellPrintStylesheetsHelper,
-                    NULL, getStylesheet());
-    walkIncludes((xmlHashScanner) xslDbgShellPrintStylesheetsHelper2,
-                 NULL, getStylesheet());
-    if (printCounter != 0)
-        xsltGenericError(xsltGenericErrorContext,
-                         "\n\tTotal of %d stylesheets found\n",
-                         printCounter);
-    else
-        /* strange but possible */
-        xsltGenericError(xsltGenericErrorContext,
-                         "\n\tNo stylesheets found\n");
+    if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
+      notifyXsldbgApp(XSLDBG_MSG_SOURCE_CHANGED, NULL);
+      walkStylesheets((xmlHashScanner) xslDbgShellPrintStylesheetsHelper,
+		      NULL, getStylesheet());
+      walkIncludes((xmlHashScanner) xslDbgShellPrintStylesheetsHelper2,
+		   NULL, getStylesheet());
+    }else{
+      walkStylesheets((xmlHashScanner) xslDbgShellPrintStylesheetsHelper,
+		      NULL, getStylesheet());
+      walkIncludes((xmlHashScanner) xslDbgShellPrintStylesheetsHelper2,
+		   NULL, getStylesheet());
+      if (printCounter != 0)
+	xsltGenericError(xsltGenericErrorContext,
+		       "\n\tTotal of %d stylesheets found\n",
+			 printCounter);
+      else
+	/* strange but possible */
+	xsltGenericError(xsltGenericErrorContext,
+		       "\n\tNo stylesheets found\n");
+    }
     return 1;                   /* always succeed */
 }

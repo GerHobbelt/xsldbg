@@ -20,12 +20,16 @@
 #undef VERSION
 #endif
 
+#include <stdio.h>
+#include <libxml/entities.h>
+#include <libxml/tree.h>
+
 #include "xsldbg.h"
 #include "debugXSL.h"
 #include "files.h"
 #include "options.h"
-#include <stdio.h>
-#include <libxml/entities.h>
+#include "xsldbgthread.h"
+
 
 
 /* top xml document */
@@ -82,36 +86,9 @@ static void guessStylesheetHelper2(void *payload, void *data,
 
 
 
-  /**
-   * fileNewEntityOffset:
-   * @url : is valid
-   * @parentUri : valid parent for @uri
-   *
-   * Returns a valid enityOffsetPtr if succesful,
-   *         NULL otherwise
-   */
-static entityOffsetPtr fileNewEntityOffset(const xmlChar * url,
-                                           const xmlChar * parentUri);
-
-
-
-  /**
-   * fileFreeEntityOffset:
-   * @entOffset : is valid
-   *
-   * Frees memory used by @entOffset
-   */
-static void fileFreeEntityOffset(entityOffsetPtr entOffset);
-
-static void filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode,
-                           xmlNodePtr lastNode);
-
-
 /* ------------------------------------- 
     End private functions
 ---------------------------------------*/
-
-
 
 
 FILE *terminalIO;
@@ -332,14 +309,14 @@ guessStylesheetHelper(void *payload, void *data,
                       xmlChar * name ATTRIBUTE_UNUSED)
 {
     xsltStylesheetPtr style = (xsltStylesheetPtr) payload;
-    searchInfoPtr searchInf = (searchInfoPtr) data;
+    searchInfoPtr searchCriteria = (searchInfoPtr) data;
     nodeSearchDataPtr searchData = NULL;
 
-    if (!style || !style->doc || !searchInf || !searchInf->data ||
-        (searchInf->type != SEARCH_NODE))
+    if (!style || !style->doc || !searchCriteria || !searchCriteria->data
+        || (searchCriteria->type != SEARCH_NODE))
         return;
 
-    searchData = (nodeSearchDataPtr) searchInf->data;
+    searchData = (nodeSearchDataPtr) searchCriteria->data;
     if (searchData->nameInput && (searchData->absoluteNameMatch == NULL)) {
         /* at this point we know that we have not made an absolute match 
          * but we may have made a relative match */
@@ -348,7 +325,7 @@ guessStylesheetHelper(void *payload, void *data,
             searchData->absoluteNameMatch =
                 (xmlChar *) xmlMemStrdup((char *) style->doc->URL);
             searchData->node = (xmlNodePtr) style->doc;
-            searchInf->found = 1;
+            searchCriteria->found = 1;
             return;
         }
 
@@ -365,7 +342,7 @@ guessStylesheetHelper(void *payload, void *data,
             searchData->guessedNameMatch =
                 (xmlChar *) xmlMemStrdup((char *) buffer);
             searchData->node = (xmlNodePtr) style->doc;
-            searchInf->found = 1;
+            searchCriteria->found = 1;
             return;
         }
 
@@ -379,7 +356,7 @@ guessStylesheetHelper(void *payload, void *data,
             searchData->guessedNameMatch =
                 (xmlChar *) xmlMemStrdup((char *) buffer);
             searchData->node = (xmlNodePtr) style->doc;
-            searchInf->found = 1;
+            searchCriteria->found = 1;
             return;
         }
 
@@ -410,7 +387,7 @@ guessStylesheetHelper(void *payload, void *data,
                     searchData->guessedNameMatch =
                         (xmlChar *) xmlMemStrdup((char *) style->doc->URL);
                     searchData->node = (xmlNodePtr) style->doc;
-                    searchInf->found = 1;
+                    searchCriteria->found = 1;
                 }
             }
         }
@@ -433,14 +410,14 @@ guessStylesheetHelper2(void *payload, void *data,
                        xmlChar * name ATTRIBUTE_UNUSED)
 {
     xmlNodePtr node = (xmlNodePtr) payload;
-    searchInfoPtr searchInf = (searchInfoPtr) data;
+    searchInfoPtr searchCriteria = (searchInfoPtr) data;
     nodeSearchDataPtr searchData = NULL;
 
-    if (!node || !node->doc || !searchInf || !searchInf->data ||
-        (searchInf->type != SEARCH_NODE))
+    if (!node || !node->doc || !searchCriteria || !searchCriteria->data ||
+        (searchCriteria->type != SEARCH_NODE))
         return;
 
-    searchData = (nodeSearchDataPtr) searchInf->data;
+    searchData = (nodeSearchDataPtr) searchCriteria->data;
     if (searchData->nameInput && (searchData->absoluteNameMatch == NULL)) {
         /* at this point we know that we have not made an absolute match 
          * but we may have made a relative match */
@@ -449,7 +426,7 @@ guessStylesheetHelper2(void *payload, void *data,
             searchData->absoluteNameMatch =
                 (xmlChar *) xmlMemStrdup((char *) node->doc->URL);
             searchData->node = node;
-            searchInf->found = 1;
+            searchCriteria->found = 1;
             return;
         }
 
@@ -466,7 +443,7 @@ guessStylesheetHelper2(void *payload, void *data,
             searchData->guessedNameMatch =
                 (xmlChar *) xmlMemStrdup((char *) buffer);
             searchData->node = node;
-            searchInf->found = 1;
+            searchCriteria->found = 1;
             return;
         }
 
@@ -480,7 +457,7 @@ guessStylesheetHelper2(void *payload, void *data,
             searchData->guessedNameMatch =
                 (xmlChar *) xmlMemStrdup((char *) buffer);
             searchData->node = node;
-            searchInf->found = 1;
+            searchCriteria->found = 1;
             return;
         }
 
@@ -511,7 +488,7 @@ guessStylesheetHelper2(void *payload, void *data,
                     searchData->guessedNameMatch =
                         (xmlChar *) xmlMemStrdup((char *) node->doc->URL);
                     searchData->node = node;
-                    searchInf->found = 1;
+                    searchCriteria->found = 1;
                 }
             }
         }
@@ -526,23 +503,23 @@ guessStylesheetHelper2(void *payload, void *data,
  * Sets the values in @searchinf depending on outcome of search
  */
 void
-guessStylesheetName(searchInfoPtr searchInf)
+guessStylesheetName(searchInfoPtr searchCriteria)
 {
     nodeSearchDataPtr searchData;
 
-    if (!searchInf)
+    if (!searchCriteria)
         return;
 
-    searchData = (nodeSearchDataPtr) searchInf->data;
+    searchData = (nodeSearchDataPtr) searchCriteria->data;
     if (searchData->nameInput == NULL)
         return;                 /* must supply name of file to look for */
 
     walkStylesheets((xmlHashScanner) guessStylesheetHelper,
-                    searchInf, getStylesheet());
-    if (!searchInf->found) {
+                    searchCriteria, getStylesheet());
+    if (!searchCriteria->found) {
         /* try looking in the included stylesheets */
         walkIncludes((xmlHashScanner) guessStylesheetHelper2,
-                     searchInf, getStylesheet());
+                     searchCriteria, getStylesheet());
     }
 }
 
@@ -602,8 +579,8 @@ changeDir(const xmlChar * path)
             xmlStrCat(buffer, path + 1);
             /* must have path char at end of path name */
             xmlStrCat(buffer, endString);
-        }else
-	  xmlStrCpy(buffer, path);	  
+        } else
+            xmlStrCpy(buffer, path);
 #else
         xmlStrCpy(buffer, path);
 #endif
@@ -616,15 +593,16 @@ changeDir(const xmlChar * path)
             workingDirPath = (xmlChar *) xmlMemStrdup((char *) buffer);
             result++;
         }
-	if (!result)
+        if (!result)
+            xsltGenericError(xsltGenericErrorContext,
+                             "Unable to change to directory %s\n", path);
+        else
+            xsltGenericError(xsltGenericErrorContext,
+                             "Change to directory %s\n", path);
+    } else
         xsltGenericError(xsltGenericErrorContext,
-                         "Unable to change to directory %s\n", path);
-	else
-	  xsltGenericError(xsltGenericErrorContext,
-			   "Change to directory %s\n", path);
-    }else
-      xsltGenericError(xsltGenericErrorContext,
-		       "Null Input to changeDir %s %d\n", __FILE__, __LINE__);
+                         "Null Input to changeDir %s %d\n", __FILE__,
+                         __LINE__);
     return result;
 }
 
@@ -842,12 +820,11 @@ filesInit(void)
     topDocument = NULL;
     tempDocument = NULL;
     topStylesheet = NULL;
-    entityOffsetList =
-        arrayListNew(4, (freeItemFunc) fileFreeEntityOffset);
+    entityOffsetList = NULL;
 #ifdef  HAVE_INCLUDE_FIX
     xmlSetEntityReferenceFunc(filesEntityRef);
 #endif
-    result = (entityOffsetList != NULL);
+    result++;                   /*  = (entityOffsetList != NULL); */
     return result;
 }
 
@@ -861,10 +838,14 @@ filesFree(void)
 {
     int result;
 
-    if (terminalIO)
+    if (terminalIO){
         fclose(terminalIO);
-    if (termName)
+	terminalIO = NULL;
+    }
+    if (termName){
         xmlFree(termName);
+	termName = NULL;
+    }
 
     result = freeXmlFile(FILES_SOURCEFILE_TYPE);
     if (result)
@@ -874,11 +855,15 @@ filesFree(void)
     if (!result)
         xsltGenericError(xsltGenericErrorContext,
                          "Unable to free memory used by xml/xsl files\n");
-    if (workingDirPath)
+    if (workingDirPath){
         xmlFree(workingDirPath);
+	workingDirPath = NULL;
+    }
 
-    if (entityOffsetList)
+    if (entityOffsetList){
         arrayListFree(entityOffsetList);
+	entityOffsetList = NULL;
+    }
 }
 
 
@@ -897,308 +882,141 @@ isSourceFile(xmlChar * fileName)
 }
 
 
-  /**
-   * fileNewEntityOffset:
-   * @url : is valid
-   * @parentUri : valid parent for @uri
-   *
-   * Returns a valid enityOffsetPtr if succesful,
-   *         NULL otherwise
+/**
+ * filesEntityRef :
+ * @uri : Is valid
+ * @firstNode : Is valid
+ * @lastNode : Is Valid
+ *
+ * Fixes the nodes from firstNode to lastNode so that debugging can occur
    */
-entityOffsetPtr
-fileNewEntityOffset(const xmlChar * url, const xmlChar * parentUri)
-{
-    entityOffsetPtr result =
-        (entityOffsetPtr) xmlMalloc(sizeof(entityOffset));
-    if (result) {
-        result->uri = xmlStrdup(url);
-        result->offset = 0;
-        result->lineCount = 0;
-        result->parentUri = xmlStrdup(parentUri);
-        result->list = arrayListNew(4, xmlFree);
-    }
-
-    return result;
-}
-
-
-  /**
-   * fileFreeEntityOffset:
-   * @entOffset : is valid
-   *
-   * Frees memory used by @entOffset
-   */
-void
-fileFreeEntityOffset(entityOffsetPtr entOffset)
-{
-    if (entOffset) {
-        if (entOffset->uri)
-            xmlFree(entOffset->uri);
-        if (entOffset->list)
-            arrayListFree(entOffset->list);
-        xmlFree(entOffset);
-    }
-}
-
-
-
-  /**
-   * fileAddEntity:
-   * @uri : Is valid
-   * @parentUri : Valid parent for @uri
-   * @firstNode : Is valid
-   * @lastNode : Is Valid
-   *
-   * Returns 1 if succesful,
-   *         0 otherwise
-   */
-int
-fileAddEntity(const xmlChar * uri, const xmlChar * parentUri,
-              xmlNodePtr firstNode, xmlNodePtr lastNode)
-{
-    int result = 0;
-    entityOffsetPtr entOffset = fileGetEntityRef(uri);
-
-    if (!firstNode || !uri || !parentUri)
-        return result;
-
-    if (!entOffset) {
-        entOffset = fileNewEntityOffset(uri, parentUri);
-        if (entOffset)
-            result = arrayListAdd(entityOffsetList, entOffset);
-    } else
-        result = 1;
-
-    /* look for the very last node */
-    while (lastNode && lastNode->last)
-        lastNode = lastNode->last;
-
-    if (!lastNode) {
-        lastNode = firstNode;
-    }
-
-    while ((lastNode->next || lastNode->children)) {
-        if (lastNode->next)
-            lastNode = lastNode->next;
-        else if (lastNode->children)
-            lastNode = lastNode->children;
-    }
-
-    if (result && entOffset) {
-        entityOffsetEntryPtr entry =
-            (entityOffsetEntryPtr) xmlMalloc(sizeof(entityOffsetEntry));
-        if (entry) {
-            entry->firstNode = firstNode;
-            entry->lastNode = lastNode;
-            result = arrayListAdd(entOffset->list, entry);
-        }
-    }
-
-    return result;
-}
-
-
-  /**
-   * fileGetEntityRef:
-   * @uri : Is valid
-   *
-   * Returns The entity @uri,
-   *         NULL otherwise
-   */
-entityOffsetPtr
-fileGetEntityRef(const xmlChar * uri)
-{
-    entityOffsetPtr result = NULL, ent;
-    int entIndex = 0;
-
-    if (entityOffsetList && uri) {
-        for (entIndex = 0; entIndex < arrayListCount(entityOffsetList);
-             entIndex++) {
-            ent = arrayListGet(entityOffsetList, entIndex);
-            if (ent && ent->uri && (xmlStrCmp(uri, ent->uri) == 0)) {
-                result = ent;
-                break;
-            }
-        }
-    }
-    return result;
-}
-
-
-  /**
-   * fileGetEntityOffset:
-   * @uri : Is valid
-   *
-   * Returns the line number offset for this uri
-   */
-long
-fileGetEntityOffset(xmlChar * uri)
-{
-    int entIndex, noElements;
-    long result = 0;
-    entityOffsetPtr entOffset = NULL;
-
-    if (entityOffsetList && uri) {
-        noElements = arrayListCount(entityOffsetList);
-        for (entIndex = 0; entIndex < noElements; entIndex++) {
-            entOffset = arrayListGet(entityOffsetList, entIndex);
-            if (entOffset && entOffset->uri &&
-                (xmlStrcmp(entOffset->uri, uri) == 0))
-                result = entOffset->offset;
-        }
-    }
-    return result;
-}
-
-  /**
-   *fileGetEntityParent:
-   * @uri : Is valid 
-   *
-   * Return the parent of this entity,
-   *        or NULL if failed
-   */
-xmlChar *
-fileGetEntityParent(xmlChar * uri)
-{
-    int entIndex, noElements;
-    xmlChar *result = NULL;
-    entityOffsetPtr entOffset = NULL;
-
-    if (entityOffsetList && uri) {
-        noElements = arrayListCount(entityOffsetList);
-        for (entIndex = 0; entIndex < noElements; entIndex++) {
-            entOffset = arrayListGet(entityOffsetList, entIndex);
-            if (entOffset && entOffset->uri &&
-                (xmlStrcmp(entOffset->uri, uri) == 0))
-                result = xmlStrdup(entOffset->parentUri);
-        }
-    }
-    return result;
-}
-
-long lineNumberOffset = 0, lineCount = 0;
-
-  /**
-   * fileEmptyEntities:
-   * 
-   * Empty the list of entities that we know about
-   */
-void
-fileEmptyEntities()
-{
-    if (entityOffsetList != NULL)
-        arrayListEmpty(entityOffsetList);
-    lineNumberOffset = 0;
-    lineCount = 0;
-}
-
-#ifdef  HAVE_INCLUDE_FIX
-
-static void fixLineNumbers(void *payload, void *data ATTRIBUTE_UNUSED,
-                           xmlChar * name ATTRIBUTE_UNUSED);
-static void maxLineNumber(void *payload, void *data ATTRIBUTE_UNUSED,
-                          xmlChar * name ATTRIBUTE_UNUSED);
-
-static void
-fixLineNumbers(void *payload, void *data ATTRIBUTE_UNUSED,
-               xmlChar * name ATTRIBUTE_UNUSED)
-{
-    xmlNodePtr node = (xmlNodePtr) payload;
-    searchInfoPtr searchInf = (searchInfoPtr) data;
-
-    if (!searchInf || !searchInf->data ||
-        !node || (node->type != XML_ELEMENT_NODE))
-        return;
-    else {
-        entityOffsetEntryPtr entry =
-            (entityOffsetEntryPtr) searchInf->data;
-        if (node == entry->lastNode)
-            searchInf->found = 1;
-        if ((long) node->content > lineCount)
-            lineCount = (long) node->content;
-        node->content =
-            (void *) (long) (lineNumberOffset + (long) node->content);
-    }
-}
-
-
-/*Look for the maximum line number this will then be our offset  */
-void
-maxLineNumber(void *payload, void *data ATTRIBUTE_UNUSED,
-              xmlChar * name ATTRIBUTE_UNUSED)
-{
-    xmlNodePtr node = (xmlNodePtr) payload;
-
-    if (node && (node->type == XML_ELEMENT_NODE)) {
-        if ((long) node->content > lineNumberOffset)
-            lineNumberOffset = (long) node->content;
-    }
-}
-
-
-int
-fixEntities(xmlDocPtr doc)
-{
-    int result = 0;
-    int entIndex, entRefIndex;
-    entityOffsetPtr entOffset = NULL;
-    searchInfoPtr searchInf = searchNewInfo(SEARCH_NODE);
-
-    if (doc && searchInf) {
-        walkChildNodes((xmlHashScanner) maxLineNumber, searchInf,
-                       (xmlNodePtr) doc);
-        /* round up to nearest number divisible by 10 */
-        lineNumberOffset = ((lineNumberOffset / 10) + 1) * 10;
-        for (entIndex = 0; entIndex < arrayListCount(entityOffsetList);
-             entIndex++) {
-            entOffset = arrayListGet(entityOffsetList, entIndex);
-            if (entOffset && entOffset->list) {
-                for (entRefIndex = 0;
-                     entRefIndex < arrayListCount(entOffset->list);
-                     entRefIndex++) {
-                    entityOffsetEntryPtr entry =
-                        (entityOffsetEntryPtr) arrayListGet(entOffset->
-                                                            list,
-                                                            entRefIndex);
-                    if (entry) {
-                        searchInf->data = entry;
-                        walkChildNodes((xmlHashScanner) fixLineNumbers,
-                                       searchInf, entry->firstNode);
-                        searchInf->found = 0;   /* reset for next time */
-                        if (entOffset->lineCount == 0)
-                            entOffset->lineCount = lineCount;
-                        lineCount = 0;
-                    }
-                }
-                entOffset->offset = lineNumberOffset;
-                lineNumberOffset += ((entOffset->lineCount / 10) + 1) * 10;
-            }
-        }
-    }
-
-    if (searchInf) {
-        searchInf->data = NULL;
-        searchFreeInfo(searchInf);
-    }
-    return result;
-}
-
-
-
 void
 filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode, xmlNodePtr lastNode)
 {
-    if (firstNode && lastNode && firstNode->next &&
-        (ent->etype == XML_EXTERNAL_GENERAL_PARSED_ENTITY))
-        fileAddEntity(ent->SystemID, ent->doc->URL, firstNode, lastNode);
+
+    if (firstNode && firstNode->next &&
+        (ent->etype == XML_EXTERNAL_GENERAL_PARSED_ENTITY)) {
+
+        if (!firstNode)
+            return;
+
+
+
+        /* find the first XML_ELEMENT_NODE */
+        while (firstNode->next && (firstNode->type != XML_ELEMENT_NODE))
+            firstNode = firstNode->next;
+
+        if (lastNode == NULL) {
+            xmlChar *uri = xmlStrdup(ent->SystemID);
+
+            if (uri) {
+                filesSetBaseUri(firstNode, uri);
+                xmlFree(uri);
+            }
+        } else {
+            xmlChar *uri = xmlStrdup(ent->SystemID);
+            xmlNodePtr node = firstNode;
+
+            if (uri) {
+                while (node) {
+                    filesSetBaseUri(node, uri);
+                    node = node->next;
+                }
+                xmlFree(uri);
+            }
+        }
+    }
+
 }
 
-#else
+
+
+ /**
+   * filesSetBaseUri:
+   * @node : Is valid and has a doc parent
+   * @uri : Is Valid
+   * 
+   * Set the base uri for this node. Function is used when xml file
+   *    has external entities in its DTD
+   * 
+   * Returns 1 if successful,
+   *        0 otherwise
+   */
 
 int
-fixEntities(xmlDocPtr doc)
+filesSetBaseUri(xmlNodePtr node, const xmlChar * uri)
 {
-  return 1;
+    int result = 0;
+
+    if (!node || !node->doc || !uri)
+        return result;
+    else {
+        /*
+         * xmlNsPtr xsldbgNs  = xmlSearchNs(node->doc, node, BAD_CAST "xsldbg");
+         * if (!xsldbgNs)
+         * xsldbgNs = xmlNewNs(node, XSLDBG_XML_NAMESPACE, BAD_CAST "xsldbg");      
+         * if (xsldbgNs){   
+         * xmlSetNsProp(node, xsldbgNs, BAD_CAST "uri", uri);  
+         * result++;
+         * }
+         */
+        xmlSetProp(node, BAD_CAST "xsldbg:uri", uri);
+    }
+    return result;
 }
 
-#endif
+
+  /**
+   * filesGetBaseUri:
+   * @node : Is valid and has a doc parent
+   * 
+   * Get the base uri for this node. Function is used when xml file
+   *    has external entities in its DTD
+   * 
+   * Returns the a copy of the base uri for this node,
+   *         NULL otherwise
+   */
+xmlChar *
+filesGetBaseUri(xmlNodePtr node)
+{
+    xmlChar *result = NULL;
+
+    if (!node || !node->doc)
+        return result;
+
+    while (node && node->parent) {
+        /*
+         * result =  xmlGetNsProp(node, BAD_CAST "uri", XSLDBG_XML_NAMESPACE);
+         */
+        result = xmlGetProp(node, BAD_CAST "xsldbg:uri");
+        if (result)
+            break;
+        else
+            node = node->parent;
+    }
+
+    return result;
+}
+
+
+  /**
+   * filesCreateTempFile:
+   * 
+   * Creates a single temporary file. Ie does not support multiple 
+   *     temporary files.
+   *
+   * Returns a file to be used for temporary results if successful,
+   *         NULL otherwise 
+   */
+FILE *
+filesCreateTempFile()
+{
+
+    FILE *file = fopen("xsldbg_tmp_file.txt", "w+");
+
+    if (file == NULL)
+        xsltGenericError(xsltGenericErrorContext,
+                         "Unable to create temporary file for xsldbg\n");
+    return file;
+}
+

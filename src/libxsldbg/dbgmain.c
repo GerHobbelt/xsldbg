@@ -10,6 +10,7 @@
 #include "xsldbg.h"
 #include "xslbreakpoint.h"
 #include "xslcallpoint.h"
+#include "files.h"
 
 #include <libxslt/xsltutils.h>  /* need for breakpoint callback support */
 
@@ -157,6 +158,7 @@ handleDebugger(xmlNodePtr cur, xmlNodePtr node,
             case DEBUG_CONT:
                 {
                     xslBreakPointPtr breakPoint = NULL;
+		    xmlChar *baseUri = NULL;
 
                     if (cur) {
                         breakPoint =
@@ -172,15 +174,25 @@ handleDebugger(xmlNodePtr cur, xmlNodePtr node,
                         }
                     }
                     if (node) {
+		      baseUri = filesGetBaseUri(node);
+		      if (baseUri != NULL){
+                        breakPoint =
+                            getBreakPoint(baseUri,
+                                          xmlGetLineNo(node));
+		      }else{
                         breakPoint =
                             getBreakPoint(node->doc->URL,
                                           xmlGetLineNo(node));
+		      }
                         if (breakPoint) {
                             if (breakPoint->enabled) {
                                 setActiveBreakPoint(breakPoint);
                                 debugBreak(cur, node, templ, ctxt);
                             }
                         }
+
+			if (baseUri)
+			  xmlFree(baseUri);
                     }
                 }
                 break;

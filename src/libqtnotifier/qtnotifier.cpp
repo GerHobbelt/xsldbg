@@ -24,7 +24,6 @@ QTNotifier xsldbgNotifier;
 int notifyXsldbgApp(XsldbgMessageEnum type, const void *data)
 {
     int result = 0;
-    /*    qDebug("notifyXsldbgApp : kpart %d", getThreadStatus());*/
     if (getThreadStatus() == XSLDBG_MSG_THREAD_NOTUSED){
       return 1;
     }
@@ -35,22 +34,18 @@ int notifyXsldbgApp(XsldbgMessageEnum type, const void *data)
 
     /* we'll do something with QT signals/slots to let the KDE world process the
      * state of the thread */
-    qDebug("notifyXsldbgApp : kpart");
       xsldbgNotifier.doNotify(type, data);
-  	
-
-    qDebug("Got a status signal from thread\n");
-    qDebug("Thread status = %d\n", getThreadStatus());
-    qDebug("Input status = %d,\n",  getInputStatus());
 
     if (getThreadStatus() == XSLDBG_MSG_THREAD_STOP)
         xsldbgThreadCleanup();        /* thread has died so cleanup after it */
-
 
     result++; /* at the moment this function will always work */
 
     return result;
 }
+
+
+
 
 QTNotifier::QTNotifier(void)
   : QObject::QObject(0, "QTNotifier")
@@ -69,8 +64,9 @@ void QTNotifier::connectNotifier(QObject *listener){
 
 void QTNotifier::doNotify(XsldbgMessageEnum type, const void *data)
 {
-	qDebug("qtnotifer::notifyXsldbgApp");	
+  /*	qDebug("qtnotifer::notifyXsldbgApp");	*/
 	emit notifyXsldbgApp(type, data);
 }
+
 
 #include "qtnotifier.moc"

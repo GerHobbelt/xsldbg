@@ -36,9 +36,7 @@ class QTNotifier : public QObject
   void doNotify(XsldbgMessageEnum type, const void *data);
 
   signals:
-   void notifyXsldbgApp(XsldbgMessageEnum, const void *);
-   
+   void notifyXsldbgApp(XsldbgMessageEnum, const void *);   
 };
-
 
 #endif

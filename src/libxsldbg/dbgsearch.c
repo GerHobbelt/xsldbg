@@ -13,6 +13,7 @@
 #include "xslbreakpoint.h"
 #include "xslsearch.h"
 #include "options.h"
+#include "files.h"
 
 #ifdef __riscos
 
@@ -456,6 +457,7 @@ scanForNode(void *payload, void *data, xmlChar * name ATTRIBUTE_UNUSED)
     searchInfoPtr searchInf = (searchInfoPtr) data;
     nodeSearchDataPtr searchData = NULL;
     xmlNodePtr node = (xmlNodePtr) payload;
+    xmlChar * baseUri = NULL;
     int match = 1;
 
     if (!node || !node->doc || !node->doc->URL ||
@@ -468,9 +470,17 @@ scanForNode(void *payload, void *data, xmlChar * name ATTRIBUTE_UNUSED)
         match = searchData->lineNo == xmlGetLineNo(node);
 
     if (searchData->url)
+      baseUri = filesGetBaseUri(node);
+    if (baseUri){
+        match = match
+            && (strcmp((char *) searchData->url, baseUri) 
+		== 0);
+	xmlFree(baseUri);
+    }else{
         match = match
             && (strcmp((char *) searchData->url, (char *) node->doc->URL)
                 == 0);
+    }
 
     if (match) {
         searchData->node = node;

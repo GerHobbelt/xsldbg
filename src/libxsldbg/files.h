@@ -23,6 +23,7 @@
 #include "arraylist.h"
 
 #ifdef USE_KDE_DOCS
+
 /**
  * Provide a file support
  *
@@ -40,105 +41,72 @@ extern "C" {
 #include <unistd.h>             /* need chdir function */
 #endif
 
-extern FILE *terminalIO;
+    extern FILE *terminalIO;
 
-  typedef struct _entityOffset entityOffset;
-  typedef entityOffset* entityOffsetPtr;
-  struct _entityOffset
-  {
-    xmlChar *uri;
-    xmlChar *parentUri;
-    long offset;
-    long lineCount; /* how many lines in this entity */
-    ArrayListPtr list;
-  };
-
-  typedef struct _entityOffsetEntry entityOffsetEntry;
-  typedef entityOffsetEntry* entityOffsetEntryPtr;
-  struct _entityOffsetEntry
-  {
-    xmlNodePtr firstNode;
-    xmlNodePtr lastNode;
-  };
-
-
+#define XSLDBG_XML_NAMESPACE \
+    (const xmlChar *) "http://xsldbg.sourceforge.net/namespace"
 
   /**
-   * fileAddEntity:
+   * filesEntityRef :
    * @uri : Is valid
-   * @parentUri : Valid parent for @uri
    * @firstNode : Is valid
    * @lastNode : Is Valid
    *
-   * Returns 1 if succesful,
-   *         0 otherwise
+   * Fixes the nodes from firstNode to lastNode so that debugging can occur
    */
-  int fileAddEntity(const xmlChar *uri, const xmlChar *parentUri, 
-		    xmlNodePtr firstNode, xmlNodePtr lastNode);
+    void filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode,
+                        xmlNodePtr lastNode);
 
 
-  /**
-   * fileEmptyEntities:
+ /**
+   * filesSetBaseUri:
+   * @node : Is valid and has a doc parent
+   * @uri : Is Valid
    * 
-   * Empty the list of entities that we know about
-   */
-  void fileEmptyEntities(void);
-
-  /**
-   * fixEntities:
-   * @doc : A valid doc completly loaded
-   *
-   * Fix line number of entities in @doc. Must only be called after all included
-   *      have been loaded
-   *
-   * Return 1 if able to fix entities that we know about
+   * Set the base uri for this node. Function is used when xml file
+   *    has external entities in its DTD
+   * 
+   * Returns 1 if successful,
    *        0 otherwise
    */
-  int fixEntities(xmlDocPtr doc);
+    int filesSetBaseUri(xmlNodePtr node, const xmlChar * uri);
 
-
-#ifdef  HAVE_INCLUDE_FIX
-  /**
-   * fileGetEntiyOffset:
-   * @uri : Is valid
-   *
-   * Returns the line number offset for this url 
-   */
-  long fileGetEntityOffset(xmlChar *uri);
 
   /**
-   * fileGetEntityRef:
-   * @uri : Is valid
-   *
-   * Find a entity
-   *
-   * Returns The entity @uri,
+   * filesGetBaseUri:
+   * @node : Is valid and has a doc parent
+   * 
+   * Get the base uri for this node. Function is used when xml file
+   *    has external entities in its DTD
+   * 
+   * Returns the a copy of the base uri for this node,
    *         NULL otherwise
    */
-  entityOffsetPtr fileGetEntityRef(const xmlChar *uri);
+    xmlChar *filesGetBaseUri(xmlNodePtr node);
 
 
   /**
-   *fileGetEntityParent:
-   * @uri : Is valid 
+   * filesCreateTempFile:
+   * 
+   * Creates a single temporary file. Ie does not support multiple 
+   *     temporary files.
    *
-   * Get the parent for this entity
-   *
-   * Return the parent of this entity,
-   *        or NULL if failed
+   * Returns a file to be used for temporary results if successful,
+   *         NULL otherwise 
    */
-  xmlChar *fileGetEntityParent(xmlChar *uri);
+    FILE *filesCreateTempFile();
 
-#endif  
 
-#ifndef USE_KDOC 
-  /* used by loadXmlFile, freeXmlFile functions */
+
+#ifndef USE_KDOC
+    /* used by loadXmlFile, freeXmlFile functions */
     typedef enum {
         FILES_XMLFILE_TYPE = 100,       /* pick a unique starting point */
         FILES_SOURCEFILE_TYPE,
         FILES_TEMPORARYFILE_TYPE
     } FileTypeEnum;
 #else
+
 /* used by loadXmlFile, freeXmlFile functions */
     enum FileTypeEnum {
         FILES_XMLFILE_TYPE = 100,       /* pick a unique starting point */
@@ -149,6 +117,7 @@ extern FILE *terminalIO;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * redirectToTerminal:
  * @device: terminal to redirect i/o to , will not work under win32
@@ -167,6 +136,7 @@ extern FILE *terminalIO;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * selectTerminalIO:
  *
@@ -175,6 +145,7 @@ extern FILE *terminalIO;
 */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * @returns 1 if able to use prevously opened terminal 
  *          0 otherwise
@@ -185,6 +156,7 @@ extern FILE *terminalIO;
 
 
 #ifdef USE_GNOME_DOCS
+
 /** 
  * selectNormalIO:
  * 
@@ -193,6 +165,7 @@ extern FILE *terminalIO;
 */
 #else
 #ifdef USE_KDE_DOCS
+
 /** 
  * @returns 1 if able to select orginal stdin, stdout, stderr
  *          0 otherwise
@@ -203,6 +176,7 @@ extern FILE *terminalIO;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * guessStyleSheetName:
  * @searchInf : is valid
@@ -213,6 +187,7 @@ extern FILE *terminalIO;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Open communications to the terminal device @p device
  *
@@ -228,6 +203,7 @@ extern FILE *terminalIO;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * stylePath:
  *
@@ -236,6 +212,7 @@ extern FILE *terminalIO;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * @return the base path for the top stylesheet ie
  *        ie URL minus the actual file name
@@ -247,6 +224,7 @@ extern FILE *terminalIO;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * workingPath:
  *
@@ -254,6 +232,7 @@ extern FILE *terminalIO;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * @return the working directory as set by changeDir function
  */
@@ -264,6 +243,7 @@ extern FILE *terminalIO;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * changeDir:
  * @path : path to adopt as new working directory
@@ -275,6 +255,7 @@ extern FILE *terminalIO;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Change working directory to path 
  *
@@ -290,6 +271,7 @@ extern FILE *terminalIO;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * loadXmlFile:
  * @path : xml file to load
@@ -302,6 +284,7 @@ extern FILE *terminalIO;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Load specified file type, freeing any memory previously used 
  *
@@ -317,6 +300,7 @@ extern FILE *terminalIO;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * freeXmlFile:
  * @fileType : A valid FileTypeEnum
@@ -327,6 +311,7 @@ extern FILE *terminalIO;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Free memory associated with the xml file 
  *
@@ -341,6 +326,7 @@ extern FILE *terminalIO;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * getStylesheet:
  *
@@ -357,6 +343,7 @@ extern FILE *terminalIO;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * getTemporaryDoc:
  *
@@ -364,6 +351,7 @@ extern FILE *terminalIO;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Return the topmost stylesheet 
  *
@@ -376,6 +364,7 @@ extern FILE *terminalIO;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * getMainDoc:
  *
@@ -383,6 +372,7 @@ extern FILE *terminalIO;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * @returns the main document
  */
@@ -392,6 +382,7 @@ extern FILE *terminalIO;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * filesReloaded:
  * @reloaded : if = -1 then ignore @reloaded
@@ -402,6 +393,7 @@ extern FILE *terminalIO;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * @returns 1 if stylesheet or its xml data file has been "flaged" as reloaded,
  *         0 otherwise
@@ -415,6 +407,7 @@ extern FILE *terminalIO;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * filesInit:
  *
@@ -424,6 +417,7 @@ extern FILE *terminalIO;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Initialize the file module
  *
@@ -436,6 +430,7 @@ extern FILE *terminalIO;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * filesFree:
  *
@@ -443,6 +438,7 @@ extern FILE *terminalIO;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Free memory used by file related structures
  */
@@ -456,7 +452,7 @@ extern FILE *terminalIO;
    * 
    * Returns true if @name has the ".xsl" externsion
    */
-  int isSourceFile(xmlChar* fileName);
+    int isSourceFile(xmlChar * fileName);
 
 #ifdef __cplusplus
 }

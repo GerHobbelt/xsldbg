@@ -21,10 +21,13 @@
 #endif
 
 #include <libxml/xpathInternals.h>
+#include <libxml/HTMLparser.h>
 #include "xsldbg.h"
 #include "debugXSL.h"
 #include "arraylist.h"
 #include "xslbreakpoint.h"
+#include "xsldbgmsg.h"
+#include "files.h"
 
 
 /* -----------------------------------------
@@ -41,6 +44,15 @@
  */
 void *xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
                             void *data ATTRIBUTE_UNUSED, xmlChar * name);
+
+/**
+ * xslShellCat:
+ * @node : Is valid
+ * @file : Is valid
+ *
+ * Send the results of cat command in @node to @file
+ */
+void xslShellCat(xmlNodePtr node, FILE * file);
 
 /* ------------------------------------- 
     End private functions
@@ -116,6 +128,34 @@ xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir)
 }
 
 
+
+/**
+ * xslShellCat:
+ * @node : Is valid
+ * @file : Is valid
+ *
+ * Send the results of cat command in @node to @file
+ */
+void
+xslShellCat(xmlNodePtr node, FILE * file)
+{
+    if (!node || !file)
+        return;
+
+    /* assume that HTML usage is enabled */
+    if (node->doc->type == XML_HTML_DOCUMENT_NODE) {
+      if (node->type == XML_HTML_DOCUMENT_NODE)
+        htmlDocDump(file, (htmlDocPtr) node);
+      else
+	htmlNodeDumpFile(file, node->doc, node);	
+    } else if (node->type == XML_DOCUMENT_NODE) {
+        xmlDocDump(file, (xmlDocPtr) node);
+    } else {
+        xmlElemDump(file, node->doc, node);
+    }
+}
+
+
 /** 
  * xslDbgShellCat:
  * @styleCtxt: the current stylesheet context
@@ -168,38 +208,62 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                         int indx;
 
                         if (list->nodesetval) {
-                            for (indx = 0; indx < list->nodesetval->nodeNr;
-                                 indx++) {
-                                if (i > 0)
-                                    xsltGenericError
-                                        (xsltGenericErrorContext,
-                                         " -------\n");
-                                xmlShellCat(ctxt, NULL,
-                                            list->nodesetval->
-                                            nodeTab[indx], NULL);
+                            if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
+                                FILE *file = filesCreateTempFile();
+
+                                if (!file) {
+                                    break;
+                                } else {
+                                    for (indx = 0;
+                                         indx < list->nodesetval->nodeNr;
+                                         indx++) {
+                                        xslShellCat(list->nodesetval->
+                                                    nodeTab[indx], file);
+                                    }
+				    fflush(file);
+                                    /* send the data to application */
+				    notifyXsldbgApp(XSLDBG_MSG_FILEOUT, file);
+                                }
+                            } else {
+                                for (indx = 0;
+                                     indx < list->nodesetval->nodeNr;
+                                     indx++) {
+                                    if (i > 0)
+                                        xsltGenericError
+                                            (xsltGenericErrorContext,
+                                             " -------\n");
+                                    xmlShellCat(ctxt, NULL,
+                                                list->nodesetval->
+                                                nodeTab[indx], NULL);
+                                }
+
                             }
                         } else {
-                            xmlGenericError(xmlGenericErrorContext,
+                            xsltGenericError(xmlGenericErrorContext,
                                             "xpath %s: results an in empty set\n",
                                             arg);
                         }
+			result++;
                         break;
                     }
 
                 case XPATH_BOOLEAN:
-                    xmlGenericError(xmlGenericErrorContext,
+                    xsltGenericError(xsltGenericErrorContext,
                                     "%s is a Boolean:%s\n", arg,
                                     xmlBoolToText(list->boolval));
+		    result++;
                     break;
                 case XPATH_NUMBER:
-                    xmlGenericError(xmlGenericErrorContext,
+                    xsltGenericError(xsltGenericErrorContext,
                                     "%s is a number:%0g\n", arg,
                                     list->floatval);
+		    result++;
                     break;
                 case XPATH_STRING:
-                    xmlGenericError(xmlGenericErrorContext,
+                    xsltGenericError(xsltGenericErrorContext,
                                     "%s is a string:%s\n", arg,
                                     list->stringval);
+		    result++;
                     break;
 
                 default:
@@ -207,7 +271,7 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
             }
             xmlXPathFreeObject(list);
         } else {
-            xmlGenericError(xmlGenericErrorContext,
+            xsltGenericError(xsltGenericErrorContext,
                             "%s: no such node\n", arg);
         }
         ctxt->pctxt->node = NULL;
@@ -230,11 +294,15 @@ void *
 xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
                       void *data ATTRIBUTE_UNUSED, xmlChar * name)
 {
+  if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
+    notifyXsldbgApp(XSLDBG_MSG_GLOBALVAR_CHANGED, payload);
+  }else{
     if (varCount)
         xsltGenericError(xsltGenericErrorContext, ", %s", name);
     else
         xsltGenericError(xsltGenericErrorContext, "%s", name);
     varCount++;
+  }
     return NULL;
 }
 
@@ -269,9 +337,10 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
         /* list variables of type requested */
         if (type == DEBUG_GLOBAL_VAR) {
             if (styleCtxt->globalVars) {
-                /* list global variables */
-                xsltGenericError(xsltGenericErrorContext,
-                                 "\nGlobal variables found: ");
+	      if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
+		notifyXsldbgApp(XSLDBG_MSG_GLOBALVAR_CHANGED, NULL);
+	      }
+	      /* list global variables */
                 xmlHashScan(styleCtxt->globalVars, xslDbgShellPrintNames,
                             NULL);
                 result++;
@@ -285,18 +354,26 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
             if (styleCtxt->varsBase) {
                 xsltStackElemPtr item =
                     styleCtxt->varsTab[styleCtxt->varsBase];
-                xsltGenericError(xsltGenericErrorContext,
-                                 "\nLocal variables found: ");
-                while (item) {
+		if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
+		  notifyXsldbgApp(XSLDBG_MSG_LOCALVAR_CHANGED, NULL);
+		  while (item) {
+		    notifyXsldbgApp(XSLDBG_MSG_LOCALVAR_CHANGED, item);
+                    item = item->next;
+		  }		  
+		}else{
+		  xsltGenericError(xsltGenericErrorContext,
+				   "\nLocal variables found: ");
+		  while (item) {
                     xsltGenericError(xsltGenericErrorContext, "%s ",
                                      item->name);
                     item = item->next;
-                }
+		  }
+		}
                 result++;
             } else {
                 xsltGenericError(xsltGenericErrorContext,
                                  "Libxslt has not initialize variables yet"
-                                 " try stepping to a template");
+                                 " try stepping past the xsl:param elements in template");
             }
         }
         xsltGenericError(xsltGenericErrorContext, "\n");

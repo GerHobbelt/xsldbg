@@ -22,6 +22,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdarg.h>
+#include <libxml/xmlerror.h>
 #include <libxslt/xsltutils.h>
 
 #include <libxsldbg/xsldbgmsg.h>
@@ -36,31 +38,66 @@
 
 #define DEBUG_BUFFER_SIZE 500
 
-
 static char inputBuffer[DEBUG_BUFFER_SIZE];
-
+static char outputBuffer[DEBUG_BUFFER_SIZE];
 
 /*the major structure to hold information about the process thread */
 pthread_t mythread;
 
+/* The reader for stdout */
+pthread_t stdoutReaderThread;
 
+FILE *stdoutIO = NULL;
+
+
+/* -----------------------------------------------
+   private functions
+ ---------------------------------------------------*/
+extern "C" {
+
+/**
+ * xsldbgGenericErrorFunc:
+ * @ctx:  Is Valid
+ * @msg:  Is valid
+ * @...:  other parameters to use
+ * 
+ * Handles print output from xsldbg and passes it to the application
+ */
+void
+xsldbgGenericErrorFunc(void *ctx, const char *msg, ...);
+
+}
+
+/* -----------------------------------------------
+   end functions
+ ---------------------------------------------------*/
 
 /* setup all application wide items */
 int
 xsldbgThreadInit(void)
 {
     int result = 0;
-
-    printf("mainInit()\n");
+    fprintf(stderr, "mainInit()\n");
+    xsltSetGenericErrorFunc(0, xsldbgGenericErrorFunc);	
     setThreadStatus(XSLDBG_MSG_THREAD_INIT);
-
+    
     /* create the thread */
     if (pthread_create(&mythread, NULL, xsldbgThreadMain, NULL) != EAGAIN) {
-        printf("created thread\n");
-        result++;
+      int counter;
+      for (counter = 0; counter < 11; counter++){
+	if (getThreadStatus() != XSLDBG_MSG_THREAD_INIT)
+	  break;
+	usleep(250000); /*guess that it will take at most 2.5 seconds to startup */
+      }
+      /* xsldbg should have started by now if it can */
+      if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
+        fprintf(stderr, "Created thread\n");
+	result++;
+      }else
+         fprintf(stderr, "Thread did not start\n");
     } else {
-        printf("failed to create thread\n");
-    }
+      fprintf(stderr, "Failed to create thread\n");
+    }    
 
     return result;
 }
@@ -70,10 +107,10 @@ xsldbgThreadInit(void)
 void
 xsldbgThreadFree(void)
 {
-    printf("xsldbgThreadFree()\n");
+  fprintf(stderr, "xsldbgThreadFree()\n");
     if (getThreadStatus() != XSLDBG_MSG_THREAD_DEAD)
     {
-    	printf("Warning killing xsldbg thread\n");
+    	fprintf(stderr, "Warning killing xsldbg thread\n");
        	setThreadStatus(XSLDBG_MSG_THREAD_STOP);    	
     }
    	
@@ -94,7 +131,7 @@ fakeInput(const char *text)
     if (!text || (getInputReady() == 1) || (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)) 
         return result;
 
-    printf("\nFaking input of \"%s\"\n", text);
+    fprintf(stderr, "\nFaking input of \"%s\"\n", text);
     strncpy(inputBuffer, text, sizeof(inputBuffer));
     setInputReady(1);
     result++;
@@ -119,10 +156,8 @@ xslDbgShellReadline(xmlChar * prompt)
   const char *inputReadBuff;
 
   static char last_read[DEBUG_BUFFER_SIZE] = { '\0' };
-  xsltGenericError(xsltGenericErrorContext,
-		   "xsldbg thread readline \n");
 
-  if (getThreadStatus() == XSLDBG_MSG_THREAD_NOTUSED)
+  if (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)
     {
 #ifdef HAVE_READLINE
       xmlChar *line_read;
@@ -159,10 +194,6 @@ xslDbgShellReadline(xmlChar * prompt)
     }
   else{
 
-
-    if (prompt != NULL)
-      printf("%s",prompt);
-
     setInputStatus(XSLDBG_MSG_AWAITING_INPUT);
     notifyXsldbgApp(XSLDBG_MSG_AWAITING_INPUT, NULL);
 
@@ -171,8 +202,8 @@ xslDbgShellReadline(xmlChar * prompt)
       /* have we been told to die */
       if (getThreadStatus() ==  XSLDBG_MSG_THREAD_STOP){
 				xsldbgFree();
-				printf("Killing of thread suceeded\n");
-				exit(1);
+				fprintf(stderr, "Killing of thread suceeded\n");
+				pthread_exit(NULL);
       }
     }
 
@@ -225,7 +256,6 @@ int notifyTextXsldbgApp(XsldbgMessageEnum type, const char *text)
   return notifyStateXsldbgApp(type, -1, XSLDBG_COMMAND_NOTUSED, text);
 }
 
-
 char mainBuffer[DEBUG_BUFFER_SIZE];
 
 /* this is where the thread get to do all its work */
@@ -237,8 +267,7 @@ xsldbgThreadMain(void *data)
   int i;
 
   if (getThreadStatus() != XSLDBG_MSG_THREAD_INIT){
-    printf("xsldbg thread is not ready to be started. Or one is already running. %s %d\n" \
-	 __FILE__ , __LINE__ );
+    fprintf(stderr, "xsldbg thread is not ready to be started. Or one is already running.\n");
     return NULL; /* we can't start more than one thread of xsldbg */
   }
 
@@ -250,19 +279,21 @@ xsldbgThreadMain(void *data)
   */
   for (i = 0; i < defaultArgc; i++){
     if (defaultArgv[i] == NULL){
-      printf("Start thread failed. Unable to create xsldbg arguments\n");
+      fprintf(stderr, "Start thread failed. Unable to create xsldbg arguments\n");
       return NULL;
     }     
   }
 
     setThreadStatus(XSLDBG_MSG_THREAD_RUN);
-    printf("Starting thread\n");
+    fprintf(stderr, "Starting thread\n");
 
     /* call the "main of xsldbg" found in debugXSL.c */
     xsldbgMain(defaultArgc, defaultArgv);
-
+    fprintf(stderr, "Stopping thread\n");
+    
     setThreadStatus(XSLDBG_MSG_THREAD_STOP);
     notifyXsldbgApp(XSLDBG_MSG_THREAD_STOP, NULL);
+    
 
   for (i = 0; i < defaultArgc; i++){
     xmlFree(defaultArgv[i]);
@@ -277,7 +308,7 @@ xsldbgThreadMain(void *data)
 void
 xsldbgThreadCleanup(void)
 {
-    printf("Thread has finished\n");
+    fprintf(stderr, "Thread has finished\n");
     if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN)
       {
 	xsldbgThreadFree();
@@ -287,3 +318,22 @@ xsldbgThreadCleanup(void)
 }
 
 
+
+void *
+xsldbgThreadStdoutReader(void *data)
+{
+  if (!stdoutIO)
+    return data;
+
+  while (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
+    if (fgets(outputBuffer, sizeof(outputBuffer -1), stdoutIO)){
+      usleep(10000);
+      strcat(outputBuffer, "\n");
+      notifyTextXsldbgApp(XSLDBG_MSG_TEXTOUT, outputBuffer);
+    }else{
+      fprintf(stderr, "Unable to read from stdout from xsldbg\n");
+      break;
+    }
+  } 
+  return data;
+}

@@ -24,9 +24,7 @@
 #include "debugXSL.h"
 #include "files.h"
 
-#ifdef USE_XSLDBG_AS_THREAD
 #include "xsldbgmsg.h"
-#endif
 
 /* temp buffer needed occationaly */
 static xmlChar buff[DEBUG_BUFFER_SIZE];
@@ -86,8 +84,13 @@ xslDbgShellFrameBreak(xmlChar * arg, int stepup)
 
     /* how many frames to go up/down */
     int noOfFrames;
+    static const xmlChar *errorPrompt =
+        (xmlChar *) "Failed to add break point\n";
 
-    if (!arg) {
+    if (!arg || !getStylesheet() || !getMainDoc()) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Errror : Debugger has no files loaded, try reloading files\n%s",
+			 errorPrompt);
         return result;
     }
 
@@ -128,9 +131,16 @@ validateSource(xmlChar ** url, long *lineNo)
 
     int result = 0, type;
     long lineNoOffset;
-
-    searchInfoPtr searchInf = searchNewInfo(SEARCH_NODE);
+    searchInfoPtr searchInf;
     nodeSearchDataPtr searchData = NULL;
+
+    if (!getStylesheet()){
+     xsltGenericError(xsltGenericErrorContext,
+		      "Stylesheet not valid files not loaded yet?\n");
+      return result;
+    }
+
+    searchInf = searchNewInfo(SEARCH_NODE);
 
     if (searchInf && searchInf->data) {
         type = DEBUG_BREAK_SOURCE;
@@ -150,16 +160,6 @@ validateSource(xmlChar ** url, long *lineNo)
                 searchData->url = (xmlChar *)
                     xmlMemStrdup((char *) searchData->guessedNameMatch);
 
-	  /* Compensate for imported stylesheets */
-	  lineNoOffset = fileGetEntityOffset(searchData->url);
-	  if (lineNoOffset > 0){
-	    xmlChar *parentUri = fileGetEntityParent(searchData->url);
-	    if (parentUri){	      
-	      xmlFree(searchData->url);
-	      searchData->url = parentUri;
-	    }	    
-	    *lineNo = *lineNo + lineNoOffset;
-	  }
             if (lineNo != NULL) {
                 /* now to check the line number */
                 if (searchData->node) {
@@ -218,10 +218,18 @@ validateData(xmlChar ** url, long *lineNo)
 {
     int result = 0;
     long lineNoOffset;
-    searchInfoPtr searchInf = searchNewInfo(SEARCH_NODE);
-
+    searchInfoPtr searchInf; 
     nodeSearchDataPtr searchData = NULL;
-    char *lastSlash = xmlStrrChr(getMainDoc()->URL, PATHCHAR);
+    char *lastSlash;
+
+    if (!getMainDoc()){
+     xsltGenericError(xsltGenericErrorContext,
+		      "Document not valid files not loaded yet?\n");
+      return result;
+    }
+
+    searchInf = searchNewInfo(SEARCH_NODE);
+    lastSlash = xmlStrrChr(getMainDoc()->URL, PATHCHAR);
 
     if (lastSlash) {
       lastSlash++;
@@ -232,23 +240,6 @@ validateData(xmlChar ** url, long *lineNo)
     }else
       strcpy(buff, "");
 
-    /* compensate for included xml files */
-    lineNoOffset = fileGetEntityOffset(*url);
-    if (lineNoOffset > 0){
-      xmlChar *parentUri = fileGetEntityParent(*url);
-      *lineNo = *lineNo + lineNoOffset;
-      xmlFree(*url);
-      *url = parentUri;
-    }else{
-      lineNoOffset = fileGetEntityOffset(buff);
-      if (lineNoOffset > 0){
-	xmlChar *parentUri = fileGetEntityParent(buff);
-	*lineNo = *lineNo + lineNoOffset;
-	if (parentUri)
-	  xmlStrCpy(buff, parentUri);
-	xmlFree(parentUri);
-      }
-    }
 
     if (searchInf && searchInf->data && getMainDoc()) {
         /* try to verify that the line number is valid */
@@ -313,13 +304,16 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
     int result = 0;
     long lineNo = -1;
     xmlChar *url = NULL;
+    static const xmlChar *errorPrompt =
+        (xmlChar *) "Failed to add break point\n";
 
     if (style == NULL) {
         style = getStylesheet();
     }
-    if (!arg || !style) {
+    if (!arg || !style || !getMainDoc()) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Errror : Debugger has no files loaded, try reloading files\n");
+                         "Errror : Debugger has no files loaded, try reloading files\n%s",
+			errorPrompt );
         return result;
     }
     if (arg[0] == '-') {
@@ -460,8 +454,13 @@ xslDbgShellDelete(xmlChar * arg)
     xslBreakPointPtr breakPoint;
     static const xmlChar *errorPrompt =
         (xmlChar *) "Failed to delete break point\n";
-    if (!arg)
+
+    if (!arg || !getStylesheet() || !getMainDoc()) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Errror : Debugger has no files loaded, try reloading files\n%s",
+			errorPrompt );
         return result;
+    }
 
     if (arg[0] == '-') {
         xmlChar *opts[2], *url = NULL;
@@ -571,8 +570,13 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
     xslBreakPointPtr breakPoint;
     static const xmlChar *errorPrompt =
         (xmlChar *) "Failed to enable/disable break point\n";
-    if (!arg)
+
+    if (!arg || !getStylesheet() || !getMainDoc()) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Errror : Debugger has no files loaded, try reloading files\n%s",
+			errorPrompt );
         return result;
+    }
 
     if (arg[0] == '-') {
         xmlChar *opts[2], *url = NULL;
@@ -650,14 +654,16 @@ void
 xslDbgPrintBreakPoint(void *payload, void *data ATTRIBUTE_UNUSED,
                       xmlChar * name ATTRIBUTE_UNUSED)
 {
+
     if (payload) {
+      if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
+        notifyXsldbgApp(XSLDBG_MSG_BREAKPOINT_CHANGED,
+                        (xslBreakPointPtr) payload);
+      }else{
         printCount++;
         xsltGenericError(xsltGenericErrorContext, " ");
         printBreakPoint(stderr, (xslBreakPointPtr) payload);
         xsltGenericError(xsltGenericErrorContext, "\n");
-#ifdef USE_XSLDBG_AS_THREAD
-        notifyXsldbgApp(XSLDBG_MSG_BREAKPOINT_CHANGED,
-                        (xslBreakPointPtr) payload);
-#endif
+      }
     }
 }

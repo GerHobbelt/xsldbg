@@ -24,7 +24,7 @@ int xsldbgMain(int argc, char **argv);
 
 int main(int argc, char **argv)
 {
-  return xsldbgMain(argc, argv);
+    return xsldbgMain(argc, argv);
 }
 
 
