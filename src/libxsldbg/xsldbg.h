@@ -31,6 +31,12 @@
  */
 #endif
  
+
+/* Don't use DocBook SGML as it is depreciated in libxml */
+#ifndef IN_LIBXML
+#define IN_LIBXML
+#endif
+
 #include <libxslt/xsltconfig.h>
 
 

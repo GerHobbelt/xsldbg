@@ -1,5 +1,19 @@
+Keith Isdale 1st Jan 2004 <k_isdale@tpg.com.au>
+  Vesion 3.1.8
+  Disable DocBook SGML parsing as it is depreciated by libxml-2.6.x : see xsldbg.h IN_LIBXML
+  Sort the printing of breakpoints in order of breakpoint ID. 
+    o Sorting can be disabled by defining XSLDBG_NO_SORTING.
+    o required adding arrayListSet function 
+    o required updating tests to take sorted breakpoints into account
+    o sorting has not been used when running xsldbg as a thread to avoid side effects on qxsldbg and kxsldgb.  
+
+Keith Isdale 30 Nov 2003 <k_isdale@tpg.com.au>
+  Update SAX usage to handle libxml-2.6.0: Usage of libxml-2.6.3 or the libxml module from GNOME cvs is 
+	required to avoid segfaults due encoding problems in libxml
+  Set encoding as UTF-8 in XML files used in automated tests
+ 
 Keith Isdale 26 July 2003 <k_isdale@tpg.com.au>
- Detect the lixbml version at run time rather than compile time, so that can use different
+  Detect the lixbml version at run time rather than compile time, so that can use different
     XML entity handling code to suit the installed libxml
 
 Keith Isdale 19 July 2003 <k_isdale@tpg.com.au>

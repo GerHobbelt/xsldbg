@@ -37,7 +37,10 @@ rm -rf %{builddir}
 touch `find . -type f`
 
 %build
+aclocal
+autoheader
 automake
+autoconf
 CXXFLAGS="$RPM_OPT_FLAGS" CFLAGS="$RPM_OPT_FLAGS" ./configure \
 	--prefix=%{prefix} --enable-xsldbgthread --enable-kde-docs --with-html-dir=%{prefix}/share/doc/packages --with-kde-dir=%{kdeprefix} --with-qt-dir=%{qtprefix} --with-gnome-prefix=%{gnomeprefix}
 make

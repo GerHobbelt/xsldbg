@@ -99,10 +99,10 @@
 		  </para>
 		</listitem>
 	  </orderedlist></para>
-  </legalnotice><authorgroup><author><firstname>Keith</firstname><surname>Isdale</surname><affiliation><orgname/><address><email>k_isdale@tpg.com.au</email></address></affiliation></author></authorgroup><revhistory><revision><revnumber>xsldbg Manual V1.0</revnumber><date>2003-07-16</date><revdescription><para role="author">Keith Isdale
+  </legalnotice><authorgroup><author><firstname>Keith</firstname><surname>Isdale</surname><affiliation><orgname/><address><email>k_isdale@tpg.com.au</email></address></affiliation></author></authorgroup><revhistory><revision><revnumber>xsldbg Manual V1.0</revnumber><date>2003-07-27</date><revdescription><para role="author">Keith Isdale
 	    	<email>k_isdale@tpg.com.au</email></para><para role="publisher"/></revdescription></revision></revhistory><releaseinfo>
       This manual describes version 3.1.7 of xsldbg. It was
-       last updated on 2003-07-16.
+       last updated on 2003-07-27.
     </releaseinfo><legalnotice><title>Feedback</title><para>To report a bug or make a suggestion regarding xsldbg application or this manual, follow the directions in the <ulink url="http://xsldbg.sourceforge.net"> xsldbg Feedback Page</ulink>. 
       </para></legalnotice></articleinfo><indexterm zone="index"><primary>xsldbg</primary></indexterm><!--please do not change the id; for translations, change lang to --><!--appropriate code --><sect1 id="overview_section"><title>Overview</title><sect2 id="overview1">
 <para> xsldbg is a text based tool to debug stylesheets (the eXtensible Stylesheet Language) and has 

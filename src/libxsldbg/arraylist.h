@@ -285,6 +285,35 @@ extern "C" {
     void *arrayListGet(arrayListPtr list, int position);
 
 
+
+#ifdef USE_GNOME_DOCS
+
+/**
+ * arrayListSet:
+ * @list: A valid list
+ * @position: 0 =< @position < arrayListCount(@list)
+ *
+ * Set item at position @position from @list. This does not delete the item first.
+ *
+ * Returns 1 if able to set element in @list at position @position to @item,
+ *         0 otherwise 
+ */
+#else
+#ifdef USE_KDE_DOCS
+
+/**
+ * Set item at position @position from @list. This does not delete the item first.
+ * @returns 1 if able to set element in @p list at position @p position to @p item,
+ *         0 otherwise 
+
+ * @param list A valid list
+ * @param position 0 =< @position < arrayListCount(@list)
+ *
+ */
+#endif
+#endif
+    int arrayListSet(arrayListPtr list, int position, void *item);
+
 #ifdef __cplusplus
 }
 #endif

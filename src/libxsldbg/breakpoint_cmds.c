@@ -897,6 +897,70 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
 }
 
 
+static void
+xslDbgShellPrintBreakPointHelper(void *payload, void *data,
+                           xmlChar * name ATTRIBUTE_UNUSED)
+{
+    if (payload && data){
+	arrayListAdd((arrayListPtr)data, payload);
+    }
+}
+
+
+/**
+ * xslDbgShellPrintBreakPoints:
+ * 
+ * Print all breakpoints
+ *
+ * Returns 1 on success,
+ *         0 otherwise
+ */
+int
+xslDbgShellPrintBreakPoints()
+{
+    int result = 1, index1 = 0, index2 = 0; 
+    arrayListPtr list = NULL;
+    breakPointPtr aPtr = NULL, bPtr = NULL;
+    xsltGenericError(xsltGenericErrorContext, "\n");
+    printCount = 0;     /* printCount will get updated by
+			 * xslDbgShellPrintBreakPoint */
+#ifndef XSLDBG_NO_SORTING
+    list = arrayListNew(20, NULL);
+    walkBreakPoints((xmlHashScanner)
+	    xslDbgShellPrintBreakPointHelper, list);
+    /* Use a very simple sort method as the comparison time will be very short */
+    for (index1 = 0; index1 < arrayListCount(list); index1++){
+	for (index2 = 0; index2 < arrayListCount(list); index2++){
+	    aPtr = arrayListGet(list, index1);
+	    bPtr = arrayListGet(list, index2);
+
+	    if (aPtr && bPtr && (aPtr->id < bPtr->id) ){ 
+		/* swap values */
+		arrayListSet(list, index2, aPtr);	
+		arrayListSet(list, index1, bPtr);	
+	    }
+	}
+    }
+	
+    for (index1 = 0; index1 < arrayListCount(list); index1++){
+    	xslDbgShellPrintBreakPoint(arrayListGet(list, index1), NULL, NULL);
+    }
+    arrayListFree(list);
+#else 
+
+    walkBreakPoints((xmlHashScanner)
+	    xslDbgShellPrintBreakPoint, NULL);
+#endif
+    if (printCount == 0)
+	xsltGenericError(xsltGenericErrorContext,
+		"\nNo file breakpoints set\n");
+    else
+	xsltGenericError(xsltGenericErrorContext,
+		"\n\t Total of %d breakpoints present\n",
+		printCount);
+    return result;
+}
+
 /**
  * xslDbgShellPrintBreakPoint:
  * @payload: A valid breakPointPtr

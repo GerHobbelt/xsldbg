@@ -236,3 +236,26 @@ arrayListGet(arrayListPtr list, int position)
     }
     return result;
 }
+
+
+/**
+ * arrayListSet:
+ * @list: A valid list
+ * @position: 0 =< @position < arrayListCount(@list)
+ *
+ * Set item at position @position from @list. This does not delete the item first.
+ *
+ * Returns 1 if able to set element in @list at position @position to @item,
+ *         0 otherwise 
+ */
+int
+arrayListSet(arrayListPtr list, int position, void *item)
+{
+    int result = 0, index;
+
+    if (list && (position >= 0) && (position < list->count)) {
+	list->data[position] = item;
+	result = 1;
+    }
+    return result;
+}

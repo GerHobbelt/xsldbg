@@ -40,6 +40,9 @@
 
   extern int xsldbgStop;
   extern int xsldbgValidateBreakpoints;
+  /* Some versions of libxml/libxslt need a different type of 
+	line numbers handling */
+  extern int xsldbgHasLineNumberFix;
 
 /****************************************************************
  *								*

@@ -1588,22 +1588,10 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     walkBreakPoints((xmlHashScanner)
                                     xslDbgShellPrintBreakPoint, NULL);
                     notifyListSend();
+		    cmdResult = 1;
                 } else {
-                    xsltGenericError(xsltGenericErrorContext, "\n");
-                    printCount = 0;     /* printCount will get updated by
-                                         * xslDbgShellPrintBreakPoint */
-
-                    walkBreakPoints((xmlHashScanner)
-                                    xslDbgShellPrintBreakPoint, NULL);
-                    if (printCount == 0)
-                        xsltGenericError(xsltGenericErrorContext,
-                                         "\nNo file breakpoints set\n");
-                    else
-                        xsltGenericError(xsltGenericErrorContext,
-                                         "\n\t Total of %d breakpoints present\n",
-                                         printCount);
+		   cmdResult = xslDbgShellPrintBreakPoints();
                 }
-                cmdResult = 1;
                 break;
 
             case DEBUG_DELETE_CMD:

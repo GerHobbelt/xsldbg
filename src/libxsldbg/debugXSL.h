@@ -317,6 +317,27 @@ extern "C" {
                                     xmlChar * name);
 
 
+#ifdef USE_GNOME_DOCS
+
+/**
+ * xslDbgShellPrintBreakPoints:
+ * 
+ * Print all breakpoints
+ *
+ * Returns 1 on success,
+ *         0 otherwise
+ */
+#else
+#ifdef USE_KDE_DOCS
+/**
+ * Print all breakpoints
+ *
+ * @returns 1 on success,
+ *         0 otherwise
+ */
+#endif
+#endif
+    int xslDbgShellPrintBreakPoints();
 
 #ifdef USE_GNOME_DOCS
 

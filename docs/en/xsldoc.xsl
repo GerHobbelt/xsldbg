@@ -29,9 +29,12 @@
 
   <!-- Main template-->
   <xsl:template match="/">
-         xsldbg version <xsl:value-of select="$xsldbg_version"/>
-         ====================
-
+<xsl:text>         xsldbg version </xsl:text><xsl:value-of select="$xsldbg_version"/>
+<xsl:text>Foo Bar</xsl:text>
+<xsl:text> 
+</xsl:text>   
+<xsl:text>         ====================</xsl:text><xsl:text> 
+</xsl:text>   
     <xsl:choose>
       <xsl:when test="$alldocs=0">
         <xsl:call-template name="helpOnCommand"/>
@@ -40,17 +43,17 @@
         <xsl:apply-templates select="$overview_node"/>
         <xsl:for-each select="/xsldoc/cmd">
           <xsl:sort select="@name"/>
-          <xsl:text>- - - - - - - - - - - - - - - - - - - -
+          <xsl:text>- - - - - - - - - - - - - - - - - - - -</xsl:text><xsl:text> 
 
 </xsl:text>
           <xsl:apply-templates select="."/>
         </xsl:for-each>
       </xsl:otherwise>
     </xsl:choose>
-<xsl:text>
-</xsl:text>
-  Help document version <xsl:value-of select="$doc_version"/><xsl:text>
-</xsl:text>
+<xsl:text> 
+</xsl:text> 
+<xsl:text>  Help document version </xsl:text><xsl:value-of select="$doc_version"/><xsl:text> 
+</xsl:text> 
   </xsl:template>
 
 
@@ -64,7 +67,7 @@
         <xsl:if test="$help !='_#_'">
           <xsl:text>Help about </xsl:text>
           <xsl:value-of select="$help"/>
-          <xsl:text> was not found.
+          <xsl:text> was not found.</xsl:text><xsl:text> 
         </xsl:text>
       </xsl:if>
       <xsl:apply-templates select="$overview_node"/>
@@ -75,12 +78,12 @@
    <!-- Convert header into something useful -->
   <xsl:template match="header">
 <xsl:value-of select="."/>
-<xsl:text>
+<xsl:text> 
     </xsl:text>
 <xsl:value-of
   select="substring('____________________________________________________________',
   1, string-length())" />
-<xsl:text>
+<xsl:text> 
 </xsl:text>
   </xsl:template>
 
@@ -91,18 +94,18 @@
 
   <!-- -->
   <xsl:template match="para">
-    <xsl:text>
+    <xsl:text> 
 </xsl:text>
     <xsl:apply-templates/>
   </xsl:template>
 
   <!-- -->
   <xsl:template match="list | usage">
-    <xsl:text>
+    <xsl:text> 
 </xsl:text>
     <xsl:for-each select="li">
       <xsl:for-each select="ancestor::node()"><xsl:text>  </xsl:text></xsl:for-each><xsl:apply-templates />
-      <xsl:text>
+      <xsl:text> 
 </xsl:text>
     </xsl:for-each>
   </xsl:template>
@@ -114,21 +117,21 @@
 
   <!-- -->
   <xsl:template name="cmd-summary" match="cmd-summary">
-    <xsl:text >                   Command summary
+    <xsl:text >                   Command summary</xsl:text><xsl:text> 
 </xsl:text>
     <xsl:apply-templates select="cmd"/>
   </xsl:template>
 
   <!-- Format command documentation -->
   <xsl:template match="cmd">
-Command : <xsl:value-of select="@title"/><xsl:text >
-</xsl:text>Summary : <xsl:value-of select="summary"/><xsl:text>
+<xsl:text>Command : </xsl:text><xsl:value-of select="@title"/><xsl:text >
+</xsl:text><xsl:text>Summary : </xsl:text><xsl:value-of select="summary"/><xsl:text> 
 </xsl:text>
     <xsl:if test="body">
-        <xsl:apply-templates select="body"/><xsl:text >
+        <xsl:apply-templates select="body"/><xsl:text> 
 </xsl:text>
     </xsl:if>
-    <xsl:text>Usage:
+    <xsl:text>Usage:</xsl:text><xsl:text> 
 </xsl:text>
     <xsl:apply-templates select="usage"/>
   </xsl:template>
