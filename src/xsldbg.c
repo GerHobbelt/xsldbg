@@ -705,8 +705,8 @@ main(int argc, char **argv)
         cur = NULL;
         doc = NULL;
         if (isOptionEnabled(OPTIONS_SHELL)) {
-            xslDebugStatus = DEBUG_STOP;
-            xslDebugGotControl(0);
+	    xslDebugStatus = DEBUG_STOP;
+	    xslDebugGotControl(0);
             xsltGenericError(xsltGenericErrorContext,
                              "\nStarting stylesheet\n\n");
         }
@@ -851,6 +851,7 @@ main(int argc, char **argv)
     xmlMemoryDump();
     return !result;
 }
+
 
 /**
  * loadStylesheet:
