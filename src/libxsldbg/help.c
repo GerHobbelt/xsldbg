@@ -37,6 +37,9 @@
  * @args : Is valid command or empty string
  *
  * Display help about the command in @args
+ *
+ * Returns 1 on success,
+ *         0 otherwise
  */
 int
 helpTop(const xmlChar * args)
@@ -47,11 +50,15 @@ helpTop(const xmlChar * args)
         (const char *) getStringOption(OPTIONS_DOCS_PATH);
     int result = 0;
 
+#ifdef __riscos
+   docsDirPath = unixfilename(docsDirPath);
+#endif
+
     if (xmlStrLen(args) > 0) {
         snprintf(helpParam, 100, "--param help %c'%s'%c", QUOTECHAR, args,
                  QUOTECHAR);
     } else
-        strcpy(helpParam, "");
+        xmlStrCpy(helpParam, "");
     if (docsDirPath) {
         snprintf((char *) buff, sizeof(buff), "%s %s"
                  " --param xsldbg_version %c'%s'%c "
@@ -95,10 +102,14 @@ helpTop(const xmlChar * args)
  * @args : Is valid command or empty string
  *
  * Display help about the command in @args
+ *
+ * Returns 1 on success,
+ *         0 otherwise
  */
-void
+int
 helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
 {
+  int result = 0;
     xmlChar buff[500];
     char *docsDirPath = (char *) getStringOption(OPTIONS_DOCS_PATH);
 
@@ -123,9 +134,12 @@ helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
             }
             fprintf(stdout, "\n");
             fclose(f);
-        } else
+	    result++;
+        } else{
             xsltGenericError(xsltGenericErrorContext,
                              "Help failed : could not open %s\n", buff);
+	    return result;
+	}
 #else
         snprintf((char *) buff, sizeof(buff), "more %sxsldoc.txt",
                  docsDirPath);
@@ -134,7 +148,8 @@ helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
             xsltGenericError(xsltGenericErrorContext,
                              "Help failed : Maybe help files not found in %s or "
                              "more not found in path\n", docsDirPath);
-        }
+        }else
+	  result++;
 #endif
     } else {
         xsltGenericError(xsltGenericErrorContext,
@@ -149,6 +164,7 @@ helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
                          XSLDBG_DOCS_DIR_VARIABLE);
 #endif
     }
+    return result;
 }
 
 #endif

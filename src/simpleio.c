@@ -16,7 +16,12 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef __riscos
+#include "config_riscos.h"
+#else
 #include "config.h"
+#endif
+
 #include <libxslt/xsltutils.h>
 
 #ifdef HAVE_READLINE

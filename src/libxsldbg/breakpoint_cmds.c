@@ -238,7 +238,7 @@ validateData(xmlChar ** url, long *lineNo)
         buff[lastSlash - (char *) getMainDoc()->URL] = '\0';
         xmlStrCat(buff, *url);
     } else
-        strcpy(buff, "");
+        xmlStrCpy(buff, "");
 
 
     if (searchInf && searchInf->data && getMainDoc()) {

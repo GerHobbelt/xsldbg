@@ -82,6 +82,7 @@
 #endif
 #else
 #include "config_riscos.h"
+#include "libxml/riscos.h"
 #endif
 
 #endif

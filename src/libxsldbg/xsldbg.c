@@ -120,6 +120,14 @@
 #  endif
 #endif
 
+#ifdef __riscos
+/* Global definition of our program name on invocation.
+   This is required such that we can invoke ourselves for processing
+   search or help messages where our executable does not exist on the
+   current run path */
+char *xsldbgCommand = NULL;
+#endif
+
 xmlParserInputPtr xmlNoNetExternalEntityLoader(const char *URL,
                                                const char *ID,
                                                xmlParserCtxtPtr ctxt);
@@ -550,6 +558,11 @@ xsldbgMain(int argc, char **argv)
     xmlDocPtr doc;
 
     xmlInitMemory();
+
+#ifdef __riscos
+    /* Remember our invocation command such that we may call ourselves */
+    xsldbgCommand = argv[0];
+#endif
 
     LIBXML_TEST_VERSION xmlLineNumbersDefault(1);
 

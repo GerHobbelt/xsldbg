@@ -471,13 +471,11 @@ scanForNode(void *payload, void *data, xmlChar * name ATTRIBUTE_UNUSED)
     if (searchData->url)
         baseUri = filesGetBaseUri(node);
     if (baseUri) {
-        match = match && (strcmp((char *) searchData->url, baseUri)
-                          == 0);
+        match = match && (xmlStrCmp(searchData->url, baseUri) == 0);
         xmlFree(baseUri);
     } else {
         match = match
-            && (strcmp((char *) searchData->url, (char *) node->doc->URL)
-                == 0);
+            && (xmlStrcmp(searchData->url, node->doc->URL) == 0);
     }
 
     if (match) {
@@ -837,7 +835,7 @@ searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
 #ifndef __risc_os
 	if (result &&  (isOptionEnabled(OPTIONS_PREFER_HTML) == 0)){
 	/* try printing out the file */
-	  snprintf(buffer, sizeof(buffer), "more %s", searchOutput);
+	  snprintf((char*)buffer, sizeof(buffer), "more %s", searchOutput);
 	  result = xslDbgShellExecute(buffer, 1);
 	}	
 #endif

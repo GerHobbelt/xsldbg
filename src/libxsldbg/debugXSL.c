@@ -1311,7 +1311,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
         (xslDebugStatus == DEBUG_TRACE)) {
         if (ctxt->node && ctxt->node && ctxt->node->doc
             && ctxt->node->doc->URL) {
-            strcpy(messageBuffer, "");
+            xmlStrCpy(messageBuffer, "");
             if (activeBreakPoint() != NULL) {
                 xslBreakPointPtr breakPtr = activeBreakPoint();
 

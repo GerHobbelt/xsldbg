@@ -17,7 +17,7 @@
  ***************************************************************************/
 
 
-#include "config.h"
+#include "xsldbg.h"
 #include <libxsldbg/xslbreakpoint.h>
 
 #include <libxsldbg/xsldbgmsg.h>

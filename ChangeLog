@@ -1,8 +1,11 @@
 Keith Isdale 23 Jan 2002 <k_isdale@tpg.com.au>
    Version 1.0.1
-   Added suport for quoted values to splitstring function in debugXSL.c
+   Added suport for quoted values to splitstring function in debugXSL.c so you now 
+	can do something like
+	  break "header | title"
    Added options command to print out option values
    Updates xsldoc.xml to suit
+   Merged in changes suggested by Justin to suit risc os   
 	
 Keith Isdale 23 Jan 2002 <k_isdale@tpg.com.au>
    Version 1.0.0
