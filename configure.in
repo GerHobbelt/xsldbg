@@ -1,12 +1,12 @@
 
 AC_INIT(src/main.c)
 
-timestamp='2002-08-04'
+timestamp='2002-08-11'
 
 
 XSLDBG_MAJOR_VERSION=3
-XSLDBG_MINOR_VERSION=0
-XSLDBG_MICRO_VERSION=9
+XSLDBG_MINOR_VERSION=1
+XSLDBG_MICRO_VERSION=0
 PACKAGE=xsldbg
 
 dnl
@@ -480,7 +480,7 @@ AC_SUBST(LIBXSLT_LIBS)
 AC_SUBST(LIBXSLT_CFLAGS)
 
 
-RUNTEST10 = "true"
+RUNTEST10="true"
 XSLDBG_LIBDIR="${prefix}/lib"
 XSLDBG_INCLUDEDIR="-I${prefix}/include"
 # EXTRA_LIBS=""
@@ -498,7 +498,7 @@ AC_CHECK_LIB(xml2, xmlSetEntityReferenceFunc,
 	as it will fail.   You will not be able to set breakpoints on external 
         entities. Try upgrading your libxml2. 
 	See also --enable-includefix)	
-	RUNTEST10 = "false"		
+	RUNTEST10="false"		
 	])
 
 AM_CONDITIONAL(WITH_TEST10, test "$RUNTEST10" != "false")

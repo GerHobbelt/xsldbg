@@ -1,5 +1,13 @@
-Keith Isdale 4 Aug 2002 <k_isdale@tpg.com
-       Version 3.0.9
+Keith Isdale 11 Aug 2002 <k_isdale@tpg.com>
+   Version 30.1.0
+   Fixed segfault in printing xPaths when in running xsldbg as a thread
+	
+Keith Isdale 10 Aug 2002 <k_isdale@tpg.com>
+   Fixed typo in when using RUNTEST10 in configure.in
+   Fixed ordering of tests in "test10" so that it passes (was ordered by file name)	   
+	
+Keith Isdale 4 Aug 2002 <k_isdale@tpg.com>
+      Version 3.0.9
        Fixed handling of stopping xsldbg when tracing or walking 
 	 and running xsldbg as a thread
        Fixed generation of file name when stoped at an external entity and

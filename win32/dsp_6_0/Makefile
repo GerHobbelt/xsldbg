@@ -58,8 +58,8 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-host_alias = i686-pc-linux-gnu
-host_triplet = i686-pc-linux-gnu
+host_alias = i686-suse-linux
+host_triplet = i686-suse-linux
 AMTAR = ${SHELL} /home/keith/lang/c/xsldbg/missing --run tar
 AS = @AS@
 AWK = gawk
@@ -71,6 +71,7 @@ DEPDIR = .deps
 DLLTOOL = @DLLTOOL@
 DOCBOOK_PREFIX = /usr/share/xml/docbook/
 DOCBOOK_VERSION = 4.1.2
+ECHO = echo
 EXEEXT = 
 EXTRA_LIBS = 
 HAVE_GNOME = 0
@@ -89,16 +90,17 @@ LIBXSLT_LIBS = -L/usr/lib -L/usr/X11R6/lib -lxslt -lxml2 -lz -lm
 LIBXSLT_PREFIX = xslt-config --prefix
 LIBXSLT_REQUIRED_VERSION = 1.0.10
 LN_S = ln -s
-MAINT = 
+MAINT = #
 OBJDUMP = @OBJDUMP@
 OBJEXT = o
 PACKAGE = xsldbg
 PERL = perl
 RANLIB = ranlib
+STRIP = strip
 THREAD_LIBS =  -lpthread 
 TIMESTAMP = 
 USE_XSLDBG_AS_THREAD = 1
-VERSION = 3.0.9
+VERSION = 3.1.0
 WITH_MEM_DEBUG = 0
 XML_CONFIG = xml2-config
 XSLDBG_CFLAGS = -I/usr/local/include -I/usr/include/libxml2 -I/usr/include/libxml2/libxml 
@@ -106,13 +108,13 @@ XSLDBG_INCLUDEDIR = -I/usr/local/include
 XSLDBG_LIBDIR = /usr/local/lib
 XSLDBG_LIBS =  -L/usr/local/lib -lxsldbg -L/usr/lib -L/usr/X11R6/lib -lxslt -lxml2 -lz -lm -lexslt -lreadline -lncurses -lhistory
 XSLDBG_MAJOR_VERSION = 3
-XSLDBG_MICRO_VERSION = 9
-XSLDBG_MINOR_VERSION = 0
+XSLDBG_MICRO_VERSION = 0
+XSLDBG_MINOR_VERSION = 1
 XSLDBG_STATIC_FLAGS =  -static
 XSLDBG_TEST_LIBS =  -L/usr/lib -L/usr/X11R6/lib -lxslt -lxml2 -lz -lm -lexslt -lreadline -lncurses -lhistory
-XSLDBG_VERSION = 3.0.9
-XSLDBG_VERSION_INFO = 3:9:0
-XSLDBG_VERSION_NUMBER = 30009
+XSLDBG_VERSION = 3.1.0
+XSLDBG_VERSION_INFO = 4:0:1
+XSLDBG_VERSION_NUMBER = 30100
 XSLT_CONFIG = xslt-config
 am__include = include
 am__quote = 
@@ -143,10 +145,10 @@ clean-libtool:
 
 distclean-libtool:
 	-rm -f libtool
-$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
+$(srcdir)/Makefile.in: # Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  win32/dsp_6_0/Makefile
-Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
+Makefile: # $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && \
 	  CONFIG_HEADERS= CONFIG_LINKS= \
 	  CONFIG_FILES=$(subdir)/$@ $(SHELL) ./config.status

@@ -226,7 +226,7 @@ printXPathObject(xmlXPathObjectPtr item, xmlChar* xPath){
 	int indx;
 
 	const char *fileName = filesTempFileName(0);
-	FILE *file;
+	FILE *file = NULL;
 
 	if (!fileName)
 	  break;
@@ -282,6 +282,7 @@ printXPathObject(xmlXPathObjectPtr item, xmlChar* xPath){
 	  } // inner switch statement 
 	  if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
 	    fclose(file);
+	    file = NULL;
 	    /* send the data to application */
 	    notifyXsldbgApp(XSLDBG_MSG_FILEOUT, fileName);
 	  } else {
