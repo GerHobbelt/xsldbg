@@ -1,7 +1,7 @@
 
 AC_INIT(src/main.c)
 
-timestamp='2002-02-12'
+timestamp='2002-02-15'
 
 
 XSLDBG_MAJOR_VERSION=2
@@ -482,7 +482,7 @@ XSLDBG_LIBDIR="${prefix}/lib"
 XSLDBG_INCLUDEDIR="-I${prefix}/include"
 # EXTRA_LIBS=""
 XSLDBG_LIBS=" -L${XSLDBG_LIBDIR} -lxsldbg ${LIBXSLT_LIBS} -lexslt"
-
+XSLDBG_TEST_LIBS=" ${LIBXSLT_LIBS} -lexslt"
 dnl
 dnl Do we have we fix for included xml files
 dnl
@@ -507,15 +507,21 @@ dnl Check for readline and history
 dnl
 AC_CHECK_HEADERS(readline/readline.h, [
 	AC_DEFINE(HAVE_READLINE)
-	XSLDBG_LIBS="$XSLDBG_LIBS -lreadline -lncurses"])
+	XSLDBG_LIBS="$XSLDBG_LIBS -lreadline -lncurses"
+	XSLDBG_TEST_LIBS="$XSLDBG_TEST_LIBS -lreadline -lncurses"])
 AC_CHECK_HEADER(readline/history.h, [
 	AC_DEFINE(HAVE_HISTORY)
-	XSLDBG_LIBS="$XSLDBG_LIBS -lhistory"])
+	XSLDBG_LIBS="$XSLDBG_LIBS -lhistory"
+	XSLDBG_TEST_LIBS="$XSLDBG_TEST_LIBS -lhistory"])
 
 AC_SUBST(XSLDBG_LIBDIR)
 AC_SUBST(XSLDBG_INCLUDEDIR)
 AC_SUBST(EXTRA_LIBS)
 AC_SUBST(XSLDBG_LIBS)
+dnl
+dnl During linking and tests we need to use this set of library flags
+dnl
+AC_SUBST(XSLDBG_TEST_LIBS)
 XSLDBG_CFLAGS="${XSLDBG_INCLUDEDIR} ${LIBXSLT_CFLAGS} "
 AC_SUBST(XSLDBG_CFLAGS)
 
@@ -542,30 +548,6 @@ then
 else
    AC_ERROR(Unable to find libxslt prefix directory, or load xsltconfig.h)
 fi
-
-
-dnl
-dnl what environment variables must be exported for xsldbg to work?
-dnl  We only LD_LIBRARY_PATH set at the moment
-dnl  I assume that /bin/sh will be used to compile xsldbg
-dnl
-
-if test "x`ls -l /bin/sh | grep bash`" != "x" -o "x`ls -l /bin/sh | grep pdksh`" != "x"
-then
-  AC_MSG_RESULT(Noting values for required variables for the bash/pdksh shell)
-  XSLDBG_EXPORTS="export LD_LIBRARY_PATH=`pwd`/src/libxsldbg/.libs:${LIBXSLT_PREFIX_DIR}/lib:${LIBXML_PREFIX_DIR}/lib:$LD_LIBRARY_PATH;"
-else
-  if test "x`ls -l /bin/sh | grep tcsh`" != "x"
-  then
-	AC_MSG_RESULT(Noting values for required variables for the tcsh shell)
-  	XSLDBG_EXPORTS="setenv LD_LIBRARY_PATH=`pwd`/src/libxsldbg/.libs:${LIBXSLT_PREFIX_DIR}/lib:${LIBXML_PREFIX_DIR}/lib:$LD_LIBRARY_PATH;"
-  else
-	AC_MSG_RESULT(Warning!! Unable to set up exports needed by xsldbg. 
-Tests may not be run nor documentation be built)
-	XSLDBG_EXPORTS=""
-  fi 	
-fi	
-AC_SUBST(XSLDBG_EXPORTS)
 
 
 dnl

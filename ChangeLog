@@ -1,3 +1,19 @@
+Keith Isdale 15 Feb 2002 <k_isdale@tpg.com.au
+  Advised by Hannes that the Makefile.am's were broken :-(
+  Read libtool docs again. 
+  Added static target, src/xsldbgtest, to do testing with -rpath specified and
+	static library used
+  Removed XSLDBG_EXPORTS from configure.in and all Makefile.am's
+  Changed $(XSLDBG) in all Makefile.am's to be make use of src/xsldbgtest 
+  Fixed broken include specification in test/Makefile.am
+  Clean build, 
+	o threading enabled/disabled, 
+	o GNOME docs enabled/disabled
+	o KDE docs enabled/disabled
+  Disabled normal breakpoint messaged been sent to terminal unless user is
+	tracing or walking through stylesheet
+	 
+	
 Keith Isdale 12 Feb 2002 <k_isdale@tpg.com.au
   Version 2.0.6
   Depreciated breakPointSetActiveBreakPoint and breakPointGetActiveBreakPoint

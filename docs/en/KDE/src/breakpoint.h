@@ -125,6 +125,8 @@
  * Get the active break point
  *
  * @returns The last break point that we stoped at
+ *
+ * Depreciated
  */
 
 
@@ -139,6 +141,8 @@
  * Set the active break point
  *
  * @param breakPoint Is valid break point or NULL
+ *
+ * Depreciated
  */
 
 

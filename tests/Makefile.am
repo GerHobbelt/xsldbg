@@ -2,15 +2,15 @@ if USE_XSLDBG_AS_THREAD
 # set the include path found by configure
 # cheet a bit because I need DOCS_PATH defined
 INCLUDES= $(all_includes) -DDOCS_PATH=\"$(HTML_DIR)/xsldbg/\" -DVERSION=\"@VERSION@\" \
-	$(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS) -I $(top_builddir)/src/libxsldbg -I $(QIDIR)/include
+	$(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS)  -I $(top_builddir)/src -I $(top_builddir)/src/libxsldbg -I $(QIDIR)/include
 else
 # set the include path found by configure
 # cheet a bit because I need DOCS_PATH defined
 INCLUDES= $(all_includes) -DDOCS_PATH=\"$(HTML_DIR)/xsldbg/\" -DVERSION=\"@VERSION@\" \
-	$(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS) -I $(top_builddir)/src/libxsldbg
+	$(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS) -I $(top_builddir)/src/libxsldbg  -I $(top_builddir)/src
 endif
 
-XSLDBG=$(top_builddir)/src/xsldbg
+XSLDBG=$(top_builddir)/src/xsldbgtest
 
 EXTRA_DIST= *.xsl *.xml *.data *.pl testcmd.dtd testcoverage.txt
 
@@ -50,18 +50,23 @@ noinst_PROGRAMS = listTest searchTest
 # Define some tests on arraylist 
 listTest_SOURCES = listTest.c 
 
-# use of configure defined libraries
-listTest_LDADD = $(XSLDBG_LIBS) -lxsldbg ../src/simpleio.o
+listTest_DEPENDENCIES  = $(top_builddir)/src/libxsldbg/libxsldbg.la
 
-if USE_XSLDBG_AS_THREAD
-# the library search path.
-listTest_LDFLAGS = $(all_libraries) -L$(top_builddir)/src/libxsldbg/.libs -L$(QTDIR)/lib
-else
-listTest_LDFLAGS = $(all_libraries) -L$(top_builddir)/src/libxsldbg/.libs
-endif
+$(top_builddir)/src/libxsldbg/libxsldbg.la:
+	cd $(top_builddir)/src/libxsldbg; $(MAKE
+
+# use of configure defined libraries
+listTest_LDADD = $(XSLDBG_TEST_LIBS) ../src/simpleio.o $(top_builddir)/src/libxsldbg/libxsldbg.la
+
+listTest_LDFLAGS = -static $(all_libraries) \
+-Wl,-rpath -Wl,$(LIBXML_PREFIX)/lib -Wl,-rpath -Wl,$(LIBXSLT_PREFIX)/lib 
+
+
 
 # Define some tests on the search dataDase
 searchTest_SOURCES = searchTest.c
+
+searchTest_DEPENDENCIES = $(listTest_DEPENDENCIES)
 
 searchTest_LDADD = $(listTest_LDADD)
 
@@ -69,22 +74,22 @@ searchTest_LDADD = $(listTest_LDADD)
 searchTest_LDFLAGS = $(listTest_LDFLAGS)
 
 $(XSLDBG):
-	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
+	@(cd $(top_builddir)/src ; $(MAKE) xsldbgtest)
 
 runtests :  $(XSLDBG) coretests $(TESTS) $(TEST_RESULTS)
 
 # do the tests of core functionality on xsldbg
 coretests: listTest searchTest
-	$(XSLDBG_EXPORTS) ./listTest
-	$(XSLDBG_EXPORTS) ./searchTest
+	./listTest
+	./searchTest
 
 ../results/%.script ../results/%.pl : %.data testgenerator.xsl
-	$(XSLDBG_EXPORTS) $(XSLDBG) --param baseFileName \'../results/$(*F)\' testgenerator.xsl $(*F).data 
+	$(XSLDBG) --param baseFileName \'../results/$(*F)\' testgenerator.xsl $(*F).data 
 
 ../results/%.results : $(TESTS) %.xsl %.xml xsldbgmatch.pl $(XSLDBG)
 	@echo "Running test $(*F)"
 	@echo "Running test $(*F)" > $@
-	$(XSLDBG_EXPORTS) $(XSLDBG) --shell  $(*F).xsl  $(*F).xml <  ../results/$(*F).script &> ../results/$(*F).log
+	$(XSLDBG) --shell  $(*F).xsl  $(*F).xml <  ../results/$(*F).script &> ../results/$(*F).log
 	perl ../results/$(*F).pl  &>  $@ < ../results/$(*F).log
 	@echo "Test $(*F) succeeded"
 	@echo "Test $(*F) succeeded">> $@

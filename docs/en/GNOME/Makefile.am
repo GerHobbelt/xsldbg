@@ -1,7 +1,7 @@
 #EXTRA_DIST =  *.html *.xsl
 DATADIR = ..
 XSLDIR = GNOME
-XSLDBG=$(top_builddir)/src/xsldbg
+XSLDBG=$(top_builddir)/src/xsldbgtest
 
 APISRC_DIR=src
 APISRC_FILES= \
@@ -40,7 +40,7 @@ API_MODULE=xsldbg-$(VERSION)
 API_MAIN_SGML_FILE=xsldbg.sgml
 
 $(XSLDBG):
-	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
+	@(cd $(top_builddir)/src ; $(MAKE) xsldbgtest)
 
 
 if USE_GNOMEDOCS

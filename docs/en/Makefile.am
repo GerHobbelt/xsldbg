@@ -1,12 +1,12 @@
 SUBDIRS = plain KDE GNOME website
 
-XSLDBG=$(top_builddir)/src/xsldbg
+XSLDBG=$(top_builddir)/src/xsldbgtest
 
 $(XSLDBG):
-	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
+	@(cd $(top_builddir)/src ; $(MAKE) xsldbgtest)
 
 xsldoc.txt: xsldoc.xsl xsldoc.xml xsldoc.dtd
-	$(XSLDBG_EXPORTS) $(XSLDBG) --param alldocs "1" \
+	$(XSLDBG) --param alldocs "1" \
 --param xsldbg_version "'$(VERSION)'" xsldoc.xsl xsldoc.xml > xsldoc.txt
 	cp xsldoc.txt ./plain/xsldoc.txt
 

@@ -2,7 +2,7 @@ EXTRA_DIST=  *.html *.xsl
 
 DATADIR = ..
 XSLDIR = KDE
-XSLDBG=$(top_builddir)/src/xsldbg
+XSLDBG=$(top_builddir)/src/xsldbgtest
 APISRC_DIR=src
 APISRC_HEADER_FILES= \
 $(APISRC_DIR)/xsldbg.h		\
@@ -37,10 +37,10 @@ CPPFLAGS=-E -C -P
 
 
 $(XSLDBG):
-	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
+	@(cd $(top_builddir)/src ; $(MAKE) xsldbgtest)
 
 index.docbook : $(KDEXSL_FILES) $(DATADIR)/xsldoc.xml 
-	$(XSLDBG_EXPORTS) $(XSLDBG) --cd $(DATADIR) --param xsldbg_version "'$(VERSION)'"  -o $(XSLDIR)/index.docbook $(XSLDIR)/xsldoc2kde.xsl xsldoc.xml
+	$(XSLDBG) --cd $(DATADIR) --param xsldbg_version "'$(VERSION)'"  -o $(XSLDIR)/index.docbook $(XSLDIR)/xsldoc2kde.xsl xsldoc.xml
 
 index.cache.bz2 : index.docbook $(DATADIR)/xsldoc.xml 
 	@echo ""

@@ -1,15 +1,15 @@
 EXTRA_DIST = *.html *.xsl 
 DATADIR = ..
 XSLDIR = plain
-XSLDBG=$(top_builddir)/src/xsldbg
+XSLDBG=$(top_builddir)/src/xsldbgtest
 
 all: index.html
 
 $(XSLDBG):
-	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
+	@(cd $(top_builddir)/src ; $(MAKE) xsldbgtest)
  
 *.html index.html : xsldoc2html.xsl $(DATADIR)/xsldoc.xml $(XSLDBG)
-	$(XSLDBG_EXPORTS)  $(XSLDBG) --cd $(DATADIR)  --param xsldbg_version "'$(VERSION)'"  -o $(XSLDIR)/index.html  $(XSLDIR)/xsldoc2html.xsl xsldoc.xml 
+	$(XSLDBG) --cd $(DATADIR)  --param xsldbg_version "'$(VERSION)'"  -o $(XSLDIR)/index.html  $(XSLDIR)/xsldoc2html.xsl xsldoc.xml 
  
 install-data-local: all
 	$(mkinstalldirs) $(HTML_DIR)/xsldbg/plain

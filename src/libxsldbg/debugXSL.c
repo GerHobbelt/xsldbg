@@ -1064,14 +1064,22 @@ debugXSLBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
         node = tempNode;
     }
     if (root) {
-        if (root->match)
-            xsltGenericError(xsltGenericErrorContext,
+      if (terminalIO == NULL){
+	if (root->match)
+	  xsltGenericError(xsltGenericErrorContext,
                              "\nReached template :\"%s\"\n", root->match);
 	else    
-            xsltGenericError(xsltGenericErrorContext,
+	  xsltGenericError(xsltGenericErrorContext,
                              "\nReached template :\"%s\"\n", root->name);
-    } else
-        xsltGenericError(xsltGenericErrorContext, "\n");
+      }else{
+	if (root->match)
+	  fprintf(terminalIO,
+		  "\nReached template :\"%s\"\n", root->match);
+	else    
+	  fprintf(terminalIO,
+		  "\nReached template :\"%s\"\n", root->name);
+      }
+    }
 
     shellPrompt(templ, node, (xmlChar *) "index.xsl",
                 (xmlShellReadlineFunc) xslDbgShellReadline, stdout, ctxt);
@@ -1202,9 +1210,11 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 	      baseUri = NULL;
 	    }
 
-            if (terminalIO != NULL)
+	    if (((xslDebugStatus == DEBUG_TRACE) || 
+		(xslDebugStatus == DEBUG_WALK)) &&
+		(terminalIO != NULL))
                 fprintf(terminalIO, "%s", messageBuffer);
-            else
+	      else
                 xsltGenericError(xsltGenericErrorContext,
                                  "%s", messageBuffer);
 
