@@ -408,7 +408,7 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
                      * is annoying */
                     xsltGenericError(xsltGenericErrorContext,
                                      "Error: Libxslt has not initialize variables yet"
-                                     " try stepping to a template");
+                                     " try stepping to a template\n");
                 } else {
                     /* send an empty list */
                     notifyListStart(XSLDBG_MSG_GLOBALVAR_CHANGED);
@@ -445,7 +445,7 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
                      * is annoying */
                     xsltGenericError(xsltGenericErrorContext,
                                      "Error: Libxslt has not initialize variables yet"
-                                     " try stepping past the xsl:param elements in template");
+                                     " try stepping past the xsl:param elements in template\n");
                 } else {
                     /* send an empty list */
                     notifyListStart(XSLDBG_MSG_LOCALVAR_CHANGED);
