@@ -5,6 +5,11 @@ Keith Isdale 30th March 2002 <k_isdale@tpg.com.au>
   Fixed bug: Warning message unclear when unable to find breakpoint
 	when executing enable command ( breakpoint_cmds.c ) 
   Fixed bug: "break *" command incorrectly freeing of memory ( breakpoint_cmds.c )	
+  Updated Makefile.cvs to suit cygwin
+
+ Tested xsldbg under the new GUI front end. qxsldbg . 
+	qxsldbg can run under cygwin/QT2/QT3. 
+
  		
 	
 Keith Isdale 1st/2nd/3rd Feb 2002 <k_isdale@tpg.com.au>
