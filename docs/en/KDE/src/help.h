@@ -20,6 +20,7 @@
 
 
 
+
 /**
  * Provide a help system for user 
  *
@@ -34,14 +35,17 @@
 
 
 
+
 /**
  * Display help about the command in @p arg
  *
  * @param args Is valid or empty string
+ * @eturns 1 on success,
+ *         0 otherwise
  */
 
 
-    void helpTop(const xmlChar * args);
+    int helpTop(const xmlChar * args);
 
 
 

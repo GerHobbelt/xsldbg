@@ -46,12 +46,12 @@ extern "C" {
 #define XSLDBG_XML_NAMESPACE \
     (const xmlChar *) "http://xsldbg.sourceforge.net/namespace"
 
-  typedef struct _entityInfo entityInfo;
-  typedef entityInfo *entityInfoPtr;
-  struct _entityInfo{
-    xmlChar *SystemID;
-    xmlChar *PublicID;
-  };
+    typedef struct _entityInfo entityInfo;
+    typedef entityInfo *entityInfoPtr;
+    struct _entityInfo {
+        xmlChar *SystemID;
+        xmlChar *PublicID;
+    };
 
 /**
  * xslDbgEntities:
@@ -61,7 +61,7 @@ extern "C" {
  * Returns 1 on sucess,
  *         0 otherwise
  */
-int xslDbgEntities();
+    int xslDbgEntities(void);
 
 
 /**
@@ -73,7 +73,7 @@ int xslDbgEntities();
  * Returns 1 on sucess,
  *         0 otherwise
  */
-  int xslDbgSystem(xmlChar *arg);
+    int xslDbgSystem(xmlChar * arg);
 
 /**
  * xslDbgPublic:
@@ -84,7 +84,7 @@ int xslDbgEntities();
  * Returns 1 on sucess,
  *         0 otherwise
  */
-int xslDbgPublic(xmlChar *arg);
+    int xslDbgPublic(xmlChar * arg);
 
 
   /**
@@ -105,7 +105,7 @@ int xslDbgPublic(xmlChar *arg);
    *
    * Returns the list entity names used for documents loaded
    */
-  ArrayListPtr filesEntityList();
+    ArrayListPtr filesEntityList(void);
 
 
  /**
@@ -136,15 +136,18 @@ int xslDbgPublic(xmlChar *arg);
 
 
   /**
-   * filesCreateTempFile:
-   * 
-   * Creates a single temporary file. Ie does not support multiple 
-   *     temporary files.
+   * filesTempFileName:
+   * @ fileNumber : Nnumber of temp file required
    *
-   * Returns a file to be used for temporary results if successful,
-   *         NULL otherwise 
+   * Return the name of tempfile. For each call to this function
+   *     with the same @fileNumber the same file name will be returned
+   *     File number : 0 is used by cat command
+   *     File number : 1 is used by profiling output  
+   *
+   * Returns The name of temp file to be used for temporary results if sucessful,
+   *         NULL otherwise
    */
-    FILE *filesCreateTempFile();
+    const char *filesTempFileName(int fileNumber);
 
   /**
    * filesLoadCatalogs:
@@ -154,7 +157,7 @@ int xslDbgPublic(xmlChar *arg);
    * Returns 1 if sucessful
    *         0 otherwise   
    */
-  int filesLoadCatalogs(void);
+    int filesLoadCatalogs(void);
 
 
 #ifndef USE_KDOC

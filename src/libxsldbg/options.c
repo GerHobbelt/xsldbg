@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include "xsldbg.h"
+#include "xsldbgthread.h"
 #include "options.h"
 #include "arraylist.h"
 #include "xsldbgmsg.h"
@@ -70,10 +71,9 @@ optionsInit(void)
 
 
     for (optionId = 0;
-         optionId <= OPTIONS_VERBOSE - OPTIONS_XINCLUDE;
-         optionId++) {
+         optionId <= OPTIONS_VERBOSE - OPTIONS_XINCLUDE; optionId++) {
         intOptions[optionId] = 0;
-	intVolitileOptions[optionId] = 0;
+        intVolitileOptions[optionId] = 0;
     }
 
     for (optionId = 0;
@@ -87,9 +87,9 @@ optionsInit(void)
 
     /* setup the docs path */
     setStringOption(OPTIONS_DOCS_PATH, docsPath);
-
+    
     setIntOption(OPTIONS_TRACE, TRACE_OFF);
-    setIntOption(OPTIONS_WALK_SPEED,  WALKSPEED_STOP);
+    setIntOption(OPTIONS_WALK_SPEED, WALKSPEED_STOP);
 
     /* set output default as standard output. Must be changed if not using
      * xsldbg's command line. Or the tty command is used */
@@ -147,21 +147,22 @@ enableOption(OptionTypeEnum optionType, int value)
         case OPTIONS_GDB:
         case OPTIONS_REPEAT:
         case OPTIONS_CATALOGS:
+    case OPTIONS_PREFER_HTML:
         case OPTIONS_VERBOSE:
-	  /* make sure that use of options are safe by only copying
-	     critical values from intVolitleOptions just before 
-	     stylesheet is started
-	  */
-	  intVolitileOptions[type - OPTIONS_XINCLUDE] = value;
-	  result++;
-	  break;
+            /* make sure that use of options are safe by only copying
+             * critical values from intVolitleOptions just before 
+             * stylesheet is started
+             */
+            intVolitileOptions[type - OPTIONS_XINCLUDE] = value;
+            result++;
+            break;
 
         case OPTIONS_TRACE:
         case OPTIONS_WALK_SPEED:
-	  intVolitileOptions[type - OPTIONS_XINCLUDE] = value;
-	  intOptions[type - OPTIONS_XINCLUDE] = value;
-	  result++;
-	  break;
+            intVolitileOptions[type - OPTIONS_XINCLUDE] = value;
+            intOptions[type - OPTIONS_XINCLUDE] = value;
+            result++;
+            break;
 
         default:
             xsltGenericError(xsltGenericErrorContext,
@@ -201,10 +202,11 @@ isOptionEnabled(OptionTypeEnum optionType)
         case OPTIONS_REPEAT:
         case OPTIONS_TRACE:
         case OPTIONS_VERBOSE:
-    case OPTIONS_CATALOGS:
+        case OPTIONS_CATALOGS:
+    case OPTIONS_PREFER_HTML:
         case OPTIONS_WALK_SPEED:
-	  result = intOptions[type - OPTIONS_XINCLUDE]; 
-	  break;
+            result = intOptions[type - OPTIONS_XINCLUDE];
+            break;
 
         default:
             xsltGenericError(xsltGenericErrorContext,
@@ -312,14 +314,15 @@ getStringOption(OptionTypeEnum optionType)
    *
    * Copy volitile options to the working area for xsldbg
    */
-void copyVolitleOptions(void)
+void
+copyVolitleOptions(void)
 {
-  int optionId;
-      for (optionId = 0;
-         optionId < OPTIONS_VERBOSE - OPTIONS_XINCLUDE;
-	   optionId++) {
+    int optionId;
+
+    for (optionId = 0;
+         optionId < OPTIONS_VERBOSE - OPTIONS_XINCLUDE; optionId++) {
         intOptions[optionId] = intVolitileOptions[optionId];
-      }
+    }
 }
 
 /**
@@ -421,21 +424,21 @@ printParamList(void)
     int paramIndex = 0;
     int itemCount = arrayListCount(getParamItemList());
 
-    if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
-      if (itemCount > 0){
-        while (result && (paramIndex < itemCount)) {
-            result = printParam(paramIndex++);
-        }	
-      }
-    }else{
-    if (itemCount > 0) {
-        xsltGenericError(xsltGenericErrorContext, "\n");
-        while (result && (paramIndex < itemCount)) {
-            result = printParam(paramIndex++);
+    if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
+        if (itemCount > 0) {
+            while (result && (paramIndex < itemCount)) {
+                result = printParam(paramIndex++);
+            }
         }
-    } else
-        xsltGenericError(xsltGenericErrorContext,
-                         "\nNo parameters present\n");
-    } 
+    } else {
+        if (itemCount > 0) {
+            xsltGenericError(xsltGenericErrorContext, "\n");
+            while (result && (paramIndex < itemCount)) {
+                result = printParam(paramIndex++);
+            }
+        } else
+            xsltGenericError(xsltGenericErrorContext,
+                             "\nNo parameters present\n");
+    }
     return result;
 }

@@ -10,7 +10,7 @@ xsldoc.txt: xsldoc.xsl xsldoc.xml xsldoc.dtd
 --param xsldbg_version "'$(VERSION)'" xsldoc.xsl xsldoc.xml > xsldoc.txt
 	cp xsldoc.txt ./plain/xsldoc.txt
 
-EXTRA_DIST= xsldoc.xsl xsldoc.xml xsldoc.dtd search.xsl search.dtd xsldoc.txt CATALOG catalog.xml
+EXTRA_DIST= xsldoc.xsl xsldoc.xml xsldoc.dtd search.xsl searchhtml.xsl search.dtd xsldoc.txt CATALOG catalog.xml
 
 all: xsldoc.txt
 

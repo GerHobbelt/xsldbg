@@ -1,4 +1,4 @@
- 
+
 /* *************************************************************************
                           xslcallpoint.h  -  public functions for the
                                                the call stack
@@ -47,7 +47,7 @@ extern "C" {
     typedef struct _xslCallPointInfo xslCallPointInfo;
     typedef xslCallPointInfo *xslCallPointInfoPtr;
     struct _xslCallPointInfo {
-      xmlChar *templateName; 
+        xmlChar *templateName;
         xmlChar *url;
         xslCallPointInfoPtr next;
     };
@@ -63,6 +63,38 @@ extern "C" {
 
 #ifdef USE_GNOME_DOCS
 /**
+ * callStackInit:
+ *
+ * Returns If callStack has been initialized properly and all
+ *               memory required has been obtained,
+ *         0 otherwise
+ *
+ * Returns 1 if callStack has been initialized properly and all
+ *               memory required has been obtained,
+ *         0 otherwise
+*/
+#endif
+int
+callStackInit(void);
+
+
+#ifdef USE_GNOME_DOCS
+/**
+ * callStackFree:
+ *
+ *
+ * Free all memory used by callStack
+ */
+#endif
+void
+callStackFree(void);
+
+
+
+
+#ifdef USE_GNOME_DOCS
+
+/**
  * addCallInfo:
  * @templatename: Template name to add
  * @url: The url for the template
@@ -74,6 +106,7 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Add template "call" to call stack
  *
@@ -86,11 +119,12 @@ extern "C" {
 #endif
 #endif
     xslCallPointInfoPtr addCallInfo(const xmlChar * templateName,
-                                       const xmlChar * url);
+                                    const xmlChar * url);
 
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * addCall:
  * @templ: The current template being applied
@@ -103,6 +137,7 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
+
   /**
    * Add template "call" to call stack
    *
@@ -114,10 +149,11 @@ extern "C" {
    */
 #endif
 #endif
-int addCall(xsltTemplatePtr templ, xmlNodePtr source);
+    int addCall(xsltTemplatePtr templ, xmlNodePtr source);
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * dropCall:
  *
@@ -125,6 +161,7 @@ int addCall(xsltTemplatePtr templ, xmlNodePtr source);
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Drop the topmost item off the call stack
  */
@@ -134,6 +171,7 @@ int addCall(xsltTemplatePtr templ, xmlNodePtr source);
 
 
 #ifdef USE_GNOME_DOCS
+
 /** 
  * stepupToDepth:
  * @depth:The frame depth to step up to  
@@ -146,6 +184,7 @@ int addCall(xsltTemplatePtr templ, xmlNodePtr source);
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /** 
  * Set the frame depth to step up to
  *
@@ -161,6 +200,7 @@ int addCall(xsltTemplatePtr templ, xmlNodePtr source);
 
 
 #ifdef USE_GNOME_DOCS
+
 /** 
  * stepdownToDepth:
  * @depth: The frame depth to step down to, 
@@ -173,6 +213,7 @@ int addCall(xsltTemplatePtr templ, xmlNodePtr source);
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /** 
  * Set the frame depth to step down to
  *
@@ -188,6 +229,7 @@ int addCall(xsltTemplatePtr templ, xmlNodePtr source);
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * getCall:
  * @depth: 0 < @depth <= callDepth()
@@ -199,6 +241,7 @@ int addCall(xsltTemplatePtr templ, xmlNodePtr source);
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Retrieve the call point at specified call depth 
 
@@ -213,6 +256,7 @@ int addCall(xsltTemplatePtr templ, xmlNodePtr source);
 
 
 #ifdef USE_GNOME_DOCS
+
 /** 
  * getCallStackTop:
  *
@@ -222,6 +266,7 @@ int addCall(xsltTemplatePtr templ, xmlNodePtr source);
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**  
  * Get the top item in the call stack
  *
@@ -233,6 +278,7 @@ int addCall(xsltTemplatePtr templ, xmlNodePtr source);
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * callDepth:
  *
@@ -242,6 +288,7 @@ int addCall(xsltTemplatePtr templ, xmlNodePtr source);
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * @returns the depth of call stack
  */

@@ -90,7 +90,7 @@ xslDbgShellFrameBreak(xmlChar * arg, int stepup)
     if (!arg || !getStylesheet() || !getMainDoc()) {
         xsltGenericError(xsltGenericErrorContext,
                          "Errror : Debugger has no files loaded, try reloading files\n%s",
-			 errorPrompt);
+                         errorPrompt);
         return result;
     }
 
@@ -134,10 +134,10 @@ validateSource(xmlChar ** url, long *lineNo)
     searchInfoPtr searchInf;
     nodeSearchDataPtr searchData = NULL;
 
-    if (!getStylesheet()){
-     xsltGenericError(xsltGenericErrorContext,
-		      "Stylesheet not valid files not loaded yet?\n");
-      return result;
+    if (!getStylesheet()) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Stylesheet not valid files not loaded yet?\n");
+        return result;
     }
 
     searchInf = searchNewInfo(SEARCH_NODE);
@@ -152,7 +152,7 @@ validateSource(xmlChar ** url, long *lineNo)
         /* try to verify that the line number is valid */
         if (searchInf->found) {
             /* ok it looks like we've got a valid url */
-            /* searchData->url will be freed by searchFreeInfo */    
+            /* searchData->url will be freed by searchFreeInfo */
             if (searchData->absoluteNameMatch)
                 searchData->url = (xmlChar *)
                     xmlMemStrdup((char *) searchData->absoluteNameMatch);
@@ -196,7 +196,7 @@ validateSource(xmlChar ** url, long *lineNo)
     if (searchInf)
         searchFreeInfo(searchInf);
     else
-      xsltGenericError(xsltGenericErrorContext,
+        xsltGenericError(xsltGenericErrorContext,
                          "Error : Unable to create searchInfo out of memory?\n");
 
     return result;
@@ -218,27 +218,27 @@ validateData(xmlChar ** url, long *lineNo)
 {
     int result = 0;
     long lineNoOffset;
-    searchInfoPtr searchInf; 
+    searchInfoPtr searchInf;
     nodeSearchDataPtr searchData = NULL;
     char *lastSlash;
 
-    if (!getMainDoc()){
-     xsltGenericError(xsltGenericErrorContext,
-		      "Document not valid files not loaded yet?\n");
-      return result;
+    if (!getMainDoc()) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Document not valid files not loaded yet?\n");
+        return result;
     }
 
     searchInf = searchNewInfo(SEARCH_NODE);
     lastSlash = xmlStrrChr(getMainDoc()->URL, PATHCHAR);
 
     if (lastSlash) {
-      lastSlash++;
-      xmlStrnCpy(buff, getMainDoc()->URL,
-		 lastSlash - (char *) getMainDoc()->URL);
-      buff[lastSlash - (char *) getMainDoc()->URL] = '\0';
-      xmlStrCat(buff, *url);
-    }else
-      strcpy(buff, "");
+        lastSlash++;
+        xmlStrnCpy(buff, getMainDoc()->URL,
+                   lastSlash - (char *) getMainDoc()->URL);
+        buff[lastSlash - (char *) getMainDoc()->URL] = '\0';
+        xmlStrCat(buff, *url);
+    } else
+        strcpy(buff, "");
 
 
     if (searchInf && searchInf->data && getMainDoc()) {
@@ -254,7 +254,7 @@ validateData(xmlChar ** url, long *lineNo)
 
         /* try to guess file name by adding the prefix of main document */
         if (!searchInf->found) {
-            if (strlen(buff) > 0) {
+            if (xmlStrLen(buff) > 0) {
                 if (searchData->url)
                     xmlFree(searchData->url);
                 searchData->url = (xmlChar *) xmlMemStrdup((char *) buff);
@@ -313,11 +313,11 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
     if (!arg || !style || !getMainDoc()) {
         xsltGenericError(xsltGenericErrorContext,
                          "Errror : Debugger has no files loaded, try reloading files\n%s",
-			errorPrompt );
+                         errorPrompt);
         return result;
     }
     if (arg[0] == '-') {
-        xmlChar *opts[2], *url;
+        xmlChar *opts[2];
 
         if ((xmlStrLen(arg) > 1) && (arg[1] == 'l')) {
             if (splitString(&arg[2], 2, opts) == 2) {
@@ -330,7 +330,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                      * break point
                      */
                     trimString(opts[0]);
-                    url = xmlMemStrdup(opts[0]);
+                    url = xmlStrdup(opts[0]);
                     if (url) {
                         if (isSourceFile(url)) {
                             if (validateSource(&url, &lineNo))
@@ -451,14 +451,14 @@ xslDbgShellDelete(xmlChar * arg)
 {
     int result = 0, breakPointId;
     long lineNo;
-    xslBreakPointPtr breakPoint;
+    xslBreakPointPtr breakPoint = NULL;
     static const xmlChar *errorPrompt =
         (xmlChar *) "Failed to delete break point\n";
 
     if (!arg || !getStylesheet() || !getMainDoc()) {
         xsltGenericError(xsltGenericErrorContext,
                          "Errror : Debugger has no files loaded, try reloading files\n%s",
-			errorPrompt );
+                         errorPrompt);
         return result;
     }
 
@@ -472,7 +472,7 @@ xslDbgShellDelete(xmlChar * arg)
                                      "\n%s\tUnable to read line number \n",
                                      errorPrompt);
                 } else {
-                    url = xmlMemStrdup(opts[0]);
+                    url = xmlStrdup(opts[0]);
                     if (url) {
                         if (isSourceFile(url)) {
                             if (validateSource(&url, NULL))
@@ -567,14 +567,14 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
 {
     int result = 0, breakPointId;
     long lineNo;
-    xslBreakPointPtr breakPoint;
+    xslBreakPointPtr breakPoint = NULL;
     static const xmlChar *errorPrompt =
         (xmlChar *) "Failed to enable/disable break point\n";
 
     if (!arg || !getStylesheet() || !getMainDoc()) {
         xsltGenericError(xsltGenericErrorContext,
                          "Errror : Debugger has no files loaded, try reloading files\n%s",
-			errorPrompt );
+                         errorPrompt);
         return result;
     }
 
@@ -656,13 +656,13 @@ xslDbgPrintBreakPoint(void *payload, void *data ATTRIBUTE_UNUSED,
 {
 
     if (payload) {
-      if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
-	notifyListQueue(payload);
-      }else{
-        printCount++;
-        xsltGenericError(xsltGenericErrorContext, " ");
-        printBreakPoint(stderr, (xslBreakPointPtr) payload);
-        xsltGenericError(xsltGenericErrorContext, "\n");
-      }
+        if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
+            notifyListQueue(payload);
+        } else {
+            printCount++;
+            xsltGenericError(xsltGenericErrorContext, " ");
+            printBreakPoint(stderr, (xslBreakPointPtr) payload);
+            xsltGenericError(xsltGenericErrorContext, "\n");
+        }
     }
 }

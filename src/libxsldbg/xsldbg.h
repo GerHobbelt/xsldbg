@@ -21,6 +21,7 @@
 #define XSLDEBUGGER_H
 
 #ifdef USE_KDE_DOCS
+
 /**
  * Provide provide application level services and useful bits and pieces
  *
@@ -77,7 +78,7 @@
 #ifndef WIN32
 #include "config.h"
 #else
-#include "xsldbgwin32conf.h"	
+#include "xsldbgwin32conf.h"
 #endif
 #else
 #include "config_riscos.h"
@@ -87,6 +88,7 @@
 
 
 #include <string.h>
+
 /* 
   Make things simpler when working between char* and xmlChar*  .
    By definition a char is the same size as an xmlChar(unsigned char). 
@@ -111,6 +113,7 @@
 #define  QUOTECHAR '\"'
 #define  PATHCHAR  '/'
 #endif
+
 /* JRF: Although RISC OS native paths use . as a separator, the arguments
         to xsldbg are passed in unix or URI form, and thus the above
         specification is correct. */
@@ -121,6 +124,7 @@ extern "C" {
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * loadStylesheet:
  *
@@ -131,6 +135,7 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Load the stylesheet and return it 
  *
@@ -143,6 +148,7 @@ extern "C" {
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * loadXmlData:
  *
@@ -153,6 +159,7 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Load the xml data file and return it  
  *
@@ -165,6 +172,7 @@ extern "C" {
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * loadXmlTemporary:
  * @path: The name of temporary file to load 
@@ -176,6 +184,7 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Load the temporary data file and return it 
  *

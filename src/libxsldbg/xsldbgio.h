@@ -1,3 +1,4 @@
+
 /***************************************************************************
                           xsldbgio.h  - declare user input functions
                              -------------------
@@ -18,7 +19,9 @@
 #ifndef XSLDBGIO_H
 #define XSLDBGIO_H
 
-#include <libxml/tree.h> /* needed for definition of xmlChar */
+#ifndef BUILD_DOCS
+#include <libxml/tree.h>        /* needed for definition of xmlChar */
+#endif
 
 /**
  * xslShellReadline:
@@ -29,8 +32,7 @@
  * Returns a copy of the text inputed or NULL if EOF in stdin found. 
  *    The caller is expected to free the returned string.
  */
-xmlChar *
-xslDbgShellReadline(xmlChar * prompt);
+xmlChar *xslDbgShellReadline(xmlChar * prompt);
 
 
 #define DEBUG_BUFFER_SIZE 500   /*used by xslDbgShell */

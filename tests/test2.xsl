@@ -72,7 +72,7 @@
   <xsl:template match="extra">
     <xsl:param name="item">
       <item/>
-      </xsl:param>
+    </xsl:param>
     <!-- ignore node content -->
   </xsl:template>
 

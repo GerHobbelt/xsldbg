@@ -306,8 +306,7 @@ searchEmpty(void)
     searchDataBaseRoot = NULL;
     if (searchDataBase) {
         xmlCreateIntSubset(searchDataBase,
-                           (xmlChar *) "search",
-                           (xmlChar *)
+                           (xmlChar *) "search", (xmlChar *)
                            "-//xsldbg//DTD search XML V1.0//EN",
                            (xmlChar *) "search.dtd");
         searchDataBaseRoot = xmlNewNode(NULL, (xmlChar *) "search");
@@ -457,7 +456,7 @@ scanForNode(void *payload, void *data, xmlChar * name ATTRIBUTE_UNUSED)
     searchInfoPtr searchInf = (searchInfoPtr) data;
     nodeSearchDataPtr searchData = NULL;
     xmlNodePtr node = (xmlNodePtr) payload;
-    xmlChar * baseUri = NULL;
+    xmlChar *baseUri = NULL;
     int match = 1;
 
     if (!node || !node->doc || !node->doc->URL ||
@@ -470,13 +469,12 @@ scanForNode(void *payload, void *data, xmlChar * name ATTRIBUTE_UNUSED)
         match = searchData->lineNo == xmlGetLineNo(node);
 
     if (searchData->url)
-      baseUri = filesGetBaseUri(node);
-    if (baseUri){
-        match = match
-            && (strcmp((char *) searchData->url, baseUri) 
-		== 0);
-	xmlFree(baseUri);
-    }else{
+        baseUri = filesGetBaseUri(node);
+    if (baseUri) {
+        match = match && (strcmp((char *) searchData->url, baseUri)
+                          == 0);
+        xmlFree(baseUri);
+    } else {
         match = match
             && (strcmp((char *) searchData->url, (char *) node->doc->URL)
                 == 0);
@@ -732,7 +730,9 @@ findNodesByQuery(const xmlChar * query ATTRIBUTE_UNUSED)
  * searchQuery:
  * @query: The query to run . If NULL then query is "//search/ *"
  * @tempFile: Where do we load the search dataBase from to execute
- *             query. If tempFile is NULL "search.data" is used
+ *             query. If tempFile is NULL "searchresult.xml" is used
+ * @outputFile : Where do we store the result. If NULL
+ *             then default to  "searchresult.html"
  * 
  * Send query as parameter for execution of search.xsl using
  *    data stored in @tempFile 
@@ -741,42 +741,123 @@ findNodesByQuery(const xmlChar * query ATTRIBUTE_UNUSED)
  *         0 otherwise   
  */
 int
-searchQuery(const xmlChar * tempFile, const xmlChar * query)
+searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
+            const xmlChar * query)
 {
     int result = 0;
     xmlChar buffer[DEBUG_BUFFER_SIZE];
     const xmlChar *docDirPath = getStringOption(OPTIONS_DOCS_PATH);
-    const xmlChar *searchXSL = NULL;
+    xmlChar *searchInput = NULL;
+    xmlChar *searchXSL = NULL; 
+    xmlChar *searchOutput = NULL;
 
 
     if (!docDirPath)
         return result;
 
-    xmlStrCpy(buffer, docDirPath);
+    /* if a tempFile if provided its up you to make sure that it is correct !!*/
+    if (tempFile == NULL){
+    xmlStrCpy(buffer, stylePath());
 #ifdef __riscos
     /* RISC OS paths don't end in directory separators */
-    xmlStrCat(buffer, ".search/xsl");
-#else
-    xmlStrCat(buffer, "search.xsl");
+      xmlStrCat(buffer, ".searchresult/xml");
+#else    
+      xmlStrCat(buffer, "searchresult.xml");
 #endif
-    searchXSL = buffer;
+    searchInput = xmlStrdup(buffer);
 #ifdef __riscos
     /* We're going to pass a native filename to a command that takes URIs,
      * so we need to convert it */
-    searchXSL = (xmlChar *) unixfilename((char *) buffer);
+    searchInput = xmlStrdup((xmlChar *) unixfilename((char *) buffer));
+#endif
+    }else
+      searchInput = xmlStrdup(tempFile);
+
+    xmlStrCpy(buffer, docDirPath);
+#ifdef __riscos
+    /* RISC OS paths don't end in directory separators */
+    if (isOptionEnabled(OPTIONS_PREFER_HTML) == 0)
+      xmlStrCat(buffer, ".search/xsl");
+    else
+       xmlStrCat(buffer, ".searchhtml/xsl");           
+#else    
+    if (isOptionEnabled(OPTIONS_PREFER_HTML) == 0)
+      xmlStrCat(buffer, "search.xsl");
+    else
+      xmlStrCat(buffer, "searchhtml.xsl");   
+#endif
+    searchXSL = xmlStrdup(buffer);
+#ifdef __riscos
+    /* We're going to pass a native filename to a command that takes URIs,
+     * so we need to convert it */
+    searchXSL = xmlStrdup((xmlChar *) unixfilename((char *) buffer));
 #endif
 
 
-    if (!tempFile)
-        tempFile = (xmlChar *) "search.data";
+    /* if a outputFile if provided its up you to make sure that it is correct*/
+    if (outputFile == NULL){
+    xmlStrCpy(buffer, stylePath());
+#ifdef __riscos
+    /* RISC OS paths don't end in directory separators */
+    if (isOptionEnabled(OPTIONS_PREFER_HTML) == 0)
+      xmlStrCat(buffer, ".searchresult/txt");
+    else
+       xmlStrCat(buffer, ".searchresult/html");           
+#else    
+    if (isOptionEnabled(OPTIONS_PREFER_HTML) == 0)
+      xmlStrCat(buffer, "searchresult.txt");
+    else
+      xmlStrCat(buffer, "searchresult.html");   
+#endif
+    searchOutput = xmlStrdup(buffer);
+#ifdef __riscos
+    /* We're going to pass a native filename to a command that takes URIs,
+     * so we need to convert it */
+    searchOutput = xmlStrdup((xmlChar *) unixfilename((char *) buffer));
+#endif
+    }else
+      searchOutput = xmlStrdup(outputFile);
+    
+
     if (!query || (xmlStrlen(query) == 0))
         query = (xmlChar *) "--param query //search/*";
-    /* see configure.in for the defintion of XSLDBG_BIN, the name of our binary */
-    if (snprintf
-        ((char *) buff, DEBUG_BUFFER_SIZE - 1,
-         "%s  %s %s %s", XSLDBG_BIN, query, searchXSL, tempFile)) {
-        result = !xslDbgShellExecute((xmlChar *) buff, 1);
+    /* see configure.in for the definition of XSLDBG_BIN, the name of our binary */
+
+    if (searchInput && searchXSL && searchOutput) {
+      if (isOptionEnabled(OPTIONS_CATALOGS) == 0)
+        snprintf((char *) buffer, sizeof(buffer),
+                 "%s -o %s %s %s %s", XSLDBG_BIN,
+                 searchOutput, query, searchXSL, searchInput);
+      else
+	/* assume that we are to use catalogs as well in our query */
+        snprintf((char *) buffer, sizeof(buffer),
+                 "%s --catalogs -o %s %s %s %s", XSLDBG_BIN,
+                 searchOutput, query, searchXSL, searchInput);	
+        result = xslDbgShellExecute(buffer, 1);
+#ifndef __risc_os
+	if (result &&  (isOptionEnabled(OPTIONS_PREFER_HTML) == 0)){
+	/* try printing out the file */
+	  snprintf(buffer, sizeof(buffer), "more %s", searchOutput);
+	  result = xslDbgShellExecute(buffer, 1);
+	}	
+#endif
+	xsltGenericError(xsltGenericErrorContext,
+			 "Transformed %s using %s and saved to %s\n",
+			 searchInput, searchXSL, searchOutput);
+    } else {
+            xsltGenericError(xsltGenericErrorContext,
+			     "Invalid filenames supplied to searchQuery\n");
     }
+
+    if (searchInput)
+      xmlFree(searchInput);
+
+    if (searchXSL)
+      xmlFree(searchXSL);
+
+    if (searchOutput)
+      xmlFree(searchOutput);
+    
     return result;
 }
 

@@ -359,11 +359,11 @@ addBreakPoint(const xmlChar * url, long lineNumber,
 
 
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-		/*
-                xsltGenericError(xsltGenericErrorContext,
-                                 "Size of line list was %d adding %d entries\n",
-                                 breakList->count, newEntries);
-		*/
+                /*
+                 * xsltGenericError(xsltGenericErrorContext,
+                 * "Size of line list was %d adding %d entries\n",
+                 * breakList->count, newEntries);
+                 */
 #endif
                 lineIndex = 0;
                 while ((lineIndex < newEntries) && result) {

@@ -45,7 +45,8 @@
     enum SearchEnum{
         SEARCH_BREAKPOINT = 400,
         SEARCH_NODE,
-        SEARCH_XSL
+        SEARCH_XSL,
+	SEARCH_VARIABLE
     };
  
 
@@ -55,6 +56,7 @@
     struct _searchInfo {
         int found;              /* found is 1 if search is finished */
         int type;               /* what type of search see SearchEnum */
+        int error;              /* did an error occur */  
         void *data;             /* extra data to pass to walkFunc */
     };
 
@@ -89,6 +91,14 @@
                                  * occured in */
     };
 
+    /* data to pass to via searchInfoPtr when searching for variables points */
+    typedef struct _variableSearchData variableSearchData;
+    typedef variableSearchData *variableSearchDataPtr;
+    struct _variableSearchData {
+      xmlChar *name;
+      xmlChar *nameURI;
+      xmlChar *select; /* new value to adopt if any */
+    };
 
 
 
@@ -235,11 +245,13 @@
  * @param query The Query to run. If NULL then @p query defaults to "//search/ *"
  * @param tempFile Where do we load the search dataBase from to execute
  *             query. If @p tempFile is NULL default is "search.data"
-
+ * @param outputFile Where do we store the result. If NULL
+ *             then default to  "searchresult.html"
  */
 
 
-    int searchQuery(const xmlChar * tempFile, const xmlChar * query);
+    int searchQuery(const xmlChar * tempFile, const xmlChar *outputFile, 
+		    const xmlChar * query);
 
 
 

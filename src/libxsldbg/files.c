@@ -24,6 +24,7 @@
 #include <libxml/entities.h>
 #include <libxml/tree.h>
 #include <libxml/catalog.h>
+#include <libxml/parserInternals.h>
 
 #include "xsldbg.h"
 #include "debugXSL.h"
@@ -86,13 +87,13 @@ static void guessStylesheetHelper2(void *payload, void *data,
                                    xmlChar * name ATTRIBUTE_UNUSED);
 
 
-entityInfoPtr filesNewEntityInfo(const xmlChar* SystemID, 
-				 const xmlChar* PublicID);
+entityInfoPtr filesNewEntityInfo(const xmlChar * SystemID,
+                                 const xmlChar * PublicID);
 
 void filesFreeEntityInfo(entityInfoPtr info);
 
-void filesAddEntityName(const xmlChar *SystemID,
-			const xmlChar *PublicID);
+void filesAddEntityName(const xmlChar * SystemID,
+                        const xmlChar * PublicID);
 
 
 /* ------------------------------------- 
@@ -171,7 +172,7 @@ openTerminal(xmlChar * device)
             case '1':
                 /* redirect only some output to terminal */
                 if (!terminalIO && termName) {
-                    terminalIO = fopen(device, "w");
+                    terminalIO = fopen((char*)device, "w");
                     if (terminalIO) {
                         result++;
                     } else {
@@ -228,7 +229,7 @@ openTerminal(xmlChar * device)
         /* just open the terminal the user will need to provide a
          * tty level by invoking tty command again with a value of 0 - 9
          */
-        terminalIO = fopen(device, "w");
+        terminalIO = fopen((char*)device, "w");
         if (terminalIO != NULL) {
             termName = xmlMemStrdup((char *) device);
             /*
@@ -675,7 +676,11 @@ loadXmlFile(const xmlChar * path, FileTypeEnum fileType)
                                          "Setting stylesheet base path to %s\n",
                                          stylePathName);
                     }
-                }
+                }else{
+		  const char cwd[4] = {'.', PATHCHAR, '\0'}; 
+		  /* ie for *nix this becomes "./" */
+		  stylePathName = xmlStrdup(BAD_CAST cwd);
+		}
             }
             break;
 
@@ -829,12 +834,13 @@ filesInit(void)
     topDocument = NULL;
     tempDocument = NULL;
     topStylesheet = NULL;
-    entityNameList = arrayListNew(4, (freeItemFunc)filesFreeEntityInfo);
+    entityNameList = arrayListNew(4, (freeItemFunc) filesFreeEntityInfo);
 #ifdef  HAVE_INCLUDE_FIX
     xmlSetEntityReferenceFunc(filesEntityRef);
 #endif
+
     if (entityNameList != NULL)
-      result++;
+        result++;
     return result;
 }
 
@@ -848,13 +854,13 @@ filesFree(void)
 {
     int result;
 
-    if (terminalIO){
+    if (terminalIO) {
         fclose(terminalIO);
-	terminalIO = NULL;
+        terminalIO = NULL;
     }
-    if (termName){
+    if (termName) {
         xmlFree(termName);
-	termName = NULL;
+        termName = NULL;
     }
 
     result = freeXmlFile(FILES_SOURCEFILE_TYPE);
@@ -865,14 +871,19 @@ filesFree(void)
     if (!result)
         xsltGenericError(xsltGenericErrorContext,
                          "Unable to free memory used by xml/xsl files\n");
-    if (workingDirPath){
-        xmlFree(workingDirPath);
-	workingDirPath = NULL;
+    if (stylePathName){
+      xmlFree(stylePathName);
+      stylePathName = NULL;
     }
 
-    if (entityNameList){
+    if (workingDirPath) {
+        xmlFree(workingDirPath);
+        workingDirPath = NULL;
+    }
+
+    if (entityNameList) {
         arrayListFree(entityNameList);
-	entityNameList = NULL;
+        entityNameList = NULL;
     }
 }
 
@@ -893,33 +904,37 @@ isSourceFile(xmlChar * fileName)
 
 
 
-entityInfoPtr filesNewEntityInfo(const xmlChar* SystemID, 
-				 const xmlChar* PublicID){
- 
-  entityInfoPtr result = (entityInfoPtr)xmlMalloc(sizeof(entityInfo));
-  if (result){
-    if (SystemID)
-      result->SystemID = xmlStrdup(SystemID);
-    else
-      result->SystemID = xmlStrdup("");
+entityInfoPtr
+filesNewEntityInfo(const xmlChar * SystemID, const xmlChar * PublicID)
+{
 
-    if (PublicID)
-      result->PublicID = xmlStrdup(PublicID);
-    else
-      result->PublicID = xmlStrdup("");
-  }
-  return result;
+    entityInfoPtr result = (entityInfoPtr) xmlMalloc(sizeof(entityInfo));
+
+    if (result) {
+        if (SystemID)
+            result->SystemID = xmlStrdup(SystemID);
+        else
+            result->SystemID = xmlStrdup( BAD_CAST "");
+
+        if (PublicID)
+            result->PublicID = xmlStrdup(PublicID);
+        else
+            result->PublicID = xmlStrdup(BAD_CAST "");
+    }
+    return result;
 }
 
-void filesFreeEntityInfo(entityInfoPtr info){
-  if (!info)
-    return;
+void
+filesFreeEntityInfo(entityInfoPtr info)
+{
+    if (!info)
+        return;
 
-  if (info->SystemID)
-    xmlFree(info->SystemID);
+    if (info->SystemID)
+        xmlFree(info->SystemID);
 
-  if (info->PublicID)
-    xmlFree(info->PublicID);
+    if (info->PublicID)
+        xmlFree(info->PublicID);
 }
 
 /**
@@ -929,29 +944,29 @@ void filesFreeEntityInfo(entityInfoPtr info){
  * Add name to entity name list of know external entities if 
  *  it doesn't already exist in list
  */
-void filesAddEntityName(const xmlChar *SystemID, 
-			const xmlChar *PublicID)
+void
+filesAddEntityName(const xmlChar * SystemID, const xmlChar * PublicID)
 {
-  int entityIndex = 0;
-  xmlChar *name2;
-  entityInfoPtr tempItem;
-  if (!SystemID || !filesEntityList())
-    return;
-  
-  for (entityIndex = 0; 
-       entityIndex < arrayListCount(filesEntityList());
-       entityIndex++){
-	 tempItem = (entityInfoPtr)arrayListGet(filesEntityList(), 
-						entityIndex);
-	 if (tempItem &&  xmlStrEqual(SystemID,tempItem->SystemID)){
-	     /* name aready exits so don't add it */
-	     return;	   
-	 }
+    int entityIndex = 0;
+    xmlChar *name2;
+    entityInfoPtr tempItem;
 
-  }
-  
-  tempItem = filesNewEntityInfo(SystemID, PublicID);
-  arrayListAdd(filesEntityList(), tempItem);
+    if (!SystemID || !filesEntityList())
+        return;
+
+    for (entityIndex = 0;
+         entityIndex < arrayListCount(filesEntityList()); entityIndex++) {
+        tempItem = (entityInfoPtr) arrayListGet(filesEntityList(),
+                                                entityIndex);
+        if (tempItem && xmlStrEqual(SystemID, tempItem->SystemID)) {
+            /* name aready exits so don't add it */
+            return;
+        }
+
+    }
+
+    tempItem = filesNewEntityInfo(SystemID, PublicID);
+    arrayListAdd(filesEntityList(), tempItem);
 }
 
 /**
@@ -977,26 +992,27 @@ filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode, xmlNodePtr lastNode)
             firstNode = firstNode->next;
 
         if (lastNode == NULL) {
-	  if (ent->SystemID) {
-	    if (ent->ExternalID)
-	      filesAddEntityName(ent->SystemID, ent->ExternalID);    	      
-	    else
-	      filesAddEntityName(ent->URI, "");
-	    filesSetBaseUri(firstNode, ent->URI);
-	  }
+            if (ent->SystemID) {
+                if (ent->ExternalID)
+                    filesAddEntityName(ent->SystemID, ent->ExternalID);
+                else
+                    filesAddEntityName(ent->URI, BAD_CAST "");
+                filesSetBaseUri(firstNode, ent->URI);
+            }
         } else {
-	  if (ent->SystemID) {
-            xmlNodePtr node = firstNode;
-	    if (ent->ExternalID)
-	      filesAddEntityName(ent->SystemID, ent->ExternalID);
-	    else
-	      filesAddEntityName(ent->URI, "");
-	    while (node) {
+            if (ent->SystemID) {
+                xmlNodePtr node = firstNode;
+
+                if (ent->ExternalID)
+                    filesAddEntityName(ent->SystemID, ent->ExternalID);
+                else
+                    filesAddEntityName(ent->URI, BAD_CAST "");
+                while (node) {
                     filesSetBaseUri(node, ent->URI);
                     node = node->next;
-	    }
-	  }
-	}
+                }
+            }
+        }
     }
 
 }
@@ -1060,40 +1076,54 @@ filesGetBaseUri(xmlNodePtr node)
         /*
          * result =  xmlGetNsProp(node, BAD_CAST "uri", XSLDBG_XML_NAMESPACE);
          */
-      if (node->type == XML_ELEMENT_NODE){
-        result = xmlGetProp(node, BAD_CAST "xsldbg:uri");
-        if (result)
-            break;
+        if (node->type == XML_ELEMENT_NODE) {
+            result = xmlGetProp(node, BAD_CAST "xsldbg:uri");
+            if (result)
+                break;
         }
         node = node->parent;
     }
 
     if (!result && node->doc && node->doc->URL)
-      result = xmlStrdup(node->doc->URL);
+        result = xmlStrdup(node->doc->URL);
 
     return result;
 }
 
 
+
+static const char *tempNames[] = {
+    "__xsldbg_tmp_file1_txt",
+    "__xsldbg_tmp_file2_txt"
+};
+
+
   /**
-   * filesCreateTempFile:
-   * 
-   * Creates a single temporary file. Ie does not support multiple 
-   *     temporary files.
+   * filesTempFileName:
+   * @ fileNumber : Nnumber of temp file required
    *
-   * Returns a file to be used for temporary results if successful,
-   *         NULL otherwise 
+   * Return the name of tempfile. For each call to this function
+   *     with the same @fileNumber the same file name will be returned
+   *     File number : 0 is used by cat command
+   *     File number : 1 is used by profiling output  
+   *
+   * Returns The name of temp file to be used for temporary results, 
+   *         NULL otherwise
    */
-FILE *
-filesCreateTempFile()
+const char *
+filesTempFileName(int fileNumber)
 {
 
-    FILE *file = fopen("__xsldbg_tmp_file_txt", "w+");
+    const char *result = NULL;
 
-    if (file == NULL)
+    if ((fileNumber < 0) || ((fileNumber + 1) > (int)sizeof(tempNames)))
         xsltGenericError(xsltGenericErrorContext,
-                         "Unable to create temporary file for xsldbg\n");
-    return file;
+                         "Unable to allocate temporary file %d for xsldbg\n",
+                         fileNumber);
+    else
+        result = tempNames[fileNumber];
+
+    return result;
 }
 
 
@@ -1104,8 +1134,10 @@ filesCreateTempFile()
  *
  * Returns the list entity names used for documents loaded
  */
-ArrayListPtr filesEntityList(){
-  return entityNameList;
+ArrayListPtr
+filesEntityList(void)
+{
+    return entityNameList;
 }
 
 
@@ -1119,39 +1151,40 @@ extern int intVolitileOptions[OPTIONS_VERBOSE - OPTIONS_XINCLUDE + 1];
  * Returns 1 if sucessful
  *         0 otherwise   
  */
-int filesLoadCatalogs(void)
+int
+filesLoadCatalogs(void)
 {
-  int result = 0;
-  int catalogOptId = OPTIONS_CATALOGS - OPTIONS_XINCLUDE; 
-  const char *catalogs;
+    int result = 0;
+    int catalogOptId = OPTIONS_CATALOGS - OPTIONS_XINCLUDE;
+    const char *catalogs;
 
-  /* only reload catalogs if something has changed */
-  if (intVolitileOptions[catalogOptId] != 
-      isOptionEnabled(OPTIONS_CATALOGS)){
-    xmlCatalogCleanup();
-    if (intVolitileOptions[catalogOptId] != 0){
-      if (getStringOption(OPTIONS_CATALOG_NAMES) == NULL){
+    /* only reload catalogs if something has changed */
+    if (intVolitileOptions[catalogOptId] !=
+        isOptionEnabled(OPTIONS_CATALOGS)) {
+        xmlCatalogCleanup();
+        if (intVolitileOptions[catalogOptId] != 0) {
+            if (getStringOption(OPTIONS_CATALOG_NAMES) == NULL) {
 #ifdef __riscos
-            catalogs = getenv("SGML$CatalogFiles");
+                catalogs = getenv("SGML$CatalogFiles");
 #else
-            catalogs = getenv("SGML_CATALOG_FILES");
+                catalogs = getenv("SGML_CATALOG_FILES");
 #endif
-            if (catalogs == NULL) {
+                if (catalogs == NULL) {
 #ifdef __riscos
-                xsltGenericError(xsltGenericErrorContext,
-                                 "Variable SGML$CatalogFiles not set\n");
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "Variable SGML$CatalogFiles not set\n");
 #else
-                xsltGenericError(xsltGenericErrorContext,
-                                 "Variable $SGML_CATALOG_FILES not set\n");
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "Variable $SGML_CATALOG_FILES not set\n");
 #endif
-		return result;
-	    }else
-	      setStringOption(OPTIONS_CATALOG_NAMES, catalogs);
-      }else
-	catalogs = getStringOption(OPTIONS_CATALOG_NAMES);
-      xmlLoadCatalogs(catalogs);    
+                    return result;
+                } else
+                    setStringOption(OPTIONS_CATALOG_NAMES, (xmlChar*)catalogs);
+            } else
+                catalogs = (char*)getStringOption(OPTIONS_CATALOG_NAMES);
+            xmlLoadCatalogs(catalogs);
+        }
+        result++;
     }
-    result++;
-  }
-  return result;
+    return result;
 }

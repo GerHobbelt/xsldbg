@@ -62,13 +62,14 @@ extern "C" {
         OPTIONS_REPEAT,         /* The number of times to repeat */
         OPTIONS_TRACE,          /* Trace execution */
         OPTIONS_WALK_SPEED,     /* How fast do we walk through code */
-	OPTIONS_CATALOGS,        /* Get the catalogs from SGML_CATALOG_FILES and
-				  store it in OPTIONS_CATALOG_NAMES */
+        OPTIONS_CATALOGS,       /* Get the catalogs from SGML_CATALOG_FILES and
+                                 * store it in OPTIONS_CATALOG_NAMES */
+	OPTIONS_PREFER_HTML,    /* Prefer html output for search results */
         OPTIONS_VERBOSE,        /* Be verbose with messages */
         OPTIONS_OUTPUT_FILE_NAME = 520, /* what is the output file name */
         OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */
         OPTIONS_DOCS_PATH,      /* path of xsldbg's documentation */
-	OPTIONS_CATALOG_NAMES,   /* the names of the catalogs to use*/
+        OPTIONS_CATALOG_NAMES,  /* the names of the catalogs to use */
         OPTIONS_DATA_FILE_NAME  /* xml data file to use */
     } OptionTypeEnum;
 
@@ -103,7 +104,7 @@ extern "C" {
 
 #else
     /* keep kdoc happy */
-    enum OptionsTypeEnum{
+    enum OptionsTypeEnum {
         OPTIONS_XINCLUDE = 500, /* Use xinclude during xml parsing */
         OPTIONS_DOCBOOK,        /* Use of docbook sgml parsing */
         OPTIONS_TIMING,         /* Use of timing */
@@ -117,7 +118,7 @@ extern "C" {
         OPTIONS_REPEAT,         /* The number of times to repeat */
         OPTIONS_TRACE,          /* Trace execution */
         OPTIONS_WALK_SPEED,     /* How fast do we walk through code */
-	OPTIONS_CATALOGS,        /* Use the catlogs from SGML_CATALOG_FILES */
+        OPTIONS_CATALOGS,       /* Use the catlogs from SGML_CATALOG_FILES */
         OPTIONS_VERBOSE,        /* Be verbose with messages */
         OPTIONS_OUTPUT_FILE_NAME = 550, /* what is the output file name */
         OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */
@@ -161,10 +162,12 @@ extern "C" {
    Win32 type systems see macro in libxslt/xsltwin32config.h
 */
 #ifdef __riscos
+
 /* The environment variable name we are going to use is the readable version
    of the application name */
 #define XSLDBG_DOCS_DIR_VARIABLE "XSLDebugDocs$Dir"
 #else
+
 /* The environment variable name on normal systems */
 #define XSLDBG_DOCS_DIR_VARIABLE "XSLDBG_DOCS_DIR"
 #endif
@@ -175,13 +178,14 @@ extern "C" {
     typedef struct _ParameterItem ParameterItem;
     typedef ParameterItem *ParameterItemPtr;
     struct _ParameterItem {
-      xmlChar *name; /* libxslt parameter name*/ 
-      xmlChar *value; /* libxslt parameter value*/
+        xmlChar *name;          /* libxslt parameter name */
+        xmlChar *value;         /* libxslt parameter value */
     };
 
 
 
 #ifdef USE_GNOME_DOCS
+
 /** 
  * optionsInit:
  *
@@ -192,6 +196,7 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /** 
  * Initialized the options module
  *
@@ -205,6 +210,7 @@ extern "C" {
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * optionsFree:
  *
@@ -212,6 +218,7 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Free memory used by options data structures
  */
@@ -222,6 +229,7 @@ extern "C" {
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * enableOption:
  * @optionType: A valid boolean option
@@ -234,6 +242,7 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Set the state of a boolean xsldbg option to @p value
  *
@@ -250,6 +259,7 @@ extern "C" {
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * isOptionEnabled:
  * @optionType: A valid boolean option to query
@@ -261,6 +271,7 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * @returns The state of a boolean xsldbg option. 
  *            ie 1 for enabled, 0 for disabled
@@ -275,6 +286,7 @@ extern "C" {
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * setIntOption:
  * @optionType: Is a valid integer option
@@ -287,6 +299,7 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Set the value of an integer xsldbg option to @p value
  *
@@ -303,6 +316,7 @@ extern "C" {
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * getIntOption:
  * @optionType: A valid integer option
@@ -313,6 +327,7 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * @returns The state of a integer xsldbg option
  *
@@ -325,6 +340,7 @@ extern "C" {
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * setStringOption:
  * @optionType: A valid string option
@@ -338,6 +354,7 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Set value for a string xsldbg option to @p value. 
  * Any memory used currently by option @p optionType will be freed
@@ -355,6 +372,7 @@ extern "C" {
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * getStringOption:
  * @optionType: A valid string option 
@@ -365,6 +383,7 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Get value for a string xsldbg option of @p optionType
  *
@@ -382,7 +401,7 @@ extern "C" {
    *
    * Copy volitile options to the working area for xsldbg
    */
-  void copyVolitleOptions(void);
+    void copyVolitleOptions(void);
 
 /* ---------------------------------------------
           Parameter related options 
@@ -390,6 +409,7 @@ extern "C" {
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * getParamItemList:
  *
@@ -401,6 +421,7 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Return the list of libxlt parameters
  *
@@ -415,6 +436,7 @@ extern "C" {
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * paramItemNew:
  * @name: Is valid 
@@ -426,6 +448,7 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Create a new libxslt parameter item
  *
@@ -443,6 +466,7 @@ extern "C" {
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * paramItemFree:
  * @item: Is valid
@@ -451,6 +475,7 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Free memory used by libxslt parameter item @p item
  *
@@ -463,6 +488,7 @@ extern "C" {
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * printParam:
  * @paramId: 0 =< paramID < arrayListCount(getParamList())
@@ -474,6 +500,7 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Prints all items in parameter list
  *
@@ -487,6 +514,7 @@ extern "C" {
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * printParamList:
  *
@@ -497,6 +525,7 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Prints all items in parameter list
  *

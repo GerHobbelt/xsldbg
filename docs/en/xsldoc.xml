@@ -57,13 +57,13 @@ the &lt;ENTER&gt; key.
 <link href="quit">quit</link>}, <link href="step">step</link>, 
 <link href="stepup">stepup</link>, <link href="stepdown">stepdown</link>,
 <link href="continue">continue</link>, <link href="run">run</link>,
-<link href="trace">trace</link>
+<link href="trace">trace</link>, <link href="setoption">setoption</link> 
 </li>
 
 <li>Libxslt parameter related :
 <link href="addparam">addparam</link>,<link href="delparam">delparam</link>,
-<link href="showparam">showparam</link>
-<link href="output">output</link>  
+<link href="showparam">showparam</link>,
+<link href="output">output</link>, <link href="setoption">setoption</link>   
 </li>
 
 <li>Template related : <link href="templates">templates</link>,
@@ -99,14 +99,17 @@ the &lt;ENTER&gt; key.
 </li>
 
 <li>File related :
-<link href="output">output</link>  
+<link href="output">output</link>, <link href="entities">entities</link>, 
+<link href="system">system</link>, <link href="public">public</link>
+</li>
+
+<li>Disabled file commands: 
 <link href="validate">validate</link>, <link href="load">load</link>, 
 <link href="save">save</link>, <link href="write">write</link>, 
 <link href="free">free</link>
 </li>
 </list>
 </para>
-<para>nb: At the moment only the output command is enabled.</para>
 </body>
 
 <footer></footer>
@@ -276,6 +279,36 @@ the &lt;ENTER&gt; key.
 </usage>
 </cmd>
 
+<cmd name="setoption" title="Setoption">
+<summary>Set an option for execution of stylesheet</summary>
+<body>
+<para>You will need to use run command to active changes</para>
+</body>
+<usage>
+<li><text>setoption &lt;OPTION_NAME&gt;  &lt;INTEGER_VALUE&gt;</text></li>
+<li><text>  Where &lt;OPTION_NAME&gt; can be either</text></li>
+<li><list>
+<li><text>debug</text>    <comment>(If &lt;INTEGER_VALUE&gt; is true dump the tree of the result instead)</comment></li>
+<li><text>catalogs</text> <comment>(If &lt;INTEGER_VALUE&gt; is true use the catalogs from $SGML_CATALOG_FILES 
+                                      or SGML$CatalogFiles for risc operating system</comment></li>
+<li><text>html</text>     <comment>(If &lt;INTEGER_VALUE&gt; is true the input document is an HTML file)</comment></li>
+<li><text>docbook</text>  <comment>(If &lt;INTEGER_VALUE&gt; is true the input document is SGML docbook)</comment></li>
+<li><text>xinclude</text>  <comment>(If &lt;INTEGER_VALUE&gt; is true do XInclude processing on document intput)</comment></li>
+<li><text>preferhtml</text> <comment>(If &lt;INTEGER_VALUE&gt; is true the prefer html output for search results. : See search command)</comment></li>
+<li><text>nonet</text>    <comment>(If &lt;INTEGER_VALUE&gt; is true refuse to fetch DTDs or entities over network)</comment></li>
+<li><text>novalid</text>  <comment>(If &lt;INTEGER_VALUE&gt; is true skip the DTD loading phase)</comment></li>
+<li><text>repeat</text>   <comment>(If &lt;INTEGER_VALUE&gt; is true run the transformation 20 times)</comment></li>
+<li><text>profile</text>   <comment>(If &lt;INTEGER_VALUE&gt; is true  dump profiling informations)</comment></li>
+<li><text>timing</text>    <comment>(If &lt;INTEGER_VALUE&gt; is true display the time used)</comment></li>
+<li><text>noout</text>     <comment>(If &lt;INTEGER_VALUE&gt; is true do not dump the result)</comment> </li>
+</list>
+</li>
+<li><text> And where value is true if it is NOT equal to zero</text></li>
+<li><text> And where value is false if it IS equal to zero</text></li>
+
+</usage>
+
+</cmd>
 <!-- - - - - - - Template related commands - - - - - - - -->
 <cmd name="templates" shortcut="t" title="Templates">
 <summary>Print a list of available templates. Search for a template</summary>
@@ -670,15 +703,48 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </usage>
 </cmd>
 
+<cmd name="entities" shortcut="ent" title="Entities">
+<summary>Print list of external General Parsed entities used data file (document)</summary>
+<body>
+<para>Shortcut name : ent</para>
+</body>
+<usage>
+<li><text>entities</text></li>
+</usage>
+</cmd>
 
+<cmd name="system" shortcut="sys" title="system">
+<summary>Print the value that a system file maps via the xml catalog</summary>
+<body>
+<para>Shortcut name : sys</para>
+</body>
+<usage>
+<li><text>system</text></li>
+</usage>
+</cmd>
+
+<cmd name="public" shortcut="pub" title="Public">
+<summary>Print the value that a public ID maps via the xml catalog</summary>
+<body>
+<para>Shortcut name : pub</para>
+</body>
+<usage>
+<li></li>
+</usage>
+</cmd>
 <!-- - - - - - - Searching related - - - - - -->
 <cmd name="search" title="Search">
 <summary>Search a dataBase of all information gathered from stylesheets loaded</summary>
 <body>
-<para>When the search command is issued a file (search.data) will be created in the current directory. You can then process this file with your own stylesheet to present data in a other ways than displayed by default.
+<para>All output files are stored in the same directory as the provided stylesheet. searchresults.xml is either transformed by  search.xsl or searchhtml.xsl depending on whether the prefrehtml option is set.
+</para>
+<para>When the search command is issued a xml file (searchresults.xml) will be created. You can then process this file with your own stylesheet to present data in a other ways. If preferhtml is not used
+then searchresult.txt is printed to display. 
 </para>
 <para>Depending on the amount of data collected it might take a while to complete this command.
 </para>
+<para>Normally results are sent to searchresults.txt but if preferhtml option is set then 
+use searchresults.html.</para>
 </body>
 <usage>
 <li>

@@ -1,3 +1,4 @@
+
 /***************************************************************************
                           xsldbgmsg.h  -  description
                              -------------------
@@ -15,63 +16,64 @@
  *                                                                         *
  ***************************************************************************/
 
- #ifndef XSLDBGMSG_H
- #define XSLDBGMSG_H
+#ifndef XSLDBGMSG_H
+#define XSLDBGMSG_H
 
-#include <libxml/tree.h> /* needed for the definition of xmlChar */
+#ifndef BUILD_DOCS
+#include <libxml/tree.h>        /* needed for the definition of xmlChar */
 #include <libxsldbg/arraylist.h>
+#endif
 
- typedef enum {
-	 /* thread status */
-   XSLDBG_MSG_THREAD_NOTUSED,    /* 0:  Thread are not to be used*/
-   XSLDBG_MSG_THREAD_INIT,	  /* 1: The xsldbg thread is initializing */
-   XSLDBG_MSG_THREAD_RUN,	 /* 2: The xsldbg thread is running */
-   XSLDBG_MSG_THREAD_STOP,	 /* 3: The xsldbg thread is about to die */
-   XSLDBG_MSG_THREAD_DEAD,       /* 4: The xsldbg thread died */
+typedef enum {
+    /* thread status */
+    XSLDBG_MSG_THREAD_NOTUSED,  /* 0:  Thread are not to be used */
+    XSLDBG_MSG_THREAD_INIT,     /* 1: The xsldbg thread is initializing */
+    XSLDBG_MSG_THREAD_RUN,      /* 2: The xsldbg thread is running */
+    XSLDBG_MSG_THREAD_STOP,     /* 3: The xsldbg thread is about to die */
+    XSLDBG_MSG_THREAD_DEAD,     /* 4: The xsldbg thread died */
 
-	 /* input status ( once thread is running) */		
-   XSLDBG_MSG_AWAITING_INPUT,	 /* 5: Waiting for user input */
-   XSLDBG_MSG_READ_INPUT,	 /* 6: Read user input */
-   XSLDBG_MSG_PROCESSING_INPUT,  /* 7: Processing user's request*/
+    /* input status ( once thread is running) */
+    XSLDBG_MSG_AWAITING_INPUT,  /* 5: Waiting for user input */
+    XSLDBG_MSG_READ_INPUT,      /* 6: Read user input */
+    XSLDBG_MSG_PROCESSING_INPUT,        /* 7: Processing user's request */
 
-	 /* provide more informatiom about state of xsldbg (optional)*/	
-   XSLDBG_MSG_PROCESSING_RESULT,  /* 8: An error occured performing command
-				     requested command */
-   XSLDBG_MSG_LINE_CHANGED,	     /* 9: Changed to new line number 
-					ie a step */
-   XSLDBG_MSG_FILE_CHANGED,      /* 10: Loaded source/data file */
-   XSLDBG_MSG_BREAKPOINT_CHANGED, /* 11: Response to a showbreak command */
-   XSLDBG_MSG_PARAMETER_CHANGED,   /* 12: Response to showparam command */
-   XSLDBG_MSG_TEXTOUT,              /* 13 : Free form text from xsldg */
-   XSLDBG_MSG_FILEOUT,              /* 14 : Response to cat commmand, ie
-				       Free form text in file */
-   XSLDBG_MSG_LOCALVAR_CHANGED,   /* 15 : Response to locals command ie a 
-				     local variable */
-   XSLDBG_MSG_GLOBALVAR_CHANGED,   /* 16 : Response to globals command 
-				      ie a global variable */  
-   XSLDBG_MSG_TEMPLATE_CHANGED,    /* 17 : Response to templates commmand 
-				      ie template details*/
-   XSLDBG_MSG_SOURCE_CHANGED,       /* 18 : Response to stylesheets command,
-				       a normal stylesheet */ 
-   XSLDBG_MSG_INCLUDED_SOURCE_CHANGED,  /* 19: Response to stylesheets 
-					   command, a xmlNodeptr of 
-					   a included stylesheet */
-   XSLDBG_MSG_CALLSTACK_CHANGED,        /* 20: Response to where command,
-					    ie a item on the call stack */
-   XSLDBG_MSG_ENTITIY_CHANGED,            /* 21: Response to entities 
-					     command */
-   XSLDBG_MSG_RESOLVE_CHANGE,         /* 22: Response to system or
-				      public command */
-   XSLDBG_MSG_LIST                   /* 23 : As list of messages  */
-
+    /* provide more informatiom about state of xsldbg (optional) */
+    XSLDBG_MSG_PROCESSING_RESULT,       /* 8: An error occured performing command
+                                         * requested command */
+    XSLDBG_MSG_LINE_CHANGED,    /* 9: Changed to new line number 
+                                 * ie a step */
+    XSLDBG_MSG_FILE_CHANGED,    /* 10: Loaded source/data file */
+    XSLDBG_MSG_BREAKPOINT_CHANGED,      /* 11: Response to a showbreak command */
+    XSLDBG_MSG_PARAMETER_CHANGED,       /* 12: Response to showparam command */
+    XSLDBG_MSG_TEXTOUT,         /* 13 : Free form text from xsldg */
+    XSLDBG_MSG_FILEOUT,         /* 14 : Response to cat commmand, ie
+                                 * Free form text in file */
+    XSLDBG_MSG_LOCALVAR_CHANGED,        /* 15 : Response to locals command ie a 
+                                         * local variable */
+    XSLDBG_MSG_GLOBALVAR_CHANGED,       /* 16 : Response to globals command 
+                                         * ie a global variable */
+    XSLDBG_MSG_TEMPLATE_CHANGED,        /* 17 : Response to templates commmand 
+                                         * ie template details */
+    XSLDBG_MSG_SOURCE_CHANGED,  /* 18 : Response to stylesheets command,
+                                 * a normal stylesheet */
+    XSLDBG_MSG_INCLUDED_SOURCE_CHANGED, /* 19: Response to stylesheets 
+                                         * command, a xmlNodeptr of 
+                                         * a included stylesheet */
+    XSLDBG_MSG_CALLSTACK_CHANGED,       /* 20: Response to where command,
+                                         * ie a item on the call stack */
+    XSLDBG_MSG_ENTITIY_CHANGED, /* 21: Response to entities 
+                                 * command */
+    XSLDBG_MSG_RESOLVE_CHANGE,  /* 22: Response to system or
+                                 * public command */
+    XSLDBG_MSG_LIST             /* 23 : As list of messages  */
 } XsldbgMessageEnum;
 
 
 typedef enum {
-	 XSLDBG_COMMAND_FAILED,		/* generic error */
-	 XSLDBG_COMMAND_WARNING,        
-	 XSLDBG_COMMAND_INFO,
-	 XSLDBG_COMMAND_NOTUSED
+    XSLDBG_COMMAND_FAILED,      /* generic error */
+    XSLDBG_COMMAND_WARNING,
+    XSLDBG_COMMAND_INFO,
+    XSLDBG_COMMAND_NOTUSED
 } XsldbgCommandStateEnum;
 
 
@@ -132,50 +134,49 @@ typedef enum {
 typedef struct _xsldbgErrorMsg xsldbgErrorMsg;
 typedef xsldbgErrorMsg *xsldbgErrorMsgPtr;
 struct _xsldbgErrorMsg {
-  XsldbgMessageEnum type;
-  int commandId;
-  XsldbgCommandStateEnum commandState;
-  xmlChar *text;
-  xmlChar *messagefileName; /* used when send large chunks of data  */
-}; 
+    XsldbgMessageEnum type;
+    int commandId;
+    XsldbgCommandStateEnum commandState;
+    xmlChar *text;
+    xmlChar *messagefileName;   /* used when send large chunks of data  */
+};
 
 
 typedef struct _notifyMessageList notifyMessageList;
-typedef notifyMessageList * notifyMessageListPtr;
-struct _notifyMessageList{
-  XsldbgMessageEnum type;
-  ArrayListPtr list;
+typedef notifyMessageList *notifyMessageListPtr;
+struct _notifyMessageList {
+    XsldbgMessageEnum type;
+    ArrayListPtr list;
 };
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
- int notifyXsldbgApp(XsldbgMessageEnum type, const void *data);
+    int notifyXsldbgApp(XsldbgMessageEnum type, const void *data);
 
- int notifyStateXsldbgApp(XsldbgMessageEnum type, int commandId, 
-			  XsldbgCommandStateEnum commandState, const char *text);
+    int notifyStateXsldbgApp(XsldbgMessageEnum type, int commandId,
+                             XsldbgCommandStateEnum commandState,
+                             const char *text);
 
- int notifyTextXsldbgApp(XsldbgMessageEnum type, const char *text);
+    int notifyTextXsldbgApp(XsldbgMessageEnum type, const char *text);
 
 
-  /* The following functions implemented in xsldbgthread.c */
-  int notifyListStart(XsldbgMessageEnum type);
+    /* The following functions implemented in xsldbgthread.c */
+    int notifyListStart(XsldbgMessageEnum type);
 
-  /* Data must be valid for until the next notifyListStart.
-    Memory pointed to by @data will not be freed. Added @data items
-    queued to list must be of the same data type as required by the
-    XsldbgMessageEnum used with the matching notifyListSend */
- int notifyListQueue(const void *data);
-  
-  /* The notified application is responsible for free memory used
-   by the ArrayList and notifyMessageList of notify message */
-  int notifyListSend(void);
-  
+    /* Data must be valid for until the next notifyListStart.
+     * Memory pointed to by @data will not be freed. Added @data items
+     * queued to list must be of the same data type as required by the
+     * XsldbgMessageEnum used with the matching notifyListSend */
+    int notifyListQueue(const void *data);
+
+    /* The notified application is responsible for free memory used
+     * by the ArrayList and notifyMessageList of notify message */
+    int notifyListSend(void);
+
 
 #ifdef __cplusplus
 }
 #endif
-
-
 #endif

@@ -48,23 +48,23 @@
 extern "C" {
 #endif
 
-  /* what types of searches are there */
-  #ifndef USE_KDOC
+    /* what types of searches are there */
+#ifndef USE_KDOC
     typedef enum {
         SEARCH_BREAKPOINT = 400,
         SEARCH_NODE,
         SEARCH_XSL,
-	SEARCH_VARIABLE
+        SEARCH_VARIABLE
     } SearchEnum;
- #else
+#else
     /* keep kdoc happy */
-    enum SearchEnum{
+    enum SearchEnum {
         SEARCH_BREAKPOINT = 400,
         SEARCH_NODE,
         SEARCH_XSL,
-	SEARCH_VARIABLE
+        SEARCH_VARIABLE
     };
- #endif
+#endif
 
     /* define a common structure to be used when searching */
     typedef struct _searchInfo searchInfo;
@@ -72,7 +72,7 @@ extern "C" {
     struct _searchInfo {
         int found;              /* found is 1 if search is finished */
         int type;               /* what type of search see SearchEnum */
-        int error;              /* did an error occur */  
+        int error;              /* did an error occur */
         void *data;             /* extra data to pass to walkFunc */
     };
 
@@ -111,9 +111,9 @@ extern "C" {
     typedef struct _variableSearchData variableSearchData;
     typedef variableSearchData *variableSearchDataPtr;
     struct _variableSearchData {
-      xmlChar *name;
-      xmlChar *nameURI;
-      xmlChar *select; /* new value to adopt if any */
+        xmlChar *name;
+        xmlChar *nameURI;
+        xmlChar *select;        /* new value to adopt if any */
     };
 
 #ifdef USE_GNOME_DOCS
@@ -345,7 +345,9 @@ extern "C" {
  * searchQuery:
  * @query: The query to run . If NULL then query is "//search/ *"
  * @tempFile: Where do we load the search dataBase from to execute
- *             query. If tempFile is NULL "search.data" is used
+ *             query. If tempFile is NULL "searchresult.xml" is used
+ * @outputFile : Where do we store the result. If NULL
+ *             then default to  "searchresult.html"
  * 
  * Send query as parameter for execution of search.xsl using
  *    data stored in @tempFile 
@@ -366,11 +368,13 @@ extern "C" {
  * @param query The Query to run. If NULL then @p query defaults to "//search/ *"
  * @param tempFile Where do we load the search dataBase from to execute
  *             query. If @p tempFile is NULL default is "search.data"
-
+ * @param outputFile Where do we store the result. If NULL
+ *             then default to  "searchresult.html"
  */
 #endif
 #endif
-    int searchQuery(const xmlChar * tempFile, const xmlChar * query);
+    int searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
+                    const xmlChar * query);
 
 
 #ifdef USE_GNOME_DOCS

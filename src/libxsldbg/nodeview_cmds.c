@@ -22,6 +22,7 @@
 
 #include <libxml/xpathInternals.h>
 #include <libxml/HTMLparser.h>
+#include <libxml/HTMLtree.h>
 #include "xsldbg.h"
 #include "debugXSL.h"
 #include "arraylist.h"
@@ -101,15 +102,16 @@ xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir)
                 case XPATH_NODESET:{
                         int indx;
 
-                        for (indx = 0; indx < list->nodesetval->nodeNr;
+                        for (indx = 0; 
+			     indx < list->nodesetval->nodeNr;
                              indx++) {
                             if (dir)
-                                (ctxt, NULL,
-                                 list->nodesetval->nodeTab[indx], NULL);
+			      xmlShellList(ctxt, NULL,
+				 list->nodesetval->nodeTab[indx], NULL);
                             else
                                 xmlShellList(ctxt, NULL,
-                                             list->nodesetval->
-                                             nodeTab[indx], NULL);
+                                             list->nodesetval->nodeTab[indx], 
+					     NULL);
                         }
                         result++;
                         break;
@@ -144,10 +146,10 @@ xslShellCat(xmlNodePtr node, FILE * file)
 
     /* assume that HTML usage is enabled */
     if (node->doc->type == XML_HTML_DOCUMENT_NODE) {
-      if (node->type == XML_HTML_DOCUMENT_NODE)
-        htmlDocDump(file, (htmlDocPtr) node);
-      else
-	htmlNodeDumpFile(file, node->doc, node);	
+        if (node->type == XML_HTML_DOCUMENT_NODE)
+            htmlDocDump(file, (htmlDocPtr) node);
+        else
+            htmlNodeDumpFile(file, node->doc, node);
     } else if (node->type == XML_DOCUMENT_NODE) {
         xmlDocDump(file, (xmlDocPtr) node);
     } else {
@@ -209,9 +211,18 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
 
                         if (list->nodesetval) {
                             if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
-                                FILE *file = filesCreateTempFile();
+                                const char *fileName =
+                                    filesTempFileName(0);
+                                FILE *file;
 
+                                if (!fileName)
+                                    break;
+                                file = fopen(fileName, "w");
                                 if (!file) {
+                                    xsltGenericError
+                                        (xsltGenericErrorContext,
+                                         "Unable to save temporary results to %s\n",
+                                         fileName);
                                     break;
                                 } else {
                                     for (indx = 0;
@@ -220,9 +231,10 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                                         xslShellCat(list->nodesetval->
                                                     nodeTab[indx], file);
                                     }
-				    fflush(file);
+                                    fclose(file);
                                     /* send the data to application */
-				    notifyXsldbgApp(XSLDBG_MSG_FILEOUT, file);
+                                    notifyXsldbgApp(XSLDBG_MSG_FILEOUT,
+                                                    fileName);
                                 }
                             } else {
                                 for (indx = 0;
@@ -240,30 +252,30 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                             }
                         } else {
                             xsltGenericError(xmlGenericErrorContext,
-                                            "xpath %s: results an in empty set\n",
-                                            arg);
+                                             "xpath %s: results an in empty set\n",
+                                             arg);
                         }
-			result++;
+                        result++;
                         break;
                     }
 
                 case XPATH_BOOLEAN:
                     xsltGenericError(xsltGenericErrorContext,
-                                    "%s is a Boolean:%s\n", arg,
-                                    xmlBoolToText(list->boolval));
-		    result++;
+                                     "%s is a Boolean:%s\n", arg,
+                                     xmlBoolToText(list->boolval));
+                    result++;
                     break;
                 case XPATH_NUMBER:
                     xsltGenericError(xsltGenericErrorContext,
-                                    "%s is a number:%0g\n", arg,
-                                    list->floatval);
-		    result++;
+                                     "%s is a number:%0g\n", arg,
+                                     list->floatval);
+                    result++;
                     break;
                 case XPATH_STRING:
                     xsltGenericError(xsltGenericErrorContext,
-                                    "%s is a string:%s\n", arg,
-                                    list->stringval);
-		    result++;
+                                     "%s is a string:%s\n", arg,
+                                     list->stringval);
+                    result++;
                     break;
 
                 default:
@@ -272,7 +284,7 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
             xmlXPathFreeObject(list);
         } else {
             xsltGenericError(xsltGenericErrorContext,
-                            "%s: no such node\n", arg);
+                             "%s: no such node\n", arg);
         }
         ctxt->pctxt->node = NULL;
     }
@@ -294,15 +306,15 @@ void *
 xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
                       void *data ATTRIBUTE_UNUSED, xmlChar * name)
 {
-  if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
-    notifyListQueue(payload);
-  }else{
-    if (varCount)
-        xsltGenericError(xsltGenericErrorContext, ", %s", name);
-    else
-        xsltGenericError(xsltGenericErrorContext, "%s", name);
-    varCount++;
-  }
+    if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
+        notifyListQueue(payload);
+    } else {
+        if (varCount)
+            xsltGenericError(xsltGenericErrorContext, ", %s", name);
+        else
+            xsltGenericError(xsltGenericErrorContext, "%s", name);
+        varCount++;
+    }
     return NULL;
 }
 
@@ -337,48 +349,54 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
         /* list variables of type requested */
         if (type == DEBUG_GLOBAL_VAR) {
             if (styleCtxt->globalVars) {
-	      if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
-		notifyListStart(XSLDBG_MSG_GLOBALVAR_CHANGED);		
-		/* list global variables */
-                xmlHashScan(styleCtxt->globalVars, xslDbgShellPrintNames,
-                            NULL);
-		notifyListSend();
-	      }else
-		/* list global variables */
-                xmlHashScan(styleCtxt->globalVars, xslDbgShellPrintNames,
-                            NULL);
+                if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
+                    notifyListStart(XSLDBG_MSG_GLOBALVAR_CHANGED);
+                    /* list global variables */
+                    xmlHashScan(styleCtxt->globalVars,
+                                xslDbgShellPrintNames, NULL);
+                    notifyListSend();
+                } else
+                    /* list global variables */
+                    xmlHashScan(styleCtxt->globalVars,
+                                xslDbgShellPrintNames, NULL);
                 result++;
             } else {
-                xsltGenericError(xsltGenericErrorContext,
-                                 "Libxslt has not initialize variables yet"
-                                 " try stepping to a template");
+                if (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)
+                    /* Don't show this message when running as a thread as it 
+                     * is annoying */
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "Libxslt has not initialize variables yet"
+                                     " try stepping to a template");
             }
         } else {
             /* list local variables */
             if (styleCtxt->varsBase) {
                 xsltStackElemPtr item =
                     styleCtxt->varsTab[styleCtxt->varsBase];
-		if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
-		  notifyListStart(XSLDBG_MSG_LOCALVAR_CHANGED);
-		  while (item) {
-		    notifyListQueue(item);
-                    item = item->next;
-		  }		  
-		  notifyListSend();
-		}else{
-		  xsltGenericError(xsltGenericErrorContext,
-				   "\nLocal variables found: ");
-		  while (item) {
-                    xsltGenericError(xsltGenericErrorContext, "%s ",
-                                     item->name);
-                    item = item->next;
-		  }
-		}
+                if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
+                    notifyListStart(XSLDBG_MSG_LOCALVAR_CHANGED);
+                    while (item) {
+                        notifyListQueue(item);
+                        item = item->next;
+                    }
+                    notifyListSend();
+                } else {
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "\nLocal variables found: ");
+                    while (item) {
+                        xsltGenericError(xsltGenericErrorContext, "%s ",
+                                         item->name);
+                        item = item->next;
+                    }
+                }
                 result++;
             } else {
-                xsltGenericError(xsltGenericErrorContext,
-                                 "Libxslt has not initialize variables yet"
-                                 " try stepping past the xsl:param elements in template");
+                if (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)
+                    /* Don't show this message when running as a thread as it 
+                     * is annoying */
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "Libxslt has not initialize variables yet"
+                                     " try stepping past the xsl:param elements in template");
             }
         }
         xsltGenericError(xsltGenericErrorContext, "\n");

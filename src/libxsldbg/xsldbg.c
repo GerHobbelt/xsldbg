@@ -297,35 +297,6 @@ endTimer(char *format, ...)
 }
 #endif
 
-void appendToFile(FILE * sourceFile, const xmlChar * destFileName);
-
-/**
- * Append the data in @sourceFile to file associated with @destFileName
- */
-void
-appendToFile(FILE * sourceFile, const xmlChar * destFileName)
-{
-    char buffer[500];
-    FILE *destFile = NULL;
-    size_t charsRead = sizeof(buffer);
-
-    if (!sourceFile || !destFileName)
-        return;
-
-    fflush(sourceFile);
-    rewind(sourceFile);
-
-    destFile = fopen(destFileName, "a");
-    if (destFile) {
-        while (!feof(sourceFile) && (charsRead == sizeof(buffer))) {
-            charsRead =
-                fread(buffer, sizeof(char), sizeof(buffer), sourceFile);
-            fwrite(buffer, sizeof(char), charsRead, destFile);
-        }
-        fclose(destFile);
-    }
-}
-
 static void
 xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
 {
@@ -364,20 +335,6 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
         startTimer();
     if ((getStringOption(OPTIONS_OUTPUT_FILE_NAME) == NULL) ||
         isOptionEnabled(OPTIONS_SHELL)) {
-        FILE *tempFile = NULL;
-
-        if (getStringOption(OPTIONS_OUTPUT_FILE_NAME) != NULL) {
-            tempFile = fopen("__xsldbg_temp2_txt", "w+");
-            if (!tempFile) {
-                xsltGenericError(xsltGenericErrorContext,
-                                 "Unable to save temporary results to %s\n",
-                                 "__xsldbg_temp2_txt");
-            }else{
-	      fprintf(tempFile, "----------------------------------------\n");
-	      fprintf(tempFile, " Extra information provided by libxslt\n" );
-	      fprintf(tempFile, "----------------------------------------\n");
-	    }
-        }
         if (getIntOption(OPTIONS_REPEAT)) {
             int j;
 
@@ -388,10 +345,31 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
             }
         }
         if (isOptionEnabled(OPTIONS_PROFILING)) {
-            if (tempFile) {
-                res = xsltProfileStylesheet(cur, doc, params, tempFile);
-            } else
+            if (terminalIO != NULL)
+                res = xsltProfileStylesheet(cur, doc, params, terminalIO);
+            else if ((getStringOption(OPTIONS_OUTPUT_FILE_NAME) == NULL) ||
+                     (getThreadStatus() != XSLDBG_MSG_THREAD_RUN) ||
+                     (filesTempFileName(1) == NULL))
                 res = xsltProfileStylesheet(cur, doc, params, stderr);
+            else {
+                /* We now have to output to using notify using 
+                 * temp file #1 */
+                FILE *tempFile = fopen(filesTempFileName(1), "w");
+
+                if (tempFile != NULL) {
+                    res =
+                        xsltProfileStylesheet(cur, doc, params, tempFile);
+                    fclose(tempFile);
+                    /* send the data to application */
+                    notifyXsldbgApp(XSLDBG_MSG_FILEOUT,
+                                    filesTempFileName(1));
+                } else {
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "Unable to dump temporary results to %s\n",
+                                     filesTempFileName(1));
+                    res = xsltProfileStylesheet(cur, doc, params, stderr);
+                }
+            }
         } else {
             res = xsltApplyStylesheet(cur, doc, params);
         }
@@ -405,32 +383,36 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
         if (res == NULL) {
             xsltGenericError(xsltGenericErrorContext, "no result for %s\n",
                              getStringOption(OPTIONS_OUTPUT_FILE_NAME));
-            if (tempFile)
-                fclose(tempFile);
             return;
         }
         if (isOptionEnabled(OPTIONS_NOOUT)) {
             xmlFreeDoc(res);
-            if (tempFile)
-                fclose(tempFile);
             return;
         }
 #ifdef LIBXML_DEBUG_ENABLED
         if (isOptionEnabled(OPTIONS_DEBUG)) {
-            if (getStringOption(OPTIONS_OUTPUT_FILE_NAME) == NULL)
+            if (terminalIO != NULL)
+                xmlDebugDumpDocument(terminalIO, res);
+            else if ((getStringOption(OPTIONS_OUTPUT_FILE_NAME) == NULL) ||
+                     (getThreadStatus() != XSLDBG_MSG_THREAD_RUN) ||
+                     (filesTempFileName(1) == NULL))
                 xmlDebugDumpDocument(stdout, res);
             else {
-                FILE *outputFile =
-                    fopen(getStringOption(OPTIONS_OUTPUT_FILE_NAME), "w");
-                if (outputFile) {
-                    xmlDebugDumpDocument(outputFile, res);
-                    fclose(outputFile);
-                }else{
-		  xsltGenericError(xsltGenericErrorContext,
-				   "Unable to dump results to %s\n",
-				   getStringOption(OPTIONS_OUTPUT_FILE_NAME));
-		}
-		  
+                FILE *tempFile = fopen(filesTempFileName(1), "w");
+
+                if (tempFile) {
+                    xmlDebugDumpDocument(tempFile, res);
+                    fclose(tempFile);
+                    /* send the data to application */
+                    notifyXsldbgApp(XSLDBG_MSG_FILEOUT,
+                                    filesTempFileName(1));
+                } else {
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "Unable to dump temporary results to %s\n",
+                                     filesTempFileName(1));
+                    xmlDebugDumpDocument(stdout, res);
+                }
+
             }
         } else {
 #endif
@@ -438,16 +420,15 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
                 if (isOptionEnabled(OPTIONS_TIMING))
                     startTimer();
                 if (xslDebugStatus != DEBUG_QUIT) {
-                    if (terminalIO == NULL) {
-                        if (getStringOption(OPTIONS_OUTPUT_FILE_NAME) == NULL)
-                            xsltSaveResultToFile(stdout, res, cur);
-                        else {
-                            xsltSaveResultToFilename(getStringOption
-                                                     (OPTIONS_OUTPUT_FILE_NAME),
-                                                     res, cur, 0);
-                        }
-                    } else
+                    if (terminalIO != NULL)
                         xsltSaveResultToFile(terminalIO, res, cur);
+                    else if (getStringOption(OPTIONS_OUTPUT_FILE_NAME) ==
+                             NULL)
+                        xsltSaveResultToFile(stdout, res, cur);
+                    else
+                        xsltSaveResultToFilename((const char*)getStringOption
+                                                 (OPTIONS_OUTPUT_FILE_NAME),
+                                                 res, cur, 0);
                 }
                 if (isOptionEnabled(OPTIONS_TIMING))
                     endTimer("Saving result");
@@ -457,16 +438,15 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
                                      "non standard output xhtml\n");
                     if (isOptionEnabled(OPTIONS_TIMING))
                         startTimer();
-                    if (terminalIO == NULL)
-                        if (getStringOption(OPTIONS_OUTPUT_FILE_NAME) ==
-                            NULL)
-                            xsltSaveResultToFile(stdout, res, cur);
-                        else
-                            xsltSaveResultToFilename(getStringOption
-                                                     (OPTIONS_OUTPUT_FILE_NAME),
-                                                     res, cur, 0);
-                    else
+                    if (terminalIO != NULL)
                         xsltSaveResultToFile(terminalIO, res, cur);
+                    else if (getStringOption(OPTIONS_OUTPUT_FILE_NAME) ==
+                             NULL)
+                        xsltSaveResultToFile(stdout, res, cur);
+                    else
+                        xsltSaveResultToFilename((const char*)getStringOption
+                                                 (OPTIONS_OUTPUT_FILE_NAME),
+                                                 res, cur, 0);
                     if (isOptionEnabled(OPTIONS_TIMING))
                         endTimer("Saving result");
                 } else {
@@ -480,12 +460,6 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
 #endif
 
         xmlFreeDoc(res);
-        if (tempFile) {
-            appendToFile(tempFile,
-                         getStringOption(OPTIONS_OUTPUT_FILE_NAME));
-            fclose(tempFile);
-        }
-
     } else {
         xsltRunStylesheet(cur, doc, params, (char *)
                           getStringOption(OPTIONS_OUTPUT_FILE_NAME), NULL,

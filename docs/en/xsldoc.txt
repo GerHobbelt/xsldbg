@@ -1,5 +1,5 @@
 
-         xsldbg version 0.9.7
+         xsldbg version 1.0.0
          ====================
    
     xsldbg help
@@ -33,8 +33,8 @@ On systems with readline library available you can use the back/forward keys to 
  
  
      Help related :help
-     Running related : {bye|exit|quit},step,stepup,stepdown,continue,run,trace
-     Libxslt parameter related :addparam,delparam,showparamoutput
+     Running related : {bye|exit|quit},step,stepup,stepdown,continue,run,trace,setoption
+     Libxslt parameter related :addparam,delparam,showparam,output,setoption
      Template related :templates,where,frame
      Break point related :break,showbreak,delete,enable
      Expression viewing(xpath) :cat
@@ -43,9 +43,9 @@ On systems with readline library available you can use the back/forward keys to 
      Node selection :source,data,cd
      Searching :search
      Operating system related :chdir,shell,tty
-     File related :outputvalidate,load,save,write,free
- 
-nb: At the moment only the output command is enabled.- - - - - - - - - - - - - - - - - - - - 
+     File related :output,entities,system,public
+     Disabled file commands:validate,load,save,write,free
+- - - - - - - - - - - - - - - - - - - - 
 
 
 Command : Addparam  
@@ -216,6 +216,16 @@ Usage:
 - - - - - - - - - - - - - - - - - - - - 
 
 
+Command : Entities  
+Summary : Print list of external General Parsed entities used data file (document)
+ 
+Shortcut name : ent      
+Usage:
+ 
+     entities
+- - - - - - - - - - - - - - - - - - - - 
+
+
 Command : Exit  
 Summary : Exit processing stylesheet as soon as possible.
 Usage:
@@ -298,6 +308,16 @@ Usage:
 - - - - - - - - - - - - - - - - - - - - 
 
 
+Command : Public  
+Summary : Print the value that a public ID maps via the xml catalog
+ 
+Shortcut name : pub      
+Usage:
+ 
+     
+- - - - - - - - - - - - - - - - - - - - 
+
+
 Command : Pwd  
 Summary : Print the current working directory.
 Usage:
@@ -337,12 +357,42 @@ Usage:
 Command : Search  
 Summary : Search a dataBase of all information gathered from stylesheets loaded
  
-When the search command is issued a file (search.data) will be created in the current directory. You can then process this file with your own stylesheet to present data in a other ways than displayed by default. 
-Depending on the amount of data collected it might take a while to complete this command.      
+All output files are stored in the same directory as the provided stylesheet. searchresults.xml is either transformed by search.xsl or searchhtml.xsl depending on whether the prefrehtml option is set. 
+When the search command is issued a xml file (searchresults.xml) will be created. You can then process this file with your own stylesheet to present data in a other ways. If preferhtml is not used then searchresult.txt is printed to display. 
+Depending on the amount of data collected it might take a while to complete this command. 
+Normally results are sent to searchresults.txt but if preferhtml option is set then use searchresults.html.      
 Usage:
  
      search <XPATH>   (See what xpath can be used see search.dtd. The deafault <XPATH> is '//search/*' )
      search -sort <XPATH>   (Tell search.xsl to sort the result before outputing it)
+- - - - - - - - - - - - - - - - - - - - 
+
+
+Command : Setoption  
+Summary : Set an option for execution of stylesheet
+ 
+You will need to use run command to active changes      
+Usage:
+ 
+     setoption <OPTION_NAME> <INTEGER_VALUE>
+     Where <OPTION_NAME> can be either
+      
+     debug   (If <INTEGER_VALUE> is true dump the tree of the result instead)
+     catalogs   (If <INTEGER_VALUE> is true use the catalogs from $SGML_CATALOG_FILES 
+                                      or SGML$CatalogFiles for risc operating system
+     html   (If <INTEGER_VALUE> is true the input document is an HTML file)
+     docbook   (If <INTEGER_VALUE> is true the input document is SGML docbook)
+     xinclude   (If <INTEGER_VALUE> is true do XInclude processing on document intput)
+     preferhtml   (If <INTEGER_VALUE> is true the prefer html output for search results. : See search command)
+     nonet   (If <INTEGER_VALUE> is true refuse to fetch DTDs or entities over network)
+     novalid   (If <INTEGER_VALUE> is true skip the DTD loading phase)
+     repeat   (If <INTEGER_VALUE> is true run the transformation 20 times)
+     profile   (If <INTEGER_VALUE> is true  dump profiling informations)
+     timing   (If <INTEGER_VALUE> is true display the time used)
+     noout   (If <INTEGER_VALUE> is true do not dump the result)
+
+     And where value is true if it is NOT equal to zero
+     And where value is false if it IS equal to zero
 - - - - - - - - - - - - - - - - - - - - 
 
 
@@ -420,6 +470,16 @@ Shortcut name: style
 Usage:
  
      stylesheets
+- - - - - - - - - - - - - - - - - - - - 
+
+
+Command : system  
+Summary : Print the value that a system file maps via the xml catalog
+ 
+Shortcut name : sys      
+Usage:
+ 
+     system
 - - - - - - - - - - - - - - - - - - - - 
 
 

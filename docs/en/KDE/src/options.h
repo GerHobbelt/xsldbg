@@ -37,13 +37,14 @@
 
 
 
+
 /* ---------------------------------------  
         Misc options
 -------------------------------------------*/
 
 
     /* keep kdoc happy */
-    enum OptionsTypeEnum{
+    enum OptionsTypeEnum {
         OPTIONS_XINCLUDE = 500, /* Use xinclude during xml parsing */
         OPTIONS_DOCBOOK,        /* Use of docbook sgml parsing */
         OPTIONS_TIMING,         /* Use of timing */
@@ -57,6 +58,7 @@
         OPTIONS_REPEAT,         /* The number of times to repeat */
         OPTIONS_TRACE,          /* Trace execution */
         OPTIONS_WALK_SPEED,     /* How fast do we walk through code */
+        OPTIONS_CATALOGS,       /* Use the catlogs from SGML_CATALOG_FILES */
         OPTIONS_VERBOSE,        /* Be verbose with messages */
         OPTIONS_OUTPUT_FILE_NAME = 550, /* what is the output file name */
         OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */
@@ -97,9 +99,11 @@
 
 
 /* for non win32 environments see the macro in xsldebugger/Makefile.am
-   Win32 tupe systems see  macro in libxslt/xsltwin32config.h
+   Win32 type systems see macro in libxslt/xsltwin32config.h
 */
-/* JRF: Under RISC OS we'll use the sysvar */
+
+
+/* The environment variable name on normal systems */
 
 
 
@@ -109,9 +113,10 @@
     typedef struct _ParameterItem ParameterItem;
     typedef ParameterItem *ParameterItemPtr;
     struct _ParameterItem {
-      xmlChar *name; /* libxslt parameter name*/ 
-      xmlChar *value; /* libxslt parameter value*/
+        xmlChar *name;          /* libxslt parameter name */
+        xmlChar *value;         /* libxslt parameter value */
     };
+
 
 
 
@@ -131,12 +136,14 @@
 
 
 
+
 /**
  * Free memory used by options data structures
  */
 
 
     void optionsFree(void);
+
 
 
 
@@ -159,6 +166,7 @@
 
 
 
+
 /**
  * @returns The state of a boolean xsldbg option. 
  *            ie 1 for enabled, 0 for disabled
@@ -169,6 +177,7 @@
 
 
     int isOptionEnabled(OptionTypeEnum optionType);
+
 
 
 
@@ -191,6 +200,7 @@
 
 
 
+
 /**
  * @returns The state of a integer xsldbg option
  *
@@ -199,6 +209,7 @@
 
 
     int getIntOption(OptionTypeEnum optionType);
+
 
 
 
@@ -222,6 +233,7 @@
 
 
 
+
 /**
  * Get value for a string xsldbg option of @p optionType
  *
@@ -234,10 +246,17 @@
     const xmlChar *getStringOption(OptionTypeEnum optionType);
 
 
+  /**
+   * copyVolitleOptions:
+   *
+   * Copy volitile options to the working area for xsldbg
+   */
+    void copyVolitleOptions(void);
 
 /* ---------------------------------------------
           Parameter related options 
 -------------------------------------------------*/
+
 
 
 
@@ -252,6 +271,7 @@
 
 
     ArrayListPtr getParamItemList(void);
+
 
 
 
@@ -275,6 +295,7 @@
 
 
 
+
 /**
  * Free memory used by libxslt parameter item @p item
  *
@@ -283,6 +304,7 @@
 
 
     void paramItemFree(ParameterItemPtr item);
+
 
 
 
@@ -297,6 +319,7 @@
 
 
     int printParam(int paramId);
+
 
 
 

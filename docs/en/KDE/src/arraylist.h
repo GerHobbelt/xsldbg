@@ -42,7 +42,7 @@
 
 
     typedef void (*freeItemFunc) (void *item);
- /* A dynamic structure behave like a list*/
+    /* A dynamic structure behave like a list */
     typedef struct _ArrayList ArrayList;
     typedef ArrayList *ArrayListPtr;
     struct _ArrayList {
@@ -72,7 +72,7 @@
 
 
     ArrayListPtr arrayListNew(int initialSize,
-                                 freeItemFunc deleteFunction);
+                              freeItemFunc deleteFunction);
 
 
 

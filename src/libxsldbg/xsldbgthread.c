@@ -87,13 +87,13 @@ setThreadStatus(XsldbgMessageEnum type)
         case XSLDBG_MSG_THREAD_NOTUSED:
         case XSLDBG_MSG_THREAD_INIT:
         case XSLDBG_MSG_THREAD_RUN:
-	  threadStatus = type;
-	  break;
+            threadStatus = type;
+            break;
 
         case XSLDBG_MSG_THREAD_STOP:
         case XSLDBG_MSG_THREAD_DEAD:
-	  xslDebugStatus = DEBUG_QUIT;
-	  threadStatus = type;
+            xslDebugStatus = DEBUG_QUIT;
+            threadStatus = type;
             break;
 
         default:
@@ -118,37 +118,44 @@ setInputReady(int value)
 
 
 
-int notifyListStart(XsldbgMessageEnum type)
+int
+notifyListStart(XsldbgMessageEnum type)
 {
-  int result = 0;
-  msgList = arrayListNew(10, NULL);
-  notifyList = (notifyMessageListPtr)xmlMalloc(sizeof(notifyMessageList));
-  if (notifyList && msgList){    
-    notifyList->type = type;
-    notifyList->list = msgList;
-    result++;
-  }
-    
-  return result;
+    int result = 0;
+
+    msgList = arrayListNew(10, NULL);
+    notifyList =
+        (notifyMessageListPtr) xmlMalloc(sizeof(notifyMessageList));
+    if (notifyList && msgList) {
+        notifyList->type = type;
+        notifyList->list = msgList;
+        result++;
+    }
+
+    return result;
 }
 
-int notifyListQueue(const void *data)
+int
+notifyListQueue(const void *data)
 {
-  int result = 0;
-  if (msgList){
-    arrayListAdd(msgList, (void*)data);
-    result++;
-  }
-  return result;
-}
-  
+    int result = 0;
 
-int notifyListSend(void)
+    if (msgList) {
+        arrayListAdd(msgList, (void *) data);
+        result++;
+    }
+    return result;
+}
+
+
+int
+notifyListSend(void)
 {
-  int result = 0;
-  if (notifyList && msgList){
-    notifyXsldbgApp(XSLDBG_MSG_LIST, notifyList);
-    result++;
-  }
-  return result;
+    int result = 0;
+
+    if (notifyList && msgList) {
+        notifyXsldbgApp(XSLDBG_MSG_LIST, notifyList);
+        result++;
+    }
+    return result;
 }

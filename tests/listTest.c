@@ -262,29 +262,5 @@ void myWalker(void *payload, void *data ATTRIBUTE_UNUSED, xmlChar *name ATTRIBUT
   }
 }
 
-/*
- * A break point has been found so pass control to user
- * @templ : The source node being executed
- * @node : The data node being processed
- * @root : The template being applide to "node"
- * @ctxt :
- */
-void debugBreak(xmlNodePtr templ ATTRIBUTE_UNUSED, xmlNodePtr nod ATTRIBUTE_UNUSED,  
-		   xsltTemplatePtr root ATTRIBUTE_UNUSED,  xsltTransformContextPtr ctxt ATTRIBUTE_UNUSED){
-  fprintf(stdout, "List test's debugBreak has reached!\n");
-}
 
 
-int changeDir(const xmlChar * path);
-
-/**
- * changeDir:
- * @path : path to adopt as new working directory
- *
- * Change working directory to path 
- */
-int
-changeDir(const xmlChar * path)
-{
-  return 0;
-}

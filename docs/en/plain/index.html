@@ -37,11 +37,11 @@ A:link, A:visited, A:active { text-decoration: underline }
 
 --></style>
 <title>
-           xsldbg 0.9.8 documentation
+           xsldbg 1.0.0 documentation
          </title>
 </head>
 <body bgcolor="#8b7765" text="#000000" link="#000000" vlink="#000000"><table class="listbody"><tr><td>
-<h1 class="cmdth">xsldbg 0.9.8</h1>
+<h1 class="cmdth">xsldbg 1.0.0</h1>
 <h2 class="cmdth">Overview</h2>
 <h3>xsldbg help</h3>
 
@@ -98,10 +98,11 @@ the &lt;ENTER&gt; key.
 <a href="#quit">quit</a>}, <a href="#step">step</a>, 
 <a href="#stepup">stepup</a>, <a href="#stepdown">stepdown</a>,
 <a href="#continue">continue</a>, <a href="#run">run</a>,
-<a href="#trace">trace</a>    </td></tr>
+<a href="#trace">trace</a>, <a href="#setoption">setoption</a>    </td></tr>
 <tr><td>Libxslt parameter related :
 <a href="#addparam">addparam</a>,<a href="#delparam">delparam</a>,
-<a href="#showparam">showparam</a><a href="#output">output</a>    </td></tr>
+<a href="#showparam">showparam</a>,
+<a href="#output">output</a>, <a href="#setoption">setoption</a>    </td></tr>
 <tr><td>Template related : <a href="#templates">templates</a>,
 <a href="#where">where</a>, <a href="#frame">frame</a>    </td></tr>
 <tr><td>Break point related : <a href="#break">break</a>, 
@@ -122,13 +123,15 @@ the &lt;ENTER&gt; key.
 <a href="#shell">shell</a>,
 <a href="#tty">tty</a>    </td></tr>
 <tr><td>File related :
-<a href="#output">output</a><a href="#validate">validate</a>, <a href="#load">load</a>, 
+<a href="#output">output</a>, <a href="#entities">entities</a>, 
+<a href="#system">system</a>, <a href="#public">public</a>    </td></tr>
+<tr><td>Disabled file commands: 
+<a href="#validate">validate</a>, <a href="#load">load</a>, 
 <a href="#save">save</a>, <a href="#write">write</a>, 
 <a href="#free">free</a>    </td></tr>
 </table></td>
 </tr></table>
 
-<p>nb: At the moment only the output command is enabled.</p>
 
 
 
@@ -382,6 +385,20 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </tr>
 </table></tr>
 </table>
+<br><br><a name="entities"></a><table width="100%" class="cmd">
+<th class="cmdth">Entities</th>
+<tr class="cmdsummary"><td>Print list of external General Parsed entities used data file (document)</td></tr>
+<tr class="cmdtr"><td class="cmdtd">
+<p>Shortcut name : ent</p>
+</td></tr>
+<tr class="cmdtr"><table class="usage" width="100%">
+<th class="cmdth">Usage</th>
+<tr>
+<td width="10"></td>
+<td><table class="listbody"><tr><td>entities    </td></tr></table></td>
+</tr>
+</table></tr>
+</table>
 <br><br><a name="exit"></a><table width="100%" class="cmd">
 <th class="cmdth">Exit</th>
 <tr class="cmdsummary"><td>Exit processing stylesheet as soon as possible.</td></tr>
@@ -502,6 +519,20 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </tr>
 </table></tr>
 </table>
+<br><br><a name="public"></a><table width="100%" class="cmd">
+<th class="cmdth">Public</th>
+<tr class="cmdsummary"><td>Print the value that a public ID maps via the xml catalog</td></tr>
+<tr class="cmdtr"><td class="cmdtd">
+<p>Shortcut name : pub</p>
+</td></tr>
+<tr class="cmdtr"><table class="usage" width="100%">
+<th class="cmdth">Usage</th>
+<tr>
+<td width="10"></td>
+<td><table class="listbody"><tr><td>    </td></tr></table></td>
+</tr>
+</table></tr>
+</table>
 <br><br><a name="pwd"></a><table width="100%" class="cmd">
 <th class="cmdth">Pwd</th>
 <tr class="cmdsummary"><td>Print the current working directory.</td></tr>
@@ -556,10 +587,15 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <th class="cmdth">Search</th>
 <tr class="cmdsummary"><td>Search a dataBase of all information gathered from stylesheets loaded</td></tr>
 <tr class="cmdtr"><td class="cmdtd">
-<p>When the search command is issued a file (search.data) will be created in the current directory. You can then process this file with your own stylesheet to present data in a other ways than displayed by default.
+<p>All output files are stored in the same directory as the provided stylesheet. searchresults.xml is either transformed by  search.xsl or searchhtml.xsl depending on whether the prefrehtml option is set.
+</p>
+<p>When the search command is issued a xml file (searchresults.xml) will be created. You can then process this file with your own stylesheet to present data in a other ways. If preferhtml is not used
+then searchresult.txt is printed to display. 
 </p>
 <p>Depending on the amount of data collected it might take a while to complete this command.
 </p>
+<p>Normally results are sent to searchresults.txt but if preferhtml option is set then 
+use searchresults.html.</p>
 </td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>
@@ -568,6 +604,44 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <td><table class="listbody">
 <tr><td>search &lt;XPATH&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(See what xpath can be used see search.dtd. The deafault &lt;XPATH&gt; is '//search/*' )</i>    </td></tr>
 <tr><td>search -sort &lt;XPATH&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Tell search.xsl to sort the result before outputing it)</i>    </td></tr>
+</table></td>
+</tr>
+</table></tr>
+</table>
+<br><br><a name="setoption"></a><table width="100%" class="cmd">
+<th class="cmdth">Setoption</th>
+<tr class="cmdsummary"><td>Set an option for execution of stylesheet</td></tr>
+<tr class="cmdtr"><td class="cmdtd">
+<p>You will need to use run command to active changes</p>
+</td></tr>
+<tr class="cmdtr"><table class="usage" width="100%">
+<th class="cmdth">Usage</th>
+<tr>
+<td width="10"></td>
+<td><table class="listbody">
+<tr><td>setoption &lt;OPTION_NAME&gt;  &lt;INTEGER_VALUE&gt;    </td></tr>
+<tr><td>  Where &lt;OPTION_NAME&gt; can be either    </td></tr>
+<tr><td>
+<table class="list"><tr>
+<td width="10"></td>
+<td><table class="listbody">
+<tr><td>debug&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true dump the tree of the result instead)</i>    </td></tr>
+<tr><td>catalogs&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true use the catalogs from $SGML_CATALOG_FILES 
+                                      or SGML$CatalogFiles for risc operating system</i>    </td></tr>
+<tr><td>html&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true the input document is an HTML file)</i>    </td></tr>
+<tr><td>docbook&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true the input document is SGML docbook)</i>    </td></tr>
+<tr><td>xinclude&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true do XInclude processing on document intput)</i>    </td></tr>
+<tr><td>preferhtml&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true the prefer html output for search results. : See search command)</i>    </td></tr>
+<tr><td>nonet&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true refuse to fetch DTDs or entities over network)</i>    </td></tr>
+<tr><td>novalid&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true skip the DTD loading phase)</i>    </td></tr>
+<tr><td>repeat&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true run the transformation 20 times)</i>    </td></tr>
+<tr><td>profile&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true  dump profiling informations)</i>    </td></tr>
+<tr><td>timing&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true display the time used)</i>    </td></tr>
+<tr><td>noout&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true do not dump the result)</i>    </td></tr>
+</table></td>
+</tr></table>    </td></tr>
+<tr><td> And where value is true if it is NOT equal to zero    </td></tr>
+<tr><td> And where value is false if it IS equal to zero    </td></tr>
 </table></td>
 </tr>
 </table></tr>
@@ -681,6 +755,20 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <tr>
 <td width="10"></td>
 <td><table class="listbody"><tr><td>stylesheets    </td></tr></table></td>
+</tr>
+</table></tr>
+</table>
+<br><br><a name="system"></a><table width="100%" class="cmd">
+<th class="cmdth">system</th>
+<tr class="cmdsummary"><td>Print the value that a system file maps via the xml catalog</td></tr>
+<tr class="cmdtr"><td class="cmdtd">
+<p>Shortcut name : sys</p>
+</td></tr>
+<tr class="cmdtr"><table class="usage" width="100%">
+<th class="cmdth">Usage</th>
+<tr>
+<td width="10"></td>
+<td><table class="listbody"><tr><td>system    </td></tr></table></td>
 </tr>
 </table></tr>
 </table>

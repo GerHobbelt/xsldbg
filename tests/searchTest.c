@@ -125,36 +125,6 @@ int nodeSearchTest(void)
   return result;
 }
 
-
-int changeDir(const xmlChar * path);
-
-/**
- * changeDir:
- * @path : path to adopt as new working directory
- *
- * Change working directory to path 
- */
-int
-changeDir(const xmlChar * path)
-{
-  return 0;
-}
-
-
-/*
- * A break point has been found so pass control to user
- * @templ : The source node being executed
- * @node : The data node being processed
- * @root : The template being applied to "node"
- * @ctxt :
- * 
- * Start the xsldbg command prompt
- */
-void
-debugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
-              xsltTransformContextPtr ctxt){
-}
-
 void testNodeScan(void *payload, void *data,
                        xmlChar * name ATTRIBUTE_UNUSED){
   searchInfoPtr info = (searchInfoPtr)data;

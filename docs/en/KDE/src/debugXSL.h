@@ -34,6 +34,8 @@
 
 
 
+
+
 /* We want skip most of these includes when building documentation*/
 
 
@@ -123,12 +125,15 @@ extern int printCount;
 /**
  * Print stylesheets that can be found in loaded stylsheet
  *
+ * @returns 1 on success,
+ *          0 otherwise
+ *
  * @param arg The stylesheets of interests, is NULL for all stylsheets
  *
  */
 
 
-    void xslDbgPrintStyleSheets(xmlChar * arg);
+    int xslDbgPrintStyleSheets(xmlChar * arg);
 
 
 
@@ -209,6 +214,20 @@ extern int printCount;
 
 
 
+  /**
+   * Enable/disable break point specified by arg using enable
+   *
+   * @param arg: is valid enable "commmand text"
+   * @param enableType : enable break point if 1, disable if 0, toggle if -1
+   *
+   * @returns 1 if successful,
+   *          0 otherwise
+   */
+
+
+  int xslDbgShellEnable(xmlChar * arg, int enableType);
+
+
 
 
 /**
@@ -246,10 +265,12 @@ extern int printCount;
  *                 @p styleCtxt
  *             otherwise look in the stylesheet found by 
  *                 debugBreak function
+ * @returns 1 on success,
+ *          0 otherwise
  */
 
 
-    void xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
+    int xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
                                   xmlShellCtxtPtr ctxt,
                                   xmlChar * arg, int verbose,
                                   int allFiles);
@@ -266,13 +287,13 @@ extern int printCount;
  * @param templ Is valid
  * @param verbose Either 1 or 0
  * @param templateCount Is valid
- * @param printCount Is valid
+ * @param count Is valid
  * @param templateName The template name to print, may be NULL
  */
 
 
     void xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
-                                   int *templateCount, int *printCount,
+                                   int *templateCount, int *count,
                                    xmlChar * templateName);
 
 
@@ -300,6 +321,9 @@ extern int printCount;
 /**
  * Print list of nodes in either ls or dir format
  *
+ * @returns 1 on success,
+ *          0 otherwise
+ *
  * @param ctxt The current shell context
  * @param arg What xpath to display
  * @param dir If 1 print in dir mode, 
@@ -307,7 +331,7 @@ extern int printCount;
  */
 
 
-    void xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg,
+    int xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg,
                               int dir);
 
 
@@ -318,13 +342,16 @@ extern int printCount;
  * Print the result of an xpath expression. This can include variables
  *        if styleCtxt is not NULL
  *
+ * @returns 1 on success,
+ *          0 otherwise
+ *
  * @param styleCtxt Current stylesheet context
  * @param ctxt Current shell context
  * @param arg The xpath to print
  */
 
 
-    void xslDbgShellCat(xsltTransformContextPtr styleCtxt,
+    int xslDbgShellCat(xsltTransformContextPtr styleCtxt,
                         xmlShellCtxtPtr ctxt, xmlChar * arg);
 
 
@@ -334,13 +361,17 @@ extern int printCount;
 /**
  *  Print the value variable specified by args.
  *
+ * @returns 1 on success,
+ *          0 otherwise
+
+ *
  * @param styleCtxt The current stylesheet context 
  * @param arg The name of variable to look for '$' prefix is optional
  * @param type Is valid VariableTypeEnum
  */
 
 
-    void xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt,
+    int xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt,
                                   xmlChar * arg, VariableTypeEnum type);
 
 
@@ -499,6 +530,19 @@ extern int printCount;
     int xslDbgShellSearch(xsltTransformContextPtr styleCtxt,
                           xsltStylesheetPtr style, xmlChar * arg);
 
+
+/**
+ * xslDbgShellSetVariable:
+ * @styleCtxt : Is valid
+ * @arg : Is valid must be in the format of 
+ *         <NAME> = <VALUE>
+ * 
+ * Change the value of a global or local variable
+ *
+ * Returns 1 on success,
+ *         0 otherwise
+ */
+  int xslDbgShellSetVariable( xsltTransformContextPtr styleCtxt, xmlChar *arg);
 
 
 

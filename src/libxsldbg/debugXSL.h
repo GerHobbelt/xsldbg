@@ -57,7 +57,7 @@ extern "C" {
 #define DEBUG_BUFFER_SIZE 500   /*used by xslDbgShell */
 
 /* how may items have been printed */
-extern int printCount;
+    extern int printCount;
 
 /****************************************************************
  *								*
@@ -78,6 +78,7 @@ extern int printCount;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * trimString:
  * @text : A valid string with leading or trailing spaces
@@ -89,6 +90,7 @@ extern int printCount;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Remove leading and trailing spaces off @p text
  *         stores result back into @p text
@@ -105,6 +107,7 @@ extern int printCount;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * splitString:
  * @textIn: The string to split
@@ -118,6 +121,7 @@ extern int printCount;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Spit string by white space and put into @p out
  * 
@@ -135,6 +139,7 @@ extern int printCount;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  *  xslDbgShell:
  * @source: The current stylesheet instruction being executed
@@ -148,6 +153,7 @@ extern int printCount;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Present the xsldbg shell to user and process entered commands
  *
@@ -168,6 +174,7 @@ extern int printCount;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * xslDbgPrintStyleSheets:
  * @arg: The stylesheets of interests, is NULL for all stylsheets
@@ -203,6 +210,7 @@ extern int printCount;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * xslDbgShellFrameBreak:
  * @arg: Is valid 
@@ -215,6 +223,7 @@ extern int printCount;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Set a "frame" break point either up or down from here
  *
@@ -231,6 +240,7 @@ extern int printCount;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * xslDbgShellBreak:
  * @arg: Is valid
@@ -244,6 +254,7 @@ extern int printCount;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Add break point specified by arg
  *
@@ -262,6 +273,7 @@ extern int printCount;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * xslDbgShellDelete:
  * @arg: Is valid
@@ -273,6 +285,7 @@ extern int printCount;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Delete break point specified by arg
  *
@@ -287,6 +300,7 @@ extern int printCount;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * xslDbgEnableBreakPoint:
  * @payload: A valid xslBreakPointPtr
@@ -301,6 +315,7 @@ extern int printCount;
 */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Enable/disable break points via use of scan of break points
  *
@@ -317,6 +332,7 @@ extern int printCount;
     void xslDbgEnableBreakPoint(void *payload, void *data, xmlChar * name);
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * xslDbgShellEnable:
  * @arg : is valid
@@ -329,6 +345,7 @@ extern int printCount;
  */
 #else
 #ifdef USE_KDE_DOCS
+
   /**
    * Enable/disable break point specified by arg using enable
    *
@@ -338,12 +355,13 @@ extern int printCount;
    * @returns 1 if successful,
    *          0 otherwise
    */
-#endif 
 #endif
-  int xslDbgShellEnable(xmlChar * arg, int enableType);
+#endif
+    int xslDbgShellEnable(xmlChar * arg, int enableType);
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * xslDbgPrintBreakPoint:
  * @payload: A valid xslBreakPointPtr
@@ -354,6 +372,7 @@ extern int printCount;
 */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Print data given by scan of break points 
  *
@@ -376,6 +395,7 @@ extern int printCount;
 
 
 #ifdef USE_GNOME_DOCS
+
 /** 
  * xslDbgPrintTemplateNames:
  * @styleCtxt: Is valid 
@@ -395,6 +415,7 @@ extern int printCount;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /** 
  * Print out the list of template names found that match critieria   
  *
@@ -413,12 +434,12 @@ extern int printCount;
 #endif
 #endif
     int xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
-                                  xmlShellCtxtPtr ctxt,
-                                  xmlChar * arg, int verbose,
-                                  int allFiles);
+                                 xmlShellCtxtPtr ctxt,
+                                 xmlChar * arg, int verbose, int allFiles);
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * xslDbgPrintTemplateHelper:
  * @templ: Is valid
@@ -434,6 +455,7 @@ extern int printCount;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * This displays the templates in the same order as they are in the 
  *   stylesheet. If verbose is 1 then print more information
@@ -454,6 +476,7 @@ extern int printCount;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * getTemplate:
  * 
@@ -463,6 +486,7 @@ extern int printCount;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /** 
  * Get the last template node found, if any
  *
@@ -481,6 +505,7 @@ extern int printCount;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * xslDbgShellPrintList: 
  * @ctxt: The current shell context
@@ -495,6 +520,7 @@ extern int printCount;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Print list of nodes in either ls or dir format
  *
@@ -508,12 +534,12 @@ extern int printCount;
  */
 #endif
 #endif
-    int xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg,
-                              int dir);
+    int xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir);
 
 
 
 #ifdef USE_GNOME_DOCS
+
 /** 
  * xslDbgShellCat:
  * @styleCtxt: the current stylesheet context
@@ -528,6 +554,7 @@ extern int printCount;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /** 
  * Print the result of an xpath expression. This can include variables
  *        if styleCtxt is not NULL
@@ -542,11 +569,12 @@ extern int printCount;
 #endif
 #endif
     int xslDbgShellCat(xsltTransformContextPtr styleCtxt,
-                        xmlShellCtxtPtr ctxt, xmlChar * arg);
+                       xmlShellCtxtPtr ctxt, xmlChar * arg);
 
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * xslDbgShellPrintVariable:
  * @styleCtxt: The current stylesheet context 
@@ -560,6 +588,7 @@ extern int printCount;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  *  Print the value variable specified by args.
  *
@@ -574,7 +603,7 @@ extern int printCount;
 #endif
 #endif
     int xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt,
-                                  xmlChar * arg, VariableTypeEnum type);
+                                 xmlChar * arg, VariableTypeEnum type);
 
 
 
@@ -587,6 +616,7 @@ extern int printCount;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * xslDbgShellChangeWd:
  * @path: The path to change to
@@ -598,6 +628,7 @@ extern int printCount;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * @returns 1 if able to change xsldbg working direcorty to @p path
  *          0 otherwise
@@ -611,6 +642,7 @@ extern int printCount;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * xslDbgShellExecute:
  * @name: The name of command string to be executed by operating system shell
@@ -624,6 +656,7 @@ extern int printCount;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * @returns 1 if able to execute command @p name,
  *          0 otherwise
@@ -648,6 +681,7 @@ extern int printCount;
 
 
 #ifdef USE_GNOME_DOCS
+
 /** 
  * xslDbgShellAddParam:
  * @arg: A string comprised of two words separated by
@@ -660,6 +694,7 @@ extern int printCount;
 */
 #else
 #ifdef USE_KDE_DOCS
+
 /* 
  * Add a parameter to be sent to libxslt later on
  *
@@ -676,6 +711,7 @@ extern int printCount;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * xslDbgShellDelParam:
  * @arg: A single white space trimmed parameter number to look for
@@ -687,6 +723,7 @@ extern int printCount;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  *
  * @returns 1 if able to delete parameter @p name,
@@ -701,6 +738,7 @@ extern int printCount;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * xslDbgShellShowParam:
  * @arg: Not used
@@ -712,6 +750,7 @@ extern int printCount;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Print list of current paramters
  *
@@ -733,6 +772,7 @@ extern int printCount;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * xslDbgShellTrace:
  * @arg: Not used
@@ -744,6 +784,7 @@ extern int printCount;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Start the tracing of the stylesheet. First need to restart it.
  *
@@ -758,6 +799,7 @@ extern int printCount;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * xslDbgShellWalk:
  * @arg: An interger between 0 and 9 indicate the speed of walk
@@ -769,6 +811,7 @@ extern int printCount;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Start walking through the stylesheet.
  *
@@ -791,6 +834,7 @@ extern int printCount;
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * xslDbgShellSearch:
  * @styleCtxt: Is valid
@@ -804,6 +848,7 @@ extern int printCount;
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * @returns 1 if able to run query with @p arg, 
  *          0 otherwise
@@ -829,7 +874,8 @@ extern int printCount;
  * Returns 1 on success,
  *         0 otherwise
  */
-  int xslDbgShellSetVariable( xsltTransformContextPtr styleCtxt, xmlChar *arg);
+    int xslDbgShellSetVariable(xsltTransformContextPtr styleCtxt,
+                               xmlChar * arg);
 
 #ifdef __cplusplus
 }

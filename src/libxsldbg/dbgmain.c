@@ -158,7 +158,7 @@ handleDebugger(xmlNodePtr cur, xmlNodePtr node,
             case DEBUG_CONT:
                 {
                     xslBreakPointPtr breakPoint = NULL;
-		    xmlChar *baseUri = NULL;
+                    xmlChar *baseUri = NULL;
 
                     if (cur) {
                         breakPoint =
@@ -174,16 +174,15 @@ handleDebugger(xmlNodePtr cur, xmlNodePtr node,
                         }
                     }
                     if (node) {
-		      baseUri = filesGetBaseUri(node);
-		      if (baseUri != NULL){
-                        breakPoint =
-                            getBreakPoint(baseUri,
-                                          xmlGetLineNo(node));
-		      }else{
-                        breakPoint =
-                            getBreakPoint(node->doc->URL,
-                                          xmlGetLineNo(node));
-		      }
+                        baseUri = filesGetBaseUri(node);
+                        if (baseUri != NULL) {
+                            breakPoint =
+                                getBreakPoint(baseUri, xmlGetLineNo(node));
+                        } else {
+                            breakPoint =
+                                getBreakPoint(node->doc->URL,
+                                              xmlGetLineNo(node));
+                        }
                         if (breakPoint) {
                             if (breakPoint->enabled) {
                                 setActiveBreakPoint(breakPoint);
@@ -191,8 +190,8 @@ handleDebugger(xmlNodePtr cur, xmlNodePtr node,
                             }
                         }
 
-			if (baseUri)
-			  xmlFree(baseUri);
+                        if (baseUri)
+                            xmlFree(baseUri);
                     }
                 }
                 break;

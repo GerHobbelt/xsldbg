@@ -46,7 +46,7 @@ extern "C" {
 
 
     typedef void (*freeItemFunc) (void *item);
- /* A dynamic structure behave like a list*/
+    /* A dynamic structure behave like a list */
     typedef struct _ArrayList ArrayList;
     typedef ArrayList *ArrayListPtr;
     struct _ArrayList {
@@ -88,7 +88,7 @@ extern "C" {
 #endif
 #endif
     ArrayListPtr arrayListNew(int initialSize,
-                                 freeItemFunc deleteFunction);
+                              freeItemFunc deleteFunction);
 
 #ifdef USE_GNOME_DOCS
 

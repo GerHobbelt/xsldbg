@@ -16,6 +16,7 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "config.h"
 #include <libxslt/xsltutils.h>
 
 #ifdef HAVE_READLINE

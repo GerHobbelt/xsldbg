@@ -1,3 +1,4 @@
+
 /***************************************************************************
                           xsldbgnotifier.h  -  description
                              -------------------
@@ -21,7 +22,7 @@
 #include <libxsldbg/xsldbgmsg.h>
 
 #ifndef __cplusplus
-	#error "Must only be used with a c++ compiler"
+#error "Must only be used with a c++ compiler"
 #endif
 
 
@@ -30,19 +31,18 @@
   *@author keith
   */
 
-class XsldbgNotifier
-{
-public:
-	XsldbgNotifier(void);
-	virtual ~XsldbgNotifier(void);
-	
-	virtual void doNotify(XsldbgMessageEnum type, const void *data);
+class XsldbgNotifier {
+  public:
+    XsldbgNotifier(void);
+      virtual ~ XsldbgNotifier(void);
+
+    virtual void doNotify(XsldbgMessageEnum type, const void *data);
 };
 
 
 
 /* get the notifer  */
-void setNotifier(XsldbgNotifier *notifier);
+void setNotifier(XsldbgNotifier * notifier);
 
 
 #endif

@@ -1,3 +1,77 @@
+Keith Isdale 23 Jan 2002 <k_isdale@tpg.com.au>
+   Version 1.0.0
+   Changed default "data" file name for  searchQuery to searchresults.xml
+	Set the "base path" for temporary and output files to current stylesheet path
+	Set default "output" file name for searchQuery to searchresults.html
+	Changed API for searchQuery to accept output file name
+	Justin to check the risc_os related code
+	
+   Disabled excessive messages that occur when running as thread
+   Forward output when tracing to terminalIO or message window	
+   Fixed usaged of readline in simpleio.c
+	
+Keith Isdale 23 Jan 2002 <k_isdale@tpg.com.au>
+   Changed meaning of data for XSLDBG_MSG_FILEOUT message to mean 
+	a file name
+        Removed filesCreateTempFile function, added filesTempFileName function
+	
+Keith Isdale 22 Jan 2002 <k_isdale@tpg.com.au>
+   Version 0.9.9
+   Fix bugs thread notifiation
+   Changed xsldbg.c so profile and debug output can go to the 
+	target document
+	
+Keith Isdale 21 Jan 2002 <k_isdale@tpg.com.au>
+  Fixed bugs in using --catalogs and --xinclude options
+  Added a means to notify app of a list of message increasing
+	its speed because of low transaction rate to application
+	Converted as many of the notification transactions to use
+	this list notification method.
+	Effective tranaction rate to application is now acceptable 
+  Fixed usage of filesGetBaseUri in debugXSL.c and bugs in
+	filesGetBaseUri
+	
+		
+Keith Isdale 20 Jan 2002 <k_isdale@tpg.com.au>
+  Fixed the use of an array for integer options
+  Added setoption command and updated main logic in debugXSL.c to suit, 
+	as well as  updated cmds.h and xmldoc.xml, added a 
+	copyVolitileOptions function to options.c to support this in
+	a safe way
+  Fixed bug in displaying the correct time take when profiling
+
+	
+	
+Keith Isdale 19 Jan 2002 <k_isdale@tpg.com.au>
+  Added entities command to print out list of external entites 
+	included in document
+ Added system and public command to show what system file and public ID
+	maps to via the current xml catalog
+	
+Keith Isdale 18 Jan 2002 <k_isdale@tpg.com.au>
+  Fix bugs in validData and validSource to validiate if
+	stylesheet, document has been loaded
+	
+Keith Isdale 17 Jan 2002 <k_isdale@tpg.com.au>
+  Added support for notifying of result of local/global variables,
+ 	  stylesheets and templates 
+  Redirected error output from libxml to as a text message notification
+	to application	when running as xsldbg a thread
+	
+Keith Isdale 13 Jan 2002 <k_isdale@tpg.com.au>
+  Started work on redirecting stdout to the application when running as 
+	thread
+	
+	
+Keith Isdale 12 Jan 2002 <k_isdale@tpg.com.au>
+  Second attempt at fixing included xml file bug
+  Stripped out garbage relating to other method tried
+  Added functions filesSetBaseUri,  filesGetBaseUri and modified 
+	debugXSL.c, filles.[ch] to suit
+  Added a namespace for xsldbg in files.h (XSLDBG_XML_NAMESPACE)	
+  Fixed bugs in gnome/gnome-xml/tree.c 	
+	
+	
 Keith Isdale 6 Jan 2002 <k_isdale@tpg.com.au>
    VERSION 0.9.8
    Made a patch for libxml to fix problems with debugging xml included files

@@ -20,6 +20,7 @@
 #define XSLDBG_HELP_H
 
 #ifdef USE_KDE_DOCS
+
 /**
  * Provide a help system for user 
  *
@@ -35,6 +36,7 @@ extern "C" {
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * helpTop:
  * @args : Is valid command or empty string
@@ -46,6 +48,7 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
+
 /**
  * Display help about the command in @p arg
  *

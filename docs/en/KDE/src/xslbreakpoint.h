@@ -1,4 +1,4 @@
-  
+
 /**************************************************************************
                           xslbreakpoint.h  -  public functions for the
                                                breakpoint API
@@ -22,6 +22,7 @@
 
 
 
+
 /**
  * Provide a basic break point support
  *
@@ -34,11 +35,207 @@
 
 
 
-  /* Define the types of status whilst debugging*/
-  
-  /* keep kdoc happy */
-     enum DebugStatusEnum{
-        DEBUG_NONE = 0,             /* must start at zero!! */
+
+
+/**************************************************************************
+                          arraylist.h  -  declare the functions for 
+                                        implementation of the array list
+                             -------------------
+    begin                : Sat Nov 10 2001
+    copyright            : (C) 2001 by Keith Isdale
+    email                : k_isdale@tpg.com.au
+ **************************************************************************/
+
+/**************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ **************************************************************************/
+
+
+
+
+
+
+/**
+ * Provide a fast easy to use array list. Support the basic functions of add
+ *  delete, empty, count, free
+ *
+ * @short Array list support
+ *
+ * @author Keith Isdale <k_isdale@tpg.com.au> 
+ */
+
+
+
+
+
+
+
+
+
+
+
+    typedef void (*freeItemFunc) (void *item);
+ /* A dynamic structure behave like a list*/
+    typedef struct _ArrayList ArrayList;
+    typedef ArrayList *ArrayListPtr;
+    struct _ArrayList {
+        int size, count;
+        void **data;
+        freeItemFunc deleteFunction;
+    };
+
+/* what size of the list do we stop automatic doubling of capacity
+    if array list size growth is needed */
+
+
+
+
+
+
+
+/**
+ * Create a new list with a size of @p initialSize
+ *
+ * @returns Non-null on success,
+ *          NULL otherwise
+ *
+ * @param initial The initial size of list
+ * @param deleteFunction the Function to call to free items in the list
+ */
+
+
+    ArrayListPtr arrayListNew(int initialSize,
+                                 freeItemFunc deleteFunction);
+
+
+
+
+/**
+ * Free memory assocated with array list, if the array list 
+ *   has a valid deleteFunction then content with be freed with 
+ *    using that deleteFunction
+ *
+ * @param list A valid list
+ */
+
+
+    void arrayListFree(ArrayListPtr list);
+
+
+
+
+
+
+/**
+ * Empties the list of its content
+ *
+ * @returns 1 on success,
+ *          0 otherwise
+ *
+ * @param list A valid list
+ */
+
+
+    int arrayListEmpty(ArrayListPtr list);
+
+
+
+
+
+/**
+ * Return the maximum number elements this list can contain
+ *
+ * @returns The maximum number elements this list can contain
+ *
+ * @param list A valid list
+ */
+
+
+    int arrayListSize(ArrayListPtr list);
+
+
+
+
+
+/**
+ * Return the count of number items in list
+ * @returns The count of number items in list
+ *
+ * @param list A valid list
+ */
+
+
+
+    int arrayListCount(ArrayListPtr list);
+
+
+
+
+
+/**
+ * Add @p item to @p list
+ *
+ * @returns 1 if able to add @p item to end of @p list,
+ *          0 otherwise
+ *
+ * @param list A valid list
+ * @param item A valid item
+ */
+
+
+    int arrayListAdd(ArrayListPtr list, void *item);
+
+
+
+
+
+/**
+ * @returns 1 if able to delete element in @p list at position @p position,
+ *          0 otherwise 
+ *
+ * @param list A valid list
+ * @param position  0 =< @p position < arrayListCount(@p list)
+ */
+
+
+    int arrayListDelete(ArrayListPtr list, int position);
+
+
+
+
+
+/**
+ * @returns Non-null if able to retrieve element in @p list at position
+ *          @p position,
+ *         NULL otherwise
+ *
+ * @param list A valid list
+ * @param position  0 =< @p position < arrayListCount(@p list)
+ */
+
+
+    void *arrayListGet(ArrayListPtr list, int position);
+
+
+
+
+
+
+
+
+    /* indicate that we are to toggle a breakpoint , used for enableBreakPoint */
+
+
+    /* Define the types of status whilst debugging */
+
+    /* keep kdoc happy */
+    enum DebugStatusEnum {
+        DEBUG_NONE = 0,         /* must start at zero!! */
         DEBUG_INIT,
         DEBUG_STEP,
         DEBUG_STEPUP,
@@ -52,15 +249,25 @@
         DEBUG_TRACE,
         DEBUG_WALK
     };
-  
 
-    enum BreakPointTypeEnum{
+
+    enum BreakPointTypeEnum {
         DEBUG_BREAK_SOURCE = 300,
         DEBUG_BREAK_DATA
     };
-  
 
-    /* The main structure for holding breakpoints*/
+
+/*Indicate what type of variable to print out. 
+  Is used by print_variable and searching functions */
+    enum VariableTypeEnum {
+        DEBUG_GLOBAL_VAR = 200, /* pick a unique starting point */
+        DEBUG_LOCAL_VAR,
+        DEBUG_ANY_VAR
+    } VariableTypeEnum;
+
+
+
+    /* The main structure for holding breakpoints */
     typedef struct _xslBreakPoint xslBreakPoint;
     typedef xslBreakPoint *xslBreakPointPtr;
     struct _xslBreakPoint {
@@ -71,6 +278,7 @@
         BreakPointTypeEnum type;
         int id;
     };
+
 
 
 
@@ -86,7 +294,8 @@
 
 
     void debugBreak(xmlNodePtr templ, xmlNodePtr node,
-                       xsltTemplatePtr root, xsltTransformContextPtr ctxt);
+                    xsltTemplatePtr root, xsltTransformContextPtr ctxt);
+
 
 
 
@@ -106,12 +315,14 @@
 
 
 
+
 /**
  * Free up any memory taken by debugger
  */
 
 
     void debugFree(void);
+
 
 
 
@@ -134,6 +345,7 @@
 
 
 
+
 /**
  * Get the active break point
  *
@@ -147,6 +359,7 @@
 
 
 
+
 /**
  * Set the active break point
  *
@@ -155,6 +368,7 @@
 
 
     void setActiveBreakPoint(xslBreakPointPtr breakPoint);
+
 
 
 
@@ -176,8 +390,9 @@
 
 
     int addBreakPoint(const xmlChar * url, long lineNumber,
-                         const xmlChar * templateName,
-                         BreakPointTypeEnum type);
+                      const xmlChar * templateName,
+                      BreakPointTypeEnum type);
+
 
 
 
@@ -200,6 +415,7 @@
 
 
 
+
 /**
  * Empty the break point collection
  *
@@ -209,6 +425,7 @@
 
 
     int emptyBreakPoint(void);
+
 
 
 
@@ -229,6 +446,96 @@
 
 
 
+/**
+ * lineNoItemNew:
+ * 
+ * Returns a new hash table for break points
+ */
+    xmlHashTablePtr lineNoItemNew(void);
+
+
+/**
+ * lineNoItemFree:
+ * @item: valid hashtable of break points
+ * 
+ * Free @item and all its contents
+ */
+    void lineNoItemFree(void *item);
+
+
+/**
+ * lineNoItemDelete:
+ * @breakPointHash: is valid
+ * @breakPoint: is valid
+ * 
+ * Returns 1 if able to delete @breakPoint from @breakPointHash,
+ *         0 otherwise
+ */
+    int lineNoItemDelete(xmlHashTablePtr breakPointHash,
+                         xslBreakPointPtr breakPoint);
+
+
+/**
+ * lineNoItemAdd:
+ * @breakPointHash: is valid
+ * @breakPoint: is valid
+ *
+ * Returns 1 if able to add @breakPoint to @breakPointHash,
+ *         0 otherwise
+ */
+    int lineNoItemAdd(xmlHashTablePtr breakPointHash,
+                      xslBreakPointPtr breakPoint);
+
+
+/**
+ * lineNoItemGet:
+ * @lineNo: blagh
+ *
+ * Returns fred
+ */
+    xmlHashTablePtr lineNoItemGet(long lineNo);
+
+
+/**
+ * breakPointInit:
+ *
+ * Returns 1 if break points have been initialized properly and all
+ *               memory required has been obtained,
+ *         0 otherwise
+*/
+    int breakPointInit(void);
+
+
+/**
+ * breakPointFree:
+ *
+ * Free all memory used by break points 
+ */
+    void breakPointFree(void);
+
+
+/** 
+ * breakPointItemNew:
+ * 
+ * Create a new break point item
+ * Returns valid break point with default values set if successful, 
+ *         NULL otherwise
+ */
+    xslBreakPointPtr breakPointItemNew(void);
+
+
+/**
+ * breakPointItemFree:
+ * @payload: valid xslBreakPointPtr 
+ * @name: not used
+ *
+ * Free memory associated with this break point
+ */
+    void breakPointItemFree(void *payload, xmlChar * name);
+
+
+
+
 
 
 /** 
@@ -239,6 +546,7 @@
 
 
     int breakPointLinesCount(void);
+
 
 
 
@@ -260,6 +568,7 @@
 
 
 
+
 /**
  * Print the details of @p breakPoint to @p file
  *
@@ -272,6 +581,7 @@
 
 
     int printBreakPoint(FILE * file, xslBreakPointPtr breakPoint);
+
 
 
 
@@ -293,6 +603,7 @@
 
 
 
+
 /**
  * Determine if a node is a break point
  *
@@ -306,6 +617,8 @@
     int isBreakPointNode(xmlNodePtr node);
 
 
+ArrayListPtr xslBreakPointLineList(void);
 
 
- 
+
+
