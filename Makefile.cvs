@@ -1,6 +1,7 @@
 default: all
 
 all:
+	libtoolize --automake
 	aclocal
 	autoheader
 	automake --add-missing
