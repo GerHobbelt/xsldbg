@@ -147,7 +147,7 @@ validateSource(xmlChar ** url, long *lineNo)
         return result;
     }
 
-    if (!url || !lineNo) {
+    if (!url) {
         xsltGenericError(xsltGenericErrorContext,
                          "Error: NULL argument provided\n");
         return result;
@@ -240,7 +240,7 @@ validateData(xmlChar ** url, long *lineNo)
         return result;
     }
 
-    if (!url || !lineNo) {
+    if (!url) {
         xsltGenericError(xsltGenericErrorContext,
                          "Error: NULL argument provided\n");
         return result;
@@ -285,9 +285,15 @@ validateData(xmlChar ** url, long *lineNo)
         }
 
         if (!searchInf->found) {
-            xsltGenericError(xsltGenericErrorContext,
+	  if (lineNo){
+             xsltGenericError(xsltGenericErrorContext,
                              "Warning: Breakpoint at file %s : line %ld doesn't "
                              "seem to be valid.\n", *url, *lineNo);
+	  } else{
+            xsltGenericError(xsltGenericErrorContext,
+                             "Error: Unable to find a data file whose name contains %s\n",
+                             *url);	       
+	  }
             result = 1;
         } else {
             if (*url)
@@ -398,7 +404,11 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                              "Error: Unable to find template '%s'\n", arg);
     } else {
         /* add breakpoint at all template names */
-        const xmlChar *name;
+        const xmlChar *name = NULL;
+	xmlChar *tempUrl = NULL; /* we must use a non-const xmlChar *
+				   and we are not making a copy
+				   of orginal value so this must not be 
+				   freed */ 
         xmlChar *defaultUrl = (xmlChar *) "<n/a>";
         int newBreakPoints = 0;
         xsltTemplatePtr templ;
@@ -408,9 +418,9 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
             while (templ) {
                 if (templ->elem && templ->elem->doc
                     && templ->elem->doc->URL) {
-                    url = (xmlChar *) templ->elem->doc->URL;
+                    tempUrl = (xmlChar *) templ->elem->doc->URL;
                 } else {
-                    url = defaultUrl;
+                    tempUrl = defaultUrl;
                 }
                 if (templ->match)
                     name = templ->match;
@@ -418,11 +428,11 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                     name = templ->name;
 
                 if (name) {
-                    if (!breakPointAdd(url, xmlGetLineNo(templ->elem),
+                    if (!breakPointAdd(tempUrl, xmlGetLineNo(templ->elem),
                                        name, DEBUG_BREAK_SOURCE)) {
                         xsltGenericError(xsltGenericErrorContext,
                                          "Error: Can't add breakPoint to file %s : line %d\n",
-                                         url, xmlGetLineNo(templ->elem));
+                                         tempUrl, xmlGetLineNo(templ->elem));
                         xsltGenericError(xsltGenericErrorContext,
                                          "Error: Breakpoint to template '%s' in file %s :"
                                          " line %d exists \n", name,
@@ -438,6 +448,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
             else
                 style = style->imports;
         }
+
         if (newBreakPoints == 0) {
             xsltGenericError(xsltGenericErrorContext,
                              "Error: No templates found or unable to add any breakPoints\n ");
@@ -451,6 +462,8 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
 
         if (defaultUrl)
             xmlFree(defaultUrl);
+	if (tempUrl)
+	  url = xmlStrdup(tempUrl);
     }
 
     if (!result) {
@@ -519,8 +532,8 @@ xslDbgShellDelete(xmlChar * arg)
                             breakPtr = breakPointGet(url, lineNo);
                         if (!breakPtr || !breakPointDelete(breakPtr))
                             xsltGenericError(xsltGenericErrorContext,
-                                             "Error: Breakpoint to '%s' doesn't exist. %s\n",
-                                             errorPrompt, arg);
+                                             "Error: Breakpoint doesn't exist at file %s : line %ld. %s\n",
+                                             url, lineNo, errorPrompt);
                         else
                             result = 1;
                         xmlFree(url);
@@ -644,7 +657,8 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
                                 breakPointEnable(breakPtr, enableType);
                         else
                             xsltGenericError(xsltGenericErrorContext,
-                                             "Error: %s", errorPrompt);
+                                             "Error: Breakpoint does not exist at %s:%ld . %s", 
+					     url, lineNo, errorPrompt);
                         xmlFree(url);
                     }
                 }

@@ -1,5 +1,5 @@
 
-         xsldbg version 2.1.3
+         xsldbg version 2.1.6
          ====================
 
     xsldbg help
@@ -437,7 +437,7 @@ Usage:
      docspath   (Path to use when looking for documentation)
      catalognames   (The names of the catalogs to use when the catalogs option is set. Value will be lost if set before setting catalogs option)
      encoding   (What encoding to use for standard output)
-     searchresultspath   Where do we store the results of searching. If this is not set then xsldbg will use the path of the stylesheet
+     searchresultspath   What path is to be used when storing the results of searching. If this is not set then xsldbg will use the path of the stylesheet
 
 - - - - - - - - - - - - - - - - - - - -
 

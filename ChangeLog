@@ -1,4 +1,13 @@
-Keith Isdale 1st/2nd/3rd March Feb 2002 <k_isdale@tpg.com.au>
+Keith Isdale 30th March 2002 <k_isdale@tpg.com.au>
+  Version 2.1.6 	
+  Fixed bug: Enable command may crash if file name provided 
+	is not found. ( breakpoint_cmds.c )
+  Fixed bug: Warning message unclear when unable to find breakpoint
+	when executing enable command ( breakpoint_cmds.c ) 
+  Fixed bug: "break *" command incorrectly freeing of memory ( breakpoint_cmds.c )	
+ 		
+	
+Keith Isdale 1st/2nd/3rd Feb 2002 <k_isdale@tpg.com.au>
    Version 2.1.5
    Changes needed to get xsldbg work under Cygwin
 	Seems to require development versions of autoconf and automake
