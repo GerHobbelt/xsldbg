@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<!DOCTYPE catalog PUBLIC "-//OASIS//DTD Entity Resolution XML Catalog V1.0//EN" "http://www.oasis-open.org/committees/entity/release/1.0/catalog.dtd">
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
+<public publicId="-//xsldbg//DTD search XML V1.0//EN" uri="search.dtd"/>
+<public publicId="-//xsldbg//DTD xsldoc XML V1.0//EN" uri="xsldoc.dtd"/>
+</catalog>
