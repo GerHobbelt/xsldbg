@@ -1,5 +1,3 @@
-EXTRA_DIST=  *.html *.xsl
-
 DATADIR = ..
 XSLDIR = KDE
 XSLDBG=$(top_builddir)/src/xsldbgtest
@@ -30,7 +28,7 @@ xsldoc2kde.xsl
 
 APIDOCS_DIR=apidocs
 
-EXTRA_DIST=$(KDEXSL_FILES) $(APISRC_HEADER_FILES)
+EXTRA_DIST=$(KDEXSL_FILES) $(APISRC_HEADER_FILES) *.html
 
 # must use -P or else kdoc will be confused!!
 CPPFLAGS=-E -C -P

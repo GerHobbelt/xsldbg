@@ -11,11 +11,16 @@
 
 <testcmd>
 
+<!-- Clear the decks before starting -->
+<cmd>
+<test>delparam</test>
+</cmd>
+
 <!-- Check robustness of command format 
      The following will print an error message telling user what
      format to use -->
 <cmd>
-<test>addparam </test>
+<test>addparam</test>
 <result>
 <row>
 <matchtext>Error: addparam command expected</matchtext>

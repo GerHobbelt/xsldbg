@@ -3,6 +3,7 @@
      File : test13.xsl     
      Author: Keith Isdale <k_isdale@tpg.com.au>
      Description: stylesheet for test "test13"
+     Test the ability to guess stylesheet and data file names
      Copyright Reserved Under GPL     
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"

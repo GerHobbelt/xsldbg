@@ -51,13 +51,14 @@ with-param		N/A	 2
 
 
 
-xsldbg command	     Test number
+xsldbg command	     Test number(s)
 -------------------- ----------
 addparam		4
-break			2
+break			2, 10
 delete			2
 delparam		4
 disable			2
 enable			2
 showbreak		2
 showparam		4
+set			10, 11

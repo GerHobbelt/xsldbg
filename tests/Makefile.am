@@ -15,7 +15,7 @@ endif
 
 XSLDBG=$(top_builddir)/src/xsldbgtest
 
-EXTRA_DIST= *.xsl *.xml *.data *.pl testcmd.dtd testcoverage.txt
+EXTRA_DIST= *.xsl *.xml *.data *.pl *.dtd testcoverage.txt
 
 TESTS = \
 	../results/test1.pl \
@@ -25,7 +25,12 @@ TESTS = \
 	../results/test5.pl \
 	../results/test6.pl \
 	../results/test7.pl \
-	../results/test8.pl 
+	../results/test8.pl \
+	../results/test9.pl \
+	../results/test10.pl \
+	../results/test11.pl \
+	../results/test12.pl \
+	../results/test13.pl 
 
 TEST_SCRIPT = \
 	../results/test1.script \
@@ -35,17 +40,13 @@ TEST_SCRIPT = \
 	../results/test5.script \
 	../results/test6.script \
 	../results/test7.script \
-	../results/test8.script
+	../results/test8.script	\
+	../results/test9.script \
+	../results/test10.script \
+	../results/test11.script \
+	../results/test12.script \
+	../results/test13.script
  
-TEST_RESULTS = \
-	../results/test1.results	\
-	../results/test2.results  	\
-	../results/test3.results	\
-	../results/test4.results	\
-	../results/test5.results	\
-	../results/test6.results	\
-	../results/test7.results	\
-	../results/test8.results
 
 # Define the array list tester
 noinst_PROGRAMS = listTest searchTest
@@ -61,7 +62,7 @@ $(top_builddir)/src/libxsldbg/libxsldbg.la:
 # use of configure defined libraries
 listTest_LDADD = ../src/simpleio.o $(top_builddir)/src/libxsldbg/libxsldbg.la $(XSLDBG_TEST_LIBS)
 
-listTest_LDFLAGS = -static $(all_libraries) \
+listTest_LDFLAGS = $(XSLDBG_STATIC_FLAGS) $(all_libraries) \
 -Wl,-rpath -Wl,$(LIBXML_PREFIX)/lib -Wl,-rpath -Wl,$(LIBXSLT_PREFIX)/lib 
 
 
@@ -79,7 +80,8 @@ searchTest_LDFLAGS = $(listTest_LDFLAGS)
 $(XSLDBG):
 	@(cd $(top_builddir)/src ; $(MAKE) xsldbgtest)
 
-runtests :  $(XSLDBG) coretests $(TESTS) $(TEST_RESULTS)
+runtests :  $(XSLDBG) coretests $(TESTS)
+	perl runtests.pl
 
 # do the tests of core functionality on xsldbg
 coretests: listTest searchTest
@@ -89,13 +91,7 @@ coretests: listTest searchTest
 ../results/%.script ../results/%.pl : %.data testgenerator.xsl
 	$(XSLDBG) --param baseFileName \'../results/$(*F)\' testgenerator.xsl $(*F).data 
 
-../results/%.results : $(TESTS) %.xsl %.xml xsldbgmatch.pl $(XSLDBG)
-	@echo "Running test $(*F)"
-	@echo "Running test $(*F)" > $@
-	$(XSLDBG) --shell  $(*F).xsl  $(*F).xml <  ../results/$(*F).script &> ../results/$(*F).log
-	perl ../results/$(*F).pl  &>  $@ < ../results/$(*F).log
-	@echo "Test $(*F) succeeded"
-	@echo "Test $(*F) succeeded">> $@
+# if the user has Perl then they will have sed
 
 if WITH_PERL
 

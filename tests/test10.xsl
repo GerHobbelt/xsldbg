@@ -16,11 +16,16 @@
           <xsl:with-param name="item" select="'1234'"/>
         </xsl:call-template>
     </output>
+    <xsl:apply-templates />
   </xsl:template>
 
   <xsl:template name="test_set_variable">
     <xsl:param name="item" select="'default-value'"/>
     <xsl:value-of select="$item"/>
+  </xsl:template>
+
+  <xsl:template match="result">
+        <xsl:apply-templates />
   </xsl:template>
 
 </xsl:stylesheet>

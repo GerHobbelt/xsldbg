@@ -1,4 +1,5 @@
-addparam 
+delparam
+addparam
 addparam help step step
 delparam a23
 delparam 10

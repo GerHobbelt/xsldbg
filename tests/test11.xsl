@@ -3,6 +3,7 @@
      File : test11.xsl     
      Author: Keith Isdale <k_isdale@tpg.com.au>
      Description: stylesheet for test "test11"
+     This test is so tricky it will be done by hand
      Copyright Reserved Under GPL     
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"

@@ -366,7 +366,10 @@ If your operating system supports it file names will be expanded.
 </list></li>
 <li><text> And where value is true if it is NOT equal to zero</text></li>
 <li><text> And where value is false if it IS equal to zero</text></li>
-
+<li>
+<text>stdout</text>
+<comment>Print all error messages to stdout. Normally error messages go to stderr.</comment>
+</li>
 <li>
 <text>setoption &lt;OPTION_NAME&gt; &quot;&lt;STRING_VALUE&gt;&quot;</text>  
 <comment>(Must not contain double quotation marks in &lt;STRING_VALUE&gt;)</comment>
@@ -404,7 +407,7 @@ If your operating system supports it file names will be expanded.
 </li>
 <li>
 <text>searchresultspath</text>
-<comment>Where do we store the results of searching. If this is not set then xsldbg will use the path of the stylesheet</comment>
+<comment>What path is to be used when storing the results of searching. If this is not set then xsldbg will use the path of the stylesheet</comment>
 </li>
 </list></li>
 </usage>

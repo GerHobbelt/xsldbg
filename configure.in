@@ -1,12 +1,12 @@
 
 AC_INIT(src/main.c)
 
-timestamp='2002-02-23'
+timestamp='2002-03-02'
 
 
 XSLDBG_MAJOR_VERSION=2
 XSLDBG_MINOR_VERSION=1
-XSLDBG_MICRO_VERSION=3
+XSLDBG_MICRO_VERSION=5
 PACKAGE=xsldbg
 
 dnl
@@ -551,19 +551,31 @@ fi
 
 
 dnl
+dnl The test scripts, under Cygwin, will fail if the -static version of 
+dnl    xsldbg is used to run tests so avoid using -static option to
+dnl    libtool 
+dnl
+
+if test "x`echo $host_os | grep -in cygwin`" != "x"
+then
+	XSLDBG_STATIC_FLAGS=
+	AC_MSG_RESULT(Disabling static build of xsldbg)
+else
+	XSLDBG_STATIC_FLAGS=" -static"
+fi
+
+AC_SUBST(XSLDBG_STATIC_FLAGS)
+
+
+dnl
 dnl Set pedantic compiler settings. Not portable settings !!
 dnl
 AC_ARG_ENABLE(pedantic,
-	[  --enable-pedantic      Use padantic compiler settings (no) ],
-	if test "${enableval}" = "yes"
+	[  --enable-pedantic      Use pedantic compiler settings (no) ],
+	if test "x${enableval}" = "xyes"
 	then
-	        AC_MSG_RESULT(Using padantic compiler settings)
-		CFLAGS=" -g -O -pedantic -W -Wunused -Wimplicit -Wreturn-type 
--Wswitch -Wcomment -Wtrigraphs -Wformat -Wchar-subscripts -Wuninitialized 
--Wparentheses -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings 
--Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wnested-externs 
--Winline"
-		AC_SUBST(CFLAGS)
+	  CFLAGS=" -g -O -pedantic -W -Wunused -Wimplicit -Wreturn-type -Wswitch -Wcomment -Wtrigraphs -Wformat -Wchar-subscripts -Wuninitialized -Wparentheses -Wshadow -Wpointer-arith -Wcast-align -Wwrite-strings -Waggregate-return -Wstrict-prototypes -Wmissing-prototypes -Wnested-externs -Winline"
+	  AC_SUBST(CFLAGS)
 	fi
 )
 

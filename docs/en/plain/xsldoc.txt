@@ -426,6 +426,7 @@ Usage:
 
      And where value is true if it is NOT equal to zero
      And where value is false if it IS equal to zero
+     stdout   Print all error messages to stdout. Normally error messages go to stderr.
      setoption <OPTION_NAME> "<STRING_VALUE>"   (Must not contain double quotation marks in <STRING_VALUE>)
      setoption <OPTION_NAME> <STRING_VALUE>   (Must not contain any spaces, nor double quotation marks in <STRING_VALUE>)
      Where <OPTION_NAME> can be either
