@@ -99,7 +99,7 @@ int main(void){
     xslBreakPointPtr breakPoint = getBreakPoint("index.html", 1);
     if (breakPoint){
       fprintf(stdout, "Added breakPoint :");
-      xslPrintBreakPoint(stdout, breakPoint);
+      printBreakPoint(stdout, breakPoint);
       fprintf(stdout, "\n");
     }else{
       fprintf(stdout,"\nBreakpoint #1 not found!\n");

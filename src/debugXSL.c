@@ -1261,7 +1261,6 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 break;
 
             case DEBUG_DELETE_CMD:
-	      if (styleCtxt != NULL){
                 if (xmlStrLen(arg))
                     xslDbgShellDelete((xmlChar *) arg);
                 else {
@@ -1275,11 +1274,6 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         xsltGenericError(xsltGenericErrorContext,
                                          "Unable to add delete point");
                 }
-	      }else {
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "Files not loaded try using run command first\n");
-	      }
-	      
                 break;
 
             case DEBUG_ENABLE_CMD:

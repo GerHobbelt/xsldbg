@@ -107,11 +107,11 @@ AM_CONDITIONAL(WITH_PERL, test "$PERL" != "false")
 AC_ARG_WITH(debug, [  --with-debug            Add the debugging code (on)])
 if test "$with_debug" = "no" ; then
     echo Disabling debug support
-    WITH_XSLT_DEBUG=0
 else
-    WITH_XSLT_DEBUG=1
+    echo Enabling debug support
+    AC_DEFINE(WITH_XSLDBG_DEBUG)
 fi
-AC_SUBST(WITH_XSLT_DEBUG)
+
 
 AC_ARG_WITH(mem_debug,
 	[  --with-mem-debug      Add the memory debugging module (off)])

@@ -18,8 +18,16 @@
 #include <libxml/hash.h>
 #include <libxml/debugXML.h>	/* needed for xmlGetLineNo(node) */
 #include <libxslt/xsltutils.h>
-#include "breakpoint.h"
 #include <breakpoint/breakpoint.h>
+
+/* awful hack to get rid of debugging messages */
+#ifndef WITH_XSLDBG_DEBUG
+#ifdef WITH_XSLT_DEBUG_BREAKPOINTS
+#undef WITH_XSLT_DEBUG_BREAKPOINTS
+#endif
+#endif
+
+#include "breakpoint.h"
 #include "arraylist.h"
 
 

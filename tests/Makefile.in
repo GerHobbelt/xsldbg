@@ -88,7 +88,6 @@ PERL = @PERL@
 RANLIB = @RANLIB@
 VERSION = @VERSION@
 WITH_MEM_DEBUG = @WITH_MEM_DEBUG@
-WITH_XSLT_DEBUG = @WITH_XSLT_DEBUG@
 XML_CONFIG = @XML_CONFIG@
 XSLDBG_INCLUDEDIR = @XSLDBG_INCLUDEDIR@
 XSLDBG_LIBDIR = @XSLDBG_LIBDIR@
@@ -106,7 +105,7 @@ INCLUDES = $(all_includes) -DDOCS_PATH=\"$(HTML_DIR)/xsldbg/\" -DVERSION=\"@VERS
 
 XSLDBG = $(top_builddir)/src/xsldbg
 
-EXTRA_DIST = *.xsl *.xml *.data *.pl testcmd.dtd
+EXTRA_DIST = *.xsl *.xml *.data *.pl testcmd.dtd testcoverage.txt
 
 TESTS =  	../results/test1.pl 	../results/test2.pl 	../results/test3.pl 	../results/test4.pl 	../results/test5.pl 	../results/test6.pl 	../results/test7.pl 	../results/test8.pl 
 

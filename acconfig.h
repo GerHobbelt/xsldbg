@@ -17,5 +17,6 @@
 #undef HAVE_HISTORY
 #undef TIMESTAMP
 #undef WITH_DEBUG_HELP
+#undef WITH_XSLDBG_DEBUG
 
 
