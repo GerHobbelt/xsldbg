@@ -247,20 +247,9 @@ validateData(xmlChar ** url, long *lineNo)
     }
 
     searchInf = searchNewInfo(SEARCH_NODE);
-    lastSlash = xmlStrrChr(filesGetMainDoc()->URL, PATHCHAR);
-
-    if (lastSlash) {
-        lastSlash++;
-        xmlStrnCpy(buff, filesGetMainDoc()->URL,
-                   lastSlash - (char *) filesGetMainDoc()->URL);
-        buff[lastSlash - (char *) filesGetMainDoc()->URL] = '\0';
-        xmlStrCat(buff, *url);
-    } else
-        xmlStrCpy(buff, "");
-
-
     if (searchInf && searchInf->data && filesGetMainDoc()) {
-        /* try to verify that the line number is valid */
+        /* Try to verify that the line number is valid. 
+	   First try an absolute name match */
         searchData = (nodeSearchDataPtr) searchInf->data;
         if (lineNo != NULL)
             searchData->lineNo = *lineNo;
@@ -270,15 +259,29 @@ validateData(xmlChar ** url, long *lineNo)
         walkChildNodes((xmlHashScanner) scanForNode, searchInf,
                        (xmlNodePtr) filesGetMainDoc());
 
-        /* try to guess file name by adding the prefix of main document */
+        /* Next try to guess file name by adding the prefix of main document 
+	   if no luck so far */
         if (!searchInf->found) {
-            if (xmlStrLen(buff) > 0) {
-                if (searchData->url)
-                    xmlFree(searchData->url);
-                searchData->url = (xmlChar *) xmlMemStrdup((char *) buff);
-                walkChildNodes((xmlHashScanner) scanForNode, searchInf,
-                               (xmlNodePtr) filesGetMainDoc());
-            }
+	  /* Find the last separator of the documents URL */
+	  lastSlash = xmlStrrChr(filesGetMainDoc()->URL, URISEPARATORCHAR);
+	  if (!lastSlash)
+	    lastSlash = xmlStrrChr(filesGetMainDoc()->URL, PATHCHAR);
+	  
+	  if (lastSlash) {
+	    lastSlash++;
+	    xmlStrnCpy(buff, filesGetMainDoc()->URL,
+		       lastSlash - (char *) filesGetMainDoc()->URL);
+	    buff[lastSlash - (char *) filesGetMainDoc()->URL] = '\0';
+	    xmlStrCat(buff, *url);
+	  } else
+	    xmlStrCpy(buff, "");
+	  if (xmlStrLen(buff) > 0) {
+	    if (searchData->url)
+	      xmlFree(searchData->url);
+	    searchData->url = (xmlChar *) xmlMemStrdup((char *) buff);
+	    walkChildNodes((xmlHashScanner) scanForNode, searchInf,
+			   (xmlNodePtr) filesGetMainDoc());
+	  }
         }
 
         if (!searchInf->found) {

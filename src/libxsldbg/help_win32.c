@@ -63,10 +63,10 @@ helpTop(const xmlChar * args)
         snprintf((char *) buff, sizeof(buff), "%s %s"
                  " --param xsldbg_version %c'%s'%c "
                  " -o %s "
-		 "%s%cxsldoc.xsl %s%cxsldoc.xml",
+                 "%s%cxsldoc.xsl %s%cxsldoc.xml",
                  XSLDBG_BIN, helpParam,
-                 QUOTECHAR, VERSION, QUOTECHAR, 
-		 filesTempFileName(0),
+                 QUOTECHAR, VERSION, QUOTECHAR,
+                 filesTempFileName(0),
                  docsDirPath, PATHCHAR, docsDirPath, PATHCHAR);
         if (xslDbgShellExecute((xmlChar *) buff, 1) == 0) {
             if (docsDirPath)
@@ -78,14 +78,14 @@ helpTop(const xmlChar * args)
             else
                 xsltGenericError(xsltGenericErrorContext,
                                  "Unable to find xsldbg or help files\n");
-        } else{
-	  if (filesMoreFile(filesTempFileName(0), NULL) == 1){
-            result = 1;
-	  }else{
-	    xsltGenericError(xsltGenericErrorContext,
-			     "Unable to print help file\n");
-	  }
-	}
+        } else {
+            if (filesMoreFile(filesTempFileName(0), NULL) == 1) {
+                result = 1;
+            } else {
+                xsltGenericError(xsltGenericErrorContext,
+                                 "Unable to print help file\n");
+            }
+        }
 
     } else {
         xsltGenericError(xsltGenericErrorContext,
@@ -123,20 +123,22 @@ helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
     int result = 0;
     xmlChar buff[500];
     const char *docTextFile = "xsldoc.txt";
-    const char *docsDirPath = (char *) optionsGetStringOption(OPTIONS_DOCS_PATH);
-    xmlChar *fileName = (xmlChar*)xmlMalloc(strlen(docDirPath) + 
-					    strlen(docTextFile) + 1);
+    const char *docsDirPath =
+        (char *) optionsGetStringOption(OPTIONS_DOCS_PATH);
+    xmlChar *fileName =
+        (xmlChar *) xmlMalloc(strlen(docDirPath) + strlen(docTextFile) +
+                              1);
 
     if (docsDirPath) {
-      if (!fileName){
-	xsltGenericError(xsltGenericErrorContext,
-			 "Error: Out of memory\n");
-	return result;
-      }
+        if (!fileName) {
+            xsltGenericError(xsltGenericErrorContext,
+                             "Error: Out of memory\n");
+            return result;
+        }
 
-     xmlStrCpy(fileName, docDirPath);
-     XmlStrCat(fileName, docTextFile);
-     result = filesMoreFile(fileName, NULL);
+        xmlStrCpy(fileName, docDirPath);
+        XmlStrCat(fileName, docTextFile);
+        result = filesMoreFile(fileName, NULL);
     } else {
         xsltGenericError(xsltGenericErrorContext,
                          "No path to documentation aborting help\n");
@@ -156,4 +158,3 @@ helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
 }
 
 #endif
-

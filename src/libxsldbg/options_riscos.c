@@ -52,6 +52,7 @@ optionsPlatformFree(void)
     /* empty */
 }
 
+
   /**
    * optionsConfigFileName:
    * 
@@ -62,7 +63,35 @@ optionsPlatformFree(void)
 xmlChar *
 optionsConfigFileName(void)
 {
-    return xmlStrdup((xmlChar *) "Choices:XSLDebug.Options");
+    xmlChar *result;
+
+    /* Find out if are are reading or writing the configuration
+     * and then go from there. This is because RISC OS uses different
+     * files for reading than writing */
+    switch (optionsConfigState(OPTIONS_CONFIG_READVALUE)) {
+        case OPTIONS_CONFIG_READING:
+            result = xmlStrdup((xmlChar *)
+                               unixfilename("Choices:XSLDebug.Options"));
+            break;
+
+        case OPTIONS_CONFIG_WRITTING:
+            result = xmlStrdup((xmlChar *)
+                               unixfilename
+                               ("<Choices$Write>.XSLDebug.Options"));
+            break;
+
+        default:
+            result = NULL;
+            xsltGenericError(xsltGenericErrorContext,
+                             "Error: Internal error configuration not in correct state\n");
+    }
+    if (result)
+        xsltGenericError(xsltGenericErrorContext,
+                         "Options filename %d : Returning filename = %s\n",
+                         optionsConfigState(OPTIONS_CONFIG_READVALUE),
+                         result);
+
+    return result;
 }
 
 
@@ -80,10 +109,15 @@ int
 optionsLoad(void)
 {
     int result = 0;
-    xmlDocPtr doc = xmlParseFile((char *) optionsConfigFileName());
+    xmlDocPtr doc;
+
+    optionsConfigState(OPTIONS_CONFIG_READING);
+    doc = xmlParseFile((char *) optionsConfigFileName());
 
     if (doc)
         result = optionsReadDoc(doc);
+
+    optionsConfigState(OPTIONS_CONFIG_IDLE);
     return 0;
 }
 
@@ -101,5 +135,11 @@ optionsLoad(void)
 int
 optionsSave(void)
 {
-    return optionsSavetoFile(optionsConfigFileName());
+    int result;
+
+    optionsConfigState(OPTIONS_CONFIG_WRITTING);
+    result = optionsSavetoFile(optionsConfigFileName());
+    optionsConfigState(OPTIONS_CONFIG_IDLE);
+
+    return result;
 }

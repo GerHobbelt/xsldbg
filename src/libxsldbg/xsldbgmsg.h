@@ -65,10 +65,10 @@ typedef enum {
                                  * command */
     XSLDBG_MSG_RESOLVE_CHANGE,  /* 22: Response to system or
                                  * public command */
-    XSLDBG_MSG_LIST,             /* 23 : As list of messages  */
+    XSLDBG_MSG_LIST,            /* 23 : As list of messages  */
 
-    XSLDBG_MSG_INTOPTION_CHANGE, /* 23* Response to options command */
-    XSLDBG_MSG_STRINGOPTION_CHANGE /* 24* Response to options command */
+    XSLDBG_MSG_INTOPTION_CHANGE,        /* 23* Response to options command */
+    XSLDBG_MSG_STRINGOPTION_CHANGE      /* 24* Response to options command */
 } XsldbgMessageEnum;
 
 

@@ -24,6 +24,7 @@
 #include "debugXSL.h"
 #include "files.h"
 #include "options.h"
+#include "utils.h"
 #include "xsldbgthread.h"
 
 static char buffer[500];
@@ -107,7 +108,7 @@ xslDbgSystem(const xmlChar * arg)
     int result = 0;
     xmlChar *name;
 
-    if (!arg) {
+    if (!arg || (xmlStrlen(arg) == 0)) {
         xsltGenericError(xsltGenericErrorContext,
                          "Error: NULL argument provided\n");
         return result;
@@ -121,21 +122,21 @@ xslDbgSystem(const xmlChar * arg)
             xmlFree(name);
         } else {
             snprintf(buffer, sizeof(buffer),
-                     "SystemID %s was not found "
-                     " in xml catalog\n\n", arg);
+                     "SystemID \"%s\" was not found "
+                     " in current catalog\n\n", arg);
             notifyXsldbgApp(XSLDBG_MSG_RESOLVE_CHANGE, "");
             xsltGenericError(xsltGenericErrorContext, buffer);
         }
     } else {
         if (name) {
             snprintf(buffer, sizeof(buffer),
-                     "SystemID %s maps to : %s\n\n", arg, name);
+                     "SystemID \"%s\" maps to : \"%s\"\n\n", arg, name);
             xmlFree(name);
             result = 1;
         } else {
             snprintf(buffer, sizeof(buffer),
-                     "SystemID %s was not found "
-                     " in xml catalog\n\n", arg);
+                     "SystemID \"%s\" was not found "
+                     " in current catalog\n\n", arg);
         }
         xsltGenericError(xsltGenericErrorContext, buffer);
     }
@@ -159,7 +160,7 @@ xslDbgPublic(const xmlChar * arg)
     int result = 0;
     xmlChar *name;
 
-    if (!arg) {
+    if (!arg || (xmlStrlen(arg) == 0)) {
         xsltGenericError(xsltGenericErrorContext,
                          "Error: NULL argument provided\n");
         return result;
@@ -173,21 +174,21 @@ xslDbgPublic(const xmlChar * arg)
             xmlFree(name);
         } else {
             snprintf(buffer, sizeof(buffer),
-                     "PublicID %s was not found "
-                     " in xml catalog\n\n", arg);
+                     "PublicID \"%s\" was not found "
+                     " in current catalog\n\n", arg);
             notifyXsldbgApp(XSLDBG_MSG_RESOLVE_CHANGE, "");
             xsltGenericError(xsltGenericErrorContext, buffer);
         }
     } else {
         if (name) {
             snprintf(buffer, sizeof(buffer),
-                     "PublicID  %s maps to : %s\n\n", arg, name);
+                     "PublicID  \"%s\" maps to : \"%s\"\n\n", arg, name);
             xmlFree(name);
             result = 1;
         } else {
             snprintf(buffer, sizeof(buffer),
-                     "PublicID %s was not found "
-                     " in xml catalog\n\n", arg);
+                     "PublicID \"%s\" was not found "
+                     " in current catalog\n\n", arg);
         }
         xsltGenericError(xsltGenericErrorContext, buffer);
     }
@@ -226,3 +227,53 @@ xslDbgEncoding(xmlChar * arg)
                          "Error: Expected one argument to encoding command\n");
     return result;
 }
+
+
+/**
+ * xslDbgShellOutput:
+ * @arg : Is valid, either a local file name which will be expanded 
+ *        if needed, or a "file://" protocol URI
+ *
+ * Set the output file name to use
+ *
+ * Returns 1 on success, 
+ *         0 otherwise
+ */
+int xslDbgShellOutput(xmlChar *arg)
+{
+  int result = 0;
+  if (arg && (xmlStrLen(arg) > 0)) {
+    if (!xmlStrnCmp(arg, "file://", 7)){
+      /* convert URI to local file name */
+      xmlChar *outputFileName = filesURItoFileName(arg);
+      if (outputFileName){
+	optionsSetStringOption(OPTIONS_OUTPUT_FILE_NAME,
+				     outputFileName);
+	xmlFree(outputFileName);
+	result = 1;
+      }
+    } else if (!xmlStrCmp(arg, "-")) {
+      optionsSetStringOption(OPTIONS_OUTPUT_FILE_NAME,
+			     NULL);
+      result = 1;
+    }else {
+      /* assume that we were provided a local file name
+       * that may need expanding 
+       */
+      xmlChar *expandedName = filesExpandName(arg);
+      
+      if (expandedName) {
+	optionsSetStringOption
+	  (OPTIONS_OUTPUT_FILE_NAME, expandedName);
+	xmlFree(expandedName);
+	result = 1;
+      }
+    }
+   } else {
+    xsltGenericError(xsltGenericErrorContext,
+		     "Error: output command is missing file name\n");
+  }
+
+  return result;
+}
+

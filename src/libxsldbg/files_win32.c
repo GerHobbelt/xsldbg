@@ -138,49 +138,55 @@ filesExpandName(const xmlChar * fileName)
    *
    * Returns A copy of the file name to use as an argument to searching
    */
-  xmlChar *filesSearchFileName(FilesSearchFileNameEnum fileType){
-  xmlChar *result = NULL;
-  int type = fileType;
-  int preferHtml = optionsGetIntOption(OPTIONS_PREFER_HTML);
-  const xmlChar *baseDir = NULL;
-  const xmlChar *name = NULL;
-  static const char* searchNames[] = {
-    /* First list names when prefer html is false*/
-    "searchresult.xml", /* input  */
-    "search.xsl",        /* stylesheet to use*/
-    "searchresult.txt",  /* where to put the result*/
-    /*Now for the names to use when prefer html is true */
-    "searchresult.xml", /* input  */   
-    "searchhtml.xsl",    /* stylesheet to use*/
-    "searchresult.html"  /* where to put the result*/
-  };
+xmlChar *
+filesSearchFileName(FilesSearchFileNameEnum fileType)
+{
+    xmlChar *result = NULL;
+    int type = fileType;
+    int preferHtml = optionsGetIntOption(OPTIONS_PREFER_HTML);
+    const xmlChar *baseDir = NULL;
+    const xmlChar *name = NULL;
+    static const char *searchNames[] = {
+        /* Note: File names here are in native format, to be appended to the
+         *  help directory name or search results path
+         */
+        /* First list names when prefer html is false */
+        "searchresult.xml",     /* input  */
+        "search.xsl",           /* stylesheet to use */
+        "searchresult.txt",     /* where to put the result */
+        /*Now for the names to use when prefer html is true */
+        "searchresult.xml",     /* input  */
+        "searchhtml.xsl",       /* stylesheet to use */
+        "searchresult.html"     /* where to put the result */
+    };
 
-  if (!optionsGetStringOption(OPTIONS_DOCS_PATH) || !stylePath()){
-    xsltGenericError(xsltGenericErrorContext,
-		     "Error: Null docs dir path or Null stylesheet path\n");
-    return result;
-  }
-    
-
-  name = (xmlChar*)searchNames[(preferHtml * 3)  + type];
-    switch(type){
-    case FILES_SEARCHINPUT:
-      baseDir = stylePath();
-      break;
-
-    case FILES_SEARCHXSL:
-      baseDir = optionsGetStringOption(OPTIONS_DOCS_PATH);
-      break;
-
-    case FILES_SEARCHRESULT:
-      baseDir = stylePath();
-      break;    
+    if (!optionsGetStringOption(OPTIONS_DOCS_PATH)
+        || !filesSearchResultsPath()) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error: Null docs dir path or Null search results path\n");
+        return result;
     }
-    
+
+
+    name = (xmlChar *) searchNames[(preferHtml * 3) + type];
+    switch (type) {
+        case FILES_SEARCHINPUT:
+            baseDir = filesSearchResultsPath();
+            break;
+
+        case FILES_SEARCHXSL:
+            baseDir = optionsGetStringOption(OPTIONS_DOCS_PATH);
+            break;
+
+        case FILES_SEARCHRESULT:
+            baseDir = filesSearchResultsPath();
+            break;
+    }
+
     result = xmlMalloc(xmlStrLen(baseDir) + xmlStrLen(name) + 1);
-    if (result){
-      xmlStrCpy(result, baseDir);
-      xmlStrCat(result, name);
+    if (result) {
+        xmlStrCpy(result, baseDir);
+        xmlStrCat(result, name);
     }
-  return result;
+    return result;
 }

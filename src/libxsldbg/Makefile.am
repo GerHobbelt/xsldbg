@@ -29,36 +29,8 @@ noinst_HEADERS=\
 
 
 # Each supported platform will have a small number of platform
-#   specific files
-if RISC_OS
-libxsldbg_la_SOURCES = \
-	xsldbg.c 	\
-	cmds.h		\
-	debugXSL.c 	\
-	arraylist.c	\
-	callstack.c	\
-	breakpoint.c 	\
-	search.c	\
-	debug.c		\
-	files.c			\
-	utils.c			\
-	options.c 		\
-	breakpoint_cmds.c 	\
-	template_cmds.c		\
-	nodeview_cmds.c		\
-	os_cmds.c		\
-	file_cmds.c		\
-	param_cmds.c		\
-	option_cmds.c		\
-	trace_cmds.c		\
-	search_cmds.c		\
-	variable_cmds.c		\
-	xsldbgthread.c		\
-	options_riscos.c	\
-	files_riscos.c		\
-	help_riscos.c		
-
-else
+#   specific files though since CYGWIN is realy *nix we use this for 
+#   both CYGWIN and *nix
 libxsldbg_la_SOURCES = \
 	xsldbg.c 	\
 	cmds.h		\
@@ -85,7 +57,6 @@ libxsldbg_la_SOURCES = \
 	options_unix.c		\
 	files_unix.c		\
 	help_unix.c	
-endif
 
 
 SOURCES = \

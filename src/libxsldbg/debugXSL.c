@@ -783,7 +783,7 @@ xslDbgWalkContinue(void)
     int result = 0, speed = optionsGetIntOption(OPTIONS_WALK_SPEED);
 
     /* We need to ensure that output is realy sent. Otherwise
-       walking using xemacs under WIN32 will not work */
+     * walking using xemacs under WIN32 will not work */
     fflush(stderr);
 
     switch (speed) {
@@ -1118,19 +1118,37 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
     xmlShellCtxtPtr ctxt;
     int exitShell = 0;          /* Indicate when to exit xslShell */
 
-    if (source == NULL)
+    if (source == NULL){
+	xsltGenericError(xsltGenericErrorContext,
+			 "Error: Source NULL in shellPrompt\n");
         return;
-    if (doc == NULL)
+    }
+    if (doc == NULL){
+	xsltGenericError(xsltGenericErrorContext,
+			 "Error: doc NULL in shellPrompt\n");
         return;
-    if (filename == NULL)
+    }
+    if (filename == NULL){
+	xsltGenericError(xsltGenericErrorContext,
+			 "Error: fileName NULL in shellPrompt\n");
         return;
-    if (input == NULL)
+    }
+    if (input == NULL){
+	xsltGenericError(xsltGenericErrorContext,
+			 "Error: Input function NULL in shellPrompt\n");
         return;
-    if (output == NULL)
+    }
+    if (output == NULL){
+	xsltGenericError(xsltGenericErrorContext,
+			 "Error: Output NULL in shellPrompt\n");
         return;
+    }
     ctxt = (xmlShellCtxtPtr) xmlMalloc(sizeof(xmlShellCtxt));
-    if (ctxt == NULL)
+    if (ctxt == NULL){
+	xsltGenericError(xsltGenericErrorContext,
+			 "Error: Out of memory\n");
         return;
+    }
 
     /* flag that we've received control */
     debugGotControl(1);
@@ -1200,18 +1218,20 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
     }
     if (xslDebugStatus == DEBUG_TRACE) {
         xmlFree(ctxt);
-        return;
-    }
+        return; /* All done. Trace next instruction/node */
+    } 
     if (xslDebugStatus == DEBUG_WALK) {
         if (xslDbgWalkContinue()) {
             xmlFree(ctxt);
-            return;
+            return; /* All done. Walk to next instruction/node */
         }
     }
 
     ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
     if (ctxt->pctxt == NULL) {
         xmlFree(ctxt);
+	xsltGenericError(xsltGenericErrorContext,
+			 "Error: Out of memory\n");
         return;
     }
 
@@ -1684,26 +1704,8 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 break;
 
             case DEBUG_OUTPUT_CMD:
-                if (xmlStrLen(arg) > 0) {
-                    if (xmlStrCmp(arg, "-") != 0) {
-                        xmlChar *expandedName = filesExpandName(arg);
-
-                        if (expandedName) {
-                            optionsSetStringOption
-                                (OPTIONS_OUTPUT_FILE_NAME, expandedName);
-                            xmlFree(expandedName);
-                        } else {
-                            cmdResult = 0;
-                        }
-                    } else
-                        optionsSetStringOption(OPTIONS_OUTPUT_FILE_NAME,
-                                               NULL);
-                    cmdResult = 1;
-                } else {
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "Error: Missing file name\n");
-                    cmdResult = 0;
-                }
+	      /* set the output file name to use */
+	      cmdResult = xslDbgShellOutput(arg);
                 break;
 
             case DEBUG_CD_CMD:
@@ -1734,11 +1736,31 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 break;
 
             case DEBUG_SYSTEM_CMD:
-                cmdResult = xslDbgSystem(arg);
+	      /* strip off a single argument. I need to do it this
+	         way because I've already public this API */
+	      {
+		xmlChar *systemID;
+		if (splitString(arg, 1, &systemID) == 1){
+		  cmdResult = xslDbgSystem(systemID);
+		}else{
+		  xsltGenericError(xsltGenericErrorContext,
+				   "Error: system command expected a systemID. Missing quotes from input?\n");
+		}
+	       }
                 break;
 
             case DEBUG_PUBLIC_CMD:
-                cmdResult = xslDbgPublic(arg);
+	      /* strip off a single argument. I need to do it this
+	         way because I've already public this API */
+	      {
+		xmlChar *publicID;
+		if (splitString(arg, 1, &publicID) == 1){
+		  cmdResult = xslDbgPublic(publicID);
+		}else{
+		  xsltGenericError(xsltGenericErrorContext,
+				   "Error: public command expected a publicID. Missing quotes from input?\n");
+		}
+	       }
                 break;
 
             case DEBUG_ENCODING_CMD:
@@ -1909,9 +1931,11 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
     xmlXPathFreeContext(ctxt->pctxt);
 
-    if (ctxt->filename != NULL)
+    if (ctxt->filename)
         xmlFree(ctxt->filename);
+
     xmlFree(ctxt);
-    if (cmdline != NULL)
+
+    if (cmdline)
         xmlFree(cmdline);
 }

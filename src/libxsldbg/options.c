@@ -69,6 +69,7 @@ const char *optionNames[] = {
     "docspath",                 /* Path of xsldbg's documentation */
     "catalognames",             /* The names of the catalogs to use when the catalogs option is active */
     "encoding",                 /* What encoding to use for standard output */
+    "searchresultspath",        /* Where do we store the results of search */
     "data",                     /* The xml data file to use */
     NULL                        /* indicate end of list */
 };
@@ -641,7 +642,7 @@ optionsSavetoFile(xmlChar * fileName)
         /*now to do the work of adding configuration items */
         for (optionIndex = OPTIONS_XINCLUDE;
              optionIndex <= OPTIONS_DATA_FILE_NAME; optionIndex++) {
-
+            result = 1;
             if (optionNames[optionIndex - OPTIONS_XINCLUDE][0] == '*')
                 continue;       /* don't save non user options */
 
@@ -669,6 +670,55 @@ optionsSavetoFile(xmlChar * fileName)
         if (rootNode)
             xmlFreeNode(rootNode);
 
+    }
+
+    return result;
+}
+
+
+
+  /**
+   * optionsConfigState:
+   * @value : Is valid
+   *
+   * Set/Get the state of configuration loading/saving
+   *
+   * Returns The current/new value of configuration flag. Where
+   *         @value means:
+   *           OPTIONS_CONFIG_READVALUE : No change return current 
+   *               value of read configuration flag
+   *           OPTIONS_CONFIG_WRITING  : Clear flag and return 
+   *               OPTIONS_CONFIG_WRITING which mean configuration 
+   *               file is being written
+   *           OPTIONS_CONFIG_READING : Set flag and return 
+   *               OPTIONS_CONFIG_READING, which means configuration
+   *               file is being read
+   *           OPTIONS_CONFIG_IDLE : We are neither reading or writing 
+   *               configuration and return OPTIONS_CONFIG_IDLE
+   */
+int
+optionsConfigState(OptionsConfigState value)
+{
+    int result = OPTIONS_CONFIG_IDLE;
+
+    /* work around as some compiler refuse to switch on enums */
+    int configValue = value;
+
+    /* hold the current state of configuration reading/writing */
+    static int configState = OPTIONS_CONFIG_IDLE;
+
+    switch (configValue) {
+        case OPTIONS_CONFIG_READVALUE:
+            /* read the current value only */
+            result = configState;
+            break;
+
+        case OPTIONS_CONFIG_READING:
+        case OPTIONS_CONFIG_WRITING:
+            /* update the value */
+            result = configValue;
+            configState = configValue;
+            break;
     }
 
     return result;

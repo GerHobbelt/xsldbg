@@ -52,6 +52,24 @@ extern "C" {
  */
 #define GDB_LINES_TO_PRINT 3
 
+
+#ifndef USE_KDOC
+    typedef enum {
+        OPTIONS_CONFIG_READVALUE = -1,  /* Read configuration flag */
+        OPTIONS_CONFIG_READING = 1,     /* Configuration file is being read */
+        OPTIONS_CONFIG_WRITING, /* Configuration file is being written */
+        OPTIONS_CONFIG_IDLE     /* We are neither reading or writing */
+    } OptionsConfigState;
+#else
+    /* keep kdoc happy */
+    enum OptionsConfigState {
+        OPTIONS_CONFIG_READVALUE = -1,  /* Read configuration flag */
+        OPTIONS_CONFIG_READING = 1,     /* Configuration file is being read */
+        OPTIONS_CONFIG_WRITING, /* Configuration file is being written */
+        OPTIONS_CONFIG_IDLE     /* We are neither reading or writing */
+    };
+#endif
+
 #ifndef USE_KDOC
     typedef enum {
         OPTIONS_XINCLUDE = 500, /* Use xinclude during xml parsing */
@@ -71,14 +89,15 @@ extern "C" {
                                  * store it in OPTIONS_CATALOG_NAMES */
         OPTIONS_PREFER_HTML,    /* Prefer html output for search results */
         OPTIONS_AUTOENCODE,     /* Try to use the encoding from the stylesheet */
-	OPTIONS_UTF8_INPUT,     /* All input from user is in UTF-8.This is normaly 
-				   used when xsldbg is running as a thread*/
+        OPTIONS_UTF8_INPUT,     /* All input from user is in UTF-8.This is normaly 
+                                 * used when xsldbg is running as a thread */
         OPTIONS_VERBOSE,        /* Be verbose with messages */
         OPTIONS_OUTPUT_FILE_NAME,       /* what is the output file name */
         OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */
         OPTIONS_DOCS_PATH,      /* path of xsldbg's documentation */
         OPTIONS_CATALOG_NAMES,  /* the names of the catalogs to use when catalogs option is active */
         OPTIONS_ENCODING,       /* What encoding to use for standard output */
+        OPTIONS_SEARCH_RESULTS_PATH,    /* Where do we store the results of searching */
         OPTIONS_DATA_FILE_NAME  /* xml data file to use */
     } OptionTypeEnum;
 
@@ -131,14 +150,15 @@ extern "C" {
                                  * store it in OPTIONS_CATALOG_NAMES */
         OPTIONS_PREFER_HTML,    /* Prefer html output for search results */
         OPTIONS_AUTOENCODE,     /* try to use the encoding from the stylesheet */
-	OPTIONS_UTF8_INPUT,     /* All input from user is in UTF-8.This normaly 
-				   used when xsldbg is running as a thread*/
+        OPTIONS_UTF8_INPUT,     /* All input from user is in UTF-8.This normaly 
+                                 * used when xsldbg is running as a thread */
         OPTIONS_VERBOSE,        /* Be verbose with messages */
         OPTIONS_OUTPUT_FILE_NAME,       /* what is the output file name */
         OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */
         OPTIONS_DOCS_PATH,      /* path of xsldbg's documentation */
         OPTIONS_CATALOG_NAMES,  /* the names of the catalogs to use when catalogs option is active */
         OPTIONS_ENCODING,       /* What encoding to use for standard output */
+        OPTIONS_SEARCH_RESULTS_PATH,    /* Where do we store the results of searching */
         OPTIONS_DATA_FILE_NAME  /* xml data file to use */
     };
 
@@ -196,7 +216,7 @@ extern "C" {
     struct _parameterItem {
         xmlChar *name;          /* libxslt parameter name */
         xmlChar *value;         /* libxslt parameter value */
-        int intValue;             /* reserved */
+        int intValue;           /* reserved */
     };
 
 
@@ -273,7 +293,7 @@ extern "C" {
    */
 #endif
 #endif
-  int optionsGetOptionID(xmlChar* optionName);
+    int optionsGetOptionID(xmlChar * optionName);
 
 
 
@@ -302,7 +322,7 @@ extern "C" {
    */
 #endif
 #endif
-  const xmlChar *optionsGetOptionName(OptionTypeEnum ID);
+    const xmlChar *optionsGetOptionName(OptionTypeEnum ID);
 
 
 #ifdef USE_GNOME_DOCS
@@ -387,7 +407,8 @@ extern "C" {
  */
 #endif
 #endif
-    int optionsSetStringOption(OptionTypeEnum optionType, const xmlChar * value);
+    int optionsSetStringOption(OptionTypeEnum optionType,
+                               const xmlChar * value);
 
 
 
@@ -495,7 +516,7 @@ extern "C" {
 #endif
 #endif
     parameterItemPtr optionsParamItemNew(const xmlChar * name,
-                                  const xmlChar * value);
+                                         const xmlChar * value);
 
 
 
@@ -599,7 +620,7 @@ extern "C" {
    */
 #endif
 #endif
-  xmlNodePtr optionsNode(OptionTypeEnum optionType);
+    xmlNodePtr optionsNode(OptionTypeEnum optionType);
 
 
 
@@ -629,7 +650,7 @@ extern "C" {
    */
 #endif
 #endif
-  int optionsReadDoc(xmlDocPtr doc);
+    int optionsReadDoc(xmlDocPtr doc);
 
 
 #ifdef USE_GNOME_DOCS
@@ -645,6 +666,7 @@ extern "C" {
    */
 #else
 #ifdef USE_KDE_DOCS
+
   /**
    * Save configuation to file specified
    *
@@ -655,7 +677,7 @@ extern "C" {
    */
 #endif
 #endif
-  int optionsSavetoFile(xmlChar *fileName);
+    int optionsSavetoFile(xmlChar * fileName);
 
 
 /* ---------------------------------------------
@@ -687,7 +709,7 @@ extern "C" {
    */
 #endif
 #endif
-  int optionsPlatformInit(void);
+    int optionsPlatformInit(void);
 
 
 #ifdef USE_GNOME_DOCS
@@ -711,7 +733,7 @@ extern "C" {
    */
 #endif
 #endif
-  void optionsPlatformFree(void);
+    void optionsPlatformFree(void);
 
 
 #ifdef USE_GNOME_DOCS
@@ -743,7 +765,7 @@ extern "C" {
    */
 #endif
 #endif
-  xmlChar* optionsConfigFileName(void);
+    xmlChar *optionsConfigFileName(void);
 
 
 #ifdef USE_GNOME_DOCS
@@ -771,7 +793,7 @@ extern "C" {
    */
 #endif
 #endif
-  int optionsLoad(void);
+    int optionsLoad(void);
 
 
 #ifdef USE_GNOME_DOCS
@@ -799,8 +821,58 @@ extern "C" {
    */
 #endif
 #endif
-  int optionsSave(void);
+    int optionsSave(void);
 
+
+#ifdef USE_GNOME_DOCS
+
+  /**
+   * optionsConfigState:
+   * @value : Is valid
+   *
+   * Set/Get the state of configuration loading/saving. Normally only used
+   *    by RISC OS
+   *
+   * Returns The current/new value of configuration flag. Where
+   *         @value means:
+   *           OPTIONS_CONFIG_READVALUE : No change return current 
+   *               value of read configuration flag
+   *           OPTIONS_CONFIG_WRITING  : Clear flag and return 
+   *               OPTIONS_CONFIG_WRITING which mean configuration 
+   *               file is being written
+   *           OPTIONS_CONFIG_READING : Set flag and return 
+   *               OPTIONS_CONFIG_READING, which means configuration
+   *               file is being read
+   *           OPTIONS_CONFIG_IDLE : We are neither reading or writing 
+   *               configuration and return OPTIONS_CONFIG_IDLE
+   */
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * Set/Get the state of configuration loading/saving. Normally only used
+   *    by RISC OS
+   *
+   *
+   * Returns The current/new value of configuration flag. Where
+   *         @p value means:
+   *           OPTIONS_CONFIG_READVALUE : No change return current 
+   *               value of read configuration flag
+   *           OPTIONS_CONFIG_WRITING  : Clear flag and return 
+   *               OPTIONS_CONFIG_WRITING which mean configuration 
+   *               file is being written
+   *           OPTIONS_CONFIG_READING : Set flag and return 
+   *               OPTIONS_CONFIG_READING, which means configuration
+   *               file is being read
+   *           OPTIONS_CONFIG_IDLE : We are neither reading or writing 
+   *               configuration and return OPTIONS_CONFIG_IDLE
+   *
+   * @param value Is valid
+   *
+   */
+#endif
+#endif
+    int optionsConfigState(OptionsConfigState value);
 
 #ifdef __cplusplus
 }

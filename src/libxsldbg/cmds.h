@@ -98,8 +98,9 @@ typedef enum {                  /* id's for commands of xslDbgShell */
         /* NULL */
 } CommandsEnum;
 #else
+
 /* Keep kdoc happy*/
- enum CommandsEnum {                  /* id's for commands of xslDbgShell */
+enum CommandsEnum {             /* id's for commands of xslDbgShell */
     DEBUG_HELP_CMD = 100,
     DEBUG_BYE_CMD,
     DEBUG_EXIT_CMD,
@@ -173,7 +174,7 @@ typedef enum {                  /* id's for commands of xslDbgShell */
     /* variable change */
     DEBUG_SET_CMD
         /* NULL */
- };
+};
 #endif
 
 #endif

@@ -93,7 +93,7 @@ extern "C" {
 #endif
 #endif
     void debugXSLBreak(xmlNodePtr templ, xmlNodePtr node,
-                    xsltTemplatePtr root, xsltTransformContextPtr ctxt);
+                       xsltTemplatePtr root, xsltTransformContextPtr ctxt);
 
 
 #ifdef USE_GNOME_DOCS
@@ -246,7 +246,8 @@ extern "C" {
 */
 #endif
 #endif
-    void xslDbgShellEnableBreakPoint(void *payload, void *data, xmlChar * name);
+    void xslDbgShellEnableBreakPoint(void *payload, void *data,
+                                     xmlChar * name);
 
 
 
@@ -301,7 +302,8 @@ extern "C" {
 */
 #endif
 #endif
-    void xslDbgShellPrintBreakPoint(void *payload, void *data, xmlChar * name);
+    void xslDbgShellPrintBreakPoint(void *payload, void *data,
+                                    xmlChar * name);
 
 
 
@@ -310,7 +312,7 @@ extern "C" {
    Template related commands
 
    They are implemented in template_cmds.c
-  ------------------------------------------- */  
+  ------------------------------------------- */
 
 #ifdef USE_GNOME_DOCS
 
@@ -381,8 +383,9 @@ extern "C" {
 #endif
 #endif
     int xslDbgShellPrintTemplateNames(xsltTransformContextPtr styleCtxt,
-                                 xmlShellCtxtPtr ctxt,
-                                 xmlChar * arg, int verbose, int allFiles);
+                                      xmlShellCtxtPtr ctxt,
+                                      xmlChar * arg, int verbose,
+                                      int allFiles);
 
 
 
@@ -496,7 +499,141 @@ extern "C" {
                                  xmlChar * arg, VariableTypeEnum type);
 
 
+/* -----------------------------------------
 
+   File related command
+
+   Implemented in file_cmds.c
+  ------------------------------------------- */
+#ifdef USE_GNOME_DOCS
+
+/**
+ * xslDbgShellOutput:
+ * @arg : Is valid, either a local file name which will be expanded 
+ *        if needed, or a "file://" protocol URI
+ *
+ * Set the output file name to use
+ *
+ * Returns 1 on success, 
+ *         0 otherwise
+ */
+#else
+#ifdef USE_KDE_DOCS
+
+/**
+ * xslDbgShellOutput:
+ * @arg : Is valid, either a local file name which will be expanded 
+ *        if needed, or a "file://" protocol URI
+ *
+ * Set the output file name to use
+ *
+ * Returns 1 on success, 
+ *         0 otherwise
+ */
+#endif
+#endif
+  int xslDbgShellOutput(xmlChar *arg);
+
+
+
+
+#ifdef USE_GNOME_DOCS
+
+  /**
+   * xslDbgEntities:
+   * 
+   * Print list of entites found 
+   *
+   * Returns 1 on sucess,
+   *         0 otherwise
+   */
+#else
+#ifdef USE_KDE_DOCS
+
+#endif
+#endif
+    int xslDbgEntities(void);
+
+
+#ifdef USE_GNOME_DOCS
+
+  /**
+   * xslDbgSystem:
+   * @arg : Is valid in UTF-8
+   * 
+   * Print what a system file @arg maps to via the current xml catalog
+   *
+   * Returns 1 on sucess,
+   *         0 otherwise
+   */
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * Print what a system file @p arg maps to via the current xml catalog
+   *
+   * @param arg Is valid in UTF-8
+   * 
+   * @returns 1 on sucess,
+   *          0 otherwise
+   */
+#endif
+#endif
+    int xslDbgSystem(const xmlChar * arg);
+
+
+#ifdef USE_GNOME_DOCS
+
+  /**
+   * xslDbgPublic:
+   * @arg : Is valid PublicID in UTF-8
+   * 
+   * Print what a public ID @arg maps to via the current xml catalog
+   *
+   * Returns 1 on sucess,
+   *         0 otherwise
+   */
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * Print what a public ID @p arg maps to via the current xml catalog
+   *
+   * @param arg Is valid PublicID in UTF-8
+   * 
+   * @returns 1 on sucess,
+   *          0 otherwise
+   */
+#endif
+#endif
+    int xslDbgPublic(const xmlChar * arg);
+
+
+#ifdef USE_GNOME_DOCS
+
+  /**
+   * xslDbgEncoding:
+   * @arg: Is valid encoding supported by libxml2
+   *
+   * Set current encoding to use for output to standard output
+   *
+   * Returns 1 on sucess,
+   *         0 otherwise
+   */
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * Set current encoding to use for output to standard output
+   *
+   * @param arg Is valid encoding supported by libxml2
+   *
+   *
+   * Returns 1 on sucess,
+   */
+#endif
+#endif
+    int xslDbgEncoding(xmlChar * arg);
 
 /* -----------------------------------------
 
@@ -657,13 +794,13 @@ extern "C" {
     int xslDbgShellShowParam(xmlChar * arg);
 
 
-  /* -----------------------------------------
-
-   Option related commands
-
-   Implemented in option_cmds.c
-
-  ------------------------------------------- */
+    /* -----------------------------------------
+     * 
+     * Option related commands
+     * 
+     * Implemented in option_cmds.c
+     * 
+     * ------------------------------------------- */
 
 #ifdef USE_GNOME_DOCS
 
@@ -690,7 +827,7 @@ extern "C" {
  */
 #endif
 #endif
-  int xslDbgShellSetOption(xmlChar *arg);
+    int xslDbgShellSetOption(xmlChar * arg);
 
 
 #ifdef USE_GNOME_DOCS
@@ -714,16 +851,16 @@ extern "C" {
  */
 #endif
 #endif
-       int xslDbgShellOptions(void);
+    int xslDbgShellOptions(void);
 
 
-  /* -----------------------------------------
-
-   Tracing, walking related commands
-
-   Implemented in shell.c
-
-  ------------------------------------------- */
+    /* -----------------------------------------
+     * 
+     * Tracing, walking related commands
+     * 
+     * Implemented in shell.c
+     * 
+     * ------------------------------------------- */
 
 
 #ifdef USE_GNOME_DOCS
@@ -782,12 +919,12 @@ extern "C" {
 
 
 
-  /* -----------------------------------------
-   
-   Seach related commands
-
-   Implemented in search_cmds.c
-  ------------------------------------------- */
+    /* -----------------------------------------
+     * 
+     * Seach related commands
+     * 
+     * Implemented in search_cmds.c
+     * ------------------------------------------- */
 
 
 #ifdef USE_GNOME_DOCS
@@ -828,6 +965,7 @@ extern "C" {
   ------------------------------------------- */
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * xslDbgShellSetVariable:
  * @styleCtxt : Is valid

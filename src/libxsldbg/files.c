@@ -29,7 +29,7 @@
 #include <libxml/catalog.h>
 #include <libxml/parserInternals.h>
 #include <libxml/encoding.h>    /* needed by filesTranslate, filesEncoding functions */
-
+#include <libxml/uri.h>    /* needed for  xmlURIUnescapeString */
 #include "xsldbg.h"
 #include "debugXSL.h"
 #include "files.h"
@@ -238,6 +238,8 @@ guessStylesheetHelper(void *payload, void *data,
     xsltStylesheetPtr style = (xsltStylesheetPtr) payload;
     searchInfoPtr searchCriteria = (searchInfoPtr) data;
     nodeSearchDataPtr searchData = NULL;
+    /* where did the directory/URI separator occur */
+    char *lastSlash;
 
     if (!style || !style->doc || !searchCriteria || !searchCriteria->data
         || (searchCriteria->type != SEARCH_NODE))
@@ -287,37 +289,24 @@ guessStylesheetHelper(void *payload, void *data,
             return;
         }
 
-        if (xmlStrChr(searchData->nameInput, PATHCHAR) == NULL) {
-            /* Last try, nameInput contains only a file name, and no path specifiers
+
+	/* Find the last separator of the stylsheet's URL */
+	lastSlash = xmlStrChr(style->doc->URL, URISEPARATORCHAR);
+	if (!lastSlash)
+	  lastSlash = xmlStrChr(style->doc->URL, PATHCHAR);
+
+        if (lastSlash) {
+            /* Last try, assume nameInput contains only a file name
              * Strip of the file name at end of the stylesheet doc URL */
-
-            /* what is used to separate directories or the URL */
-            char separatorChar;
-
-            /* where did the directory separator occur */
-            char *lastSlash;
-
-            /* if the stylesheets URL seems to be a URI then use the 
-             * URI separator character. Otherwise use the default directory
-             * separator character for the operating system */
-            if (xmlStrChr(style->doc->URL, URISEPARATORCHAR))
-                separatorChar = URISEPARATORCHAR;
-            else
-                separatorChar = PATHCHAR;
-
-            lastSlash = xmlStrrChr(style->doc->URL, separatorChar);
-
-            if (lastSlash) {
-                lastSlash++;    /* skip the slash */
-                if (xmlStrCmp(lastSlash, searchData->nameInput) == 0) {
-                    /* guessed right! */
-                    searchData->guessedNameMatch =
+	  lastSlash++;    /* skip the slash */
+	  if (xmlStrCmp(lastSlash, searchData->nameInput) == 0) {
+	    /* guessed right! */
+	    searchData->guessedNameMatch =
                         (xmlChar *) xmlMemStrdup((char *) style->doc->URL);
                     searchData->node = (xmlNodePtr) style->doc;
                     searchCriteria->found = 1;
                 }
             }
-        }
     }
 }
 
@@ -339,6 +328,8 @@ guessStylesheetHelper2(void *payload, void *data,
     xmlNodePtr node = (xmlNodePtr) payload;
     searchInfoPtr searchCriteria = (searchInfoPtr) data;
     nodeSearchDataPtr searchData = NULL;
+    /* where did the directory/URI separator occur */
+    char *lastSlash;
 
     if (!node || !node->doc || !searchCriteria || !searchCriteria->data ||
         (searchCriteria->type != SEARCH_NODE))
@@ -388,39 +379,27 @@ guessStylesheetHelper2(void *payload, void *data,
             return;
         }
 
-        if (xmlStrChr(searchData->nameInput, PATHCHAR) == NULL) {
-            /* Last try, nameInput contains only a file name, and no path specifiers
-             * Strip of the file name at end of the stylesheet doc URL */
 
-            /* what is used to separate directories or the URL */
-            char separatorChar;
+	/* Find the last separator of the stylsheet's URL */
+	lastSlash = xmlStrChr(node->doc->URL, URISEPARATORCHAR);
+	if (!lastSlash)
+	  lastSlash = xmlStrChr(node->doc->URL, PATHCHAR);
 
-            /* where did the directory separator occur */
-            char *lastSlash;
-
-            /* if the stylesheets URL seems to be a URI then use the 
-             * URI separator character. Otherwise use the default directory
-             * separator character for the operating system */
-            if (xmlStrChr(node->doc->URL, URISEPARATORCHAR))
-                separatorChar = URISEPARATORCHAR;
-            else
-                separatorChar = PATHCHAR;
-
-            lastSlash = xmlStrrChr(node->doc->URL, separatorChar);
-
-            if (lastSlash) {
-                lastSlash++;    /* skip the slash */
-                if (xmlStrCmp(lastSlash, searchData->nameInput) == 0) {
-                    /* guessed right! */
-                    searchData->guessedNameMatch =
+        if (lastSlash) {
+	  /* Last try, assume nameInput contains only a file name
+	   * Strip of the file name at end of the stylesheet doc URL */
+	  lastSlash++;    /* skip the slash */
+	  if (xmlStrCmp(lastSlash, searchData->nameInput) == 0) {
+	    /* guessed right! */
+	    searchData->guessedNameMatch =
                         (xmlChar *) xmlMemStrdup((char *) node->doc->URL);
-                    searchData->node = node;
-                    searchCriteria->found = 1;
-                }
-            }
-        }
+	    searchData->node = node;
+	    searchCriteria->found = 1;
+	  }
+	}
     }
 }
+
 
 /**
  * guessStylesheetName:
@@ -505,7 +484,7 @@ changeDir(const xmlChar * path)
         xsltGenericError(xsltGenericErrorContext,
                          "Error: Null Input to changeDir %s %d\n",
                          __FILE__, __LINE__);
-	return result; 
+        return result;
     }
 
     if (!expandedName)
@@ -519,23 +498,23 @@ changeDir(const xmlChar * path)
 
     xmlStrCpy(buffer, expandedName);
     /* strip off any extra PATHCHAR's as win32's chdir function 
-       fails if we don't */
+     * fails if we don't */
     charIndex = xmlStrLen(buffer) - 1;
-    while (charIndex && (buffer[charIndex] == PATHCHAR)){
-      charIndex--;
+    while (charIndex && (buffer[charIndex] == PATHCHAR)) {
+        charIndex--;
     }
     buffer[charIndex + 1] = '\0';
-    
+
 
     if (chdir((char *) buffer) == 0) {
         if (workingDirPath)
             xmlFree(workingDirPath);
-	/* must have path char at end of path name */
-	xmlStrCat(buffer, endString);
+        /* must have path char at end of path name */
+        xmlStrCat(buffer, endString);
         workingDirPath = (xmlChar *) xmlMemStrdup((char *) buffer);
         result = 1;
     }
-    xmlFree(expandedName); /* this will always be valid time*/
+    xmlFree(expandedName);      /* this will always be valid time */
     if (!result) {
         xsltGenericError(xsltGenericErrorContext,
                          "Error: Unable to change to directory %s\n",
@@ -958,7 +937,10 @@ filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode, xmlNodePtr lastNode)
                     filesAddEntityName(ent->SystemID, ent->ExternalID);
                 else
                     filesAddEntityName(ent->URI, BAD_CAST "");
-                filesSetBaseUri(firstNode, ent->URI);
+		while(firstNode){
+		  filesSetBaseUri(firstNode, ent->URI);
+		  firstNode = firstNode->next;
+		}
             }
         } else {
             if (ent->SystemID) {
@@ -1082,38 +1064,43 @@ int
 filesLoadCatalogs(void)
 {
     int result = 0;
-    int catalogOptId = OPTIONS_CATALOGS - OPTIONS_XINCLUDE;
-    const char *catalogs;
+    const char *catalogs = NULL;
 
-    /* only reload catalogs if something has changed */
-    if (intVolitileOptions[catalogOptId] !=
-        optionsGetIntOption(OPTIONS_CATALOGS)) {
-        xmlCatalogCleanup();
-        if (intVolitileOptions[catalogOptId] != 0) {
-            if (optionsGetStringOption(OPTIONS_CATALOG_NAMES) == NULL) {
+    xmlCatalogCleanup();
+    if (optionsGetIntOption(OPTIONS_CATALOGS)) {
+      if (optionsGetStringOption(OPTIONS_CATALOG_NAMES) == NULL) {
+	/* use the SGML catalog */
 #ifdef __riscos
-                catalogs = getenv("SGML$CatalogFiles");
+	catalogs = getenv("SGML$CatalogFiles");
 #else
-                catalogs = getenv("SGML_CATALOG_FILES");
+	catalogs = getenv("SGML_CATALOG_FILES");
 #endif
-                if (catalogs == NULL) {
+	if (catalogs == NULL) {
 #ifdef __riscos
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "Variable SGML$CatalogFiles not set\n");
+	  xsltGenericError(xsltGenericErrorContext,
+			   "Variable SGML$CatalogFiles not set\n");
 #else
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "Variable $SGML_CATALOG_FILES not set\n");
+	  xsltGenericError(xsltGenericErrorContext,
+			   "Variable $SGML_CATALOG_FILES not set\n");
 #endif
-                    return result;
-                } else
-                    optionsSetStringOption(OPTIONS_CATALOG_NAMES,
-                                           (xmlChar *) catalogs);
-            } else
-                catalogs = (char *)
-                    optionsGetStringOption(OPTIONS_CATALOG_NAMES);
-            xmlLoadCatalogs(catalogs);
-        }
-        result = 1;
+	} else
+	  /* copy the current catalog name(s) for user to see */
+	  optionsSetStringOption(OPTIONS_CATALOG_NAMES,
+				 (xmlChar *) catalogs);
+      } else
+	/* Use the current catalog settings from users*/
+	catalogs = (char *)
+	  optionsGetStringOption(OPTIONS_CATALOG_NAMES);
+
+      result = 1;
+    }
+
+    if (catalogs){
+      /* Load the new cataog selection */
+      xmlLoadCatalogs(catalogs);
+    }else{
+      /* Use default catalogs */
+      xmlInitializeCatalog();
     }
     return result;
 }
@@ -1259,54 +1246,162 @@ filesSetEncoding(const char *encoding)
    * Returns 1 if successful,
    *         0 otherwise
    */
-  int filesMoreFile(const xmlChar* fileName, FILE *file)
+int
+filesMoreFile(const xmlChar * fileName, FILE * file)
 {
-  int result = 0;
-  int openedFile = 0;
-  int lineCount;
-  int reachedEof = 0;
-  if (fileName && !file){
-    file = fopen((char*)fileName, "r");     
-    openedFile = 1;/* since we opened the file we must close it */
-  }
-  if (file){
-    while (!feof(file) && !reachedEof){
-      lineCount = 0;
-      while (!feof(file) && (lineCount < FILES_NO_LINES) && 
-	     !reachedEof){
-	if (fgets((char*)buffer, sizeof(buffer), file)){
-	  xsltGenericError(xsltGenericErrorContext,"%s", buffer);
-	  lineCount++;
-	}else{
-	  reachedEof = 1;
-	}		  
-      }
-      
-      if (!feof(file) && !reachedEof){
-	xsltGenericError(xsltGenericErrorContext," ----- more ---- \n");
-	fflush(stderr);
-	if (fgets((char*)buffer, sizeof(buffer), stdin)){
-	  if ((*buffer == 'q') || (*buffer == 'Q'))
-	      reachedEof = 1;
-	}else{
-	  reachedEof = 1;
+    int result = 0;
+    int openedFile = 0;
+    int lineCount;
+    int reachedEof = 0;
+
+    if (fileName && !file) {
+#ifdef __riscos
+        /* convert into RISC OS format a *nix style file name */
+        fileName = (const xmlChar *) riscosfilename((char *) fileName);
+#endif
+        file = fopen((char *) fileName, "r");
+        openedFile = 1;         /* since we opened the file we must close it */
+    }
+    if (file) {
+        while (!feof(file) && !reachedEof) {
+            lineCount = 0;
+            while (!feof(file) && (lineCount < FILES_NO_LINES) &&
+                   !reachedEof) {
+                if (fgets((char *) buffer, sizeof(buffer), file)) {
+                    xsltGenericError(xsltGenericErrorContext, "%s",
+                                     buffer);
+                    lineCount++;
+                } else {
+                    reachedEof = 1;
+                }
+            }
+
+            if (!feof(file) && !reachedEof) {
+                xsltGenericError(xsltGenericErrorContext,
+                                 " ----- more ---- \n");
+                fflush(stderr);
+                if (fgets((char *) buffer, sizeof(buffer), stdin)) {
+                    if ((*buffer == 'q') || (*buffer == 'Q'))
+                        reachedEof = 1;
+                } else {
+                    reachedEof = 1;
+                }
+            }
+        }
+
+        if (openedFile) {
+            fclose(file);
+        }
+        xsltGenericError(xsltGenericErrorContext, "\n");
+        result = 1;
+    } else {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error: No valid file provided to print\n");
+    }
+
+
+    return result;
+}
+
+
+  /**
+   * filesSearchResultsPath:
+   *
+   * Get the base path to be used for storing search results
+   *
+   * Returns The base path to be used for storing search results
+   */
+const xmlChar *
+filesSearchResultsPath()
+{
+    const xmlChar *result;
+
+    if (optionsGetStringOption(OPTIONS_SEARCH_RESULTS_PATH))
+        result = optionsGetStringOption(OPTIONS_SEARCH_RESULTS_PATH);
+    else
+        result = stylePath();
+
+    return result;
+}
+
+
+  /**
+   * filesURItoFileName:
+   * @uri : A valid URI that uses the "file://" prefix
+   *
+   * Return A copy of the conversion of @uri to a file name
+   *        that is suitable to be used  with the fopen function.
+   *        May be NULL, if out of memory, @uri does not use the
+   *        "file://" prefix, or unable to convert to a valid file name
+   *
+   * Returns A copy of the conversion of @uri to a file name
+   *        that is suitable to be used with the fopen function.
+   *        May be NULL, if out of memory, @uri does not use the
+   *        "file://" prefix, or unable to convert to a valid file name
+   *    
+   */
+xmlChar *filesURItoFileName(const xmlChar* uri)
+{
+  xmlChar *result = NULL;
+  xmlChar *unescapedFileName = NULL;
+  const xmlChar* tempName = NULL;
+
+  if (uri){
+    if (!xmlStrnCmp(uri, "file://localhost", 16 )){
+      tempName = uri + 16;
+    }else{
+#if defined(WIN32) && ! defined(CYGWIN)
+      if (!xmlStrnCmp(uri, "file:///", 8))
+	tempName = uri + 8;
+#else
+      if (!xmlStrnCmp(uri, "file://", 7))
+	tempName = uri + 6; /* we need the leading '/'*/
+#endif
+    }
+
+    /* If we've found something check to see if the file name 
+       found is to be valid */
+    if (tempName)
+      result = (xmlChar*) xmlStrdup(tempName);
+      unescapedFileName =  (xmlChar*) xmlStrdup(tempName);
+      if (result && unescapedFileName){
+	if (PATHCHAR != URISEPARATORCHAR){
+	  /* Must convert path separators first */
+	  xmlChar *probe = result;
+	  while(*probe != '\0'){
+	    if (*probe == (xmlChar)URISEPARATORCHAR)
+	      *probe = (xmlChar)PATHCHAR;
+	    probe++;
+	  }
 	}
+	/* Now unescape the file name in result so far
+	* NB: An unescaped name takes less memory that an escaped name
+	*/
+	xmlURIUnescapeString((char*)result, -1,  (char*)unescapedFileName);
+	xmlFree(result);
+	/* success we've got an local unescaped file name */
+	result = unescapedFileName;
+      }else{
+        xsltGenericError(xsltGenericErrorContext,
+			 "Error: Out of memory\n");	
+	if (result){
+	  xmlFree(result);
+	}
+	if (unescapedFileName) /* not needed, here for completeness */
+	  xmlFree(unescapedFileName);
+
+	result = NULL;
       }
+    }else{
+        xsltGenericError(xsltGenericErrorContext,
+			 "Error: Unable to convert %s to local file name\n",
+			 uri);
     }
-    
-    if (openedFile){
-      fclose(file);      
-    }
-    xsltGenericError(xsltGenericErrorContext,"\n");
-    result = 1;
-  }else{
-    	xsltGenericError(xsltGenericErrorContext,
-			 "Error: No valid file provided to print\n");
-  }
 
 
   return result;
 }
+
 
 /* TODO in xsldbg 3.x rename these to use files prefix */
 

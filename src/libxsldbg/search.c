@@ -399,21 +399,9 @@ searchSave(const xmlChar * fileName)
     int result = 0;
     xmlChar *searchInput = NULL;
 
-    if (fileName == NULL) {
-        xmlStrCpy(buffer, stylePath());
-#ifdef __riscos
-        /* RISC OS paths don't end in directory separators */
-        xmlStrCat(buffer, ".searchresult/xml");
-#else
-        xmlStrCat(buffer, "searchresult.xml");
-#endif
-        searchInput = xmlStrdup(buffer);
-#ifdef __riscos
-        /* We're going to pass a native filename to a command that takes URIs,
-         * so we need to convert it */
-        searchInput = xmlStrdup((xmlChar *) unixfilename((char *) buffer));
-#endif
-    } else
+    if (fileName == NULL)
+        searchInput = filesSearchFileName(FILES_SEARCHINPUT);
+    else
         searchInput = xmlStrdup(fileName);
 
     if (xmlSaveFormatFile((char *) searchInput, searchDataBase, 1))
@@ -445,26 +433,29 @@ searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
             const xmlChar * query)
 {
     int result = 0;
+
     /* The file name of where the input is comming from */
     xmlChar *searchInput = NULL;
+
     /* The XSL file name to use during transformation of searchInput */
     xmlChar *searchXSL = NULL;
+
     /* Where to store the result of transformation */
     xmlChar *searchOutput = NULL;
 
- 
+
     /* if a tempFile if provided its up you to make sure that it is correct !! */
-    if (tempFile == NULL) 
-      searchInput = filesSearchFileName(FILES_SEARCHINPUT);
+    if (tempFile == NULL)
+        searchInput = filesSearchFileName(FILES_SEARCHINPUT);
     else
-      searchInput = xmlStrdup(tempFile);
-    
-    searchXSL =  filesSearchFileName(FILES_SEARCHXSL);
+        searchInput = xmlStrdup(tempFile);
+
+    searchXSL = filesSearchFileName(FILES_SEARCHXSL);
 
     /* if a outputFile if provided its up you to make sure that it is correct */
-    if (outputFile == NULL) 
-      searchOutput =  filesSearchFileName(FILES_SEARCHRESULT);
-     else
+    if (outputFile == NULL)
+        searchOutput = filesSearchFileName(FILES_SEARCHRESULT);
+    else
         searchOutput = xmlStrdup(outputFile);
 
     if (!query || (xmlStrlen(query) == 0))
@@ -485,7 +476,7 @@ searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
 
         if (result && (optionsGetIntOption(OPTIONS_PREFER_HTML) == 0)) {
             /* try printing out the file */
-	  result = filesMoreFile(searchOutput, NULL);
+            result = filesMoreFile(searchOutput, NULL);
         }
 
         xsltGenericError(xsltGenericErrorContext,
@@ -716,7 +707,7 @@ findTemplateNode(xsltStylesheetPtr style, const xmlChar * name)
                 templName = (xmlChar *) templ->name;
 
             if (templName) {
-                if (!strcmp((char *) templName, (char *) name)) {
+                if (!xmlStrCmp((char *) templName, (char *) name)) {
                     return templ->elem;
                 }
             }

@@ -1,3 +1,4 @@
+
 /**************************************************************************
                           debug.h  -  declare major debugger functions
                              -------------------
@@ -92,7 +93,7 @@ extern "C" {
  */
 #endif
 #endif
-int debugGotControl(int reached);
+    int debugGotControl(int reached);
 
 #ifdef __cplusplus
 }

@@ -58,128 +58,26 @@ extern "C" {
     };
 
 
-  /* how many lines do we print before pausing when 
-     performing "more" on a UTF-8 file. See function filesMoreFile */
+    /* how many lines do we print before pausing when 
+     * performing "more" on a UTF-8 file. See function filesMoreFile */
 #define FILES_NO_LINES 20
 
-  /* Define the types of file names that we are intested in when creating
-     search results */
+    /* Define the types of file names that we are intested in when creating
+     * search results */
 #ifndef USE_KDOC
-  typedef enum {
-    FILES_SEARCHINPUT,
-    FILES_SEARCHXSL,
-    FILES_SEARCHRESULT
-  } FilesSearchFileNameEnum;
+    typedef enum {
+        FILES_SEARCHINPUT,
+        FILES_SEARCHXSL,
+        FILES_SEARCHRESULT
+    } FilesSearchFileNameEnum;
 #else
-   /* keep kdoc happy */
-  enum  FilesSearchFileNameEnum {
-    FILES_SEARCHINPUT,
-    FILES_SEARCHXSL,
-    FILES_SEACHRESULT
-  };
+    /* keep kdoc happy */
+    enum FilesSearchFileNameEnum {
+        FILES_SEARCHINPUT,
+        FILES_SEARCHXSL,
+        FILES_SEACHRESULT
+    };
 #endif
-  /*-----------------------------------------------------------
-                               File commands
-    -----------------------------------------------------------*/
-
-#ifdef USE_GNOME_DOCS
-
-  /**
-   * xslDbgEntities:
-   * 
-   * Print list of entites found 
-   *
-   * Returns 1 on sucess,
-   *         0 otherwise
-   */
-#else
-#ifdef USE_KDE_DOCS
-
-#endif
-#endif
-    int xslDbgEntities(void);
-
-
-#ifdef USE_GNOME_DOCS
-
-  /**
-   * xslDbgSystem:
-   * @arg : Is valid in UTF-8
-   * 
-   * Print what a system file @arg maps to via the current xml catalog
-   *
-   * Returns 1 on sucess,
-   *         0 otherwise
-   */
-#else
-#ifdef USE_KDE_DOCS
-
-  /**
-   * Print what a system file @p arg maps to via the current xml catalog
-   *
-   * @param arg Is valid in UTF-8
-   * 
-   * @returns 1 on sucess,
-   *          0 otherwise
-   */
-#endif
-#endif
-    int xslDbgSystem(const xmlChar * arg);
-
-
-#ifdef USE_GNOME_DOCS
-
-  /**
-   * xslDbgPublic:
-   * @arg : Is valid PublicID in UTF-8
-   * 
-   * Print what a public ID @arg maps to via the current xml catalog
-   *
-   * Returns 1 on sucess,
-   *         0 otherwise
-   */
-#else
-#ifdef USE_KDE_DOCS
-
-  /**
-   * Print what a public ID @p arg maps to via the current xml catalog
-   *
-   * @param arg Is valid PublicID in UTF-8
-   * 
-   * @returns 1 on sucess,
-   *          0 otherwise
-   */
-#endif
-#endif
-    int xslDbgPublic(const xmlChar * arg);
-
-
-#ifdef USE_GNOME_DOCS
-
-  /**
-   * xslDbgEncoding:
-   * @arg: Is valid encoding supported by libxml2
-   *
-   * Set current encoding to use for output to standard output
-   *
-   * Returns 1 on sucess,
-   *         0 otherwise
-   */
-#else
-#ifdef USE_KDE_DOCS
-
-  /**
-   * Set current encoding to use for output to standard output
-   *
-   * @param arg Is valid encoding supported by libxml2
-   *
-   *
-   * Returns 1 on sucess,
-   */
-#endif
-#endif
-    int xslDbgEncoding(xmlChar * arg);
-
 
 
 
@@ -828,7 +726,68 @@ extern "C" {
    */
 #endif
 #endif
-  int filesMoreFile(const xmlChar* fileName, FILE *file);
+    int filesMoreFile(const xmlChar * fileName, FILE * file);
+
+#ifdef USE_GNOME_DOCS
+
+  /**
+   * filesSearchResultsPath:
+   *
+   * Get the base path to be used for storing search results
+   *
+   * Returns The base path to be used for storing search results
+   */
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * Get the base path to be used for storing search results
+   *
+   * @returns The base path to be used for storing search results
+   */
+#endif
+#endif
+    const xmlChar *filesSearchResultsPath(void);
+
+
+
+#ifdef USE_GNOME_DOCS
+
+  /**
+   * filesURItoFileName:
+   * @uri : A valid URI that uses the "file://" prefix
+   *
+   * Return A copy of the conversion of @uri to a file name
+   *        that is suitable to be used  with the fopen function.
+   *        May be NULL, if out of memory, @uri does not use the
+   *        "file://" prefix, or unable to convert to a valid file name
+   *
+   * Returns A copy of the conversion of @uri to a file name
+   *        that is suitable to be used with the fopen function.
+   *        May be NULL, if out of memory, @uri does not use the
+   *        "file://" prefix, or unable to convert to a valid file name
+   *    
+   */
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * Return A copy of the conversion of @uri to a file name
+   *        that is suitable to be used with the fopen function.
+   *        May be NULL, if out of memory, @uri does not use the
+   *        "file://" protocol, or unable to convert to a valid file name
+   *
+   * Returns A copy of the conversion of @uri to a file name
+   *        that is suitable to be used with the fopen function.
+   *        May be NULL, if out of memory, @uri does not use the
+   *        "file://" prefix, or unable to convert to a valid file name
+   *    
+   * @param uri A valid URI that uses the "file://" prefix
+   *
+   */
+#endif
+#endif
+  xmlChar *filesURItoFileName(const xmlChar* uri);
 
 
 #ifdef USE_GNOME_DOCS
@@ -849,7 +808,7 @@ extern "C" {
    */
 #endif
 #endif
-  void xsldbgUpdateFileDetails(xmlNodePtr node);
+    void xsldbgUpdateFileDetails(xmlNodePtr node);
 
 
 
@@ -986,7 +945,7 @@ extern "C" {
    */
 #endif
 #endif
-  xmlChar* filesExpandName(const xmlChar *fileName);
+    xmlChar *filesExpandName(const xmlChar * fileName);
 
 
 
@@ -1013,7 +972,7 @@ extern "C" {
    */
 #endif
 #endif
-  xmlChar * filesSearchFileName(FilesSearchFileNameEnum fileType);
+    xmlChar *filesSearchFileName(FilesSearchFileNameEnum fileType);
 
 #ifdef __cplusplus
 }

@@ -46,6 +46,7 @@ extern "C" {
 #define xmlStrLen(text) strlen((char*)(text))
 #define xmlStrCat(a, b) strcat((char*)(a), (char*)(b))
 #define xmlStrCmp(a, b) strcmp((char*)(a), (char*)(b))
+#define xmlStrnCmp(a, b, c) strncmp((char*)(a), (char*)(b), c)
 #define xmlStrCpy(a, b) strcpy((char*)(a), (char*)(b))
 #define xmlStrnCpy(a, b, c) strncpy((char*)(a),(char*)(b), c)
 #define xmlStrChr(a, b) strchr((char*)(a), b)
@@ -172,7 +173,7 @@ extern "C" {
 */
 #endif
 #endif
-int lookupName(xmlChar * name, xmlChar ** matchList);
+    int lookupName(xmlChar * name, xmlChar ** matchList);
 
 
 #ifdef __cplusplus

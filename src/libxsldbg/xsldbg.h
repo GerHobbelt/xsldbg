@@ -86,7 +86,7 @@
 #include "libxml/riscos.h"
 #endif
 
-#endif /* BUILD_DOCS*/
+#endif /* BUILD_DOCS */
 
 
 #ifdef __cplusplus
