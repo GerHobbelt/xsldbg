@@ -1,0 +1,188 @@
+Copy of emails relating to analysis
+
+-----------------------------------
+
+    * From: Keith Isdale <k_isdale tpg com au>
+    * To: xslt <xslt gnome org>
+    * Subject: [xslt] template breakpoint complexity, release of
+xsldbg-0.6.4
+    * Date: Mon, 5 Nov 2001 14:14:39 +1000
+
+Hi,
+
+Here's  some analysis I've done which may be of interest . This has been
+to 
+reduce the risk of poor interfaces/implementation by doing some
+estimations 
+of its performance when debugging docbook xsl.  
+
+Also new version of  xsldbg has been released. at 
+sourceforge.net/projects/xsldbg.  The new release requires the latest cvs 
+source for both libxml and libxslt .  libxslt must to be patched and 
+configured and reinstalled with the "--with-debugger=yes"  option enabled.  
+ 
+Changes made  are 
+	 o upgrade to libxslt-1.0.6
+	 o the removal of xsltaddon
+	 o splitting og breakpoint API implementation in separate files.
+  	 o xsldbg now throws an error if the debugger patch to libxslt has
+not 
+been applied
+
+Daniel : Could I have a flag in xslt.h to indicate if debugging is
+enabled? I 
+currently do a grep on the libraries that xslt-config indicates libxslt 
+exports to tell if debugging is enabled.
+
+See xsldbg's ChangeLog for more details.
+This version 
+	o does not improve the implentation the the breakpoint API
+	o suffers from the hard limit of a maximum 40 breakpoints.
+
+Lastly I think that xmlGetLineNo can be improved, see attached diff for 
+debugXML.c (apply to libxml). This is not required but is recommended.
+
+bye,
+
+Keith Isdale
+
+
+--------------------
+
+	The problem
+	---------
+
+How to ensure that finding a breakpoint takes the minimum amount of time.
+In 
+the worst case scenario there can be as many templates per line (and 
+corresponding breakpoint) as there are files(see summary below). 
+
+	A solution
+	-------
+I am starting to view the breakpoint problem as solvable by using a map 
+between a line number and a hash table of breakpoints. This means that I
+can 
+use a list (implementated using an array)  to hold these maps. To get a 
+breakpoint I could use this algorithm
+  
+Line	Code 
+---       -----
+1:    	lineNumber = xmlGetLineNo(node) 
+2:    	URL = node->doc->URL;
+
+3:   	map = getItem(mapList, lineNumber)    
+4:   	 if (map != NULL){
+5:   	   breakpoint = getEntry(map, URL)
+6)  	 }
+
+
+notes: 
+  mapList is the list of maps ( linenumber to breakpoints) 
+  lineNumber is the lineNumber of "xsl instruction" or "xml document node" 
+being checked to see it it is a breakpoint 
+ <URL> is the URL of node being looked at , and is the "key" for the map
+
+The first statement, getItem,  would have an order of complexity of 1
+The map would likely to have, on average, four entries. (see below in 
+summary). So the second statement would have an order of complexity of 4. 
+
+It is assumed that the hash map of breakpionts will not need to be
+rehashed 
+to minimize the time taken to find a breakpoint.  This assumption will
+need 
+to be tested! Test to be conducted is counting the number of collisions in 
+hash table (elements in hash table with same hashcode). When xsldbg is
+loaded 
+with maximum number of "template" breakpoints.
+
+If needed possible rehash strategies are 
+1)  set hash table to another hashCode function. (hmm what other one's to
+use)
+2)  grow hash table size  
+	But this would cause slight delay during rehashing, and use more
+memory.
+     choice a) By a factor of two if table has only a few elements
+     choice b) Up to 1.5  times the size of number of elements in hash
+table 
+when there are a large number of elements in hash table (try to reduce
+memory 
+wastage)
+
+It is also assumed that the xmlGetLineNo function rarely need to "search"
+for 
+a valid parent/previous node with a valid line number. This will need to
+be 
+tested!
+ 
+		Statistics summary  
+		-------------
+These are the statistics that I determined from the html version of
+docbook 
+xsl 1.75
+
+By inspection I found nearly all stylesheets files have a template at the 
+start of file. Since I allow breakpoints to be set at all templates the
+worst 
+case for the number of breakpoints per line is the number of files.
+
+In the avarage case it is expected that each line will have a four
+templates. 
+Which means we could expect to have four breakpionts per line. 
+
+
+
+		Details of statistics
+		-------------
+
+Files needed for test
+--------------
+cat *.xsl >> xsl_data.txt
+ls *.xsl > xsl_filenames.txt
+
+Number of files:44
+cmd used : wc  -l xsl_filenames.txt
+
+Total number of lines : 17412 
+cmd used : wc -l xsl_data.txt
+
+Average size of file: 395
+cmd used: perl -e "print 17412/44"
+
+Size of preamble: 7 (by visual inspection on files)
+
+Average area of file excluding "preamble":388
+cmd used: perl -e "print 395 -7"
+
+Total number of templates:1352
+cmd used: grep -c "\(\<xsl:template\)" xsl_data.txt 
+
+"called templates" ie <xsl:template name= ...  
+Total number of normal templates : 235
+cmd used: grep -c "\(xsl:template\([[:space:]]\)\+name\)" xsl_data.txt 
+
+"normal" templates ie <xsl:template match= ...    
+Total number of normal templates : 1113
+cmd used: grep -c "\(xsl:template\([[:space:]]\)\+match\)" xsl_data.txt 
+
+These don't addup to total number of templates , can't find th reason
+why.:-(
+
+Max number of templates per file: 372
+Min number of templates per file: 0
+cmd used :grep -c -e "<xsl:template" *.xsl  
+
+Density of templates per line (average): 3.5
+cmd used: perl -e "print 1352/388"
+
+Density of templates per line (in file with most templates 
+titlepage.templates.xsl ) :7.2
+approximate cmd used :  (wc -l titlepage.templates.xsl)   divided by  grep
+-c 
+"\(\<xsl:template\)"  titlepage.templates.xsl 
+
+------------------------------
+
+
+
+
+
