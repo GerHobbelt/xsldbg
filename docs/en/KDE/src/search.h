@@ -659,3 +659,21 @@
 
 
 
+
+  /**
+   * Find documentation comment that applies to @p sourceNode. If found convert comment 
+   *         into search dataBase format required
+   *
+   * Returns Documentation comment for @node as a new xmlNode in search dataBase format 
+   *            if successful,
+   *         NULL otherwise
+   *
+   * @param node Is valid
+   */
+
+
+  xmlNodePtr searchCommentNode(xmlNodePtr node);
+
+
+
+

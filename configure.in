@@ -219,8 +219,7 @@ fi]
     WITH_DEBUG_HELP=1])
 
 dnl
-dnl Do you want to experiment with using xsldbg as a thread
-dnl Warning will lead to alpha version of xsldbg
+dnl Do you want to use xsldbg as a thread
 dnl
 
 USE_XSLDBG_AS_THREAD=0
@@ -235,7 +234,7 @@ AC_ARG_ENABLE(xsldbgthread,
 [case "${enableval}" in 
 	yes) xsldbgthread="true"
        AC_MSG_RESULT(
-!!Warning!!! Enabling xsldbg as a thread
+ Enabling xsldbg as a thread
 )
 	     AC_CHECK_HEADERS(pthread.h,
 	     AC_DEFINE(HAVE_PTHREAD)

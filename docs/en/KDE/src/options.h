@@ -42,6 +42,11 @@
         Misc options
 -------------------------------------------*/
 
+/** The largest number lines of text can be print print printing documents
+    This is equivant to gdb shorting of evaluation values
+ */
+
+
 
     /* keep kdoc happy */
     enum OptionsTypeEnum {
@@ -62,6 +67,8 @@
                                  * store it in OPTIONS_CATALOG_NAMES */
         OPTIONS_PREFER_HTML,    /* Prefer html output for search results */
         OPTIONS_AUTOENCODE,     /* try to use the encoding from the stylesheet */
+	OPTIONS_UTF8_INPUT,     /* All input from user is in UTF-8.This normaly 
+				   used when xsldbg is running as a thread*/
         OPTIONS_VERBOSE,        /* Be verbose with messages */
         OPTIONS_OUTPUT_FILE_NAME,       /* what is the output file name */
         OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */
@@ -149,6 +156,43 @@
 
 
     void optionsFree(void);
+
+
+
+
+
+  /**
+   * Find the option id for a given option name
+   *
+   * @returns The optionID for @optionName if successful, where  
+   *             OPTIONS_XINCLUDE<= optionID <= OPTIONS_DATA_FILE_NAME,
+   *         otherwise returns -1
+   *
+   * @param optionName A valid option name see documentation for "setoption" 
+   *        command and program usage documentation
+   *
+   */
+
+
+  int optionsGetOptionID(xmlChar* optionName);
+
+
+
+
+
+
+  /**
+   * Get the name text for an option
+   *
+   * Returns The name of option if @ID is valid, 
+   *         NULL otherwise 
+   *
+   * @param ID A valid option ID
+   *
+   */
+
+
+  const xmlChar *optionsGetOptionName(OptionTypeEnum ID);
 
 
 
