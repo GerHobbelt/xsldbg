@@ -12,6 +12,7 @@ noinst_HEADERS=\
 	help.h 			\
 	cmds.h			\
 	debugXSL.h 		\
+	debug.h			\
 	arraylist.h		\
 	callstack.h		\
 	breakpoint.h		\
