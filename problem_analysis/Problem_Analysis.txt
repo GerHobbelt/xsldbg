@@ -1,0 +1,63 @@
+	Problem domain analysis
+        -----------------------
+
+The follow entities are present in the problem domain for libxslt with
+interest and values as follows
+
+
+libxslt library
+	o values to get more users
+	o values standards compliance
+	o values stability  (relatively stable not changing every day)
+	o values reliability (lots of error checking)
+	o values localisation of changes to a module
+	o values stable project scope:
+		a commercial and free library to process stylesheets
+
+
+Novice user
+	o wants to learn language
+	o wants to experiment
+
+
+Experienced user
+	o values usability
+	o values functionality
+	o values getting desired results quickly
+
+Application
+	o wants stable third part tools
+	o values control over tools
+	o values consistant formatting
+		- errors
+		- normal outputs
+
+
+Stylesheets
+	o contains
+		- varialbles
+			o local
+			o global
+		- template
+	o values selection of content by
+		- template
+		- absolute path
+		- relative path
+	o wants to print content
+		- format consistant accross many documents
+		- format same as original document
+
+data
+	o contains
+		- node
+		- attibutes
+		- content
+	o values selection of content by
+		- template
+		- absolute path
+		- relative path
+	o wants to print content
+		- format consistant accross many documents
+		- format same as original document
+
+
