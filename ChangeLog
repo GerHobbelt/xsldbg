@@ -1,3 +1,7 @@
+* Keith Isdale 9 Nov 2001
+* Checked cvs -ok
+* taged repository to rel-0-6-5
+
 * Keith Isdale 8 Nov 2001
 * Fixed typos in cvs log messages to spell Daniel's name correctly
 * taged repository to rel-0-6-4
@@ -36,3 +40,4 @@
 * Added tests directory and build a framework for automated testing
 *	see results directory for the intermediate outputs of testing
 * Added function xslDebugGotControl to breakpoint API (see /breakpoint/dbgmain.c)	
+
