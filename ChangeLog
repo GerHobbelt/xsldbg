@@ -1,7 +1,11 @@
+* Keith Isdale 8 Nov 2001
+* Fixed typos in cvs log messages to spell Daniel's name correctly
+* taged repository to rel-0-6-4
+
 *Keith Isdale 7 Nov 2001
-* Applied Daniels patch see
+* Applied Daniel's patch see
 *	http://mail.gnome.org/archives/xslt/2001-November/msg00015.html
-* Added patch_history directory and stored Daniels patch in it
+* Added patch_history directory and stored Daniel's patch in it
 * Change to version 0.6.5
 * Added problem_analysis directory to keep record of analysies performed
 	
