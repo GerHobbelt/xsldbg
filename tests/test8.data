@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+<!DOCTYPE testcmd SYSTEM "testcmd.dtd">
+<!-- 
+     File : test8.data     
+     Author: Keith Isdale <k_isdale@tpg.com.au>
+     Description: xml data that decribes what to do for "test8"
+     Copyright Reserved Under GPL     
+-->
+
+  <!-- Test xsl:text, xsl:message -->
+
+<testcmd>
+<!-- try to find docbook xsl --> 
+<cmd>
+<test>chdir /usr/share/xml/docbook/xsl/html</test>
+<result>
+<row>
+<matchtext optional="yes">Change to directory \/usr\/share\/xml\/docbook\/xsl\/html</matchtext>
+</row>
+</result>
+</cmd>
+
+<!-- loadup docbook xsl -->
+<cmd>
+<test>source docbook.xsl</test>
+</cmd>
+<cmd>
+<test>yes</test> <!-- we need to say yes to load file -->
+<result>
+<row>
+<matchtext optional="yes">Load of source deferred use run command</matchtext>
+</row>
+</result>
+</cmd>
+
+<!-- loadup my some docbook documentation -->
+<cmd>
+<test>data ~/lang/c/xsldbg/xsldbg/docs/en/KDE/index.docbook</test>
+</cmd>
+<cmd>
+<test>yes</test> <!-- we need to say yes to load file -->
+<result>
+<row>
+<matchtext optional="yes">Load of xml data deferred use run command</matchtext>
+</row>
+</result>
+</cmd>
+<cmd>
+<test>d *</test> <!-- clear any breakpoints present -->
+</cmd>
+<cmd>
+<test>run</test>
+</cmd>
+<cmd>
+<test>show</test>
+</cmd>
+<cmd>
+<test>break *</test>
+</cmd>
+<cmd>
+<test>show</test>
+<result>
+<row>
+<matchtext optional="yes">Total of 1382 breakPoints present</matchtext>
+</row>
+</result>
+</cmd>
+<cmd>
+<test>quit</test>
+</cmd>
+</testcmd>
+
+
+<!-- initialization code for xemacs -->
+<!--
+Local Variables:
+mode: sgml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+-->

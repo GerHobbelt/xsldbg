@@ -6,11 +6,6 @@ INCLUDES= $(all_includes) -DHELP_DOC_PATH=\"$(HTML_DIR)/xsldbg\" \
 EXTRA_DIST = \
 	help.c help.h 		\
 	debugXSL.c debugXSL.h 	\
-	dbgarraylist.c arraylist.h \
-	dbgbreakpoint.c		\
-	dbgcallstack.c 		\
-	dbgsearch.c		\
-	dbgmain.c		\
 	files.c files.h		\
 	options.c options.h	\
 	xsldbg.h
@@ -21,11 +16,6 @@ xsldbg_SOURCES = \
 	files.c		\
 	options.c	\
 	debugXSL.c 	\
-	dbgarraylist.c	\
-	dbgbreakpoint.c	\
-	dbgcallstack.c 	\
-	dbgsearch.c	\
-	dbgmain.c	\
 	help.c	
 xsldbg_LDADD   = 
 

@@ -61,6 +61,27 @@
 <row>
 <breakpoint line="36"/> <!-- libxslt handling "item" -->
 </row>
+
+<!-- Result for test -->
+<!-- Test for-each -->
+<row>
+<breakpoint line="41"/>
+</row>
+<row>
+<breakpoint line="42"/>
+</row>
+<row>
+<breakpoint line="43"/>
+</row>
+<row>
+<breakpoint line="43"/><!-- libxslt handling "item" -->
+</row>
+<!-- Ignore any more occurances of 
+       <row>
+       <breakpoint line="43"/>
+       </row>
+As we don't need to test that libxslt works!
+-->
 </result>
 </cmd>
 <cmd>

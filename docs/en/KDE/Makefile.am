@@ -10,7 +10,7 @@ $(XSLDBG):
 index.docbook : xsldoc2kde.xsl $(DATADIR)/xsldoc.xml 
 	$(XSLDBG) --cd $(DATADIR) --param xsldbg_version "'$(VERSION)'"  -o $(XSLDIR)/index.docbook $(XSLDIR)/xsldoc2kde.xsl xsldoc.xml
 
-index.cache.bz2 : index.docbook
+index.cache.bz2 : index.docbook $(DATADIR)/xsldoc.xml 
 	meinproc index.docbook
 	meinproc --htdig index.docbook > index.cache
 	rm -f index.cache.bz2
@@ -19,9 +19,9 @@ index.cache.bz2 : index.docbook
 
 
 if USE_KDEDOCS
-all: index.docbook index.cache.bz2
+all: index.docbook index.cache.bz2 $(DATADIR)/xsldoc.xml 
 
-clean:
+clean: 
 	rm -f index.docbook
 	rm -f *.html
 	rm -f *.bz2

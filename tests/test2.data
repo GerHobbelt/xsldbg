@@ -21,7 +21,7 @@
 <breakpoint line="18"/>
 </row>
 <row>
-<breakpoint line="57"/>
+<breakpoint line="59"/>
 </row>
 
 <!-- Test basic usage of xsl:call-template -->
@@ -29,7 +29,7 @@
 <breakpoint line="20"/>
 </row>
 <row>
-<breakpoint line="70"/>
+<breakpoint line="72"/>
 </row>
 
 <!-- Result of test -->
@@ -48,7 +48,7 @@ Test the ability to step into a xsl:with-param child -->
 <breakpoint line="26"/>
 </row>
 <row>
-<breakpoint line="57"/>
+<breakpoint line="59"/>
 </row>
 
 <!-- Results of test  -->
@@ -67,7 +67,7 @@ Test the ability to step into a xsl:with-param child -->
 <breakpoint line="34"/>
 </row>
 <row>
-<breakpoint line="74"/>
+<breakpoint line="76"/>
 </row>
 
 <!-- Results for test -->
@@ -76,16 +76,16 @@ Test the ability to step into a xsl:with-param child -->
 <breakpoint line="39"/>
 </row>
 <row>
-<breakpoint line="62"/>
-</row>
-<row>
-<breakpoint line="63"/>
-</row>
-<row>
-<breakpoint line="64"/><!--  the step into with-param -->
-</row>
-<row>
 <breakpoint line="64"/>
+</row>
+<row>
+<breakpoint line="65"/>
+</row>
+<row>
+<breakpoint line="66"/><!--  the step into with-param -->
+</row>
+<row>
+<breakpoint line="66"/>
 </row>
 
 <!-- Results for test -->
@@ -94,16 +94,16 @@ Test the ability to step into a xsl:with-param child -->
 <breakpoint line="42"/>
 </row>
 <row>
-<breakpoint line="79"/>
-</row>
-<row>
-<breakpoint line="80"/>
-</row>
-<row>
 <breakpoint line="81"/>
 </row>
 <row>
-<breakpoint line="81"/> <!--  the step into with-param -->
+<breakpoint line="82"/>
+</row>
+<row>
+<breakpoint line="83"/>
+</row>
+<row>
+<breakpoint line="83"/> <!--  the step into with-param -->
 </row>
 
 <!-- Result of test -->
@@ -115,9 +115,13 @@ Test the ability to step into a xsl:with-param child -->
 <breakpoint line="46"/>
 </row>
 <row>
-<breakpoint line="57"/>
+<breakpoint line="59"/>
 </row>
 
+<!-- Test xsl:apply-templates -->
+<row>
+<breakpoint line="49"/>
+</row>
 <!-- End of tests -->
 </result>
 </cmd>

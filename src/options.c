@@ -56,6 +56,8 @@ int trace = 0;
  /* do we print out messages/debuging info */
 int verbose = 0;
 
+/* what speed do we walk though code */
+int walkSpeed = 0;
 
 /* keep track of our string options */
 xmlChar *stringOptions[ OPTIONS_DATA_FILE_NAME - OPTIONS_OUTPUT_FILE_NAME + 1];
@@ -162,6 +164,10 @@ int enableOption(enum Option_type option_type, int value){
     verbose = value; /* do we print out extra messages/debuging info */
     break;
 
+  case OPTIONS_WALK_SPEED:
+    walkSpeed = value; /* How fast do we walk through code */
+    break;
+
   default:
       xsltGenericError(xsltGenericErrorContext,
 		       "Not a valid boolean xsldbg option %d\n", type);
@@ -225,6 +231,10 @@ int isOptionEnabled(enum Option_type option_type){
 
   case OPTIONS_VERBOSE:
     result = verbose; /* do we print out extra messages/debuging info */
+    break;
+
+  case OPTIONS_WALK_SPEED:
+    result = walkSpeed; /* How fast do we walk through code */
     break;
 
   default:

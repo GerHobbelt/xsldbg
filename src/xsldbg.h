@@ -20,9 +20,7 @@
 #define XSLDEBUGGER_H
 
 
-#ifndef WITH_XSLT_DEBUG
-#define WITH_XSLT_DEBUG
-#endif
+#ifdef  WITH_XSLT_DEBUG
 
 #ifndef WITH_XSLT_DEBUG_SHELL
 #define WITH_XSLT_DEBUG_SHELL
@@ -39,6 +37,8 @@
 #ifndef  WITH_XSL_DEBUG_HELP
 #define WITH_XSL_DEBUG_HELP
 #endif
+
+#endif /* end of WITH_XSL_DEBUG */
 
 /**
  * ATTRIBUTE_UNUSED:

@@ -1,9 +1,36 @@
+* Keith Isdale 19 Nov 2001
+* Added automatic replacement of '~' for $HOME environment variable value
+*         when useing source and data commands
+* Added xslEmptyBreakPoint to breakpoint API
+* Did a trial run of importing breakpoint API implementation into 
+*    libxslt. Made small changes to header imports.
+*    Fixed xslHandleDebugger so it doesn't crash if its preconditions 
+*       are not met	
+*   Ported new xsltproc code into xsldbg.c
+*   Added xslDebugBreak to dbgmain.c 	
+*   Fix many minor errors detected by setting pandantic compiler flags
+* Changed source and data commands so that a "run" is required after
+*      changing files, this makes if much simpler and more reliable
+* Added test8 to run xsldbg on docbook.xsl
+* Cleaned up breakpoint API source
+	
+* Keith Isdale 18 Nov 2001
+* Implemented  new breakpoint API changed 
+*	in libxslt breakpoint/dbgbreakpoint.c
+*	in libxslt breakpoint/breakpoint.h	
+* Fixed crash when using arraylist
+	
+* Keith Isdale 17 Nov 2001
 * Add libxslt parameter commands ie addparam, delparam, showparam
 * Added shell, chdir commands
-* Added trace command 	
-* Upated xsldoc.xml
+* Added trace, walk commands
+* Added catch of SIGINT to xsldbg.c to stop execution upon receiving SIGINT
 * Fixed help.c to pass right parameters when looking for commmand provided 
-*	if provided
+*	if provided	
+* Upated xsldoc.xml
+* Fixed libxslt/attributes.c so that xsl:attribute, and xsl:attribute-set works	
+* Added test 5, 6, 7 all libxst intructions able to be stepped into are now covered	
+
 	
 * Keith Isdale 11 Nov 2001
 * Separated parameter storage from xsldbg.c and put into options.[ch]

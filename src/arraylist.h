@@ -19,8 +19,6 @@
 #ifndef ARRAYLIST_H
 #define ARRAYLIST_H
 
-#include "xsldbg.h"
-
 typedef void (*freeItemFunc) (void *item);
 
 typedef struct _ArrayList ArrayList;

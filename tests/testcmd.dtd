@@ -8,20 +8,25 @@
 <!ELEMENT cmd (test, result?)>
 <!ELEMENT test (#PCDATA)>
 <!ELEMENT result (row+)>
-<!ELEMENT row (template|breakpoint|breakpointlist)>
+<!ELEMENT row (template|breakpoint|breakpointlist|parameter|matchtext)>
 <!ELEMENT template EMPTY>
 <!ELEMENT breakpoint EMPTY>
 <!ELEMENT breakpointlist EMPTY>
+<!ELEMENT parameter EMPTY>
+<!ELEMENT matchtext (#PCDATA)>
+
 
 <!ATTLIST template 
     name CDATA #REQUIRED
     file CDATA #IMPLIED 
     line CDATA #IMPLIED
+    optional CDATA #IMPLIED
 >
 
 <!ATTLIST breakpoint
     file CDATA #IMPLIED
     line CDATA #IMPLIED 
+    optional CDATA #IMPLIED
 >
 
 <!ATTLIST breakpointlist
@@ -29,4 +34,12 @@
     state CDATA #IMPLIED 
     file CDATA #IMPLIED 
     line CDATA #IMPLIED
+    optional CDATA #IMPLIED
+>
+
+<!ATTLIST parameter
+    id CDATA #IMPLIED
+    name CDATA #IMPLIED 
+    value CDATA #IMPLIED 
+    optional CDATA #IMPLIED
 >

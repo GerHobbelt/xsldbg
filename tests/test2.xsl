@@ -11,7 +11,7 @@
   <xsl:strip-space elements="text()"/>
   <xsl:output method="text"/> 
 
-  <!-- Test apply templates and call template -->
+  <!-- Test xsl:apply-templates, xsl:call-template, xsl:apply-imports -->
   <xsl:template match="/">
         <!-- Basic xsl:apply-templates, xsl:call-template usage -->
         <!-- Test basic usage of xsl:apply-templates -->
@@ -45,6 +45,8 @@
         <xsl:apply-templates select="result/data">
           <xsl:sort select="."/>
         </xsl:apply-templates>
+
+        <xsl:apply-imports/> <!-- useless but test that we can step to it -->
 
   </xsl:template>
 

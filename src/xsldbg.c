@@ -32,12 +32,15 @@
 #include "options.h"
 #include "files.h"
 #include <breakpoint/breakpoint.h>
+/* need to setup catch of SIGINT */
+#include <signal.h>
 
 /* needed by printTemplateNames */
-#include "libxslt/transform.h"
+#include <libxslt/transform.h>
 
-#include "libxslt/xslt.h" /*libxslt.h"*/
-#include "libexslt/exslt.h"
+/* standard includes from xsltproc*/
+#include <libxslt/xslt.h>
+#include <libexslt/exslt.h>
 #ifdef HAVE_STRING_H
 #include <string.h>
 #endif
@@ -52,6 +55,9 @@
 #endif
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
+#endif
+#ifdef HAVE_STDARG_H
+#include <stdarg.h>
 #endif
 #include <libxml/xmlmemory.h>
 #include <libxml/debugXML.h>
@@ -81,9 +87,17 @@
 #include <winsock2.h>
 #pragma comment(lib, "ws2_32.lib")
 #define gettimeofday(p1,p2)
+#define HAVE_TIME_H
+#include <time.h>
+#define HAVE_STDARG_H
+#include <stdarg.h>
 #endif /* _MS_VER */
 #else /* WIN32 */
+#if defined(HAVE_SYS_TIME_H)
 #include <sys/time.h>
+#elif defined(HAVE_TIME_H)
+#include <time.h>
+#endif
 #endif /* WIN32 */
 
 #ifndef HAVE_STAT
@@ -97,19 +111,114 @@
 #  endif
 #endif
 
+
 xmlParserInputPtr xmlNoNetExternalEntityLoader(const char *URL,
 	                                       const char *ID,
 					       xmlParserCtxtPtr ctxt);
 
-int xsldbgInit();
-void xsldbgFree();
+int xsldbgInit(void);
+void xsldbgFree(void);
+int breakPointInit(void);
+void breakPointFree(void);
 void printTemplates(xsltStylesheetPtr style, xmlDocPtr doc);
 
+/*
+ * Internal timing routines to remove the necessity to have unix-specific
+ * function calls
+ */
+
+#if defined(HAVE_GETTIMEOFDAY)
+static struct timeval begin, end;
+/*
+ * startTimer: call where you want to start timing
+ */
+static void startTimer(void)
+{
+    gettimeofday(&begin,NULL);
+}
+/*
+ * endTimer: call where you want to stop timing and to print out a
+ *           message about the timing performed; format is a printf
+ *           type argument
+ */
+static void endTimer(const char *format, ...)
+{
+    long msec;
+    va_list ap;
+
+    gettimeofday(&end, NULL);
+    msec = end.tv_sec - begin.tv_sec;
+    msec *= 1000;
+    msec += (end.tv_usec - begin.tv_usec) / 1000;
+
+#ifndef HAVE_STDARG_H
+#error "endTimer required stdarg functions"
+#endif
+    va_start(ap, format);
+    vfprintf(stderr,format,ap);
+    va_end(ap);
+
+    xsltGenericError(xsltGenericErrorContext, " took %ld ms\n", msec);
+}
+#elif defined(HAVE_TIME_H)
+/*
+ * No gettimeofday function, so we have to make do with calling clock.
+ * This is obviously less accurate, but there's little we can do about
+ * that.
+ */
+
+clock_t begin, end;
+static void startTimer(void)
+{
+    begin=clock();
+}
+static void endTimer(char *format, ...)
+{
+    long msec;
+    va_list ap;
+
+    end=clock();
+    msec = ((end-begin) * 1000) / CLOCKS_PER_SEC;
+
+#ifndef HAVE_STDARG_H
+#error "endTimer required stdarg functions"
+#endif
+    va_start(ap, format);
+    vfprintf(stderr,format,ap);
+    va_end(ap);
+    xsltGenericError(xsltGenericErrorContext, " took %ld ms\n", msec);
+}
+#else
+/*
+ * We don't have a gettimeofday or time.h, so we just don't do timing
+ */
+static void startTimer(void)
+{
+  /*
+   * Do nothing
+   */
+}
+static void endTimer(char *format, ...)
+{
+  /*
+   * We cannot do anything because we don't have a timing function
+   */
+#ifdef HAVE_STDARG_H
+    va_start(ap, format);
+    vfprintf(stderr,format,ap);
+    va_end(ap);
+    xsltGenericError(xsltGenericErrorContext, " was not timed\n", msec);
+#else
+  /* We don't have gettimeofday, time or stdarg.h, what crazy world is
+   * this ?!
+   */
+#endif
+}
+#endif
 
 static void
 xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur, const char *filename) {
-    struct timeval begin, end;
-  xmlDocPtr res;
+    xmlDocPtr res;
   const char *params[xslArrayListCount(getParamItemList())*2 + 2];
   int nbparams = 0;
   int index;
@@ -124,131 +233,90 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur, const char *filename) {
       nbparams+=2;
     }
   }
+
   params[nbparams] = NULL;
 
 #ifdef LIBXML_XINCLUDE_ENABLED
   if (isOptionEnabled(OPTIONS_XINCLUDE)) {
     if (isOptionEnabled(OPTIONS_TIMING))
-      gettimeofday(&begin, NULL);
-    xmlXIncludeProcess(doc);
-    if (isOptionEnabled(OPTIONS_TIMING)) {
-      long msec;
-
-      gettimeofday(&end, NULL);
-      msec = end.tv_sec - begin.tv_sec;
-      msec *= 1000;
-      msec += (end.tv_usec - begin.tv_usec) / 1000;
-      fprintf(stderr, "XInclude processing %s took %ld ms\n",
-	      filename, msec);
-    }
-  }
-#endif
-  if (isOptionEnabled(OPTIONS_TIMING))
-    gettimeofday(&begin, NULL);
-  if (getStringOption(OPTIONS_OUTPUT_FILE_NAME) == NULL) {
-    if (getIntOption(OPTIONS_REPEAT)) {
-      int j;
-
-      for (j = 1; j < getIntOption(OPTIONS_REPEAT); j++) {
-	res = xsltApplyStylesheet(cur, doc, params);
-	xmlFreeDoc(res);
-	loadXmlFile(NULL, FILES_XMLFILE_TYPE);
-      }
-    }else
-      res =  xsltApplyStylesheet(cur, doc, params);
-
-    if (isOptionEnabled(OPTIONS_PROFILING)) {
-      res = xsltProfileStylesheet(cur, doc, params, stderr);
-    } else {
-      res = xsltApplyStylesheet(cur, doc, params);
-    }
-    if (isOptionEnabled(OPTIONS_TIMING)) {
-      long msec;
-
-      gettimeofday(&end, NULL);
-      msec = end.tv_sec - begin.tv_sec;
-      msec *= 1000;
-      msec += (end.tv_usec - begin.tv_usec) / 1000;
-      if (getIntOption(OPTIONS_REPEAT))
-	fprintf(stderr,
-		"Applying stylesheet %d times took %ld ms\n",
-		getIntOption(OPTIONS_REPEAT), msec);
-      else
-	fprintf(stderr,
-		"Applying stylesheet took %ld ms\n", msec);
-    }
-    if (res == NULL) {
-      fprintf(stderr, "no result for %s\n", filename);
-      return;
-    }
-    if (isOptionEnabled(OPTIONS_NOOUT)) {
-      xmlFreeDoc(res);
-      return;
-    }
-#ifdef LIBXML_DEBUG_ENABLED
-    if (isOptionEnabled(OPTIONS_DEBUG))
-      xmlDebugDumpDocument(stdout, res);
-    else {
-#endif
-      if (cur->methodURI == NULL) {
-	if (isOptionEnabled(OPTIONS_TIMING))
-	  gettimeofday(&begin, NULL);
-	xsltSaveResultToFile(stdout, res, cur);
-	if (isOptionEnabled(OPTIONS_TIMING)) {
-	  long msec;
-
-	  gettimeofday(&end, NULL);
-	  msec = end.tv_sec - begin.tv_sec;
-	  msec *= 1000;
-	  msec += (end.tv_usec - begin.tv_usec) / 1000;
-	  fprintf(stderr, "Saving result took %ld ms\n",
-		  msec);
+	    startTimer();
+	xmlXIncludeProcess(doc);
+	if (isOptionEnabled(OPTIONS_TIMING)){
+	    endTimer("XInclude processing %s", filename);
 	}
+    }
+#endif
+    if (isOptionEnabled(OPTIONS_TIMING))
+        startTimer();
+    if (getStringOption(OPTIONS_OUTPUT_FILE_NAME) == NULL) {
+      if (getIntOption(OPTIONS_REPEAT)){
+	    int j;
+
+	    for (j = 1; j < getIntOption(OPTIONS_REPEAT); j++) {
+		res = xsltApplyStylesheet(cur, doc, params);
+		xmlFreeDoc(res);
+		doc = loadXmlData();
+	    }
+	}
+      if (isOptionEnabled(OPTIONS_PROFILING)){
+	    res = xsltProfileStylesheet(cur, doc, params, stderr);
       } else {
-	if (xmlStrEqual
-	    (cur->method, (const xmlChar *) "xhtml")) {
-	  fprintf(stderr, "non standard output xhtml\n");
-	  if (isOptionEnabled(OPTIONS_TIMING))
-	    gettimeofday(&begin, NULL);
-	  xsltSaveResultToFile(stdout, res, cur);
-	  if (isOptionEnabled(OPTIONS_TIMING)) {
-	    long msec;
-
-	    gettimeofday(&end, NULL);
-	    msec = end.tv_sec - begin.tv_sec;
-	    msec *= 1000;
-	    msec +=
-	      (end.tv_usec - begin.tv_usec) / 1000;
-	    fprintf(stderr,
-		    "Saving result took %ld ms\n",
-		    msec);
-	  }
-	} else {
-	  fprintf(stderr,
-		  "Unsupported non standard output %s\n",
-		  cur->method);
-	}
+	res = xsltApplyStylesheet(cur, doc, params);
       }
+      if (isOptionEnabled(OPTIONS_PROFILING)){
+	    if (getIntOption(OPTIONS_REPEAT))
+		endTimer("Applying stylesheet %d times", getIntOption(OPTIONS_REPEAT));
+	    else
+		endTimer("Applying stylesheet");
+	}
+	if (res == NULL) {
+	    xsltGenericError(xsltGenericErrorContext, "no result for %s\n", filename);
+	    return;
+	}
+	if (isOptionEnabled(OPTIONS_NOOUT)) {
+	    xmlFreeDoc(res);
+	    return;
+	}
 #ifdef LIBXML_DEBUG_ENABLED
-    }
+	if (isOptionEnabled(OPTIONS_DEBUG))
+	    xmlDebugDumpDocument(stdout, res);
+	else {
+#endif
+	    if (cur->methodURI == NULL) {
+		if (isOptionEnabled(OPTIONS_TIMING))
+		    startTimer();
+		xsltSaveResultToFile(stdout, res, cur);
+		if (isOptionEnabled(OPTIONS_TIMING))
+		    endTimer("Saving result");
+	    } else {
+		if (xmlStrEqual
+		    (cur->method, (const xmlChar *) "xhtml")) {
+		    xsltGenericError(xsltGenericErrorContext, "non standard output xhtml\n");
+		    if (isOptionEnabled(OPTIONS_TIMING))
+			startTimer();
+		    xsltSaveResultToFile(stdout, res, cur);
+		    if (isOptionEnabled(OPTIONS_TIMING))
+			endTimer("Saving result");
+		} else {
+		    xsltGenericError(xsltGenericErrorContext,
+			    "Unsupported non standard output %s\n",
+			    cur->method);
+		}
+	    }
+#ifdef LIBXML_DEBUG_ENABLED
+	}
 #endif
 
-    xmlFreeDoc(res);
-  } else {
-    xsltRunStylesheet(cur, doc, params, getStringOption(OPTIONS_OUTPUT_FILE_NAME), NULL, NULL);
-    if (isOptionEnabled(OPTIONS_TIMING)) {
-      long msec;
-
-      gettimeofday(&end, NULL);
-      msec = end.tv_sec - begin.tv_sec;
-      msec *= 1000;
-      msec += (end.tv_usec - begin.tv_usec) / 1000;
-      fprintf(stderr,
-	      "Running stylesheet and saving result took %ld ms\n",
-	      msec);
+	xmlFreeDoc(res);
+    } else {
+	xsltRunStylesheet(cur, doc, params, 
+			  getStringOption(OPTIONS_OUTPUT_FILE_NAME), 
+			  NULL, NULL);
+	if (isOptionEnabled(OPTIONS_TIMING))
+	    endTimer("Running stylesheet and saving result");
     }
-  }
 }
+
 
 static void usage(const char *name) {
     printf("Usage: %s [options] stylesheet file [file ...]\n", name);
@@ -286,7 +354,7 @@ static void usage(const char *name) {
 int
 main(int argc, char **argv)
 {
-  int i, result = 1, noFilesFound = 0;
+  int i, result = 1, noFilesFound = 0, retryCount = 0;
   xsltStylesheetPtr cur = NULL;
   xmlDocPtr doc, style;
 
@@ -422,7 +490,7 @@ main(int argc, char **argv)
 
 	catalogs = getenv("SGML_CATALOG_FILES");
 	if (catalogs == NULL) {
-	  fprintf(stderr, "Variable $SGML_CATALOG_FILES not set\n");
+	  xsltGenericError(xsltGenericErrorContext, "Variable $SGML_CATALOG_FILES not set\n");
 	} else {
 	  xmlLoadCatalogs(catalogs);
 	}
@@ -444,7 +512,7 @@ main(int argc, char **argv)
 			paramItemNew(argv[i], argv[i + 1]));
 	i++;
 	if (xslArrayListCount(getParamItemList()) >= 8) {
-	  fprintf(stderr, "too many params\n");
+	  xsltGenericError(xsltGenericErrorContext, "too many params\n");
 	  return (1);
 	}
       } else if ((!strcmp(argv[i], "-maxdepth")) ||
@@ -494,7 +562,7 @@ main(int argc, char **argv)
       }
 
       else {
-	fprintf(stderr, "Unknown option %s\n", argv[i]);
+	xsltGenericError(xsltGenericErrorContext, "Unknown option %s\n", argv[i]);
 	result = 0;
       }
   }
@@ -526,9 +594,11 @@ main(int argc, char **argv)
 
   xslDebugGotControl(0);
   while (xslDebugStatus != DEBUG_QUIT){
-    if (isOptionEnabled(OPTIONS_SHELL))
-      fprintf(stderr, "\nStarting stylesheet\n\n");
-    if (xslDebugStatus != DEBUG_RUN && (getIntOption(OPTIONS_TRACE) == 0))
+    if (isOptionEnabled(OPTIONS_SHELL)){
+      xsltGenericError(xsltGenericErrorContext, "\nStarting stylesheet\n\n");	
+    }
+    if (xslDebugStatus != DEBUG_RUN && 
+	(getIntOption(OPTIONS_TRACE) == TRACE_OFF))
       xslDebugStatus = DEBUG_CONT;
 
     if (getStringOption(OPTIONS_SOURCE_FILE_NAME) == NULL){
@@ -587,30 +657,38 @@ main(int argc, char **argv)
 
 
     if (isOptionEnabled(OPTIONS_SHELL)){
-      if( (xslDebugStatus != DEBUG_QUIT) && !xslDebugGotControl(0) ){
-	fprintf(stderr, "\nDebugger never received control setting breakpoint on all" \
-		" template names\n");
-	setStringOption(OPTIONS_ROOT_TEMPLATE_NAME, "*");
-      }
-      fprintf(stderr, "\nFinished stylesheet\n\n");
-      {
-	/* handle trace execution */
-	int trace = getIntOption(OPTIONS_TRACE);
-	switch(trace){
-	case 0:
-	  /* no trace of execution*/
+      if( (xslDebugStatus != DEBUG_QUIT) && !xslDebugGotControl(0)){
+	  xsltGenericError(xsltGenericErrorContext, "\nDebugger never received control\n" \
+			   "Going straight to command shell!\n");
+	  if (getStylesheet() && getMainDoc()){
+	    xslDebugBreak((xmlNodePtr)getStylesheet()->doc, (xmlNodePtr)getMainDoc(), NULL, NULL);
+	  }else{
+	    xmlDocPtr tempDoc = xmlNewDoc( "1.0");
+	    xslDebugBreak((xmlNodePtr)tempDoc, (xmlNodePtr)tempDoc, NULL, NULL);
+	    xmlFreeDoc(tempDoc);
+	  }
+      }else{
+	xsltGenericError(xsltGenericErrorContext, "\nFinished stylesheet\n\n");
+	{
+	  /* handle trace execution */
+	  int trace = getIntOption(OPTIONS_TRACE);
+	  switch(trace){
+	  case TRACE_OFF:
+	    /* no trace of execution*/
 	  break;
-
-	case 1:
-	  /* tell xsldbg to stop tracing next time we get here*/
-	  setIntOption(OPTIONS_TRACE, 2);
-	  xslDebugStatus = DEBUG_STOP;
-	  break;
-
-	case 2:
-	  /* turn off tracing */
-	  setIntOption(OPTIONS_TRACE, 0);
-	  break;
+	  
+	  case TRACE_ON:
+	    /* tell xsldbg to stop tracing next time we get here*/
+	    setIntOption(OPTIONS_TRACE, TRACE_RUNNING);
+	    xslDebugStatus = DEBUG_TRACE;
+	    break;
+	    
+	  case TRACE_RUNNING:
+	    /* turn off tracing */
+	    xslDebugStatus = DEBUG_CONT;
+	    setIntOption(OPTIONS_TRACE, TRACE_OFF);
+	    break;
+	  }
 	}
       }
     }else{
@@ -629,39 +707,32 @@ main(int argc, char **argv)
 
 
 xsltStylesheetPtr loadStyleSheet(){  
-    struct timeval begin, end;
-    xsltStylesheetPtr cur = NULL;
-    xmlDocPtr doc, style;
-    gettimeofday(&begin, NULL);
-    style = xmlParseFile(getStringOption(OPTIONS_SOURCE_FILE_NAME));
-    if (isOptionEnabled(OPTIONS_TIMING) && !isOptionEnabled(OPTIONS_SHELL)) {
-      long msec;
+  struct timeval begin, end;
+  xsltStylesheetPtr cur = NULL;
+  xmlDocPtr doc, style;
 
-      gettimeofday(&end, NULL);
-      msec = end.tv_sec - begin.tv_sec;
-      msec *= 1000;
-      msec += (end.tv_usec - begin.tv_usec) / 1000;
-      fprintf(stderr, "Parsing stylesheet %s took %ld ms\n",
-	      getStringOption(OPTIONS_SOURCE_FILE_NAME), msec);
+  if (isOptionEnabled(OPTIONS_TIMING))
+    startTimer();
+  style = xmlParseFile((const char *) getStringOption(OPTIONS_SOURCE_FILE_NAME));
+  if (isOptionEnabled(OPTIONS_TIMING)) 
+    endTimer("Parsing stylesheet %s", getStringOption(OPTIONS_SOURCE_FILE_NAME));
+  if (style == NULL) {
+    xsltGenericError(xsltGenericErrorContext,  "cannot parse %s\n", getStringOption(OPTIONS_SOURCE_FILE_NAME));
+    cur = NULL;
+    if (!isOptionEnabled(OPTIONS_SHELL)){
+      xsltGenericError(xsltGenericErrorContext, "Aborting debugger!!\n");
+      xslDebugStatus = DEBUG_QUIT;
+    }else{
+      xsltGenericError(xsltGenericErrorContext, "\n");      
+      xslDebugStatus = DEBUG_STOP;
     }
-    if (style == NULL) {
-      fprintf(stderr,  "cannot parse %s\n", 
-	      getStringOption(OPTIONS_SOURCE_FILE_NAME));
-      /*
-	if (isOptionEnabled(OPTIONS_SHELL))
-	fprintf(stderr, "Aborting debugger!!\n");
-	else
-	fprintf(stderr, "\n");
-	cur = NULL;
-	xslDebugStatus = DEBUG_QUIT;
-      */
-    } else {
-      cur = xsltLoadStylesheetPI(style);
-      if (cur != NULL) {
-	/* it is an embedded stylesheet */
-	xsltProcess(style, cur, getStringOption(OPTIONS_SOURCE_FILE_NAME));
-	xsltFreeStylesheet(cur);
-      }
+  } else {
+    cur = xsltLoadStylesheetPI(style);
+    if (cur != NULL) {
+      /* it is an embedded stylesheet */
+      xsltProcess(style, cur,getStringOption(OPTIONS_SOURCE_FILE_NAME));
+      xsltFreeStylesheet(cur);
+    }else{
       cur = xsltParseStylesheetDoc(style);
       if (cur != NULL) {
 	if (cur->indent == 1)
@@ -669,11 +740,13 @@ xsltStylesheetPtr loadStyleSheet(){
 	else
 	  xmlIndentTreeOutput = 0;
       } else {
-	xmlFreeDoc(style);
+      xmlFreeDoc(style);
       }
     }
-    return cur;
   }
+  return cur;
+}
+
 
 xmlDocPtr loadXmlData(){
   struct timeval begin, end;
@@ -686,8 +759,9 @@ xmlDocPtr loadXmlData(){
 
 
   doc = NULL;
-  if (isOptionEnabled(OPTIONS_TIMING) && !isOptionEnabled(OPTIONS_SHELL))
-    gettimeofday(&begin, NULL);
+  
+  if (isOptionEnabled(OPTIONS_TIMING))
+    startTimer();
 #ifdef LIBXML_HTML_ENABLED
   if (isOptionEnabled(OPTIONS_HTML))
     doc = htmlParseFile(getStringOption(OPTIONS_DATA_FILE_NAME), NULL);
@@ -700,29 +774,17 @@ xmlDocPtr loadXmlData(){
 #endif
       doc = xmlParseFile(getStringOption(OPTIONS_DATA_FILE_NAME));
   if (doc == NULL) {
-    fprintf(stderr, "unable to parse %s\n", 
-	    getStringOption(OPTIONS_DATA_FILE_NAME));
-    /*
-      if (isOptionEnabled(OPTIONS_SHELL))
-      fprintf(stderr, "Aborting debugger!!\n");
-      else
-      fprintf(stderr, "\n");      
+    xsltGenericError(xsltGenericErrorContext, "unable to parse %s\n", getStringOption(OPTIONS_DATA_FILE_NAME));
+    if (!isOptionEnabled(OPTIONS_SHELL)){
+      xsltGenericError(xsltGenericErrorContext, "Aborting debugger!!\n");
       xslDebugStatus = DEBUG_QUIT;
-    */
-  }
-    
-  if (isOptionEnabled(OPTIONS_TIMING) && 
-      !isOptionEnabled(OPTIONS_SHELL) && 
-      (xslDebugStatus != DEBUG_QUIT)) {
-    long msec;
-      
-    gettimeofday(&end, NULL);
-    msec = end.tv_sec - begin.tv_sec;
-    msec *= 1000;
-    msec += (end.tv_usec - begin.tv_usec) / 1000;
-    fprintf(stderr, "Parsing document %s took %ld ms\n",
-	    getStringOption(OPTIONS_DATA_FILE_NAME), msec);
-  }
+    }else{
+      xsltGenericError(xsltGenericErrorContext, "\n");      
+      xslDebugStatus = DEBUG_STOP;
+    }
+  }else if (isOptionEnabled(OPTIONS_TIMING))
+    endTimer("Parsing document %s", getStringOption(OPTIONS_DATA_FILE_NAME));
+	    
   return doc;
 }
 
@@ -754,7 +816,7 @@ xmlDocPtr loadXmlTemporay(const char *path){
 #endif
       doc = xmlParseFile(path);
   if (doc == NULL) {
-    fprintf(stderr, "unable to parse %s\n", 
+    xsltGenericError(xsltGenericErrorContext, "unable to parse %s\n", 
 	    path);
   }
     
@@ -766,7 +828,7 @@ xmlDocPtr loadXmlTemporay(const char *path){
     msec = end.tv_sec - begin.tv_sec;
     msec *= 1000;
     msec += (end.tv_usec - begin.tv_usec) / 1000;
-    fprintf(stderr, "Parsing document %s took %ld ms\n",
+    xsltGenericError(xsltGenericErrorContext, "Parsing document %s took %ld ms\n",
 	    path, msec);
   }
   return doc;
@@ -789,6 +851,19 @@ void printTemplates(xsltStylesheetPtr style, xmlDocPtr doc){
   }
 }
 
+void catchSigInt(int value){
+  if (xslDebugStatus != DEBUG_STOP){
+    /* stop running/walking imediately !!*/
+    xslDebugStatus = DEBUG_STOP;
+    setIntOption(OPTIONS_WALK_SPEED, WALKSPEED_STOP);
+  }else{
+    /* empty, don't want to kill program, 
+       user will use {exit| bye|quit} command to quit program*/
+  }
+}
+
+typedef void (*sighandler_t)(int);   
+sighandler_t oldHandler;
 
 int xsldbgInit(){
   static int initialized = 0;  
@@ -798,6 +873,12 @@ int xsldbgInit(){
     result = filesInit();
     if (result)
       result = optionsInit();
+    if (result)
+    result = breakPointInit();
+
+    /* catch SIGINT */
+    oldHandler = signal(SIGINT, catchSigInt);
+
     initialized = 1;
   }
   return result;
@@ -807,4 +888,8 @@ void xsldbgFree(){
   xslDebugFree();
   filesFree();
   optionsFree();
+  breakPointFree(); 
+
+  if (oldHandler != SIG_ERR)
+    signal(SIGINT, oldHandler);
 }

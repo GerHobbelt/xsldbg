@@ -19,6 +19,7 @@
 #define OPTIONS_H
 
 #include "arraylist.h"
+#include <libxslt/xslt.h>
 /* ---------------------------------------  
         Misc parsing related options
 -------------------------------------------*/
@@ -35,6 +36,7 @@ enum Option_type {
   OPTIONS_SHELL ,
   OPTIONS_REPEAT,
   OPTIONS_TRACE, /* trace the execution */
+  OPTIONS_WALK_SPEED, /* how fast do we walk through code */
   OPTIONS_VERBOSE, /* do we print out messages/debuging info */
 
   /* string options */
@@ -43,6 +45,35 @@ enum Option_type {
   OPTIONS_SOURCE_FILE_NAME,
   OPTIONS_DATA_FILE_NAME
 };
+
+/* define what tracing is used */
+enum {
+  TRACE_OFF,
+  TRACE_ON,
+  TRACE_RUNNING,
+  TRACE_FINISHED /* not need but just in case*/
+};
+
+enum {
+  WALKSPEED_0,
+  WALKSPEED_STOP = WALKSPEED_0,
+  WALKSPEED_1,
+  WALKSPEED_FAST = WALKSPEED_1,
+  WALKSPEED_2,
+  WALKSPEED_3,
+  WALKSPEED_4,
+  WALKSPEED_5,
+  WALKSPEED_NORMAL = WALKSPEED_5,
+  WALKSPEED_6,
+  WALKSPEED_7,
+  WALKSPEED_8,
+  WALKSPEED_9,
+  WALKSPEED_SLOW =  WALKSPEED_9
+
+};
+
+/* how many microseconds is each speed increase worth*/
+#define WALKDELAY 250000 
 
 /* used to keep track of libxslt paramters 
  see Parameter related option near end of file

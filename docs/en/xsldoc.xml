@@ -31,6 +31,7 @@ the &lt;ENTER&gt; key.
 <li>LINENO : a valid line number in associated FILENAME</li>
 <li>NUMBER_OF_FRAMES : a valid line number frames to change position by</li>
 <li>BREAKPOINT_ID : a valid break point number</li>
+<li>SPEED: speed to walk through code at, between 0 to 9</li>
 <li><comment>(Comment)</comment>: a comment about command meaning or usage</li>
 <li>{ opt1 | opt2 | opt2 .. etc} : Choose one of the opt's</li>
 <li>XPATH : a xpath selection of node(s)</li>
@@ -212,6 +213,16 @@ they are not completed.</para>
 <usage>
 <li>
 <text>trace</text>
+</li>
+</usage>
+</cmd>
+
+<cmd name="walk" title="Walk">
+<summary>Walk through code using a range of speeds</summary>
+<usage>
+<li>
+<text>walk SPEED</text>
+<comment>(Use Ctrl-c to stop execution, SPEED is a value between 0 and 9)</comment>
 </li>
 </usage>
 </cmd>
@@ -476,11 +487,11 @@ they are not completed.</para>
 <usage>
 <li>
 <text>source</text>
-<comment>(Switch to the current node in stylesheet)</comment>
+<comment>(Switch to the current node in stylesheet.)</comment>
 </li>
 <li>
 <text>source SOURCE</text>
-<comment>(To change to a new source file. May need to use run command to execute it)</comment>
+<comment>(To change to a new source file.  A leading '~' is replaced by the $HOME environment variable value. May need to use run command to execute it)</comment>
 </li>
 </usage>
 </cmd>
@@ -490,11 +501,11 @@ they are not completed.</para>
 <usage>
 <li>
 <text>data</text>
-<comment>(Switch to the current document node)</comment>
+<comment>(Switch to the current document node.)</comment>
 </li>
 <li>
 <text>data DATA</text>
-<comment>(To change to a new xml data file. May need to use run command to process it)</comment>
+<comment>(To change to a new xml data file.  A leading '~' is replaced by the $HOME environment variable value. May need to use run command to process it)</comment>
 </li>
 </usage>
 </cmd>

@@ -24,16 +24,25 @@
 #use the package xsldbgmatch
 require "xsldbgmatch.pl";
 
-my $template ="",  $fileName ="", $identifier ="", $state ="", $line ="";
-my $result = 1;
-  </xsl:text>
+      my $template ="",  $fileName ="", $identifier ="", $state ="", $line ="";
+      my $testCount = 0, $failedTestCount = 0, $optionalTestCount = 0;
+
+      my $result = 1, $testName ="</xsl:text><xsl:value-of select="$baseFileName"/>";
+      printf "Running test $testName\n";
         <xsl:apply-templates select="*"/>
   <xsl:text>
     if ($result == 1){
+      if ($failedTestCount != 0){
+       printf "Success but some optional tests failed : $failedTestCount of $testCount tests\n";
+      }
+      printf "\n\n";
       exit(0);
     }else{
+      printf "Failure : $failedTestCount of $testCount tests failed\n";
+      printf "\n\n";
       exit(1);
     }
+
   </xsl:text>
   </xsl:document>
 </xsl:template>
@@ -66,27 +75,67 @@ my $result = 1;
   </xsl:template>
  
   <xsl:template match="template">
-    $result = $result &amp;&amp; xsldbgmatch::templateListMatch( 
-      "<xsl:value-of select="@name"/>", 
-      "<xsl:value-of select="@file"/>",  
-      "<xsl:value-of select="@line"/>", 
-      "<xsl:value-of select="$baseFileName"/>" );
+    $testCount = $testCount + 1;
+    <xsl:if test="@optional">$optionalTestCount = $optionalTestCount + 1;</xsl:if>
+    if (xsldbgmatch::templateListMatch( 
+             "<xsl:value-of select="@name"/>", 
+               "<xsl:value-of select="@file"/>",  
+                 "<xsl:value-of select="@line"/>", 
+                    $testName) == 0){
+      $failedTestCount = $failedTestCount + 1;
+      <xsl:if test="not(@optional)">$result = 0;</xsl:if>
+    }
   </xsl:template> 
 
   <xsl:template match="breakpoint">
-    $result =  $result &amp;&amp; xsldbgmatch::breakpointMatch( 
-      "<xsl:value-of select="@file"/>",  
-       "<xsl:value-of select="@line"/>",
-       "<xsl:value-of select="$baseFileName"/>");
+    $testCount = $testCount + 1;
+    <xsl:if test="@optional">$optionalTestCount = $optionalTestCount + 1;</xsl:if>
+    if (xsldbgmatch::breakpointMatch( 
+             "<xsl:value-of select="@file"/>",  
+               "<xsl:value-of select="@line"/>",
+                 $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       <xsl:if test="not(@optional)">$result = 0;</xsl:if>
+    }
   </xsl:template> 
 
   <xsl:template match="breakpointlist">
-    $result =  $result &amp;&amp; xsldbgmatch::breakpointListMatch(
-      "<xsl:value-of select="@id"/>",  
-        "<xsl:value-of select="@state"/>" , 
-         "<xsl:value-of select="@file"/>",  
-          "<xsl:value-of select="@line"/>",
-          "<xsl:value-of select="$baseFileName"/>");
+    $testCount = $testCount + 1;
+    <xsl:if test="@optional">$optionalTestCount = $optionalTestCount + 1;</xsl:if>
+    if (xsldbgmatch::breakpointListMatch(
+             "<xsl:value-of select="@id"/>",  
+               "<xsl:value-of select="@state"/>" , 
+                 "<xsl:value-of select="@file"/>",  
+                   "<xsl:value-of select="@line"/>",
+                     $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       <xsl:if test="not(@optional)">$result = 0;</xsl:if>
+    }
+  </xsl:template>
+
+
+  <xsl:template match="parameter">
+    $testCount = $testCount + 1;
+    <xsl:if test="@optional">$optionalTestCount = $optionalTestCount + 1;</xsl:if>
+    if (xsldbgmatch::parameterMatch(
+             "<xsl:value-of select="@id"/>",  
+               "<xsl:value-of select="@name"/>" , 
+                 "<xsl:value-of select="@value"/>",
+                   $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       <xsl:if test="not(@optional)">$result = 0;</xsl:if>
+    }
+  </xsl:template>
+
+  <xsl:template match="matchtext">
+    $testCount = $testCount + 1;
+    <xsl:if test="@optional">$optionalTestCount = $optionalTestCount + 1;</xsl:if>
+    if (xsldbgmatch::textMatch(
+             "<xsl:value-of select="."/>", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       <xsl:if test="not(@optional)">$result = 0;</xsl:if>
+    }
   </xsl:template>
 
 </xsl:stylesheet>

@@ -1,12 +1,12 @@
 
 AC_INIT(src/xsldbg.c)
 
-timestamp='2001-11-13'
+timestamp='2001-11-19'
 
 
 XSLDBG_MAJOR_VERSION=0
 XSLDBG_MINOR_VERSION=7
-XSLDBG_MICRO_VERSION=1
+XSLDBG_MICRO_VERSION=5
 PACKAGE=xsldbg
 
 LIBXML_REQUIRED_VERSION=2.4.7
@@ -63,6 +63,15 @@ AC_LANG_C
 AC_PROG_CC
 AM_PROG_LIBTOOL
 
+dnl
+dnl Math detection
+dnl
+
+AC_CHECK_HEADERS(sys/types.h sys/time.h stdlib.h unistd.h string.h)
+AC_CHECK_HEADERS(ieeefp.h nan.h math.h fp_class.h float.h ansidecl.h)
+AC_CHECK_HEADERS(time.h sys/stat.h stdarg.h)
+AC_CHECK_FUNCS(stat _stat)
+
 AC_CHECK_FUNC(isnan, , AC_CHECK_LIB(m, isnan,
   [M_LIBS="-lm"; AC_DEFINE(HAVE_ISNAN)]))
 
@@ -80,6 +89,12 @@ AC_CHECK_FUNC(fabs, , AC_CHECK_LIB(m, pow,
 AC_CHECK_FUNCS(gettimeofday)
 AC_CHECK_FUNCS(mktime localtime asctime)
 
+dnl
+dnl Do we have a usleep function, need by the walk command
+dnl
+dnl AC_CHECK_FUNC(usleep, , AC_CHECK_LIB(c, usleep,
+dnl	AC_DEFINE(HAVE_SLEEP)))
+AC_CHECK_FUNCS(usleep)
 
 dnl
 dnl Perl is just needed for testing

@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE testcmd SYSTEM "testcmd.dtd">
+<!-- 
+     File : test7.data     
+     Author: Keith Isdale <k_isdale@tpg.com.au>
+     Description: xml data that decribes what to do for "test7"
+     Copyright Reserved Under GPL     
+-->
+
+  <!-- Test xsl:text, xsl:message -->
+
+<testcmd>
+<cmd>
+<test>trace</test>
+<result>
+
+<row>
+<breakpoint line="13"/>
+</row>
+<row>
+<breakpoint line="13"/>
+</row>
+<row>
+<breakpoint line="17"/>
+</row>
+<row>
+<breakpoint line="17"/> 
+</row>
+<row>
+<breakpoint line="17"/> 
+</row>
+
+</result>
+</cmd>
+
+
+<cmd>
+<test>quit</test>
+</cmd>
+</testcmd>
+
+
+<!-- initialization code for xemacs -->
+<!--
+Local Variables:
+mode: sgml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+-->
