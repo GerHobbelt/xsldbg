@@ -1,6 +1,9 @@
 * Keith Isdale 30 Nov 2001
 * Applied fixes as suggested by Justin
-* Changed version 0.8.3	
+* Fixed configure.in, acconfig.h, breakpointInternals.h so that
+*   debugging is disable when asked , awful hack but it works	
+* Changed version 0.8.3
+	
 	
 * Keith Isdale 29 Nov 2001
 * Change help so that is can either display static text file or respond to 
