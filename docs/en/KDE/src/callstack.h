@@ -1,4 +1,3 @@
-
 /* *************************************************************************
                           xslcallpoint.h  -  public functions for the
                                                the call stack
@@ -27,15 +26,6 @@
  *
  * @author Keith Isdale <k_isdale@tpg.com.au> 
  */
-
-
-
-
-
-
-
-
-
     typedef struct _callPointInfo callPointInfo;
     typedef callPointInfo *callPointInfoPtr;
     struct _callPointInfo {
@@ -52,23 +42,10 @@
         long lineNo;
         callPointPtr next;
     };
-
-
-
     int
       callStackInit(void);
-
-
-
-
     void
       callStackFree(void);
-
-
-
-
-
-
   /**
    * Add template "call" to call stack
    *
@@ -81,22 +58,12 @@
 
 
     int callStackAdd(xsltTemplatePtr templ, xmlNodePtr source);
-
-
-
-
-
 /**
  * Drop the topmost item off the call stack
  */
 
 
     void callStackDrop(void);
-
-
-
-
-
 /** 
  * Set the frame depth to step up to
  *
@@ -109,11 +76,6 @@
 
 
     int callStackStepup(int depth);
-
-
-
-
-
 /** 
  * Set the frame depth to step down to
  *
@@ -126,11 +88,6 @@
 
 
     int callStackStepdown(int depth);
-
-
-
-
-
 /**
  * Retrieve the call point at specified call depth 
 
@@ -142,11 +99,6 @@
 
 
     callPointPtr callStackGet(int depth);
-
-
-
-
-
 /**  
  * Get the top item in the call stack
  *
@@ -155,17 +107,9 @@
 
 
     callPointPtr callStackGetTop(void);
-
-
-
-
-
 /**
  * @returns the depth of call stack
  */
 
 
     int callStackGetDepth(void);
-
-
-

@@ -42,7 +42,7 @@ index.docbook : $(KDEXSL_FILES) $(DATADIR)/xsldoc.xml
 
 
 index.cache.bz2 : index.docbook $(DATADIR)/xsldoc.xml 
-	if test -f $(KDEDIR)/bin/meinproc; then meinproc --htdig index.docbook > index.cache; rm -f index.cache.bz2; bzip2 index.cache; else echo "Meinproc not found"; fi
+	if test -f $(KDEDIR)/bin/meinproc; then meinproc --htdig index.docbook > index.cache; rm -f index.cache.bz2; bzip2 index.cache;echo "KDE style docs can be found using Konqueror pointed at help:/khelpcenter/xsldbg/index.html"; else echo "Meinproc not found, has KDEDIR been set?"; fi
 
 # You only need this to regenerate HTML pages
 if USE_KDEDOCS

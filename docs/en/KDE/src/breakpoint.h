@@ -1,4 +1,3 @@
-
 /**************************************************************************
                           breakpoint.h  -  public functions for the
                                                breakpoint API
@@ -30,22 +29,13 @@
  *
  * @author Keith Isdale <k_isdale@tpg.com.au> 
  */
-
-
-
-
-/* BUILD_DOCS */
-
-
-
     /* indicate that we are to toggle a breakpoint , used for enableBreakPoint */
 
 
     /* Define the types of status whilst debugging */
-
     /* keep kdoc happy */
     enum DebugStatusEnum {
-        DEBUG_NONE = 0,         /* must start at zero!! */
+        DEBUG_NONE = 0, /* must start at zero!! */
         DEBUG_INIT,
         DEBUG_STEP,
         DEBUG_STEPUP,
@@ -88,11 +78,6 @@
         BreakPointTypeEnum type;
         int id;
     };
-
-
-
-
-
 /**
  * Intialized the breakpoint module 
  *
@@ -103,24 +88,12 @@
 
 
     int breakPointInit(void);
-
-
-
-
-
-
 /**
  * Free all memory used by breakpoint module
  */
 
 
     void breakPointFree(void);
-
-
-
-
-
-
 /**
  * Get the active break point
  *
@@ -131,12 +104,6 @@
 
 
     breakPointPtr breakPointActiveBreakPoint(void);
-
-
-
-
-
-
 /**
  * Set the active break point
  *
@@ -147,12 +114,6 @@
 
 
     void breakPointSetActiveBreakPoint(breakPointPtr breakPtr);
-
-
-
-
-
-
 /**
  * Add break point at file and line number specified
  *
@@ -171,14 +132,8 @@
 
     int breakPointAdd(const xmlChar * url, long lineNumber,
                       const xmlChar * templateName,
-		      const xmlChar * modeName,
+                      const xmlChar * modeName,
                       BreakPointTypeEnum type);
-
-
-
-
-
-
 /**
  * Delete the break point specified if it can be found using 
  *    @p breakPtr's url and lineNo
@@ -192,12 +147,6 @@
 
 
     int breakPointDelete(breakPointPtr breakPtr);
-
-
-
-
-
-
 /**
  * Empty the break point collection
  *
@@ -207,12 +156,6 @@
 
 
     int breakPointEmpty(void);
-
-
-
-
-
-
 /**
  * Enable or disable a break point
  *
@@ -225,12 +168,6 @@
 
 
     int breakPointEnable(breakPointPtr breakPtr, int enable);
-
-
-
-
-
-
 /**
  * Get a break point for the breakpoint collection
  *
@@ -244,12 +181,6 @@
 
 
     breakPointPtr breakPointGet(const xmlChar * url, long lineNumber);
-
-
-
-
-
-
 /**
  * Return A hash of breakpoints with same line number
  *
@@ -260,12 +191,6 @@
 
 
     xmlHashTablePtr breakPointGetLineNoHash(long lineNo);
-
-
-
-
-
-
 /** 
  * Create a new break point item
  *
@@ -275,12 +200,6 @@
 
 
     breakPointPtr breakPointItemNew(void);
-
-
-
-
-
-
 /**
  * Free memory associated with this break point
  *
@@ -291,12 +210,6 @@
 
 
     void breakPointItemFree(void *payload, xmlChar * name);
-
-
-
-
-
-
 /** 
  * Return the number of hash tables of break points with the same line number
  *
@@ -305,12 +218,6 @@
 
 
     int breakPointLinesCount(void);
-
-
-
-
-
-
 /**
  * Print the details of @p breakPtr to @p file
  *
@@ -323,12 +230,6 @@
 
 
     int breakPointPrint(FILE * file, breakPointPtr breakPtr);
-
-
-
-
-
-
 /**
  * Determine if there is a break point at file and line number specified
  *
@@ -342,12 +243,6 @@
 
 
     int breakPointIsPresent(const xmlChar * url, long lineNumber);
-
-
-
-
-
-
 /**
  * Determine if a node is a break point
  *
@@ -359,12 +254,6 @@
 
 
     int breakPointIsPresentNode(xmlNodePtr node);
-
-
-
-
-
-
 /**
  * Return The list of hash tables for break points
  *        Dangerous function to use!!
@@ -375,7 +264,3 @@
 
 
     arrayListPtr breakPointLineList(void);
-
-
-
-

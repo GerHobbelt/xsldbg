@@ -49,7 +49,7 @@
 </LI>
 </ul>
 <h3>src/breakpoint.h</h3><ul>
-<LI>enum <A HREF="#ref51">DebugStatusEnum</A> {        DEBUG_NONE = 0,         
+<LI>enum <A HREF="#ref51">DebugStatusEnum</A> {        DEBUG_NONE = 0, 
         DEBUG_INIT,
         DEBUG_STEP,
         DEBUG_STEPUP,
@@ -85,7 +85,7 @@
 </LI>
 <LI>int &nbsp;<b><A HREF="#ref61">breakPointAdd</A></b> (const xmlChar * url, long lineNumber,
                       const xmlChar * templateName,
-		      const xmlChar * modeName,
+                      const xmlChar * modeName,
                       <A HREF="#BreakPointTypeEnum">BreakPointTypeEnum</A> type) 
 </LI>
 <LI>int &nbsp;<b><A HREF="#ref62">breakPointDelete</A></b> (<A HREF="#breakPointPtr">breakPointPtr</A> breakPtr) 
@@ -163,7 +163,7 @@
     DEBUG_DIR_CMD,
     DEBUG_DU_CMD,
     DEBUG_CAT_CMD,
-    DEBUG_PRINT_CMD,            
+    DEBUG_PRINT_CMD, 
     DEBUG_PWD_CMD,
     DEBUG_DUMP_CMD,
     DEBUG_BASE_CMD,
@@ -189,7 +189,7 @@
     DEBUG_DELPARAM_CMD,
     DEBUG_SHOWPARAM_CMD,
     DEBUG_SETOPTION_CMD,
-    DEBUG_OPTIONS_CMD,          
+    DEBUG_OPTIONS_CMD, 
     DEBUG_TRACE_CMD,
     DEBUG_WALK_CMD,
     DEBUG_ADDWATCH_CMD,
@@ -263,8 +263,8 @@
 </LI>
 <LI>int &nbsp;<b><A HREF="#ref163">xslDbgShellOptions</A></b> (void) 
 </LI>
-<LI>int &nbsp;<b><A HREF="#ref164">xslDbgShellShowWatches</A></b> (xsltTransformContextPtr styleCtxt, 
-			       xmlShellCtxtPtr ctx,int showWarnings) 
+<LI>int &nbsp;<b><A HREF="#ref164">xslDbgShellShowWatches</A></b> (xsltTransformContextPtr styleCtxt,
+                               xmlShellCtxtPtr ctx,int showWarnings) 
 </LI>
 <LI>int &nbsp;<b><A HREF="#ref165">xslDbgShellAddWatch</A></b> (xmlChar* arg) 
 </LI>
@@ -308,7 +308,7 @@
 </LI>
 <LI>int &nbsp;<b><A HREF="#ref184">filesSetEncoding</A></b> (const char *encoding) 
 </LI>
-<LI>enum FileTypeEnum {        FILES_XMLFILE_TYPE = 100,       
+<LI>enum FileTypeEnum {        FILES_XMLFILE_TYPE = 100, 
         FILES_SOURCEFILE_TYPE,
         FILES_TEMPORARYFILE_TYPE
     }
@@ -367,26 +367,26 @@
 </LI>
 </ul>
 <h3>src/options.h</h3><ul>
-<LI>enum <A HREF="#ref5">OptionsConfigState</A> {        OPTIONS_CONFIG_READVALUE = -1,  
-        OPTIONS_CONFIG_READING = 1,     
+<LI>enum <A HREF="#ref5">OptionsConfigState</A> {        OPTIONS_CONFIG_READVALUE = -1, 
+        OPTIONS_CONFIG_READING = 1, 
         OPTIONS_CONFIG_WRITING, 
-        OPTIONS_CONFIG_IDLE     
+        OPTIONS_CONFIG_IDLE 
     }
 </LI>
-<LI>enum OptionsTypeEnum {        OPTIONS_VERBOSE,        
-        OPTIONS_OUTPUT_FILE_NAME,       
-        OPTIONS_SOURCE_FILE_NAME,       
-        OPTIONS_DOCS_PATH,      
-        OPTIONS_CATALOG_NAMES,  
-        OPTIONS_ENCODING,       
-        OPTIONS_SEARCH_RESULTS_PATH,    
-        OPTIONS_DATA_FILE_NAME  
+<LI>enum OptionsTypeEnum {        OPTIONS_VERBOSE, 
+        OPTIONS_OUTPUT_FILE_NAME, 
+        OPTIONS_SOURCE_FILE_NAME, 
+        OPTIONS_DOCS_PATH, 
+        OPTIONS_CATALOG_NAMES, 
+        OPTIONS_ENCODING, 
+        OPTIONS_SEARCH_RESULTS_PATH, 
+        OPTIONS_DATA_FILE_NAME 
     }
 </LI>
-<LI>enum TraceModeEnum {        TRACE_OFF = 600,        
-        TRACE_ON,               
-        TRACE_RUNNING,          
-        TRACE_FINISHED          
+<LI>enum TraceModeEnum {        TRACE_OFF = 600, 
+        TRACE_ON, 
+        TRACE_RUNNING, 
+        TRACE_FINISHED 
     }
 </LI>
 <LI>enum WalkSpeedEnum {        WALKSPEED_0 = 0,
@@ -691,7 +691,7 @@
           <code>position</code>,
          NULL otherwise
 </p>
-<A NAME="DebugStatusEnum"></A><A NAME="ref51"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>DebugStatusEnum</strong> {        DEBUG_NONE = 0,         
+<A NAME="DebugStatusEnum"></A><A NAME="ref51"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>DebugStatusEnum</strong> {        DEBUG_NONE = 0, 
         DEBUG_INIT,
         DEBUG_STEP,
         DEBUG_STEPUP,
@@ -752,7 +752,7 @@
 </TABLE></P>
 <A NAME="breakPointAdd"></A><A NAME="ref61"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>breakPointAdd</strong> (const xmlChar * url, long lineNumber,
                       const xmlChar * templateName,
-		      const xmlChar * modeName,
+                      const xmlChar * modeName,
                       <A HREF="#BreakPointTypeEnum">BreakPointTypeEnum</A> type)
 <br></td><td align="right"><h3><strong>breakPointAdd</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___breakpoint_h.html">src/breakpoint.h</A>&gt;</code></small></p><p>
  Add break point at file and line number specified
@@ -1024,7 +1024,7 @@
     DEBUG_DIR_CMD,
     DEBUG_DU_CMD,
     DEBUG_CAT_CMD,
-    DEBUG_PRINT_CMD,            
+    DEBUG_PRINT_CMD, 
     DEBUG_PWD_CMD,
     DEBUG_DUMP_CMD,
     DEBUG_BASE_CMD,
@@ -1050,7 +1050,7 @@
     DEBUG_DELPARAM_CMD,
     DEBUG_SHOWPARAM_CMD,
     DEBUG_SETOPTION_CMD,
-    DEBUG_OPTIONS_CMD,          
+    DEBUG_OPTIONS_CMD, 
     DEBUG_TRACE_CMD,
     DEBUG_WALK_CMD,
     DEBUG_ADDWATCH_CMD,
@@ -1428,8 +1428,8 @@
 <p><b>Returns</b>: 1 on success,
           0 otherwise
  </p>
-<A NAME="xslDbgShellShowWatches"></A><A NAME="ref164"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellShowWatches</strong> (xsltTransformContextPtr styleCtxt, 
-			       xmlShellCtxtPtr ctx,int showWarnings)
+<A NAME="xslDbgShellShowWatches"></A><A NAME="ref164"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellShowWatches</strong> (xsltTransformContextPtr styleCtxt,
+                               xmlShellCtxtPtr ctx,int showWarnings)
 <br></td><td align="right"><h3><strong>xslDbgShellShowWatches</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
  xslDbgShellShowWatches:
  @styleCtxt: the current stylesheet context
@@ -1642,7 +1642,7 @@
 <TR><TD align="left" valign="top"><i>encoding</i></TD><TD align="left" valign="top">Is a valid encoding supported by the iconv library or NULL
 </TD></TR>
 </TABLE></P>
-<A NAME="FileTypeEnum"></A><A NAME="ref185"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>FileTypeEnum</strong> {        FILES_XMLFILE_TYPE = 100,       
+<A NAME="FileTypeEnum"></A><A NAME="ref185"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>FileTypeEnum</strong> {        FILES_XMLFILE_TYPE = 100, 
         FILES_SOURCEFILE_TYPE,
         FILES_TEMPORARYFILE_TYPE
     }
@@ -1916,27 +1916,27 @@
 <p><b>Returns</b>: 1 on success,
           0 otherwise
  </p>
-<A NAME="OptionsConfigState"></A><A NAME="ref5"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>OptionsConfigState</strong> {        OPTIONS_CONFIG_READVALUE = -1,  
-        OPTIONS_CONFIG_READING = 1,     
+<A NAME="OptionsConfigState"></A><A NAME="ref5"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>OptionsConfigState</strong> {        OPTIONS_CONFIG_READVALUE = -1, 
+        OPTIONS_CONFIG_READING = 1, 
         OPTIONS_CONFIG_WRITING, 
-        OPTIONS_CONFIG_IDLE     
+        OPTIONS_CONFIG_IDLE 
     }
 </td><td align="right"><h3><strong>OptionsConfigState</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><p> The largest number lines of text can be print print printing documents
     This is equivant to gdb shorting of evaluation values
  </p>
-<A NAME="OptionsTypeEnum"></A><A NAME="ref6"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>OptionsTypeEnum</strong> {        OPTIONS_VERBOSE,        
-        OPTIONS_OUTPUT_FILE_NAME,       
-        OPTIONS_SOURCE_FILE_NAME,       
-        OPTIONS_DOCS_PATH,      
-        OPTIONS_CATALOG_NAMES,  
-        OPTIONS_ENCODING,       
-        OPTIONS_SEARCH_RESULTS_PATH,    
-        OPTIONS_DATA_FILE_NAME  
+<A NAME="OptionsTypeEnum"></A><A NAME="ref6"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>OptionsTypeEnum</strong> {        OPTIONS_VERBOSE, 
+        OPTIONS_OUTPUT_FILE_NAME, 
+        OPTIONS_SOURCE_FILE_NAME, 
+        OPTIONS_DOCS_PATH, 
+        OPTIONS_CATALOG_NAMES, 
+        OPTIONS_ENCODING, 
+        OPTIONS_SEARCH_RESULTS_PATH, 
+        OPTIONS_DATA_FILE_NAME 
     }
-</td><td align="right"><h3><strong>OptionsTypeEnum</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><A NAME="TraceModeEnum"></A><A NAME="ref7"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>TraceModeEnum</strong> {        TRACE_OFF = 600,        
-        TRACE_ON,               
-        TRACE_RUNNING,          
-        TRACE_FINISHED          
+</td><td align="right"><h3><strong>OptionsTypeEnum</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><A NAME="TraceModeEnum"></A><A NAME="ref7"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>TraceModeEnum</strong> {        TRACE_OFF = 600, 
+        TRACE_ON, 
+        TRACE_RUNNING, 
+        TRACE_FINISHED 
     }
 </td><td align="right"><h3><strong>TraceModeEnum</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><A NAME="WalkSpeedEnum"></A><A NAME="ref8"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>WalkSpeedEnum</strong> {        WALKSPEED_0 = 0,
         WALKSPEED_STOP = WALKSPEED_0,
@@ -2826,7 +2826,7 @@ Convert <code>include</code> into search dataBase format
 </p>
 <HR>
 	<table>
-	<tr><td><small>Generated by: keith on linux on Sat Sep  7 12:26:29 2002, using kdoc 2.0a54.</small></td></tr>
+	<tr><td><small>Generated by: keith on crevasse on Sun Mar  9 13:12:15 2003, using kdoc 2.0a54.</small></td></tr>
 	</table>
 </BODY>
 </HTML>

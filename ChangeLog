@@ -1,3 +1,6 @@
+Keith Isdale 9th March Feb 2003 <k_isdale@tpg.com.au>
+  Be more descriptive about QTDIR and KDEDIR   
+  
 Keith Isdale 16th  Feb 2003 <k_isdale@tpg.com.au>
   Update web site address for the download of Igor's Win32 binaries 
   Fix compile errors under certain configurations 

@@ -2,6 +2,10 @@ See docs/en/website/index.html and docs/en/plain/index.html for latest informati
   
 nb: docs/en/website/index.html includes a quick tutorial about using xsldbg
 
+For all users of qxsldbg and KDE style documentation you will need to set your KDEDIR and QTDIR paths eg:
+  export QTDIR=/usr/lib/qt3
+  export KDEDIR=/opt/kde3 
+
 For WIN32 users using tmake you will need to set
   LIBXML_PREFIX must be set to the location of libxml
   LIBXSLT_PREFIX must be set to the location of libxslt

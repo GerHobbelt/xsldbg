@@ -259,7 +259,7 @@ AC_ARG_ENABLE(xsldbgthread,
         fi
 	      AC_MSG_RESULT(Ok)
 	    else
-	    	AC_MSG_ERROR("QT library not found")
+	    	AC_MSG_ERROR("QT library not found, has QTDIR been set?")
       fi
 			;;
 
