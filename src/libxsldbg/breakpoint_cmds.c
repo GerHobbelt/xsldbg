@@ -33,7 +33,7 @@
 /* temp buffer needed occationaly */
 static xmlChar buff[DEBUG_BUFFER_SIZE];
 
-// needed by breakpoint validation
+/* needed by breakpoint validation */
 extern int breakPointCounter;
 
 /* ---------------------------------------------------
@@ -922,7 +922,7 @@ void xslDbgShellValidateBreakPoint(void *payload, void *data ATTRIBUTE_UNUSED,
 
     if (!(breakPtr->flags & BREAKPOINT_ORPHANED) && ((item.lineNo != breakPtr->lineNo ) || 
 	    (xmlStrlen(item.url) != xmlStrlen(breakPtr->url)) || xmlStrCmp(item.url, breakPtr->url))){
-	// we have a new location for breakpoint
+	/* we have a new location for breakpoint */
 	int lastCounter = breakPointCounter;
 	item.flags = breakPtr->flags;
 	item.type = breakPtr->type;

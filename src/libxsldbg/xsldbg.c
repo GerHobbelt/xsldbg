@@ -910,8 +910,8 @@ xsldbgMain(int argc, char **argv)
                         }
                     }
 		    if (!optionsGetIntOption(OPTIONS_AUTORESTART)){ 
-		    // pass control to user they won't be able to do much
-		    //  other than add breakpoints, quit, run, continue
+		    /* pass control to user they won't be able to do much
+		      other than add breakpoints, quit, run, continue */
 		    debugXSLBreak((xmlNodePtr) cur->doc, (xmlNodePtr) doc,
                               NULL, NULL);
 		    }
@@ -1209,7 +1209,7 @@ handler_routine(DWORD dwCtrlType)
 void
 catchSigInt(int value ATTRIBUTE_UNUSED)
 {
-    if (xslDebugStatus == DEBUG_NONE) {
+    if ((xslDebugStatus == DEBUG_NONE) || (xsldbgStop == 1) || (xslDebugStatus == DEBUG_STOP)) {
         xsldbgFree();
         exit(1);
     }
@@ -1330,8 +1330,8 @@ xsldbgFree()
     initialized = 0;
 
 #ifdef HAVE_READLINE
-    //  rl_free_line_state ();
-    //  rl_cleanup_after_signal();
+    /*  rl_free_line_state ();
+      rl_cleanup_after_signal(); */
 #   ifdef HAVE_HISTORY
        clear_history();
 #   endif    

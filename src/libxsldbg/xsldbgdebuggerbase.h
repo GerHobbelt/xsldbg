@@ -49,14 +49,14 @@ class XsldbgDebuggerBase : public QObject {
     friend class XsldbgEvent;
 
  public:
-  XsldbgDebuggerBase();
-  ~XsldbgDebuggerBase();
+  XsldbgDebuggerBase(void);
+  ~XsldbgDebuggerBase(void);
 
   void setInitialized(bool state) {initialized = state; };
-  bool getInitialized() {return initialized ;};
+  bool getInitialized(void) {return initialized ;};
 
   void setUpdateTimerID(int ID) { updateTimerID = ID;};
-  int getUpdateTimerID() {return updateTimerID ;};
+  int getUpdateTimerID(void) {return updateTimerID ;};
 
 
   /** Convert from libxslt UTF8 to a QString */	
@@ -66,7 +66,7 @@ class XsldbgDebuggerBase : public QObject {
   static QString fromUTF8(const xmlChar *text);
 
   /* list of command yet to be processed */
-  QStringList commandQueue() {return _commandQueue ;};
+  QStringList commandQueue(void) {return _commandQueue ;};
   
  private:
   bool initialized;

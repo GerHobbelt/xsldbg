@@ -19,6 +19,8 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
 
+#include "arraylist.h"
+
 #ifdef USE_KDE_DOCS
 
 /**
@@ -34,7 +36,6 @@
 
 /* We want skip most of these includes when building documentation */
 #ifndef BUILD_DOCS
-#include "arraylist.h"
 #include <libxslt/xslt.h>
 #endif
 
@@ -923,7 +924,7 @@ extern "C" {
    *
    * Return the current list of expressions to watch
    */
-  arrayListPtr optionsGetWatchList();
+  arrayListPtr optionsGetWatchList(void);
 
 
 #ifdef __cplusplus

@@ -12,7 +12,7 @@
 #include "arraylist.h"
 #include "options.h"
 
-extern int xsldbgValidateBreakpoints; //located in debugXSL.c
+extern int xsldbgValidateBreakpoints; /*located in debugXSL.c*/
 
 /*-----------------------------------------------------------
        Private functions
