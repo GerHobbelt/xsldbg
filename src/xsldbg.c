@@ -723,6 +723,19 @@ main(int argc, char **argv)
             /* at least on file name has not been set */
             /*goto a xsldbg command prompt */
             showPrompt = 1;
+	    if (getStringOption(OPTIONS_SOURCE_FILE_NAME) == NULL)
+		xsltGenericError(xsltGenericErrorContext,
+				 "No source file supplied\n");
+	    
+	    if (getStringOption(OPTIONS_DATA_FILE_NAME) == NULL)
+	      {
+		xsltGenericError(xsltGenericErrorContext,
+				 "No data file supplied\n");
+		if (getStringOption(OPTIONS_SOURCE_FILE_NAME) != NULL)
+		  xsltGenericError(xsltGenericErrorContext,"Supplied with source file of %s\n",
+				   getStringOption(OPTIONS_SOURCE_FILE_NAME));				       	       
+	      }
+	    
         } else {
             loadXmlFile(NULL, FILES_SOURCEFILE_TYPE);
             cur = getStylesheet();
@@ -1043,7 +1056,7 @@ printTemplates(xsltStylesheetPtr style, xmlDocPtr doc)
 void
 catchSigInt(int value ATTRIBUTE_UNUSED)
 {
-    if (xslDebugStatus == DEBUG_RUN) {
+    if (xslDebugStatus == DEBUG_NONE) {
         xsldbgFree();
         exit(1);
     }

@@ -16,7 +16,7 @@
 	</TABLE>
 	<HR>
 	<TABLE BORDER="0">
-		<TR><TH>Definition</TH><TD><code>#include &lt;<A HREF="src___xslbreakpoint_h.html">src/xslbreakpoint.h</A>&gt;</code></TD></TR>
+		<TR><TH>Definition</TH><TD><code>#include &lt;<A HREF="src___xslbreakpoint__2_h.html">src/xslbreakpoint_2.h</A>&gt;</code></TD></TR>
 <TR><TH><A HREF="full-list-_xslBreakPoint.html">List of all Methods</A></TH></TR>
 	</TABLE>
 	</TD>
@@ -26,231 +26,21 @@
 <TR><TD><small><A HREF="hier.html">Hierarchy</A></small></TD></TR>
 <TR><TD><small><A HREF="index.html">Index</A></small></TD></TR>
 </TABLE></TD></TR></TABLE>
-<h4>Public Methods</h4><ul><LI>void &nbsp;<b><A HREF="#ref7">xslDebugBreak</A></b> (xmlNodePtr templ, xmlNodePtr node,
-                       xsltTemplatePtr root, xsltTransformContextPtr ctxt) 
-</LI>
-<LI>int &nbsp;<b><A HREF="#ref8">debugInit</A></b> (void) 
-</LI>
-<LI>void &nbsp;<b><A HREF="#ref9">debugFree</A></b> (void) 
-</LI>
-<LI>int &nbsp;<b><A HREF="#ref10">xslDebugGotControl</A></b> (int reached) 
-</LI>
-<LI><A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> &nbsp;<b><A HREF="#ref11">activeBreakPoint</A></b> (void) 
-</LI>
-<LI>void &nbsp;<b><A HREF="#ref12">setActiveBreakPoint</A></b> (<A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> breakPoint) 
-</LI>
-<LI>int &nbsp;<b><A HREF="#ref13">xslAddBreakPoint</A></b> (const xmlChar * url, long lineNumber,
-                         const xmlChar * templateName,
-                         BreakPointTypeEnum type) 
-</LI>
-<LI>int &nbsp;<b><A HREF="#ref14">deleteBreakPoint</A></b> (<A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> breakPoint) 
-</LI>
-<LI>int &nbsp;<b><A HREF="#ref15">xslEmptyBreakPoint</A></b> (void) 
-</LI>
-<LI>int &nbsp;<b><A HREF="#ref16">enableBreakPoint</A></b> (<A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> breakPoint, int enable) 
-</LI>
-<LI>int &nbsp;<b><A HREF="#ref17">xslBreakPointLinesCount</A></b> (void) 
-</LI>
-<LI><A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> &nbsp;<b><A HREF="#ref18">getBreakPoint</A></b> (const xmlChar * url, long lineNumber) 
-</LI>
-<LI>int &nbsp;<b><A HREF="#ref19">printBreakPoint</A></b> (FILE * file, <A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> breakPoint) 
-</LI>
-<LI>int &nbsp;<b><A HREF="#ref20">xslIsBreakPoint</A></b> (const xmlChar * url, long lineNumber) 
-</LI>
-<LI>int &nbsp;<b><A HREF="#ref21">xslIsBreakPointNode</A></b> (xmlNodePtr node) 
-</LI>
-</ul><h4>Public Members</h4><ul><LI>xmlChar *<b><A HREF="#ref1">url</A></b></LI>
+<h4>Public Members</h4><ul><LI>xmlChar *<b><A HREF="#ref1">url</A></b></LI>
 <LI>long <b><A HREF="#ref2">lineNo</A></b></LI>
 <LI>xmlChar *<b><A HREF="#ref3">templateName</A></b></LI>
 <LI>int <b><A HREF="#ref4">enabled</A></b></LI>
-<LI>int <b><A HREF="#ref5">type</A></b></LI>
+<LI>BreakPointTypeEnum <b><A HREF="#ref5">type</A></b></LI>
 <LI>int <b><A HREF="#ref6">id</A></b></LI>
 </ul><HR><H2><A NAME="longdesc">Detailed Description</A></H2><A NAME="url"></A><A NAME="ref1"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlChar * <strong>url</strong>
 </td><td align="right"><h3><strong>url</strong></h3></td></tr></table><p></p><A NAME="lineNo"></A><A NAME="ref2"></A><table width="100%"><tr bgcolor="#eeeeee"><td>long  <strong>lineNo</strong>
 </td><td align="right"><h3><strong>lineNo</strong></h3></td></tr></table><p></p><A NAME="templateName"></A><A NAME="ref3"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlChar * <strong>templateName</strong>
 </td><td align="right"><h3><strong>templateName</strong></h3></td></tr></table><p></p><A NAME="enabled"></A><A NAME="ref4"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int  <strong>enabled</strong>
-</td><td align="right"><h3><strong>enabled</strong></h3></td></tr></table><p></p><A NAME="type"></A><A NAME="ref5"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int  <strong>type</strong>
+</td><td align="right"><h3><strong>enabled</strong></h3></td></tr></table><p></p><A NAME="type"></A><A NAME="ref5"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="#BreakPointTypeEnum">BreakPointTypeEnum</A>  <strong>type</strong>
 </td><td align="right"><h3><strong>type</strong></h3></td></tr></table><p></p><A NAME="id"></A><A NAME="ref6"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int  <strong>id</strong>
-</td><td align="right"><h3><strong>id</strong></h3></td></tr></table><p></p><A NAME="xslDebugBreak"></A><A NAME="ref7"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDebugBreak</strong> (xmlNodePtr templ, xmlNodePtr node,
-                       xsltTemplatePtr root, xsltTransformContextPtr ctxt)
-<br></td><td align="right"><h3><strong>xslDebugBreak</strong></h3></td></tr></table><p></p><p>
- A break point has been found so pass control to user
-</p>
-<p></p>
-<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
-<TR><TD align="left" valign="top"><i>templ</i></TD><TD align="left" valign="top">The source node being executed
-</TD></TR>
-<TR><TD align="left" valign="top"><i>node</i></TD><TD align="left" valign="top">The data node being processed
-</TD></TR>
-<TR><TD align="left" valign="top"><i>root</i></TD><TD align="left" valign="top">The template being applied to "node"
-</TD></TR>
-<TR><TD align="left" valign="top"><i>ctxt</i></TD><TD align="left" valign="top">transform context for stylesheet being processed
- </TD></TR>
-</TABLE></P>
-<A NAME="debugInit"></A><A NAME="ref8"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>debugInit</strong> (void)
-<br></td><td align="right"><h3><strong>debugInit</strong></h3></td></tr></table><p></p><p>
- Initialize debugger allocating any memory needed by debugger
-</p>
-<p></p>
-<p><b>Returns</b>: 1 on success,
-          0 otherwise
- </p>
-<A NAME="debugFree"></A><A NAME="ref9"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>debugFree</strong> (void)
-<br></td><td align="right"><h3><strong>debugFree</strong></h3></td></tr></table><p></p><p>
- Free up any memory taken by debugger
- </p>
-<A NAME="xslDebugGotControl"></A><A NAME="ref10"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDebugGotControl</strong> (int reached)
-<br></td><td align="right"><h3><strong>xslDebugGotControl</strong></h3></td></tr></table><p></p><p> 
- Set flag that debuger has received control to value of <code>reached</code>
-</p>
-<p></p>
-<p></p>
-<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
-<TR><TD align="left" valign="top"><i>reached</i></TD><TD align="left" valign="top">1 if debugger has received control, -1 to read its value,
-              0 to clear the flag
- </TD></TR>
-</TABLE></P>
-<p><b>Returns</b>: 1 if any breakpoint was reached previously,
-         0 otherwise
-</p>
-<A NAME="activeBreakPoint"></A><A NAME="ref11"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> &nbsp;<strong>activeBreakPoint</strong> (void)
-<br></td><td align="right"><h3><strong>activeBreakPoint</strong></h3></td></tr></table><p></p><p>
-</p>
-<p><b>Returns</b>: The last break point that we stoped at
- </p>
-<A NAME="setActiveBreakPoint"></A><A NAME="ref12"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setActiveBreakPoint</strong> (<A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> breakPoint)
-<br></td><td align="right"><h3><strong>setActiveBreakPoint</strong></h3></td></tr></table><p></p><p>
- Set the active break point
-</p>
-<p></p>
-<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
-<TR><TD align="left" valign="top"><i>breakPoint</i></TD><TD align="left" valign="top">Is valid break point or NULL
- </TD></TR>
-</TABLE></P>
-<A NAME="xslAddBreakPoint"></A><A NAME="ref13"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslAddBreakPoint</strong> (const xmlChar * url, long lineNumber,
-                         const xmlChar * templateName,
-                         BreakPointTypeEnum type)
-<br></td><td align="right"><h3><strong>xslAddBreakPoint</strong></h3></td></tr></table><p></p><p>
- Add break point at file and line number specified
-</p>
-<p></p>
-<p></p>
-<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
-<TR><TD align="left" valign="top"><i>url</i></TD><TD align="left" valign="top">Non-null, non-empty file name that has been loaded by
-                    debugger
-</TD></TR>
-<TR><TD align="left" valign="top"><i>lineNumber</i></TD><TD align="left" valign="top"><code>lineNumber</code> >= 0 and is available in url specified and
-                points to an xml element
-</TD></TR>
-<TR><TD align="left" valign="top"><i>temlateName</i></TD><TD align="left" valign="top">The template name of break point or NULL
-</TD></TR>
-<TR><TD align="left" valign="top"><i>type</i></TD><TD align="left" valign="top">Valid BreakPointTypeEnum
-</TD></TR>
-</TABLE></P>
-<p><b>Returns</b>: 1 if successful,
-	    0 otherwise
-</p>
-<A NAME="deleteBreakPoint"></A><A NAME="ref14"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>deleteBreakPoint</strong> (<A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> breakPoint)
-<br></td><td align="right"><h3><strong>deleteBreakPoint</strong></h3></td></tr></table><p></p><p>
- Delete the break point specified if it can be found using 
-    <code>breakPoint</code>'s url and lineNo
-</p>
-<p></p>
-<p></p>
-<p></p>
-<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
-<TR><TD align="left" valign="top"><i>breakPoint</i></TD><TD align="left" valign="top">Is valid
-</TD></TR>
-</TABLE></P>
-<p><b>Returns</b>: 1 if successful,
-	    0 otherwise
-</p>
-<A NAME="xslEmptyBreakPoint"></A><A NAME="ref15"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslEmptyBreakPoint</strong> (void)
-<br></td><td align="right"><h3><strong>xslEmptyBreakPoint</strong></h3></td></tr></table><p></p><p>
-</p>
-<p><b>Returns</b>: 1 if able to empty the break point list of its contents,
-          0  otherwise
- </p>
-<A NAME="enableBreakPoint"></A><A NAME="ref16"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>enableBreakPoint</strong> (<A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> breakPoint, int enable)
-<br></td><td align="right"><h3><strong>enableBreakPoint</strong></h3></td></tr></table><p></p><p>
- Enable or disable a break point
-</p>
-<p></p>
-<p></p>
-<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
-<TR><TD align="left" valign="top"><i>breakpoint</i></TD><TD align="left" valign="top">A valid breakpoint
-</TD></TR>
-<TR><TD align="left" valign="top"><i>enable</i></TD><TD align="left" valign="top">Enable break point if 1, disable if 0, toggle if -1
-</TD></TR>
-</TABLE></P>
-<p><b>Returns</b>: 1 if successful,
-	    0 otherwise
-</p>
-<A NAME="xslBreakPointLinesCount"></A><A NAME="ref17"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslBreakPointLinesCount</strong> (void)
-<br></td><td align="right"><h3><strong>xslBreakPointLinesCount</strong></h3></td></tr></table><p></p><p>
-</p>
-<p><b>Returns</b>: the number of hash tables of break points with the same line number
- </p>
-<A NAME="getBreakPoint"></A><A NAME="ref18"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> &nbsp;<strong>getBreakPoint</strong> (const xmlChar * url, long lineNumber)
-<br></td><td align="right"><h3><strong>getBreakPoint</strong></h3></td></tr></table><p></p><p>
-</p>
-<p></p>
-<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
-<TR><TD align="left" valign="top"><i>url</i></TD><TD align="left" valign="top">Non-null, non-empty file name that has been loaded by
-                    debugger
-</TD></TR>
-<TR><TD align="left" valign="top"><i>lineNumber</i></TD><TD align="left" valign="top"><code>lineNumber</code> >= 0 and is available in url specified
-</TD></TR>
-</TABLE></P>
-<p><b>Returns</b>: break point if break point exists at location specified,
-	    NULL otherwise
-</p>
-<A NAME="printBreakPoint"></A><A NAME="ref19"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>printBreakPoint</strong> (FILE * file, <A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> breakPoint)
-<br></td><td align="right"><h3><strong>printBreakPoint</strong></h3></td></tr></table><p></p><p>
- Print the details of <code>breakPoint</code> to <code>file</code>
-</p>
-<p></p>
-<p></p>
-<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
-<TR><TD align="left" valign="top"><i>file</i></TD><TD align="left" valign="top">Is valid
-</TD></TR>
-<TR><TD align="left" valign="top"><i>breakpoint</i></TD><TD align="left" valign="top">A valid break point
- </TD></TR>
-</TABLE></P>
-<p><b>Returns</b>: 1 if successful,
-	    0 otherwise
-</p>
-<A NAME="xslIsBreakPoint"></A><A NAME="ref20"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslIsBreakPoint</strong> (const xmlChar * url, long lineNumber)
-<br></td><td align="right"><h3><strong>xslIsBreakPoint</strong></h3></td></tr></table><p></p><p>
- Determine if there is a break point at file and line number specified
-</p>
-<p></p>
-<p></p>
-<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
-<TR><TD align="left" valign="top"><i>url</i></TD><TD align="left" valign="top">Non-null, non-empty file name that has been loaded by
-                    debugger
- @lineNumber <code>lineNumber</code> >= 0 and is available in url specified
-</TD></TR>
-</TABLE></P>
-<p><b>Returns</b>: 1  if successful,  
-          0 otherwise
-</p>
-<A NAME="xslIsBreakPointNode"></A><A NAME="ref21"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslIsBreakPointNode</strong> (xmlNodePtr node)
-<br></td><td align="right"><h3><strong>xslIsBreakPointNode</strong></h3></td></tr></table><p></p><p>
- Determine if a node is a break point
-</p>
-<p></p>
-<p></p>
-<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
-<TR><TD align="left" valign="top"><i>node</i></TD><TD align="left" valign="top">Is valid
- </TD></TR>
-</TABLE></P>
-<p><b>Returns</b>: 1 on success, 
-          0 otherwise
-</p>
-<HR>
+</td><td align="right"><h3><strong>id</strong></h3></td></tr></table><p></p><HR>
 	<table>
-	<tr><td><small>Generated by: keith on linux on Fri Dec  7 22:39:08 2001, using kdoc 2.0a53.</small></td></tr>
+	<tr><td><small>Generated by: keith on linux on Thu Dec 13 17:47:30 2001, using kdoc 2.0a53.</small></td></tr>
 	</table>
 </BODY>
 </HTML>

@@ -1,4 +1,4 @@
-
+ 
 /* *************************************************************************
                           xslcallpoint.h  -  public functions for the
                                                the call stack
@@ -17,8 +17,8 @@
  *                                                                         *
  ************************************************************************* */
 
-#ifndef XSLCALLPOINT_H
-#define XSLCALLPOINT_H
+
+
 
 /**
  * Provide a call stack support
@@ -29,24 +29,17 @@
  */
 
 
-#include "xslbreakpoint.h"
 
-#ifdef WITH_XSLT_DEBUG
-#ifndef WITH_XSLT_DEBUG_BREAKPOINTS
-#define WITH_XSLT_DEBUG_BREAKPOINTS
-#endif
-#endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+
+
 
 
 
     typedef struct _xslCallPointInfo xslCallPointInfo;
     typedef xslCallPointInfo *xslCallPointInfoPtr;
     struct _xslCallPointInfo {
-        xmlChar *templateName;
+      xmlChar *templateName; 
         xmlChar *url;
         xslCallPointInfoPtr next;
     };
@@ -60,21 +53,33 @@ extern "C" {
     };
 
 
+
+
 /**
+ * Add template "call" to call stack
+ *
  * @returns A reference to the added info if successful, 
  *          NULL otherwise
  *
  * @param templateName Template name to add
  * @param url The url for the template
  */
-    xslCallPointInfoPtr xslAddCallInfo(const xmlChar * templateName,
+
+
+    xslCallPointInfoPtr addCallInfo(const xmlChar * templateName,
                                        const xmlChar * url);
+
+
 
 
 /**
  * Drop the topmost item off the call stack
  */
-    void xslDropCall(void);
+
+
+    void dropCall(void);
+
+
 
 
 /** 
@@ -84,9 +89,13 @@ extern "C" {
  *          0 otherwise
  *
  * @param depth The frame depth to step up to  
- *            0 < @p depth <= xslCallDepth()
+ *            0 < @p depth <= callDepth()
  */
-    int xslStepupToDepth(int depth);
+
+
+    int stepupToDepth(int depth);
+
+
 
 
 /** 
@@ -96,9 +105,13 @@ extern "C" {
  *          0 otherwise
  *
  * @param depth The frame depth to step down to  
- *            0 < @p depth <= xslCallDepth()
+ *            0 < @p depth <= callDepth()
  */
-    int xslStepdownToDepth(int depth);
+
+
+    int stepdownToDepth(int depth);
+
+
 
 
 /**
@@ -107,23 +120,31 @@ extern "C" {
  * @returns Non-null a if depth is valid,
  *          NULL otherwise 
  *
- * @param depth 0 < @p depth <= xslCallDepth()
+ * @param depth 0 < @p depth <= callDepth()
  */
-    xslCallPointPtr xslGetCall(int depth);
+
+
+    xslCallPointPtr getCall(int depth);
+
+
 
 
 /** 
  * @returns The top of the call stack
  */
-    xslCallPointPtr xslGetCallStackTop(void);
+
+
+    xslCallPointPtr getCallStackTop(void);
+
+
 
 
 /**
  * @returns the depth of call stack
  */
-    int xslCallDepth(void);
 
-#ifdef __cplusplus
-}
-#endif
-#endif
+
+    int callDepth(void);
+
+
+

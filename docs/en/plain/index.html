@@ -37,11 +37,11 @@ A:link, A:visited, A:active { text-decoration: underline }
 
 --></style>
 <title>
-           xsldbg 0.8.7 documentation
+           xsldbg 0.9.1 documentation
          </title>
 </head>
 <body bgcolor="#8b7765" text="#000000" link="#000000" vlink="#000000"><table class="listbody"><tr><td>
-<h1 class="cmdth">xsldbg 0.8.7</h1>
+<h1 class="cmdth">xsldbg 0.9.1</h1>
 <h2 class="cmdth">Overview</h2>
 <h3>xsldbg help</h3>
 
@@ -77,11 +77,11 @@ the &lt;ENTER&gt; key.
 <tr><td>XPATH : a xpath selection of node(s)    </td></tr>
 <tr><td>PARAM_ID : a valid parameter number as indicated by showparam command    </td></tr>
 <tr><td>PATH : a path to change working directory to    </td></tr>
-<tr><td>TEXT : free form text &nbsp;&nbsp;&nbsp;&nbsp;<i>(no restricttions)</i>    </td></tr>
+<tr><td>TEXT : free form text &nbsp;&nbsp;&nbsp;&nbsp;<i>(no restrictions)</i>    </td></tr>
 <tr><td>COMMAND : a valid command for the xsdbg    </td></tr>
 <tr><td>QNAME : a valid variable/parameter name    </td></tr>
 <tr><td>SOURCE : the stylesheet being/to be executed    </td></tr>
-<tr><td>DATA : the xml data being/tobe processed by the stylesheet    </td></tr>
+<tr><td>DATA : the xml data(document) being/to be processed by the stylesheet    </td></tr>
 <tr><td>DEVICE_PATH : is a valid terminal on the operating system    </td></tr>
 <tr><td>TTY_LEVEL : is a valid level of input/output to use    </td></tr>
 </table></td>
@@ -159,7 +159,7 @@ they are not completed.</p>
 </table>
 <br><br><a name="break"></a><table width="100%" class="cmd">
 <th class="cmdth">Break</th>
-<tr class="cmdsummary"><td>Break at a template, at a location in any file loaded, or at the current node. </td></tr>
+<tr class="cmdsummary"><td>Break at a template, at a location in a stylesheet or xml file loaded by xsldbg, or at the current node. </td></tr>
 <tr class="cmdtr"><td class="cmdtd">
 <p>Shortcut name: b</p>
 <p>xsldbg will try to guess the complete URL given a 
@@ -171,7 +171,7 @@ they are not completed.</p>
 <tr><td>a file name relative to the current working directory of xsldbg    </td></tr>
 </table></td>
 </tr></table>
-Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
+Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </p>
 <p> break -l xsldoc.xsl 26
 </p>
@@ -203,10 +203,16 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <br><br><a name="cat"></a><table width="100%" class="cmd">
 <th class="cmdth">Cat</th>
 <tr class="cmdsummary"><td>Print the result of a xpath expression on relative current node.</td></tr>
-<tr class="cmdtr"><td class="cmdtd">
-<p>Usage : cat &lt;XPATH&gt;</p>
-<p>Usage : cat $&lt;QNAME&gt;       (To view a varaible or parameter)</p>
-</td></tr>
+<tr class="cmdtr"><table class="usage" width="100%">
+<th class="cmdth">Usage</th>
+<tr>
+<td width="10"></td>
+<td><table class="listbody">
+<tr><td>Usage : cat &lt;XPATH&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(To view a variable or parameter)</i>    </td></tr>
+<tr><td>Usage : cat $&lt;QNAME&gt;    </td></tr>
+</table></td>
+</tr>
+</table></tr>
 </table>
 <br><br><a name="cd"></a><table width="100%" class="cmd">
 <th class="cmdth">Cd</th>
@@ -249,6 +255,9 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <br><br><a name="continue"></a><table width="100%" class="cmd">
 <th class="cmdth">Continue</th>
 <tr class="cmdsummary"><td>Continue running stylesheet, stopping at any break points found.</td></tr>
+<tr class="cmdtr"><td class="cmdtd">
+<p>Shortcut name: c</p>
+</td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>
 <tr>
@@ -388,6 +397,9 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <br><br><a name="frame"></a><table width="100%" class="cmd">
 <th class="cmdth">Frame</th>
 <tr class="cmdsummary"><td>Print the stack frame at a given depth</td></tr>
+<tr class="cmdtr"><td class="cmdtd">
+<p>Shortcut name: f</p>
+</td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>
 <tr>
@@ -399,6 +411,13 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <br><br><a name="free"></a><table width="100%" class="cmd">
 <th class="cmdth">Free</th>
 <tr class="cmdsummary"><td>Free stylesheet and data        (Disabled see run)</td></tr>
+<tr class="cmdtr"><table class="usage" width="100%">
+<th class="cmdth">Usage</th>
+<tr>
+<td width="10"></td>
+<td><table class="listbody"><tr><td>free    </td></tr></table></td>
+</tr>
+</table></tr>
 </table>
 <br><br><a name="globals"></a><table width="100%" class="cmd">
 <th class="cmdth">Globals</th>
@@ -417,6 +436,9 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <br><br><a name="help"></a><table width="100%" class="cmd">
 <th class="cmdth">Help</th>
 <tr class="cmdsummary"><td>Display help on command or overiew</td></tr>
+<tr class="cmdtr"><td class="cmdtd">
+<p>Shortcut name: h</p>
+</td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>
 <tr>
@@ -431,6 +453,13 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <br><br><a name="load"></a><table width="100%" class="cmd">
 <th class="cmdth">Load</th>
 <tr class="cmdsummary"><td>Reload stylesheet and data file(s)      (Disabled see run)</td></tr>
+<tr class="cmdtr"><table class="usage" width="100%">
+<th class="cmdth">Usage</th>
+<tr>
+<td width="10"></td>
+<td><table class="listbody"><tr><td>load    </td></tr></table></td>
+</tr>
+</table></tr>
 </table>
 <br><br><a name="locals"></a><table width="100%" class="cmd">
 <th class="cmdth">Locals</th>
@@ -471,6 +500,9 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <br><br><a name="quit"></a><table width="100%" class="cmd">
 <th class="cmdth">Quit</th>
 <tr class="cmdsummary"><td>Exit processing stylesheet as soon as possible.</td></tr>
+<tr class="cmdtr"><td class="cmdtd">
+<p>Shortcut name: q</p>
+</td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>
 <tr>
@@ -482,6 +514,9 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <br><br><a name="run"></a><table width="100%" class="cmd">
 <th class="cmdth">Run</th>
 <tr class="cmdsummary"><td>Restart the stylesheet.</td></tr>
+<tr class="cmdtr"><td class="cmdtd">
+<p>Shortcut name: r</p>
+</td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>
 <tr>
@@ -493,16 +528,21 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <br><br><a name="save"></a><table width="100%" class="cmd">
 <th class="cmdth">Save</th>
 <tr class="cmdsummary"><td>Save the generated data file       (Disabled)</td></tr>
+<tr class="cmdtr"><table class="usage" width="100%">
+<th class="cmdth">Usage</th>
+<tr>
+<td width="10"></td>
+<td><table class="listbody"><tr><td>save    </td></tr></table></td>
+</tr>
+</table></tr>
 </table>
 <br><br><a name="search"></a><table width="100%" class="cmd">
 <th class="cmdth">Search</th>
-<tr class="cmdsummary"><td>Search a database of all information gathered from stylsheets loaded</td></tr>
+<tr class="cmdsummary"><td>Search a dataBase of all information gathered from stylesheets loaded</td></tr>
 <tr class="cmdtr"><td class="cmdtd">
-<p>When the search command is issued a file (search.data) will be created in the current directory. You can then process this file with your own stylessheet to present data in a other ways than displayed by default.
+<p>When the search command is issued a file (search.data) will be created in the current directory. You can then process this file with your own stylesheet to present data in a other ways than displayed by default.
 </p>
 <p>Depending on the amount of data collected it might take a while to compled this command.
-</p>
-<p>At the moment breakpoints are not being sorted properly. Which is being looked at.
 </p>
 </td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
@@ -511,7 +551,7 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <td width="10"></td>
 <td><table class="listbody">
 <tr><td>search &lt;XPATH&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(See what xpath can be used see search.dtd. The deafault &lt;XPATH&gt; is '//search/*' )</i>    </td></tr>
-<tr><td>search -sort &lt;XPATH&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Enable tell search.xsl to sort the result before outputing it)</i>    </td></tr>
+<tr><td>search -sort &lt;XPATH&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Tell search.xsl to sort the result before outputing it)</i>    </td></tr>
 </table></td>
 </tr>
 </table></tr>
@@ -530,6 +570,9 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <br><br><a name="showbreak"></a><table width="100%" class="cmd">
 <th class="cmdth">Showbreak</th>
 <tr class="cmdsummary"><td>To display list of template break points.</td></tr>
+<tr class="cmdtr"><td class="cmdtd">
+<p>Shortcut name: show</p>
+</td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>
 <tr>
@@ -628,6 +671,9 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <br><br><a name="templates"></a><table width="100%" class="cmd">
 <th class="cmdth">Templates</th>
 <tr class="cmdsummary"><td>Print a list of available templates. Search for a template</td></tr>
+<tr class="cmdtr"><td class="cmdtd">
+<p>Shortcut name: t</p>
+</td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>
 <tr>
@@ -658,14 +704,14 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <tr>
 <td width="10"></td>
 <td><table class="listbody">
-<tr><td>tty &lt;DEVICE_PATH&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Where  &lt;DEVICE_PATH&gt; is a valid terminal on the operating system)</i>    </td></tr>
+<tr><td>tty &lt;DEVICE_PATH&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Where  &lt;DEVICE_PATH&gt; is a valid terminal on the operating system. And &lt;TTY_LEVEL&gt; defaults to level 1)</i>    </td></tr>
 <tr><td>tty &lt;TTY_LEVEL&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Where &lt;TTY_LEVEL&gt; is a valid level of input/output to use)</i><table class="list"><tr>
 <td width="10"></td>
 <td><table class="listbody">
 <tr><td>Where level is     </td></tr>
-<tr><td>0 = Default input output    </td></tr>
-<tr><td>1 = Terminal output only&nbsp;&nbsp;&nbsp;&nbsp;<i>(Not emplemented yet.)</i>    </td></tr>
-<tr><td>2 = Undefined &nbsp;&nbsp;&nbsp;&nbsp;<i>(Not emplemented yet.)</i>    </td></tr>
+<tr><td>0 = Default input/output     </td></tr>
+<tr><td>1 = Terminal output of results of transformation, tracing and walking &nbsp;&nbsp;&nbsp;&nbsp;<i>(Default state when tty device has been opened. Not fully implemented yet.)</i>    </td></tr>
+<tr><td>2 = Full redirection to terminal&nbsp;&nbsp;&nbsp;&nbsp;<i>(Not implemented yet.)</i>    </td></tr>
 <tr><td>All other integer values are assumed to mean level 0
     </td></tr>
 </table></td>
@@ -677,6 +723,13 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <br><br><a name="validate"></a><table width="100%" class="cmd">
 <th class="cmdth">Validate</th>
 <tr class="cmdsummary"><td>Validate the output file generated by stylesheet    (Disabled)</td></tr>
+<tr class="cmdtr"><table class="usage" width="100%">
+<th class="cmdth">Usage</th>
+<tr>
+<td width="10"></td>
+<td><table class="listbody"><tr><td>validate    </td></tr></table></td>
+</tr>
+</table></tr>
 </table>
 <br><br><a name="walk"></a><table width="100%" class="cmd">
 <th class="cmdth">Walk</th>
@@ -692,6 +745,9 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <br><br><a name="where"></a><table width="100%" class="cmd">
 <th class="cmdth">Where</th>
 <tr class="cmdsummary"><td>Print a trace of templates calls (frame stack) and print the working directory.</td></tr>
+<tr class="cmdtr"><td class="cmdtd">
+<p>Shortcut name: w</p>
+</td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>
 <tr>
@@ -703,6 +759,13 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <br><br><a name="write"></a><table width="100%" class="cmd">
 <th class="cmdth">Write</th>
 <tr class="cmdsummary"><td>To be completed</td></tr>
+<tr class="cmdtr"><table class="usage" width="100%">
+<th class="cmdth">Usage</th>
+<tr>
+<td width="10"></td>
+<td><table class="listbody"><tr><td>write    </td></tr></table></td>
+</tr>
+</table></tr>
 </table>
 <br><br>
 </td></tr></table>

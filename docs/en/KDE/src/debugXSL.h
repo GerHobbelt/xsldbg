@@ -2,19 +2,19 @@
 /* *************************************************************************
                           debugXSL.h  -  describe the core function of xsldbg
                              -------------------
-    begin                : Fri Dec 7 2001
+    begin                : Sun Sep 16 2001
     copyright            : (C) 2001 by Keith Isdale
     email                : k_isdale@tpg.com.au
- ***************************************************************************/
+ ************************************************************************* */
 
-/***************************************************************************
+/* *************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
  *                                                                         *
- ************************************************************************ **/
+ ************************************************************************* */
 
 /*
  * Orinal file : debugXML.h : This is a set of routines used for
@@ -31,31 +31,18 @@
  *    variables   Keith Isdale <k_isdale@tpg.com.au>
  */
 
-#ifndef DEBUGXSL_H
-#define DEBUGXSL_H
 
-/**
- * Provide a set of core commands for user
- *
- * @short debugger core logic 
- *
- * @author Keith Isdale <k_isdale@tpg.com.au> 
- */
 
-#include <stdio.h>
-#include <libxml/tree.h>
-#include <libxml/debugXML.h>
 
-#include <libxslt/xsltInternals.h>
-#include <libxml/xpath.h>
-#include "breakpointInternals.h"
+/* We want skip most of these includes when building documentation*/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-#define DEBUG_BUFFER_SIZE 500   /*used by xslDbgShell */
 
+
+/*used by xslDbgShell */
+
+/* how may items have been printed */
+extern int printCount;
 
 /****************************************************************
  *								*
@@ -64,16 +51,17 @@ extern "C" {
  ****************************************************************/
 
 /**
- * @returns 1 if @p c is a blank character
- *
- * @param c An UNICODE value (int)
+ * IS_BLANK:
+ * @c:  an UNICODE value (int)
  *
  * Macro to check the following production in the XML spec
  *
  * [3] S ::= (#x20 | #x9 | #xD | #xA)+
  */
-#define IS_BLANK(c) (((c) == 0x20) || ((c) == 0x09) || ((c) == 0xA) ||	\
-                     ((c) == 0x0D))
+
+
+
+
 
 /**
  * Remove leading and trailing spaces off @p text
@@ -84,7 +72,12 @@ extern "C" {
  *
  * @param text A valid string with leading or trailing spaces
  */
+
+
     int trimString(xmlChar * text);
+
+
+
 
 
 /**
@@ -97,7 +90,12 @@ extern "C" {
  * @param maxStrings The max number of strings to put into @p out
  * @param out Is valid and at least the size of @p maxStrings
  */
+
+
     int splitString(xmlChar * textIn, int maxStrings, xmlChar ** out);
+
+
+
 
 
 /**
@@ -110,10 +108,16 @@ extern "C" {
  * @param output Where to put the results
  * @param styleCtxt Is valid 
  */
+
+
     void xslDbgShell(xmlNodePtr source, xmlNodePtr doc,
                      xmlChar * filename,
                      xmlShellReadlineFunc input,
                      FILE * output, xsltTransformContextPtr styleCtxt);
+
+
+
+
 
 
 /**
@@ -122,6 +126,8 @@ extern "C" {
  * @param arg The stylesheets of interests, is NULL for all stylsheets
  *
  */
+
+
     void xslDbgPrintStyleSheets(xmlChar * arg);
 
 
@@ -133,6 +139,8 @@ extern "C" {
   ------------------------------------------- */
 
 
+
+
 /**
  * Set a "frame" break point either up or down from here
  *
@@ -142,7 +150,12 @@ extern "C" {
  * @param arg Is valid 
  * @param stepup If != 1 then we step up, otherwise step down
  */
+
+
     int xslDbgShellFrameBreak(xmlChar * arg, int stepup);
+
+
+
 
 
 /**
@@ -154,10 +167,14 @@ extern "C" {
  * @param arg Is valid
  * @param style Is valid
  * @param ctxt Is valid
- * 
  */
+
+
     int xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                          xsltTransformContextPtr ctxt);
+
+
+
 
 
 /**
@@ -168,7 +185,11 @@ extern "C" {
  *
  * @param arg Is valid
  */
+
+
     int xslDbgShellDelete(xmlChar * arg);
+
+
 
 
 /**
@@ -182,7 +203,12 @@ extern "C" {
  *              @li   -1 toggle enabling of break point 
  * @param name Not used
 */
+
+
     void xslDbgEnableBreakPoint(void *payload, void *data, xmlChar * name);
+
+
+
 
 
 /**
@@ -192,6 +218,8 @@ extern "C" {
  * @param data Not used
  * @param name Not used
 */
+
+
     void xslDbgPrintBreakPoint(void *payload, void *data, xmlChar * name);
 
 
@@ -202,6 +230,9 @@ extern "C" {
    Template related commands
 
   ------------------------------------------- */
+
+
+
 
 /** 
  * Print out the list of template names found that match critieria   
@@ -214,12 +245,17 @@ extern "C" {
  * @param allFiles If 1 then look for all templates in stylsheets found in 
  *                 @p styleCtxt
  *             otherwise look in the stylesheet found by 
- *                 xslDebugBreak function
+ *                 debugBreak function
  */
+
+
     void xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
                                   xmlShellCtxtPtr ctxt,
                                   xmlChar * arg, int verbose,
                                   int allFiles);
+
+
+
 
 /**
  * This displays the templates in the same order as they are in the 
@@ -233,15 +269,22 @@ extern "C" {
  * @param printCount Is valid
  * @param templateName The template name to print, may be NULL
  */
+
+
     void xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
                                    int *templateCount, int *printCount,
                                    xmlChar * templateName);
+
+
+
 
 /**
  * getTemplate:
  * 
  * @returns the last template node found, if any
  */
+
+
     xsltTemplatePtr getTemplate(void);
 
 
@@ -251,6 +294,9 @@ extern "C" {
 
   ------------------------------------------- */
 
+
+
+
 /**
  * Print list of nodes in either ls or dir format
  *
@@ -259,8 +305,13 @@ extern "C" {
  * @param dir If 1 print in dir mode, 
  *        otherwise ls mode
  */
+
+
     void xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg,
                               int dir);
+
+
+
 
 
 /** 
@@ -271,8 +322,13 @@ extern "C" {
  * @param ctxt Current shell context
  * @param arg The xpath to print
  */
+
+
     void xslDbgShellCat(xsltTransformContextPtr styleCtxt,
                         xmlShellCtxtPtr ctxt, xmlChar * arg);
+
+
+
 
 
 /**
@@ -282,6 +338,8 @@ extern "C" {
  * @param arg The name of variable to look for '$' prefix is optional
  * @param type Is valid VariableTypeEnum
  */
+
+
     void xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt,
                                   xmlChar * arg, VariableTypeEnum type);
 
@@ -294,13 +352,21 @@ extern "C" {
 
   ------------------------------------------- */
 
+
+
+
 /**
  * @returns 1 if able to change xsldbg working direcorty to @p path
  *          0 otherwise
  *
  * @param path Operating system path(directory) to change to
  */
+
+
     int xslDbgShellChangeWd(const xmlChar * path);
+
+
+
 
 
 /**
@@ -312,6 +378,8 @@ extern "C" {
  * @param verbose If 1 then print extra debugging messages,
  *            normal messages otherwise
  */
+
+
     int xslDbgShellExecute(xmlChar * name, int verbose);
 
 
@@ -323,6 +391,9 @@ extern "C" {
 
   ------------------------------------------- */
 
+
+
+
 /* 
  * Add a parameter to be sent to libxslt later on
  *
@@ -332,7 +403,12 @@ extern "C" {
  * @param arg A string comprised of two words separated by
  *          one or more spaces. 
  */
+
+
     int xslDbgShellAddParam(xmlChar * arg);
+
+
+
 
 
 /**
@@ -342,7 +418,12 @@ extern "C" {
  *
  * @param arg A single white space trimmed libxslt parameter number to look for
  */
+
+
     int xslDbgShellDelParam(xmlChar * arg);
+
+
+
 
 
 /**
@@ -353,6 +434,8 @@ extern "C" {
  *
  * @param arg Not used
  */
+
+
     int xslDbgShellShowParam(xmlChar * arg);
 
 
@@ -362,6 +445,9 @@ extern "C" {
 
   ------------------------------------------- */
 
+
+
+
 /**
  * Start the tracing of the stylesheet. First need to restart it.
  *
@@ -370,7 +456,11 @@ extern "C" {
  *
  * @param arg Not used
  */
+
+
     int xslDbgShellTrace(xmlChar * arg);
+
+
 
 
 /**
@@ -381,6 +471,8 @@ extern "C" {
  *
  * @param arg An interger between 0 and 9 indicate the speed of walk
  */
+
+
     int xslDbgShellWalk(xmlChar * arg);
 
 
@@ -391,6 +483,9 @@ extern "C" {
    
   ------------------------------------------- */
 
+
+
+
 /**
  * @returns 1 if able to run query with @p arg, 
  *          0 otherwise
@@ -399,12 +494,12 @@ extern "C" {
  * @param style Is valid
  * @param arg The xpath query to use for searching dataBase
  */
+
+
     int xslDbgShellSearch(xsltTransformContextPtr styleCtxt,
                           xsltStylesheetPtr style, xmlChar * arg);
 
 
-#ifdef __cplusplus
-}
-#endif
-#endif
- /* DEBUGXSL_H */
+
+
+ /* __DEBUG_XSL__ */

@@ -1,12 +1,12 @@
 
 AC_INIT(src/xsldbg.c)
 
-timestamp='2001-12-11'
+timestamp='2001-12-13'
 
 
 XSLDBG_MAJOR_VERSION=0
 XSLDBG_MINOR_VERSION=9
-XSLDBG_MICRO_VERSION=0
+XSLDBG_MICRO_VERSION=1
 PACKAGE=xsldbg
 
 LIBXML_REQUIRED_VERSION=2.4.10
@@ -58,7 +58,8 @@ AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE(xsldbg, ${VERSION})
 AM_MAINTAINER_MODE
 AC_DEFINE_UNQUOTED(TIMESTAMP, "$timestamp")
-
+AC_SUBST(TIMESTAMP)
+ 
 AC_LANG_C
 AC_PROG_CC
 AM_PROG_LIBTOOL
@@ -162,6 +163,26 @@ AC_ARG_ENABLE(gnome_docs,
 	esac],[gnome_docs=false])
 AM_CONDITIONAL(USE_GNOMEDOCS, test "x$gnome_docs" = "xtrue")
 
+
+dnl 
+dnl Where is docbookx.dtd, needed only for generating GNOME docs
+dnl
+
+DOCBOOK_PREFIX="/usr/share/xml/docbook/"
+AC_ARG_WITH(docbook-prefix, [  --with-docbook-prefix	Set the prefix for docbook (/usr/share/xml/docbook)],
+	DOCBOOK_PREFIX="$withval"	
+)
+AC_SUBST(DOCBOOK_PREFIX)
+
+dnl
+dnl What version of docbook needed only by GNOME docs
+dnl
+
+DOCBOOK_VERSION="4.1.2"
+AC_ARG_WITH(docbook-version, [  --with-docbook-version 	  Set the version of docbook (4.1.2)],
+	DOCBOOK_VERSION="$withval"
+)
+AC_SUBST(DOCBOOK_VERSION)
 
 dnl
 dnl Do you want to use the help system

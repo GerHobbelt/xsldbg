@@ -1,8 +1,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
 
-  <xsl:template name="overview_chapter">
-    <chapter id="overview_chapter">
+  <xsl:template name="overview_section">
+    <sect1 id="overview_section">
       <title>Overview</title>
       <xsl:for-each select="overview/body">
             <xsl:element name="section">
@@ -12,7 +12,7 @@
               <xsl:apply-templates />
              </xsl:element>
           </xsl:for-each>
-    </chapter>
+     </sect1>
   </xsl:template>
 
 </xsl:stylesheet>

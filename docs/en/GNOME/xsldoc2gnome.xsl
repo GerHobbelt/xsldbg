@@ -1,31 +1,49 @@
 <?xml version="1.0" ?>
 <!-- 
-  File : xsldoc2html.xsl 
-  Purpose :Convert xsldoc.xml to kde style xmlDocbook
+  File : xsldoc2gnome.xsl 
+  Purpose :Convert xsldoc.xml to GNOME style xmlDocbook
   Author : Keith Isdale <k_isdale@tpg.com.au>
 -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
 
-  <xsl:output method="xml" doctype-public="-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" 
-    doctype-system="dtd/kdex.dtd"/>
+  <xsl:output method="xml" doctype-public="-//OASIS//DTD DocBook XML V4.1.2//EN"
+    doctype-system="http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" indent="yes"/>
+
+  <!--
+GNOME docs template state this as its preable of 
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+    "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
+<!ENTITY version "1.4.0"> 
+<!ENTITY date "4/20/2001">
+]>
+
+This is achieved useing $xsldbg_version and $xsldbg_date
+ -->
+
   <xsl:param name="xsldbg_version" select="'0.5.9'"/>
+  <xsl:param name="xsldbg_date" select="'12/13/2001'"/>
   <xsl:param name="use_cs2" select="0"/>
-  <xsl:variable name="doc_version" select="'0.4'"/>
+  <xsl:variable name="doc_version" select="'0.1'"/>
   <xsl:strip-space elements="title list li para entry"/>
-  <xsl:include href="bookinfo.xsl"/>
+  <xsl:include href="articleinfo.xsl"/>
   <xsl:include href="overview.xsl"/>
-  <xsl:include href="credits.xsl"/>
   <xsl:include href="commands.xsl"/>
+  <xsl:include href="authors.xsl"/>
+  <xsl:include href="credits.xsl"/>
 
   <xsl:template match="/xsldoc">
-  <book>    
-  <xsl:call-template name="book_info"/> 
-  <xsl:call-template name="overview_chapter"/>
-  <xsl:call-template name="command_chapter"/>
-  <xsl:call-template name="credit_chapter"/> 
-  </book>
+    <xsl:call-template name="article_header"/>
+  <article id="index" lang="en"> 
+  <xsl:call-template name="article_info"/>
+  <xsl:comment>please do not change the id; for translations, change lang to </xsl:comment>
+  <xsl:comment>appropriate code </xsl:comment>
+  <xsl:call-template name="overview_section"/>
+  <xsl:call-template name="command_section"/>
+  <xsl:call-template name="author_section"/>
+  <xsl:call-template name="credit_section"/> 
+  </article>
   </xsl:template>
 
   <xsl:template match="para">

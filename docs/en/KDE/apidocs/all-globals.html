@@ -26,153 +26,494 @@
 <TR><TD><small><A HREF="index.html">Index</A></small></TD></TR>
 </TABLE></TD></TR></TABLE>
 <h3>src/arraylist.h</h3><ul>
-<LI>typedef void &nbsp;(*<b><A HREF="#ref1">freeItemFunc</A></b>) (void *item) 
+<LI>typedef void &nbsp;(*<b><A HREF="#ref24">freeItemFunc</A></b>) (void *item) 
 </LI>
 <LI>typedef struct _ArrayList  ArrayList
 </LI>
+<LI><A HREF="#ArrayListPtr">ArrayListPtr</A> &nbsp;<b><A HREF="#ref28">arrayListNew</A></b> (int initialSize,
+                                 <A HREF="#freeItemFunc">freeItemFunc</A> deleteFunction) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref29">arrayListFree</A></b> (<A HREF="#ArrayListPtr">ArrayListPtr</A> list) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref30">arrayListEmpty</A></b> (<A HREF="#ArrayListPtr">ArrayListPtr</A> list) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref31">arrayListSize</A></b> (<A HREF="#ArrayListPtr">ArrayListPtr</A> list) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref32">arrayListCount</A></b> (<A HREF="#ArrayListPtr">ArrayListPtr</A> list) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref33">arrayListAdd</A></b> (<A HREF="#ArrayListPtr">ArrayListPtr</A> list, void *item) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref34">arrayListDelete</A></b> (<A HREF="#ArrayListPtr">ArrayListPtr</A> list, int position) 
+</LI>
+<LI>void *&nbsp;<b><A HREF="#ref35">arrayListGet</A></b> (<A HREF="#ArrayListPtr">ArrayListPtr</A> list, int position) 
+</LI>
 </ul>
 <h3>src/debugXSL.h</h3><ul>
-<LI>int &nbsp;<b><A HREF="#ref15">trimString</A></b> (xmlChar * text) 
+<LI>int &nbsp;<b><A HREF="#ref113">trimString</A></b> (xmlChar * text) 
 </LI>
-<LI>int &nbsp;<b><A HREF="#ref16">splitString</A></b> (xmlChar * textIn, int maxStrings, xmlChar ** out) 
+<LI>int &nbsp;<b><A HREF="#ref114">splitString</A></b> (xmlChar * textIn, int maxStrings, xmlChar ** out) 
 </LI>
-<LI>void &nbsp;<b><A HREF="#ref17">xslDbgShell</A></b> (xmlNodePtr source, xmlNodePtr doc,
+<LI>void &nbsp;<b><A HREF="#ref115">xslDbgShell</A></b> (xmlNodePtr source, xmlNodePtr doc,
                      xmlChar * filename,
                      xmlShellReadlineFunc input,
                      FILE * output, xsltTransformContextPtr styleCtxt) 
 </LI>
-<LI>void &nbsp;<b><A HREF="#ref18">xslDbgPrintStyleSheets</A></b> (xmlChar * arg) 
+<LI>void &nbsp;<b><A HREF="#ref116">xslDbgPrintStyleSheets</A></b> (xmlChar * arg) 
 </LI>
-<LI>int &nbsp;<b><A HREF="#ref19">xslDbgShellFrameBreak</A></b> (xmlChar * arg, int stepup) 
+<LI>int &nbsp;<b><A HREF="#ref117">xslDbgShellFrameBreak</A></b> (xmlChar * arg, int stepup) 
 </LI>
-<LI>int &nbsp;<b><A HREF="#ref20">xslDbgShellBreak</A></b> (xmlChar * arg, xsltStylesheetPtr style,
+<LI>int &nbsp;<b><A HREF="#ref118">xslDbgShellBreak</A></b> (xmlChar * arg, xsltStylesheetPtr style,
                          xsltTransformContextPtr ctxt) 
 </LI>
-<LI>int &nbsp;<b><A HREF="#ref21">xslDbgShellDelete</A></b> (xmlChar * arg) 
+<LI>int &nbsp;<b><A HREF="#ref119">xslDbgShellDelete</A></b> (xmlChar * arg) 
 </LI>
-<LI>void &nbsp;<b><A HREF="#ref22">xslDbgEnableBreakPoint</A></b> (void *payload, void *data, xmlChar * name) 
+<LI>void &nbsp;<b><A HREF="#ref120">xslDbgEnableBreakPoint</A></b> (void *payload, void *data, xmlChar * name) 
 </LI>
-<LI>void &nbsp;<b><A HREF="#ref23">xslDbgPrintBreakPoint</A></b> (void *payload, void *data, xmlChar * name) 
+<LI>void &nbsp;<b><A HREF="#ref121">xslDbgPrintBreakPoint</A></b> (void *payload, void *data, xmlChar * name) 
 </LI>
-<LI>void &nbsp;<b><A HREF="#ref24">xslDbgPrintTemplateNames</A></b> (xsltTransformContextPtr styleCtxt,
+<LI>void &nbsp;<b><A HREF="#ref122">xslDbgPrintTemplateNames</A></b> (xsltTransformContextPtr styleCtxt,
                                   xmlShellCtxtPtr ctxt,
                                   xmlChar * arg, int verbose,
                                   int allFiles) 
 </LI>
-<LI>void &nbsp;<b><A HREF="#ref25">xslDbgPrintTemplateHelper</A></b> (xsltTemplatePtr templ, int verbose,
-                                   int *templateCount, int *printCount,
+<LI>void &nbsp;<b><A HREF="#ref123">xslDbgPrintTemplateHelper</A></b> (xsltTemplatePtr templ, int verbose,
+                                   int *templateCount, int *<A HREF="#printCount">printCount</A>,
                                    xmlChar * templateName) 
 </LI>
-<LI>xsltTemplatePtr &nbsp;<b><A HREF="#ref26">getTemplate</A></b> (void) 
+<LI>xsltTemplatePtr &nbsp;<b><A HREF="#ref124">getTemplate</A></b> (void) 
 </LI>
-<LI>void &nbsp;<b><A HREF="#ref27">xslDbgShellPrintList</A></b> (xmlShellCtxtPtr ctxt, xmlChar * arg,
+<LI>void &nbsp;<b><A HREF="#ref125">xslDbgShellPrintList</A></b> (xmlShellCtxtPtr ctxt, xmlChar * arg,
                               int dir) 
 </LI>
-<LI>void &nbsp;<b><A HREF="#ref28">xslDbgShellCat</A></b> (xsltTransformContextPtr styleCtxt,
+<LI>void &nbsp;<b><A HREF="#ref126">xslDbgShellCat</A></b> (xsltTransformContextPtr styleCtxt,
                         xmlShellCtxtPtr ctxt, xmlChar * arg) 
 </LI>
-<LI>void &nbsp;<b><A HREF="#ref29">xslDbgShellPrintVariable</A></b> (xsltTransformContextPtr styleCtxt,
+<LI>void &nbsp;<b><A HREF="#ref127">xslDbgShellPrintVariable</A></b> (xsltTransformContextPtr styleCtxt,
                                   xmlChar * arg, VariableTypeEnum type) 
 </LI>
-<LI>int &nbsp;<b><A HREF="#ref30">xslDbgShellChangeWd</A></b> (const xmlChar * path) 
+<LI>int &nbsp;<b><A HREF="#ref128">xslDbgShellChangeWd</A></b> (const xmlChar * path) 
 </LI>
-<LI>int &nbsp;<b><A HREF="#ref31">xslDbgShellExecute</A></b> (xmlChar * name, int verbose) 
+<LI>int &nbsp;<b><A HREF="#ref129">xslDbgShellExecute</A></b> (xmlChar * name, int verbose) 
 </LI>
 <LI>int &nbsp;<b>xslDbgShellAddParam</b> (xmlChar * arg) 
 </LI>
-<LI>int &nbsp;<b><A HREF="#ref33">xslDbgShellDelParam</A></b> (xmlChar * arg) 
+<LI>int &nbsp;<b><A HREF="#ref131">xslDbgShellDelParam</A></b> (xmlChar * arg) 
 </LI>
-<LI>int &nbsp;<b><A HREF="#ref34">xslDbgShellShowParam</A></b> (xmlChar * arg) 
+<LI>int &nbsp;<b><A HREF="#ref132">xslDbgShellShowParam</A></b> (xmlChar * arg) 
 </LI>
-<LI>int &nbsp;<b><A HREF="#ref35">xslDbgShellTrace</A></b> (xmlChar * arg) 
+<LI>int &nbsp;<b><A HREF="#ref133">xslDbgShellTrace</A></b> (xmlChar * arg) 
 </LI>
-<LI>int &nbsp;<b><A HREF="#ref36">xslDbgShellWalk</A></b> (xmlChar * arg) 
+<LI>int &nbsp;<b><A HREF="#ref134">xslDbgShellWalk</A></b> (xmlChar * arg) 
 </LI>
-<LI>int &nbsp;<b><A HREF="#ref37">xslDbgShellSearch</A></b> (xsltTransformContextPtr styleCtxt,
+<LI>int &nbsp;<b><A HREF="#ref135">xslDbgShellSearch</A></b> (xsltTransformContextPtr styleCtxt,
                           xsltStylesheetPtr style, xmlChar * arg) 
 </LI>
 </ul>
 <h3>src/files.h</h3><ul>
-<LI>enum <A HREF="#ref38">FileTypeEnum</A> {        FILES_XMLFILE_TYPE = 100,       
+<LI>enum <A HREF="#ref137">FileTypeEnum</A> {        FILES_XMLFILE_TYPE = 100,       
         FILES_SOURCEFILE_TYPE,
         FILES_TEMPORARYFILE_TYPE
     }
 </LI>
-<LI>int &nbsp;<b><A HREF="#ref39">openTerminal</A></b> (xmlChar * device) 
+<LI>int &nbsp;<b>openTerminal</b> (xmlChar * device) 
 </LI>
-<LI>int &nbsp;<b><A HREF="#ref40">selectTerminalIO</A></b> (void) 
+<LI>int &nbsp;<b><A HREF="#ref139">selectTerminalIO</A></b> (void) 
 </LI>
-<LI>int &nbsp;<b><A HREF="#ref41">selectNormalIO</A></b> (void) 
+<LI>int &nbsp;<b><A HREF="#ref140">selectNormalIO</A></b> (void) 
 </LI>
-<LI>xsltTemplatePtr &nbsp;<b><A HREF="#ref42">getTemplate</A></b> (void) 
+<LI>xsltTemplatePtr &nbsp;<b><A HREF="#ref141">getTemplate</A></b> (void) 
 </LI>
-<LI>void &nbsp;<b><A HREF="#ref43">guessStylesheetName</A></b> (<A HREF="#searchInfoPtr">searchInfoPtr</A> searchInf) 
+<LI>void &nbsp;<b><A HREF="#ref142">guessStylesheetName</A></b> (<A HREF="#searchInfoPtr">searchInfoPtr</A> searchInf) 
 </LI>
-<LI>xmlChar *&nbsp;<b><A HREF="#ref44">stylePath</A></b> (void) 
+<LI>xmlChar *&nbsp;<b><A HREF="#ref143">stylePath</A></b> (void) 
 </LI>
-<LI>xmlChar *&nbsp;<b><A HREF="#ref45">workingPath</A></b> (void) 
+<LI>xmlChar *&nbsp;<b><A HREF="#ref144">workingPath</A></b> (void) 
 </LI>
-<LI>int &nbsp;<b><A HREF="#ref46">changeDir</A></b> (const xmlChar * path) 
+<LI>int &nbsp;<b><A HREF="#ref145">changeDir</A></b> (const xmlChar * path) 
 </LI>
-<LI>int &nbsp;<b><A HREF="#ref47">loadXmlFile</A></b> (const xmlChar * path, <A HREF="#FileTypeEnum">FileTypeEnum</A> fileType) 
+<LI>int &nbsp;<b><A HREF="#ref146">loadXmlFile</A></b> (const xmlChar * path, <A HREF="#FileTypeEnum">FileTypeEnum</A> fileType) 
 </LI>
-<LI>int &nbsp;<b><A HREF="#ref48">freeXmlFile</A></b> (<A HREF="#FileTypeEnum">FileTypeEnum</A> fileType) 
+<LI>int &nbsp;<b><A HREF="#ref147">freeXmlFile</A></b> (<A HREF="#FileTypeEnum">FileTypeEnum</A> fileType) 
 </LI>
-<LI>xsltStylesheetPtr &nbsp;<b><A HREF="#ref49">getStylesheet</A></b> (void) 
+<LI>xsltStylesheetPtr &nbsp;<b>getStylesheet</b> (void) 
 </LI>
-<LI>xmlDocPtr &nbsp;<b><A HREF="#ref50">getTemporaryDoc</A></b> (void) 
+<LI>xmlDocPtr &nbsp;<b><A HREF="#ref149">getTemporaryDoc</A></b> (void) 
 </LI>
-<LI>xmlDocPtr &nbsp;<b><A HREF="#ref51">getMainDoc</A></b> (void) 
+<LI>xmlDocPtr &nbsp;<b><A HREF="#ref150">getMainDoc</A></b> (void) 
 </LI>
-<LI>int &nbsp;<b><A HREF="#ref52">filesReloaded</A></b> (int reloaded) 
+<LI>int &nbsp;<b><A HREF="#ref151">filesReloaded</A></b> (int reloaded) 
 </LI>
-<LI>int &nbsp;<b><A HREF="#ref53">filesInit</A></b> (void) 
+<LI>int &nbsp;<b><A HREF="#ref152">filesInit</A></b> (void) 
 </LI>
-<LI>void &nbsp;<b><A HREF="#ref54">filesFree</A></b> (void) 
+<LI>void &nbsp;<b><A HREF="#ref153">filesFree</A></b> (void) 
 </LI>
 </ul>
 <h3>src/help.h</h3><ul>
-<LI>void &nbsp;<b><A HREF="#ref58">helpTop</A></b> (const xmlChar * args) 
+<LI>void &nbsp;<b><A HREF="#ref4">helpTop</A></b> (const xmlChar * args) 
 </LI>
 </ul>
 <h3>src/options.h</h3><ul>
-<LI>typedef struct _Options  <A HREF="#ref55">Options</A>
+<LI>enum <A HREF="#ref5">OptionsTypeEnum</A> {        OPTIONS_XINCLUDE = 500, 
+        OPTIONS_DOCBOOK,        
+        OPTIONS_TIMING,         
+        OPTIONS_PROFILING,      
+        OPTIONS_NOVALID,        
+        OPTIONS_NOOUT,          
+        OPTIONS_HTML,           
+        OPTIONS_DEBUG,          
+        OPTIONS_SHELL,          
+        OPTIONS_GDB,            
+        OPTIONS_REPEAT,         
+        OPTIONS_TRACE,          
+        OPTIONS_WALK_SPEED,     
+        OPTIONS_VERBOSE,        
+        OPTIONS_OUTPUT_FILE_NAME = 550, 
+        OPTIONS_SOURCE_FILE_NAME,       
+        OPTIONS_DOCS_PATH,      
+        OPTIONS_DATA_FILE_NAME  
+    }
+</LI>
+<LI>enum TraceModeEnum {        TRACE_OFF = 600,        
+        TRACE_ON,               
+        TRACE_RUNNING,          
+        TRACE_FINISHED          
+    }
+</LI>
+<LI>enum WalkSpeedEnum {        WALKSPEED_0 = 0,
+        WALKSPEED_STOP = WALKSPEED_0,
+        WALKSPEED_1,
+        WALKSPEED_FAST = WALKSPEED_1,
+        WALKSPEED_2,
+        WALKSPEED_3,
+        WALKSPEED_4,
+        WALKSPEED_5,
+        WALKSPEED_NORMAL = WALKSPEED_5,
+        WALKSPEED_6,
+        WALKSPEED_7,
+        WALKSPEED_8,
+        WALKSPEED_9,
+        WALKSPEED_SLOW = WALKSPEED_9
+    }
+</LI>
+<LI>typedef struct _ParameterItem  ParameterItem
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref11">optionsInit</A></b> (void) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref12">optionsFree</A></b> (void) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref13">enableOption</A></b> (OptionTypeEnum optionType, int value) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref14">isOptionEnabled</A></b> (OptionTypeEnum optionType) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref15">setIntOption</A></b> (OptionTypeEnum optionType, int value) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref16">getIntOption</A></b> (OptionTypeEnum optionType) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref17">setStringOption</A></b> (OptionTypeEnum optionType, const xmlChar * value) 
+</LI>
+<LI>const xmlChar *&nbsp;<b><A HREF="#ref18">getStringOption</A></b> (OptionTypeEnum optionType) 
+</LI>
+<LI><A HREF="#ArrayListPtr">ArrayListPtr</A> &nbsp;<b><A HREF="#ref19">getParamItemList</A></b> (void) 
+</LI>
+<LI><A HREF="#ParameterItemPtr">ParameterItemPtr</A> &nbsp;<b><A HREF="#ref20">paramItemNew</A></b> (const xmlChar * name,
+                                  const xmlChar * value) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref21">paramItemFree</A></b> (<A HREF="#ParameterItemPtr">ParameterItemPtr</A> item) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref22">printParam</A></b> (int paramId) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref23">printParamList</A></b> (void) 
 </LI>
 </ul>
-<h3>src/xslbreakpoint.h</h3><ul>
-<LI>typedef struct _xslBreakPoint  <A HREF="#ref5">xslBreakPoint</A>
+<h3>src/xslbreakpoint_2.h</h3><ul>
+<LI>enum <A HREF="#ref36">DebugStatusEnum</A> {        DEBUG_NONE = 0,             
+        DEBUG_INIT,
+        DEBUG_STEP,
+        DEBUG_STEPUP,
+        DEBUG_STEPDOWN,
+        DEBUG_NEXT,
+        DEBUG_STOP,
+        DEBUG_CONT,
+        DEBUG_RUN,
+        DEBUG_RUN_RESTART,
+        DEBUG_QUIT,
+        DEBUG_TRACE,
+        DEBUG_WALK
+    }
+</LI>
+<LI>enum BreakPointTypeEnum {        DEBUG_BREAK_SOURCE = 300,
+        DEBUG_BREAK_DATA
+    }
+</LI>
+<LI>typedef struct _xslBreakPoint  xslBreakPoint
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref41">debugBreak</A></b> (xmlNodePtr templ, xmlNodePtr node,
+                       xsltTemplatePtr root, xsltTransformContextPtr ctxt) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref42">debugInit</A></b> (void) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref43">debugFree</A></b> (void) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref44">debugGotControl</A></b> (int reached) 
+</LI>
+<LI><A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> &nbsp;<b><A HREF="#ref45">activeBreakPoint</A></b> (void) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref46">setActiveBreakPoint</A></b> (<A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> breakPoint) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref47">addBreakPoint</A></b> (const xmlChar * url, long int lineNumber,
+                         const xmlChar * templateName,
+                         <A HREF="#BreakPointTypeEnum">BreakPointTypeEnum</A> type) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref48">deleteBreakPoint</A></b> (<A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> breakPoint) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref49">emptyBreakPoint</A></b> (void) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref50">enableBreakPoint</A></b> (<A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> breakPoint, int enable) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref51">breakPointLinesCount</A></b> (void) 
+</LI>
+<LI><A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> &nbsp;<b><A HREF="#ref52">getBreakPoint</A></b> (const xmlChar * url, long int lineNumber) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref53">printBreakPoint</A></b> (FILE * file, <A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> breakPoint) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref54">isBreakPoint</A></b> (const xmlChar * url, long int lineNumber) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref55">isBreakPointNode</A></b> (xmlNodePtr node) 
 </LI>
 </ul>
 <h3>src/xslcallpoint.h</h3><ul>
-<LI>typedef struct _xslCallPointInfo  <A HREF="#ref8">xslCallPointInfo</A>
+<LI>typedef struct _xslCallPointInfo  <A HREF="#ref56">xslCallPointInfo</A>
+</LI>
+<LI>typedef struct _xslCallPoint  xslCallPoint
+</LI>
+<LI><A HREF="#xslCallPointInfoPtr">xslCallPointInfoPtr</A> &nbsp;<b><A HREF="#ref62">addCallInfo</A></b> (const xmlChar * templateName,
+                                       const xmlChar * url) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref63">dropCall</A></b> (void) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref64">stepupToDepth</A></b> (int depth) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref65">stepdownToDepth</A></b> (int depth) 
+</LI>
+<LI><A HREF="#xslCallPointPtr">xslCallPointPtr</A> &nbsp;<b><A HREF="#ref66">getCall</A></b> (int depth) 
+</LI>
+<LI><A HREF="#xslCallPointPtr">xslCallPointPtr</A> &nbsp;<b><A HREF="#ref67">getCallStackTop</A></b> (void) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref68">callDepth</A></b> (void) 
 </LI>
 </ul>
 <h3>src/xsldbg.h</h3><ul>
-<LI>xsltStylesheetPtr &nbsp;<b><A HREF="#ref59">loadStylesheet</A></b> (void) 
+<LI>xsltStylesheetPtr &nbsp;<b><A HREF="#ref1">loadStylesheet</A></b> (void) 
 </LI>
-<LI>xmlDocPtr &nbsp;<b><A HREF="#ref60">loadXmlData</A></b> (void) 
+<LI>xmlDocPtr &nbsp;<b><A HREF="#ref2">loadXmlData</A></b> (void) 
 </LI>
-<LI>xmlDocPtr &nbsp;<b><A HREF="#ref61">loadXmlTemporay</A></b> (const xmlChar * path) 
+<LI>xmlDocPtr &nbsp;<b><A HREF="#ref3">loadXmlTemporary</A></b> (const xmlChar * path) 
 </LI>
 </ul>
 <h3>src/xslsearch.h</h3><ul>
-<LI>enum <A HREF="#ref11">SearchEnum</A> {        SEARCH_BREAKPOINT = 400,
+<LI>enum <A HREF="#ref69">SearchEnum</A> {        SEARCH_BREAKPOINT = 400,
         SEARCH_NODE,
         SEARCH_XSL
     }
 </LI>
 <LI>typedef struct _searchInfo  searchInfo
 </LI>
+<LI>typedef struct _breakPointSearchData  breakPointSearchData
+</LI>
+<LI>typedef struct _nodeSearchData  nodeSearchData
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref79">searchInit</A></b> (void) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref80">searchFree</A></b> (void) 
+</LI>
+<LI><A HREF="#searchInfoPtr">searchInfoPtr</A> &nbsp;<b><A HREF="#ref81">searchNewInfo</A></b> (<A HREF="#SearchEnum">SearchEnum</A> type) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref82">searchFreeInfo</A></b> (<A HREF="#searchInfoPtr">searchInfoPtr</A> info) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref83">searchEmpty</A></b> (void) 
+</LI>
+<LI>xmlDocPtr &nbsp;<b><A HREF="#ref84">searchDoc</A></b> (void) 
+</LI>
+<LI>xmlNodePtr &nbsp;<b><A HREF="#ref85">searchRootNode</A></b> (void) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref86">searchAdd</A></b> (xmlNodePtr node) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref87">searchSave</A></b> (const xmlChar * fileName) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref88">searchQuery</A></b> (const xmlChar * tempFile, const xmlChar * query) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref89">updateSearchData</A></b> (xsltTransformContextPtr styleCtxt,
+                         xsltStylesheetPtr style,
+                         void *data, VariableTypeEnum variableTypes) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref90">scanForBreakPoint</A></b> (void *payload, void *data, xmlChar * name) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref91">scanForNode</A></b> (void *payload, void *data, xmlChar * name) 
+</LI>
+<LI>xmlNodePtr &nbsp;<b><A HREF="#ref92">findNodeByLineNo</A></b> (xsltTransformContextPtr ctxt,
+                                const xmlChar * url, long int lineNumber) 
+</LI>
+<LI>xmlNodePtr &nbsp;<b><A HREF="#ref93">findTemplateNode</A></b> (const xsltStylesheetPtr style,
+                                const xmlChar * name) 
+</LI>
+<LI><A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> &nbsp;<b><A HREF="#ref94">findBreakPointByName</A></b> (const xmlChar * templateName) 
+</LI>
+<LI><A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> &nbsp;<b><A HREF="#ref95">findBreakPointById</A></b> (int id) 
+</LI>
+<LI>xmlXPathObjectPtr &nbsp;<b><A HREF="#ref96">findNodesByQuery</A></b> (const xmlChar * query) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref97">walkBreakPoints</A></b> (xmlHashScanner walkFunc, void *data) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref98">walkTemplates</A></b> (xmlHashScanner walkFunc, void *data,
+                       xsltStylesheetPtr style) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref99">walkStylesheets</A></b> (xmlHashScanner walkFunc, void *data,
+                         xsltStylesheetPtr style) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref100">walkGlobals</A></b> (xmlHashScanner walkFunc,
+                     void *data, xsltStylesheetPtr style) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref101">walkLocals</A></b> (xmlHashScanner walkFunc, void *data,
+                    xsltStylesheetPtr style) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref102">walkIncludes</A></b> (xmlHashScanner walkFunc, void *data,
+                      xsltStylesheetPtr style) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref103">walkIncludeInst</A></b> (xmlHashScanner walkFunc, void *data,
+                         xsltStylesheetPtr style) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref104">walkChildNodes</A></b> (xmlHashScanner walkFunc, void *data,
+                        xmlNodePtr node) 
+</LI>
+<LI>xmlNodePtr &nbsp;<b><A HREF="#ref105">searchBreakPointNode</A></b> (<A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> breakPoint) 
+</LI>
+<LI>xmlNodePtr &nbsp;<b><A HREF="#ref106">searchTemplateNode</A></b> (xmlNodePtr templNode) 
+</LI>
+<LI>xmlNodePtr &nbsp;<b><A HREF="#ref107">searchGlobalNode</A></b> (xmlNodePtr globalVariable) 
+</LI>
+<LI>xmlNodePtr &nbsp;<b><A HREF="#ref108">searchLocalNode</A></b> (xmlNodePtr localVariable) 
+</LI>
+<LI>xmlNodePtr &nbsp;<b><A HREF="#ref109">searchSourceNode</A></b> (xsltStylesheetPtr style) 
+</LI>
+<LI>xmlNodePtr &nbsp;<b><A HREF="#ref110">searchIncludeNode</A></b> (xmlNodePtr include) 
+</LI>
+<LI>xmlNodePtr &nbsp;<b><A HREF="#ref111">searchCallStackNode</A></b> (<A HREF="#xslCallPointPtr">xslCallPointPtr</A> callStackItem) 
+</LI>
 </ul>
 <h2>Global member Documentation</h2>
-<A NAME="freeItemFunc"></A><A NAME="ref1"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef void &nbsp;(*<strong>freeItemFunc</strong>) (void *item)
+<A NAME="freeItemFunc"></A><A NAME="ref24"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef void &nbsp;(*<strong>freeItemFunc</strong>) (void *item)
 </td><td align="right"><h3>(*<strong>freeItemFunc</strong>)</h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___arraylist_h.html">src/arraylist.h</A>&gt;</code></small></p><p>
  Provide a fast easy to use array list. Support the basic functions of add
   delete, empty, count, free
 </p>
 <p></p>
 <p></p>
-<A NAME="ArrayList"></A><A NAME="ref2"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct <A HREF="_ArrayList.html">_ArrayList</A>  <strong>ArrayList</strong></td><td align="right"><h3><strong>ArrayList</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___arraylist_h.html">src/arraylist.h</A>&gt;</code></small></p><A NAME="trimString"></A><A NAME="ref15"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>trimString</strong> (xmlChar * text)
+<A NAME="ArrayList"></A><A NAME="ref25"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct <A HREF="_ArrayList.html">_ArrayList</A>  <strong>ArrayList</strong></td><td align="right"><h3><strong>ArrayList</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___arraylist_h.html">src/arraylist.h</A>&gt;</code></small></p><A NAME="arrayListNew"></A><A NAME="ref28"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="#ArrayListPtr">ArrayListPtr</A> &nbsp;<strong>arrayListNew</strong> (int initialSize,
+                                 <A HREF="#freeItemFunc">freeItemFunc</A> deleteFunction)
+<br></td><td align="right"><h3><strong>arrayListNew</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___arraylist_h.html">src/arraylist.h</A>&gt;</code></small></p><p>
+ Create a new list with a size of <code>initialSize</code>
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>initial</i></TD><TD align="left" valign="top">The initial size of list
+</TD></TR>
+<TR><TD align="left" valign="top"><i>deleteFunction</i></TD><TD align="left" valign="top">the Function to call to free items in the list
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: Non-null on success,
+          NULL otherwise
+</p>
+<A NAME="arrayListFree"></A><A NAME="ref29"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>arrayListFree</strong> (<A HREF="#ArrayListPtr">ArrayListPtr</A> list)
+<br></td><td align="right"><h3><strong>arrayListFree</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___arraylist_h.html">src/arraylist.h</A>&gt;</code></small></p><p>
+ Free memory assocated with array list, if the array list 
+   has a valid deleteFunction then content with be freed with 
+    using that deleteFunction
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>list</i></TD><TD align="left" valign="top">A valid list
+ </TD></TR>
+</TABLE></P>
+<A NAME="arrayListEmpty"></A><A NAME="ref30"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>arrayListEmpty</strong> (<A HREF="#ArrayListPtr">ArrayListPtr</A> list)
+<br></td><td align="right"><h3><strong>arrayListEmpty</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___arraylist_h.html">src/arraylist.h</A>&gt;</code></small></p><p>
+ Empties the list of its content
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>list</i></TD><TD align="left" valign="top">A valid list
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+</p>
+<A NAME="arrayListSize"></A><A NAME="ref31"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>arrayListSize</strong> (<A HREF="#ArrayListPtr">ArrayListPtr</A> list)
+<br></td><td align="right"><h3><strong>arrayListSize</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___arraylist_h.html">src/arraylist.h</A>&gt;</code></small></p><p>
+ Return the maximum number elements this list can contain
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>list</i></TD><TD align="left" valign="top">A valid list
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: The maximum number elements this list can contain
+</p>
+<A NAME="arrayListCount"></A><A NAME="ref32"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>arrayListCount</strong> (<A HREF="#ArrayListPtr">ArrayListPtr</A> list)
+<br></td><td align="right"><h3><strong>arrayListCount</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___arraylist_h.html">src/arraylist.h</A>&gt;</code></small></p><p>
+ Return the count of number items in list
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>list</i></TD><TD align="left" valign="top">A valid list
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: The count of number items in list
+</p>
+<A NAME="arrayListAdd"></A><A NAME="ref33"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>arrayListAdd</strong> (<A HREF="#ArrayListPtr">ArrayListPtr</A> list, void *item)
+<br></td><td align="right"><h3><strong>arrayListAdd</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___arraylist_h.html">src/arraylist.h</A>&gt;</code></small></p><p>
+ Add <code>item</code> to <code>list</code>
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>list</i></TD><TD align="left" valign="top">A valid list
+</TD></TR>
+<TR><TD align="left" valign="top"><i>item</i></TD><TD align="left" valign="top">A valid item
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 if able to add <code>item</code> to end of <code>list</code>,
+          0 otherwise
+</p>
+<A NAME="arrayListDelete"></A><A NAME="ref34"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>arrayListDelete</strong> (<A HREF="#ArrayListPtr">ArrayListPtr</A> list, int position)
+<br></td><td align="right"><h3><strong>arrayListDelete</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___arraylist_h.html">src/arraylist.h</A>&gt;</code></small></p><p>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>list</i></TD><TD align="left" valign="top">A valid list
+</TD></TR>
+<TR><TD align="left" valign="top"><i>position</i></TD><TD align="left" valign="top">0 =< <code>position</code> < arrayListCount(<code>list</code>)
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 if able to delete element in <code>list</code> at position <code>position</code>,
+          0 otherwise 
+</p>
+<A NAME="arrayListGet"></A><A NAME="ref35"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void *&nbsp;<strong>arrayListGet</strong> (<A HREF="#ArrayListPtr">ArrayListPtr</A> list, int position)
+<br></td><td align="right"><h3><strong>arrayListGet</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___arraylist_h.html">src/arraylist.h</A>&gt;</code></small></p><p>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>list</i></TD><TD align="left" valign="top">A valid list
+</TD></TR>
+<TR><TD align="left" valign="top"><i>position</i></TD><TD align="left" valign="top">0 =< <code>position</code> < arrayListCount(<code>list</code>)
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: Non-null if able to retrieve element in <code>list</code> at position
+          <code>position</code>,
+         NULL otherwise
+</p>
+<A NAME="trimString"></A><A NAME="ref113"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>trimString</strong> (xmlChar * text)
 <br></td><td align="right"><h3><strong>trimString</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
  Remove leading and trailing spaces off <code>text</code>
          stores result back into <code>text</code>
@@ -186,7 +527,7 @@
 <p><b>Returns</b>: 1 on success,
           0 otherwise
 </p>
-<A NAME="splitString"></A><A NAME="ref16"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>splitString</strong> (xmlChar * textIn, int maxStrings, xmlChar ** out)
+<A NAME="splitString"></A><A NAME="ref114"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>splitString</strong> (xmlChar * textIn, int maxStrings, xmlChar ** out)
 <br></td><td align="right"><h3><strong>splitString</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
  Spit string by white space and put into <code>out</code>
 </p>
@@ -203,7 +544,7 @@
 <p><b>Returns</b>: 1 on success,
           0 otherwise
 </p>
-<A NAME="xslDbgShell"></A><A NAME="ref17"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgShell</strong> (xmlNodePtr source, xmlNodePtr doc,
+<A NAME="xslDbgShell"></A><A NAME="ref115"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgShell</strong> (xmlNodePtr source, xmlNodePtr doc,
                      xmlChar * filename,
                      xmlShellReadlineFunc input,
                      FILE * output, xsltTransformContextPtr styleCtxt)
@@ -225,7 +566,7 @@
 <TR><TD align="left" valign="top"><i>styleCtxt</i></TD><TD align="left" valign="top">Is valid 
  </TD></TR>
 </TABLE></P>
-<A NAME="xslDbgPrintStyleSheets"></A><A NAME="ref18"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgPrintStyleSheets</strong> (xmlChar * arg)
+<A NAME="xslDbgPrintStyleSheets"></A><A NAME="ref116"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgPrintStyleSheets</strong> (xmlChar * arg)
 <br></td><td align="right"><h3><strong>xslDbgPrintStyleSheets</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
  Print stylesheets that can be found in loaded stylsheet
 </p>
@@ -235,7 +576,7 @@
 <TR><TD align="left" valign="top"><i>arg</i></TD><TD align="left" valign="top">The stylesheets of interests, is NULL for all stylsheets
 </TD></TR>
 </TABLE></P>
-<A NAME="xslDbgShellFrameBreak"></A><A NAME="ref19"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellFrameBreak</strong> (xmlChar * arg, int stepup)
+<A NAME="xslDbgShellFrameBreak"></A><A NAME="ref117"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellFrameBreak</strong> (xmlChar * arg, int stepup)
 <br></td><td align="right"><h3><strong>xslDbgShellFrameBreak</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
  Set a "frame" break point either up or down from here
 </p>
@@ -250,26 +591,25 @@
 <p><b>Returns</b>: 1 on success,
           0 otherwise
 </p>
-<A NAME="xslDbgShellBreak"></A><A NAME="ref20"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellBreak</strong> (xmlChar * arg, xsltStylesheetPtr style,
+<A NAME="xslDbgShellBreak"></A><A NAME="ref118"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellBreak</strong> (xmlChar * arg, xsltStylesheetPtr style,
                          xsltTransformContextPtr ctxt)
 <br></td><td align="right"><h3><strong>xslDbgShellBreak</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
  Add break point specified by arg
 </p>
 <p></p>
 <p></p>
-<p> </p>
 <p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
 <TR><TD align="left" valign="top"><i>arg</i></TD><TD align="left" valign="top">Is valid
 </TD></TR>
 <TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">Is valid
 </TD></TR>
 <TR><TD align="left" valign="top"><i>ctxt</i></TD><TD align="left" valign="top">Is valid
-</TD></TR>
+ </TD></TR>
 </TABLE></P>
 <p><b>Returns</b>: 1 on success,
           0 otherwise
 </p>
-<A NAME="xslDbgShellDelete"></A><A NAME="ref21"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellDelete</strong> (xmlChar * arg)
+<A NAME="xslDbgShellDelete"></A><A NAME="ref119"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellDelete</strong> (xmlChar * arg)
 <br></td><td align="right"><h3><strong>xslDbgShellDelete</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
  Delete break point specified by arg
 </p>
@@ -282,7 +622,7 @@
 <p><b>Returns</b>: 1 on success,
           0 otherwise
 </p>
-<A NAME="xslDbgEnableBreakPoint"></A><A NAME="ref22"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgEnableBreakPoint</strong> (void *payload, void *data, xmlChar * name)
+<A NAME="xslDbgEnableBreakPoint"></A><A NAME="ref120"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgEnableBreakPoint</strong> (void *payload, void *data, xmlChar * name)
 <br></td><td align="right"><h3><strong>xslDbgEnableBreakPoint</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
  Enable/disable break points via use of scan of break points
 </p>
@@ -308,7 +648,7 @@
 <TR><TD align="left" valign="top"><i>name</i></TD><TD align="left" valign="top">Not used
 </TD></TR>
 </TABLE></P>
-<A NAME="xslDbgPrintBreakPoint"></A><A NAME="ref23"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgPrintBreakPoint</strong> (void *payload, void *data, xmlChar * name)
+<A NAME="xslDbgPrintBreakPoint"></A><A NAME="ref121"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgPrintBreakPoint</strong> (void *payload, void *data, xmlChar * name)
 <br></td><td align="right"><h3><strong>xslDbgPrintBreakPoint</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
  Print data given by scan of break points 
 </p>
@@ -321,7 +661,7 @@
 <TR><TD align="left" valign="top"><i>name</i></TD><TD align="left" valign="top">Not used
 </TD></TR>
 </TABLE></P>
-<A NAME="xslDbgPrintTemplateNames"></A><A NAME="ref24"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgPrintTemplateNames</strong> (xsltTransformContextPtr styleCtxt,
+<A NAME="xslDbgPrintTemplateNames"></A><A NAME="ref122"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgPrintTemplateNames</strong> (xsltTransformContextPtr styleCtxt,
                                   xmlShellCtxtPtr ctxt,
                                   xmlChar * arg, int verbose,
                                   int allFiles)
@@ -342,11 +682,11 @@
 <TR><TD align="left" valign="top"><i>allFiles</i></TD><TD align="left" valign="top">If 1 then look for all templates in stylsheets found in 
                  <code>styleCtxt</code>
              otherwise look in the stylesheet found by 
-                 xslDebugBreak function
+                 debugBreak function
  </TD></TR>
 </TABLE></P>
-<A NAME="xslDbgPrintTemplateHelper"></A><A NAME="ref25"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgPrintTemplateHelper</strong> (xsltTemplatePtr templ, int verbose,
-                                   int *templateCount, int *printCount,
+<A NAME="xslDbgPrintTemplateHelper"></A><A NAME="ref123"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgPrintTemplateHelper</strong> (xsltTemplatePtr templ, int verbose,
+                                   int *templateCount, int *<A HREF="#printCount">printCount</A>,
                                    xmlChar * templateName)
 <br></td><td align="right"><h3><strong>xslDbgPrintTemplateHelper</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
  This displays the templates in the same order as they are in the 
@@ -367,14 +707,14 @@
 <TR><TD align="left" valign="top"><i>templateName</i></TD><TD align="left" valign="top">The template name to print, may be NULL
  </TD></TR>
 </TABLE></P>
-<A NAME="getTemplate"></A><A NAME="ref26"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xsltTemplatePtr &nbsp;<strong>getTemplate</strong> (void)
+<A NAME="getTemplate"></A><A NAME="ref124"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xsltTemplatePtr &nbsp;<strong>getTemplate</strong> (void)
 <br></td><td align="right"><h3><strong>getTemplate</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
  getTemplate:
 </p>
 <p></p>
 <p><b>Returns</b>: the last template node found, if any
  </p>
-<A NAME="xslDbgShellPrintList"></A><A NAME="ref27"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgShellPrintList</strong> (xmlShellCtxtPtr ctxt, xmlChar * arg,
+<A NAME="xslDbgShellPrintList"></A><A NAME="ref125"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgShellPrintList</strong> (xmlShellCtxtPtr ctxt, xmlChar * arg,
                               int dir)
 <br></td><td align="right"><h3><strong>xslDbgShellPrintList</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
  Print list of nodes in either ls or dir format
@@ -389,7 +729,7 @@
         otherwise ls mode
  </TD></TR>
 </TABLE></P>
-<A NAME="xslDbgShellCat"></A><A NAME="ref28"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgShellCat</strong> (xsltTransformContextPtr styleCtxt,
+<A NAME="xslDbgShellCat"></A><A NAME="ref126"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgShellCat</strong> (xsltTransformContextPtr styleCtxt,
                         xmlShellCtxtPtr ctxt, xmlChar * arg)
 <br></td><td align="right"><h3><strong>xslDbgShellCat</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p> 
  Print the result of an xpath expression. This can include variables
@@ -404,7 +744,7 @@
 <TR><TD align="left" valign="top"><i>arg</i></TD><TD align="left" valign="top">The xpath to print
  </TD></TR>
 </TABLE></P>
-<A NAME="xslDbgShellPrintVariable"></A><A NAME="ref29"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgShellPrintVariable</strong> (xsltTransformContextPtr styleCtxt,
+<A NAME="xslDbgShellPrintVariable"></A><A NAME="ref127"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgShellPrintVariable</strong> (xsltTransformContextPtr styleCtxt,
                                   xmlChar * arg, VariableTypeEnum type)
 <br></td><td align="right"><h3><strong>xslDbgShellPrintVariable</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
   Print the value variable specified by args.
@@ -418,7 +758,7 @@
 <TR><TD align="left" valign="top"><i>type</i></TD><TD align="left" valign="top">Is valid VariableTypeEnum
  </TD></TR>
 </TABLE></P>
-<A NAME="xslDbgShellChangeWd"></A><A NAME="ref30"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellChangeWd</strong> (const xmlChar * path)
+<A NAME="xslDbgShellChangeWd"></A><A NAME="ref128"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellChangeWd</strong> (const xmlChar * path)
 <br></td><td align="right"><h3><strong>xslDbgShellChangeWd</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
 </p>
 <p></p>
@@ -429,7 +769,7 @@
 <p><b>Returns</b>: 1 if able to change xsldbg working direcorty to <code>path</code>
           0 otherwise
 </p>
-<A NAME="xslDbgShellExecute"></A><A NAME="ref31"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellExecute</strong> (xmlChar * name, int verbose)
+<A NAME="xslDbgShellExecute"></A><A NAME="ref129"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellExecute</strong> (xmlChar * name, int verbose)
 <br></td><td align="right"><h3><strong>xslDbgShellExecute</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
 </p>
 <p></p>
@@ -444,8 +784,8 @@
 <p><b>Returns</b>: 1 if able to execute command <code>name</code>,
           0 otherwise
 </p>
-<A NAME="xslDbgShellAddParam"></A><A NAME="ref32"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellAddParam</strong> (xmlChar * arg)
-<br></td><td align="right"><h3><strong>xslDbgShellAddParam</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><A NAME="xslDbgShellDelParam"></A><A NAME="ref33"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellDelParam</strong> (xmlChar * arg)
+<A NAME="xslDbgShellAddParam"></A><A NAME="ref130"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellAddParam</strong> (xmlChar * arg)
+<br></td><td align="right"><h3><strong>xslDbgShellAddParam</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><A NAME="xslDbgShellDelParam"></A><A NAME="ref131"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellDelParam</strong> (xmlChar * arg)
 <br></td><td align="right"><h3><strong>xslDbgShellDelParam</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
 </p>
 <p></p>
@@ -457,7 +797,7 @@
 <p><b>Returns</b>: 1 if able to delete parameter <code>name</code>,
           0 otherwise
 </p>
-<A NAME="xslDbgShellShowParam"></A><A NAME="ref34"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellShowParam</strong> (xmlChar * arg)
+<A NAME="xslDbgShellShowParam"></A><A NAME="ref132"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellShowParam</strong> (xmlChar * arg)
 <br></td><td align="right"><h3><strong>xslDbgShellShowParam</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
  Print list of current paramters
 </p>
@@ -470,7 +810,7 @@
 <p><b>Returns</b>: 1 on success,
          0 otherwise
 </p>
-<A NAME="xslDbgShellTrace"></A><A NAME="ref35"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellTrace</strong> (xmlChar * arg)
+<A NAME="xslDbgShellTrace"></A><A NAME="ref133"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellTrace</strong> (xmlChar * arg)
 <br></td><td align="right"><h3><strong>xslDbgShellTrace</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
  Start the tracing of the stylesheet. First need to restart it.
 </p>
@@ -483,7 +823,7 @@
 <p><b>Returns</b>: 1 on success,
           0 otherwise
 </p>
-<A NAME="xslDbgShellWalk"></A><A NAME="ref36"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellWalk</strong> (xmlChar * arg)
+<A NAME="xslDbgShellWalk"></A><A NAME="ref134"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellWalk</strong> (xmlChar * arg)
 <br></td><td align="right"><h3><strong>xslDbgShellWalk</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
  Start walking through the stylesheet.
 </p>
@@ -496,7 +836,7 @@
 <p><b>Returns</b>: 1 on success,
           0 otherwise
 </p>
-<A NAME="xslDbgShellSearch"></A><A NAME="ref37"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellSearch</strong> (xsltTransformContextPtr styleCtxt,
+<A NAME="xslDbgShellSearch"></A><A NAME="ref135"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellSearch</strong> (xsltTransformContextPtr styleCtxt,
                           xsltStylesheetPtr style, xmlChar * arg)
 <br></td><td align="right"><h3><strong>xslDbgShellSearch</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
 </p>
@@ -512,7 +852,7 @@
 <p><b>Returns</b>: 1 if able to run query with <code>arg</code>, 
           0 otherwise
 </p>
-<A NAME="FileTypeEnum"></A><A NAME="ref38"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>FileTypeEnum</strong> {        FILES_XMLFILE_TYPE = 100,       
+<A NAME="FileTypeEnum"></A><A NAME="ref137"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>FileTypeEnum</strong> {        FILES_XMLFILE_TYPE = 100,       
         FILES_SOURCEFILE_TYPE,
         FILES_TEMPORARYFILE_TYPE
     }
@@ -521,8 +861,26 @@
 </p>
 <p></p>
 <p></p>
-<A NAME="openTerminal"></A><A NAME="ref39"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>openTerminal</strong> (xmlChar * device)
-<br></td><td align="right"><h3><strong>openTerminal</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
+<A NAME="openTerminal"></A><A NAME="ref138"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>openTerminal</strong> (xmlChar * device)
+<br></td><td align="right"><h3><strong>openTerminal</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><A NAME="selectTerminalIO"></A><A NAME="ref139"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>selectTerminalIO</strong> (void)
+<br></td><td align="right"><h3><strong>selectTerminalIO</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
+</p>
+<p><b>Returns</b>: 1 if able to use prevously opened terminal 
+          0 otherwise
+</p>
+<A NAME="selectNormalIO"></A><A NAME="ref140"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>selectNormalIO</strong> (void)
+<br></td><td align="right"><h3><strong>selectNormalIO</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p> 
+</p>
+<p><b>Returns</b>: 1 if able to select orginal stdin, stdout, stderr
+          0 otherwise
+</p>
+<A NAME="getTemplate"></A><A NAME="ref141"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xsltTemplatePtr &nbsp;<strong>getTemplate</strong> (void)
+<br></td><td align="right"><h3><strong>getTemplate</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
+</p>
+<p><b>Returns</b>: the last template node found, if any
+ </p>
+<A NAME="guessStylesheetName"></A><A NAME="ref142"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>guessStylesheetName</strong> (<A HREF="#searchInfoPtr">searchInfoPtr</A> searchInf)
+<br></td><td align="right"><h3><strong>guessStylesheetName</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
  Open communications to the terminal device <code>device</code>
 </p>
 <p></p>
@@ -534,45 +892,18 @@
 <p><b>Returns</b>: 1 if sucessful
           0 otherwise
 </p>
-<A NAME="selectTerminalIO"></A><A NAME="ref40"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>selectTerminalIO</strong> (void)
-<br></td><td align="right"><h3><strong>selectTerminalIO</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
-</p>
-<p><b>Returns</b>: 1 if able to use prevously opened terminal 
-          0 otherwise
-</p>
-<A NAME="selectNormalIO"></A><A NAME="ref41"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>selectNormalIO</strong> (void)
-<br></td><td align="right"><h3><strong>selectNormalIO</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p> 
-</p>
-<p><b>Returns</b>: 1 if able to select orginal stdin, stdout, stderr
-          0 otherwise
-</p>
-<A NAME="getTemplate"></A><A NAME="ref42"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xsltTemplatePtr &nbsp;<strong>getTemplate</strong> (void)
-<br></td><td align="right"><h3><strong>getTemplate</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
-</p>
-<p><b>Returns</b>: the last template node found, if any
- </p>
-<A NAME="guessStylesheetName"></A><A NAME="ref43"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>guessStylesheetName</strong> (<A HREF="#searchInfoPtr">searchInfoPtr</A> searchInf)
-<br></td><td align="right"><h3><strong>guessStylesheetName</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
- Try to find a matching stylesheet name
- Sets the values in <code>searchinf</code> depending on outcome of search
-</p>
-<p></p>
-<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
-<TR><TD align="left" valign="top"><i>searchInf</i></TD><TD align="left" valign="top">Iss valid
- </TD></TR>
-</TABLE></P>
-<A NAME="stylePath"></A><A NAME="ref44"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlChar *&nbsp;<strong>stylePath</strong> (void)
+<A NAME="stylePath"></A><A NAME="ref143"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlChar *&nbsp;<strong>stylePath</strong> (void)
 <br></td><td align="right"><h3><strong>stylePath</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
 </p>
 <p><b>Returns</b>: the base path for the top stylesheet ie
         ie URL minus the actual file name
  </p>
-<A NAME="workingPath"></A><A NAME="ref45"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlChar *&nbsp;<strong>workingPath</strong> (void)
+<A NAME="workingPath"></A><A NAME="ref144"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlChar *&nbsp;<strong>workingPath</strong> (void)
 <br></td><td align="right"><h3><strong>workingPath</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
 </p>
 <p><b>Returns</b>: the working directory as set by changeDir function
  </p>
-<A NAME="changeDir"></A><A NAME="ref46"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>changeDir</strong> (const xmlChar * path)
+<A NAME="changeDir"></A><A NAME="ref145"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>changeDir</strong> (const xmlChar * path)
 <br></td><td align="right"><h3><strong>changeDir</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
  Change working directory to path 
 </p>
@@ -582,7 +913,7 @@
          new working directory
  </TD></TR>
 </TABLE></P>
-<A NAME="loadXmlFile"></A><A NAME="ref47"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>loadXmlFile</strong> (const xmlChar * path, <A HREF="#FileTypeEnum">FileTypeEnum</A> fileType)
+<A NAME="loadXmlFile"></A><A NAME="ref146"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>loadXmlFile</strong> (const xmlChar * path, <A HREF="#FileTypeEnum">FileTypeEnum</A> fileType)
 <br></td><td align="right"><h3><strong>loadXmlFile</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
 </p>
 <p></p>
@@ -595,7 +926,7 @@
 <p><b>Returns</b>: 1 on success,
          0 otherwise 
 </p>
-<A NAME="freeXmlFile"></A><A NAME="ref48"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>freeXmlFile</strong> (<A HREF="#FileTypeEnum">FileTypeEnum</A> fileType)
+<A NAME="freeXmlFile"></A><A NAME="ref147"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>freeXmlFile</strong> (<A HREF="#FileTypeEnum">FileTypeEnum</A> fileType)
 <br></td><td align="right"><h3><strong>freeXmlFile</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
  Free memory associated with the xml file 
 </p>
@@ -608,25 +939,21 @@
 <p><b>Returns</b>: 1 on success,
          0 otherwise
 </p>
-<A NAME="getStylesheet"></A><A NAME="ref49"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xsltStylesheetPtr &nbsp;<strong>getStylesheet</strong> (void)
-<br></td><td align="right"><h3><strong>getStylesheet</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
+<A NAME="getStylesheet"></A><A NAME="ref148"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xsltStylesheetPtr &nbsp;<strong>getStylesheet</strong> (void)
+<br></td><td align="right"><h3><strong>getStylesheet</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><A NAME="getTemporaryDoc"></A><A NAME="ref149"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlDocPtr &nbsp;<strong>getTemporaryDoc</strong> (void)
+<br></td><td align="right"><h3><strong>getTemporaryDoc</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
  Return the topmost stylesheet 
 </p>
 <p></p>
 <p><b>Returns</b>: non-null on success,
           NULL otherwise
  </p>
-<A NAME="getTemporaryDoc"></A><A NAME="ref50"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlDocPtr &nbsp;<strong>getTemporaryDoc</strong> (void)
-<br></td><td align="right"><h3><strong>getTemporaryDoc</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
-</p>
-<p><b>Returns</b>: the current "temporary" document
- </p>
-<A NAME="getMainDoc"></A><A NAME="ref51"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlDocPtr &nbsp;<strong>getMainDoc</strong> (void)
+<A NAME="getMainDoc"></A><A NAME="ref150"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlDocPtr &nbsp;<strong>getMainDoc</strong> (void)
 <br></td><td align="right"><h3><strong>getMainDoc</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
 </p>
 <p><b>Returns</b>: the main document
  </p>
-<A NAME="filesReloaded"></A><A NAME="ref52"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>filesReloaded</strong> (int reloaded)
+<A NAME="filesReloaded"></A><A NAME="ref151"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>filesReloaded</strong> (int reloaded)
 <br></td><td align="right"><h3><strong>filesReloaded</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
 </p>
 <p></p>
@@ -638,63 +965,527 @@
 <p><b>Returns</b>: 1 if stylesheet or its xml data file has been "flaged" as reloaded,
          0 otherwise
 </p>
-<A NAME="filesInit"></A><A NAME="ref53"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>filesInit</strong> (void)
+<A NAME="filesInit"></A><A NAME="ref152"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>filesInit</strong> (void)
 <br></td><td align="right"><h3><strong>filesInit</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
- Initialize the file related structures
+ Initialize the file module
 </p>
 <p></p>
 <p><b>Returns</b>: 1 on success,
           0 otherwise
  </p>
-<A NAME="filesFree"></A><A NAME="ref54"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>filesFree</strong> (void)
+<A NAME="filesFree"></A><A NAME="ref153"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>filesFree</strong> (void)
 <br></td><td align="right"><h3><strong>filesFree</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
  Free memory used by file related structures
  </p>
-<A NAME="helpTop"></A><A NAME="ref58"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>helpTop</strong> (const xmlChar * args)
+<A NAME="helpTop"></A><A NAME="ref4"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>helpTop</strong> (const xmlChar * args)
 <br></td><td align="right"><h3><strong>helpTop</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___help_h.html">src/help.h</A>&gt;</code></small></p><p>
  Display help about the command in <code>arg</code>
 </p>
 <p></p>
 <p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
-<TR><TD align="left" valign="top"><i>args</i></TD><TD align="left" valign="top">Is valid 
+<TR><TD align="left" valign="top"><i>args</i></TD><TD align="left" valign="top">Is valid or empty string
  </TD></TR>
 </TABLE></P>
-<A NAME="Options"></A><A NAME="ref55"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct <A HREF="_Options.html">_Options</A>  <strong>Options</strong></td><td align="right"><h3><strong>Options</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><p>
+<A NAME="OptionsTypeEnum"></A><A NAME="ref5"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>OptionsTypeEnum</strong> {        OPTIONS_XINCLUDE = 500, 
+        OPTIONS_DOCBOOK,        
+        OPTIONS_TIMING,         
+        OPTIONS_PROFILING,      
+        OPTIONS_NOVALID,        
+        OPTIONS_NOOUT,          
+        OPTIONS_HTML,           
+        OPTIONS_DEBUG,          
+        OPTIONS_SHELL,          
+        OPTIONS_GDB,            
+        OPTIONS_REPEAT,         
+        OPTIONS_TRACE,          
+        OPTIONS_WALK_SPEED,     
+        OPTIONS_VERBOSE,        
+        OPTIONS_OUTPUT_FILE_NAME = 550, 
+        OPTIONS_SOURCE_FILE_NAME,       
+        OPTIONS_DOCS_PATH,      
+        OPTIONS_DATA_FILE_NAME  
+    }
+</td><td align="right"><h3><strong>OptionsTypeEnum</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><p>
  Provide a mechanism to change option. The Options structure is not in use,
    it has been added so that kdoc puts all option related 
    functions together 
 </p>
 <p></p>
 <p></p>
-<A NAME="xslBreakPoint"></A><A NAME="ref5"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct <A HREF="_xslBreakPoint.html">_xslBreakPoint</A>  <strong>xslBreakPoint</strong></td><td align="right"><h3><strong>xslBreakPoint</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslbreakpoint_h.html">src/xslbreakpoint.h</A>&gt;</code></small></p><p>
+<A NAME="TraceModeEnum"></A><A NAME="ref6"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>TraceModeEnum</strong> {        TRACE_OFF = 600,        
+        TRACE_ON,               
+        TRACE_RUNNING,          
+        TRACE_FINISHED          
+    }
+</td><td align="right"><h3><strong>TraceModeEnum</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><A NAME="WalkSpeedEnum"></A><A NAME="ref7"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>WalkSpeedEnum</strong> {        WALKSPEED_0 = 0,
+        WALKSPEED_STOP = WALKSPEED_0,
+        WALKSPEED_1,
+        WALKSPEED_FAST = WALKSPEED_1,
+        WALKSPEED_2,
+        WALKSPEED_3,
+        WALKSPEED_4,
+        WALKSPEED_5,
+        WALKSPEED_NORMAL = WALKSPEED_5,
+        WALKSPEED_6,
+        WALKSPEED_7,
+        WALKSPEED_8,
+        WALKSPEED_9,
+        WALKSPEED_SLOW = WALKSPEED_9
+    }
+</td><td align="right"><h3><strong>WalkSpeedEnum</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><A NAME="ParameterItem"></A><A NAME="ref8"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct <A HREF="_ParameterItem.html">_ParameterItem</A>  <strong>ParameterItem</strong></td><td align="right"><h3><strong>ParameterItem</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><A NAME="optionsInit"></A><A NAME="ref11"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>optionsInit</strong> (void)
+<br></td><td align="right"><h3><strong>optionsInit</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><p> 
+ Initialized the options module
+</p>
+<p></p>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+ </p>
+<A NAME="optionsFree"></A><A NAME="ref12"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>optionsFree</strong> (void)
+<br></td><td align="right"><h3><strong>optionsFree</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><p>
+ Free memory used by options data structures
+ </p>
+<A NAME="enableOption"></A><A NAME="ref13"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>enableOption</strong> (OptionTypeEnum optionType, int value)
+<br></td><td align="right"><h3><strong>enableOption</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><p>
+ Set the state of a boolean xsldbg option to <code>value</code>
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>optionType</i></TD><TD align="left" valign="top">Is a valid boolean option
+</TD></TR>
+<TR><TD align="left" valign="top"><i>value</i></TD><TD align="left" valign="top">1 to enable, 0 otherwise
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+</p>
+<A NAME="isOptionEnabled"></A><A NAME="ref14"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>isOptionEnabled</strong> (OptionTypeEnum optionType)
+<br></td><td align="right"><h3><strong>isOptionEnabled</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><p>
+</p>
+<p></p>
+<p> </p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>optionType</i></TD><TD align="left" valign="top">Is a valid boolean option to query
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: The state of a boolean xsldbg option. 
+            ie 1 for enabled, 0 for disabled
+</p>
+<A NAME="setIntOption"></A><A NAME="ref15"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>setIntOption</strong> (OptionTypeEnum optionType, int value)
+<br></td><td align="right"><h3><strong>setIntOption</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><p>
+ Set the value of an integer xsldbg option to <code>value</code>
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>optionType</i></TD><TD align="left" valign="top">Is a valid integer option
+</TD></TR>
+<TR><TD align="left" valign="top"><i>value</i></TD><TD align="left" valign="top">Is the valid to adopt
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+         0 otherwise
+</p>
+<A NAME="getIntOption"></A><A NAME="ref16"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>getIntOption</strong> (OptionTypeEnum optionType)
+<br></td><td align="right"><h3><strong>getIntOption</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><p>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>optionType</i></TD><TD align="left" valign="top">Is a valid integer option
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: The state of a integer xsldbg option
+</p>
+<A NAME="setStringOption"></A><A NAME="ref17"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>setStringOption</strong> (OptionTypeEnum optionType, const xmlChar * value)
+<br></td><td align="right"><h3><strong>setStringOption</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><p>
+ Set value for a string xsldbg option to <code>value</code>. 
+ Any memory used currently by option <code>optionType</code> will be freed
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>optionType</i></TD><TD align="left" valign="top">A valid string option
+</TD></TR>
+<TR><TD align="left" valign="top"><i>value</i></TD><TD align="left" valign="top">The value to copy
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+</p>
+<A NAME="getStringOption"></A><A NAME="ref18"></A><table width="100%"><tr bgcolor="#eeeeee"><td>const xmlChar *&nbsp;<strong>getStringOption</strong> (OptionTypeEnum optionType)
+<br></td><td align="right"><h3><strong>getStringOption</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><p>
+ Get value for a string xsldbg option of <code>optionType</code>
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>optionType</i></TD><TD align="left" valign="top">A valid string option 
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: current option value which may be NULL
+</p>
+<A NAME="getParamItemList"></A><A NAME="ref19"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="#ArrayListPtr">ArrayListPtr</A> &nbsp;<strong>getParamItemList</strong> (void)
+<br></td><td align="right"><h3><strong>getParamItemList</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><p>
+ Return the list of libxlt parameters
+</p>
+<p></p>
+<p><b>Returns</b>: The list of parameters to provide to libxslt when doing 
+              stylesheet transformation if successful
+          NULL otherwise
+ </p>
+<A NAME="paramItemNew"></A><A NAME="ref20"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="#ParameterItemPtr">ParameterItemPtr</A> &nbsp;<strong>paramItemNew</strong> (const xmlChar * name,
+                                  const xmlChar * value)
+<br></td><td align="right"><h3><strong>paramItemNew</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><p>
+ Create a new libxslt parameter item
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>name</i></TD><TD align="left" valign="top">Is valid 
+</TD></TR>
+<TR><TD align="left" valign="top"><i>value</i></TD><TD align="left" valign="top">Is valid 
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: non-null if sucessful
+          NULL otherwise
+</p>
+<A NAME="paramItemFree"></A><A NAME="ref21"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>paramItemFree</strong> (<A HREF="#ParameterItemPtr">ParameterItemPtr</A> item)
+<br></td><td align="right"><h3><strong>paramItemFree</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><p>
+ Free memory used by libxslt parameter item <code>item</code>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>item</i></TD><TD align="left" valign="top">Is valid
+ </TD></TR>
+</TABLE></P>
+<A NAME="printParam"></A><A NAME="ref22"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>printParam</strong> (int paramId)
+<br></td><td align="right"><h3><strong>printParam</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><p>
+ Prints all items in parameter list
+</p>
+<p></p>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+ </p>
+<A NAME="printParamList"></A><A NAME="ref23"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>printParamList</strong> (void)
+<br></td><td align="right"><h3><strong>printParamList</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><p>
+ Prints all items in parameter list
+</p>
+<p></p>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+ </p>
+<A NAME="DebugStatusEnum"></A><A NAME="ref36"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>DebugStatusEnum</strong> {        DEBUG_NONE = 0,             
+        DEBUG_INIT,
+        DEBUG_STEP,
+        DEBUG_STEPUP,
+        DEBUG_STEPDOWN,
+        DEBUG_NEXT,
+        DEBUG_STOP,
+        DEBUG_CONT,
+        DEBUG_RUN,
+        DEBUG_RUN_RESTART,
+        DEBUG_QUIT,
+        DEBUG_TRACE,
+        DEBUG_WALK
+    }
+</td><td align="right"><h3><strong>DebugStatusEnum</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslbreakpoint__2_h.html">src/xslbreakpoint_2.h</A>&gt;</code></small></p><p>
  Provide a basic break point support
 </p>
 <p></p>
 <p></p>
-<A NAME="xslCallPointInfo"></A><A NAME="ref8"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct <A HREF="_xslCallPointInfo.html">_xslCallPointInfo</A>  <strong>xslCallPointInfo</strong></td><td align="right"><h3><strong>xslCallPointInfo</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslcallpoint_h.html">src/xslcallpoint.h</A>&gt;</code></small></p><p>
+<A NAME="BreakPointTypeEnum"></A><A NAME="ref37"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>BreakPointTypeEnum</strong> {        DEBUG_BREAK_SOURCE = 300,
+        DEBUG_BREAK_DATA
+    }
+</td><td align="right"><h3><strong>BreakPointTypeEnum</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslbreakpoint__2_h.html">src/xslbreakpoint_2.h</A>&gt;</code></small></p><A NAME="xslBreakPoint"></A><A NAME="ref38"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct <A HREF="_xslBreakPoint.html">_xslBreakPoint</A>  <strong>xslBreakPoint</strong></td><td align="right"><h3><strong>xslBreakPoint</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslbreakpoint__2_h.html">src/xslbreakpoint_2.h</A>&gt;</code></small></p><A NAME="debugBreak"></A><A NAME="ref41"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>debugBreak</strong> (xmlNodePtr templ, xmlNodePtr node,
+                       xsltTemplatePtr root, xsltTransformContextPtr ctxt)
+<br></td><td align="right"><h3><strong>debugBreak</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslbreakpoint__2_h.html">src/xslbreakpoint_2.h</A>&gt;</code></small></p><p>
+ A break point has been found so pass control to user
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>templ</i></TD><TD align="left" valign="top">The source node being executed
+</TD></TR>
+<TR><TD align="left" valign="top"><i>node</i></TD><TD align="left" valign="top">The data node being processed
+</TD></TR>
+<TR><TD align="left" valign="top"><i>root</i></TD><TD align="left" valign="top">The template being applied to "node"
+</TD></TR>
+<TR><TD align="left" valign="top"><i>ctxt</i></TD><TD align="left" valign="top">transform context for stylesheet being processed
+ </TD></TR>
+</TABLE></P>
+<A NAME="debugInit"></A><A NAME="ref42"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>debugInit</strong> (void)
+<br></td><td align="right"><h3><strong>debugInit</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslbreakpoint__2_h.html">src/xslbreakpoint_2.h</A>&gt;</code></small></p><p>
+ Initialize debugger allocating any memory needed by debugger
+</p>
+<p></p>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+ </p>
+<A NAME="debugFree"></A><A NAME="ref43"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>debugFree</strong> (void)
+<br></td><td align="right"><h3><strong>debugFree</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslbreakpoint__2_h.html">src/xslbreakpoint_2.h</A>&gt;</code></small></p><p>
+ Free up any memory taken by debugger
+ </p>
+<A NAME="debugGotControl"></A><A NAME="ref44"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>debugGotControl</strong> (int reached)
+<br></td><td align="right"><h3><strong>debugGotControl</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslbreakpoint__2_h.html">src/xslbreakpoint_2.h</A>&gt;</code></small></p><p> 
+ Set flag that debuger has received control to value of <code>reached</code>
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>reached</i></TD><TD align="left" valign="top">1 if debugger has received control, -1 to read its value,
+              0 to clear the flag
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 if any breakpoint was reached previously,
+         0 otherwise
+</p>
+<A NAME="activeBreakPoint"></A><A NAME="ref45"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> &nbsp;<strong>activeBreakPoint</strong> (void)
+<br></td><td align="right"><h3><strong>activeBreakPoint</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslbreakpoint__2_h.html">src/xslbreakpoint_2.h</A>&gt;</code></small></p><p>
+ Get the active break point
+</p>
+<p></p>
+<p><b>Returns</b>: The last break point that we stoped at
+ </p>
+<A NAME="setActiveBreakPoint"></A><A NAME="ref46"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>setActiveBreakPoint</strong> (<A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> breakPoint)
+<br></td><td align="right"><h3><strong>setActiveBreakPoint</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslbreakpoint__2_h.html">src/xslbreakpoint_2.h</A>&gt;</code></small></p><p>
+ Set the active break point
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>breakPoint</i></TD><TD align="left" valign="top">Is valid break point or NULL
+ </TD></TR>
+</TABLE></P>
+<A NAME="addBreakPoint"></A><A NAME="ref47"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>addBreakPoint</strong> (const xmlChar * url, long int lineNumber,
+                         const xmlChar * templateName,
+                         <A HREF="#BreakPointTypeEnum">BreakPointTypeEnum</A> type)
+<br></td><td align="right"><h3><strong>addBreakPoint</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslbreakpoint__2_h.html">src/xslbreakpoint_2.h</A>&gt;</code></small></p><p>
+ Add break point at file and line number specified
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>url</i></TD><TD align="left" valign="top">Non-null, non-empty file name that has been loaded by
+                    debugger
+</TD></TR>
+<TR><TD align="left" valign="top"><i>lineNumber</i></TD><TD align="left" valign="top"><code>lineNumber</code> >= 0 and is available in url specified and
+                points to an xml element
+</TD></TR>
+<TR><TD align="left" valign="top"><i>temlateName</i></TD><TD align="left" valign="top">The template name of break point or NULL
+</TD></TR>
+<TR><TD align="left" valign="top"><i>type</i></TD><TD align="left" valign="top">Valid BreakPointTypeEnum
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 if successful,
+	    0 otherwise
+</p>
+<A NAME="deleteBreakPoint"></A><A NAME="ref48"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>deleteBreakPoint</strong> (<A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> breakPoint)
+<br></td><td align="right"><h3><strong>deleteBreakPoint</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslbreakpoint__2_h.html">src/xslbreakpoint_2.h</A>&gt;</code></small></p><p>
+ Delete the break point specified if it can be found using 
+    <code>breakPoint</code>'s url and lineNo
+</p>
+<p></p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>breakPoint</i></TD><TD align="left" valign="top">Is valid
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 if successful,
+	    0 otherwise
+</p>
+<A NAME="emptyBreakPoint"></A><A NAME="ref49"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>emptyBreakPoint</strong> (void)
+<br></td><td align="right"><h3><strong>emptyBreakPoint</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslbreakpoint__2_h.html">src/xslbreakpoint_2.h</A>&gt;</code></small></p><p>
+ Empty the break point collection
+</p>
+<p></p>
+<p><b>Returns</b>: 1 if able to empty the break point list of its contents,
+          0  otherwise
+ </p>
+<A NAME="enableBreakPoint"></A><A NAME="ref50"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>enableBreakPoint</strong> (<A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> breakPoint, int enable)
+<br></td><td align="right"><h3><strong>enableBreakPoint</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslbreakpoint__2_h.html">src/xslbreakpoint_2.h</A>&gt;</code></small></p><p>
+ Enable or disable a break point
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>breakPoint</i></TD><TD align="left" valign="top">A valid breakpoint
+</TD></TR>
+<TR><TD align="left" valign="top"><i>enable</i></TD><TD align="left" valign="top">Enable break point if 1, disable if 0, toggle if -1
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 if successful,
+	    0 otherwise
+</p>
+<A NAME="breakPointLinesCount"></A><A NAME="ref51"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>breakPointLinesCount</strong> (void)
+<br></td><td align="right"><h3><strong>breakPointLinesCount</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslbreakpoint__2_h.html">src/xslbreakpoint_2.h</A>&gt;</code></small></p><p> 
+ Return the number of hash tables of break points with the same line number
+</p>
+<p></p>
+<p><b>Returns</b>: the number of hash tables of break points with the same line number
+ </p>
+<A NAME="getBreakPoint"></A><A NAME="ref52"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> &nbsp;<strong>getBreakPoint</strong> (const xmlChar * url, long int lineNumber)
+<br></td><td align="right"><h3><strong>getBreakPoint</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslbreakpoint__2_h.html">src/xslbreakpoint_2.h</A>&gt;</code></small></p><p>
+ Get a break point for the breakpoint collection
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>url</i></TD><TD align="left" valign="top">Non-null, non-empty file name that has been loaded by
+                    debugger
+</TD></TR>
+<TR><TD align="left" valign="top"><i>lineNumber</i></TD><TD align="left" valign="top"><code>lineNumber</code> >= 0 and is available in url specified
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: break point if break point exists at location specified,
+	    NULL otherwise
+</p>
+<A NAME="printBreakPoint"></A><A NAME="ref53"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>printBreakPoint</strong> (FILE * file, <A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> breakPoint)
+<br></td><td align="right"><h3><strong>printBreakPoint</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslbreakpoint__2_h.html">src/xslbreakpoint_2.h</A>&gt;</code></small></p><p>
+ Print the details of <code>breakPoint</code> to <code>file</code>
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>file</i></TD><TD align="left" valign="top">Is valid
+</TD></TR>
+<TR><TD align="left" valign="top"><i>breakPoint</i></TD><TD align="left" valign="top">A valid break point
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 if successful,
+	    0 otherwise
+</p>
+<A NAME="isBreakPoint"></A><A NAME="ref54"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>isBreakPoint</strong> (const xmlChar * url, long int lineNumber)
+<br></td><td align="right"><h3><strong>isBreakPoint</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslbreakpoint__2_h.html">src/xslbreakpoint_2.h</A>&gt;</code></small></p><p>
+ Determine if there is a break point at file and line number specified
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>url</i></TD><TD align="left" valign="top">Non-null, non-empty file name that has been loaded by
+                    debugger
+ @lineNumber <code>lineNumber</code> >= 0 and is available in url specified
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1  if successful,  
+          0 otherwise
+</p>
+<A NAME="isBreakPointNode"></A><A NAME="ref55"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>isBreakPointNode</strong> (xmlNodePtr node)
+<br></td><td align="right"><h3><strong>isBreakPointNode</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslbreakpoint__2_h.html">src/xslbreakpoint_2.h</A>&gt;</code></small></p><p>
+ Determine if a node is a break point
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>node</i></TD><TD align="left" valign="top">Is valid
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success, 
+          0 otherwise
+</p>
+<A NAME="xslCallPointInfo"></A><A NAME="ref56"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct <A HREF="_xslCallPointInfo.html">_xslCallPointInfo</A>  <strong>xslCallPointInfo</strong></td><td align="right"><h3><strong>xslCallPointInfo</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslcallpoint_h.html">src/xslcallpoint.h</A>&gt;</code></small></p><p>
  Provide a call stack support
 </p>
 <p></p>
 <p></p>
-<A NAME="loadStylesheet"></A><A NAME="ref59"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xsltStylesheetPtr &nbsp;<strong>loadStylesheet</strong> (void)
-<br></td><td align="right"><h3><strong>loadStylesheet</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xsldbg_h.html">src/xsldbg.h</A>&gt;</code></small></p><p>
+<A NAME="xslCallPoint"></A><A NAME="ref59"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct <A HREF="_xslCallPoint.html">_xslCallPoint</A>  <strong>xslCallPoint</strong></td><td align="right"><h3><strong>xslCallPoint</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslcallpoint_h.html">src/xslcallpoint.h</A>&gt;</code></small></p><A NAME="addCallInfo"></A><A NAME="ref62"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="#xslCallPointInfoPtr">xslCallPointInfoPtr</A> &nbsp;<strong>addCallInfo</strong> (const xmlChar * templateName,
+                                       const xmlChar * url)
+<br></td><td align="right"><h3><strong>addCallInfo</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslcallpoint_h.html">src/xslcallpoint.h</A>&gt;</code></small></p><p>
+ Add template "call" to call stack
 </p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>templateName</i></TD><TD align="left" valign="top">Template name to add
+</TD></TR>
+<TR><TD align="left" valign="top"><i>url</i></TD><TD align="left" valign="top">The url for the template
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: A reference to the added info if successful, 
+          NULL otherwise
+</p>
+<A NAME="dropCall"></A><A NAME="ref63"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>dropCall</strong> (void)
+<br></td><td align="right"><h3><strong>dropCall</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslcallpoint_h.html">src/xslcallpoint.h</A>&gt;</code></small></p><p>
+ Drop the topmost item off the call stack
+ </p>
+<A NAME="stepupToDepth"></A><A NAME="ref64"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>stepupToDepth</strong> (int depth)
+<br></td><td align="right"><h3><strong>stepupToDepth</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslcallpoint_h.html">src/xslcallpoint.h</A>&gt;</code></small></p><p> 
+ Set the frame depth to step up to
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>depth</i></TD><TD align="left" valign="top">The frame depth to step up to  
+            0 < <code>depth</code> <= callDepth()
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+</p>
+<A NAME="stepdownToDepth"></A><A NAME="ref65"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>stepdownToDepth</strong> (int depth)
+<br></td><td align="right"><h3><strong>stepdownToDepth</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslcallpoint_h.html">src/xslcallpoint.h</A>&gt;</code></small></p><p> 
+ Set the frame depth to step down to
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>depth</i></TD><TD align="left" valign="top">The frame depth to step down to  
+            0 < <code>depth</code> <= callDepth()
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success, 
+          0 otherwise
+</p>
+<A NAME="getCall"></A><A NAME="ref66"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="#xslCallPointPtr">xslCallPointPtr</A> &nbsp;<strong>getCall</strong> (int depth)
+<br></td><td align="right"><h3><strong>getCall</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslcallpoint_h.html">src/xslcallpoint.h</A>&gt;</code></small></p><p>
+ Retrieve the call point at specified call depth 
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>depth</i></TD><TD align="left" valign="top">0 < <code>depth</code> <= callDepth()
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: Non-null a if depth is valid,
+          NULL otherwise 
+</p>
+<A NAME="getCallStackTop"></A><A NAME="ref67"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="#xslCallPointPtr">xslCallPointPtr</A> &nbsp;<strong>getCallStackTop</strong> (void)
+<br></td><td align="right"><h3><strong>getCallStackTop</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslcallpoint_h.html">src/xslcallpoint.h</A>&gt;</code></small></p><p> 
+</p>
+<p><b>Returns</b>: The top of the call stack
+ </p>
+<A NAME="callDepth"></A><A NAME="ref68"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>callDepth</strong> (void)
+<br></td><td align="right"><h3><strong>callDepth</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslcallpoint_h.html">src/xslcallpoint.h</A>&gt;</code></small></p><p>
+</p>
+<p><b>Returns</b>: the depth of call stack
+ </p>
+<A NAME="loadStylesheet"></A><A NAME="ref1"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xsltStylesheetPtr &nbsp;<strong>loadStylesheet</strong> (void)
+<br></td><td align="right"><h3><strong>loadStylesheet</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xsldbg_h.html">src/xsldbg.h</A>&gt;</code></small></p><p>
+ Load the stylesheet and return it 
+</p>
+<p></p>
 <p><b>Returns</b>: The stylesheet after reloading it if successful
          NULL otherwise
  </p>
-<A NAME="loadXmlData"></A><A NAME="ref60"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlDocPtr &nbsp;<strong>loadXmlData</strong> (void)
+<A NAME="loadXmlData"></A><A NAME="ref2"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlDocPtr &nbsp;<strong>loadXmlData</strong> (void)
 <br></td><td align="right"><h3><strong>loadXmlData</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xsldbg_h.html">src/xsldbg.h</A>&gt;</code></small></p><p>
+ Load the xml data file and return it  
 </p>
-<p><b>Returns</b>: The data file after reloading it if successful
+<p></p>
+<p><b>Returns</b>: The stylesheet after reloading it if successful
          NULL otherwise
  </p>
-<A NAME="loadXmlTemporay"></A><A NAME="ref61"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlDocPtr &nbsp;<strong>loadXmlTemporay</strong> (const xmlChar * path)
-<br></td><td align="right"><h3><strong>loadXmlTemporay</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xsldbg_h.html">src/xsldbg.h</A>&gt;</code></small></p><p>
+<A NAME="loadXmlTemporary"></A><A NAME="ref3"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlDocPtr &nbsp;<strong>loadXmlTemporary</strong> (const xmlChar * path)
+<br></td><td align="right"><h3><strong>loadXmlTemporary</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xsldbg_h.html">src/xsldbg.h</A>&gt;</code></small></p><p>
+ Load the temporary data file and return it 
 </p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>path</i></TD><TD align="left" valign="top">The name of temporary file to loa
+ </TD></TR>
+</TABLE></P>
 <p><b>Returns</b>: The temporary file after reloading it if successful,
          NULL otherwise
- </p>
-<A NAME="SearchEnum"></A><A NAME="ref11"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>SearchEnum</strong> {        SEARCH_BREAKPOINT = 400,
+</p>
+<A NAME="SearchEnum"></A><A NAME="ref69"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>SearchEnum</strong> {        SEARCH_BREAKPOINT = 400,
         SEARCH_NODE,
         SEARCH_XSL
     }
@@ -703,9 +1494,463 @@
 </p>
 <p></p>
 <p></p>
-<A NAME="searchInfo"></A><A NAME="ref12"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct <A HREF="_searchInfo.html">_searchInfo</A>  <strong>searchInfo</strong></td><td align="right"><h3><strong>searchInfo</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><HR>
+<A NAME="searchInfo"></A><A NAME="ref70"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct <A HREF="_searchInfo.html">_searchInfo</A>  <strong>searchInfo</strong></td><td align="right"><h3><strong>searchInfo</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><A NAME="breakPointSearchData"></A><A NAME="ref73"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct <A HREF="_breakPointSearchData.html">_breakPointSearchData</A>  <strong>breakPointSearchData</strong></td><td align="right"><h3><strong>breakPointSearchData</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><A NAME="nodeSearchData"></A><A NAME="ref76"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct <A HREF="_nodeSearchData.html">_nodeSearchData</A>  <strong>nodeSearchData</strong></td><td align="right"><h3><strong>nodeSearchData</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><A NAME="searchInit"></A><A NAME="ref79"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>searchInit</strong> (void)
+<br></td><td align="right"><h3><strong>searchInit</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Initialize the search module
+</p>
+<p></p>
+<p><b>Returns</b>: 1 if search structures have been initialized properly and all
+               memory required has been obtained,
+          0 otherwise
+</p>
+<A NAME="searchFree"></A><A NAME="ref80"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>searchFree</strong> (void)
+<br></td><td align="right"><h3><strong>searchFree</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Free all memory used by the search module
+ </p>
+<A NAME="searchNewInfo"></A><A NAME="ref81"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="#searchInfoPtr">searchInfoPtr</A> &nbsp;<strong>searchNewInfo</strong> (<A HREF="#SearchEnum">SearchEnum</A> type)
+<br></td><td align="right"><h3><strong>searchNewInfo</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Create a new search
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>type</i></TD><TD align="left" valign="top">What type of search is required
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: valid search info pointer if successful
+          NULL otherwise
+</p>
+<A NAME="searchFreeInfo"></A><A NAME="ref82"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>searchFreeInfo</strong> (<A HREF="#searchInfoPtr">searchInfoPtr</A> info)
+<br></td><td align="right"><h3><strong>searchFreeInfo</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Free memory used by <code>info</code>
+</p>
+<p></p>
+<p> </p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>info</i></TD><TD align="left" valign="top">A valid search info
+</TD></TR>
+</TABLE></P>
+<A NAME="searchEmpty"></A><A NAME="ref83"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>searchEmpty</strong> (void)
+<br></td><td align="right"><h3><strong>searchEmpty</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Empty the seach data base of its contents
+</p>
+<p></p>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+ </p>
+<A NAME="searchDoc"></A><A NAME="ref84"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlDocPtr &nbsp;<strong>searchDoc</strong> (void)
+<br></td><td align="right"><h3><strong>searchDoc</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p> 
+ Return the document used for seaching ie the search dataBase
+</p>
+<p></p>
+<p><b>Returns</b>: the document used for searching
+         Dangerous function to use! Does NOT return a copy of 
+             search data  so don't free it
+ </p>
+<A NAME="searchRootNode"></A><A NAME="ref85"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlNodePtr &nbsp;<strong>searchRootNode</strong> (void)
+<br></td><td align="right"><h3><strong>searchRootNode</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Get the topmost node in the search dataBase
+</p>
+<p></p>
+<p><b>Returns</b>: The topmost xml node in search dataBase.
+         Dangerous function to use! Does NOT return a copy of 
+             search root node  so don't free it
+ </p>
+<A NAME="searchAdd"></A><A NAME="ref86"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>searchAdd</strong> (xmlNodePtr node)
+<br></td><td align="right"><h3><strong>searchAdd</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Add a node to the search dataBase
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>node</i></TD><TD align="left" valign="top">Is valid
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 if able to add <code>node</code> to top node in search dataBase,
+          0 otherwise
+</p>
+<A NAME="searchSave"></A><A NAME="ref87"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>searchSave</strong> (const xmlChar * fileName)
+<br></td><td align="right"><h3><strong>searchSave</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Save the search dataBase to <code>fileName</code>  
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>fileName</i></TD><TD align="left" valign="top">Valid file name
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+</p>
+<A NAME="searchQuery"></A><A NAME="ref88"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>searchQuery</strong> (const xmlChar * tempFile, const xmlChar * query)
+<br></td><td align="right"><h3><strong>searchQuery</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Send query as parameter for execution of search.xsl using
+    data stored in <code>tempFile</code> 
+</p>
+<p></p>
+<p></p>
+<p> </p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>query</i></TD><TD align="left" valign="top">The Query to run. If NULL then <code>query</code> defaults to "//search/ *"
+</TD></TR>
+<TR><TD align="left" valign="top"><i>tempFile</i></TD><TD align="left" valign="top">Where do we load the search dataBase from to execute
+             query. If <code>tempFile</code> is NULL default is "search.data"
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise   
+</p>
+<A NAME="updateSearchData"></A><A NAME="ref89"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>updateSearchData</strong> (xsltTransformContextPtr styleCtxt,
+                         xsltStylesheetPtr style,
+                         void *data, VariableTypeEnum variableTypes)
+<br></td><td align="right"><h3><strong>updateSearchData</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Update the search dataBase
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>styleCtxt</i></TD><TD align="left" valign="top">Not used
+</TD></TR>
+<TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">Is valid
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">Not used but MUST be NULL for the moment
+</TD></TR>
+<TR><TD align="left" valign="top"><i>variableTypes</i></TD><TD align="left" valign="top">What types of variables to look
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 if able to update the search dataBase,
+         0 otherwise
+</p>
+<A NAME="scanForBreakPoint"></A><A NAME="ref90"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>scanForBreakPoint</strong> (void *payload, void *data, xmlChar * name)
+<br></td><td align="right"><h3><strong>scanForBreakPoint</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Test if break point matches criteria given by <code>data</code>. If so then 
+      set <code>data</code>->found to 1 and stores  reference to break point found in 
+         <code>data</code>->data->node
+     otherwise <code>data</code> is unchanged
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>payload</i></TD><TD align="left" valign="top">A valid xslBreakPointPtr 
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">The criteria to look for and a valid searchInfoPtr of
+          type SEARCH_BREAKPOINT 
+</TD></TR>
+<TR><TD align="left" valign="top"><i>name</i></TD><TD align="left" valign="top">Not used 
+</TD></TR>
+</TABLE></P>
+<A NAME="scanForNode"></A><A NAME="ref91"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>scanForNode</strong> (void *payload, void *data, xmlChar * name)
+<br></td><td align="right"><h3><strong>scanForNode</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Test if node matches criteria given by <code>data</code> if so then 
+     set <code>data</code>->found to 1 and  stores reference to node found in
+     <code>data</code>->data->node.
+  otherwise <code>data</code> is unchanged
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>payload</i></TD><TD align="left" valign="top">A valid xmlNodePtr
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">The criteria to look for and a valid searchInfo of
+          type SEARCH_NODE 
+</TD></TR>
+<TR><TD align="left" valign="top"><i>name</i></TD><TD align="left" valign="top">Not used
+</TD></TR>
+</TABLE></P>
+<A NAME="findNodeByLineNo"></A><A NAME="ref92"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlNodePtr &nbsp;<strong>findNodeByLineNo</strong> (xsltTransformContextPtr ctxt,
+                                const xmlChar * url, long int lineNumber)
+<br></td><td align="right"><h3><strong>findNodeByLineNo</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Find the closest line number in file specified that can be a point 
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>ctxt</i></TD><TD align="left" valign="top">Valid ctxt to look into
+</TD></TR>
+<TR><TD align="left" valign="top"><i>url</i></TD><TD align="left" valign="top">Non-null, non-empty file name that has been loaded by
+           debugger
+</TD></TR>
+<TR><TD align="left" valign="top"><i>lineNumber</i></TD><TD align="left" valign="top"><code>lineNumber</code> >= 0 and is available in <code>url</code>
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: The node at line number specified if successful,
+	    NULL otherwise
+</p>
+<A NAME="findTemplateNode"></A><A NAME="ref93"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlNodePtr &nbsp;<strong>findTemplateNode</strong> (const xsltStylesheetPtr style,
+                                const xmlChar * name)
+<br></td><td align="right"><h3><strong>findTemplateNode</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Find a template node
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">A Valid stylesheet collection to look into 
+</TD></TR>
+<TR><TD align="left" valign="top"><i>name</i></TD><TD align="left" valign="top">Valid template name to look for
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: The template node found if successful,
+          NULL otherwise 
+</p>
+<A NAME="findBreakPointByName"></A><A NAME="ref94"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> &nbsp;<strong>findBreakPointByName</strong> (const xmlChar * templateName)
+<br></td><td align="right"><h3><strong>findBreakPointByName</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Find the breakpoint at template with "match" or "name" equal 
+    to templateName
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>templateName</i></TD><TD align="left" valign="top">Valid template name to look for
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: The break point that matches <code>templateName</code>
+          NULL otherwise
+</p>
+<A NAME="findBreakPointById"></A><A NAME="ref95"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> &nbsp;<strong>findBreakPointById</strong> (int id)
+<br></td><td align="right"><h3><strong>findBreakPointById</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Find a break point by its id
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>id</i></TD><TD align="left" valign="top">The break point id to look for
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: The break point with given the break point id if found,
+          NULL otherwise 
+</p>
+<A NAME="findNodesByQuery"></A><A NAME="ref96"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlXPathObjectPtr &nbsp;<strong>findNodesByQuery</strong> (const xmlChar * query)
+<br></td><td align="right"><h3><strong>findNodesByQuery</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Find nodes in search dataBase using an xpath query
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>query</i></TD><TD align="left" valign="top">The xpath query to run, see dbgsearch.c or 
+           search.dtd for more details
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: The nodes that match the given query on success,
+          NULL otherwise 
+</p>
+<A NAME="walkBreakPoints"></A><A NAME="ref97"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>walkBreakPoints</strong> (xmlHashScanner walkFunc, void *data)
+<br></td><td align="right"><h3><strong>walkBreakPoints</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Walks through all break points calling walkFunc for each. The payload
+  sent to walkFunc is of type xslBreakPointPtr 
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>walkFunc</i></TD><TD align="left" valign="top">The function to callback for each break point found
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">The extra data to pass onto <code>walkFunc</code>
+ </TD></TR>
+</TABLE></P>
+<A NAME="walkTemplates"></A><A NAME="ref98"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>walkTemplates</strong> (xmlHashScanner walkFunc, void *data,
+                       xsltStylesheetPtr style)
+<br></td><td align="right"><h3><strong>walkTemplates</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Walks through all templates found in <code>style</code> calling walkFunc for each.
+   The payload of walkFunc is of type xsltTemplatePtr
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>walkFunc</i></TD><TD align="left" valign="top">The function to callback for each template found
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">The extra data to pass onto <code>walkFunc</code>
+</TD></TR>
+<TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">The stylesheet to start from
+ </TD></TR>
+</TABLE></P>
+<A NAME="walkStylesheets"></A><A NAME="ref99"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>walkStylesheets</strong> (xmlHashScanner walkFunc, void *data,
+                         xsltStylesheetPtr style)
+<br></td><td align="right"><h3><strong>walkStylesheets</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Walks through all stylesheets found in <code>style</code> calling walkFunc for
+   each. The payload sent to walkFunc is of type xsltStylesheetPtr
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>walkFunc</i></TD><TD align="left" valign="top">The function to callback for each stylesheet found
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">The extra data to pass onto <code>walkFunc</code>
+</TD></TR>
+<TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">The stylesheet to start from
+ </TD></TR>
+</TABLE></P>
+<A NAME="walkGlobals"></A><A NAME="ref100"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>walkGlobals</strong> (xmlHashScanner walkFunc,
+                     void *data, xsltStylesheetPtr style)
+<br></td><td align="right"><h3><strong>walkGlobals</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Call walkFunc for each global variable found in <code>style</code>. The payload
+   sent to walkFunc is of type xmlNodePtr
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>walkFunc</i></TD><TD align="left" valign="top">The function to callback for each gobal variable found
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">The extra data to pass onto <code>walkFunc</code>
+</TD></TR>
+<TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">The stylesheet to start from
+ </TD></TR>
+</TABLE></P>
+<A NAME="walkLocals"></A><A NAME="ref101"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>walkLocals</strong> (xmlHashScanner walkFunc, void *data,
+                    xsltStylesheetPtr style)
+<br></td><td align="right"><h3><strong>walkLocals</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Walks through all local variables found in <code>style</code> calling 
+   walkFunc for each. The payload of walkFunc is of type xmlNodePtr
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>walkFunc</i></TD><TD align="left" valign="top">The function to callback for each local variable found
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">The extra data to pass onto <code>walkFunc</code>
+</TD></TR>
+<TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">The stylesheet to start from
+ </TD></TR>
+</TABLE></P>
+<A NAME="walkIncludes"></A><A NAME="ref102"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>walkIncludes</strong> (xmlHashScanner walkFunc, void *data,
+                      xsltStylesheetPtr style)
+<br></td><td align="right"><h3><strong>walkIncludes</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Walks through all included stylesheets found in <code>style</code>,
+   calling walkFunc for each. The payload of walkFunc is of
+   type xmlNodePtr
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>walkFunc</i></TD><TD align="left" valign="top">The function to callback for each included stylesheet
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">The extra data to pass onto <code>walkFunc</code>
+</TD></TR>
+<TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">The stylesheet to start from
+ </TD></TR>
+</TABLE></P>
+<A NAME="walkIncludeInst"></A><A NAME="ref103"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>walkIncludeInst</strong> (xmlHashScanner walkFunc, void *data,
+                         xsltStylesheetPtr style)
+<br></td><td align="right"><h3><strong>walkIncludeInst</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Walks through all xsl:include calling walkFunc for each. The payload
+   of walkFunc is of type xmlNodePtr
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>walkFunc</i></TD><TD align="left" valign="top">The function to callback for each xsl:include instruction found
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">The extra data to pass onto <code>walkFunc</code>
+</TD></TR>
+<TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">The stylesheet to start from
+ </TD></TR>
+</TABLE></P>
+<A NAME="walkChildNodes"></A><A NAME="ref104"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>walkChildNodes</strong> (xmlHashScanner walkFunc, void *data,
+                        xmlNodePtr node)
+<br></td><td align="right"><h3><strong>walkChildNodes</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Call walkFunc for each child of <code>node</code> the payload sent to walkFunc is
+   a xmlNodePtr
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>walkFunc</i></TD><TD align="left" valign="top">The function to callback for each child/sibling found
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">The extra data to pass onto <code>walkFunc</code>
+</TD></TR>
+<TR><TD align="left" valign="top"><i>node</i></TD><TD align="left" valign="top">Valid xmlNodePtr
+ </TD></TR>
+</TABLE></P>
+<A NAME="searchBreakPointNode"></A><A NAME="ref105"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlNodePtr &nbsp;<strong>searchBreakPointNode</strong> (<A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> breakPoint)
+<br></td><td align="right"><h3><strong>searchBreakPointNode</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Convert <code>breakPoint</code> into search dataBase format
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>breakPoint</i></TD><TD align="left" valign="top">Is valid
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: <code>breakPoint</code> as a new xmlNode in search dataBase format 
+               if successful,
+          NULL otherwise
+</p>
+<A NAME="searchTemplateNode"></A><A NAME="ref106"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlNodePtr &nbsp;<strong>searchTemplateNode</strong> (xmlNodePtr templNode)
+<br></td><td align="right"><h3><strong>searchTemplateNode</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Convert <code>templateNode</code> into search dataBase format
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>templNode</i></TD><TD align="left" valign="top">A valid template node
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: <code>templNode</code> as a new xmlNode in search dataBase format 
+               if successful,
+          NULL otherwise
+</p>
+<A NAME="searchGlobalNode"></A><A NAME="ref107"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlNodePtr &nbsp;<strong>searchGlobalNode</strong> (xmlNodePtr globalVariable)
+<br></td><td align="right"><h3><strong>searchGlobalNode</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Convert <code>globalVariable</code> into search dataBase format
+</p>
+<p></p>
+<p></p>
+<p> </p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>globalVariable</i></TD><TD align="left" valign="top">A valid xmlNodePtr node
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: <code>globalVariable</code> as a new xmlNode in search dataBase 
+               format if successful,
+          NULL otherwise
+</p>
+<A NAME="searchLocalNode"></A><A NAME="ref108"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlNodePtr &nbsp;<strong>searchLocalNode</strong> (xmlNodePtr localVariable)
+<br></td><td align="right"><h3><strong>searchLocalNode</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p> 
+ Convert <code>localVariable</code> into search dataBase format
+</p>
+<p></p>
+<p></p>
+<p> </p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>localVariable</i></TD><TD align="left" valign="top">Is valid
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: <code>localVariable</code> as a new xmlNode in search dataBase 
+              format if successful,
+         NULL otherwise
+</p>
+<A NAME="searchSourceNode"></A><A NAME="ref109"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlNodePtr &nbsp;<strong>searchSourceNode</strong> (xsltStylesheetPtr style)
+<br></td><td align="right"><h3><strong>searchSourceNode</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>  
+ Convert <code>style</code> into search dataBase format
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">Is valid
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: <code>style</code> as a new xmlNode in search dataBase format if successful,
+         NULL otherwise
+</p>
+<A NAME="searchIncludeNode"></A><A NAME="ref110"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlNodePtr &nbsp;<strong>searchIncludeNode</strong> (xmlNodePtr include)
+<br></td><td align="right"><h3><strong>searchIncludeNode</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Convert <code>include</code> into search dataBase format
+</p>
+<p></p>
+<p></p>
+<p> </p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>include</i></TD><TD align="left" valign="top">Is a valid xsl:include instruction
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: <code>include</code> as a new xmlNode in search dataBase format
+              if successful,
+         NULL otherwise
+</p>
+<A NAME="searchCallStackNode"></A><A NAME="ref111"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlNodePtr &nbsp;<strong>searchCallStackNode</strong> (<A HREF="#xslCallPointPtr">xslCallPointPtr</A> callStackItem)
+<br></td><td align="right"><h3><strong>searchCallStackNode</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+Convert <code>include</code> into search dataBase format
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>callStackItem</i></TD><TD align="left" valign="top">Is valid
+   </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: <code>callStackItem</code> as a new xmlNode in search dataBase
+               format if successful,
+            NULL otherwise  
+</p>
+<HR>
 	<table>
-	<tr><td><small>Generated by: keith on linux on Fri Dec  7 22:39:08 2001, using kdoc 2.0a53.</small></td></tr>
+	<tr><td><small>Generated by: keith on linux on Thu Dec 13 17:47:30 2001, using kdoc 2.0a53.</small></td></tr>
 	</table>
 </BODY>
 </HTML>

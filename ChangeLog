@@ -1,3 +1,32 @@
+Keith Isdale 12 Dec 2001 <k_isdale@tpg.com.au>
+   added DOCBOOK_PREFIX and DOCBOOK_VERSION to configure.in to be used by docs/en/GNOME/Makefile.am
+   fix bug in catchSigInt, control-c tryies to start debugger shell when debugging is disabled
+	 change DEBUG_RUN to DEBUG_NONE	
+   updated GNOME docs now usable but problems with "&GPL;" not being found ??
+   added TIMESTAMP to AC_SUBST's  and used in docs/en/GNOME/Makefile.am 
+   added docs/en/GNOME/authors.xsl
+	
+Keith Isdale 12 Dec 2001 <k_isdale@tpg.com.au>
+   Fixed docs/en/xsldoc.xsl to make use of $alldocs not $alldoc 
+   Clarified the meaning of tty command in docs/en/xsldoc.xml, yet to fix this
+	in src/files.c
+   Fixed typos in docs/en/xmldoc.xml 
+	
+Keith Isdale 11 Dec 2001 <k_isdale@tpg.com.au>
+  version 0.9.1
+  I was told of a show stopper name clashes between xsldbg and libxslt
+	also found xsldbg did not run at all well with libxslt-1.0.9
+  Found cause sent patch to xslt@gnome.org
+	removed xsl prefix on ALL functions outside of debugXSL.[ch]
+  cvs added new files
+	src/*.h
+	docs/en/GNOME/*.xsl
+	docs/en/KDE/apidocs/*.html
+  Still not beta quality yet :-(  
+	
+	
+	
+	
 Keith Isdale 10 Dec 2001 <k_isdale@tpg.com.au>
   Version 0.9.0 
   Extended xsldoc.dtd so that a "cmd" has a shortcut. Then changed xsldoc.xsl

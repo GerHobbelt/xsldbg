@@ -1,8 +1,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
 
-  <xsl:template match="credit_chapter" name="credit_chapter">
-    <chapter id="credits_chapter">
+  <xsl:template name="credit_section">
+    <sect1 id="credits_section">
       <title>Credits</title>
 
       <para></para>
@@ -13,7 +13,7 @@
         <para> The writers the libxml and libxsl.</para>
       </section>
 
-    </chapter>
+    </sect1>
   </xsl:template>
 
 </xsl:stylesheet>

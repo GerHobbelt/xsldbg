@@ -16,8 +16,9 @@
   <!-- We want help to point to a invalid command if stylesheet
        user has not provided a value for 'help' param-->
   <xsl:param name="help" select="'_#_'"/>  
-  <xsl:param name="alldoc" select="0"/>
+  <xsl:param name="alldocs" select="0"/>
   <xsl:variable name="help_cmd" select="$command_nodes[@name=$help or @shortcut=$help]"/> 
+
 
 
   <xsl:template match="/">
@@ -25,7 +26,7 @@
          ====================
    
     <xsl:choose>
-      <xsl:when test="$alldoc=0">
+      <xsl:when test="$alldocs=0">
         <xsl:call-template name="helpOnCommand"/>
       </xsl:when>
       <xsl:otherwise>

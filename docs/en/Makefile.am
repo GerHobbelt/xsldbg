@@ -20,6 +20,14 @@ install-data-local: all
 clean:
 	rm -f xsldoc.txt
 
+very-clean: clean
+	rm -f *.*~
+	rm -f *~
+	rm -f Makefile.in
+	rm -f Makefile
+
+
+
 
 
 

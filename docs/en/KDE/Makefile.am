@@ -86,6 +86,10 @@ clean:
 	rm -f $(APISRC_DIR)/*.h
 
 very-clean:clean
+	rm -f *.*~
+	rm -f *~
+	rm -f Makefile.in
+	rm -f Makefile
 
 
 install-data-local: all

@@ -74,6 +74,6 @@ clean:
 very-clean:clean
 	rm -f *.*~
 	rm -f *~
-
-
+	rm -f Makefile.in
+	rm -f Makefile
 

@@ -20,10 +20,11 @@ CPPFLAGS=-E -C -P
 
 
 GNOMEXSL_FILES= \
-bookinfo.xsl  	\
+articleinfo.xsl \
 commands.xsl  	\
 credits.xsl  	\
 overview.xsl  	\
+authors.xsl	\
 xsldoc2gnome.xsl 
 
 APIDOCS_DIR=apidocs
@@ -66,10 +67,15 @@ $(APISRC_DIR):
 $(APISRC_FILES): $(APISRC_DIR)
 	$(CC) -DBUILD_DOCS -DUSE_GNOME_DOCS $(CPPFLAGS) $(top_builddir)/src/$(@F) > $@
 
+gnome.docbook : $(GNOMEXSL_FILES) ../xsldoc.xml
+	$(XSLDBG) --param xsldbg_version "'$(VERSION)'" --param xsldbg_date "'$(TIMESTAMP)'" xsldoc2gnome.xsl ../xsldoc.xml  > gnome.docbook
 
-rebuild: xsldbg-sections.txt templates sgml html
+index.html appDocs : gnome.docbook
+	$(XSLDBG) $(DOCBOOK_PREFIX)/xsl/html/docbook.xsl  gnome.docbook > index.html
 
-all: 
+rebuild: xsldbg-sections.txt templates sgml html appDocs
+
+all: appDocs rebuild 
 
 clean:
 	rm -f ./plain/xsldoc.txt

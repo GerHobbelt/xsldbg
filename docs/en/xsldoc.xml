@@ -37,11 +37,11 @@ the &lt;ENTER&gt; key.
 <li>XPATH : a xpath selection of node(s)</li>
 <li>PARAM_ID : a valid parameter number as indicated by showparam command</li>
 <li>PATH : a path to change working directory to</li>
-<li>TEXT : free form text <comment>(no restricttions)</comment></li>
+<li>TEXT : free form text <comment>(no restrictions)</comment></li>
 <li>COMMAND : a valid command for the xsdbg</li>
 <li>QNAME : a valid variable/parameter name</li>
 <li>SOURCE : the stylesheet being/to be executed</li>
-<li>DATA : the xml data being/tobe processed by the stylesheet</li>
+<li>DATA : the xml data(document) being/to be processed by the stylesheet</li>
 <li>DEVICE_PATH : is a valid terminal on the operating system</li>
 <li>TTY_LEVEL : is a valid level of input/output to use</li>
 </list>
@@ -332,7 +332,7 @@ they are not completed.</para>
 
 <!-- - - - -  Break point related commands - - - - - - - -->
 <cmd name="break" shortcut="b" title="Break">
-<summary>Break at a template, at a location in any file loaded, or at the current node. </summary>
+<summary>Break at a template, at a location in a stylesheet or xml file loaded by xsldbg, or at the current node. </summary>
 <body>
 <para>Shortcut name: b</para>
 <para>xsldbg will try to guess the complete URL given a 
@@ -341,7 +341,7 @@ they are not completed.</para>
 <li>a file name in the same directory as the &quot;top&quot; stylesheet loaded</li>
 <li>a file name relative to the current working directory of xsldbg</li>
 </list>
-Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
+Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </para>
 <para> break -l xsldoc.xsl 26
 </para>
@@ -483,7 +483,7 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <usage>
 <li>
 <text>Usage : cat &lt;XPATH&gt;</text>
-<comment>(To view a varaible or parameter)</comment>
+<comment>(To view a variable or parameter)</comment>
 </li>
 <li>
 <text>Usage : cat $&lt;QNAME&gt;</text>
@@ -660,13 +660,11 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 
 <!-- - - - - - - Searching related - - - - - -->
 <cmd name="search" title="Search">
-<summary>Search a database of all information gathered from stylsheets loaded</summary>
+<summary>Search a dataBase of all information gathered from stylesheets loaded</summary>
 <body>
-<para>When the search command is issued a file (search.data) will be created in the current directory. You can then process this file with your own stylessheet to present data in a other ways than displayed by default.
+<para>When the search command is issued a file (search.data) will be created in the current directory. You can then process this file with your own stylesheet to present data in a other ways than displayed by default.
 </para>
 <para>Depending on the amount of data collected it might take a while to compled this command.
-</para>
-<para>At the moment breakpoints are not being sorted properly. Which is being looked at.
 </para>
 </body>
 <usage>
@@ -674,7 +672,7 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <text>search &lt;XPATH&gt;</text><comment>(See what xpath can be used see search.dtd. The deafault &lt;XPATH&gt; is '//search/*' )</comment>
 </li>
 <li>
-<text>search -sort &lt;XPATH&gt;</text><comment>(Enable tell search.xsl to sort the result before outputing it)</comment>
+<text>search -sort &lt;XPATH&gt;</text><comment>(Tell search.xsl to sort the result before outputing it)</comment>
 </li>
 </usage>
 </cmd>
@@ -705,8 +703,8 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <usage>
 <li>
 <text>tty &lt;DEVICE_PATH&gt;</text>
-<comment>(Where  &lt;DEVICE_PATH&gt; is a valid terminal on the operating system)</comment>
-</li>
+<comment>(Where  &lt;DEVICE_PATH&gt; is a valid terminal on the operating system. And &lt;TTY_LEVEL&gt; defaults to level 1)</comment>
+</li> 
 <li>
 <text>tty &lt;TTY_LEVEL&gt;</text>
 <comment>(Where &lt;TTY_LEVEL&gt; is a valid level of input/output to use)</comment>
@@ -715,14 +713,14 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <text>Where level is </text>
 </li>
 <li>
-<text>0 = Default input output</text>
+<text>0 = Default input/output </text>
 </li>
 <li>
-<text>1 = Terminal output only</text>
-<comment>(Not implemented yet.)</comment>
+<text>1 = Terminal output of results of transformation, tracing and walking </text>
+<comment>(Default state when tty device has been opened. Not fully implemented yet.)</comment>
 </li>
 <li>
-<text>2 = Undefined </text>
+<text>2 = Full redirection to terminal</text>
 <comment>(Not implemented yet.)</comment>
 </li>
 <li>All other integer values are assumed to mean level 0

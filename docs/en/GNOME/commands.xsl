@@ -1,13 +1,13 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
 
-  <xsl:template name="command_chapter">
-    <chapter id="command_chapter">
+  <xsl:template name="command_section">
+    <sect1 id="command_section">
       <title>Command summary</title>
         <xsl:apply-templates select="cmd">
           <xsl:sort name="@name"/>
         </xsl:apply-templates>
-    </chapter>
+    </sect1>
   </xsl:template>
 
   <xsl:template match="cmd">

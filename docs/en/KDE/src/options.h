@@ -16,8 +16,10 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef OPTIONS_H
-#define OPTIONS_H
+
+
+
+
 
 /**
  * Provide a mechanism to change option. The Options structure is not in use,
@@ -29,30 +31,19 @@
  * @author Keith Isdale <k_isdale@tpg.com.au> 
  */
 
-#include "arraylist.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/* We want skip most of these includes when building documentation */
 
-    /* not used, Keep kdoc happy for the moment :) */
-    typedef struct _Options Options;
-    typedef Options *OptionsPtr;
-    struct _Options {
-        int unused_variable;
-    }
 
-/* used to keep track of libxslt paramters 
- see Parameter related option functions near end of file*/
- typedef struct _ParameterItem ParameterItem;
-    typedef ParameterItem *ParameterItemPtr;
-    struct _ParameterItem {
-        xmlChar *name;
-        xmlChar *value;
-    };
 
-    /* what options are available */
-    enum OptionTypeEnum {
+
+/* ---------------------------------------  
+        Misc options
+-------------------------------------------*/
+
+
+    /* keep kdoc happy */
+    enum OptionsTypeEnum{
         OPTIONS_XINCLUDE = 500, /* Use xinclude during xml parsing */
         OPTIONS_DOCBOOK,        /* Use of docbook sgml parsing */
         OPTIONS_TIMING,         /* Use of timing */
@@ -98,64 +89,93 @@ extern "C" {
         WALKSPEED_8,
         WALKSPEED_9,
         WALKSPEED_SLOW = WALKSPEED_9
-    };
+    } unusedOpt3;
 
 
-/* ---------------------------------------  
-        Misc parsing related options
--------------------------------------------*/
+/* how many microseconds is each speed increase worth*/
 
-
-/* how many microseconds is each speed increase worth */
-#define WALKDELAY 250000
 
 
 /* for non win32 environments see the macro in xsldebugger/Makefile.am
    Win32 tupe systems see  macro in libxslt/xsltwin32config.h
 */
-#ifndef __riscos                /* JRF: Under RISC OS we'll use the sysvar */
-#define USE_DOCS_MACRO
-#endif
+/* JRF: Under RISC OS we'll use the sysvar */
+
+
+
+/* used to keep track of libxslt paramters 
+ see Parameter related options near end of file
+*/
+    typedef struct _ParameterItem ParameterItem;
+    typedef ParameterItem *ParameterItemPtr;
+    struct _ParameterItem {
+      xmlChar *name; /* libxslt parameter name*/ 
+      xmlChar *value; /* libxslt parameter value*/
+    };
+
+
+
 
 
 /** 
- * Allocate memory needed by options data structures
+ * Initialized the options module
  *
  * @returns 1 on success,
  *          0 otherwise
  */
+
+
     int optionsInit(void);
+
+
+
 
 
 /**
  * Free memory used by options data structures
  */
+
+
     void optionsFree(void);
 
 
+
+
+
 /**
- * Set the state of a xsldbg option to @p value
+ * Set the state of a boolean xsldbg option to @p value
  *
  * @returns 1 on success,
- *         0 otherwise
+ *          0 otherwise
  *
- * @param optionType Is a valid integer option
+ * @param optionType Is a valid boolean option
  * @param value 1 to enable, 0 otherwise
  */
+
+
     int enableOption(OptionTypeEnum optionType, int value);
 
 
+
+
+
 /**
- * @returns The state of a xsldbg option. ie 1 for enabled, 0 for disabled
+ * @returns The state of a boolean xsldbg option. 
+ *            ie 1 for enabled, 0 for disabled
  *
- * @param optionType Is a valid integer option to query
+ * @param optionType Is a valid boolean option to query
 
  */
+
+
     int isOptionEnabled(OptionTypeEnum optionType);
 
 
+
+
+
 /**
- * Set the value of a xsldbg option to @p value
+ * Set the value of an integer xsldbg option to @p value
  *
  * @returns 1 on success,
  *         0 otherwise
@@ -163,15 +183,25 @@ extern "C" {
  * @param optionType Is a valid integer option
  * @param value Is the valid to adopt
  */
+
+
     int setIntOption(OptionTypeEnum optionType, int value);
 
 
+
+
+
 /**
- * @returns The state of a xsldbg option
+ * @returns The state of a integer xsldbg option
  *
  * @param optionType Is a valid integer option
  */
+
+
     int getIntOption(OptionTypeEnum optionType);
+
+
+
 
 
 /**
@@ -184,7 +214,12 @@ extern "C" {
  * @param optionType A valid string option
  * @param value The value to copy
  */
+
+
     int setStringOption(OptionTypeEnum optionType, const xmlChar * value);
+
+
+
 
 
 /**
@@ -193,22 +228,33 @@ extern "C" {
  * @returns current option value which may be NULL
  *
  * @param optionType A valid string option 
-
  */
+
+
     const xmlChar *getStringOption(OptionTypeEnum optionType);
 
 
 
 /* ---------------------------------------------
           Parameter related options 
-------------------------------------------------- */
+-------------------------------------------------*/
+
+
+
 
 /**
+ * Return the list of libxlt parameters
+ *
  * @returns The list of parameters to provide to libxslt when doing 
  *              stylesheet transformation if successful
  *          NULL otherwise
  */
+
+
     ArrayListPtr getParamItemList(void);
+
+
+
 
 
 /**
@@ -220,8 +266,13 @@ extern "C" {
  * @param name Is valid 
  * @param value Is valid 
  */
+
+
     ParameterItemPtr paramItemNew(const xmlChar * name,
                                   const xmlChar * value);
+
+
+
 
 
 /**
@@ -229,18 +280,12 @@ extern "C" {
  *
  * @param item Is valid
  */
+
+
     void paramItemFree(ParameterItemPtr item);
 
 
-/**
- * Print parameter information
- *
- * @returns 1 on success,
- *          0 otherwise
- *
- * @param paramId: 0 =< @p paramID < arrayListCount(getParamList())
- */
-    int printParam(int paramId);
+
 
 
 /**
@@ -249,9 +294,23 @@ extern "C" {
  * @returns 1 on success,
  *          0 otherwise
  */
+
+
+    int printParam(int paramId);
+
+
+
+
+
+/**
+ * Prints all items in parameter list
+ *
+ * @returns 1 on success,
+ *          0 otherwise
+ */
+
+
     int printParamList(void);
 
-#ifdef __cplusplus
-}
-#endif
-#endif
+
+
