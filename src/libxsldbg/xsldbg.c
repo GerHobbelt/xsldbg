@@ -310,7 +310,8 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
             startTimer();
         xmlXIncludeProcess(doc);
         if (isOptionEnabled(OPTIONS_TIMING)) {
-            endTimer("XInclude processing %s", getStringOption(OPTIONS_OUTPUT_FILE_NAME));
+            endTimer("XInclude processing %s",
+                     getStringOption(OPTIONS_OUTPUT_FILE_NAME));
         }
     }
 #endif
@@ -355,18 +356,18 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
             if (cur->methodURI == NULL) {
                 if (isOptionEnabled(OPTIONS_TIMING))
                     startTimer();
-		if (xslDebugStatus != DEBUG_QUIT)
-		  {
-		    if (terminalIO == NULL){
-		      if( getStringOption(OPTIONS_OUTPUT_FILE_NAME) == NULL)
-			xsltSaveResultToFile(stdout, res, cur);
-		      else
-			xsltSaveResultToFilename(getStringOption(OPTIONS_OUTPUT_FILE_NAME),
-						 res, cur, 0); 
-		    }
-		  else
-                    xsltSaveResultToFile(terminalIO, res, cur);
-		}
+                if (xslDebugStatus != DEBUG_QUIT) {
+                    if (terminalIO == NULL) {
+                        if (getStringOption(OPTIONS_OUTPUT_FILE_NAME) ==
+                            NULL)
+                            xsltSaveResultToFile(stdout, res, cur);
+                        else
+                            xsltSaveResultToFilename(getStringOption
+                                                     (OPTIONS_OUTPUT_FILE_NAME),
+                                                     res, cur, 0);
+                    } else
+                        xsltSaveResultToFile(terminalIO, res, cur);
+                }
                 if (isOptionEnabled(OPTIONS_TIMING))
                     endTimer("Saving result");
             } else {
@@ -376,11 +377,13 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
                     if (isOptionEnabled(OPTIONS_TIMING))
                         startTimer();
                     if (terminalIO == NULL)
-		      if( getStringOption(OPTIONS_OUTPUT_FILE_NAME) == NULL)
-			xsltSaveResultToFile(stdout, res, cur);
-		      else
-			xsltSaveResultToFilename(getStringOption(OPTIONS_OUTPUT_FILE_NAME),
-						 res, cur, 0);
+                        if (getStringOption(OPTIONS_OUTPUT_FILE_NAME) ==
+                            NULL)
+                            xsltSaveResultToFile(stdout, res, cur);
+                        else
+                            xsltSaveResultToFilename(getStringOption
+                                                     (OPTIONS_OUTPUT_FILE_NAME),
+                                                     res, cur, 0);
                     else
                         xsltSaveResultToFile(terminalIO, res, cur);
                     if (isOptionEnabled(OPTIONS_TIMING))
@@ -415,8 +418,8 @@ usage(const char *name)
                      "Without any parameters xsldbg starts in command mode, ready"
                      "for the source and data to be select\n");
     xsltGenericError(xsltGenericErrorContext, "   Options:\n");
-   /* Options help format is --<option>: <description>
-                           or --<option> <para>: <description> */
+    /* Options help format is --<option>: <description>
+     * or --<option> <para>: <description> */
     xsltGenericError(xsltGenericErrorContext,
                      "      --version or -V : show the version of libxml and libxslt used\n");
     xsltGenericError(xsltGenericErrorContext,
@@ -472,7 +475,8 @@ usage(const char *name)
                      "      --gdb : run in gdb mode printing out more information\n");
 }
 
-int xsldbgMain(int argc, char **argv)
+int
+xsldbgMain(int argc, char **argv)
 {
     int i, result = 1, noFilesFound = 0;
     xsltStylesheetPtr cur = NULL;
@@ -487,15 +491,15 @@ int xsldbgMain(int argc, char **argv)
 
     LIBXML_TEST_VERSION xmlLineNumbersDefault(1);
 
-    if (!xsldbgInit())
-	{
-		printf("Internal error, maybe ran out of memory aborting xsldbg\n");
+    if (!xsldbgInit()) {
+        printf
+            ("Internal error, maybe ran out of memory aborting xsldbg\n");
         xsldbgFree();
-	    xsltCleanupGlobals();
-		xmlCleanupParser();
-		xmlMemoryDump();
+        xsltCleanupGlobals();
+        xmlCleanupParser();
+        xmlMemoryDump();
         exit(1);
-	}
+    }
 
     if (argc == 1)
         result = enableOption(OPTIONS_SHELL, 1);
@@ -748,6 +752,8 @@ int xsldbgMain(int argc, char **argv)
         showPrompt = 0;
         cur = NULL;
         doc = NULL;
+        fileEmptyEntities();
+
         if (isOptionEnabled(OPTIONS_SHELL)) {
             debugGotControl(0);
             xsltGenericError(xsltGenericErrorContext,
@@ -908,6 +914,7 @@ int xsldbgMain(int argc, char **argv)
 }
 
 
+
 /**
  * loadStylesheet:
  *
@@ -942,6 +949,7 @@ loadStylesheet(void)
             xslDebugStatus = DEBUG_STOP;
         }
     } else {
+        fixEntities(style);
         cur = xsltLoadStylesheetPI(style);
         if (cur != NULL) {
             /* it is an embedded stylesheet */
@@ -1019,6 +1027,7 @@ loadXmlData(void)
         endTimer("Parsing document %s",
                  getStringOption(OPTIONS_DATA_FILE_NAME));
 
+    fixEntities(doc);
     return doc;
 }
 
@@ -1091,30 +1100,31 @@ printTemplates(xsltStylesheetPtr style, xmlDocPtr doc)
 }
 
 #ifdef WIN32
-/* For the windows world we capture the control event */ 
-BOOL WINAPI handler_routine(DWORD dwCtrlType)
+
+/* For the windows world we capture the control event */
+BOOL WINAPI
+handler_routine(DWORD dwCtrlType)
 {
 
-  switch(dwCtrlType)
-    {
-    case CTRL_C_EVENT:
-    case CTRL_BREAK_EVENT:
-    case CTRL_CLOSE_EVENT:
-		catchSigInt(SIGINT);
-	break;
+    switch (dwCtrlType) {
+        case CTRL_C_EVENT:
+        case CTRL_BREAK_EVENT:
+        case CTRL_CLOSE_EVENT:
+            catchSigInt(SIGINT);
+            break;
 
-    case CTRL_LOGOFF_EVENT:
-    case CTRL_SHUTDOWN_EVENT:
-        xsldbgFree();
-        exit(1);
-      break;
+        case CTRL_LOGOFF_EVENT:
+        case CTRL_SHUTDOWN_EVENT:
+            xsldbgFree();
+            exit(1);
+            break;
 
-     default:
-      printf("Unknown control event\n");
-      break;
+        default:
+            printf("Unknown control event\n");
+            break;
     }
 
-  return(TRUE);
+    return (TRUE);
 }
 
 #endif
@@ -1192,21 +1202,22 @@ xsldbgInit()
         /* catch SIGINT */
         oldHandler = signal(SIGINT, catchSigInt);
 #else
-	if (result)	{
-	BOOL bSuccess = SetConsoleCtrlHandler(handler_routine, TRUE);	
-	if (bSuccess == TRUE)
-		result++;
-	else
-		result = 0;
-	}
+        if (result) {
+            BOOL bSuccess = SetConsoleCtrlHandler(handler_routine, TRUE);
+
+            if (bSuccess == TRUE)
+                result++;
+            else
+                result = 0;
+        }
 #endif
-	if (result){
+        if (result) {
 #ifndef WIN32
-        /* catch SIGTIN tty input available fro child */
-        signal(SIGTERM, catchSigTerm);
+            /* catch SIGTIN tty input available fro child */
+            signal(SIGTERM, catchSigTerm);
 #endif
-        initialized = 1;
-	}
+            initialized = 1;
+        }
     }
     return result;
 }
@@ -1228,7 +1239,7 @@ xsldbgFree()
     if (oldHandler != SIG_ERR)
         signal(SIGINT, oldHandler);
 #else
-	SetConsoleCtrlHandler(handler_routine, FALSE);	
+    SetConsoleCtrlHandler(handler_routine, FALSE);
 #endif
 
 }

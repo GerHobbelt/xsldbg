@@ -25,6 +25,7 @@
 #include "files.h"
 #include "options.h"
 #include <stdio.h>
+#include <libxml/entities.h>
 
 
 /* top xml document */
@@ -46,6 +47,8 @@ static xmlChar *stylePathName = NULL;
 static xmlChar *workingDirPath = NULL;
 
 
+static ArrayListPtr entityOffsetList = NULL;
+
 /* -----------------------------------------
    Private function declarations for files.c
  -------------------------------------------*/
@@ -60,8 +63,8 @@ static xmlChar *workingDirPath = NULL;
  *   info will be set to found and the search data will contain the
  *   file name found. We are given our payload via walkStylesheets
  */
-void guessStylesheetHelper(void *payload, void *data,
-                           xmlChar * name ATTRIBUTE_UNUSED);
+static void guessStylesheetHelper(void *payload, void *data,
+                                  xmlChar * name ATTRIBUTE_UNUSED);
 
 
 /**
@@ -74,8 +77,32 @@ void guessStylesheetHelper(void *payload, void *data,
  *   info will be set to found and the search data will contain the
  *   file name found. We are given our payload via walkIncludes
  */
-void guessStylesheetHelper2(void *payload, void *data,
-                            xmlChar * name ATTRIBUTE_UNUSED);
+static void guessStylesheetHelper2(void *payload, void *data,
+                                   xmlChar * name ATTRIBUTE_UNUSED);
+
+
+  /**
+   * fileNewEntityOffset:
+   * @url : is valid
+   * @parentUri : valid parent for @uri
+   *
+   * Returns a valid enityOffsetPtr if succesful,
+   *         NULL otherwise
+   */
+static entityOffsetPtr fileNewEntityOffset(const xmlChar * url, const xmlChar *parentUri);
+
+
+
+  /**
+   * fileFreeEntityOffset:
+   * @entOffset : is valid
+   *
+   * Frees memory used by @entOffset
+   */
+static void fileFreeEntityOffset(entityOffsetPtr entOffset);
+
+static void filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode, xmlNodePtr lastNode);
+
 
 /* ------------------------------------- 
     End private functions
@@ -214,7 +241,7 @@ openTerminal(xmlChar * device)
          */
         terminalIO = fopen(device, "w");
         if (terminalIO != NULL) {
-            termName = xmlMemStrdup((char *)device);
+            termName = xmlMemStrdup((char *) device);
             /*
              * dup2(fileno(terminalIO), fileno(stdin));
              * dup2(fileno(terminalIO), fileno(stderr));
@@ -794,8 +821,10 @@ filesInit(void)
     topDocument = NULL;
     tempDocument = NULL;
     topStylesheet = NULL;
-    result = 1;                 /* nothing else  to do for the moment */
-
+    entityOffsetList =
+        arrayListNew(4, (freeItemFunc) fileFreeEntityOffset);
+    xmlSetEntityReferenceFunc(filesEntityRef);
+    result = (entityOffsetList != NULL);
     return result;
 }
 
@@ -824,6 +853,9 @@ filesFree(void)
                          "Unable to free memory used by xml/xsl files\n");
     if (workingDirPath)
         xmlFree(workingDirPath);
+
+    if (entityOffsetList)
+        arrayListFree(entityOffsetList);
 }
 
 
@@ -833,9 +865,302 @@ filesFree(void)
  * 
  * Returns true if @name has the ".xsl" externsion
  */
-int isSourceFile(xmlChar* fileName)
+int
+isSourceFile(xmlChar * fileName)
 {
-  return strstr((char *) fileName, ".xsl") ||
-    strstr((char *) fileName, ".Xsl") ||
-    strstr((char *) fileName, ".XSL");
+    return strstr((char *) fileName, ".xsl") ||
+        strstr((char *) fileName, ".Xsl") ||
+        strstr((char *) fileName, ".XSL");
+}
+
+
+  /**
+   * fileNewEntityOffset:
+   * @url : is valid
+   * @parentUri : valid parent for @uri
+   *
+   * Returns a valid enityOffsetPtr if succesful,
+   *         NULL otherwise
+   */
+entityOffsetPtr
+fileNewEntityOffset(const xmlChar * url, const xmlChar *parentUri)
+{
+    entityOffsetPtr result =
+        (entityOffsetPtr) xmlMalloc(sizeof(entityOffset));
+    if (result) {
+        result->uri = xmlStrdup(url);
+        result->offset = 0;
+	result->lineCount = 0;
+	result->parentUri = xmlStrdup(parentUri);
+	result->list = arrayListNew(4, xmlFree);
+    }
+
+    return result;
+}
+
+
+  /**
+   * fileFreeEntityOffset:
+   * @entOffset : is valid
+   *
+   * Frees memory used by @entOffset
+   */
+void
+fileFreeEntityOffset(entityOffsetPtr entOffset)
+{
+    if (entOffset) {
+        if (entOffset->uri)
+            xmlFree(entOffset->uri);
+	if (entOffset->list)
+	  arrayListFree(entOffset->list);
+        xmlFree(entOffset);
+    }
+}
+
+
+
+  /**
+   * fileAddEntity:
+   * @uri : Is valid
+   * @parentUri : Valid parent for @uri
+   * @firstNode : Is valid
+   * @lastNode : Is Valid
+   *
+   * Returns 1 if succesful,
+   *         0 otherwise
+   */
+  int fileAddEntity(const xmlChar *uri, const xmlChar *parentUri, 
+		    xmlNodePtr firstNode, xmlNodePtr lastNode)
+{
+    int result = 0;
+    entityOffsetPtr entOffset =  fileGetEntityRef(uri);
+
+    if (!firstNode || !uri || !parentUri)
+      return result;
+
+    if (!entOffset){
+      entOffset = fileNewEntityOffset(uri, parentUri);
+      if (entOffset)
+	result = arrayListAdd(entityOffsetList, entOffset);
+    }else
+      result = 1;
+
+    /* look for the very last node */
+    while (lastNode && lastNode->last)
+      lastNode = lastNode->last;
+
+    if (!lastNode){
+      lastNode = firstNode;
+    }
+
+    while ((lastNode->next || lastNode->children) ){
+      if (lastNode->next)
+	lastNode = lastNode->next;
+      else
+	if (lastNode->children)
+	  lastNode = lastNode->children;
+    }
+
+    if (result && entOffset) {
+      entityOffsetEntryPtr entry = 
+	(entityOffsetEntryPtr)xmlMalloc(sizeof(entityOffsetEntry));
+      if (entry){
+	entry->firstNode = firstNode;
+	entry->lastNode = lastNode;
+        result = arrayListAdd(entOffset->list, entry);
+      }
+    }
+
+    return result;
+}
+
+
+  /**
+   * fileGetEntityRef:
+   * @uri : Is valid
+   *
+   * Returns The entity @uri,
+   *         NULL otherwise
+   */
+entityOffsetPtr fileGetEntityRef(const xmlChar *uri)
+{
+  entityOffsetPtr result = NULL, ent;
+  int entIndex =0;
+  if (entityOffsetList && uri )
+    {
+      for (entIndex = 0; entIndex < arrayListCount(entityOffsetList); entIndex++)
+	{
+	  ent = arrayListGet(entityOffsetList, entIndex);
+	  if (ent && ent->uri && (xmlStrCmp(uri, ent->uri) == 0))
+	    {
+	      result = ent;
+	      break;
+	    }
+	}
+    }
+  return result;
+}
+
+
+  /**
+   * fileGetEntityOffset:
+   * @uri : Is valid
+   *
+   * Returns the line number offset for this uri
+   */
+long
+fileGetEntityOffset(xmlChar * uri)
+{
+    int entIndex, noElements;
+    long result = 0;
+    entityOffsetPtr entOffset = NULL;
+
+    if (entityOffsetList&& uri) {
+        noElements = arrayListCount(entityOffsetList);
+        for (entIndex = 0; entIndex < noElements; entIndex++) {
+            entOffset = arrayListGet(entityOffsetList, entIndex);
+            if (entOffset && entOffset->uri &&
+                (xmlStrcmp(entOffset->uri, uri) == 0))
+                result = entOffset->offset;
+        }
+    }
+    return result;
+}
+
+  /**
+   *fileGetEntityParent:
+   * @uri : Is valid 
+   *
+   * Return the parent of this entity,
+   *        or NULL if failed
+   */
+  xmlChar *fileGetEntityParent(xmlChar *uri)
+{
+    int entIndex, noElements;
+    xmlChar* result = NULL;
+    entityOffsetPtr entOffset = NULL;
+
+    if (entityOffsetList&& uri) {
+        noElements = arrayListCount(entityOffsetList);
+        for (entIndex = 0; entIndex < noElements; entIndex++) {
+            entOffset = arrayListGet(entityOffsetList, entIndex);
+            if (entOffset && entOffset->uri &&
+                (xmlStrcmp(entOffset->uri, uri) == 0))
+                result = xmlStrdup(entOffset->parentUri);
+        }
+    }
+    return result;
+}
+
+long lineNumberOffset = 0, lineCount = 0;
+
+  /**
+   * fileEmptyEntities:
+   * 
+   * Empty the list of entities that we know about
+   */
+void
+fileEmptyEntities()
+{
+    if (entityOffsetList != NULL)
+        arrayListEmpty(entityOffsetList);
+    lineNumberOffset = 0;
+    lineCount = 0;
+}
+
+
+static void fixLineNumbers(void *payload, void *data ATTRIBUTE_UNUSED,
+                           xmlChar * name ATTRIBUTE_UNUSED);
+static void maxLineNumber(void *payload, void *data ATTRIBUTE_UNUSED,
+                          xmlChar * name ATTRIBUTE_UNUSED);
+
+static void
+fixLineNumbers(void *payload, void *data ATTRIBUTE_UNUSED,
+               xmlChar * name ATTRIBUTE_UNUSED)
+{
+    xmlNodePtr node = (xmlNodePtr) payload;
+    searchInfoPtr searchInf = (searchInfoPtr) data;
+
+    if (!searchInf || !searchInf->data ||
+	!node || (node->type != XML_ELEMENT_NODE))
+      return;
+    else{
+      entityOffsetEntryPtr entry = (entityOffsetEntryPtr)searchInf->data;
+      if (node == entry->lastNode)
+	searchInf->found = 1;
+      if ((long) node->content > lineCount)
+	lineCount = (long) node->content;
+      node->content = (void*) (long)(lineNumberOffset + (long) node->content);
+    }
+}
+
+
+/*Look for the maximum line number this will then be our offset  */
+void
+maxLineNumber(void *payload, void *data ATTRIBUTE_UNUSED,
+              xmlChar * name ATTRIBUTE_UNUSED)
+{
+    xmlNodePtr node = (xmlNodePtr) payload;
+
+    if (node && (node->type == XML_ELEMENT_NODE)) {
+        if ((long) node->content > lineNumberOffset)
+            lineNumberOffset = (long) node->content;
+    }
+}
+
+
+int
+fixEntities(xmlDocPtr doc)
+{
+    int result = 0;
+    int entIndex, entRefIndex;
+    entityOffsetPtr entOffset = NULL;
+    searchInfoPtr searchInf = searchNewInfo(SEARCH_NODE);
+
+    if (doc && searchInf) {
+        walkChildNodes((xmlHashScanner) maxLineNumber, searchInf,
+                       (xmlNodePtr) doc);
+        /* round up to nearest number divisible by 10 */
+        lineNumberOffset = ((lineNumberOffset / 10) + 1)*10;
+	for (entIndex = 0; entIndex < arrayListCount(entityOffsetList); entIndex++)
+	  {
+	    entOffset = arrayListGet(entityOffsetList, entIndex);
+	    if (entOffset && entOffset->list){
+	      for (entRefIndex = 0; 
+		     entRefIndex < arrayListCount(entOffset->list);
+		       entRefIndex++)
+		{
+		  entityOffsetEntryPtr entry  = 
+		    (entityOffsetEntryPtr) arrayListGet(entOffset->list, entRefIndex);
+		  if (entry)
+		    {
+		      searchInf->data = entry;
+		      walkChildNodes((xmlHashScanner) fixLineNumbers, searchInf,
+				     entry->firstNode);
+		      searchInf->found = 0; /* reset for next time */
+		      if (entOffset->lineCount == 0)
+			entOffset->lineCount = lineCount;
+		      lineCount =0;
+		    }
+		}
+	      entOffset->offset = lineNumberOffset;
+	      lineNumberOffset += ((entOffset->lineCount / 10) + 1)*10;
+	    }
+	  }
+    }
+
+    if (searchInf){
+      searchInf->data = NULL;
+      searchFreeInfo(searchInf);
+    }
+    return result;
+}
+ 
+
+
+void filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode, xmlNodePtr lastNode)
+{
+  if (firstNode && lastNode && firstNode->next && 
+      (ent->etype == XML_EXTERNAL_GENERAL_PARSED_ENTITY))
+    fileAddEntity(ent->SystemID, ent->doc->URL, firstNode, lastNode);
 }

@@ -127,6 +127,8 @@ validateSource(xmlChar ** url, long *lineNo)
 {
 
     int result = 0, type;
+    long lineNoOffset;
+
     searchInfoPtr searchInf = searchNewInfo(SEARCH_NODE);
     nodeSearchDataPtr searchData = NULL;
 
@@ -140,13 +142,24 @@ validateSource(xmlChar ** url, long *lineNo)
         /* try to verify that the line number is valid */
         if (searchInf->found) {
             /* ok it looks like we've got a valid url */
-            /* searchData->url will be freed by searchFreeInfo */
+            /* searchData->url will be freed by searchFreeInfo */    
             if (searchData->absoluteNameMatch)
                 searchData->url = (xmlChar *)
                     xmlMemStrdup((char *) searchData->absoluteNameMatch);
             else
                 searchData->url = (xmlChar *)
                     xmlMemStrdup((char *) searchData->guessedNameMatch);
+
+	  /* Compensate for imported stylesheets */
+	  lineNoOffset = fileGetEntityOffset(searchData->url);
+	  if (lineNoOffset > 0){
+	    xmlChar *parentUri = fileGetEntityParent(searchData->url);
+	    if (parentUri){	      
+	      xmlFree(searchData->url);
+	      searchData->url = parentUri;
+	    }	    
+	    *lineNo = *lineNo + lineNoOffset;
+	  }
             if (lineNo != NULL) {
                 /* now to check the line number */
                 if (searchData->node) {
@@ -183,7 +196,7 @@ validateSource(xmlChar ** url, long *lineNo)
     if (searchInf)
         searchFreeInfo(searchInf);
     else
-        xsltGenericError(xsltGenericErrorContext,
+      xsltGenericError(xsltGenericErrorContext,
                          "Error : Unable to create searchInfo out of memory?\n");
 
     return result;
@@ -204,9 +217,38 @@ int
 validateData(xmlChar ** url, long *lineNo)
 {
     int result = 0;
+    long lineNoOffset;
     searchInfoPtr searchInf = searchNewInfo(SEARCH_NODE);
 
     nodeSearchDataPtr searchData = NULL;
+    char *lastSlash = xmlStrrChr(getMainDoc()->URL, PATHCHAR);
+
+    if (lastSlash) {
+      lastSlash++;
+      xmlStrnCpy(buff, getMainDoc()->URL,
+		 lastSlash - (char *) getMainDoc()->URL);
+      buff[lastSlash - (char *) getMainDoc()->URL] = '\0';
+      xmlStrCat(buff, *url);
+    }else
+      strcpy(buff, "");
+
+    /* compensate for included xml files */
+    lineNoOffset = fileGetEntityOffset(*url);
+    if (lineNoOffset > 0){
+      xmlChar *parentUri = fileGetEntityParent(*url);
+      *lineNo = *lineNo + lineNoOffset;
+      xmlFree(*url);
+      *url = parentUri;
+    }else{
+      lineNoOffset = fileGetEntityOffset(buff);
+      if (lineNoOffset > 0){
+	xmlChar *parentUri = fileGetEntityParent(buff);
+	*lineNo = *lineNo + lineNoOffset;
+	if (parentUri)
+	  xmlStrCpy(buff, parentUri);
+	xmlFree(parentUri);
+      }
+    }
 
     if (searchInf && searchInf->data && getMainDoc()) {
         /* try to verify that the line number is valid */
@@ -221,16 +263,7 @@ validateData(xmlChar ** url, long *lineNo)
 
         /* try to guess file name by adding the prefix of main document */
         if (!searchInf->found) {
-            char *lastSlash;
-
-            lastSlash = xmlStrrChr(getMainDoc()->URL, PATHCHAR);
-
-            if (lastSlash) {
-                lastSlash++;
-                xmlStrnCpy(buff, getMainDoc()->URL,
-                           lastSlash - (char *) getMainDoc()->URL);
-                buff[lastSlash - (char *) getMainDoc()->URL] = '\0';
-                xmlStrCat(buff, *url);
+            if (strlen(buff) > 0) {
                 if (searchData->url)
                     xmlFree(searchData->url);
                 searchData->url = (xmlChar *) xmlMemStrdup((char *) buff);
@@ -239,12 +272,12 @@ validateData(xmlChar ** url, long *lineNo)
             }
         }
 
-        if (!searchInf->found){
+        if (!searchInf->found) {
             xsltGenericError(xsltGenericErrorContext,
                              "Warning ; Breakpoint at file %s : line %ld doesn't "
                              "seem to be valid.\n", *url, *lineNo);
-	    result++;
-        }else {
+            result++;
+        } else {
             if (*url)
                 xmlFree(*url);
             *url = xmlStrdup(searchData->url);
@@ -445,8 +478,7 @@ xslDbgShellDelete(xmlChar * arg)
                         if (isSourceFile(url)) {
                             if (validateSource(&url, NULL))
                                 breakPoint = getBreakPoint(url, lineNo);
-                        } else 
-			  if (validateData(&url, NULL))
+                        } else if (validateData(&url, NULL))
                             breakPoint = getBreakPoint(url, lineNo);
                         if (!breakPoint || !deleteBreakPoint(breakPoint))
                             xsltGenericError(xsltGenericErrorContext,
@@ -557,8 +589,7 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
                         if (strstr((char *) url, ".xsl")) {
                             if (validateSource(&url, NULL))
                                 breakPoint = getBreakPoint(url, lineNo);
-                        } else
-			  if (validateData(&url, NULL))
+                        } else if (validateData(&url, NULL))
                             breakPoint = getBreakPoint(url, lineNo);
                         if (breakPoint)
                             result =

@@ -61,13 +61,13 @@ xslDbgShellAddParam(xmlChar * arg)
         return result;
     }
     if ((xmlStrLen(arg) > 1) && splitString(arg, 2, opts) == 2) {
-      paramItem =  paramItemNew(opts[0], opts[1]);
-      result = arrayListAdd(getParamItemList(), paramItem);
+        paramItem = paramItemNew(opts[0], opts[1]);
+        result = arrayListAdd(getParamItemList(), paramItem);
     }
     if (!result)
         xsltGenericError(xsltGenericErrorContext, "%s", errorPrompt);
-    else{
-      xsltGenericError(xsltGenericErrorContext,"\n");
+    else {
+        xsltGenericError(xsltGenericErrorContext, "\n");
     }
     return result;
 }
@@ -113,7 +113,7 @@ xslDbgShellDelParam(xmlChar * arg)
     if (!result)
         xsltGenericError(xsltGenericErrorContext, "%s", errorPrompt);
     else
-      xsltGenericError(xsltGenericErrorContext,"\n");
+        xsltGenericError(xsltGenericErrorContext, "\n");
 
     return result;
 }
@@ -137,25 +137,27 @@ xslDbgShellShowParam(xmlChar * arg ATTRIBUTE_UNUSED)
     int paramIndex = 0;
     int itemCount = arrayListCount(getParamItemList());
 
-   notifyXsldbgApp(XSLDBG_MSG_PARAMETER_CHANGED, NULL);
+    notifyXsldbgApp(XSLDBG_MSG_PARAMETER_CHANGED, NULL);
 
     if (itemCount > 0) {
-      ParameterItemPtr paramItem = NULL;
+        ParameterItemPtr paramItem = NULL;
+
         while (paramIndex < itemCount) {
-	  paramItem = 
-	    (ParameterItemPtr) arrayListGet(getParamItemList(), paramIndex++);
-	  if (paramItem != NULL) 
-	    notifyXsldbgApp(XSLDBG_MSG_PARAMETER_CHANGED, paramItem);
+            paramItem =
+                (ParameterItemPtr) arrayListGet(getParamItemList(),
+                                                paramIndex++);
+            if (paramItem != NULL)
+                notifyXsldbgApp(XSLDBG_MSG_PARAMETER_CHANGED, paramItem);
         }
     }
 #endif
 
     if (printParamList())
-      result = 1;
+        result = 1;
     else
         xsltGenericError(xsltGenericErrorContext,
                          "Error in printing parameters\n");
-      xsltGenericError(xsltGenericErrorContext,"\n");
+    xsltGenericError(xsltGenericErrorContext, "\n");
 
     return result;
 }

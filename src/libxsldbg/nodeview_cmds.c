@@ -63,7 +63,7 @@ int
 xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir)
 {
     xmlXPathObjectPtr list;
-		int result = 0;
+    int result = 0;
 
     if (!ctxt || !arg) {
         xsltGenericError(xsltGenericErrorContext,
@@ -76,7 +76,7 @@ xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir)
             xmlShellDir(ctxt, NULL, ctxt->node, NULL);
         else
             xmlShellList(ctxt, NULL, ctxt->node, NULL);
-			result++; /*assume that this worked */
+        result++;               /*assume that this worked */
     } else {
         ctxt->pctxt->node = ctxt->node;
         ctxt->pctxt->node = ctxt->node;
@@ -93,14 +93,13 @@ xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir)
                              indx++) {
                             if (dir)
                                 (ctxt, NULL,
-                                            list->nodesetval->
-                                            nodeTab[indx], NULL);
+                                 list->nodesetval->nodeTab[indx], NULL);
                             else
                                 xmlShellList(ctxt, NULL,
                                              list->nodesetval->
                                              nodeTab[indx], NULL);
                         }
-												result++;
+                        result++;
                         break;
                     }
                 default:
@@ -113,7 +112,7 @@ xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir)
         }
         ctxt->pctxt->node = NULL;
     }
-		return result;
+    return result;
 }
 
 
@@ -136,7 +135,7 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
 {
     xmlXPathObjectPtr list;
     int i = 0;
-		int result =0;
+    int result = 0;
 
     if (!ctxt) {
         xsltGenericError(xsltGenericErrorContext,
@@ -147,7 +146,7 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
         arg = (xmlChar *) "";
     if (arg[0] == 0) {
         xmlShellCat(ctxt, NULL, ctxt->node, NULL);
-				result++;
+        result++;
     } else {
         ctxt->pctxt->node = ctxt->node;
         if (!styleCtxt) {
@@ -213,7 +212,7 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
         }
         ctxt->pctxt->node = NULL;
     }
-	  return result;
+    return result;
 }
 
 /* only used by xslDbgPrintNames and xslDbgPrintVariable cound number of variables */
@@ -256,7 +255,8 @@ int
 xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
                          VariableTypeEnum type)
 {
-		int result = 0;
+    int result = 0;
+
     varCount = 0;
     if (!styleCtxt) {
         xsltGenericError(xsltGenericErrorContext,
@@ -274,7 +274,7 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
                                  "\nGlobal variables found: ");
                 xmlHashScan(styleCtxt->globalVars, xslDbgShellPrintNames,
                             NULL);
-								result++;
+                result++;
             } else {
                 xsltGenericError(xsltGenericErrorContext,
                                  "Libxslt has not initialize variables yet"
@@ -292,7 +292,7 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
                                      item->name);
                     item = item->next;
                 }
-								result++;
+                result++;
             } else {
                 xsltGenericError(xsltGenericErrorContext,
                                  "Libxslt has not initialize variables yet"
@@ -304,7 +304,7 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
         /* Display the value of variable */
         if (arg[0] == '$')
             xmlShellPrintXPathResult(xmlXPathEval
-                                     (arg, styleCtxt->xpathCtxt));					
+                                     (arg, styleCtxt->xpathCtxt));
         else {
             xmlChar tempbuff[100];
 
@@ -313,7 +313,7 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
             xmlShellPrintXPathResult(xmlXPathEval(tempbuff,
                                                   styleCtxt->xpathCtxt));
         }
-				result++;
+        result++;
     }
-	return result;
+    return result;
 }

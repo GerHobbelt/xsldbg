@@ -144,9 +144,9 @@ xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
                          xmlChar * arg, int verbose, int allFiles)
 {
     int templateCount = 0, printCount = 0;
-		int result = 0;
+    int result = 0;
     xsltStylesheetPtr curStyle;
-    xsltTemplatePtr templ;		
+    xsltTemplatePtr templ;
 
     trimString(arg);
     if (xmlStrLen(arg) == 0) {
@@ -172,7 +172,7 @@ xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
             curStyle = NULL;
     }
 
-    xsltGenericError(xsltGenericErrorContext,"\n");
+    xsltGenericError(xsltGenericErrorContext, "\n");
     while (curStyle) {
         templ = curStyle->templates;
         /* print them out in the order their in the file */
@@ -194,8 +194,8 @@ xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
                          "\t Total of %d templates printed\n", printCount);
     }
 
-	result++;
-	return result;
+    result++;
+    return result;
 }
 
 
@@ -272,5 +272,5 @@ xslDbgPrintStyleSheets(xmlChar * arg)
         /* strange but possible */
         xsltGenericError(xsltGenericErrorContext,
                          "\n\tNo stylesheets found\n");
-	 return 1; /* always succeed */
+    return 1;                   /* always succeed */
 }

@@ -105,7 +105,7 @@ const char *commandNames[] = {
     /* "cat", already listed */
     "source",
     "data",
-    "output", /* output file name */
+    "output",                   /* output file name */
     "cd",
 
     /* file related */
@@ -131,7 +131,7 @@ const char *commandNames[] = {
 
     /* searching */
     "search",
-    
+
     /*variable value change */
     "set",
 
@@ -177,7 +177,7 @@ const char *shortCommandNames[] = {
     /* "cat", already listed */
     "source",
     "data",
-    "o", /* output file name */
+    "o",                        /* output file name */
     "cd",
 
     /* file related */
@@ -203,7 +203,7 @@ const char *shortCommandNames[] = {
 
     /* searching */
     "search",
-    
+
     /*variable value change */
     "set",
 
@@ -865,18 +865,16 @@ splitString(xmlChar * textIn, int maxStrings, xmlChar ** out)
         while (!IS_BLANK(*textIn) && (*textIn != '\0'))
             textIn++;
 
-	if (*textIn != '\0')
-	  {
-	    *textIn = '\0';
-	    textIn++;
-	    result++;
-	  }
-	else{
-	  *textIn = '\0';
-	  textIn++;
-	  result++;
-	  break;
-	}
+        if (*textIn != '\0') {
+            *textIn = '\0';
+            textIn++;
+            result++;
+        } else {
+            *textIn = '\0';
+            textIn++;
+            result++;
+            break;
+        }
     }
     return result;
 }
@@ -1480,8 +1478,8 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 printCount = 0; /* printCount will get updated by
                                  * xslDbgPrintBreakPoint */
 #ifdef USE_XSLDBG_AS_THREAD
-		/* notify the app of the start of breakpoint list */
-		notifyXsldbgApp(XSLDBG_MSG_BREAKPOINT_CHANGED, NULL);
+                /* notify the app of the start of breakpoint list */
+                notifyXsldbgApp(XSLDBG_MSG_BREAKPOINT_CHANGED, NULL);
 #endif
                 walkBreakPoints((xmlHashScanner) xslDbgPrintBreakPoint,
                                 NULL);
@@ -1640,9 +1638,9 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
                     showSource = 1;
 #ifdef USE_XSLDBG_AS_THREAD
-		    xsldbgUpdateFileDetails((xmlNodePtr) ctxt->node);
-		    /* let any listener know that we got to a new line */
-		    notifyXsldbgApp(XSLDBG_MSG_LINE_CHANGED, NULL);
+                    xsldbgUpdateFileDetails((xmlNodePtr) ctxt->node);
+                    /* let any listener know that we got to a new line */
+                    notifyXsldbgApp(XSLDBG_MSG_LINE_CHANGED, NULL);
 #endif
                     if (ctxt->pctxt == NULL) {
                         xmlFree(ctxt);
@@ -1693,9 +1691,9 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
                     showSource = 0;
 #ifdef USE_XSLDBG_AS_THREAD
-		    xsldbgUpdateFileDetails((xmlNodePtr) ctxt->node);
-		    /* let any listener know that we got to a new line */
-		    notifyXsldbgApp(XSLDBG_MSG_LINE_CHANGED, NULL);
+                    xsldbgUpdateFileDetails((xmlNodePtr) ctxt->node);
+                    /* let any listener know that we got to a new line */
+                    notifyXsldbgApp(XSLDBG_MSG_LINE_CHANGED, NULL);
 #endif
                     if (ctxt->pctxt == NULL) {
                         xmlFree(ctxt);
@@ -1736,19 +1734,19 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 }
                 break;
 
-	case DEBUG_OUTPUT_CMD:
-	  if (xmlStrLen(arg) > 0){
-	    if (xmlStrCmp(arg, "-") != 0)
-	      setStringOption(OPTIONS_OUTPUT_FILE_NAME, arg);
-	    else
-	      setStringOption(OPTIONS_OUTPUT_FILE_NAME, NULL);
-	    cmdResult = 1;
-	  }else{
-            xsltGenericError(xsltGenericErrorContext,
-			     "Missing file name\n");
-	    cmdResult = 0;
-	  }
-	  break;
+            case DEBUG_OUTPUT_CMD:
+                if (xmlStrLen(arg) > 0) {
+                    if (xmlStrCmp(arg, "-") != 0)
+                        setStringOption(OPTIONS_OUTPUT_FILE_NAME, arg);
+                    else
+                        setStringOption(OPTIONS_OUTPUT_FILE_NAME, NULL);
+                    cmdResult = 1;
+                } else {
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "Missing file name\n");
+                    cmdResult = 0;
+                }
+                break;
 
             case DEBUG_CD_CMD:
                 /* use dir as a working buffer */
@@ -1757,8 +1755,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 shortCutId = lookupName(dir, (xmlChar **) cdShortCuts);
                 if (shortCutId >= 0) {
                     if (xmlStrLen(arg) == 2) {
-                        cmdResult = xslDbgCd(styleCtxt, ctxt,
-                                             (xmlChar *)
+                        cmdResult = xslDbgCd(styleCtxt, ctxt, (xmlChar *)
                                              cdAlternative[shortCutId],
                                              source);
                     } else {
@@ -1883,12 +1880,12 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             case DEBUG_SEARCH_CMD:
                 cmdResult =
                     xslDbgShellSearch(styleCtxt, getStylesheet(), arg);
-		break;
+                break;
 
 
 
             case DEBUG_SET_CMD:
-                cmdResult =  xslDbgShellSetVariable(styleCtxt, arg);
+                cmdResult = xslDbgShellSetVariable(styleCtxt, arg);
                 break;
 
             default:
@@ -1924,9 +1921,10 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
         /* notify any listeners of that the command failed */
         if (cmdResult == 0) {
-	  xmlStrnCpy(messageBuffer, cmdline, sizeof(messageBuffer));
-	  notifyStateXsldbgApp(XSLDBG_MSG_PROCESSING_RESULT,
-                   commandId + DEBUG_HELP_CMD, XSLDBG_COMMAND_FAILED, messageBuffer);
+            xmlStrnCpy(messageBuffer, cmdline, sizeof(messageBuffer));
+            notifyStateXsldbgApp(XSLDBG_MSG_PROCESSING_RESULT,
+                                 commandId + DEBUG_HELP_CMD,
+                                 XSLDBG_COMMAND_FAILED, messageBuffer);
 
         }
 

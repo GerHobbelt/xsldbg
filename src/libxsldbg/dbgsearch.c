@@ -15,6 +15,7 @@
 #include "options.h"
 
 #ifdef __riscos
+
 /* Include for filename conversions */
 #include "libxml/riscos.h"
 #endif
@@ -146,7 +147,7 @@ searchNewInfo(SearchEnum type)
         case SEARCH_XSL:
             break;
 
-    case SEARCH_VARIABLE:
+        case SEARCH_VARIABLE:
             result = (searchInfoPtr) xmlMalloc(sizeof(searchInfo));
             if (result) {
                 variableSearchDataPtr searchData;
@@ -155,7 +156,7 @@ searchNewInfo(SearchEnum type)
                 searchData = (variableSearchDataPtr)
                     xmlMalloc(sizeof(variableSearchData));
                 if (searchData) {
-                    searchData->name = NULL;		    
+                    searchData->name = NULL;
                     searchData->nameURI = NULL;
                     searchData->select = NULL;
                     result->data = searchData;
@@ -164,12 +165,12 @@ searchNewInfo(SearchEnum type)
                     result = NULL;
                 }
             }
-      break;
+            break;
 
     }
-    if (result){
+    if (result) {
         result->found = 0;
-	result->error = 0;
+        result->error = 0;
     }
     return result;
 }
@@ -281,7 +282,7 @@ searchFree(void)
     if (searchDataBase) {
         xmlFreeDoc(searchDataBase);
         searchDataBase = NULL;
-	searchDataBaseRoot = NULL;
+        searchDataBaseRoot = NULL;
     }
 }
 
@@ -305,7 +306,8 @@ searchEmpty(void)
     if (searchDataBase) {
         xmlCreateIntSubset(searchDataBase,
                            (xmlChar *) "search",
-                           (xmlChar *) "-//xsldbg//DTD search XML V1.0//EN",
+                           (xmlChar *)
+                           "-//xsldbg//DTD search XML V1.0//EN",
                            (xmlChar *) "search.dtd");
         searchDataBaseRoot = xmlNewNode(NULL, (xmlChar *) "search");
         if (searchDataBaseRoot)
@@ -759,7 +761,7 @@ searchQuery(const xmlChar * tempFile, const xmlChar * query)
         tempFile = (xmlChar *) "search.data";
     if (!query || (xmlStrlen(query) == 0))
         query = (xmlChar *) "--param query //search/*";
-    /* see configure.in for the defintion of XSLDBG_BIN, the name of our binary*/
+    /* see configure.in for the defintion of XSLDBG_BIN, the name of our binary */
     if (snprintf
         ((char *) buff, DEBUG_BUFFER_SIZE - 1,
          "%s  %s %s %s", XSLDBG_BIN, query, searchXSL, tempFile)) {
@@ -1067,7 +1069,7 @@ walkChildNodes(xmlHashScanner walkFunc, void *data, xmlNodePtr node)
     while (node && !searchInf->found) {
         (walkFunc) (node, data, NULL);
         child = node->children;
-        if  (child && !searchInf->found) {
+        if (child && !searchInf->found) {
             walkChildNodes(walkFunc, data, child);
         }
         node = node->next;

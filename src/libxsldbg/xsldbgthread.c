@@ -1,3 +1,4 @@
+
 /***************************************************************************
                           xsldbgthread.c  -  basic thread support
                              -------------------
@@ -32,14 +33,16 @@ static int inputReady = 0;
 static int appReady = 0;
 
 
-int getAppReady(void)
+int
+getAppReady(void)
 {
-  return appReady;
+    return appReady;
 }
 
-void setAppReady(int ready)
+void
+setAppReady(int ready)
 {
-  appReady = ready;
+    appReady = ready;
 }
 
 
@@ -50,18 +53,18 @@ getInputStatus(void)
     return inputStatus;
 }
 
-void setInputStatus(XsldbgMessageEnum type)
+void
+setInputStatus(XsldbgMessageEnum type)
 {
-  switch(type)
-    {
-  	 case XSLDBG_MSG_AWAITING_INPUT:		 /* Waiting for user input */
-   	 case XSLDBG_MSG_READ_INPUT:			   /* Read user input */
-	 	 case XSLDBG_MSG_PROCESSING_INPUT:  /* Processing user's request*/
-			inputStatus = type;
-		break;
+    switch (type) {
+        case XSLDBG_MSG_AWAITING_INPUT:        /* Waiting for user input */
+        case XSLDBG_MSG_READ_INPUT:    /* Read user input */
+        case XSLDBG_MSG_PROCESSING_INPUT:      /* Processing user's request */
+            inputStatus = type;
+            break;
 
-    default:
-      printf("Invalid input status %d\n", type);
+        default:
+            printf("Invalid input status %d\n", type);
     }
 }
 
@@ -74,35 +77,34 @@ getThreadStatus(void)
 }
 
 /* reset the status to @p type */
-void setThreadStatus(XsldbgMessageEnum type)
+void
+setThreadStatus(XsldbgMessageEnum type)
 {
-  switch(type)
-    {
-    case XSLDBG_MSG_THREAD_NOTUSED:
-    case XSLDBG_MSG_THREAD_INIT:
-    case XSLDBG_MSG_THREAD_RUN:
-    case XSLDBG_MSG_THREAD_STOP:
-    case XSLDBG_MSG_THREAD_DEAD:
-	threadStatus = type;
-	break;
+    switch (type) {
+        case XSLDBG_MSG_THREAD_NOTUSED:
+        case XSLDBG_MSG_THREAD_INIT:
+        case XSLDBG_MSG_THREAD_RUN:
+        case XSLDBG_MSG_THREAD_STOP:
+        case XSLDBG_MSG_THREAD_DEAD:
+            threadStatus = type;
+            break;
 
-    default:
-      printf("Invalid thread status %d\n",type);
-  }
+        default:
+            printf("Invalid thread status %d\n", type);
+    }
 }
 
 
 /* Is input ready yet */
-int getInputReady()
+int
+getInputReady()
 {
-  return inputReady;
+    return inputReady;
 }
 
-/* set/clear flag that indicates if input is ready*/ 
-void setInputReady(int value)
+/* set/clear flag that indicates if input is ready*/
+void
+setInputReady(int value)
 {
-  inputReady = value;
+    inputReady = value;
 }
-
-
-

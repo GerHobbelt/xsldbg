@@ -100,13 +100,12 @@ optionsInit(void)
     docsPath = (xmlChar *) DOCS_PATH;
 #else
     docsPath = (xmlChar *) getenv(XSLDBG_DOCS_DIR_VARIABLE);
-    if (!docsPath)
-      {
-	xsltGenericError(xsltGenericErrorContext,
-			 "Warning no value for documentation specified in environment variable %s. " \
-			 "No help nor search results will display\n", 
-			XSLDBG_DOCS_DIR_VARIABLE);
-      }
+    if (!docsPath) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Warning no value for documentation specified in environment variable %s. "
+                         "No help nor search results will display\n",
+                         XSLDBG_DOCS_DIR_VARIABLE);
+    }
 #endif
 
 
@@ -124,7 +123,7 @@ optionsInit(void)
     setStringOption(OPTIONS_DOCS_PATH, docsPath);
 
     /* set output default as standard output. Must be changed if not using
-       xsldbg's command line. Or the tty command is used */
+     * xsldbg's command line. Or the tty command is used */
     setStringOption(OPTIONS_OUTPUT_FILE_NAME, NULL);
     return (parameterList != NULL);
 }
@@ -504,7 +503,7 @@ printParamList(void)
     int itemCount = arrayListCount(getParamItemList());
 
     if (itemCount > 0) {
-        xsltGenericError(xsltGenericErrorContext,"\n");
+        xsltGenericError(xsltGenericErrorContext, "\n");
         while (result && (paramIndex < itemCount)) {
             result = printParam(paramIndex++);
         }

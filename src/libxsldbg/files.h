@@ -20,6 +20,7 @@
 #define FILES_H
 
 #include "xslsearch.h"
+#include "arraylist.h"
 
 #ifdef USE_KDE_DOCS
 /**
@@ -41,6 +42,92 @@ extern "C" {
 
 extern FILE *terminalIO;
 
+  typedef struct _entityOffset entityOffset;
+  typedef entityOffset* entityOffsetPtr;
+  struct _entityOffset
+  {
+    xmlChar *uri;
+    xmlChar *parentUri;
+    long offset;
+    long lineCount; /* how many lines in this entity */
+    ArrayListPtr list;
+  };
+
+  typedef struct _entityOffsetEntry entityOffsetEntry;
+  typedef entityOffsetEntry* entityOffsetEntryPtr;
+  struct _entityOffsetEntry
+  {
+    xmlNodePtr firstNode;
+    xmlNodePtr lastNode;
+  };
+
+
+  /**
+   * fileAddEntity:
+   * @uri : Is valid
+   * @parentUri : Valid parent for @uri
+   * @firstNode : Is valid
+   * @lastNode : Is Valid
+   *
+   * Returns 1 if succesful,
+   *         0 otherwise
+   */
+  int fileAddEntity(const xmlChar *uri, const xmlChar *parentUri, 
+		    xmlNodePtr firstNode, xmlNodePtr lastNode);
+
+
+  /**
+   * fileEmptyEntities:
+   * 
+   * Empty the list of entities that we know about
+   */
+  void fileEmptyEntities(void);
+
+
+  /**
+   * fileGetEntiyOffset:
+   * @uri : Is valid
+   *
+   * Returns the line number offset for this url 
+   */
+  long fileGetEntityOffset(xmlChar *uri);
+
+  /**
+   * fileGetEntityRef:
+   * @uri : Is valid
+   *
+   * Find a entity
+   *
+   * Returns The entity @uri,
+   *         NULL otherwise
+   */
+  entityOffsetPtr fileGetEntityRef(const xmlChar *uri);
+
+
+  /**
+   *fileGetEntityParent:
+   * @uri : Is valid 
+   *
+   * Get the parent for this entity
+   *
+   * Return the parent of this entity,
+   *        or NULL if failed
+   */
+  xmlChar *fileGetEntityParent(xmlChar *uri);
+
+  /**
+   * fixEntities:
+   * @doc : A valid doc completly loaded
+   *
+   * Fix line number of entities in @doc. Must only be called after all included
+   *      have been loaded
+   *
+   * Return 1 if able to fix entities that we know about
+   *        0 otherwise
+   */
+  int fixEntities(xmlDocPtr doc);
+  
+
 #ifndef USE_KDOC 
   /* used by loadXmlFile, freeXmlFile functions */
     typedef enum {
@@ -56,6 +143,7 @@ extern FILE *terminalIO;
         FILES_TEMPORARYFILE_TYPE
     };
 #endif
+
 
 #ifdef USE_GNOME_DOCS
 /**

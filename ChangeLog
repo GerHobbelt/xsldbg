@@ -1,3 +1,6 @@
+Keith Isdale 6 Jan 2002 <k_isdale@tpg.com.au>
+   Fixed the guessing of file names when using break, delete, enable commands
+
 Keith Isdale 5 Jan 2002 <k_isdale@tpg.com.au>
   Added XSLDBG_MSG_PARAMETER_CHANGED message to notifier, modified
 	param_cmds to make use of it. A notify message is sent when all parameters
