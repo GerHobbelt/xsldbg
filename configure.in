@@ -149,7 +149,7 @@ then
  AC_DEFINE(USE_DOCS_MACRO, 1)
  if test "x$prefix" != "x"
  then
-   AC_MSG_RESULT(xsldbg will look for installed documentation in ${prefix}/xsldbg/doc)
+   AC_MSG_RESULT(xsldbg will look for installed documentation in ${prefix}/doc/xsldbg)
  else
    AC_MSG_RESULT(xsldbg will look for installed documentation in ${ac_default_prefix}doc/xsldbg/)
  fi	
