@@ -25,7 +25,11 @@ noinst_HEADERS=\
 	xsldbgnotifier.h	\
 	xsldbgmsg.h		\
 	xsldbgthread.h		\
-	xsldbgio.h	
+	xsldbgio.h		\
+	qtnotifier2.h		\
+	xsldbgevent.h		\
+	xsldbgdebuggerbase.h	\
+	xsldbgwin32config.h	
 
 
 # Each supported platform will have a small number of platform

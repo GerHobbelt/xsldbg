@@ -1,6 +1,6 @@
 
 /***************************************************************************
-                          xsldbgwin32.h  - make win32 specific definitions
+                          xsldbgwin32config.h  - make win32 specific definitions
                              -------------------
     begin                : Sun Dec 16 2001
     copyright            : (C) 2001 by Keith Isdale
@@ -25,6 +25,12 @@
 #define VERSION "@VERSION@"
 
 #define TIMESTAMP __DATE__
+
+#ifdef XSLDBG_SO_EXPORTS
+#   define XSLDBG_SO_API __declspec(dllexport)
+#else
+#   define XSLDBG_SO_API __declspec(dllimport)
+#endif
 
 #ifndef WITH_DEBUGGER
 #define WITH_DEBUGGER

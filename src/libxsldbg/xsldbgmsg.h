@@ -19,6 +19,14 @@
 #ifndef XSLDBGMSG_H
 #define XSLDBGMSG_H
 
+#ifdef WIN32
+# include <libxsldbg/xsldbgwin32config.h>
+#else
+#  ifndef XSLDBG_SO_API
+#    define XSLDBG_SO_API
+#  endif
+#endif
+
 #ifndef BUILD_DOCS
 #include <libxml/tree.h>        /* needed for the definition of xmlChar */
 #include <libxsldbg/arraylist.h>
@@ -159,17 +167,17 @@ struct _notifyMessageList {
 extern "C" {
 #endif
 
-    int notifyXsldbgApp(XsldbgMessageEnum type, const void *data);
+XSLDBG_SO_API int notifyXsldbgApp(XsldbgMessageEnum type, const void *data);
 
-    int notifyStateXsldbgApp(XsldbgMessageEnum type, int commandId,
+XSLDBG_SO_API int notifyStateXsldbgApp(XsldbgMessageEnum type, int commandId,
                              XsldbgCommandStateEnum commandState,
                              const char *text);
 
-    int notifyTextXsldbgApp(XsldbgMessageEnum type, const char *text);
+XSLDBG_SO_API int notifyTextXsldbgApp(XsldbgMessageEnum type, const char *text);
 
 
     /* The following functions implemented in xsldbgthread.c */
-    int notifyListStart(XsldbgMessageEnum type);
+	int notifyListStart(XsldbgMessageEnum type);
 
     /* Data must be valid for until the next notifyListStart.
      * Memory pointed to by @data will not be freed. Added @data items

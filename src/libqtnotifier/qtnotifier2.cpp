@@ -16,14 +16,14 @@
  ***************************************************************************/
 
 #include <qapplication.h>
-#include "xsldbgevent.h"
-#include "qtnotifier2.h"
-#include "xsldbgdebuggerbase.h"
+#include <libxsldbg/xsldbgevent.h>
+#include <libxsldbg/qtnotifier2.h>
+#include <libxsldbg/xsldbgdebuggerbase.h>
 #include <libxsldbg/xsldbgthread.h>
 
 XsldbgDebuggerBase *_debugger = 0L;
 
-int notifyXsldbgApp(XsldbgMessageEnum type, const void *data)
+XSLDBG_SO_API int notifyXsldbgApp(XsldbgMessageEnum type, const void *data)
 {
     int result = 0;
     if (getThreadStatus() == XSLDBG_MSG_THREAD_NOTUSED){
@@ -54,7 +54,7 @@ int notifyXsldbgApp(XsldbgMessageEnum type, const void *data)
 
 
 
-void connectNotifier(XsldbgDebuggerBase *debugger){
+XSLDBG_SO_API void connectNotifier(XsldbgDebuggerBase *debugger){
   _debugger = debugger;
 }
 

@@ -19,6 +19,11 @@
 #ifndef XSLDBGTHREAD_H
 #define  XSLDBGTHREAD_H
 
+#if defined WIN32
+#include "libqtnotifier_so.h"
+#endif
+
+
 #ifndef BUILD_DOCS
 #include <libxsldbg/xsldbgmsg.h>
 #include <libxml/xmlmemory.h>
@@ -42,21 +47,20 @@ extern "C" {
 
     void setThreadStatus(XsldbgMessageEnum type);
 
-    int xsldbgThreadInit(void);
-
     void *xsldbgThreadMain(void *data);
 
     int xsldbgMain(int argc, char **argv);
 
+    XSLDBG_SO_API int xsldbgThreadInit(void);
 
-    void xsldbgThreadFree(void);
+    XSLDBG_SO_API void xsldbgThreadFree(void);
 
     /* thread has died so cleanup after it */
-    void xsldbgThreadCleanup(void);
+    XSLDBG_SO_API void xsldbgThreadCleanup(void);
 
-    const char *getFakeInput(void);
+    XSLDBG_SO_API const char *getFakeInput(void);
 
-    int fakeInput(const char *text);
+    XSLDBG_SO_API int fakeInput(const char *text);
 
     /* Is input ready yet */
     int getInputReady(void);

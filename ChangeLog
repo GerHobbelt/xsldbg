@@ -1,3 +1,14 @@
+Keith Isdale 05th April 2002 <k_isdale@tpg.com.a
+ Version 2.1.7
+ Changes needed by qtxsldbg under WIN32
+    Updated xsldbgwin32config.h to support dll declares
+    Moved qnotifer2.h xsldbgevent.h xsldbgdebuggerbase.h to src/libxsldbg
+    Updated Makefile.am's
+  cvs add to src/libxsldbg
+     qnotifer2.h xsldbgevent.h xsldbgdebuggerbase.h
+  cvs remove from src/libqtnotifier
+     qnotifer2.h xsldbgevent.h xsldbgdebuggerbase.h	
+	
 Keith Isdale 30th March 2002 <k_isdale@tpg.com.au>
   Version 2.1.6 	
   Fixed bug: Enable command may crash if file name provided 
