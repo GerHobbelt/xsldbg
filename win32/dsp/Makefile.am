@@ -6,3 +6,5 @@ xsldbg.dsp 	\
 libxsldbg.dsp 	\
 xsldbg.dsw 	\
 createcatalog.bat
+
+all:
