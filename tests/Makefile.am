@@ -5,7 +5,7 @@ INCLUDES= $(all_includes) -DDOCS_PATH=\"$(HTML_DIR)/xsldbg/\" -DVERSION=\"@VERSI
 
 XSLDBG=$(top_builddir)/src/xsldbg
 
-EXTRA_DIST= *.xsl *.xml *.data *.pl testcmd.dtd
+EXTRA_DIST= *.xsl *.xml *.data *.pl testcmd.dtd testcoverage.txt
 
 TESTS = \
 	../results/test1.pl \
