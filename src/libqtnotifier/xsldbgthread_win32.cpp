@@ -69,7 +69,7 @@ xsldbgGenericErrorFunc(void *ctx, const char *msg, ...);
  ---------------------------------------------------*/
 
 /* setup all application wide items */
-XSLDBG_SO_API int
+int
 xsldbgThreadInit(void)
 {
     int result = 0;
@@ -102,7 +102,7 @@ xsldbgThreadInit(void)
 
 
 /* tell the thread to stop and free that memory !*/
-XSLDBG_SO_API void
+void
 xsldbgThreadFree(void)
 {
   fprintf(stderr, "xsldbgThreadFree()\n");
@@ -120,14 +120,14 @@ xsldbgThreadFree(void)
    	
 }
 
-XSLDBG_SO_API const char *getFakeInput()
+const char *getFakeInput()
 {
 	return inputBuffer;
 }
 
 
 /* put text into standard input just like we had typed it */
-XSLDBG_SO_API int
+int
 fakeInput(const char *text)
 {
     int result = 0;
@@ -227,7 +227,7 @@ xsldbgErrorMsg msg;
 xsldbgErrorMsgPtr  msgPtr = &msg;
 xmlChar *msgText = NULL;
 
-XSLDBG_SO_API int notifyStateXsldbgApp(XsldbgMessageEnum type, int commandId, 
+int notifyStateXsldbgApp(XsldbgMessageEnum type, int commandId, 
 			  XsldbgCommandStateEnum commandState, const char *text)
 {
   int result = 0;
@@ -255,7 +255,7 @@ XSLDBG_SO_API int notifyStateXsldbgApp(XsldbgMessageEnum type, int commandId,
 }
 
 
-XSLDBG_SO_API int notifyTextXsldbgApp(XsldbgMessageEnum type, const char *text)
+int notifyTextXsldbgApp(XsldbgMessageEnum type, const char *text)
 {
   return notifyStateXsldbgApp(type, -1, XSLDBG_COMMAND_NOTUSED, text);
 }

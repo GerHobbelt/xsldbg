@@ -637,7 +637,7 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
 int
 xslDbgPrintCallStack(const xmlChar * arg)
 {
-    int depth;
+    int depth = 0;
     int result = 1;
     callPointPtr callPointItem;
 

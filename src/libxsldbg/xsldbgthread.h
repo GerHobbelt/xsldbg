@@ -51,16 +51,16 @@ extern "C" {
 
     int xsldbgMain(int argc, char **argv);
 
-    XSLDBG_SO_API int xsldbgThreadInit(void);
+     int xsldbgThreadInit(void);
 
-    XSLDBG_SO_API void xsldbgThreadFree(void);
+     void xsldbgThreadFree(void);
 
     /* thread has died so cleanup after it */
-    XSLDBG_SO_API void xsldbgThreadCleanup(void);
+     void xsldbgThreadCleanup(void);
 
-    XSLDBG_SO_API const char *getFakeInput(void);
+     const char *getFakeInput(void);
 
-    XSLDBG_SO_API int fakeInput(const char *text);
+     int fakeInput(const char *text);
 
     /* Is input ready yet */
     int getInputReady(void);

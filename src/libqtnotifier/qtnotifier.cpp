@@ -15,6 +15,12 @@
  *                                                                         *
  ***************************************************************************/
 
+// For this this to be ignored by moc 
+
+#if 0
+
+
+
 #include "qtnotifier.h"
 #include <libxsldbg/xsldbgthread.h>
 
@@ -67,5 +73,4 @@ void QTNotifier::doNotify(XsldbgMessageEnum type, const void *data)
 	emit notifyXsldbgApp(type, data);
 }
 
-
-#include "qtnotifier.moc"
+#endif

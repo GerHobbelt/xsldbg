@@ -32,10 +32,10 @@
 /* how many columns do we have */
 #define XSLDBGEVENT_COLUMNS 3
 
-class XSLDBG_SO_API XsldbgDebuggerBase;
-class XSLDBG_SO_API XsldbgEventData;
+class  XsldbgDebuggerBase;
+class  XsldbgEventData;
 
-class XSLDBG_SO_API XsldbgEventDataList : public QGList
+class  XsldbgEventDataList : public QGList
 {
 public:
     XsldbgEventDataList()                             {}
@@ -97,7 +97,7 @@ private:
  *
  * @author Keith Isdale <k_isdale@tpg.com.au> 
  */
-class XSLDBG_SO_API XsldbgEventData {
+class  XsldbgEventData {
 
  public:
   XsldbgEventData();
@@ -229,7 +229,7 @@ class XSLDBG_SO_API XsldbgEventData {
  *
  * @author Keith Isdale <k_isdale@tpg.com.au> 
  */
-class XSLDBG_SO_API XsldbgEvent : public QEvent {
+class  XsldbgEvent : public QEvent {
 
  public:  
   XsldbgEvent(XsldbgMessageEnum type, const void *data);
@@ -292,7 +292,7 @@ class XSLDBG_SO_API XsldbgEvent : public QEvent {
       each data item in the list will be of the type required
       by the "type" this event
    */
-   class XSLDBG_SO_API XsldbgEventDataList list;
+   class  XsldbgEventDataList list;
     };
 
 

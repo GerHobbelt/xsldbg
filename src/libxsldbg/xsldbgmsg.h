@@ -167,13 +167,13 @@ struct _notifyMessageList {
 extern "C" {
 #endif
 
-XSLDBG_SO_API int notifyXsldbgApp(XsldbgMessageEnum type, const void *data);
+int notifyXsldbgApp(XsldbgMessageEnum type, const void *data);
 
-XSLDBG_SO_API int notifyStateXsldbgApp(XsldbgMessageEnum type, int commandId,
+int notifyStateXsldbgApp(XsldbgMessageEnum type, int commandId,
                              XsldbgCommandStateEnum commandState,
                              const char *text);
 
-XSLDBG_SO_API int notifyTextXsldbgApp(XsldbgMessageEnum type, const char *text);
+int notifyTextXsldbgApp(XsldbgMessageEnum type, const char *text);
 
 
     /* The following functions implemented in xsldbgthread.c */

@@ -23,7 +23,7 @@
 
 XsldbgDebuggerBase *_debugger = 0L;
 
-XSLDBG_SO_API int notifyXsldbgApp(XsldbgMessageEnum type, const void *data)
+int notifyXsldbgApp(XsldbgMessageEnum type, const void *data)
 {
     int result = 0;
     if (getThreadStatus() == XSLDBG_MSG_THREAD_NOTUSED){
@@ -54,7 +54,7 @@ XSLDBG_SO_API int notifyXsldbgApp(XsldbgMessageEnum type, const void *data)
 
 
 
-XSLDBG_SO_API void connectNotifier(XsldbgDebuggerBase *debugger){
+void connectNotifier(XsldbgDebuggerBase *debugger){
   _debugger = debugger;
 }
 

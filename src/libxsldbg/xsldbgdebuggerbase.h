@@ -42,7 +42,7 @@ class QStringList;
     We delegate the task of emitting our signals to XsldbgEvent , so 
     Xsldbg must become our friend
 */
-class XSLDBG_SO_API XsldbgDebuggerBase : public QObject {
+class XsldbgDebuggerBase : public QObject {
 
   Q_OBJECT
 

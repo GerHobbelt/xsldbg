@@ -52,13 +52,13 @@ void *xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
                             void *data ATTRIBUTE_UNUSED, xmlChar * name);
 
 /**
- * xslShellCat:
+ * xslDbgCatToFile:
  * @node : Is valid
  * @file : Is valid
  *
  * Send the results of cat command in @node to @file
  */
-void xslShellCat(xmlNodePtr node, FILE * file);
+static void xslDbgCatToFile(xmlNodePtr node, FILE * file);
 
 
 /**
@@ -150,14 +150,14 @@ xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir)
 
 
 /**
- * xslShellCat:
+ * xslDbgCatToFile:
  * @node : Is valid
  * @file : Is valid
  *
  * Send the results of cat command in @node to @file
  */
 void
-xslShellCat(xmlNodePtr node, FILE * file)
+xslDbgCatToFile(xmlNodePtr node, FILE * file)
 {
     if (!node || !file)
         return;
@@ -184,7 +184,7 @@ xslShellCat(xmlNodePtr node, FILE * file)
         xmlDocDump(file, (xmlDocPtr) node);
         doc->encoding = encoding;
     } else {
-        xmlElemDump(file, node->doc, node);
+			xmlElemDump(file, node->doc, node);
     }
 }
 
@@ -245,8 +245,8 @@ printXPathObject(xmlXPathObjectPtr item, xmlChar* xPath){
 	    if (item->nodesetval){
 	      for (indx = 0;
 		   indx < item->nodesetval->nodeNr; indx++){ 
-		xslShellCat(item->nodesetval->
-			    nodeTab[indx], file);
+				xslDbgCatToFile(item->nodesetval->
+						nodeTab[indx], file);
 	      }
 	    } else {
 	      xsltGenericError(xmlGenericErrorContext,
@@ -421,7 +421,7 @@ xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
 	      }else if (item->tree){
 	         xsltGenericError(xsltGenericErrorContext, " Global = %s\n", 
 				  fullQualifiedName);
-		 xslShellCat(item->tree, stderr);
+		 xslDbgCatToFile(item->tree, stderr);
 	      }else if (item->select){
 	         xsltGenericError(xsltGenericErrorContext, " Global = %s\n%s", 
 				  fullQualifiedName, item->select);
@@ -550,7 +550,7 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
 			        }else if (item->tree){
 			           xsltGenericError(xsltGenericErrorContext, " Local = %s\n", 
 					       fullQualifiedName);
-			           xslShellCat(item->tree, stderr);
+			           xslDbgCatToFile(item->tree, stderr);
 			        }else if (item->select){
 				  xsltGenericError(xsltGenericErrorContext, " Local = %s\n%s", 
 						   fullQualifiedName, item->select);

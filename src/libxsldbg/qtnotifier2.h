@@ -25,11 +25,11 @@
 #include <libxsldbg/xsldbgnotifier.h>
 
 
-class XSLDBG_SO_API XsldbgDebuggerBase;
+class  XsldbgDebuggerBase;
 
 extern "C" {
 
-XSLDBG_SO_API void connectNotifier(XsldbgDebuggerBase *debugger);
+ void connectNotifier(XsldbgDebuggerBase *debugger);
 
 }
 
