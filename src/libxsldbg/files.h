@@ -53,6 +53,10 @@ extern "C" {
         xmlChar *PublicID;
     };
 
+
+    /* ------------------- File commands  ------------------ 
+     * ---------------------------------------------------------- */
+
 /**
  * xslDbgEntities:
  * 
@@ -66,26 +70,42 @@ extern "C" {
 
 /**
  * xslDbgSystem:
- * @arg : Is valid
+ * @arg : Is valid in UTF-8
  * 
  * Print what a system file @arg maps to via the current xml catalog
  *
  * Returns 1 on sucess,
  *         0 otherwise
  */
-    int xslDbgSystem(xmlChar * arg);
+    int xslDbgSystem(const xmlChar * arg);
 
 /**
  * xslDbgPublic:
- * @arg : Is valid
+ * @arg : Is valid PublicID in UTF-8
  * 
  * Print what a public ID @arg maps to via the current xml catalog
  *
  * Returns 1 on sucess,
  *         0 otherwise
  */
-    int xslDbgPublic(xmlChar * arg);
+    int xslDbgPublic(const xmlChar * arg);
 
+
+/**
+ * xslDbgEncoding:
+ * @arg: Is valid encoding supported by libxml2
+ *
+ * Set current encoding to use for output to standard output
+ *
+ * Returns 1 on sucess,
+ *         0 otherwise
+ */
+    int xslDbgEncoding(xmlChar * arg);
+
+
+
+    /* -------- General function for working with files -----
+     * -------------------------------------------------------- */
 
   /**
    * filesEntityRef :
@@ -154,10 +174,49 @@ extern "C" {
    *
    * Load the catalogs specifed by OPTIONS_CATALOG_NAMES if 
    *      OPTIONS_CATALOGS is enabled
+   *
    * Returns 1 if sucessful
    *         0 otherwise   
    */
     int filesLoadCatalogs(void);
+
+
+  /**
+   * filesEncode:
+   * @text: Is valid, text to translate from UTF-8, 
+   *
+   * Return  A  string of converted @text
+   *
+   * Returns  A  string of converted @text, may be NULL
+   */
+    xmlChar *filesEncode(const xmlChar * text);
+
+
+  /**
+   * filesDeccode:
+   * @text: Is valid, text to translate from current encoding to UTF-8, 
+   *
+   * Return  A  string of converted @text
+   *
+   * Returns  A  string of converted @text, may be NULL
+   */
+    xmlChar *filesDecode(const xmlChar * text);
+
+
+    /*
+     * filesSetEncoding:
+     * @encoding : Is a valid encoding supported by the iconv library or NULL
+     *
+     * Opens encoding for all standard output to @encoding. If  @encoding 
+     *        is NULL then close current encoding and use UTF-8 as output encoding
+     *
+     * Returns 1 if successful in setting the encoding of all standard output
+     *           to @encoding
+     *         0 otherwise
+     */
+    int filesSetEncoding(const char *encoding);
+
+
 
 
 #ifndef USE_KDOC

@@ -121,6 +121,7 @@
 #endif
 
 #ifdef __riscos
+
 /* Global definition of our program name on invocation.
    This is required such that we can invoke ourselves for processing
    search or help messages where our executable does not exist on the
@@ -434,7 +435,8 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
                              NULL)
                         xsltSaveResultToFile(stdout, res, cur);
                     else
-                        xsltSaveResultToFilename((const char*)getStringOption
+                        xsltSaveResultToFilename((const char *)
+                                                 getStringOption
                                                  (OPTIONS_OUTPUT_FILE_NAME),
                                                  res, cur, 0);
                 }
@@ -452,7 +454,8 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
                              NULL)
                         xsltSaveResultToFile(stdout, res, cur);
                     else
-                        xsltSaveResultToFilename((const char*)getStringOption
+                        xsltSaveResultToFilename((const char *)
+                                                 getStringOption
                                                  (OPTIONS_OUTPUT_FILE_NAME),
                                                  res, cur, 0);
                     if (isOptionEnabled(OPTIONS_TIMING))
@@ -771,7 +774,7 @@ xsldbgMain(int argc, char **argv)
             }
         } else {
             xsltGenericError(xsltGenericErrorContext,
-                             "Unknown option %s\n", argv[i]);
+                             "Error: Unknown option %s\n", argv[i]);
             result = 0;
         }
     }
@@ -1182,7 +1185,7 @@ handler_routine(DWORD dwCtrlType)
             break;
 
         default:
-            printf("Unknown control event\n");
+            printf("Error: Unknown control event\n");
             break;
     }
 
@@ -1346,7 +1349,14 @@ xsldbgGenericErrorFunc(void *ctx, const char *msg, ...)
         vsnprintf(msgBuffer, sizeof(msgBuffer), msg, args);
         notifyTextXsldbgApp(XSLDBG_MSG_TEXTOUT, msgBuffer);
     } else {
-        vfprintf(stderr, msg, args);
+        xmlChar *encodeResult = NULL;
+        vsnprintf(msgBuffer, sizeof(msgBuffer), msg, args);
+	encodeResult = filesEncode((xmlChar*)msgBuffer);
+	if(encodeResult){
+	  fprintf(stderr, "%s", encodeResult);
+	  xmlFree(encodeResult);
+	}else
+	  fprintf(stderr, "%s", msgBuffer);
     }
     va_end(args);
 }

@@ -177,7 +177,7 @@ extern "C" {
 
 /**
  * xslDbgPrintStyleSheets:
- * @arg: The stylesheets of interests, is NULL for all stylsheets
+ * @arg: The stylesheets of interests and in UTF-8, is NULL for all stylesheets
  *
  * Print stylesheets that can be found in loaded stylsheet
  *
@@ -193,7 +193,7 @@ extern "C" {
  * @returns 1 on success,
  *          0 otherwise
  *
- * @param arg The stylesheets of interests, is NULL for all stylsheets
+ * @param arg The stylesheets of interests and in UTF-8, is NULL for all stylesheets
  *
  */
 #endif
@@ -213,7 +213,7 @@ extern "C" {
 
 /**
  * xslDbgShellFrameBreak:
- * @arg: Is valid 
+ * @arg: Is valid number of frames to change location by
  * @stepup: If != 1 then we step up, otherwise step down
  *
  * Set a "frame" break point either up or down from here
@@ -230,7 +230,7 @@ extern "C" {
  * @returns 1 on success,
  *          0 otherwise
  *
- * @param arg Is valid 
+ * @param arg Is valid  and in UTF-8
  * @param stepup If != 1 then we step up, otherwise step down
  */
 #endif
@@ -243,7 +243,7 @@ extern "C" {
 
 /**
  * xslDbgShellBreak:
- * @arg: Is valid
+ * @arg: Is valid and in UTF-8
  * @style: Is valid
  * @ctxt: Is valid
  * 
@@ -261,7 +261,7 @@ extern "C" {
  * @returns 1 on success,
  *          0 otherwise
  *
- * @param arg Is valid
+ * @param arg Is valid and in UTF-8
  * @param style Is valid
  * @param ctxt Is valid
  */
@@ -276,7 +276,7 @@ extern "C" {
 
 /**
  * xslDbgShellDelete:
- * @arg: Is valid
+ * @arg: Is valid and in UTF-8
  * 
  * Delete break point specified by arg
  *
@@ -292,7 +292,7 @@ extern "C" {
  * @returns 1 on success,
  *          0 otherwise
  *
- * @param arg Is valid
+ * @param arg Is valid and in UTF-8
  */
 #endif
 #endif
@@ -335,7 +335,7 @@ extern "C" {
 
 /**
  * xslDbgShellEnable:
- * @arg : is valid
+ * @arg : is valid enable "commmand text" and in UTF-8
  * @enableType : enable break point if 1, disable if 0, toggle if -1
  *
  * Enable/disable break point specified by arg using enable 
@@ -349,7 +349,7 @@ extern "C" {
   /**
    * Enable/disable break point specified by arg using enable
    *
-   * @param arg: is valid enable "commmand text"
+   * @param arg: is valid enable "commmand text" and in UTF-8
    * @param enableType : enable break point if 1, disable if 0, toggle if -1
    *
    * @returns 1 if successful,
@@ -446,7 +446,7 @@ extern "C" {
  * @verbose: Either 1 or 0
  * @templateCount: Is valid
  * @count: Is valid
- * @templateName: template name to print, may be NULL
+ * @templateName: template name to print and in UTF-8, may be NULL
  *
  * This display the templates in the same order as they are in the 
  *   stylesheet. If verbose is 1 then print more information
@@ -466,7 +466,7 @@ extern "C" {
  * @param verbose Either 1 or 0
  * @param templateCount Is valid
  * @param count Is valid
- * @param templateName The template name to print, may be NULL
+ * @param templateName The template name to print and in UTF-8, may be NULL
  */
 #endif
 #endif
@@ -509,7 +509,7 @@ extern "C" {
 /**
  * xslDbgShellPrintList: 
  * @ctxt: The current shell context
- * @arg: What xpath to display
+ * @arg: What xpath to display  and in UTF-8
  * @dir: If 1 print in dir mode?, 
  *        otherwise ls mode
  *
@@ -528,7 +528,7 @@ extern "C" {
  *          0 otherwise
  *
  * @param ctxt The current shell context
- * @param arg What xpath to display
+ * @param arg What xpath to display  and in UTF-8
  * @param dir If 1 print in dir mode, 
  *        otherwise ls mode
  */
@@ -544,7 +544,7 @@ extern "C" {
  * xslDbgShellCat:
  * @styleCtxt: the current stylesheet context
  * @ctxt: The current shell context
- * @arg: The xpath to print
+ * @arg: The xpath to print and in UTF-8
  *
  * Print the result of an xpath expression. This can include variables
  *        if styleCtxt is not NULL
@@ -564,7 +564,7 @@ extern "C" {
  *
  * @param styleCtxt Current stylesheet context
  * @param ctxt Current shell context
- * @param arg The xpath to print
+ * @param arg The xpath to print and in UTF-8
  */
 #endif
 #endif
@@ -578,7 +578,7 @@ extern "C" {
 /**
  * xslDbgShellPrintVariable:
  * @styleCtxt: The current stylesheet context 
- * @arg: The name of variable to look for '$' prefix is optional
+ * @arg: The name of variable to look for '$' prefix is optional and in UTF-8
  * @type: A valid VariableTypeEnum
  *
  *  Print the value variable specified by args.
@@ -597,7 +597,7 @@ extern "C" {
 
  *
  * @param styleCtxt The current stylesheet context 
- * @param arg The name of variable to look for '$' prefix is optional
+ * @param arg The name of variable to look for '$' prefix is optional and in UTF-8
  * @param type Is valid VariableTypeEnum
  */
 #endif
@@ -619,7 +619,7 @@ extern "C" {
 
 /**
  * xslDbgShellChangeWd:
- * @path: The path to change to
+ * @path: The path to change to and in UTF-8
  *
  * Change the current working directory of the operating system
  *
@@ -633,11 +633,11 @@ extern "C" {
  * @returns 1 if able to change xsldbg working direcorty to @p path
  *          0 otherwise
  *
- * @param path Operating system path(directory) to change to
+ * @param path Operating system path(directory) to change to and in UTF-8 
  */
 #endif
 #endif
-    int xslDbgShellChangeWd(const xmlChar * path);
+    int xslDbgShellChangeWd(xmlChar * path);
 
 
 
@@ -685,7 +685,7 @@ extern "C" {
 /** 
  * xslDbgShellAddParam:
  * @arg: A string comprised of two words separated by
- *          one or more spaces. 
+ *          one or more spaces which are in UTF-8. 
  *
  * Add a libxslt parameter to be sent to libxslt later on
  *
@@ -702,7 +702,7 @@ extern "C" {
  *          0 otherwise
  *
  * @param arg A string comprised of two words separated by
- *          one or more spaces. 
+ *          one or more spaces which are in UTF-8
  */
 #endif
 #endif
@@ -716,7 +716,7 @@ extern "C" {
  * xslDbgShellDelParam:
  * @arg: A single white space trimmed parameter number to look for
  * 
- * Delet a libxslt parameter to be sent to libxslt later on
+ * Delete a libxslt parameter that was to be sent to libxslt later on
  *
  * Returns 1 if able to delete parameter @name,
  *         0 otherwise
@@ -725,6 +725,7 @@ extern "C" {
 #ifdef USE_KDE_DOCS
 
 /**
+ * Delete a libxslt parameter that was to be sent to libxslt later on
  *
  * @returns 1 if able to delete parameter @p name,
  *          0 otherwise

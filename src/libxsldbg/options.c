@@ -87,9 +87,11 @@ optionsInit(void)
 
     /* setup the docs path */
     setStringOption(OPTIONS_DOCS_PATH, docsPath);
-    
+
     setIntOption(OPTIONS_TRACE, TRACE_OFF);
     setIntOption(OPTIONS_WALK_SPEED, WALKSPEED_STOP);
+    /* always try to use encoding if found */
+    enableOption(OPTIONS_AUTOENCODE, 1);
 
     /* set output default as standard output. Must be changed if not using
      * xsldbg's command line. Or the tty command is used */
@@ -147,7 +149,8 @@ enableOption(OptionTypeEnum optionType, int value)
         case OPTIONS_GDB:
         case OPTIONS_REPEAT:
         case OPTIONS_CATALOGS:
-    case OPTIONS_PREFER_HTML:
+        case OPTIONS_PREFER_HTML:
+        case OPTIONS_AUTOENCODE:
         case OPTIONS_VERBOSE:
             /* make sure that use of options are safe by only copying
              * critical values from intVolitleOptions just before 
@@ -203,7 +206,8 @@ isOptionEnabled(OptionTypeEnum optionType)
         case OPTIONS_TRACE:
         case OPTIONS_VERBOSE:
         case OPTIONS_CATALOGS:
-    case OPTIONS_PREFER_HTML:
+        case OPTIONS_PREFER_HTML:
+        case OPTIONS_AUTOENCODE:
         case OPTIONS_WALK_SPEED:
             result = intOptions[type - OPTIONS_XINCLUDE];
             break;

@@ -113,6 +113,7 @@ const char *commandNames[] = {
     "entities",
     "system",
     "public",
+    "encoding",
     "validate",
     "load",
     "save",
@@ -191,6 +192,7 @@ const char *shortCommandNames[] = {
     "ent",                      /* entities command */
     "sys",                      /* sytem command */
     "pub",                      /* public command */
+    "encoding",
     "validate",
     "load",
     "save",
@@ -268,11 +270,13 @@ const char *optionNames[] = {
     "*_walkspeed_*",            /* How fast do we walk through code */
     "catalogs",                 /* do we use catalogs in SGML_CATALOG_FILES */
     "preferhtml",               /* Prefer html output for search results */
+    "autoencode",               /* Try to use the encoding from the stylesheet */
     "verbose",                  /* Be verbose with messages */
     "output",                   /* what is the output file name */
     "source",                   /* The stylesheet source to use */
     "docspath",                 /* Path of xsldbg's documentation */
     "catalognames",             /* The names of the catalogs to use when the catalogs option is active */
+    "encoding",                 /* What encoding to use for standard output */
     "data",                     /* The xml data file to use */
     NULL                        /* indicate end of list */
 };
@@ -308,7 +312,8 @@ const char *optionNames[] = {
  * Change directories
  * @styleCtxt : current stylesheet context
  * @ctxt : current shell context
- * @name : path to change to
+ * @arg : path to change to
+ * @source : is valid
  *
  * Returns 1 on success,
  *         0 otherwise
@@ -538,7 +543,8 @@ xsldbgUrl(void)
  * Change directories
  * @styleCtxt : current stylesheet context
  * @ctxt : current shell context
- * @name : path to change to
+ * @arg : path to change to and in UTF-8
+ * @source : is valid 
  *
  * Returns 1 on success,
  *         0 otherwise
@@ -553,7 +559,7 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
 
     if (!ctxt) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Debuger has no files loaded, try reloading files\n");
+                         "Error: Debuger has no files loaded, try reloading files\n");
         return result;
     }
     if (arg == NULL)
@@ -576,7 +582,7 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                         findTemplateNode(styleCtxt->style, &arg[offset]);
                     if (!templateNode) {
                         xsltGenericError(xsltGenericErrorContext,
-                                         "Template '%s' not found\n",
+                                         "Error: Template '%s' not found\n",
                                          &arg[offset]);
                         return result;
                     } else {
@@ -605,11 +611,11 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                     }
                 } else {
                     xsltGenericError(xsltGenericErrorContext,
-                                     "Unknown option to cd\n");
+                                     "Error: Unknown option to cd\n");
                 }
             } else
                 xsltGenericError(xsltGenericErrorContext,
-                                 "Unable to cd, No stylesheet properly parsed\n");
+                                 "Error: Unable to cd, No stylesheet properly parsed\n");
         } else {
             xmlNodePtr savenode;
 
@@ -629,7 +635,7 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                 list = xmlXPathEval((xmlChar *) arg, ctxt->pctxt);
             } else {
                 xsltGenericError(xsltGenericErrorContext,
-                                 "Invalid parameters to xslDbgCd\n");
+                                 "Error: Invalid parameters to xslDbgCd\n");
             }
         }
 
@@ -656,7 +662,7 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
             xmlXPathFreeObject(list);
         } else {
             xmlGenericError(xmlGenericErrorContext,
-                            "%s: no such node\n", arg);
+                            "Error: %s no such node\n", arg);
         }
         ctxt->pctxt->node = NULL;
     }
@@ -710,7 +716,7 @@ xslDbgPrintCallStack(const xmlChar * arg)
                 } else {
 #ifdef WITH_XSLT_DEBUG_PROCESS
                     xsltGenericError(xsltGenericErrorContext,
-                                     "Call stack item not found at depth %d :"
+                                     "Error: Call stack item not found at depth %d :"
                                      " xslDbgPrintCallStack\n", depth);
 #endif
                     break;
@@ -718,7 +724,7 @@ xslDbgPrintCallStack(const xmlChar * arg)
             }
             if (callDepth() == 0)
                 xsltGenericError(xsltGenericErrorContext,
-                                 "No items on call stack\n");
+                                 "Error: No items on call stack\n");
             else
                 xsltGenericError(xsltGenericErrorContext, "\n");
         }
@@ -730,7 +736,7 @@ xslDbgPrintCallStack(const xmlChar * arg)
             /* should never happen but just in case, when running as a 
              * thread always provide NO params to the where command */
             xsltGenericError(xsltGenericErrorContext,
-                             "Notification of a frame not supported\n");
+                             "Error: Notification of a frame not supported\n");
             return result;
         }
 
@@ -751,7 +757,7 @@ xslDbgPrintCallStack(const xmlChar * arg)
             } else {
 #ifdef WITH_XSLT_DEBUG_PROCESS
                 xsltGenericError(xsltGenericErrorContext,
-                                 "Call stack item not found at templateDepth %d :"
+                                 "Error: Call stack item not found at templateDepth %d :"
                                  " xslDbgPrintCallStack\n", depth);
 #endif
             }
@@ -917,44 +923,44 @@ splitString(xmlChar * textIn, int maxStrings, xmlChar ** out)
         while (IS_BLANK(*textIn))
             textIn++;
 
-	if (*textIn == '\"'){
-	  textIn++;
-	  foundQuote++;
-	}
+        if (*textIn == '\"') {
+            textIn++;
+            foundQuote++;
+        }
         out[result] = textIn;
 
         /* look for end of word */
-	if (foundQuote == 0){
-	  while (!IS_BLANK(*textIn) && (*textIn != '\0'))
-            textIn++;
+        if (foundQuote == 0) {
+            while (!IS_BLANK(*textIn) && (*textIn != '\0'))
+                textIn++;
 
-	  if (*textIn != '\0'){ 
-	    *textIn = '\0';
-            textIn++;
-	  }
-	  
-	  if (xmlStrLen(out[result]) > 0){
-	    result++;
-	  }
-	}else{
-	  /* look for ending quotation mark */
-	  while ((*textIn != '\0') && (*textIn != '\"') )
-            textIn++;
-	  if (*textIn == '\0'){
+            if (*textIn != '\0') {
+                *textIn = '\0';
+                textIn++;
+            }
+
+            if (xmlStrLen(out[result]) > 0) {
+                result++;
+            }
+        } else {
+            /* look for ending quotation mark */
+            while ((*textIn != '\0') && (*textIn != '\"'))
+                textIn++;
+            if (*textIn == '\0') {
                 xsltGenericError(xsltGenericErrorContext,
-				 "Unmatched quotes in input\n");
-		return result;
-	  }
-	  *textIn = '\0';
-	  textIn++; /* skip the '"' which is now a '\0'*/
-	  foundQuote = 0;
-	  result++;	    
-	}
-	  
+                                 "Error: Unmatched quotes in input\n");
+                return result;
+            }
+            *textIn = '\0';
+            textIn++;           /* skip the '"' which is now a '\0' */
+            foundQuote = 0;
+            result++;
+        }
+
     }
 
     if (*textIn != '\0')
-      result = 0; /* We have not processed all the text givent to us */
+        result = 0;             /* We have not processed all the text givent to us */
     return result;
 }
 
@@ -1111,32 +1117,34 @@ updateSearchData(xsltTransformContextPtr styleCtxt ATTRIBUTE_UNUSED,
 
     searchEmpty();
     xsltGenericError(xsltGenericErrorContext,
-                     "Updating search database, this may take a while ..\n");
+                     "Information: Updating search database, this may take a while ..\n");
     /* add items in the call stack to the search dataBase */
     addCallStackItems();
     xsltGenericError(xsltGenericErrorContext,
-                     "  Looking for breakpoints \n");
+                     "Information: Looking for breakpoints \n");
     walkBreakPoints((xmlHashScanner) addBreakPointNode, data);
 
     xsltGenericError(xsltGenericErrorContext,
-                     "  Looking for imports and top level stylesheets \n");
+                     "Information: Looking for imports and top level stylesheets \n");
     walkStylesheets((xmlHashScanner) addSourceNode, data, style);
     xsltGenericError(xsltGenericErrorContext,
-                     "  Looking for xsl:includes \n");
+                     "Information: Looking for xsl:includes \n");
     walkIncludeInst((xmlHashScanner) addIncludeNode, data, style);
     xsltGenericError(xsltGenericErrorContext,
-                     "  Looking for templates \n");
+                     "Information: Looking for templates \n");
     walkTemplates((xmlHashScanner) addTemplateNode, data, style);
     xsltGenericError(xsltGenericErrorContext,
-                     "  Looking for global variables \n");
+                     "Information: Looking for global variables \n");
     walkGlobals((xmlHashScanner) addGlobalNode, data, style);
     xsltGenericError(xsltGenericErrorContext,
-                     "  Looking for local variables \n");
+                     "Information: Looking for local variables \n");
     walkLocals((xmlHashScanner) addLocalNode, data, style);
-    xsltGenericError(xsltGenericErrorContext, "  Formatting output \n");
-    snprintf((char*)messageBuffer, sizeof(messageBuffer),
+    xsltGenericError(xsltGenericErrorContext, "Information: Formatting output \n");
+    /*
+    snprintf((char *) messageBuffer, sizeof(messageBuffer),
              "%s/searchresult.xml", stylePath());
-    searchSave((xmlChar *) messageBuffer);
+    */
+    searchSave(NULL);
     result++;
     return result;
 }
@@ -1175,6 +1183,10 @@ debugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
         xmlAddChild((xmlNodePtr) tempDoc, tempNode);
         templ = tempNode;
     }
+
+    if (node == NULL)
+      node = (xmlNodePtr)getMainDoc();
+
     if (node == NULL) {
         tempDoc = xmlNewDoc((xmlChar *) "1.0");
         if (!tempDoc)
@@ -1191,7 +1203,7 @@ debugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
         if (root->match)
             xsltGenericError(xsltGenericErrorContext,
                              "\nReached template :\"%s\"\n", root->match);
-        else if (root->name)
+	else    
             xsltGenericError(xsltGenericErrorContext,
                              "\nReached template :\"%s\"\n", root->name);
     } else
@@ -1315,7 +1327,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             if (activeBreakPoint() != NULL) {
                 xslBreakPointPtr breakPtr = activeBreakPoint();
 
-                snprintf((char*)messageBuffer, sizeof(messageBuffer),
+                snprintf((char *) messageBuffer, sizeof(messageBuffer),
                          "Breakpoint in file %s : line %ld \n",
                          breakPtr->url, breakPtr->lineNo);
             } else {
@@ -1329,11 +1341,11 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     breakUri = ctxt->node->doc->URL;
 
                 if (xmlGetLineNo(ctxt->node) != -1)
-                    snprintf((char*)messageBuffer, sizeof(messageBuffer),
+                    snprintf((char *) messageBuffer, sizeof(messageBuffer),
                              "Breakpoint at file %s : line %ld \n",
                              breakUri, xmlGetLineNo(ctxt->node));
                 else
-                    snprintf((char*)messageBuffer, sizeof(messageBuffer),
+                    snprintf((char *) messageBuffer, sizeof(messageBuffer),
                              "Breakpoint @ text node in file %s\n",
                              breakUri);
                 if (baseUri != NULL) {
@@ -1389,11 +1401,21 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
              * Get a new command line
              */
             cmdline = (xmlChar *) ctxt->input((char *) prompt);
-        } else{
+            if (cmdline) {
+                /* we get encoded characters from the command line
+                 * so decode them into UTF-8 */
+                xmlChar *tempResult = filesDecode(cmdline);
+
+                if (tempResult) {
+                    xmlFree(cmdline);
+                    cmdline = tempResult;
+                }
+            }
+        } else {
             /* don't need a prompt for running as when running as a thread */
-	     xmlStrCpy(messageBuffer, "");
-            cmdline = (xmlChar *) ctxt->input((char*)messageBuffer);
-	}
+            xmlStrCpy(messageBuffer, "");
+            cmdline = (xmlChar *) ctxt->input((char *) messageBuffer);
+        }
 
         if (cmdline == NULL)
             break;
@@ -1630,7 +1652,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                                           xmlGetLineNo(ctxt->node));
                     if (!breakPoint || !deleteBreakPoint(breakPoint)) {
                         xsltGenericError(xsltGenericErrorContext,
-                                         "Unable to add delete point");
+                                         "Error: Unable to delete point\n");
                         cmdResult = 0;
                     }
                 }
@@ -1652,7 +1674,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         (!enableBreakPoint
                          (breakPoint, !breakPoint->enabled))) {
                         xsltGenericError(xsltGenericErrorContext,
-                                         "Unable to add enable/disable point\n");
+                                         "Error: Unable to enable/disable point\n");
                         cmdResult = 0;
                     }
                 }
@@ -1669,11 +1691,9 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                             getBreakPoint(filesGetBaseUri(ctxt->node),
                                           xmlGetLineNo(ctxt->node));
                     if (!breakPoint
-                        ||
-                        (!enableBreakPoint
-                         (breakPoint, !!breakPoint->enabled))) {
+                        || !enableBreakPoint(breakPoint, 0)) {
                         xsltGenericError(xsltGenericErrorContext,
-                                         "Unable to add enable/disable point\n");
+                                         "Error: Unable to disable point\n");
                         cmdResult = 0;
                     }
                 }
@@ -1732,7 +1752,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                                                          DEBUG_GLOBAL_VAR);
                 else {
                     xsltGenericError(xsltGenericErrorContext,
-                                     "Need to use run command first\n");
+                                     "Error: Need to use run command first\n");
                     cmdResult = 0;
                 }
                 break;
@@ -1743,7 +1763,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                                                          DEBUG_LOCAL_VAR);
                 else {
                     xsltGenericError(xsltGenericErrorContext,
-                                     "Need to use run command first\n");
+                                     "Error: Need to use run command first\n");
                     cmdResult = 0;
                 }
                 break;
@@ -1907,6 +1927,9 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 cmdResult = xslDbgPublic(arg);
                 break;
 
+            case DEBUG_ENCODING_CMD:
+                cmdResult = xslDbgEncoding(arg);
+                break;
 
             case DEBUG_VALIDATE_CMD:
                 xsltGenericError(xsltGenericErrorContext,
@@ -1989,68 +2012,86 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     long optValue;
                     long optID;
 
-                    if (splitString(arg, 2, opts) == 2) {		      
-                            optID =
-                                lookupName(opts[0],
-                                           (xmlChar **) optionNames);
-                            if (optID >= 0) {
-			      if (optID <= (OPTIONS_VERBOSE - OPTIONS_XINCLUDE)){
-				/* handle setting integer option */
-				if (!sscanf((char *) opts[1], "%ld", &optValue)) {
-				  xsltGenericError(xsltGenericErrorContext,
-						   "Error : Unable to parse integer value for option \n");
-				}else{
-				  cmdResult = setIntOption(optID + OPTIONS_XINCLUDE,
-					       optValue);
-				}
-			      } else{
-				/* handle setting a string option */
-				cmdResult = setStringOption(optID + OPTIONS_XINCLUDE, opts[1]);
-				
-			      }
+                    if (splitString(arg, 2, opts) == 2) {
+                        optID =
+                            lookupName(opts[0], (xmlChar **) optionNames);
+                        if (optID >= 0) {
+                            if (optID <=
+                                (OPTIONS_VERBOSE - OPTIONS_XINCLUDE)) {
+                                /* handle setting integer option */
+                                if (!sscanf
+                                    ((char *) opts[1], "%ld", &optValue)) {
+                                    xsltGenericError
+                                        (xsltGenericErrorContext,
+                                         "Error : Unable to parse integer value for option \n");
+                                } else {
+                                    cmdResult =
+                                        setIntOption(optID +
+                                                     OPTIONS_XINCLUDE,
+                                                     optValue);
+                                }
                             } else {
-                                xsltGenericError(xsltGenericErrorContext,
-                                                 "Unknown option name %s\n",
-                                                 opts[0]);
-                            }
-		    }else {
-		      xsltGenericError(xsltGenericErrorContext,
-				       "Expected two arguments to setoption command\n");
-		}
-                }else {
-		  xsltGenericError(xsltGenericErrorContext,
-				   "Expected two arguments to setoption command\n");
-		}
-                break;
-		
-	case DEBUG_OPTIONS_CMD:
-	  {
-	    int optionIndex;
-	    xsltGenericError(xsltGenericErrorContext,"\n");
-	    /* Print out the integer options and thier values */
-	    for (optionIndex = OPTIONS_XINCLUDE; optionIndex <= OPTIONS_VERBOSE; optionIndex++){
-	      /* skip any non-user options */
-	      if (optionNames[optionIndex - OPTIONS_XINCLUDE][0] != '*'){
-	            xsltGenericError(xsltGenericErrorContext,
-				     "Option %s = %d\n",  optionNames[optionIndex - OPTIONS_XINCLUDE],
-				     getIntOption(optionIndex));
-	      }
-	    }
-	    /* Print out the string options and thier values */
-	    for (optionIndex = OPTIONS_OUTPUT_FILE_NAME; optionIndex <= OPTIONS_DATA_FILE_NAME; optionIndex++){
-	      if (getStringOption(optionIndex) != NULL){
-	            xsltGenericError(xsltGenericErrorContext,
-				     "Option %s = \"%s\"\n",  optionNames[optionIndex - OPTIONS_XINCLUDE],
-				     getStringOption(optionIndex));
-	      }else{
-	            xsltGenericError(xsltGenericErrorContext,
-				     "Option %s = \"\"\n",  optionNames[optionIndex - OPTIONS_XINCLUDE]);
-	      }
+                                /* handle setting a string option */
+                                cmdResult =
+                                    setStringOption(optID +
+                                                    OPTIONS_XINCLUDE,
+                                                    opts[1]);
 
-	    }	     
-	    xsltGenericError(xsltGenericErrorContext,"\n");   	    
-	  }
-	  break;
+                            }
+                        } else {
+                            xsltGenericError(xsltGenericErrorContext,
+                                             "Error: Unknown option name %s\n",
+                                             opts[0]);
+                        }
+                    } else {
+                        xsltGenericError(xsltGenericErrorContext,
+                                         "Error expected: two arguments to setoption command\n");
+                    }
+                } else {
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "Error: Expected two arguments to setoption command\n");
+                }
+                break;
+
+            case DEBUG_OPTIONS_CMD:
+                {
+                    int optionIndex;
+
+                    xsltGenericError(xsltGenericErrorContext, "\n");
+                    /* Print out the integer options and thier values */
+                    for (optionIndex = OPTIONS_XINCLUDE;
+                         optionIndex <= OPTIONS_VERBOSE; optionIndex++) {
+                        /* skip any non-user options */
+                        if (optionNames[optionIndex - OPTIONS_XINCLUDE][0]
+                            != '*') {
+                            xsltGenericError(xsltGenericErrorContext,
+                                             "Option %s = %d\n",
+                                             optionNames[optionIndex -
+                                                         OPTIONS_XINCLUDE],
+                                             getIntOption(optionIndex));
+                        }
+                    }
+                    /* Print out the string options and thier values */
+                    for (optionIndex = OPTIONS_OUTPUT_FILE_NAME;
+                         optionIndex <= OPTIONS_DATA_FILE_NAME;
+                         optionIndex++) {
+                        if (getStringOption(optionIndex) != NULL) {
+                            xsltGenericError(xsltGenericErrorContext,
+                                             "Option %s = \"%s\"\n",
+                                             optionNames[optionIndex -
+                                                         OPTIONS_XINCLUDE],
+                                             getStringOption(optionIndex));
+                        } else {
+                            xsltGenericError(xsltGenericErrorContext,
+                                             "Option %s = \"\"\n",
+                                             optionNames[optionIndex -
+                                                         OPTIONS_XINCLUDE]);
+                        }
+
+                    }
+                    xsltGenericError(xsltGenericErrorContext, "\n");
+                }
+                break;
 
             case DEBUG_TTY_CMD:
                 if (openTerminal(arg)) {
@@ -2096,7 +2137,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
             default:
                 xmlGenericError(xmlGenericErrorContext,
-                                "Unknown command %s, try help\n", command);
+                                "Error: Unknown command %s, try help\n", command);
                 cmdResult = 0;
         }
 
@@ -2127,9 +2168,10 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
         /* notify any listeners of that the command failed */
         if (cmdResult == 0) {
-            snprintf((char*)messageBuffer, sizeof(messageBuffer),
+            snprintf((char *) messageBuffer, sizeof(messageBuffer),
                      "\nRequest to xsldbg failed:%s\n", cmdline);
-            notifyTextXsldbgApp(XSLDBG_MSG_TEXTOUT, (char*)messageBuffer);
+            notifyTextXsldbgApp(XSLDBG_MSG_TEXTOUT,
+                                (char *) messageBuffer);
         }
 
         xmlFree(cmdline);

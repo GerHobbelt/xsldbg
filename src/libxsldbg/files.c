@@ -25,6 +25,7 @@
 #include <libxml/tree.h>
 #include <libxml/catalog.h>
 #include <libxml/parserInternals.h>
+#include <libxml/encoding.h>    /* needed by filesTranslate, filesEncoding functions */
 
 #include "xsldbg.h"
 #include "debugXSL.h"
@@ -52,8 +53,14 @@ static xmlChar *stylePathName = NULL;
 /* what is the path for current working directory*/
 static xmlChar *workingDirPath = NULL;
 
-
 static ArrayListPtr entityNameList = NULL;
+
+/* Current encoding to use for standard output*/
+static xmlCharEncodingHandlerPtr stdoutEncoding = NULL;
+
+/* input and output buffers for encoding*/
+static xmlBufferPtr encodeInBuff = NULL;
+static xmlBufferPtr encodeOutBuff = NULL;
 
 /* -----------------------------------------
    Private function declarations for files.c
@@ -172,7 +179,7 @@ openTerminal(xmlChar * device)
             case '1':
                 /* redirect only some output to terminal */
                 if (!terminalIO && termName) {
-                    terminalIO = fopen((char*)device, "w");
+                    terminalIO = fopen((char *) device, "w");
                     if (terminalIO) {
                         result++;
                     } else {
@@ -229,7 +236,7 @@ openTerminal(xmlChar * device)
         /* just open the terminal the user will need to provide a
          * tty level by invoking tty command again with a value of 0 - 9
          */
-        terminalIO = fopen((char*)device, "w");
+        terminalIO = fopen((char *) device, "w");
         if (terminalIO != NULL) {
             termName = xmlMemStrdup((char *) device);
             /*
@@ -676,11 +683,16 @@ loadXmlFile(const xmlChar * path, FileTypeEnum fileType)
                                          "Setting stylesheet base path to %s\n",
                                          stylePathName);
                     }
-                }else{
-		  const char cwd[4] = {'.', PATHCHAR, '\0'}; 
-		  /* ie for *nix this becomes "./" */
-		  stylePathName = xmlStrdup(BAD_CAST cwd);
-		}
+                } else {
+                    const char cwd[4] = { '.', PATHCHAR, '\0' };
+
+                    /* ie for *nix this becomes "./" */
+                    stylePathName = xmlStrdup(BAD_CAST cwd);
+                }
+
+                /* try to find encoding for this stylesheet */
+                if (isOptionEnabled(OPTIONS_AUTOENCODE))
+                    filesSetEncoding((char*)topStylesheet->encoding);
             }
             break;
 
@@ -839,7 +851,10 @@ filesInit(void)
     xmlSetEntityReferenceFunc(filesEntityRef);
 #endif
 
-    if (entityNameList != NULL)
+    /* setup the encoding */
+    encodeInBuff = xmlBufferCreate();
+    encodeOutBuff = xmlBufferCreate();
+    if (entityNameList && encodeInBuff && encodeOutBuff)
         result++;
     return result;
 }
@@ -871,9 +886,9 @@ filesFree(void)
     if (!result)
         xsltGenericError(xsltGenericErrorContext,
                          "Unable to free memory used by xml/xsl files\n");
-    if (stylePathName){
-      xmlFree(stylePathName);
-      stylePathName = NULL;
+    if (stylePathName) {
+        xmlFree(stylePathName);
+        stylePathName = NULL;
     }
 
     if (workingDirPath) {
@@ -885,6 +900,16 @@ filesFree(void)
         arrayListFree(entityNameList);
         entityNameList = NULL;
     }
+
+    /* Free memory used by encoding related structures */
+    if (encodeInBuff)
+        xmlBufferFree(encodeInBuff);
+
+    if (encodeOutBuff)
+        xmlBufferFree(encodeOutBuff);
+
+    /* close current encoding */
+    filesSetEncoding(NULL);
 }
 
 
@@ -914,7 +939,7 @@ filesNewEntityInfo(const xmlChar * SystemID, const xmlChar * PublicID)
         if (SystemID)
             result->SystemID = xmlStrdup(SystemID);
         else
-            result->SystemID = xmlStrdup( BAD_CAST "");
+            result->SystemID = xmlStrdup(BAD_CAST "");
 
         if (PublicID)
             result->PublicID = xmlStrdup(PublicID);
@@ -1116,7 +1141,7 @@ filesTempFileName(int fileNumber)
 
     const char *result = NULL;
 
-    if ((fileNumber < 0) || ((fileNumber + 1) > (int)sizeof(tempNames)))
+    if ((fileNumber < 0) || ((fileNumber + 1) > (int) sizeof(tempNames)))
         xsltGenericError(xsltGenericErrorContext,
                          "Unable to allocate temporary file %d for xsldbg\n",
                          fileNumber);
@@ -1179,12 +1204,129 @@ filesLoadCatalogs(void)
 #endif
                     return result;
                 } else
-                    setStringOption(OPTIONS_CATALOG_NAMES, (xmlChar*)catalogs);
+                    setStringOption(OPTIONS_CATALOG_NAMES,
+                                    (xmlChar *) catalogs);
             } else
-                catalogs = (char*)getStringOption(OPTIONS_CATALOG_NAMES);
+                catalogs = (char *) getStringOption(OPTIONS_CATALOG_NAMES);
             xmlLoadCatalogs(catalogs);
         }
         result++;
+    }
+    return result;
+}
+
+
+
+
+  /**
+   * filesEncode:
+   * @text: Is valid, text to translate from UTF-8, 
+   *
+   * Return  A  new string of converted @text
+   *
+   * Returns  A  new string of converted @text, may be NULL
+   */
+xmlChar *
+filesEncode(const xmlChar * text)
+{
+    xmlChar *result = NULL;
+
+    if (!stdoutEncoding || !encodeInBuff || !encodeOutBuff)
+        return xmlStrdup(text); /* no encoding active return as UTF-8 */
+
+    xmlBufferEmpty(encodeInBuff);
+    xmlBufferEmpty(encodeOutBuff);
+    xmlBufferCat(encodeInBuff, text);
+
+    if (xmlCharEncOutFunc(stdoutEncoding, encodeOutBuff, encodeInBuff) >=
+        0) {
+        result = xmlStrdup(xmlBufferContent(encodeOutBuff));
+    } else {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Encoding of text failed\n");
+        return xmlStrdup(text); /*  panic,  return as UTF-8 */
+    }
+    return result;
+}
+
+
+
+  /**
+   * filesDeccode:
+   * @text: Is valid, text to translate from current encoding to UTF-8, 
+   *
+   * Return  A  string of converted @text
+   *
+   * Returns  A  string of converted @text, may be NULL
+   */
+xmlChar *
+filesDecode(const xmlChar * text)
+{
+    xmlChar *result = NULL;
+
+    if (!stdoutEncoding || !encodeInBuff || !encodeOutBuff)
+        return xmlStrdup(text); /* no encoding active return as UTF-8 */
+
+    xmlBufferEmpty(encodeInBuff);
+    xmlBufferEmpty(encodeOutBuff);
+    xmlBufferCat(encodeInBuff, text);
+
+    if (xmlCharEncInFunc(stdoutEncoding, encodeOutBuff, encodeInBuff) >= 0) {
+        result = xmlStrdup(xmlBufferContent(encodeOutBuff));
+    } else {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Encoding of text failed\n");
+        return xmlStrdup(text); /*  panic,  return @text unchanged */
+    }
+    return result;
+}
+
+
+  /*
+   * filesSetEncoding:
+   * @encoding : Is a valid encoding supported by the iconv library or NULL
+   *
+   * Opens encoding for all standard output to @encoding. If  @encoding 
+   *        is NULL then close current encoding and use UTF-8 as output encoding
+   *
+   * Returns 1 if successful in setting the encoding of all standard output
+   *           to @encoding
+   *         0 otherwise
+   */
+int
+filesSetEncoding(const char *encoding)
+{
+    int result = 0;
+
+    if (encoding) {
+        /* don't switch encoding unless we've found a valid encoding */
+        xmlCharEncodingHandlerPtr tempEncoding =
+            xmlFindCharEncodingHandler(encoding);
+        if (tempEncoding) {
+            filesSetEncoding(NULL);     /* re-use code to close encoding */
+            stdoutEncoding = tempEncoding;
+            result =
+                (xmlCharEncOutFunc(stdoutEncoding, encodeOutBuff, NULL) >=
+                 0);
+            if (!result) {
+                xmlCharEncCloseFunc(stdoutEncoding);
+                stdoutEncoding = NULL;
+                xsltGenericError(xsltGenericErrorContext,
+                                 "Unable to initialize encoding %s",
+                                 encoding);
+            } else
+                setStringOption(OPTIONS_ENCODING, (xmlChar*) encoding);
+        } else {
+            xsltGenericError(xsltGenericErrorContext,
+                             "Invalid encoding %s\n", encoding);
+        }
+    } else {
+        /* close encoding and use UTF-8 */
+        if (stdoutEncoding)
+            result = (xmlCharEncCloseFunc(stdoutEncoding) >= 0);
+        else
+            result++;
+        stdoutEncoding = NULL;
     }
     return result;
 }

@@ -1,5 +1,5 @@
 
-         xsldbg version 1.0.1
+         xsldbg version 1.0.2
          ====================
    
     xsldbg help
@@ -392,6 +392,7 @@ Usage:
      docbook   (If <INTEGER_VALUE> is true the input document is SGML docbook)
      xinclude   (If <INTEGER_VALUE> is true do XInclude processing on document intput)
      preferhtml   (If <INTEGER_VALUE> is true the prefer html output for search results. : See search command)
+     autoencode   (Try to use the encoding from the stylesheet)
      nonet   (If <INTEGER_VALUE> is true refuse to fetch DTDs or entities over network)
      novalid   (If <INTEGER_VALUE> is true skip the DTD loading phase)
      repeat   (If <INTEGER_VALUE> is true run the transformation 20 times)
@@ -410,6 +411,7 @@ Usage:
      output   (Output file's SystemID )
      docspath   (Path to use when looking for documentation)
      catalognames   (The names of the catalogs to use when the catalogs option is set. Value will be lost if set before setting catalogs option)
+     encoding   (What encoding to use for standard output)
 
 - - - - - - - - - - - - - - - - - - - - 
 

@@ -51,7 +51,7 @@ helpTop(const xmlChar * args)
     int result = 0;
 
 #ifdef __riscos
-   docsDirPath = unixfilename(docsDirPath);
+    docsDirPath = unixfilename(docsDirPath);
 #endif
 
     if (xmlStrLen(args) > 0) {
@@ -109,7 +109,7 @@ helpTop(const xmlChar * args)
 int
 helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
 {
-  int result = 0;
+    int result = 0;
     xmlChar buff[500];
     char *docsDirPath = (char *) getStringOption(OPTIONS_DOCS_PATH);
 
@@ -134,12 +134,12 @@ helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
             }
             fprintf(stdout, "\n");
             fclose(f);
-	    result++;
-        } else{
+            result++;
+        } else {
             xsltGenericError(xsltGenericErrorContext,
                              "Help failed : could not open %s\n", buff);
-	    return result;
-	}
+            return result;
+        }
 #else
         snprintf((char *) buff, sizeof(buff), "more %sxsldoc.txt",
                  docsDirPath);
@@ -148,8 +148,8 @@ helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
             xsltGenericError(xsltGenericErrorContext,
                              "Help failed : Maybe help files not found in %s or "
                              "more not found in path\n", docsDirPath);
-        }else
-	  result++;
+        } else
+            result++;
 #endif
     } else {
         xsltGenericError(xsltGenericErrorContext,

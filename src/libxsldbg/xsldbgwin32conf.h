@@ -29,10 +29,10 @@
     
 #ifndef WITH_DEBUGGER
 #define WITH_DEBUGGER
-#endif  /*  */
+#endif /*  */
     
 #ifndef WITH_DEBUG_HELP
 #define WITH_DEBUG_HELP
-#endif  /*  */
+#endif /*  */
     
-#endif  /*  */
+#endif /*  */

@@ -66,6 +66,7 @@ typedef enum {                  /* id's for commands of xslDbgShell */
     DEBUG_ENTITIES_CMD,
     DEBUG_SYSTEM_CMD,
     DEBUG_PUBLIC_CMD,
+    DEBUG_ENCODING_CMD,
     DEBUG_VALIDATE_CMD,
     DEBUG_LOAD_CMD,
     DEBUG_SAVE_CMD,
@@ -82,7 +83,7 @@ typedef enum {                  /* id's for commands of xslDbgShell */
     DEBUG_DELPARAM_CMD,
     DEBUG_SHOWPARAM_CMD,
     DEBUG_SETOPTION_CMD,
-    DEBUG_OPTIONS_CMD, /* print options */
+    DEBUG_OPTIONS_CMD,          /* print options */
 
     /* extra options/commands */
     DEBUG_TRACE_CMD,

@@ -41,7 +41,7 @@
  *         0 otherwise
  */
 int
-xslDbgShellChangeWd(const xmlChar * path)
+xslDbgShellChangeWd(xmlChar * path)
 {
     int result = 0;
 

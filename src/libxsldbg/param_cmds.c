@@ -38,7 +38,7 @@
 /** 
  * xslDbgShellAddParam:
  * @arg: A string comprised of two words separated by
- *          one or more spaces. 
+ *          one or more spaces which are in UTF-8 
  *
  * Add a libxslt parameter to be sent to libxslt later on
  *

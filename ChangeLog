@@ -1,4 +1,13 @@
-Keith Isdale 23 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 28 Jan 2002 <k_isdale@tpg.com.au>
+   Version 1.0.2
+   Added support for encoding output to standard output ( encoding command )
+   Added auto detection of encodinge ( autoencode option )
+   Fixed result of locals and globals command to be consistant with
+	rest of project	
+   Fixed formatting of several error messages
+   Fixed disable command to always disable the breakpoint
+	
+Keith Isdale 27 Jan 2002 <k_isdale@tpg.com.au>
    Version 1.0.1
    Added suport for quoted values to splitstring function in debugXSL.c so you now 
 	can do something like
@@ -7,7 +16,7 @@ Keith Isdale 23 Jan 2002 <k_isdale@tpg.com.au>
    Updates xsldoc.xml to suit
    Merged in changes suggested by Justin to suit risc os   
 	
-Keith Isdale 23 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 24 Jan 2002 <k_isdale@tpg.com.au>
    Version 1.0.0
    Changed default "data" file name for  searchQuery to searchresults.xml
 	Set the "base path" for temporary and output files to current stylesheet path

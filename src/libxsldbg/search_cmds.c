@@ -36,7 +36,7 @@
  * xslDbgShellSearch:
  * @styleCtxt: Is valid
  * @style: Is valid
- * @arg: The xpath query to use for searching dataBase
+ * @arg: The xpath query to use for searching dataBase and in UTF-8
  * 
  * Displays the result of performing a query on the search dataBase
  *

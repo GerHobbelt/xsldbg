@@ -69,7 +69,7 @@ int validateData(xmlChar ** url, long *lineNo);
 
 /**
  * xslDbgShellFrameBreak:
- * @arg: Is valid 
+ * @arg: Is valid number of frames to change location by
  * @stepup: If != 1 then we step up, otherwise step down
  *
  * Set a "frame" break point either up or down from here
@@ -288,7 +288,7 @@ validateData(xmlChar ** url, long *lineNo)
 
 /**
  * xslDbgShellBreak:
- * @arg: Is valid
+ * @arg: Is valid and in UTF-8
  * @style: Is valid
  * @ctxt: Is valid
  * 
@@ -343,7 +343,6 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                                     addBreakPoint(url, lineNo, NULL,
                                                   DEBUG_BREAK_DATA);
                         }
-                        xmlFree(url);
                     }
                 }
             } else
@@ -425,7 +424,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
     }
 
     if (!result) {
-        if (url)
+      if (url)
             xsltGenericError(xsltGenericErrorContext,
                              "Failed to add breakpoint "
                              "at file %s: line %ld\n", url, lineNo);
@@ -433,13 +432,16 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
             xsltGenericError(xsltGenericErrorContext,
                              "Failed to add breakpoint(s)\n");
     }
+
+    if (url)
+      xmlFree(url);
     return result;
 }
 
 
 /**
  * xslDbgShellDelete:
- * @arg: Is valid
+ * @arg: Is valid and in UTF-8
  * 
  * Delete break point specified by arg
  *
@@ -554,7 +556,7 @@ xslDbgEnableBreakPoint(void *payload, void *data,
 
 /**
  * xslDbgShellEnable:
- * @arg : is valid
+ * @arg : is valid and in UTF-8
  * @enableType : enable break point if 1, disable if 0, toggle if -1
  *
  * Enable/disable break point specified by arg using enable 
@@ -661,7 +663,7 @@ xslDbgPrintBreakPoint(void *payload, void *data ATTRIBUTE_UNUSED,
         } else {
             printCount++;
             xsltGenericError(xsltGenericErrorContext, " ");
-            printBreakPoint(stderr, (xslBreakPointPtr) payload);
+            printBreakPoint(NULL, (xslBreakPointPtr) payload);
             xsltGenericError(xsltGenericErrorContext, "\n");
         }
     }

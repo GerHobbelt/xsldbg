@@ -64,12 +64,14 @@ extern "C" {
         OPTIONS_WALK_SPEED,     /* How fast do we walk through code */
         OPTIONS_CATALOGS,       /* Get the catalogs from SGML_CATALOG_FILES and
                                  * store it in OPTIONS_CATALOG_NAMES */
-	OPTIONS_PREFER_HTML,    /* Prefer html output for search results */
+        OPTIONS_PREFER_HTML,    /* Prefer html output for search results */
+        OPTIONS_AUTOENCODE,     /* try to use the encoding from the stylesheet */
         OPTIONS_VERBOSE,        /* Be verbose with messages */
-        OPTIONS_OUTPUT_FILE_NAME, /* what is the output file name */
+        OPTIONS_OUTPUT_FILE_NAME,       /* what is the output file name */
         OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */
         OPTIONS_DOCS_PATH,      /* path of xsldbg's documentation */
         OPTIONS_CATALOG_NAMES,  /* the names of the catalogs to use when catalogs option is active */
+        OPTIONS_ENCODING,       /* What encoding to use for standard output */
         OPTIONS_DATA_FILE_NAME  /* xml data file to use */
     } OptionTypeEnum;
 
@@ -120,14 +122,16 @@ extern "C" {
         OPTIONS_WALK_SPEED,     /* How fast do we walk through code */
         OPTIONS_CATALOGS,       /* Get the catalogs from SGML_CATALOG_FILES and
                                  * store it in OPTIONS_CATALOG_NAMES */
-	OPTIONS_PREFER_HTML,    /* Prefer html output for search results */
+        OPTIONS_PREFER_HTML,    /* Prefer html output for search results */
+        OPTIONS_AUTOENCODE,     /* try to use the encoding from the stylesheet */
         OPTIONS_VERBOSE,        /* Be verbose with messages */
-        OPTIONS_OUTPUT_FILE_NAME, /* what is the output file name */
+        OPTIONS_OUTPUT_FILE_NAME,       /* what is the output file name */
         OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */
         OPTIONS_DOCS_PATH,      /* path of xsldbg's documentation */
         OPTIONS_CATALOG_NAMES,  /* the names of the catalogs to use when catalogs option is active */
+        OPTIONS_ENCODING,       /* What encoding to use for standard output */
         OPTIONS_DATA_FILE_NAME  /* xml data file to use */
-     };
+    };
 
     /* define what tracing is used */
     enum TraceModeEnum {

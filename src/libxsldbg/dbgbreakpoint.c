@@ -528,7 +528,7 @@ getBreakPoint(const xmlChar * url, long lineNumber)
 
 /**
  * printBreakPoint:
- * @file: Is valid
+ * @file: Is valid, or NULL to use libxslt error function
  * @breakPoint: A valid break point
  *
  * Print the details of @breakPoint to @file
@@ -541,24 +541,47 @@ printBreakPoint(FILE * file, xslBreakPointPtr breakPoint)
 {
     int result = 0;
 
-    if (!file || !breakPoint)
+    if (!breakPoint)
         return result;
-
-    fprintf(file, "Breakpoint %d ", breakPoint->id);
-    if (breakPoint->enabled)
+    if (file){
+      /* support old meaning of file parameter */
+      fprintf(file, "Breakpoint %d ", breakPoint->id);
+      if (breakPoint->enabled)
         fprintf(file, "enabled ");
-    else
+      else
         fprintf(file, "disabled ");
 
-    if (breakPoint->templateName) {
+      if (breakPoint->templateName) {
         fprintf(file, "for template :\"%s\" ", breakPoint->templateName);
-    }
+      }
 
-    if (breakPoint->url) {
+      if (breakPoint->url) {
         fprintf(file, "in file %s : line %ld",
                 breakPoint->url, breakPoint->lineNo);
-    } else {
+      } else {
         fprintf(file, "in file <n/a>, line %ld", breakPoint->lineNo);
+      }
+    }else{
+      xsltGenericError(xsltGenericErrorContext,
+		        "Breakpoint %d ", breakPoint->id);
+      if (breakPoint->enabled)
+	xsltGenericError(xsltGenericErrorContext, "enabled ");
+      else
+	xsltGenericError(xsltGenericErrorContext,"disabled ");
+
+      if (breakPoint->templateName) {
+	xsltGenericError(xsltGenericErrorContext,
+			 "for template :\"%s\" ", breakPoint->templateName);
+      }
+
+      if (breakPoint->url) {
+	xsltGenericError(xsltGenericErrorContext,
+			 "in file %s : line %ld",
+			 breakPoint->url, breakPoint->lineNo);
+      } else {
+	xsltGenericError(xsltGenericErrorContext,
+			 "in file <n/a>, line %ld", breakPoint->lineNo);
+      }
     }
     return ++result;
 }

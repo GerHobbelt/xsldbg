@@ -84,7 +84,7 @@ xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
                           int *templateCount, int *printCount,
                           xmlChar * templateName)
 {
-    const xmlChar *name, *defaultUrl = (xmlChar *) "<n/a>";
+    xmlChar *name, *defaultUrl = (xmlChar *) "<n/a>";
     const xmlChar *url;
 
     if (templ) {
@@ -97,9 +97,9 @@ xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
             url = defaultUrl;
         }
         if (templ->match)
-            name = templ->match;
+            name = xmlStrdup(templ->match);
         else
-            name = templ->name;
+            name = xmlStrdup(templ->name);
 
         if (name) {
             if ((templateName != NULL) &&
@@ -121,6 +121,7 @@ xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
                                          "\"%s\" ", name);
                 }
             }
+            xmlFree(name);
         }
         templ = templ->next;
     }
@@ -154,7 +155,6 @@ xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
     xsltStylesheetPtr curStyle;
     xsltTemplatePtr templ;
 
-    trimString(arg);
     if (xmlStrLen(arg) == 0) {
         arg = NULL;
     } else {
@@ -278,7 +278,7 @@ xslDbgShellPrintStylesheetsHelper2(void *payload,
 
 /**
  * xslDbgPrintStyleSheets:
- * @arg: The stylesheets of interests, is NULL for all stylsheets
+ * @arg: The stylesheets of interests and in UTF-8, is NULL for all stylsheets
  *
  * Print stylesheets that can be found in loaded stylsheet
  *

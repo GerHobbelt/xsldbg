@@ -554,7 +554,7 @@ extern "C" {
 
 /**
  * printBreakPoint:
- * @file: Is valid
+ * @file: Is valid, or NULL to use libxslt's error display function
  * @breakPoint: A valid break point
  *
  * Print the details of @breakPoint to @file
@@ -571,7 +571,7 @@ extern "C" {
  * @returns 1 if successful,
  *	    0 otherwise
  *
- * @param file Is valid
+ * @param file Is valid, or NULL to use libxslt's error display function
  * @param breakPoint A valid break point
  */
 #endif
@@ -637,6 +637,7 @@ extern "C" {
     int isBreakPointNode(xmlNodePtr node);
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * xslBreakPointLinesList:
  *
@@ -644,7 +645,7 @@ extern "C" {
  *        Dangerous function to use!! 
  */
 #endif
-ArrayListPtr xslBreakPointLineList(void);
+    ArrayListPtr xslBreakPointLineList(void);
 
 
 #ifdef __cplusplus

@@ -34,6 +34,7 @@
 /* -----------------------------------------
    Private function declarations for nodeview_cmds.c
  -------------------------------------------*/
+static xmlChar buffer[500];
 
 /*
  * xslDbgShellPrintNames:
@@ -63,7 +64,7 @@ void xslShellCat(xmlNodePtr node, FILE * file);
 /**
  * xslDbgShellPrintList: 
  * @ctxt: The current shell context
- * @arg: What xpath to display
+ * @arg: What xpath to display and in UTF-8
  * @dir: If 1 print in dir mode?, 
  *        otherwise ls mode
  *
@@ -80,7 +81,7 @@ xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir)
 
     if (!ctxt || !arg) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Debugger has no files loaded, try reloading files\n");
+                         "Error: Debugger has no files loaded, try reloading files\n");
         return result;
     }
 
@@ -102,16 +103,16 @@ xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir)
                 case XPATH_NODESET:{
                         int indx;
 
-                        for (indx = 0; 
-			     indx < list->nodesetval->nodeNr;
-                             indx++) {
+                        for (indx = 0;
+                             indx < list->nodesetval->nodeNr; indx++) {
                             if (dir)
-			      xmlShellList(ctxt, NULL,
-				 list->nodesetval->nodeTab[indx], NULL);
+                                xmlShellList(ctxt, NULL,
+                                             list->nodesetval->
+                                             nodeTab[indx], NULL);
                             else
                                 xmlShellList(ctxt, NULL,
-                                             list->nodesetval->nodeTab[indx], 
-					     NULL);
+                                             list->nodesetval->
+                                             nodeTab[indx], NULL);
                         }
                         result++;
                         break;
@@ -122,7 +123,7 @@ xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir)
             xmlXPathFreeObject(list);
         } else {
             xmlGenericError(xmlGenericErrorContext,
-                            "%s: no such node\n", arg);
+                            "Error: %s no such node\n", arg);
         }
         ctxt->pctxt->node = NULL;
     }
@@ -151,7 +152,19 @@ xslShellCat(xmlNodePtr node, FILE * file)
         else
             htmlNodeDumpFile(file, node->doc, node);
     } else if (node->type == XML_DOCUMENT_NODE) {
+        /* turn off encoding for the moment and just dump UTF-8 
+           which will be converted by xsldbgGeneralErrorFunc */
+        xmlDocPtr doc = (xmlDocPtr) node;
+        const xmlChar *encoding = doc->encoding;
+	if (encoding){
+	  xsltGenericError(xsltGenericErrorContext,
+			   "Information: Temporarily setting document's" \
+			 " encoding to UTF-8, was previously %s\n",
+			  encoding);
+	}
+	doc->encoding = (xmlChar*)"UTF-8";
         xmlDocDump(file, (xmlDocPtr) node);
+	doc->encoding = encoding;
     } else {
         xmlElemDump(file, node->doc, node);
     }
@@ -162,7 +175,7 @@ xslShellCat(xmlNodePtr node, FILE * file)
  * xslDbgShellCat:
  * @styleCtxt: the current stylesheet context
  * @ctxt: The current shell context
- * @arg: The xpath to print
+ * @arg: The xpath to print (in UTF-8)
  *
  * Print the result of an xpath expression. This can include variables
  *        if styleCtxt is not NULL
@@ -181,14 +194,46 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
 
     if (!ctxt) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Debuger has no files loaded, try reloading files\n");
+                         "Error: Debuger has no files loaded, try reloading files\n");
         return result;
     }
     if (arg == NULL)
         arg = (xmlChar *) "";
+
     if (arg[0] == 0) {
-        xmlShellCat(ctxt, NULL, ctxt->node, NULL);
+      /* do a cat of the current node */
+      const char *fileName =
+	filesTempFileName(0);
+      FILE *file;
+      
+      if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
+	/* send it to the application as an UTF-8 message */
+	xmlShellCat(ctxt, NULL, ctxt->node, NULL);
+	result++;
+	return result;
+      }
+
+      if (!fileName){	    
+	xsltGenericError(xsltGenericErrorContext,
+			 "Error: Can't create temporary file for xslDbgCat\n");
+	return result;
+      }
+
+      file = fopen(fileName, "w+");
+      if (file) {
+	xslShellCat(ctxt->node, file);
+	fflush(file);
+	rewind(file);
+	while (!feof(file) && fgets((char*)buffer, sizeof(buffer), file)){
+	    xsltGenericError(xsltGenericErrorContext, "%s", buffer);	      
+	}
+	xsltGenericError(xsltGenericErrorContext, "\n");
+	fclose(file);
         result++;
+      }else
+	xsltGenericError(xsltGenericErrorContext,
+			 "Error: Can't open temporary file %s for xslDbgCat\n",
+			 fileName);
     } else {
         ctxt->pctxt->node = ctxt->node;
         if (!styleCtxt) {
@@ -221,7 +266,7 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                                 if (!file) {
                                     xsltGenericError
                                         (xsltGenericErrorContext,
-                                         "Unable to save temporary results to %s\n",
+                                         "Error: Unable to save temporary results to %s\n",
                                          fileName);
                                     break;
                                 } else {
@@ -252,7 +297,7 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                             }
                         } else {
                             xsltGenericError(xmlGenericErrorContext,
-                                             "xpath %s: results an in empty set\n",
+                                             "Error: xpath %s results an in empty set\n",
                                              arg);
                         }
                         result++;
@@ -272,19 +317,22 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                     result++;
                     break;
                 case XPATH_STRING:
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "%s is a string:%s\n", arg,
-                                     list->stringval);
-                    result++;
-                    break;
+		  if (list->stringval) {
+		    xsltGenericError(xsltGenericErrorContext,
+				     "%s is a string:%s\n",
+				     arg, list->stringval);
+		    result++;
+		  }
+		  break;
 
                 default:
-                    xmlShellPrintXPathError(list->type, (char *) arg);
-            }
+                    xmlShellPrintXPathError(list->type,
+                                            (char *) arg);
+		  }
             xmlXPathFreeObject(list);
         } else {
             xsltGenericError(xsltGenericErrorContext,
-                             "%s: no such node\n", arg);
+                             "Error: %s no such node\n", arg);
         }
         ctxt->pctxt->node = NULL;
     }
@@ -308,12 +356,10 @@ xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
 {
     if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
         notifyListQueue(payload);
-    } else {
-        if (varCount)
-            xsltGenericError(xsltGenericErrorContext, ", %s", name);
-        else
-            xsltGenericError(xsltGenericErrorContext, "%s", name);
-        varCount++;
+    } else if (name) {
+      xsltGenericError(xsltGenericErrorContext, "Global %s\n",
+		       name);
+            varCount++;
     }
     return NULL;
 }
@@ -323,7 +369,7 @@ xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
 /**
  * xslDbgShellPrintVariable:
  * @styleCtxt: The current stylesheet context 
- * @arg: The name of variable to look for '$' prefix is optional
+ * @arg: The name of variable to look for '$' prefix is optional and in UTF-8
  * @type: A valid VariableTypeEnum
  *
  *  Print the value variable specified by args.
@@ -340,7 +386,7 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
     varCount = 0;
     if (!styleCtxt) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Debuger has no files loaded or libxslt has not reached "
+                         "Error: Debuger has no files loaded or libxslt has not reached "
                          "a template.\nTry reloading files or taking more steps.\n");
         return result;
     }
@@ -365,7 +411,7 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
                     /* Don't show this message when running as a thread as it 
                      * is annoying */
                     xsltGenericError(xsltGenericErrorContext,
-                                     "Libxslt has not initialize variables yet"
+                                     "Error: Libxslt has not initialize variables yet"
                                      " try stepping to a template");
             }
         } else {
@@ -381,11 +427,11 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
                     }
                     notifyListSend();
                 } else {
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "\nLocal variables found: ");
                     while (item) {
-                        xsltGenericError(xsltGenericErrorContext, "%s ",
-                                         item->name);
+		      if (item->name){
+			xsltGenericError(xsltGenericErrorContext,
+					 "Local %s \n", item->name);
+		      }
                         item = item->next;
                     }
                 }
@@ -395,7 +441,7 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
                     /* Don't show this message when running as a thread as it 
                      * is annoying */
                     xsltGenericError(xsltGenericErrorContext,
-                                     "Libxslt has not initialize variables yet"
+                                     "Error: Libxslt has not initialize variables yet"
                                      " try stepping past the xsl:param elements in template");
             }
         }

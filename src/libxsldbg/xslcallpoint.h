@@ -62,6 +62,7 @@ extern "C" {
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * callStackInit:
  *
@@ -74,11 +75,12 @@ extern "C" {
  *         0 otherwise
 */
 #endif
-int
-callStackInit(void);
+    int
+      callStackInit(void);
 
 
 #ifdef USE_GNOME_DOCS
+
 /**
  * callStackFree:
  *
@@ -86,8 +88,8 @@ callStackInit(void);
  * Free all memory used by callStack
  */
 #endif
-void
-callStackFree(void);
+    void
+      callStackFree(void);
 
 
 

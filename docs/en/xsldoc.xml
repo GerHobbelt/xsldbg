@@ -313,6 +313,10 @@ the &lt;ENTER&gt; key.
 <text>preferhtml</text>
 <comment>(If &lt;INTEGER_VALUE&gt; is true the prefer html output for search results. : See search command)</comment>
 </li>
+<li>
+<text>autoencode</text>
+<comment>(Try to use the encoding from the stylesheet)</comment>
+</li>
 <li><text>nonet</text>
 <comment>(If &lt;INTEGER_VALUE&gt; is true refuse to fetch DTDs or entities over network)</comment>
 </li>
@@ -371,9 +375,15 @@ the &lt;ENTER&gt; key.
 <text>catalognames</text>
 <comment>(The names of the catalogs to use when the catalogs option is set. Value will be lost if set before setting catalogs option)</comment>
 </li>
+<li>
+<text>encoding</text>
+<comment>(What encoding to use for standard output)</comment>
+</li>
 </list></li>
 </usage>
 </cmd>
+
+
 
 <cmd name="options" title="options">
 <summary>Print the values for xsldbg's option</summary>

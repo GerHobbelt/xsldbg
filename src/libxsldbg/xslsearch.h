@@ -316,7 +316,7 @@ extern "C" {
 
 /**
  * searchSave:
- * @fileName: A valid file name
+ * @fileName: A valid file name, or NULL for the default
  *
  * Save the search dataBase to @fileName
  *

@@ -35,7 +35,7 @@ static xmlNodePtr searchDataBaseRoot;
 static xmlChar *lastQuery;
 
 #define BUFFER_SIZE 500
-static char buff[BUFFER_SIZE];
+static xmlChar buffer[BUFFER_SIZE];
 
 /* -----------------------------------------
    Private function declarations for dbgsearch.c
@@ -361,7 +361,7 @@ searchRootNode(void)
 
 /**
  * searchSave:
- * @fileName: A valid file name
+ * @fileName: A valid file name, or NULL for the default
  *
  * Save the search dataBase to @fileName
  *
@@ -371,7 +371,33 @@ searchRootNode(void)
 int
 searchSave(const xmlChar * fileName)
 {
-    return xmlSaveFormatFile((char *) fileName, searchDataBase, 1);
+
+    int result = 0;
+    xmlChar *searchInput = NULL;
+    if (fileName == NULL) {
+        xmlStrCpy(buffer, stylePath());
+#ifdef __riscos
+        /* RISC OS paths don't end in directory separators */
+        xmlStrCat(buffer, ".searchresult/xml");
+#else
+        xmlStrCat(buffer, "searchresult.xml");
+#endif
+        searchInput = xmlStrdup(buffer);
+#ifdef __riscos
+        /* We're going to pass a native filename to a command that takes URIs,
+         * so we need to convert it */
+        searchInput = xmlStrdup((xmlChar *) unixfilename((char *) buffer));
+#endif
+    } else
+        searchInput = xmlStrdup(fileName);
+
+    if (xmlSaveFormatFile((char*)searchInput, searchDataBase, 1))
+      result++;
+
+    if (searchInput)
+      xmlFree(searchInput);
+
+    return result;
 }
 
 
@@ -474,8 +500,7 @@ scanForNode(void *payload, void *data, xmlChar * name ATTRIBUTE_UNUSED)
         match = match && (xmlStrCmp(searchData->url, baseUri) == 0);
         xmlFree(baseUri);
     } else {
-        match = match
-            && (xmlStrcmp(searchData->url, node->doc->URL) == 0);
+        match = match && (xmlStrcmp(searchData->url, node->doc->URL) == 0);
     }
 
     if (match) {
@@ -743,46 +768,45 @@ searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
             const xmlChar * query)
 {
     int result = 0;
-    xmlChar buffer[DEBUG_BUFFER_SIZE];
     const xmlChar *docDirPath = getStringOption(OPTIONS_DOCS_PATH);
     xmlChar *searchInput = NULL;
-    xmlChar *searchXSL = NULL; 
+    xmlChar *searchXSL = NULL;
     xmlChar *searchOutput = NULL;
 
 
     if (!docDirPath)
         return result;
 
-    /* if a tempFile if provided its up you to make sure that it is correct !!*/
-    if (tempFile == NULL){
-    xmlStrCpy(buffer, stylePath());
+    /* if a tempFile if provided its up you to make sure that it is correct !! */
+    if (tempFile == NULL) {
+        xmlStrCpy(buffer, stylePath());
 #ifdef __riscos
-    /* RISC OS paths don't end in directory separators */
-      xmlStrCat(buffer, ".searchresult/xml");
-#else    
-      xmlStrCat(buffer, "searchresult.xml");
+        /* RISC OS paths don't end in directory separators */
+        xmlStrCat(buffer, ".searchresult/xml");
+#else
+        xmlStrCat(buffer, "searchresult.xml");
 #endif
-    searchInput = xmlStrdup(buffer);
+        searchInput = xmlStrdup(buffer);
 #ifdef __riscos
-    /* We're going to pass a native filename to a command that takes URIs,
-     * so we need to convert it */
-    searchInput = xmlStrdup((xmlChar *) unixfilename((char *) buffer));
+        /* We're going to pass a native filename to a command that takes URIs,
+         * so we need to convert it */
+        searchInput = xmlStrdup((xmlChar *) unixfilename((char *) buffer));
 #endif
-    }else
-      searchInput = xmlStrdup(tempFile);
+    } else
+        searchInput = xmlStrdup(tempFile);
 
     xmlStrCpy(buffer, docDirPath);
 #ifdef __riscos
     /* RISC OS paths don't end in directory separators */
     if (isOptionEnabled(OPTIONS_PREFER_HTML) == 0)
-      xmlStrCat(buffer, ".search/xsl");
+        xmlStrCat(buffer, ".search/xsl");
     else
-       xmlStrCat(buffer, ".searchhtml/xsl");           
-#else    
+        xmlStrCat(buffer, ".searchhtml/xsl");
+#else
     if (isOptionEnabled(OPTIONS_PREFER_HTML) == 0)
-      xmlStrCat(buffer, "search.xsl");
+        xmlStrCat(buffer, "search.xsl");
     else
-      xmlStrCat(buffer, "searchhtml.xsl");   
+        xmlStrCat(buffer, "searchhtml.xsl");
 #endif
     searchXSL = xmlStrdup(buffer);
 #ifdef __riscos
@@ -792,70 +816,72 @@ searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
 #endif
 
 
-    /* if a outputFile if provided its up you to make sure that it is correct*/
-    if (outputFile == NULL){
-    xmlStrCpy(buffer, stylePath());
+    /* if a outputFile if provided its up you to make sure that it is correct */
+    if (outputFile == NULL) {
+        xmlStrCpy(buffer, stylePath());
 #ifdef __riscos
-    /* RISC OS paths don't end in directory separators */
-    if (isOptionEnabled(OPTIONS_PREFER_HTML) == 0)
-      xmlStrCat(buffer, ".searchresult/txt");
-    else
-       xmlStrCat(buffer, ".searchresult/html");           
-#else    
-    if (isOptionEnabled(OPTIONS_PREFER_HTML) == 0)
-      xmlStrCat(buffer, "searchresult.txt");
-    else
-      xmlStrCat(buffer, "searchresult.html");   
+        /* RISC OS paths don't end in directory separators */
+        if (isOptionEnabled(OPTIONS_PREFER_HTML) == 0)
+            xmlStrCat(buffer, ".searchresult/txt");
+        else
+            xmlStrCat(buffer, ".searchresult/html");
+#else
+        if (isOptionEnabled(OPTIONS_PREFER_HTML) == 0)
+            xmlStrCat(buffer, "searchresult.txt");
+        else
+            xmlStrCat(buffer, "searchresult.html");
 #endif
-    searchOutput = xmlStrdup(buffer);
+        searchOutput = xmlStrdup(buffer);
 #ifdef __riscos
-    /* We're going to pass a native filename to a command that takes URIs,
-     * so we need to convert it */
-    searchOutput = xmlStrdup((xmlChar *) unixfilename((char *) buffer));
+        /* We're going to pass a native filename to a command that takes URIs,
+         * so we need to convert it */
+        searchOutput =
+            xmlStrdup((xmlChar *) unixfilename((char *) buffer));
 #endif
-    }else
-      searchOutput = xmlStrdup(outputFile);
-    
+    } else
+        searchOutput = xmlStrdup(outputFile);
+
 
     if (!query || (xmlStrlen(query) == 0))
         query = (xmlChar *) "--param query //search/*";
     /* see configure.in for the definition of XSLDBG_BIN, the name of our binary */
 
     if (searchInput && searchXSL && searchOutput) {
-      if (isOptionEnabled(OPTIONS_CATALOGS) == 0)
-        snprintf((char *) buffer, sizeof(buffer),
-                 "%s -o %s %s %s %s", XSLDBG_BIN,
-                 searchOutput, query, searchXSL, searchInput);
-      else
-	/* assume that we are to use catalogs as well in our query */
-        snprintf((char *) buffer, sizeof(buffer),
-                 "%s --catalogs -o %s %s %s %s", XSLDBG_BIN,
-                 searchOutput, query, searchXSL, searchInput);	
+        if (isOptionEnabled(OPTIONS_CATALOGS) == 0)
+            snprintf((char *) buffer, sizeof(buffer),
+                     "%s -o %s %s %s %s", XSLDBG_BIN,
+                     searchOutput, query, searchXSL, searchInput);
+        else
+            /* assume that we are to use catalogs as well in our query */
+            snprintf((char *) buffer, sizeof(buffer),
+                     "%s --catalogs -o %s %s %s %s", XSLDBG_BIN,
+                     searchOutput, query, searchXSL, searchInput);
         result = xslDbgShellExecute(buffer, 1);
 #ifndef __risc_os
-	if (result &&  (isOptionEnabled(OPTIONS_PREFER_HTML) == 0)){
-	/* try printing out the file */
-	  snprintf((char*)buffer, sizeof(buffer), "more %s", searchOutput);
-	  result = xslDbgShellExecute(buffer, 1);
-	}	
+        if (result && (isOptionEnabled(OPTIONS_PREFER_HTML) == 0)) {
+            /* try printing out the file */
+            snprintf((char *) buffer, sizeof(buffer), "more %s",
+                     searchOutput);
+            result = xslDbgShellExecute(buffer, 1);
+        }
 #endif
-	xsltGenericError(xsltGenericErrorContext,
-			 "Transformed %s using %s and saved to %s\n",
-			 searchInput, searchXSL, searchOutput);
+        xsltGenericError(xsltGenericErrorContext,
+                         "Transformed %s using %s and saved to %s\n",
+                         searchInput, searchXSL, searchOutput);
     } else {
-            xsltGenericError(xsltGenericErrorContext,
-			     "Invalid filenames supplied to searchQuery\n");
+        xsltGenericError(xsltGenericErrorContext,
+                         "Invalid filenames supplied to searchQuery\n");
     }
 
     if (searchInput)
-      xmlFree(searchInput);
+        xmlFree(searchInput);
 
     if (searchXSL)
-      xmlFree(searchXSL);
+        xmlFree(searchXSL);
 
     if (searchOutput)
-      xmlFree(searchOutput);
-    
+        xmlFree(searchOutput);
+
     return result;
 }
 
@@ -1190,9 +1216,9 @@ searchBreakPointNode(xslBreakPointPtr breakPoint)
             result = result
                 && (xmlNewProp(node, (xmlChar *) "url", breakPoint->url) !=
                     NULL);
-            sprintf(buff, "%ld", breakPoint->lineNo);
+            sprintf((char*)buffer, "%ld", breakPoint->lineNo);
             result = result
-                && (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) buff)
+                && (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) buffer)
                     != NULL);
             if (breakPoint->templateName) {
                 result = result
@@ -1201,18 +1227,18 @@ searchBreakPointNode(xslBreakPointPtr breakPoint)
                      (node, (xmlChar *) "template",
                       breakPoint->templateName) != NULL);
             }
-            sprintf(buff, "%d", breakPoint->enabled);
+            sprintf((char*)buffer, "%d", breakPoint->enabled);
             result = result
                 &&
-                (xmlNewProp(node, (xmlChar *) "enabled", (xmlChar *) buff)
+                (xmlNewProp(node, (xmlChar *) "enabled", (xmlChar *) buffer)
                  != NULL);
-            sprintf(buff, "%d", breakPoint->type);
+            sprintf((char*)buffer, "%d", breakPoint->type);
             result = result
-                && (xmlNewProp(node, (xmlChar *) "type", (xmlChar *) buff)
+                && (xmlNewProp(node, (xmlChar *) "type", (xmlChar *) buffer)
                     != NULL);
-            sprintf(buff, "%d", breakPoint->id);
+            sprintf((char*)buffer, "%d", breakPoint->id);
             result = result
-                && (xmlNewProp(node, (xmlChar *) "id", (xmlChar *) buff) !=
+                && (xmlNewProp(node, (xmlChar *) "id", (xmlChar *) buffer) !=
                     NULL);
         } else
             result = 0;
@@ -1269,9 +1295,9 @@ searchTemplateNode(xmlNodePtr templNode)
                      (node, (xmlChar *) "url",
                       templNode->doc->URL) != NULL);
             }
-            sprintf(buff, "%ld", xmlGetLineNo(templNode));
+            sprintf((char*)buffer, "%ld", xmlGetLineNo(templNode));
             result = result
-                && (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) buff)
+                && (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) buffer)
                     != NULL);
         } else
             result = 0;
@@ -1311,10 +1337,10 @@ searchGlobalNode(xmlNodePtr variable)
                 result = result &&
                     (xmlNewProp(node, (xmlChar *) "url",
                                 variable->doc->URL) != NULL);
-                sprintf(buff, "%ld", xmlGetLineNo(variable));
+                sprintf((char*)buffer, "%ld", xmlGetLineNo(variable));
                 result = result
                     && (xmlNewProp(node, (xmlChar *) "line",
-                                   (xmlChar *) buff) != NULL);
+                                   (xmlChar *) buffer) != NULL);
             }
             value = xmlGetProp(variable, (xmlChar *) "name");
             if (value) {
@@ -1475,10 +1501,10 @@ searchIncludeNode(xmlNodePtr include)
                     result = result &&
                         (xmlNewProp(node, (xmlChar *) "url",
                                     include->parent->doc->URL) != NULL);
-                    sprintf(buff, "%ld", xmlGetLineNo(include));
+                    sprintf((char*)buffer, "%ld", xmlGetLineNo(include));
                     result = result
                         && (xmlNewProp(node, (xmlChar *) "line",
-                                       (xmlChar *) buff) != NULL);
+                                       (xmlChar *) buffer) != NULL);
                 }
             }
         } else
@@ -1520,9 +1546,9 @@ searchCallStackNode(xslCallPointPtr callStackItem)
                     (xmlNewProp
                      (node, (xmlChar *) "url", callStackItem->info->url)
                      != NULL);
-            sprintf(buff, "%ld", callStackItem->lineNo);
+            sprintf((char*)buffer, "%ld", callStackItem->lineNo);
             result = result
-                && (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) buff)
+                && (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) buffer)
                     != NULL);
             if (callStackItem->info && callStackItem->info->templateName) {
                 result = result &&
