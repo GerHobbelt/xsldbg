@@ -30,6 +30,7 @@
 
 /* --- Start specificaly xsldbg related code by KPI -- */
 #include "xsldbg.h"
+#include "files.h"
 #include "debugXSL.h"
 #include <breakpoint/breakpoint.h>
 #include "help.h"
@@ -83,6 +84,7 @@ xmlChar *commandNames[] = \
    "save", 
    "write", 
    "free",
+   "chdir",
 
    NULL /* Indicate the end of list*/ 
 } ; 
@@ -130,6 +132,7 @@ xmlChar *shortCommandNames[] = \
    "save", 
    "write", 
    "free",
+   "chdir",
 
    NULL /* Indicate the end of list*/ 
 } ; 
@@ -176,6 +179,7 @@ enum { DEBUG_HELP_CMD = 100, /* id's for commands of xslDbgShell*/
        DEBUG_SAVE_CMD, 
        DEBUG_WRITE_CMD, 
        DEBUG_FREE_CMD,
+       DEBUG_CHDIR_CMD,
 
        /*NULL */} ;
 
@@ -337,8 +341,10 @@ xslDbgShellBreak(xmlChar *arg, xsltStylesheetPtr style){
   int result = 0;
   long lineNo;
   static char *errorPrompt =  "Failed to add break point\n";
-  if (!arg)
+  if (!arg || !style){
+    fprintf(stderr, "Debuger has no files loaded, try reloading files\n");
     return result;
+  }
   if (arg[0] == '-'){
     xmlChar *opts[2];
     if ( (strlen(arg) > 1) && (arg[1] == 'l') ){
@@ -557,6 +563,11 @@ xslDbgShellEnable(xmlChar *arg, int enableType){
 void 
 xslDbgPrintList(xmlShellCtxtPtr ctxt, xmlChar *arg, int dir){
   xmlXPathObjectPtr list;
+  if (!ctxt || !arg){
+    fprintf(stderr, "Debuger has no files loaded, try reloading files\n");
+    return;
+  }
+
   if (arg[0] == 0) {
     if (dir)
       xmlShellDir(ctxt, NULL, ctxt->node, NULL);
@@ -609,6 +620,12 @@ void xslDbgCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,\
 	      xmlChar *arg){
   xmlXPathObjectPtr list;
   int i = 0;
+  if (!ctxt){
+    fprintf(stderr, "Debuger has no files loaded, try reloading files\n");
+    return;
+  }
+  if (arg == NULL)
+    arg = "";
   if (arg[0] == 0) {
     xmlShellCat(ctxt, NULL, ctxt->node, NULL);
   } else {
@@ -699,6 +716,11 @@ static void
 xslDbgPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar *arg, 
 		    int type){
   varCount= 0;
+  if (!styleCtxt) {
+    fprintf(stderr, "Debuger has no files loaded, try reloading files\n");
+    return;
+  }
+
   if (arg[0] == 0){
     /* list variables of type requested */
     if (type == DEBUG_PRINT_GLOBAL_VAR ){
@@ -740,54 +762,70 @@ void xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,\
 	      xmlChar *arg, xmlNodePtr source){
   xmlXPathObjectPtr list = NULL;
   int index = 2; /* in some cases I'm only interested after first two chars  */
-
+  if (!ctxt){
+    fprintf(stderr, "Debuger has no files loaded, try reloading files\n");
+    return;
+  }
+  if (arg == NULL)
+    arg = "";
   if (arg[0] == 0) {
     ctxt->node = (xmlNodePtr) ctxt->doc;
   } else {
     if ((arg[0] =='-')  && (strlen(arg) >2) ) {
-      if (arg[1] =='t'){
-	xmlNodePtr templateNode;
-	/* quickly find a template*/
+      if (styleCtxt){ 
+	if (arg[1] =='t'){
+	  xmlNodePtr templateNode;
+	  /* quickly find a template*/
 
-	/* skip any white spaces*/
-	while (isspace(arg[index]))
-	       index++;
+	  /* skip any white spaces*/
+	  while (isspace(arg[index]))
+	    index++;
 
-	templateNode =xslFindTemplateNode(styleCtxt->style, &arg[index]);
-	if (!templateNode){
-	  fprintf(stderr, "Template '%s' not found\n", &arg[index]);
-	  return;
-	}else{
+	  templateNode =xslFindTemplateNode(styleCtxt->style, &arg[index]);
+	  if (!templateNode){
+	    fprintf(stderr, "Template '%s' not found\n", &arg[index]);
+	    return;
+	  }else{
 	    fprintf(stderr, " template :\"%s\"\n", &arg[index]);	
 	    ctxt->pctxt->node;
 	    return;
-	}
-      }else if (arg[1] =='s'){
-	/*quickly switch to another stylesheet node */
-	xmlXPathContextPtr pctxt = xmlXPathNewContext(source->doc);
-	if (pctxt == NULL) {
-	  xmlFree(ctxt);
-	  xslDebugStatus = DEBUG_QUIT;
-	  return;
 	  }
-	if (!xmlXPathNsLookup(pctxt, "xsl"))
-	  xmlXPathRegisterNs(pctxt, "xsl", XSLT_NAMESPACE);
-	list = xmlXPathEval((xmlChar *) &arg[index], pctxt); 
-	if (pctxt){
-	  xmlFree(pctxt);
+	}else if (arg[1] =='s'){
+	  /*quickly switch to another stylesheet node */
+	  xmlXPathContextPtr pctxt = xmlXPathNewContext(source->doc);
+	  if (pctxt == NULL) {
+	    xmlFree(ctxt);
+	    xslDebugStatus = DEBUG_QUIT;
+	    return;
+	  }
+	  if (!xmlXPathNsLookup(pctxt, "xsl"))
+	    xmlXPathRegisterNs(pctxt, "xsl", XSLT_NAMESPACE);
+	  list = xmlXPathEval((xmlChar *) &arg[index], pctxt); 
+	  if (pctxt){
+	    xmlFree(pctxt);
+	  }
+	}else{
+	  printf("Unknown option to cd\n");
 	}
-      }else{
-	printf("Unknown option to cd\n");
-      }
-
+      }else
+	printf("Unable to cd, No stylesheet properly parsed\n");
     } else {
-      xmlNodePtr savenode = styleCtxt->xpathCtxt->node;
-      ctxt->pctxt->node = ctxt->node;
-      styleCtxt->xpathCtxt->node = ctxt->node;
-      if (!xmlXPathNsLookup(ctxt->pctxt, "xsl"))
-	xmlXPathRegisterNs(ctxt->pctxt, "xsl", XSLT_NAMESPACE);
-      list = xmlXPathEval((xmlChar *) arg, styleCtxt->xpathCtxt); 
-      styleCtxt->xpathCtxt->node = savenode;
+      xmlNodePtr savenode;
+      if (styleCtxt){
+	savenode= styleCtxt->xpathCtxt->node;
+	ctxt->pctxt->node = ctxt->node;
+	styleCtxt->xpathCtxt->node = ctxt->node;
+	if (!xmlXPathNsLookup(ctxt->pctxt, "xsl"))
+	  xmlXPathRegisterNs(ctxt->pctxt, "xsl", XSLT_NAMESPACE);
+	list = xmlXPathEval((xmlChar *) arg, styleCtxt->xpathCtxt); 	
+	styleCtxt->xpathCtxt->node = savenode;
+      }else if (ctxt->pctxt){
+	if (!xmlXPathNsLookup(ctxt->pctxt, "xsl"))
+	  xmlXPathRegisterNs(ctxt->pctxt, "xsl", XSLT_NAMESPACE);
+	 list = xmlXPathEval((xmlChar *) arg, ctxt->pctxt);
+      }else{
+	printf("Invalid parameters to xslDbgCd\n");	
+      }
     }
 
     if (list != NULL) {
@@ -1021,7 +1059,7 @@ void xslDebugBreak(xmlNodePtr templ, xmlNodePtr node,  xsltTemplatePtr root, \
      }else{
        fprintf(stderr, "\n");
      } 
-     if (ctxt->node && ctxt->node && ctxt->node->doc && ctxt->node->doc->URL){
+     if (ctxt && ctxt->node && ctxt->node && ctxt->node->doc && ctxt->node->doc->URL){
        if (xslActiveBreakPoint() > 0){
 	 fprintf(stderr, "Breakpoint %d ", xslActiveBreakPoint());
        }else{
@@ -1391,6 +1429,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, char *filename, \
 
 	  /* --- Node selection related commands --- */
 	case DEBUG_SOURCE_CMD:
+	  if (strlen(arg) == 0){
 	  if (ctxt->doc == doc->doc)
 	    lastDocNode = ctxt->node;
 	  ctxt->doc = source->doc;
@@ -1401,23 +1440,70 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, char *filename, \
 	    xmlFree(ctxt);
 	    xslDebugStatus = DEBUG_QUIT;
 	    return;
-	  }else	    
+	  }else	    	    
 	    break;
+	  }else{
+	    /* load new stylesheet file*/
+            char * response = ctxt->input("Load stylesheet file (yes/no)");
+	    if (!strcmp(response, "yes")){
+	      loadXmlFile(arg, FILES_SOURCEFILE_TYPE);
+	      source = (xmlNodePtr)getStylesheet()->doc;
+	      if (source){
+		if (ctxt->doc == source->doc)
+		  lastDocNode = ctxt->node;	  
+		ctxt->doc = doc->doc;
+		ctxt->node = doc;
+		ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
+		showSource = 1;
+		if (ctxt->pctxt == NULL) {
+		  xmlFree(ctxt);
+		  xslDebugStatus = DEBUG_QUIT;
+		  return;	    
+		}
+		printf("Loaded %s ok\n", arg);
+	      }
+	    }
+	  }
+	  break;
 
 	case DEBUG_DATA_CMD:
-	  if (ctxt->doc == source->doc)
-	    lastSourceNode = ctxt->node;	  
-	  ctxt->doc = doc->doc;
-	  ctxt->node = lastDocNode;
-	  ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
-	  showSource = 0;
-	  if (ctxt->pctxt == NULL) {
-	    xmlFree(ctxt);
-	    xslDebugStatus = DEBUG_QUIT;
-	    return;	    
+	  if (strlen(arg) == 0){
+	    if (ctxt->doc == source->doc)
+	      lastSourceNode = ctxt->node;	  
+	    ctxt->doc = doc->doc;
+	    ctxt->node = lastDocNode;
+	    ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
+	    showSource = 0;
+	    if (ctxt->pctxt == NULL) {
+	      xmlFree(ctxt);
+	      xslDebugStatus = DEBUG_QUIT;
+	      return;	    
+	    }
+	    else	  
+	      break;
+	  }else{
+	    /* load new xml file*/
+            char * response = ctxt->input("Load xml DATA file (yes/no)");
+	    if (!strcmp(response, "yes")){
+	      loadXmlFile(arg, FILES_XMLFILE_TYPE);
+	      doc = (xmlNodePtr)getMainDoc();
+	      if (doc){
+		if (ctxt->doc == source->doc)
+		  lastSourceNode = ctxt->node;	  
+		ctxt->doc = doc->doc;
+		ctxt->node = doc;
+		ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
+		showSource = 0;
+		if (ctxt->pctxt == NULL) {
+		  xmlFree(ctxt);
+		  xslDebugStatus = DEBUG_QUIT;
+		  return;	    
+		}
+		printf("Loaded %s ok\n", arg);
+	      }
+	    }
 	  }
-	  else	  
-	    break;
+	  break;
 
 	case DEBUG_CD_CMD:
 	  /* use dir as a working buffer */
@@ -1481,6 +1567,14 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, char *filename, \
 		xmlMemShow(stdout, len);
 	    }
 	  */
+	  break;
+
+	case   DEBUG_CHDIR_CMD:
+	  if (strlen(arg))
+	    changeDir(arg);
+	  else
+	    printf("Missing path name after chdir command\n");
+
 	  break;
 
 	default:

@@ -1,3 +1,20 @@
+* Keith Isdale 11 Nov 2001
+* Separated parameters from xsldbg.c 
+* Added files.[ch] 
+	 handles file interaction. But still uses xsldbg.c to do
+*        actual file parsing and loading	
+* Added options.[ch] 
+*        handles storage and retrieval of xsldbg options such as stylesheet 
+*	 file name 
+* Added	implementation for array list via arraylist.h, dbgarraylist.c
+* Added tests for array list
+* Added support for an unlimited number of libxslt parameters. But still
+*       use the hard limit of 8 parameters  for the moment	
+* Added the ability to choose xml and stylesheet file from xsldbg prompt
+* Made debugging default, if no parameters are given to xsldbg than it
+*      goes straight to xsldbg command prompt	
+*
+	
 * Keith Isdale 10 Nov 2001
 * Reverted to orginal name for XSL_DEBUGGER definition
 	

@@ -342,11 +342,31 @@ they are not completed.</para>
 
 <!-- - - - - - - Node selection related commands - - - - - - - -->
 <cmd name="source" title="Source">
-<summary>Switch to displaying the current node in stylesheet.</summary>
+<summary>Switch to displaying the current node in stylesheet. Or change stylesheet used</summary>
+<usage>
+<li>
+<text>source</text>
+<comment>(Switch to the current node in stylesheet)</comment>
+</li>
+<li>
+<text>source FILENAME</text>
+<comment>(To change to a new source file. Use run command to execute it)</comment>
+</li>
+</usage>
 </cmd>
 
 <cmd name="data" title="Data">
-<summary>Switch to displaying the current node in xml data.</summary>
+<summary>Switch to displaying the current node in xml data. Or chane xml data used</summary>
+<usage>
+<li>
+<text>data</text>
+<comment>(Switch to the current document node)</comment>
+</li>
+<li>
+<text>data FILENAME</text>
+<comment>(To change to a new xml data file. Use run command to process it)</comment>
+</li>
+</usage>
 </cmd>
 
 <cmd name="cd" title="Cd">

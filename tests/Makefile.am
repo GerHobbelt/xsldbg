@@ -1,9 +1,28 @@
+# set the include path found by configure
+# cheet a bit because I need HELP_DOC_PATH defined
+INCLUDES= $(all_includes)  -DVERSION=\"@VERSION@\" \
+	$(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS)
+
 XSLDBG=$(top_builddir)/src/xsldbg
+
+EXTRA_DIST= *.xsl *.xml *.data *.pl
 
 TESTS = ../results/test1.pl ../results/test2.pl
 TEST_RESULTS =../results/test1.results  ../results/test2.results
 
-EXTRA_DIST= *.xsl *.xml *.data *.pl
+# Define the array list tester
+bin_PROGRAMS = listTest
+
+# Define some tests on arraylist 
+listTest_SOURCES = listTest.c 
+
+# use of configure defined libraries
+listTest_LDADD = $(XSLDBG_LIBS)
+
+# the library search path.
+listTest_LDFLAGS = $(all_libraries) ../src/dbgarraylist.o ../src/options.o
+
+
 
 $(XSLDBG):
 	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
@@ -23,7 +42,8 @@ runtests : $(TESTS) $(TEST_RESULTS) $(XSLDBG)
 
 if WITH_PERL
 
-all: $(XSLDBG) runtests
+all: $(XSLDBG) runtests listTest
+	listTest
 
 clean:
 	rm -f ../results/*.script

@@ -70,4 +70,9 @@
 #include <libxslt/xsltutils.h>
 #include <breakpoint/breakpoint.h>
 #include "config.h"
+
+xmlDocPtr loadXmlData();
+xmlDocPtr loadXmlTemporay(const char *path);
+xsltStylesheetPtr loadStyleSheet();
+
 #endif
