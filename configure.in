@@ -137,7 +137,7 @@ dnl
 
 docs_macro=true
 AC_ARG_ENABLE(docs_macro,
-	[  --enable-doc-macro      Use a compiler macro to specify where documentation is (PREFIX/doc/xsldbg/) ],
+	[  --enable-docs-macro      Use a compiler macro to specify where documentation is (PREFIX/doc/xsldbg/) ],
 	if test "${enableval}" = "no"
 	then
 		docs_macro=false
