@@ -675,7 +675,7 @@ main(int argc, char **argv)
                 /*goto a xsldbg command prompt */
                 showPrompt = 1;
                 if (xslDebugStatus == DEBUG_RUN) {
-                    xslDebugStatus = DEBUG_QUIT;        /* pannic !! */
+                    xslDebugStatus = DEBUG_QUIT;        /* panic !! */
                     result = 0;
                 }
             }
@@ -686,7 +686,7 @@ main(int argc, char **argv)
             doc = getMainDoc();
             if (doc == NULL) {
                 if (xslDebugStatus == DEBUG_RUN) {
-                    xslDebugStatus = DEBUG_QUIT;        /* pannic !! */
+                    xslDebugStatus = DEBUG_QUIT;        /* panic !! */
                     result = 0;
                 } else {
                     /*goto a xsldbg command prompt */
@@ -740,7 +740,7 @@ main(int argc, char **argv)
         } else {
             /* Some sort of problem loading source file has occured. Quit? */
             if (xslDebugStatus == DEBUG_RUN) {
-                xslDebugStatus = DEBUG_QUIT;    /* Pannic!! */
+                xslDebugStatus = DEBUG_QUIT;    /* Panic!! */
                 result = 0;
             } else {
                 /*goto a xsldbg command prompt */
@@ -750,7 +750,7 @@ main(int argc, char **argv)
 
         if (showPrompt && isOptionEnabled(OPTIONS_SHELL)) {
             xmlDocPtr tempDoc = xmlNewDoc((xmlChar *) "1.0");
-	    xmlNodePtr tempNode = xmlNewNode(NULL, "xsldbg_default_node");
+	    xmlNodePtr tempNode = xmlNewNode(NULL, (xmlChar *)"xsldbg_default_node");
 	    if (!tempDoc || !tempNode){
 	      xsldbgFree();
 	      exit(1);		  
@@ -951,10 +951,7 @@ loadXmlTemporay(const xmlChar * path)
     }
 
     if (isOptionEnabled(OPTIONS_TIMING) && (xslDebugStatus != DEBUG_QUIT)) {
-        long msec;
-	endTimer("Parsing document %s", path, msec);
-        xsltGenericError(xsltGenericErrorContext,
-                         "Parsing document %s took %ld ms\n", path, msec);
+      endTimer("Parsing document %s", path);
     }
     return doc;
 }
@@ -980,6 +977,9 @@ printTemplates(xsltStylesheetPtr style, xmlDocPtr doc)
     }
 }
 
+
+void catchSigInt(int value ATTRIBUTE_UNUSED);
+
 void
 catchSigInt(int value ATTRIBUTE_UNUSED)
 {
@@ -994,6 +994,8 @@ catchSigInt(int value ATTRIBUTE_UNUSED)
         setIntOption(OPTIONS_WALK_SPEED, WALKSPEED_STOP);
     }
 }
+
+void catchSigTerm(int value ATTRIBUTE_UNUSED);
 
 void
 catchSigTerm(int value ATTRIBUTE_UNUSED)

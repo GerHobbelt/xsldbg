@@ -1,3 +1,6 @@
+* Keith Isdale 30 Nov 2001
+* Applied fixes as suggested by Justin
+	
 * Keith Isdale 29 Nov 2001
 * Change help so that is can either display static text file or respond to 
 *   queries, added docs/en/xsldoc.txt
@@ -5,6 +8,8 @@
 *	#include "xsldbg.h", and change xsldbg.h to have
 *	    #include "config" or equivalent. This is to suit risc os
 *       config_risc.h for risc os as supplied by Justin Fletcher
+* Updated tests to suit patch for variables and double debugging of
+*   text nodes	
 	
 	
 * Keith Isdale 28 Nov 2001

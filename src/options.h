@@ -19,7 +19,7 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
 
-#include <breakpoint/arraylist.h>
+#include "arraylist.h"
 #include <libxslt/xslt.h>
 
 /* ---------------------------------------  
@@ -81,7 +81,9 @@ enum {
 /* for non win32 environments see the macro in xsldebugger/Makefile.am
    Win32 tupe systems see  macro in libxslt/xsltwin32config.h
 */
-#define USE_DOCS_MACRO 
+#ifndef __riscos /* JRF: Under RISC OS we'll use the sysvar */
+#define USE_DOCS_MACRO
+#endif
 
 /* used to keep track of libxslt paramters 
  see Parameter related option near end of file

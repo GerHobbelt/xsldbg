@@ -63,6 +63,8 @@ char *ttyName, *termName;
 /**
  * redirectToTerminal:
  * @device: terminal to redirect i/o to , will not work under win32
+ * Returns 1 if successful,
+ *         0 if failed
  */
 int 
 openTerminal(xmlChar *device)
@@ -70,10 +72,42 @@ openTerminal(xmlChar *device)
   int result =0;
   FILE oldStdout = *stdout;
   
-  if (!device)
-    return;
+  if (!device) /* Failed; there's no device */
+    return result;
+#ifdef __riscos
+  /*
+     On RISC OS, you get one terminal - the screen.
+     we assume that the parameter is meant to be an output device as
+     per normal - we can use vdu:, rawvdu: or :tt, or a filename for
+     normal VDU output, VDU output without newline expansion,
+     C terminal output with control code escaping, or a raw file
+     respectively.
+     The name passed is expected to be in native file format - no
+     URI escaping here.
+     One assumes that you might use a socket or a pipe here.
+   */
 
-#ifdef HAVE_UNISTD /* fix me for WinNT, risc os!! */
+  if (terminalIO != NULL)
+    fclose(terminalIO);
+
+  if (device[0]=='\0') {
+    /* look like we are supposed to close the terminal */
+    selectNormalIO();/* shouldn't be needed but just in case */
+  } else {
+    terminalIO = fopen((char *)device,"r+");
+    if (terminalIO != NULL) {
+      termName = (char *)device; /* JRF: Not sure how safe this is */
+      /* This can't be done reliably; really need more thought */
+      result++;
+    } else {
+      xsltGenericError(xsltGenericErrorContext,
+		     "Unable to open terminal %s", device);
+      termName = NULL;
+    }
+  }
+#else
+
+#ifdef HAVE_UNISTD /* fix me for WinNT*/
   if (terminalIO != NULL)
     fclose(terminalIO);  
 
@@ -99,6 +133,8 @@ openTerminal(xmlChar *device)
 #else
     xsltGenericError(xsltGenericErrorContext,
 		     "Terminals are no supported by this operating system\n");
+#endif
+
 #endif
     return result;    
 }
@@ -161,7 +197,7 @@ void guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
        but we may have made a relative match */
     if (xmlStrCmp(style->doc->URL, searchData->nameInput) == 0){
       /* absolute path match great!*/
-      searchData->absoluteNameMatch = (xmlChar*)xmlMemStrdup(style->doc->URL);
+      searchData->absoluteNameMatch = (xmlChar*)xmlMemStrdup((char*)style->doc->URL);
       return;
     }
 
@@ -175,7 +211,7 @@ void guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
     }
     if (xmlStrCmp(style->doc->URL, buffer) == 0){
       /* guessed right!*/
-      searchData->guessedNameMatch = (xmlChar*)xmlMemStrdup(buffer);
+      searchData->guessedNameMatch = (xmlChar*)xmlMemStrdup((char*)buffer);
       return;
     }
 
@@ -186,7 +222,7 @@ void guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
     }
     if ( xmlStrCmp(style->doc->URL, buffer) == 0){
       /* guessed right!*/
-      searchData->guessedNameMatch = (xmlChar*)xmlMemStrdup(buffer);
+      searchData->guessedNameMatch = (xmlChar*)xmlMemStrdup((char*)buffer);
       return;
     }
 
@@ -198,7 +234,7 @@ void guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
 	    lastSlash++; /* skip the slash */
 	    if (xmlStrCmp(lastSlash, searchData->nameInput) == 0){
 	      /* guessed right!*/
-	      searchData->guessedNameMatch = (xmlChar*)xmlMemStrdup(style->doc->URL);
+	      searchData->guessedNameMatch = (xmlChar*)xmlMemStrdup((char*)style->doc->URL);
 	    }
 	  }
     }
@@ -215,7 +251,11 @@ void guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
 xmlChar *guessStyleSheetName(xmlChar* name)
 {
   xmlChar *result = NULL;
-  FileSearch searchData = {name, NULL, NULL};
+  FileSearch searchData;
+  searchData.nameInput = name;
+  searchData.absoluteNameMatch = NULL;
+  searchData.guessedNameMatch = NULL;
+
   if (name){
     walkStylesheets((xmlHashScanner)guessStyleSheetHelper, &searchData,
 		     getStylesheet());    
@@ -235,7 +275,7 @@ xmlChar *guessStyleSheetName(xmlChar* name)
  *        ie URL minus the actual file name
  */
 xmlChar *
-stylePath()
+stylePath(void)
 {
   return stylePathName;
 }
@@ -246,7 +286,7 @@ stylePath()
  * Return the working directory as set by changeDir function
  */
 xmlChar*
-workingPath()
+workingPath(void)
 {
   return workingDirPath;
 }
@@ -268,7 +308,7 @@ changeDir(const xmlChar * path)
        /* must have path char at end of path name*/
       xmlStrCpy(buffer, path);
       xmlStrCat(buffer, endString);
-      workingDirPath = (xmlChar*)xmlMemStrdup(buffer);
+      workingDirPath = (xmlChar*)xmlMemStrdup((char*)buffer);
       result++;
     }
     if (!result)
@@ -321,11 +361,11 @@ loadXmlFile(const xmlChar * path, enum File_type file_type)
             top_style = loadStylesheet();
             if (top_style && top_style->doc){
 	      /* look for last slash (or baskslash) of URL*/
-	       char *lastSlash =   xmlStrrChr(top_style->doc->URL, PATHCHAR);
+	       char *lastSlash =   (const char*)xmlStrrChr(top_style->doc->URL, PATHCHAR);
 	       const char *docUrl = top_style->doc->URL;
                 result++;		
 		if (docUrl && lastSlash){
-		    stylePathName = xmlMemStrdup(docUrl);
+		    stylePathName = (xmlChar*)xmlMemStrdup(docUrl);
 		    stylePathName[lastSlash - docUrl + 1] = '\0';
 		    if (isOptionEnabled(OPTIONS_SHELL)) {   
 		    	xsltGenericError(xsltGenericErrorContext,
@@ -464,6 +504,9 @@ filesInit(void)
 {
     int result = 0;
     terminalIO = NULL;
+#ifdef __riscos
+    ttyName = ":tt"; /* Default tty */
+#endif
 #ifdef HAVE_UNISTD
     ttyName = ttyname(fileno(stdin));
     /* save out io for when/if we send debugging to a terminal */

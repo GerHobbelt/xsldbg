@@ -324,7 +324,7 @@ xmlChar *xslDbgShellReadline(xmlChar * prompt);
  * 
  * Returns the last template node found, if any
  */
-xsltTemplatePtr getTemplate(){
+xsltTemplatePtr getTemplate(void){
   return rootCopy;
 }
 
@@ -539,7 +539,7 @@ xslDbgPrintCallStack(const xmlChar* arg)
     else
       xsltGenericError(xsltGenericErrorContext, "\n");
   }else{
-    long depth = atoi(arg);
+    long depth = atol((char*)arg);
     if (depth >=0 ){
       callPoint = xslGetCall(depth + 1);
       if (callPoint && callPoint->info) {
@@ -642,7 +642,7 @@ lookupName(xmlChar * name, xmlChar ** matchList)
     int result = -1, nameIndex;
 
     for (nameIndex = 0; matchList[nameIndex]; nameIndex++) {
-        if (!strcmp(name, matchList[nameIndex])) {
+        if (!xmlStrCmp(name, matchList[nameIndex])) {
             result = nameIndex;
             break;
         }
@@ -828,10 +828,11 @@ addCallStackItems(void){
   }
 }
 
-void
+int
   updateSearchData(xsltTransformContextPtr styleCtxt, xsltStylesheetPtr style,
 		 void *data, int variableTypes)
 {
+  int result =0;
     xslSearchEmpty();
     xsltGenericError(xsltGenericErrorContext, 
 		     "Updating search database, this may take a while ..\n");
@@ -859,6 +860,8 @@ void
     xsltGenericError(xsltGenericErrorContext,
 		     "  Formatting output \n");    
     xslSearchSave((xmlChar*)"search.data");
+    result++;
+    return result;
 }
 
 /*
@@ -882,10 +885,10 @@ xslDebugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
     selectNormalIO();
 
     if (templ == NULL){
-      tempDoc = xmlNewDoc("1.0");
+      tempDoc = xmlNewDoc((xmlChar*)"1.0");
       if (!tempDoc)
 	return;
-      tempNode = xmlNewNode(NULL,"xsldbg_default_node");
+      tempNode = xmlNewNode(NULL,(xmlChar*)"xsldbg_default_node");
       if (!tempNode){
 	xmlFreeDoc(tempDoc);
 	return;
@@ -894,10 +897,10 @@ xslDebugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
       templ = tempNode;
     }
     if (node == NULL){
-      tempDoc = xmlNewDoc("1.0");
+      tempDoc = xmlNewDoc((xmlChar*)"1.0");
       if (!tempDoc)
 	return;
-      tempNode = xmlNewNode(NULL,"xsldbg_default_node");
+      tempNode = xmlNewNode(NULL,(xmlChar*)"xsldbg_default_node");
       if (!tempNode){
 	xmlFreeDoc(tempDoc);
 	return;

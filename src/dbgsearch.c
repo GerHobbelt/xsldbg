@@ -31,16 +31,16 @@ struct _xslBreakPointSearch
 };
 
 /* store all data in this document so we can write it to file*/
-xmlDocPtr searchDataBase;
+static xmlDocPtr searchDataBase;
 
 /* the topmost node in document*/
-xmlNodePtr searchDataBaseRoot;
+static xmlNodePtr searchDataBaseRoot;
 
 /* what was the last query that was run */
-xmlChar *lastQuery;
+static xmlChar *lastQuery;
 
 #define BUFFER_SIZE 500
-char buff[BUFFER_SIZE];
+static char buff[BUFFER_SIZE];
 
 /**
  * seachInit:
@@ -404,7 +404,7 @@ xslSearchQuery(const xmlChar * tempFile,
 {
     int result = 0;
     xmlChar buffer[DEBUG_BUFFER_SIZE];
-    const char *docDirPath = getStringOption(OPTIONS_DOCS_PATH);
+    const xmlChar *docDirPath = getStringOption(OPTIONS_DOCS_PATH);
     const xmlChar *searchXSL = NULL;
     
 
@@ -423,7 +423,7 @@ xslSearchQuery(const xmlChar * tempFile,
     if (snprintf
         ((char *) buff, DEBUG_BUFFER_SIZE - 1,
          "xsldbg  %s %s %s", query, searchXSL, tempFile)) {
-        result = !xslDbgShellExecute(buff, 1);
+        result = !xslDbgShellExecute((xmlChar*)buff, 1);
     }
     return result;
 }
@@ -524,6 +524,9 @@ walkStylesheets (xmlHashScanner walkFunc, void *data,
 
 xmlHashScanner globalWalkFunc = NULL;
 
+void globalVarHelper(void* *payload, void *data ATTRIBUTE_UNUSED,
+		xmlChar * name ATTRIBUTE_UNUSED);
+
 /* Our payload is a xsltStylesheetPtr given to us via walkStylesheets. 
    globalWalkFunc will always be set to the walkFunc to call
 */
@@ -557,7 +560,6 @@ void
 walkGlobals (xmlHashScanner walkFunc, void *data ATTRIBUTE_UNUSED,
 		   xsltStylesheetPtr style)
 {
-  xsltStackElemPtr global;
   if (!walkFunc || !style)
     return;
 
@@ -569,7 +571,8 @@ walkGlobals (xmlHashScanner walkFunc, void *data ATTRIBUTE_UNUSED,
 
 
 xmlHashScanner  localWalkFunc = NULL;
-
+void localVarHelper(void* *payload, void *data ATTRIBUTE_UNUSED,
+	       xmlChar * name ATTRIBUTE_UNUSED);
 /* Our payload is a xsltTemplatePtr given to us via walkTemplates. 
    localWalkFunc will always be set to the walkFunc to call
 */
@@ -606,8 +609,6 @@ void
 walkLocals (xmlHashScanner walkFunc, void *data,
 		  xsltStylesheetPtr style)
 {
-  xsltTemplatePtr templ;
-
   if (!walkFunc || !style)
     return;
 

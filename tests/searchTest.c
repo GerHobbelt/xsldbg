@@ -1,4 +1,4 @@
-#include <breakpoint/breakpointInternal.h>
+#include "../src/breakpointInternals.h"
 #include <libxml/debugXML.h>
 
 int main(void){

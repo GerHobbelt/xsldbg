@@ -147,6 +147,13 @@ extern "C"
   ArrayListPtr xslBreakPointLineList (void);
 
 
+/**
+ * xslDbgShellEnable:
+ * @arg : non-null
+ *
+ * Enable/disable break point specified by arg
+ */
+  int xslDbgShellEnable(xmlChar * arg, int enableType);
 /*
 -----------------------------------------------------------
        Main debugger functions
@@ -332,6 +339,70 @@ extern "C"
  *        NULL otherwise
  */
   xmlNodePtr searchCallStackNode (xslCallPointPtr callStackItem);
+
+/**
+ * walkLocals:
+ * @walkFunc: function to callback for each template found
+ * @data : the extra data to pass onto walker
+ * @style : the stylesheet to start from
+ *
+ * Walks through all templates calling walkFunc for each. The payload
+ *   of walkFunc is of type xmlNodePtr
+ */
+  void walkLocals (xmlHashScanner walkFunc, void *data,
+		  xsltStylesheetPtr style);
+
+/**
+ * walkIncludes:
+ * @walkFunc: function to callback for each xsl:include found
+ * @data : the extra data to pass onto walker
+ * @style : the stylesheet to start from
+ *
+ * Walks through all xsl:include calling walkFunc for each. The payload
+ *   of walkFunc is of type xmlNodePtr
+ */
+  void walkIncludes (xmlHashScanner walkFunc, void *data,
+		     xsltStylesheetPtr style);
+
+
+/**
+ * walkGlobals:
+ * @walkFunc: function to callback for each variable of type @type found
+ * @data : the extra data to pass onto walker
+ * @styleCtxt : the stylesheet to start from
+ *
+ * Call walkFunc for each global variable. The payload
+ *   sent to walkFunc is of type xmlNodePtr
+ */
+  void walkGlobals (xmlHashScanner walkFunc, void *data ATTRIBUTE_UNUSED,
+		      xsltStylesheetPtr style);
+
+/**
+ * walkChildNodes:
+ * @walkFunc: function to callback for each child/sibling found
+ * @data : the extra data to pass onto walker
+ * @node : valid xmlNodePtr
+ *
+ * Call walkFunc for each child of @node the payload sent to walkFunc is
+ *   a xmlNodePtr
+ */
+  void walkChildNodes (xmlHashScanner walkFunc, void *data, xmlNodePtr node);
+
+  /* fix me !*/
+  /**
+   *updateSearchData:
+   * @styleCtxt:
+   * @style:
+   * @data:
+   * @variableTypes
+   *
+   * Return 1 on success,
+   *        0 otherwis
+   */
+  int updateSearchData(xsltTransformContextPtr styleCtxt,
+			  xsltStylesheetPtr style,
+			  void *data, int variableTypes);
+
 
 #ifdef __cplusplus
 }

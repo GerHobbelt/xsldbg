@@ -222,7 +222,6 @@ xslArrayListDelete (ArrayListPtr list, int position)
 void *
 xslArrayListGet (ArrayListPtr list, int position)
 {
-  int index;
   void *result = NULL;
 
   if (list && (position >= 0) && (position < list->count))

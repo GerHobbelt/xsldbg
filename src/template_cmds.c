@@ -24,15 +24,21 @@
 #include "debugXSL.h"
 #include "files.h"
 
+static int printCounter; /* Dangerous name think of a better one*/
+
 /* This is a semi private function defined in debugXSL.c */
 /**
  * getTemplate:
  * 
  * Returns the last template node found, if any
  */
-xsltTemplatePtr getTemplate();
+xsltTemplatePtr getTemplate(void);
 
-int printCount;
+
+
+void xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
+                          int *templateCount, int *printCount, 
+			  xmlChar *templateName);
 
 /* invert the order of printin template names so that it prints in the 
 same order that they are in file*/
@@ -149,13 +155,17 @@ xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
 
 
 void xslDbgShellPrintStylesheetsHelper(void *payload ATTRIBUTE_UNUSED,
+				       void *data ATTRIBUTE_UNUSED, xmlChar * name); 
+
+void 
+xslDbgShellPrintStylesheetsHelper(void *payload ATTRIBUTE_UNUSED,
                  void *data ATTRIBUTE_UNUSED, xmlChar * name)
 {
   xsltStylesheetPtr style = (xsltStylesheetPtr)payload;
   if (style && style->doc){
     xsltGenericError(xsltGenericErrorContext,
 		     " Stylesheet %s\n", style->doc->URL);
-    printCount++;
+    printCounter++;
   }
 }
 
@@ -168,12 +178,12 @@ void xslDbgShellPrintStylesheetsHelper(void *payload ATTRIBUTE_UNUSED,
    */
 void xslDbgPrintStyleSheets(xmlChar * arg)
 {
-  printCount = 0;
+  printCounter = 0;
   walkStylesheets((xmlHashScanner)xslDbgShellPrintStylesheetsHelper, NULL,
 		     getStylesheet());  
-  if (printCount != 0)
+  if (printCounter != 0)
        xsltGenericError(xsltGenericErrorContext,
-			"\n\tTotal of %d stylesheets found\n", printCount);
+			"\n\tTotal of %d stylesheets found\n", printCounter);
   else
     /* strange but possible */
        xsltGenericError(xsltGenericErrorContext,

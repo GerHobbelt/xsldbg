@@ -22,53 +22,53 @@
 #include "arraylist.h"
 
 /* Enable the use of xinclude during file parsing*/
-int xinclude = 0;
+static int xinclude = 0;
 
 /* Enable the use of docbook sgml file parsing */
-int docbook = 0;
+static int docbook = 0;
 
 /* Enable the use of timing during file parsing/execution */
-int timing = 0;
+static int timing = 0;
 
 /* Enable the use of profiling during file execution */
-int profile = 0;
+static int profile = 0;
 
 /* Disables validation when parsing files */
-int novalid = 0;
+static int novalid = 0;
 
 /* Disables output to stdout */
-int noout = 0;
+static int noout = 0;
 
 /* Enable the use of html parsing */
-int html = 0;
+static int html = 0;
 
 /* Enable the use of debuging */
-int debug = 0;
+static int debug = 0;
 
 /* Set the number of time to repeat */
-int repeat = 0;
+static int repeat = 0;
 
 /* Enable the use of debugger shell */
-int shell = 0;
+static int shell = 0;
 
 /* trace one execution */
-int trace = 0;
+static int trace = 0;
 
  /* do we print out messages/debuging info */
-int verbose = 0;
+static int verbose = 0;
 
 /* what speed do we walk though code */
-int walkSpeed = 0;
+static int walkSpeed = 0;
 
 /* do we run in gdb mode (prints out more information )*/
-int gdbMode = 0;
+static int gdbMode = 0;
 
 /* keep track of our string options */
-xmlChar *stringOptions[OPTIONS_DATA_FILE_NAME - OPTIONS_OUTPUT_FILE_NAME +
+static xmlChar *stringOptions[OPTIONS_DATA_FILE_NAME - OPTIONS_OUTPUT_FILE_NAME +
                        1];
 
 /* keep track of our parameters */
-ArrayListPtr parameterList;
+static ArrayListPtr parameterList;
 
 /** 
  * optionsInit:
@@ -81,7 +81,7 @@ int
 optionsInit(void)
 {
     int index;
-    char *docsPath = NULL;
+    xmlChar *docsPath = NULL;
 /* for non win32 environments see the macro in xsldebugger/Makefile.am
    Win32 tupe systems see  macro in libxslt/xsltwin32config.h
    For definition of USE_DOCS_MACRO see options.h */
@@ -89,7 +89,13 @@ optionsInit(void)
 #ifdef USE_DOCS_MACRO
     docsPath = DOCS_PATH;
 #else
-   docsPath = getenv("XSLDBG_DOCS_DIR");
+#ifndef __riscos
+      docsPath = getenv("XSLDBG_DOCS_DIR");
+#else
+    /* JRF NoteToSelf: Requires registration with allocations service -
+       will need more thought about filename translations */
+    docsPath = (xmlChar *)getenv("XSLDBGDocs$Dir");
+#endif
 #endif
 
     for (index = 0;

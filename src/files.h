@@ -70,7 +70,7 @@ xmlChar *guessStyleSheetName(xmlChar* name);
  * Return the base path for the top stylesheet ie
  *        ie URL minus the actual file name
  */
-xmlChar *stylePath();
+xmlChar *stylePath(void);
 
 
 /**
@@ -79,7 +79,7 @@ xmlChar *stylePath();
  * Return the working directory as set by changeDir function
  */
 xmlChar*
-workingPath();
+workingPath(void);
 
 
 /**

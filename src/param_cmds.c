@@ -22,6 +22,7 @@
 
 #include "xsldbg.h"
 #include "debugXSL.h"
+#include "options.h"
 
 /* -----------------------------------------
 

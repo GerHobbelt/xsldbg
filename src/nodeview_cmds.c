@@ -43,7 +43,7 @@ xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir)
 
     if (!ctxt || !arg) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Debuger has no files loaded, try reloading files\n");
+                         "Debugger has no files loaded, try reloading files\n");
         return;
     }
 
