@@ -34,7 +34,7 @@ enum File_type {
  * redirectToTerminal:
  * @device: terminal to redirect i/o to , will not work under win32
  */
-int openTerminal(xmlChar *device);
+int openTerminal(xmlChar * device);
 
 
 /**
@@ -51,8 +51,8 @@ int selectTerminalIO(void);
  * Returns 1 if able to select orginal stdin, stdout, stderr
  *         0 otherwise
 */
-int 
-selectNormalIO(void);
+int
+  selectNormalIO(void);
 
 /**
  * guessStyleSheetName:
@@ -61,7 +61,7 @@ selectNormalIO(void);
  * Returns non-NULL if found,
  *          NULL otherwise
  */
-xmlChar *guessStyleSheetName(xmlChar* name);
+xmlChar *guessStyleSheetName(xmlChar * name);
 
 
 /**
@@ -78,8 +78,7 @@ xmlChar *stylePath(void);
  *
  * Return the working directory as set by changeDir function
  */
-xmlChar*
-workingPath(void);
+xmlChar *workingPath(void);
 
 
 /**

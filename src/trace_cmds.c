@@ -93,7 +93,7 @@ xslDbgShellWalk(xmlChar * arg)
         }
         result++;
         setIntOption(OPTIONS_WALK_SPEED, speed);
-	xslDebugStatus = DEBUG_WALK;
+        xslDebugStatus = DEBUG_WALK;
     }
 #else
     xsltGenericError(xsltGenericErrorContext,

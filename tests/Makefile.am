@@ -16,6 +16,17 @@ TESTS = \
 	../results/test6.pl \
 	../results/test7.pl \
 	../results/test8.pl 
+
+TEST_SCRIPT = \
+	../results/test1.script \
+	../results/test2.script \
+	../results/test3.script \
+	../results/test4.script \
+	../results/test5.script \
+	../results/test6.script \
+	../results/test7.script \
+	../results/test8.script
+ 
 TEST_RESULTS = \
 	../results/test1.results	\
 	../results/test2.results  	\
@@ -36,14 +47,14 @@ XSLDBG_OBJECTS = \
 	../src/options.o 	../src/dbgsearch.o \
 	../src/dbgarraylist.o 	../src/dbgbreakpoint.o \
 	../src/dbgmain.o 	../src/dbgcallstack.o \
-	../src/os_cmds.o	
+	../src/os_cmds.o
 
 # use of configure defined libraries
 listTest_LDADD = $(XSLDBG_LIBS) $(XSLDBG_OBJECTS)
 
 
 # the library search path.
-searchTest_LDFLAGS = $(all_libraries) 
+searchTest_LDFLAGS = $(all_libraries)
 
 # Define some tests on the search dataDase
 searchTest_SOURCES = searchTest.c
@@ -52,22 +63,22 @@ searchTest_SOURCES = searchTest.c
 searchTest_LDADD = $(XSLDBG_LIBS) $(XSLDBG_OBJECTS)
 
 # the library search path.
-searchTest_LDFLAGS = $(all_libraries) 
+searchTest_LDFLAGS = $(all_libraries)
 
 $(XSLDBG):
 	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
 
-../results/%.script ../results/%.pl : %.data testgenerator.xsl 
-	$(XSLDBG) --param baseFileName \'../results/$(*F)\' testgenerator.xsl $(*F).data 
+../results/%.script ../results/%.pl : %.data testgenerator.xsl
+	$(XSLDBG) --param baseFileName \'../results/$(*F)\' testgenerator.xsl $(*F).data
 
-runtests : $(TESTS) $(TEST_RESULTS) $(XSLDBG) 
+runtests : $(TESTS) $(TEST_RESULTS) $(XSLDBG)
 
-../results/%.results : $(TESTS) %.xsl %.xml xsldbgmatch.pl $(XSLDBG) 	
+../results/%.results : $(TESTS) %.xsl %.xml xsldbgmatch.pl $(XSLDBG)
 	@echo "Running test $(*F)"
 	@echo "Running test $(*F)" > $@
 	$(XSLDBG) --shell  $(*F).xsl  $(*F).xml <  ../results/$(*F).script &> ../results/$(*F).log
 	perl ../results/$(*F).pl  &>  $@ < ../results/$(*F).log
-	@echo "Test $(*F) succeeded" 
+	@echo "Test $(*F) succeeded"
 	@echo "Test $(*F) succeeded">> $@
 
 if WITH_PERL

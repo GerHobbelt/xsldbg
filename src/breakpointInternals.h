@@ -14,11 +14,6 @@
 #ifndef BREAKPOINTINTERNAL_H
 #define BREAKPOINTINTERNAL_H
 
-#include <string.h>
-#include <libxml/hash.h>
-#include <libxml/debugXML.h>	/* needed for xmlGetLineNo(node) */
-#include <libxslt/xsltutils.h>
-#include <breakpoint/breakpoint.h>
 
 /* awful hack to get rid of debugging messages */
 #ifndef WITH_XSLDBG_DEBUG
@@ -30,21 +25,19 @@
 #include "breakpoint.h"
 #include "arraylist.h"
 
-
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 
 /*Indicate what type of variable to print out. 
   Is used by print_variable and searching functions */
-  enum 
-  {
-    DEBUG_GLOBAL_VAR = 1,
-    DEBUG_LOCAL_VAR,
-    DEBUG_ANY_VAR
-  };
+    enum {
+        DEBUG_GLOBAL_VAR = 1,
+        DEBUG_LOCAL_VAR,
+        DEBUG_ANY_VAR
+    };
+
 /*
 -----------------------------------------------------------
              Break point related functions
@@ -56,7 +49,7 @@ extern "C"
  * 
  * Returns a new hash table for breakPoints
  */
-  xmlHashTablePtr lineNoItemNew (void);
+    xmlHashTablePtr lineNoItemNew(void);
 
 /**
  * lineNoItemFree:
@@ -64,7 +57,7 @@ extern "C"
  * 
  * Free @item and all its contents
  */
-  void lineNoItemFree (void *item);
+    void lineNoItemFree(void *item);
 
 
 /**
@@ -75,8 +68,8 @@ extern "C"
  * Returns 1 if able to delete @breakPoint from @breakPointHash,
  *         0 otherwise
  */
-  int lineNoItemDelete (xmlHashTablePtr breakPointHash,
-			xslBreakPointPtr breakPoint);
+    int lineNoItemDelete(xmlHashTablePtr breakPointHash,
+                         xslBreakPointPtr breakPoint);
 
 /**
  * lineNoItemAdd:
@@ -86,8 +79,8 @@ extern "C"
  * Returns 1 if able to add @breakPoint to @breakPointHash,
  *         0 otherwise
  */
-  int lineNoItemAdd (xmlHashTablePtr breakPointHash,
-		     xslBreakPointPtr breakPoint);
+    int lineNoItemAdd(xmlHashTablePtr breakPointHash,
+                      xslBreakPointPtr breakPoint);
 
 
 /**
@@ -97,7 +90,7 @@ extern "C"
  * Return the hash table for this line if successful, 
  *        NULL otherwise
  */
-  xmlHashTablePtr lineNoItemGet (long lineNo);
+    xmlHashTablePtr lineNoItemGet(long lineNo);
 
 
 /**
@@ -107,7 +100,7 @@ extern "C"
  *               memory required has been obtained,
  *         0 otherwise
 */
-  int breakPointInit (void);
+    int breakPointInit(void);
 
 
 /**
@@ -115,7 +108,7 @@ extern "C"
  *
  * Free all memory used by breakPoints 
  */
-  void breakPointFree (void);
+    void breakPointFree(void);
 
 
 /** 
@@ -125,7 +118,7 @@ extern "C"
  * Returns valid breakPoint with default values set if successful, 
  *         NULL otherwise
  */
-  xslBreakPointPtr breakPointItemNew (void);
+    xslBreakPointPtr breakPointItemNew(void);
 
 
 /**
@@ -135,7 +128,8 @@ extern "C"
  *
  * Free memory associated with this breakPoint
  */
-  void breakPointItemFree (void *payload, xmlChar * name ATTRIBUTE_UNUSED);
+    void breakPointItemFree(void *payload,
+                            xmlChar * name ATTRIBUTE_UNUSED);
 
 
 /**
@@ -143,7 +137,7 @@ extern "C"
  *
  * Return the number of hash tables of breakPoints with the same line number
  */
-  int xslBreakPointLinesCount (void);
+    int xslBreakPointLinesCount(void);
 
 
 /**
@@ -152,7 +146,7 @@ extern "C"
  * Return the list of hash tables for breakpoints
  *        Dangerous function to use!! 
  */
-  ArrayListPtr xslBreakPointLineList (void);
+    ArrayListPtr xslBreakPointLineList(void);
 
 
 /**
@@ -161,7 +155,8 @@ extern "C"
  *
  * Enable/disable break point specified by arg
  */
-  int xslDbgShellEnable(xmlChar * arg, int enableType);
+    int xslDbgShellEnable(xmlChar * arg, int enableType);
+
 /*
 -----------------------------------------------------------
        Main debugger functions
@@ -186,20 +181,71 @@ extern "C"
  * Return 1 if successful ,
  *        0 otherwise
  */
-  int callStackInit (void);
+    int callStackInit(void);
 
 /**
  * callStackFree:
  *
  * Perform a once only deallocation of memory used
  */
-  void callStackFree (void);
+    void callStackFree(void);
 
 /*
 -----------------------------------------------------------
              Search related functions
 ----------------------------------------------------------
 */
+
+/* what types of searches are there */
+    enum SearchEnum {
+        SEARCH_BREAKPOINT = 20,
+        SEARCH_NODE,
+        SEARCH_XSL
+    };
+
+    typedef struct _searchInfo searchInfo;
+    typedef searchInfo *searchInfoPtr;
+    struct _searchInfo {
+        int found;              /* allow the walkFunc to indicate that its finished */
+        int type;               /* what type of search are we */
+        void *data;
+    };
+
+    /* data to pass to via searchInfoPtr when searching for breakpoints */
+    typedef struct _breakPointSearchData breakPointSearchData;
+    typedef breakPointSearchData *breakPointSearchDataPtr;
+    struct _breakPointSearchData {
+        int id;
+        const xmlChar *templateName;
+        xslBreakPointPtr breakPoint;
+    };
+
+/* data to pass via searchInfoPtr when searching for nodes*/
+    typedef struct _nodeSearchData nodeSearchData;
+    typedef nodeSearchData *nodeSearchDataPtr;
+    struct _nodeSearchData {
+        long lineNo;
+        const xmlChar *url;
+        xmlNodePtr node;
+    };
+
+/**
+ * searchNewInfo:
+ * @type: what type of search is required
+ * 
+ * Return valid search info ptr is succssfull
+ *        NULL otherwise
+ */
+    searchInfoPtr searchNewInfo(enum SearchEnum type);
+
+
+/**
+ * searchFreeInfo:
+ * @info : valid search info
+ *
+ * Free memory used by @info
+ */
+    void searchFreeInfo(searchInfoPtr info);
 
 
 /**
@@ -209,7 +255,7 @@ extern "C"
  *               memory required has been obtained,
  *         0 otherwise
 */
-  int searchInit (void);
+    int searchInit(void);
 
 
 /**
@@ -217,7 +263,7 @@ extern "C"
  *
  * Free all memory used by searching 
  */
-  void searchFree (void);
+    void searchFree(void);
 
 
 /**
@@ -227,7 +273,7 @@ extern "C"
  * Returns 1 on success,
  *         0 otherwise
  */
-  int searchEmpty (void);
+    int searchEmpty(void);
 
 
 /**
@@ -237,7 +283,7 @@ extern "C"
  * Return 1 if able to add @node to top node in search dataBase,
  *        0 otherwise
  */
-  int searchAdd (xmlNodePtr node);
+    int searchAdd(xmlNodePtr node);
 
 /**
  * searchSave:
@@ -246,7 +292,7 @@ extern "C"
  * Return 1 on success,
  *        0 otherwise
  */
-  int searchSave (const xmlChar * fileName);
+    int searchSave(const xmlChar * fileName);
 
   /**
    * searchQuery:
@@ -259,7 +305,7 @@ extern "C"
    * Return 1 on success,
    *        0 otherwise   
    */
-  int searchQuery (const xmlChar * tempFile, const xmlChar * query);
+    int searchQuery(const xmlChar * tempFile, const xmlChar * query);
 
 
 /**
@@ -269,7 +315,7 @@ extern "C"
  *         Dangerous function to use! Does NOT return a copy of 
  *             searchData  so don't free it
  */
-  xmlDocPtr searchDoc (void);
+    xmlDocPtr searchDoc(void);
 
 
 /**
@@ -279,7 +325,7 @@ extern "C"
  *         Dangerous function to use! Does NOT return a copy of 
  *             searchRootNode  so don't free it
  */
-  xmlNodePtr searchRootNode (void);
+    xmlNodePtr searchRootNode(void);
 
 
 /**
@@ -289,7 +335,7 @@ extern "C"
  * Return breakpoint as a new xmlNode in search dataBase format if successful,
  *        NULL otherwise
  */
-  xmlNodePtr searchBreakPointNode (xslBreakPointPtr breakPoint);
+    xmlNodePtr searchBreakPointNode(xslBreakPointPtr breakPoint);
 
 
 /**
@@ -299,7 +345,7 @@ extern "C"
  * Returns @templNode as a new xmlNode in search dataBase format if successful,
  *        NULL otherwise
  */
-  xmlNodePtr searchTemplateNode (xmlNodePtr templNode);
+    xmlNodePtr searchTemplateNode(xmlNodePtr templNode);
 
 /** 
  * searchGlobalNode:
@@ -308,7 +354,7 @@ extern "C"
  * Returns @style as a new xmlNode in search dataBase format if successful,
  *        NULL otherwise
  */
-  xmlNodePtr searchGlobalNode(xmlNodePtr variable);
+    xmlNodePtr searchGlobalNode(xmlNodePtr variable);
 
 /** 
  * searchLocalNode:
@@ -317,7 +363,7 @@ extern "C"
  * Returns @style as a new xmlNode in search dataBase format if successful,
  *        NULL otherwise
  */
-  xmlNodePtr searchLocalNode(xmlNodePtr variable);
+    xmlNodePtr searchLocalNode(xmlNodePtr variable);
 
 
 /**
@@ -327,7 +373,7 @@ extern "C"
  * Returns @style as a new xmlNode in search dataBase format if successful,
  *        NULL otherwise
  */
-  xmlNodePtr searchSourceNode (xsltStylesheetPtr style);
+    xmlNodePtr searchSourceNode(xsltStylesheetPtr style);
 
 
 /**
@@ -337,7 +383,7 @@ extern "C"
  * Returns @include as a new xmlNode in search dataBase format if successful,
  *        NULL otherwise
  */
-  xmlNodePtr searchIncludeNode (xmlNodePtr include);
+    xmlNodePtr searchIncludeNode(xmlNodePtr include);
 
 /**
  * searchCallStackNode:
@@ -346,7 +392,7 @@ extern "C"
  * Returns @callStackItem as a new xmlNode in search dataBase format if successful,
  *        NULL otherwise
  */
-  xmlNodePtr searchCallStackNode (xslCallPointPtr callStackItem);
+    xmlNodePtr searchCallStackNode(xslCallPointPtr callStackItem);
 
 /**
  * walkLocals:
@@ -357,8 +403,8 @@ extern "C"
  * Walks through all templates calling walkFunc for each. The payload
  *   of walkFunc is of type xmlNodePtr
  */
-  void walkLocals (xmlHashScanner walkFunc, void *data,
-		  xsltStylesheetPtr style);
+    void walkLocals(xmlHashScanner walkFunc, void *data,
+                    xsltStylesheetPtr style);
 
 /**
  * walkIncludes:
@@ -369,8 +415,8 @@ extern "C"
  * Walks through all xsl:include calling walkFunc for each. The payload
  *   of walkFunc is of type xmlNodePtr
  */
-  void walkIncludes (xmlHashScanner walkFunc, void *data,
-		     xsltStylesheetPtr style);
+    void walkIncludes(xmlHashScanner walkFunc, void *data,
+                      xsltStylesheetPtr style);
 
 
 /**
@@ -382,8 +428,8 @@ extern "C"
  * Call walkFunc for each global variable. The payload
  *   sent to walkFunc is of type xmlNodePtr
  */
-  void walkGlobals (xmlHashScanner walkFunc, void *data ATTRIBUTE_UNUSED,
-		      xsltStylesheetPtr style);
+    void walkGlobals(xmlHashScanner walkFunc, void *data ATTRIBUTE_UNUSED,
+                     xsltStylesheetPtr style);
 
 /**
  * walkChildNodes:
@@ -394,9 +440,11 @@ extern "C"
  * Call walkFunc for each child of @node the payload sent to walkFunc is
  *   a xmlNodePtr
  */
-  void walkChildNodes (xmlHashScanner walkFunc, void *data, xmlNodePtr node);
+    void walkChildNodes(xmlHashScanner walkFunc, void *data,
+                        xmlNodePtr node);
 
-  /* fix me !*/
+    /* fix me ! */
+
   /**
    *updateSearchData:
    * @styleCtxt:
@@ -407,13 +455,12 @@ extern "C"
    * Return 1 on success,
    *        0 otherwis
    */
-  int updateSearchData(xsltTransformContextPtr styleCtxt,
-			  xsltStylesheetPtr style,
-			  void *data, int variableTypes);
+    int updateSearchData(xsltTransformContextPtr styleCtxt,
+                         xsltStylesheetPtr style,
+                         void *data, int variableTypes);
 
 
 #ifdef __cplusplus
 }
 #endif
-
 #endif

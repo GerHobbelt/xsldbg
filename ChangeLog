@@ -1,3 +1,14 @@
+* Keith Isdale 1 Dec 2001
+* Added	--with-libxslt-prefix to configure.in
+* Changed to version 0.8.4
+* Changed source and data commands so that they clear any breakpoints present 	
+* Changed xsldbg.c so that it when running a stylesheet you get output
+* Fixed transform.c (double entry to text nodes)
+*	variables.c (no entry to variable node)
+*     Sent diff to xslt@gnome.org	
+* Remove any depndance on old breakpoint API file in libxslt
+*   now fully using callbackmechanism	
+	
 * Keith Isdale 30 Nov 2001
 * Applied fixes as suggested by Justin
 * Fixed configure.in, acconfig.h, breakpointInternals.h so that

@@ -64,8 +64,8 @@ static int walkSpeed = 0;
 static int gdbMode = 0;
 
 /* keep track of our string options */
-static xmlChar *stringOptions[OPTIONS_DATA_FILE_NAME - OPTIONS_OUTPUT_FILE_NAME +
-                       1];
+static xmlChar *stringOptions[OPTIONS_DATA_FILE_NAME -
+                              OPTIONS_OUTPUT_FILE_NAME + 1];
 
 /* keep track of our parameters */
 static ArrayListPtr parameterList;
@@ -80,8 +80,9 @@ static ArrayListPtr parameterList;
 int
 optionsInit(void)
 {
-    int index;
+    int optionId;
     xmlChar *docsPath = NULL;
+
 /* for non win32 environments see the macro in xsldebugger/Makefile.am
    Win32 tupe systems see  macro in libxslt/xsltwin32config.h
    For definition of USE_DOCS_MACRO see options.h */
@@ -90,20 +91,20 @@ optionsInit(void)
     docsPath = DOCS_PATH;
 #else
 #ifndef __riscos
-      docsPath = getenv("XSLDBG_DOCS_DIR");
+    docsPath = getenv("XSLDBG_DOCS_DIR");
 #else
     /* JRF NoteToSelf: Requires registration with allocations service -
-       will need more thought about filename translations */
-    docsPath = (xmlChar *)getenv("XSLDBGDocs$Dir");
+     * will need more thought about filename translations */
+    docsPath = (xmlChar *) getenv("XSLDBGDocs$Dir");
 #endif
 #endif
 
-    for (index = 0;
-         index <= OPTIONS_DATA_FILE_NAME - OPTIONS_OUTPUT_FILE_NAME;
-         index++) {
-        stringOptions[index] = NULL;
+    for (optionId = 0;
+         optionId <= OPTIONS_DATA_FILE_NAME - OPTIONS_OUTPUT_FILE_NAME;
+         optionId++) {
+        stringOptions[optionId] = NULL;
     }
-    
+
     /* init our parameter list */
     parameterList = xslArrayListNew(10, (freeItemFunc) paramItemFree);
 
@@ -336,15 +337,15 @@ setStringOption(enum Option_type option_type, const xmlChar * value)
 
     if ((option_type >= OPTIONS_OUTPUT_FILE_NAME) &&
         (option_type <= OPTIONS_DATA_FILE_NAME)) {
-        int index = option_type - OPTIONS_OUTPUT_FILE_NAME;
+        int optionId = option_type - OPTIONS_OUTPUT_FILE_NAME;
 
-        if (stringOptions[index])
-            xmlFree(stringOptions[index]);
+        if (stringOptions[optionId])
+            xmlFree(stringOptions[optionId]);
         if (value)
-            stringOptions[index] =
+            stringOptions[optionId] =
                 (xmlChar *) xmlMemStrdup((char *) value);
         else
-            stringOptions[index] = NULL;
+            stringOptions[optionId] = NULL;
         result++;
     } else
         xsltGenericError(xsltGenericErrorContext,
@@ -478,4 +479,3 @@ printParamList(void)
 
     return result;
 }
-

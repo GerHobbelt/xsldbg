@@ -10,17 +10,18 @@
 #include "xsldbg.h"
 #include "breakpointInternals.h"
 
-#include <libxslt/xsltutils.h> /* need for breakpoint callback support */
+#include <libxslt/xsltutils.h>  /* need for breakpoint callback support */
 
 /* setup debugger callbacks */
 struct DebuggerCallbacks {
     xsltHandleDebuggerCallback debuggercallback;
     xsltAddCallCallback addcallback;
     xsltDropCallCallback dropcallback;
-}debuggerDriver;
+} debuggerDriver;
 
 void xslHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
-                  xsltTemplatePtr templ, xsltTransformContextPtr ctxt);
+                       xsltTemplatePtr templ,
+                       xsltTransformContextPtr ctxt);
 
 /*
 -----------------------------------------------------------
@@ -28,7 +29,7 @@ void xslHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
 -----------------------------------------------------------
 */
 
-extern char *xslShellReadline (char *prompt);
+extern char *xslShellReadline(char *prompt);
 
 /**
  * debugInit :
@@ -38,21 +39,21 @@ extern char *xslShellReadline (char *prompt);
  *         0 otherwise
  */
 int
-debugInit (void)
+debugInit(void)
 {
 
-  int result;
+    int result;
 
-  xslDebugStatus = DEBUG_CONT;
-  result = breakPointInit ();
-  result = result && callStackInit ();
+    xslDebugStatus = DEBUG_NONE;
+    result = breakPointInit();
+    result = result && callStackInit();
 
-  /* setup debugger callbacks */
-  debuggerDriver.debuggercallback = xslHandleDebugger;
-  debuggerDriver.addcallback = xslAddCall;
-  debuggerDriver.dropcallback = xslDropCall;
-  xsltSetDebuggerCallbacks(3, &debuggerDriver);
-  return result;
+    /* setup debugger callbacks */
+    debuggerDriver.debuggercallback = xslHandleDebugger;
+    debuggerDriver.addcallback = xslAddCall;
+    debuggerDriver.dropcallback = xslDropCall;
+    xsltSetDebuggerCallbacks(3, &debuggerDriver);
+    return result;
 }
 
 
@@ -62,10 +63,10 @@ debugInit (void)
  * Free up any memory taken by debugging
  */
 void
-debugFree (void)
+debugFree(void)
 {
-  breakPointFree ();
-  callStackFree ();
+    breakPointFree();
+    callStackFree();
 }
 
 
@@ -78,13 +79,13 @@ debugFree (void)
  *         0 otherwise
  */
 int
-xslDebugGotControl (int reached)
+xslDebugGotControl(int reached)
 {
-  static int hasReached;
-  int result = hasReached;
+    static int hasReached;
+    int result = hasReached;
 
-  hasReached = reached;
-  return result;
+    hasReached = reached;
+    return result;
 }
 
 
@@ -103,61 +104,64 @@ void
 xslHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
                   xsltTemplatePtr templ, xsltTransformContextPtr ctxt)
 {
-  setActiveBreakPoint(NULL);
-  if (!cur && !node){
-    xsltGenericError(xsltGenericErrorContext,
-		     "Soure and doc are NULL can't enter debugger\n");
-  }else{
-    switch (xslDebugStatus) {
+    setActiveBreakPoint(NULL);
+    if (!cur && !node) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Soure and doc are NULL can't enter debugger\n");
+    } else {
+        switch (xslDebugStatus) {
 
-      /* A temparary stopping point */
-    case DEBUG_WALK:
-    case DEBUG_TRACE:
-      /* only allow breakpoints at xml elements */
-      if (xmlGetLineNo(cur) != -1)
-	xslDebugBreak(cur, node, templ, ctxt);
-      break;
+                /* A temparary stopping point */
+            case DEBUG_WALK:
+            case DEBUG_TRACE:
+                /* only allow breakpoints at xml elements */
+                if (xmlGetLineNo(cur) != -1)
+                    xslDebugBreak(cur, node, templ, ctxt);
+                break;
 
-    case DEBUG_STOP:
-      xslDebugStatus = DEBUG_CONT;
-      /* only allow breakpoints at xml elements */
-      if (xmlGetLineNo(cur) != -1)
-	xslDebugBreak(cur, node, templ, ctxt);
-      break;
+            case DEBUG_STOP:
+                xslDebugStatus = DEBUG_CONT;
+                /* only allow breakpoints at xml elements */
+                if (xmlGetLineNo(cur) != -1)
+                    xslDebugBreak(cur, node, templ, ctxt);
+                break;
 
-    case DEBUG_STEP:
-      /* only allow breakpoints at xml elements */
-      if (xmlGetLineNo(cur) != -1)
-	xslDebugBreak(cur, node, templ, ctxt);
-      break;
+            case DEBUG_STEP:
+                /* only allow breakpoints at xml elements */
+                if (xmlGetLineNo(cur) != -1)
+                    xslDebugBreak(cur, node, templ, ctxt);
+                break;
 
-    case DEBUG_CONT:
-      {
-	xslBreakPointPtr breakPoint = NULL;
-	if (cur){  
-	  breakPoint = getBreakPoint(cur->doc->URL, xmlGetLineNo(cur));
-	  
-	  if (breakPoint) {
-	    if (breakPoint->enabled) {
-	    setActiveBreakPoint(breakPoint);
-	    xslDebugBreak(cur, node, templ, ctxt);
-	    return;
-	    }
-	  }
-	}
-	if (node){
-	  breakPoint =  
-	    getBreakPoint(node->doc->URL, xmlGetLineNo(node));
-	  if (breakPoint){
-	    if (breakPoint->enabled){
-	      setActiveBreakPoint(breakPoint);
-	      xslDebugBreak(cur, node, templ, ctxt);
-	    }
-	  }
-	}
-      }
-      break;
+            case DEBUG_CONT:
+                {
+                    xslBreakPointPtr breakPoint = NULL;
+
+                    if (cur) {
+                        breakPoint =
+                            getBreakPoint(cur->doc->URL,
+                                          xmlGetLineNo(cur));
+
+                        if (breakPoint) {
+                            if (breakPoint->enabled) {
+                                setActiveBreakPoint(breakPoint);
+                                xslDebugBreak(cur, node, templ, ctxt);
+                                return;
+                            }
+                        }
+                    }
+                    if (node) {
+                        breakPoint =
+                            getBreakPoint(node->doc->URL,
+                                          xmlGetLineNo(node));
+                        if (breakPoint) {
+                            if (breakPoint->enabled) {
+                                setActiveBreakPoint(breakPoint);
+                                xslDebugBreak(cur, node, templ, ctxt);
+                            }
+                        }
+                    }
+                }
+                break;
+        }
     }
-  }
 }
-

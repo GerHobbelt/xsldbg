@@ -118,7 +118,7 @@ extern "C" {
    *
    * Print stylesheets that can be found in loaded stylsheet
    */
-  void xslDbgPrintStyleSheets(xmlChar * arg);
+    void xslDbgPrintStyleSheets(xmlChar * arg);
 
 /* -----------------------------------------
 
@@ -135,7 +135,7 @@ extern "C" {
  * Return 1 on success,
  *        0 otherwise
  */
-int xslDbgShellFrameBreak(xmlChar * arg, int stepup);
+    int xslDbgShellFrameBreak(xmlChar * arg, int stepup);
 
 
 /**
@@ -146,7 +146,7 @@ int xslDbgShellFrameBreak(xmlChar * arg, int stepup);
  * Return 1 on success,
  *        0 otherwise
  */
-int xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style);
+    int xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style);
 
 
 /**
@@ -157,7 +157,7 @@ int xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style);
  * Return 1 on success,
  *        0 otherwise
  */
-int xslDbgShellDelete(xmlChar * arg);
+    int xslDbgShellDelete(xmlChar * arg);
 
 
 /**
@@ -171,8 +171,8 @@ int xslDbgShellDelete(xmlChar * arg);
  *
  * Enable/disable break points via use of scan of breakPoints
 */
-void xslDbgEnableBreakPoint(void *payload, void *data,
-                       xmlChar * name ATTRIBUTE_UNUSED);
+    void xslDbgEnableBreakPoint(void *payload, void *data,
+                                xmlChar * name ATTRIBUTE_UNUSED);
 
 /**
  * xslDbgPrintBreakPoint:
@@ -182,8 +182,8 @@ void xslDbgEnableBreakPoint(void *payload, void *data,
  *
  * Print data given by scan of breakPoints 
 */
-void xslDbgPrintBreakPoint(void *payload, void *data ATTRIBUTE_UNUSED,
-                      xmlChar * name ATTRIBUTE_UNUSED);
+    void xslDbgPrintBreakPoint(void *payload, void *data ATTRIBUTE_UNUSED,
+                               xmlChar * name ATTRIBUTE_UNUSED);
 
 
 /* -----------------------------------------
@@ -204,11 +204,12 @@ void xslDbgPrintBreakPoint(void *payload, void *data ATTRIBUTE_UNUSED,
  *
  * print out the list of template names found that match critieria   
  */
-void
-xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
-                         xmlShellCtxtPtr ctxt ATTRIBUTE_UNUSED,
-                         xmlChar * arg ATTRIBUTE_UNUSED, int verbose,
-                         int allFiles);
+    void
+     
+        xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
+                                 xmlShellCtxtPtr ctxt ATTRIBUTE_UNUSED,
+                                 xmlChar * arg ATTRIBUTE_UNUSED,
+                                 int verbose, int allFiles);
 
 /* -----------------------------------------
 
@@ -225,7 +226,8 @@ xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
  *
  * Print list of nodes in either ls or dir format
  */
-void xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir);
+    void xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg,
+                              int dir);
 
 
 /** 
@@ -237,8 +239,8 @@ void xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir);
  * Print the result of an xpath expression. This can include variables
  *        if styleCtxt is not NULL
  */
-void xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
-	       xmlChar * arg);
+    void xslDbgShellCat(xsltTransformContextPtr styleCtxt,
+                        xmlShellCtxtPtr ctxt, xmlChar * arg);
 
 /**
  * xslDbgShellPrintVariable:
@@ -249,8 +251,8 @@ void xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
  *
  *  Print the value variable specified by args.
  */
-void xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
-			 int type);
+    void xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt,
+                                  xmlChar * arg, int type);
 
 
 /* -----------------------------------------
@@ -265,8 +267,8 @@ void xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
  *
  * Returns 1 if able to change xsldbg working direcorty to @path
  *         0 otherwise
- */ 
-int xslDbgShellChangeWd(const xmlChar * path);
+ */
+    int xslDbgShellChangeWd(const xmlChar * path);
 
 
 /**
@@ -278,7 +280,7 @@ int xslDbgShellChangeWd(const xmlChar * path);
  * Return 1 on success,
  *        0 otherwise
  */
-int xslDbgShellExecute(xmlChar * name, int verbose);
+    int xslDbgShellExecute(xmlChar * name, int verbose);
 
 
 /* -----------------------------------------
@@ -296,7 +298,7 @@ int xslDbgShellExecute(xmlChar * name, int verbose);
  * Return 1 on success,
  *        0 otherwise
 */
-int xslDbgShellAddParam(xmlChar * arg);
+    int xslDbgShellAddParam(xmlChar * arg);
 
 
 /**
@@ -306,7 +308,7 @@ int xslDbgShellAddParam(xmlChar * arg);
  * Return 1 if able to delete parameter @name,
  *        0 otherwise
  */
-int xslDbgShellDelParam(xmlChar * arg);
+    int xslDbgShellDelParam(xmlChar * arg);
 
 
 /**
@@ -317,7 +319,7 @@ int xslDbgShellDelParam(xmlChar * arg);
  * Return 1 on success,
  *        0 otherwise
  */
-int xslDbgShellShowParam(xmlChar * arg ATTRIBUTE_UNUSED);
+    int xslDbgShellShowParam(xmlChar * arg ATTRIBUTE_UNUSED);
 
 
 /* -----------------------------------------
@@ -334,7 +336,7 @@ int xslDbgShellShowParam(xmlChar * arg ATTRIBUTE_UNUSED);
  * Return 1 on success,
  *        0 otherwise
  */
-int xslDbgShellTrace(xmlChar * arg ATTRIBUTE_UNUSED);
+    int xslDbgShellTrace(xmlChar * arg ATTRIBUTE_UNUSED);
 
 /**
  * xslDbgShellWalk:
@@ -344,7 +346,7 @@ int xslDbgShellTrace(xmlChar * arg ATTRIBUTE_UNUSED);
  * Return 1 on success,
  *        0 otherwise
  */
-int xslDbgShellWalk(xmlChar * arg);
+    int xslDbgShellWalk(xmlChar * arg);
 
 
 
@@ -363,14 +365,14 @@ int xslDbgShellWalk(xmlChar * arg);
  * Return 1 if able to run query with @arg, 
  *        0 otherwise
  */
-int
-xslDbgShellSearch(xsltTransformContextPtr styleCtxt, xsltStylesheetPtr style,
-		  xmlChar * arg);
+    int
+     
+        xslDbgShellSearch(xsltTransformContextPtr styleCtxt,
+                          xsltStylesheetPtr style, xmlChar * arg);
 
 
 #ifdef __cplusplus
 }
 #endif
-#endif                         
+#endif
  /* __DEBUG_XSL__ */
-

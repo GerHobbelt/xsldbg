@@ -23,13 +23,14 @@
     <xsl:choose>
       <xsl:when test="boolean($dosort)">
         <xsl:apply-templates select="$query">
-          <xsl:sort select="@id"/>
+          <xsl:sort select="//breakpoint/@id" data-type="number" order="ascending"/>
+          <xsl:sort select="//template/@name" order="ascending"/>
+          <xsl:sort select="//template/@match" order="ascending"/>
+          <xsl:sort select="//source/@href" order="ascending"/>
         </xsl:apply-templates>
        </xsl:when>
        <xsl:otherwise>
-         <!-- disable sorting it does't always work anyhow 
-             need to fix section attriute for xsl:sort
-             -->
+         <!-- disabled sorting -->
          <xsl:apply-templates select="$query">
          </xsl:apply-templates>
        </xsl:otherwise>

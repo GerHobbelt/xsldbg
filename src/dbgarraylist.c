@@ -33,28 +33,25 @@
  *         0 otherwise
  */
 ArrayListPtr
-xslArrayListNew (int initialSize, freeItemFunc deleteFunction)
+xslArrayListNew(int initialSize, freeItemFunc deleteFunction)
 {
-  ArrayListPtr list = NULL;
+    ArrayListPtr list = NULL;
 
-  if (initialSize <= 0)
-    {
-      xsltGenericError (xsltGenericErrorContext,
-			"xslArrayListNew invalid initialSize %d\n",
-			initialSize);
-    }
-  else
-    list = (ArrayListPtr) xmlMalloc (sizeof (ArrayList));
+    if (initialSize <= 0) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "xslArrayListNew invalid initialSize %d\n",
+                         initialSize);
+    } else
+        list = (ArrayListPtr) xmlMalloc(sizeof(ArrayList));
 
-  if (list)
-    {
-      list->data = (void *) xmlMalloc (sizeof (void *) * initialSize);
-      list->deleteFunction = deleteFunction;
-      list->count = 0;
-      list->size = initialSize;
+    if (list) {
+        list->data = (void *) xmlMalloc(sizeof(void *) * initialSize);
+        list->deleteFunction = deleteFunction;
+        list->count = 0;
+        list->size = initialSize;
     }
 
-  return list;
+    return list;
 }
 
 
@@ -67,14 +64,14 @@ xslArrayListNew (int initialSize, freeItemFunc deleteFunction)
  *   xmlFree
  */
 void
-xslArrayListFree (ArrayListPtr list)
+xslArrayListFree(ArrayListPtr list)
 {
-  if (!list)
-    return;
+    if (!list)
+        return;
 
-  xslArrayListEmpty (list);
-  xmlFree (list->data);
-  xmlFree (list);
+    xslArrayListEmpty(list);
+    xmlFree(list->data);
+    xmlFree(list);
 }
 
 /**
@@ -86,24 +83,21 @@ xslArrayListFree (ArrayListPtr list)
  *         0 otherwise
  */
 int
-xslArrayListEmpty (ArrayListPtr list)
+xslArrayListEmpty(ArrayListPtr list)
 {
-  int index, result = 0;
+    int index, result = 0;
 
-  if (list)
-    {
-      if (list->deleteFunction)
-	{
-	  for (index = 0; index < list->count; index++)
-	    {
-	      if (list->data[index])
-		(*list->deleteFunction) (list->data[index]);
-	    }
-	  result++;
-	  list->count = 0;
-	}
+    if (list) {
+        if (list->deleteFunction) {
+            for (index = 0; index < list->count; index++) {
+                if (list->data[index])
+                    (*list->deleteFunction) (list->data[index]);
+            }
+            result++;
+            list->count = 0;
+        }
     }
-  return result;
+    return result;
 }
 
 /**
@@ -113,14 +107,14 @@ xslArrayListEmpty (ArrayListPtr list)
  * Returns the maximum number elements this list can contain
  */
 int
-xslArrayListSize (ArrayListPtr list)
+xslArrayListSize(ArrayListPtr list)
 {
-  int result = 0;
+    int result = 0;
 
-  if (list)
-    result = list->size;
+    if (list)
+        result = list->size;
 
-  return result;
+    return result;
 }
 
 
@@ -131,14 +125,14 @@ xslArrayListSize (ArrayListPtr list)
  * Returns the count of number items in list
  */
 int
-xslArrayListCount (ArrayListPtr list)
+xslArrayListCount(ArrayListPtr list)
 {
-  int result = 0;
+    int result = 0;
 
-  if (list)
-    result = list->count;
+    if (list)
+        result = list->count;
 
-  return result;
+    return result;
 }
 
 
@@ -150,35 +144,32 @@ xslArrayListCount (ArrayListPtr list)
  * Add item to end of list
  */
 int
-xslArrayListAdd (ArrayListPtr list, void *item)
+xslArrayListAdd(ArrayListPtr list, void *item)
 {
-  int result = 0;
+    int result = 0;
 
-  if (list && item)
-    {
-      if (list->count + 1 > list->size)
-	{
-	  /* grow the size of data */
-	  void **temp;
-	  int newSize, index;
+    if (list && item) {
+        if (list->count + 1 > list->size) {
+            /* grow the size of data */
+            void **temp;
+            int newSize, index;
 
-	  if (list->size < DOUBLE_SIZE_MAX_ITEM)
-	    newSize = list->size * 2;
-	  else
-	    newSize = (int) (list->size * 1.5);
-	  temp = (void *) xmlMalloc (sizeof (void *) * newSize);
-	  for (index = 0; index < list->count; index++)
-	    {
-	      temp[index] = list->data[index];
-	    }
-	  xmlFree (list->data);
-	  list->data = temp;
-	  list->size = newSize;
-	}
-      list->data[list->count++] = item;
-      result++;
+            if (list->size < DOUBLE_SIZE_MAX_ITEM)
+                newSize = list->size * 2;
+            else
+                newSize = (int) (list->size * 1.5);
+            temp = (void *) xmlMalloc(sizeof(void *) * newSize);
+            for (index = 0; index < list->count; index++) {
+                temp[index] = list->data[index];
+            }
+            xmlFree(list->data);
+            list->data = temp;
+            list->size = newSize;
+        }
+        list->data[list->count++] = item;
+        result++;
     }
-  return result;
+    return result;
 }
 
 
@@ -190,25 +181,23 @@ xslArrayListAdd (ArrayListPtr list, void *item)
  * Add item to end of list
  */
 int
-xslArrayListDelete (ArrayListPtr list, int position)
+xslArrayListDelete(ArrayListPtr list, int position)
 {
-  int result = 0, index;
+    int result = 0, index;
 
-  if (list && (list->count > 0) && (position >= 0) &&
-      (position < list->count) && list->data[position])
-    {
-      if (list->deleteFunction)
-	(*list->deleteFunction) (list->data[position]);
+    if (list && (list->count > 0) && (position >= 0) &&
+        (position < list->count) && list->data[position]) {
+        if (list->deleteFunction)
+            (*list->deleteFunction) (list->data[position]);
 
-      /* shuffle all elements upwards */
-      for (index = position; index < (list->count - 1); index++)
-	{
-	  list->data[index] = list->data[index + 1];
-	}
-      list->count--;
-      result++;
+        /* shuffle all elements upwards */
+        for (index = position; index < (list->count - 1); index++) {
+            list->data[index] = list->data[index + 1];
+        }
+        list->count--;
+        result++;
     }
-  return result;
+    return result;
 }
 
 /**
@@ -220,13 +209,12 @@ xslArrayListDelete (ArrayListPtr list, int position)
  *     NULL otherwise
  */
 void *
-xslArrayListGet (ArrayListPtr list, int position)
+xslArrayListGet(ArrayListPtr list, int position)
 {
-  void *result = NULL;
+    void *result = NULL;
 
-  if (list && (position >= 0) && (position < list->count))
-    {
-      result = list->data[position];
+    if (list && (position >= 0) && (position < list->count)) {
+        result = list->data[position];
     }
-  return result;
+    return result;
 }

@@ -8,27 +8,15 @@
  ***************************************************************************/
 
 
-#include "xsldbg.h" 
+#include "xsldbg.h"
 #include "debugXSL.h"
 #include "breakpointInternals.h"
 #include "options.h"
 
 
 /* our private function*/
-void scanForBreakPoint (void *payload, void *data,
-			xmlChar * name ATTRIBUTE_UNUSED);
-
-/* data to pass to walk function when searching 
-   it is rarely used */
-typedef struct _xslBreakPointSearch xslBreakPointSearch;
-typedef xslBreakPointSearch *xslBreakPointSearchPtr;
-struct _xslBreakPointSearch
-{
-  const xmlChar *templateName;
-  int id;
-  int found;  /* allow the walkFunc to indicate that its finished */
-  xslBreakPointPtr breakPoint;
-};
+void scanForBreakPoint(void *payload, void *data,
+                       xmlChar * name ATTRIBUTE_UNUSED);
 
 /* store all data in this document so we can write it to file*/
 static xmlDocPtr searchDataBase;
@@ -42,6 +30,89 @@ static xmlChar *lastQuery;
 #define BUFFER_SIZE 500
 static char buff[BUFFER_SIZE];
 
+
+
+/**
+ * searchNewInfo:
+ * @type: what type of search is required
+ * 
+ * Return valid search info ptr is succssfull
+ *        NULL otherwise
+ */
+searchInfoPtr
+searchNewInfo(enum SearchEnum type)
+{
+    searchInfoPtr result = NULL;
+
+    switch (type) {
+        case SEARCH_BREAKPOINT:
+            result = (searchInfoPtr) xmlMalloc(sizeof(searchInfo));
+            if (result) {
+                breakPointSearchDataPtr searchData;
+
+                result->type = SEARCH_BREAKPOINT;
+                searchData =
+                    (breakPointSearchDataPtr)
+                    xmlMalloc(sizeof(breakPointSearchData));
+                if (searchData) {
+                    searchData->id = -1;
+                    searchData->templateName = NULL;
+                    searchData->breakPoint = NULL;
+                    result->data = searchData;
+                } else {
+                    xmlFree(result);
+                    result = NULL;
+                }
+            }
+            break;
+
+        case SEARCH_NODE:
+            result = (searchInfoPtr) xmlMalloc(sizeof(searchInfo));
+            if (result) {
+                nodeSearchDataPtr searchData;
+
+                result->type = SEARCH_NODE;
+                searchData =
+                    (nodeSearchDataPtr) xmlMalloc(sizeof(nodeSearchData));
+                if (searchData) {
+                    searchData->node = NULL;
+                    searchData->lineNo = -1;
+                    searchData->url = NULL;
+                    result->data = searchData;
+                } else {
+                    xmlFree(result);
+                    result = NULL;
+                }
+            }
+            break;
+
+        case SEARCH_XSL:
+            break;
+
+    }
+    if (result)
+        result->found = 0;
+    return result;
+}
+
+
+/**
+ * searchFreeInfo:
+ * @info : valid search info
+ *
+ * Free memory used by @info
+ */
+void
+searchFreeInfo(searchInfoPtr info)
+{
+    if (info) {
+        if (info->data)
+            xmlFree(info->data);
+        xmlFree(info);
+    }
+}
+
+
 /**
  * seachInit:
  *
@@ -50,24 +121,21 @@ static char buff[BUFFER_SIZE];
  *         0 otherwise
 */
 int
-searchInit (void)
+searchInit(void)
 {
-  searchDataBase = xmlNewDoc ((xmlChar *) "1.0");
-  lastQuery = NULL;
-  if (searchDataBase == NULL)
-    {
+    searchDataBase = xmlNewDoc((xmlChar *) "1.0");
+    lastQuery = NULL;
+    if (searchDataBase == NULL) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-      xmlGenericError (xmlGenericErrorContext,
-		       "Search init failed : memory error\n");
+        xmlGenericError(xmlGenericErrorContext,
+                        "Search init failed : memory error\n");
 #endif
+    } else {
+        searchDataBaseRoot = xmlNewNode(NULL, (xmlChar *) "search");
+        if (searchRootNode)
+            xmlAddChild((xmlNodePtr) searchDataBase, searchDataBaseRoot);
     }
-  else
-    {
-      searchDataBaseRoot = xmlNewNode (NULL, (xmlChar *) "search");
-      if (searchRootNode)
-	xmlAddChild ((xmlNodePtr) searchDataBase, searchDataBaseRoot);
-    }
-  return (searchDataBase != NULL) && (searchRootNode != NULL);
+    return (searchDataBase != NULL) && (searchRootNode != NULL);
 }
 
 
@@ -77,12 +145,11 @@ searchInit (void)
  * Free all memory used by searching 
  */
 void
-searchFree (void)
+searchFree(void)
 {
-  if (searchDataBase)
-    {
-      xmlFreeDoc (searchDataBase);
-      searchDataBase = NULL;
+    if (searchDataBase) {
+        xmlFreeDoc(searchDataBase);
+        searchDataBase = NULL;
     }
 }
 
@@ -94,30 +161,28 @@ searchFree (void)
  *         0 otherwise
  */
 int
-xslSearchEmpty (void)
+xslSearchEmpty(void)
 {
-  if (searchDataBase)
-    {
-      xmlFreeDoc (searchDataBase);
-      searchDataBase = xmlNewDoc ((xmlChar *) "1.0");
-      if (searchDataBase)
-	{
-	  searchDataBaseRoot = xmlNewNode (NULL, (xmlChar *) "search");
-	  if (searchRootNode)
-	    xmlAddChild ((xmlNodePtr) searchDataBase, searchDataBaseRoot);
-	}
-      if (lastQuery)
-	xmlFree (lastQuery);
-      lastQuery = NULL;
-      if ((searchDataBase == NULL) || (searchRootNode == NULL))
-	{
+    if (searchDataBase) {
+        xmlFreeDoc(searchDataBase);
+        searchDataBase = xmlNewDoc((xmlChar *) "1.0");
+        if (searchDataBase) {
+            searchDataBaseRoot = xmlNewNode(NULL, (xmlChar *) "search");
+            if (searchRootNode)
+                xmlAddChild((xmlNodePtr) searchDataBase,
+                            searchDataBaseRoot);
+        }
+        if (lastQuery)
+            xmlFree(lastQuery);
+        lastQuery = NULL;
+        if ((searchDataBase == NULL) || (searchRootNode == NULL)) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-	  xmlGenericError (xmlGenericErrorContext,
-			   "Seach Empty failed : memory error\n");
+            xmlGenericError(xmlGenericErrorContext,
+                            "Seach Empty failed : memory error\n");
 #endif
-	}
+        }
     }
-  return (searchDataBase != NULL) && (searchRootNode != NULL);
+    return (searchDataBase != NULL) && (searchRootNode != NULL);
 }
 
 /**
@@ -128,9 +193,9 @@ xslSearchEmpty (void)
  *             searchData  so don't free it.
  */
 xmlDocPtr
-searchDoc (void)
+searchDoc(void)
 {
-  return searchDataBase;
+    return searchDataBase;
 }
 
 
@@ -142,9 +207,9 @@ searchDoc (void)
  *             searchRootNode  so don't free it
  */
 xmlNodePtr
-searchRootNode (void)
+searchRootNode(void)
 {
-  return searchDataBaseRoot;
+    return searchDataBaseRoot;
 }
 
 
@@ -156,9 +221,9 @@ searchRootNode (void)
  *        0 otherwise
  */
 int
-xslSearchSave (const xmlChar * fileName)
+xslSearchSave(const xmlChar * fileName)
 {
-  return xmlSaveFormatFile ((char *) fileName, searchDataBase, 1);
+    return xmlSaveFormatFile((char *) fileName, searchDataBase, 1);
 }
 
 /**
@@ -169,48 +234,51 @@ xslSearchSave (const xmlChar * fileName)
  *        0 otherwise
  */
 int
-xslSearchAdd (xmlNodePtr node)
+xslSearchAdd(xmlNodePtr node)
 {
-  int result = 0;
+    int result = 0;
 
-  if (node && searchDataBaseRoot)
-    {
-      xmlAddChild (searchDataBaseRoot, node);
-      result++;
+    if (node && searchDataBaseRoot) {
+        xmlAddChild(searchDataBaseRoot, node);
+        result++;
     }
-  return result;
+    return result;
 }
 
 /**
  *  scanForBreakPoint : 
  * Test if breakpoint matches given criteria
  * @payload : a valid xslBreakPointPtr 
- * @data : the criteria to look for and a valid xslBreakPointSearchPtr 
+ * @data : the criteria to look for and a valid searchInfo of
+ *          type SEARCH_BREAKPOINT 
  * @name
  *
 */
 void
-scanForBreakPoint (void *payload, void *data, xmlChar * name ATTRIBUTE_UNUSED)
+scanForBreakPoint(void *payload, void *data,
+                  xmlChar * name ATTRIBUTE_UNUSED)
 {
-  xslBreakPointPtr breakPoint = (xslBreakPointPtr) payload;
-  xslBreakPointSearchPtr searchData = (xslBreakPointSearchPtr) data;
-  int found = 0;
+    xslBreakPointPtr breakPoint = (xslBreakPointPtr) payload;
+    searchInfoPtr searchInf = (searchInfoPtr) data;
+    breakPointSearchDataPtr searchData = NULL;
+    int found = 0;
 
-  if (!payload || !data || searchData->found)
-    return;
+    if (!payload || !searchInf || !searchInf->data
+        || (searchInf->type != SEARCH_BREAKPOINT) || searchInf->found)
+        return;
 
-  if (searchData->id && (breakPoint->id == searchData->id))
-    found = 1;
-  else if (searchData->templateName && breakPoint->templateName &&
-	   (strcmp
-	    ((char *) breakPoint->templateName,
-	     (char *) searchData->templateName) == 0))
-    found = 1;
+    searchData = (breakPointSearchDataPtr) searchInf->data;
 
-  if (found)
-    {
-      searchData->found = 1;
-      searchData->breakPoint = breakPoint;
+    if (searchData->id && (breakPoint->id == searchData->id))
+        found = 1;
+    else if (searchData->templateName && breakPoint->templateName &&
+             (xmlStrCmp(breakPoint->templateName, searchData->templateName)
+              == 0))
+        found = 1;
+
+    if (found) {
+        searchInf->found = 1;
+        searchData->breakPoint = breakPoint;
     }
 }
 
@@ -229,22 +297,21 @@ scanForBreakPoint (void *payload, void *data, xmlChar * name ATTRIBUTE_UNUSED)
  *	    0 otherwise
 */
 xmlNodePtr
-xslFindNodeByLineNo (xsltTransformContextPtr ctxt,
-		     const xmlChar * url, long lineNumber)
+xslFindNodeByLineNo(xsltTransformContextPtr ctxt,
+                    const xmlChar * url, long lineNumber)
 {
-  xmlNodePtr result = NULL;
+    xmlNodePtr result = NULL;
 
-  if (!ctxt || !url || (lineNumber == -1))
-    {
+    if (!ctxt || !url || (lineNumber == -1)) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-      xsltGenericError (xsltGenericErrorContext,
-			"Invalid ctxt, url or line number to "
-			"xslFindNodeByLineNo\n");
+        xsltGenericError(xsltGenericErrorContext,
+                         "Invalid ctxt, url or line number to "
+                         "xslFindNodeByLineNo\n");
 #endif
-      return result;
+        return result;
     }
 
-  return result;
+    return result;
 }
 
 
@@ -257,55 +324,50 @@ xslFindNodeByLineNo (xsltTransformContextPtr ctxt,
  *           NULL otherwise 
  */
 xmlNodePtr
-xslFindTemplateNode (xsltStylesheetPtr style, const xmlChar * name)
+xslFindTemplateNode(xsltStylesheetPtr style, const xmlChar * name)
 {
-  xmlNodePtr result = NULL;
-  xmlChar *templName;
-  xsltTemplatePtr templ;
+    xmlNodePtr result = NULL;
+    xmlChar *templName;
+    xsltTemplatePtr templ;
 
-  if (!style || !name)
-    {
+    if (!style || !name) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-      xsltGenericError (xsltGenericErrorContext,
-			"Invalid stylesheet or template name : "
-			"xslFindTemplateNode\n");
+        xsltGenericError(xsltGenericErrorContext,
+                         "Invalid stylesheet or template name : "
+                         "xslFindTemplateNode\n");
 #endif
-      return result;
+        return result;
     }
 
-  while (style)
-    {
-      templ = style->templates;
+    while (style) {
+        templ = style->templates;
 
-      while (templ)
-	{
-	  if (templ->match)
-	    templName = (xmlChar *) templ->match;
-	  else
-	    templName = (xmlChar *) templ->name;
+        while (templ) {
+            if (templ->match)
+                templName = (xmlChar *) templ->match;
+            else
+                templName = (xmlChar *) templ->name;
 
-	  if (templName)
-	    {
-	      if (!strcmp ((char *) templName, (char *) name))
-		{
-		  return templ->elem;
-		}
-	    }
-	  templ = templ->next;
-	}
-      if (style->next)
-	style = style->next;
-      else
-	style = style->imports;
+            if (templName) {
+                if (!strcmp((char *) templName, (char *) name)) {
+                    return templ->elem;
+                }
+            }
+            templ = templ->next;
+        }
+        if (style->next)
+            style = style->next;
+        else
+            style = style->imports;
     }
 
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-  if (!result)
-    xsltGenericError (xsltGenericErrorContext,
-		      "Template named '%s' not found :"
-		      " xslFindTemplateNode\n", name);
+    if (!result)
+        xsltGenericError(xsltGenericErrorContext,
+                         "Template named '%s' not found :"
+                         " xslFindTemplateNode\n", name);
 #endif
-  return result;
+    return result;
 }
 
 /**
@@ -318,26 +380,33 @@ xslFindTemplateNode (xsltStylesheetPtr style, const xmlChar * name)
  *          0 otherwise
 */
 xslBreakPointPtr
-findBreakPointByName (const xmlChar * templateName)
+findBreakPointByName(const xmlChar * templateName)
 {
-  xslBreakPointSearch searchData;
+    xslBreakPointPtr result = NULL;
+    searchInfoPtr searchInf = searchNewInfo(SEARCH_BREAKPOINT);
+    breakPointSearchDataPtr searchData;
 
-  searchData.found = 0;
-  searchData.id = -1;
-  searchData.templateName = templateName;
-  searchData.breakPoint = NULL;
-  if (templateName)
-    {
-      walkBreakPoints ((xmlHashScanner) scanForBreakPoint, &searchData);
+    if (!searchInf || (searchInf->type != SEARCH_BREAKPOINT))
+        return result;
+
+    searchData = (breakPointSearchDataPtr) searchInf->data;
+    searchData->templateName = templateName;
+    if (templateName) {
+        walkBreakPoints((xmlHashScanner) scanForBreakPoint, searchInf);
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-      if (!searchData.found)
-	xsltGenericError (xsltGenericErrorContext,
-			  "Break point with template name of \"%s\" "
-			  "not found :xslFindBreakPointByName\n",
-			  templateName);
+        if (!searchInf->found) {
+            xsltGenericError(xsltGenericErrorContext,
+                             "Break point with template name of \"%s\" "
+                             "not found :xslFindBreakPointByName\n",
+                             templateName);
 #endif
+        } else
+            result = searchData->breakPoint;
     }
-  return searchData.breakPoint;
+
+    searchFreeInfo(searchInf);
+
+    return result;
 }
 
 
@@ -350,25 +419,31 @@ findBreakPointByName (const xmlChar * templateName)
  *          0 otherwise 
  */
 xslBreakPointPtr
-findBreakPointById (int id)
+findBreakPointById(int id)
 {
-  xslBreakPointSearch searchData;
+    xslBreakPointPtr result = NULL;
+    searchInfoPtr searchInf = searchNewInfo(SEARCH_BREAKPOINT);
+    breakPointSearchDataPtr searchData;
 
-  searchData.found = 0;
-  searchData.id = id;
-  searchData.templateName = NULL;
-  searchData.breakPoint = NULL;
-  if (id)
-    {
-      walkBreakPoints ((xmlHashScanner) scanForBreakPoint, &searchData);
+    if (!searchInf || !searchInf->data)
+        return result;
+
+    searchData = (breakPointSearchDataPtr) searchInf->data;
+    if (id >= 0) {
+        searchData->id = id;
+        walkBreakPoints((xmlHashScanner) scanForBreakPoint, searchInf);
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-      if (!searchData.found)
-	xsltGenericError (xsltGenericErrorContext,
-			  "Break point id %d not found :xslFindBreakPointById\n",
-			  id);
+        if (!searchInf->found) {
+            xsltGenericError(xsltGenericErrorContext,
+                             "Break point id %d not found :xslFindBreakPointById\n",
+                             id);
 #endif
+        } else
+            result = searchData->breakPoint;
     }
-  return searchData.breakPoint;
+
+    searchFreeInfo(searchInf);
+    return result;
 }
 
 
@@ -380,11 +455,11 @@ findBreakPointById (int id)
  *        NULL otherwise 
  */
 xmlXPathObjectPtr
-xslFindNodesByQuery (const xmlChar * query ATTRIBUTE_UNUSED)
+xslFindNodesByQuery(const xmlChar * query ATTRIBUTE_UNUSED)
 {
-  xmlXPathObjectPtr list = NULL;
+    xmlXPathObjectPtr list = NULL;
 
-  return list;
+    return list;
 }
 
 /**
@@ -399,21 +474,20 @@ xslFindNodesByQuery (const xmlChar * query ATTRIBUTE_UNUSED)
  *        0 otherwise   
  */
 int
-xslSearchQuery(const xmlChar * tempFile,
-               const xmlChar * query)
+xslSearchQuery(const xmlChar * tempFile, const xmlChar * query)
 {
     int result = 0;
     xmlChar buffer[DEBUG_BUFFER_SIZE];
     const xmlChar *docDirPath = getStringOption(OPTIONS_DOCS_PATH);
     const xmlChar *searchXSL = NULL;
-    
 
-    if (!docDirPath) 
-      return result;
+
+    if (!docDirPath)
+        return result;
 
     xmlStrCpy(buffer, docDirPath);
     xmlStrCat(buffer, "search.xsl");
-    searchXSL = buffer;  
+    searchXSL = buffer;
 
 
     if (!tempFile)
@@ -423,7 +497,7 @@ xslSearchQuery(const xmlChar * tempFile,
     if (snprintf
         ((char *) buff, DEBUG_BUFFER_SIZE - 1,
          "xsldbg  %s %s %s", query, searchXSL, tempFile)) {
-        result = !xslDbgShellExecute((xmlChar*)buff, 1);
+        result = !xslDbgShellExecute((xmlChar *) buff, 1);
     }
     return result;
 }
@@ -438,21 +512,19 @@ xslSearchQuery(const xmlChar * tempFile,
  *  sent to walkFunc is of type xslBreakPointPtr 
  */
 void
-walkBreakPoints (xmlHashScanner walkFunc, void *data)
+walkBreakPoints(xmlHashScanner walkFunc, void *data)
 {
-  int lineNo;
-  xmlHashTablePtr hashTable;
+    int lineNo;
+    xmlHashTablePtr hashTable;
 
-  if (!walkFunc)
-    return;
+    if (!walkFunc)
+        return;
 
-  for (lineNo = 0; lineNo < xslBreakPointLinesCount (); lineNo++)
-    {
-      hashTable = lineNoItemGet (lineNo);
-      if (hashTable)
-	{
-	  xmlHashScan (hashTable, walkFunc, data);
-	}
+    for (lineNo = 0; lineNo < xslBreakPointLinesCount(); lineNo++) {
+        hashTable = lineNoItemGet(lineNo);
+        if (hashTable) {
+            xmlHashScan(hashTable, walkFunc, data);
+        }
     }
 }
 
@@ -468,26 +540,23 @@ walkBreakPoints (xmlHashScanner walkFunc, void *data)
  *   of walkFunc is of type xsltTemplatePtr
  */
 void
-walkTemplates (xmlHashScanner walkFunc, void *data,
-		  xsltStylesheetPtr style)
+walkTemplates(xmlHashScanner walkFunc, void *data, xsltStylesheetPtr style)
 {
-  xsltTemplatePtr templ;
+    xsltTemplatePtr templ;
 
-  if (!walkFunc || !style)
-    return;
+    if (!walkFunc || !style)
+        return;
 
-  while (style)
-    {
-      templ = style->templates;
-      while (templ)
-	{
-	  (*walkFunc) (templ, data, NULL);
-	  templ = templ->next;
-	}
-      if (style->next)
-	style = style->next;
-      else
-	style = style->imports;
+    while (style) {
+        templ = style->templates;
+        while (templ) {
+            (*walkFunc) (templ, data, NULL);
+            templ = templ->next;
+        }
+        if (style->next)
+            style = style->next;
+        else
+            style = style->imports;
     }
 }
 
@@ -502,21 +571,21 @@ walkTemplates (xmlHashScanner walkFunc, void *data,
  *   sent to walkFuc is of type xsltStylesheetPtr
  */
 void
-walkStylesheets (xmlHashScanner walkFunc, void *data,
-		    xsltStylesheetPtr style)
+walkStylesheets(xmlHashScanner walkFunc, void *data,
+                xsltStylesheetPtr style)
 {
-  xsltStylesheetPtr next;
-  if (!walkFunc || !style)
-    return;
+    xsltStylesheetPtr next;
 
-  next = style->next;
-  while (style)
-    {
-      (*walkFunc) (style, data, NULL);      
-      if (style->imports)
-	style = style->imports;
-      else
-	style = next;
+    if (!walkFunc || !style)
+        return;
+
+    next = style->next;
+    while (style) {
+        (*walkFunc) (style, data, NULL);
+        if (style->imports)
+            style = style->imports;
+        else
+            style = next;
     }
 }
 
@@ -524,26 +593,27 @@ walkStylesheets (xmlHashScanner walkFunc, void *data,
 
 xmlHashScanner globalWalkFunc = NULL;
 
-void globalVarHelper(void* *payload, void *data ATTRIBUTE_UNUSED,
-		xmlChar * name ATTRIBUTE_UNUSED);
+void globalVarHelper(void **payload, void *data ATTRIBUTE_UNUSED,
+                     xmlChar * name ATTRIBUTE_UNUSED);
 
 /* Our payload is a xsltStylesheetPtr given to us via walkStylesheets. 
    globalWalkFunc will always be set to the walkFunc to call
 */
-void 
-globalVarHelper(void* *payload, void *data ATTRIBUTE_UNUSED,
-		xmlChar * name ATTRIBUTE_UNUSED){
-  xsltStylesheetPtr style = (xsltStylesheetPtr)payload;
-  xsltStackElemPtr global;
+void
+globalVarHelper(void **payload, void *data ATTRIBUTE_UNUSED,
+                xmlChar * name ATTRIBUTE_UNUSED)
+{
+    xsltStylesheetPtr style = (xsltStylesheetPtr) payload;
+    xsltStackElemPtr global;
 
-  if (style){
-    global = style->variables;
-  
-    while(global && global->comp ){
-      (*globalWalkFunc)(global->comp->inst, data, NULL);
-      global = global->next;
+    if (style) {
+        global = style->variables;
+
+        while (global &&global->comp) {
+            (*globalWalkFunc) (global->comp->inst, data, NULL);
+            global = global->next;
+        }
     }
-  }
 }
 
 
@@ -557,42 +627,45 @@ globalVarHelper(void* *payload, void *data ATTRIBUTE_UNUSED,
  *   sent to walkFunc is of type xmlNodePtr
  */
 void
-walkGlobals (xmlHashScanner walkFunc, void *data ATTRIBUTE_UNUSED,
-		   xsltStylesheetPtr style)
+walkGlobals(xmlHashScanner walkFunc, void *data ATTRIBUTE_UNUSED,
+            xsltStylesheetPtr style)
 {
-  if (!walkFunc || !style)
-    return;
+    if (!walkFunc || !style)
+        return;
 
-  globalWalkFunc = walkFunc;
+    globalWalkFunc = walkFunc;
 
-  walkStylesheets((xmlHashScanner)globalVarHelper, data, style);  
+    walkStylesheets((xmlHashScanner) globalVarHelper, data, style);
 }
 
 
 
-xmlHashScanner  localWalkFunc = NULL;
-void localVarHelper(void* *payload, void *data ATTRIBUTE_UNUSED,
-	       xmlChar * name ATTRIBUTE_UNUSED);
+xmlHashScanner localWalkFunc = NULL;
+void localVarHelper(void **payload, void *data ATTRIBUTE_UNUSED,
+                    xmlChar * name ATTRIBUTE_UNUSED);
+
 /* Our payload is a xsltTemplatePtr given to us via walkTemplates. 
    localWalkFunc will always be set to the walkFunc to call
 */
-void 
-localVarHelper(void* *payload, void *data ATTRIBUTE_UNUSED,
-		xmlChar * name ATTRIBUTE_UNUSED){
-  xsltTemplatePtr templ = (xsltTemplatePtr)payload;
-  xmlNodePtr node;
-  if (templ && templ->elem){
-    node = templ->elem->children;
-    
-    while(node){
-      if (IS_XSLT_NAME(node,"param") || IS_XSLT_NAME(node,"variable")){
-	(*localWalkFunc)(node, data, NULL);
-	node = node->next;
-      }
-      else
-	break;
+void
+localVarHelper(void **payload, void *data ATTRIBUTE_UNUSED,
+               xmlChar * name ATTRIBUTE_UNUSED)
+{
+    xsltTemplatePtr templ = (xsltTemplatePtr) payload;
+    xmlNodePtr node;
+
+    if (templ && templ->elem) {
+        node = templ->elem->children;
+
+        while (node) {
+            if (IS_XSLT_NAME(node, "param")
+                || IS_XSLT_NAME(node, "variable")) {
+                (*localWalkFunc) (node, data, NULL);
+                node = node->next;
+            } else
+                break;
+        }
     }
-  }
 }
 
 
@@ -606,15 +679,14 @@ localVarHelper(void* *payload, void *data ATTRIBUTE_UNUSED,
  *   of walkFunc is of type xmlNodePtr
  */
 void
-walkLocals (xmlHashScanner walkFunc, void *data,
-		  xsltStylesheetPtr style)
+walkLocals(xmlHashScanner walkFunc, void *data, xsltStylesheetPtr style)
 {
-  if (!walkFunc || !style)
-    return;
+    if (!walkFunc || !style)
+        return;
 
-  localWalkFunc = walkFunc;
+    localWalkFunc = walkFunc;
 
-  walkTemplates((xmlHashScanner)localVarHelper, data, style);
+    walkTemplates((xmlHashScanner) localVarHelper, data, style);
 
 }
 
@@ -622,65 +694,76 @@ walkLocals (xmlHashScanner walkFunc, void *data,
 /**
  * walkIncludes:
  * @walkFunc: function to callback for each xsl:include found
- * @data : the extra data to pass onto walker
+ * @data : the data to pass onto walker
  * @style : the stylesheet to start from
  *
  * Walks through all xsl:include calling walkFunc for each. The payload
  *   of walkFunc is of type xmlNodePtr
  */
 void
-walkIncludes (xmlHashScanner walkFunc, void *data,
-		  xsltStylesheetPtr style)
+walkIncludes(xmlHashScanner walkFunc, void *data, xsltStylesheetPtr style)
 {
-  xmlNodePtr node = NULL, styleChild = NULL;
+    xmlNodePtr node = NULL, styleChild = NULL;
 
-  if (!walkFunc || !style)
-    return;
+    if (!walkFunc || !style)
+        return;
 
-  while (style)
-    {
-      /*look for stylesheet node */
-      if (style->doc){
-	node = (xmlNodePtr)style->doc->children;
-	while (node){
-	  /* not need but just in case :) */
-	  if (IS_XSLT_NAME(node, "stylesheet") || IS_XSLT_NAME(node, "transform")){
-	    styleChild = node->children; /* get the topmost elements */
-	    break;
-	  }else
-	    node = node->next;
-	}
+    while (style) {
+        /*look for stylesheet node */
+        if (style->doc) {
+            node = (xmlNodePtr) style->doc->children;
+            while (node) {
+                /* not need but just in case :) */
+                if (IS_XSLT_NAME(node, "stylesheet")
+                    || IS_XSLT_NAME(node, "transform")) {
+                    styleChild = node->children;        /* get the topmost elements */
+                    break;
+                } else
+                    node = node->next;
+            }
 
-	/* look for includes */
-	while(styleChild){
-	  if (IS_XSLT_NAME(styleChild, "include"))
-	    (*walkFunc)(styleChild, data, NULL);
-	styleChild = styleChild ->next;
-	}
-      }
-      /* try next stylesheet */
-      if (style->next)
-	style = style->next;
-      else
-	style = style->imports;
+            /* look for includes */
+            while (styleChild) {
+                if (IS_XSLT_NAME(styleChild, "include"))
+                    (*walkFunc) (styleChild, data, NULL);
+                styleChild = styleChild->next;
+            }
+        }
+        /* try next stylesheet */
+        if (style->next)
+            style = style->next;
+        else
+            style = style->imports;
     }
 }
 
 /**
  * walkChildNodes:
  * @walkFunc: function to callback for each child/sibling found
- * @data : the extra data to pass onto walker
+ * @data : the searchInfoPtr to pass onto walker
  * @node : valid xmlNodePtr
  *
  * Call walkFunc for each child of @node the payload sent to walkFunc is
  *   a xmlNodePtr
  */
 void
-walkChildNodes (xmlHashScanner walkFunc, void *data, xmlNodePtr node)
+walkChildNodes(xmlHashScanner walkFunc, void *data, xmlNodePtr node)
 {
-  xsltGenericError (xsltGenericErrorContext,
-		    "walkChildNodes not overloaded\n");
+    xmlNodePtr child = NULL;
+    searchInfoPtr searchInf = (searchInfoPtr) data;
 
+    if (!walkFunc || !searchInf || !searchInf->data)
+        return;
+
+    while (node && !searchInf->found) {
+        (walkFunc) (child, data, NULL);
+        child = node->children;
+        while (child && !searchInf->found) {
+            walkChildNodes(walkFunc, data, child);
+            child = child->next;
+        }
+        node = node->next;
+    }
 }
 
 
@@ -692,57 +775,53 @@ walkChildNodes (xmlHashScanner walkFunc, void *data, xmlNodePtr node)
  *        NULL otherwise
  */
 xmlNodePtr
-searchBreakPointNode (xslBreakPointPtr breakPoint)
+searchBreakPointNode(xslBreakPointPtr breakPoint)
 {
 
-  xmlNodePtr node = NULL;
-  int result = 1;
+    xmlNodePtr node = NULL;
+    int result = 1;
 
-  if (breakPoint)
-    {
-      node = xmlNewNode (NULL, (xmlChar *) "breakpoint");
-      if (node)
-	{
-	  /* if unable to create any property failed then result will be equal to 0 */
-	  result = result
-	    && (xmlNewProp (node, (xmlChar *) "url", breakPoint->url) !=
-		NULL);
-	  sprintf (buff, "%ld", breakPoint->lineNo);
-	  result = result
-	    && (xmlNewProp (node, (xmlChar *) "line", (xmlChar *) buff) !=
-		NULL);
-	  if (breakPoint->templateName)
-	    {
-	      result = result
-		&&
-		(xmlNewProp
-		 (node, (xmlChar *) "template",
-		  breakPoint->templateName) != NULL);
-	    }
-	  sprintf (buff, "%d", breakPoint->enabled);
-	  result = result
-	    && (xmlNewProp (node, (xmlChar *) "enabled", (xmlChar *) buff) !=
-		NULL);
-	  sprintf (buff, "%d", breakPoint->type);
-	  result = result
-	    && (xmlNewProp (node, (xmlChar *) "type", (xmlChar *) buff) !=
-		NULL);
-	  sprintf (buff, "%d", breakPoint->id);
-	  result = result
-	    && (xmlNewProp (node, (xmlChar *) "id", (xmlChar *) buff) !=
-		NULL);
-	}
-      else
-	result = 0;
-      if (!result)
-	{
+    if (breakPoint) {
+        node = xmlNewNode(NULL, (xmlChar *) "breakpoint");
+        if (node) {
+            /* if unable to create any property failed then result will be equal to 0 */
+            result = result
+                && (xmlNewProp(node, (xmlChar *) "url", breakPoint->url) !=
+                    NULL);
+            sprintf(buff, "%ld", breakPoint->lineNo);
+            result = result
+                && (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) buff)
+                    != NULL);
+            if (breakPoint->templateName) {
+                result = result
+                    &&
+                    (xmlNewProp
+                     (node, (xmlChar *) "template",
+                      breakPoint->templateName) != NULL);
+            }
+            sprintf(buff, "%d", breakPoint->enabled);
+            result = result
+                &&
+                (xmlNewProp(node, (xmlChar *) "enabled", (xmlChar *) buff)
+                 != NULL);
+            sprintf(buff, "%d", breakPoint->type);
+            result = result
+                && (xmlNewProp(node, (xmlChar *) "type", (xmlChar *) buff)
+                    != NULL);
+            sprintf(buff, "%d", breakPoint->id);
+            result = result
+                && (xmlNewProp(node, (xmlChar *) "id", (xmlChar *) buff) !=
+                    NULL);
+        } else
+            result = 0;
+        if (!result) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-	  xsltGenericError (xsltGenericErrorContext,
-			    "Error out of Memory for function searchBreakPointNode\n");
+            xsltGenericError(xsltGenericErrorContext,
+                             "Error out of Memory for function searchBreakPointNode\n");
 #endif
-	}
+        }
     }
-  return node;
+    return node;
 }
 
 
@@ -754,53 +833,51 @@ searchBreakPointNode (xslBreakPointPtr breakPoint)
  *        NULL otherwise
  */
 xmlNodePtr
-searchTemplateNode (xmlNodePtr templNode)
+searchTemplateNode(xmlNodePtr templNode)
 {
-  xmlNodePtr node = NULL;
-  xmlChar *value;
-  int result = 1;
+    xmlNodePtr node = NULL;
+    xmlChar *value;
+    int result = 1;
 
-  if (templNode)
-    {
-      node = xmlNewNode (NULL, (xmlChar *) "template");
-      if (node)
-	{
-	  /* if unable to create any property failed then result will be equal to 0 */
-	  value = xmlGetProp (templNode, (xmlChar *) "match");
-	  if (value)
-	    {
-	      result = result
-		&& (xmlNewProp (node, (xmlChar *) "match", value) != NULL);
-	      xmlFree (value);
-	    }
-	  value = xmlGetProp (templNode, (xmlChar *) "name");
-	  if (value)
-	    {
-	      result = result
-		&& (xmlNewProp (node, (xmlChar *) "name", value) != NULL);
-	      xmlFree (value);
-	    }
-	  if (templNode->doc){
-	    result = result
-	      && (xmlNewProp (node, (xmlChar *) "url", templNode->doc->URL) !=
-		  NULL);
-	  }
-	  sprintf (buff, "%ld", xmlGetLineNo (templNode));
-	  result = result
-	    && (xmlNewProp (node, (xmlChar *) "line", (xmlChar *) buff) !=
-		NULL);
-	}
-      else
-	result = 0;
-      if (!result)
-	{
+    if (templNode) {
+        node = xmlNewNode(NULL, (xmlChar *) "template");
+        if (node) {
+            /* if unable to create any property failed then result will be equal to 0 */
+            value = xmlGetProp(templNode, (xmlChar *) "match");
+            if (value) {
+                result = result
+                    && (xmlNewProp(node, (xmlChar *) "match", value) !=
+                        NULL);
+                xmlFree(value);
+            }
+            value = xmlGetProp(templNode, (xmlChar *) "name");
+            if (value) {
+                result = result
+                    && (xmlNewProp(node, (xmlChar *) "name", value) !=
+                        NULL);
+                xmlFree(value);
+            }
+            if (templNode->doc) {
+                result = result
+                    &&
+                    (xmlNewProp
+                     (node, (xmlChar *) "url",
+                      templNode->doc->URL) != NULL);
+            }
+            sprintf(buff, "%ld", xmlGetLineNo(templNode));
+            result = result
+                && (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) buff)
+                    != NULL);
+        } else
+            result = 0;
+        if (!result) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-	  xsltGenericError (xsltGenericErrorContext,
-			    "Error out of Memory for function searchTemplateNode\n");
+            xsltGenericError(xsltGenericErrorContext,
+                             "Error out of Memory for function searchTemplateNode\n");
 #endif
-	}
+        }
     }
-  return node;
+    return node;
 }
 
 
@@ -811,49 +888,51 @@ searchTemplateNode (xmlNodePtr templNode)
  * Returns @style as a new xmlNode in search dataBase format if successful,
  *        NULL otherwise
  */
-xmlNodePtr searchGlobalNode(xmlNodePtr variable){
+xmlNodePtr
+searchGlobalNode(xmlNodePtr variable)
+{
     xmlNodePtr node = NULL;
-  int result = 1;
-  xmlChar *value;
-  if (variable){
-    node = xmlNewNode (NULL, (xmlChar *)"variable");
-    if (node){
-      /* if unable to create any property failed then result will be equal to 0 */
-      if (variable->doc){
-	result = result &&
-	  (xmlNewProp (node, (xmlChar *) "url", 
-		       variable->doc->URL) !=  NULL);
-	sprintf (buff, "%ld", xmlGetLineNo (variable));
-	result = result
-	  && (xmlNewProp (node, (xmlChar *) "line", 
-			  (xmlChar *) buff) != NULL);
-      }      
-      value = xmlGetProp (variable, (xmlChar *) "name");
-      if (value)
-	{
-	  result = result
-	    && (xmlNewProp (node, (xmlChar *) "name", value) != NULL);
-	  xmlFree (value);
-	}
-      value = xmlGetProp (variable, (xmlChar *) "select");
-      if (value)
-	{
-	  result = result
-	    && (xmlNewProp (node, (xmlChar *) "select", value) != NULL);
-	  xmlFree (value);
-	}
-    }else
-      result = 0;
-  }
-  if (!result)
-    {
+    int result = 1;
+    xmlChar *value;
+
+    if (variable) {
+        node = xmlNewNode(NULL, (xmlChar *) "variable");
+        if (node) {
+            /* if unable to create any property failed then result will be equal to 0 */
+            if (variable->doc) {
+                result = result &&
+                    (xmlNewProp(node, (xmlChar *) "url",
+                                variable->doc->URL) != NULL);
+                sprintf(buff, "%ld", xmlGetLineNo(variable));
+                result = result
+                    && (xmlNewProp(node, (xmlChar *) "line",
+                                   (xmlChar *) buff) != NULL);
+            }
+            value = xmlGetProp(variable, (xmlChar *) "name");
+            if (value) {
+                result = result
+                    && (xmlNewProp(node, (xmlChar *) "name", value) !=
+                        NULL);
+                xmlFree(value);
+            }
+            value = xmlGetProp(variable, (xmlChar *) "select");
+            if (value) {
+                result = result
+                    && (xmlNewProp(node, (xmlChar *) "select", value) !=
+                        NULL);
+                xmlFree(value);
+            }
+        } else
+            result = 0;
+    }
+    if (!result) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-      xsltGenericError (xsltGenericErrorContext,
-			"Error out of Memory for function searchGlobalNode\n");
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error out of Memory for function searchGlobalNode\n");
 #endif
     }
-  return node;
-} 
+    return node;
+}
 
 
 /** 
@@ -863,45 +942,49 @@ xmlNodePtr searchGlobalNode(xmlNodePtr variable){
  * Returns @style as a new xmlNode in search dataBase format if successful,
  *        NULL otherwise
  */
-xmlNodePtr searchLocalNode(xmlNodePtr variable){
+xmlNodePtr
+searchLocalNode(xmlNodePtr variable)
+{
     xmlNodePtr node = NULL;
-  int result = 1;
-  xmlChar *value;
-  xmlNodePtr parent;
-  if (variable){
-    node = searchGlobalNode(variable);
-    if (node){
-      /* if unable to create any property failed then result will be equal to 0 */      
-      parent = variable->parent;
-      /* try to find out what template this variable belongs to */
-      if (parent && IS_XSLT_NAME(parent, "template")){
-	value = xmlGetProp (parent, (xmlChar *) "name");
-	if (value)
-	  {
-	    result = result
-	      && (xmlNewProp (node, (xmlChar *) "templname", value) != NULL);
-	  xmlFree (value);
-	  }
-	value = xmlGetProp (parent, (xmlChar *) "match");
-	if (value)
-	  {
-	    result = result
-	      && (xmlNewProp (node, (xmlChar *) "templmatch", value) != NULL);
-	  xmlFree (value);
-	  }
-      }
-    }else
-      result = 0;
-  }
-  if (!result)
-    {
+    int result = 1;
+    xmlChar *value;
+    xmlNodePtr parent;
+
+    if (variable) {
+        node = searchGlobalNode(variable);
+        if (node) {
+            /* if unable to create any property failed then result will be equal to 0 */
+            parent = variable->parent;
+            /* try to find out what template this variable belongs to */
+            if (parent && IS_XSLT_NAME(parent, "template")) {
+                value = xmlGetProp(parent, (xmlChar *) "name");
+                if (value) {
+                    result = result
+                        &&
+                        (xmlNewProp(node, (xmlChar *) "templname", value)
+                         != NULL);
+                    xmlFree(value);
+                }
+                value = xmlGetProp(parent, (xmlChar *) "match");
+                if (value) {
+                    result = result
+                        &&
+                        (xmlNewProp(node, (xmlChar *) "templmatch", value)
+                         != NULL);
+                    xmlFree(value);
+                }
+            }
+        } else
+            result = 0;
+    }
+    if (!result) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-      xsltGenericError (xsltGenericErrorContext,
-			"Error out of Memory for function searchLocalNode\n");
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error out of Memory for function searchLocalNode\n");
 #endif
     }
-  return node;
-} 
+    return node;
+}
 
 
 /**
@@ -912,41 +995,35 @@ xmlNodePtr searchLocalNode(xmlNodePtr variable){
  *        NULL otherwise
  */
 xmlNodePtr
-searchSourceNode (xsltStylesheetPtr style)
+searchSourceNode(xsltStylesheetPtr style)
 {
-  xmlNodePtr node = NULL;
-  int result = 1;
+    xmlNodePtr node = NULL;
+    int result = 1;
 
-  if (style)
-    {
-      node = xmlNewNode (NULL, (xmlChar *) "source");
-      if (node)
-	{
-	  /* if unable to create any property failed then result will be equal to 0 */
-	  if (style->doc)
-	    {
-	      result = result &&
-		(xmlNewProp (node, (xmlChar *) "href", style->doc->URL) !=
-		 NULL);
-	      if (style->parent && style->parent->doc)
-		{
-		  result = result &&
-		    (xmlNewProp (node, (xmlChar *) "parent",
-				 style->parent->doc->URL) != NULL);
-		}
-	    }
-	}
-      else
-	result = 0;
+    if (style) {
+        node = xmlNewNode(NULL, (xmlChar *) "source");
+        if (node) {
+            /* if unable to create any property failed then result will be equal to 0 */
+            if (style->doc) {
+                result = result &&
+                    (xmlNewProp(node, (xmlChar *) "href", style->doc->URL)
+                     != NULL);
+                if (style->parent && style->parent->doc) {
+                    result = result &&
+                        (xmlNewProp(node, (xmlChar *) "parent",
+                                    style->parent->doc->URL) != NULL);
+                }
+            }
+        } else
+            result = 0;
     }
-  if (!result)
-    {
+    if (!result) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-      xsltGenericError (xsltGenericErrorContext,
-			"Error out of Memory for function searchSourceNode\n");
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error out of Memory for function searchSourceNode\n");
 #endif
     }
-  return node;
+    return node;
 }
 
 
@@ -957,48 +1034,45 @@ searchSourceNode (xsltStylesheetPtr style)
  * Returns @include as a new xmlNode in search dataBase format if successful,
  *        NULL otherwise
  */
-xmlNodePtr searchIncludeNode (xmlNodePtr include){
- xmlNodePtr node = NULL;
-  int result = 1;
-  xmlChar *value;
-  if (include)
-    {
-      node = xmlNewNode (NULL, (xmlChar *) "source");
-      if (node)
-	{
-	  /* if unable to create any property failed then result will be equal to 0 */
-	  if (include->doc)
-	    {
-	      value = xmlGetProp (include, (xmlChar *) "href");
-	      if (value)
-		{
-		  result = result
-		    && (xmlNewProp (node, (xmlChar *) "href", value) != NULL);
-		  xmlFree (value);
-		}
-	      if (include->parent && include->parent->doc)
-		{
-		  result = result &&
-		    (xmlNewProp (node, (xmlChar *) "url",
-				 include->parent->doc->URL) != NULL);
-		  sprintf (buff, "%ld", xmlGetLineNo (include));
-		  result = result
-		    && (xmlNewProp (node, (xmlChar *) "line", 
-			  (xmlChar *) buff) != NULL);
-		}
-	    }
-	}
-      else
-	result = 0;
+xmlNodePtr
+searchIncludeNode(xmlNodePtr include)
+{
+    xmlNodePtr node = NULL;
+    int result = 1;
+    xmlChar *value;
+
+    if (include) {
+        node = xmlNewNode(NULL, (xmlChar *) "source");
+        if (node) {
+            /* if unable to create any property failed then result will be equal to 0 */
+            if (include->doc) {
+                value = xmlGetProp(include, (xmlChar *) "href");
+                if (value) {
+                    result = result
+                        && (xmlNewProp(node, (xmlChar *) "href", value) !=
+                            NULL);
+                    xmlFree(value);
+                }
+                if (include->parent && include->parent->doc) {
+                    result = result &&
+                        (xmlNewProp(node, (xmlChar *) "url",
+                                    include->parent->doc->URL) != NULL);
+                    sprintf(buff, "%ld", xmlGetLineNo(include));
+                    result = result
+                        && (xmlNewProp(node, (xmlChar *) "line",
+                                       (xmlChar *) buff) != NULL);
+                }
+            }
+        } else
+            result = 0;
     }
-  if (!result)
-    {
+    if (!result) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-      xsltGenericError (xsltGenericErrorContext,
-			"Error out of Memory for function searchIncludeNode\n");
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error out of Memory for function searchIncludeNode\n");
 #endif
     }
-  return node;
+    return node;
 }
 
 /**
@@ -1009,45 +1083,39 @@ xmlNodePtr searchIncludeNode (xmlNodePtr include){
  *        NULL otherwise
  */
 xmlNodePtr
-searchCallStackNode (xslCallPointPtr callStackItem)
+searchCallStackNode(xslCallPointPtr callStackItem)
 {
-  xmlNodePtr node = NULL;
-  int result = 1;
+    xmlNodePtr node = NULL;
+    int result = 1;
 
-  if (callStackItem)
-    {
-      node = xmlNewNode (NULL, (xmlChar *) "callstack");
-      if (node)
-	{
-	  /* if unable to create any property failed then result will be equal to 0 */
-	  if (callStackItem->info && callStackItem->info->url)
-	    result = result
-	      &&
-	      (xmlNewProp (node, (xmlChar *) "url", callStackItem->info->url)
-	       != NULL);
-	  sprintf (buff, "%ld", callStackItem->lineNo);
-	  result = result
-	    && (xmlNewProp (node, (xmlChar *) "line", (xmlChar *) buff) !=
-		NULL);
-	  if (callStackItem->info && callStackItem->info->templateName)
-	    {
-	      result = result &&
-		(xmlNewProp
-		 (node, (xmlChar *) "template",
-		  callStackItem->info->templateName) != NULL);
-	    }
-	}
-      else
-	result = 0;
-      if (!result)
-	{
+    if (callStackItem) {
+        node = xmlNewNode(NULL, (xmlChar *) "callstack");
+        if (node) {
+            /* if unable to create any property failed then result will be equal to 0 */
+            if (callStackItem->info && callStackItem->info->url)
+                result = result
+                    &&
+                    (xmlNewProp
+                     (node, (xmlChar *) "url", callStackItem->info->url)
+                     != NULL);
+            sprintf(buff, "%ld", callStackItem->lineNo);
+            result = result
+                && (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) buff)
+                    != NULL);
+            if (callStackItem->info && callStackItem->info->templateName) {
+                result = result &&
+                    (xmlNewProp
+                     (node, (xmlChar *) "template",
+                      callStackItem->info->templateName) != NULL);
+            }
+        } else
+            result = 0;
+        if (!result) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-	  xsltGenericError (xsltGenericErrorContext,
-			    "Error out of Memory for function searchBreakPointNode\n");
+            xsltGenericError(xsltGenericErrorContext,
+                             "Error out of Memory for function searchBreakPointNode\n");
 #endif
-	}
+        }
     }
-  return node;
+    return node;
 }
-
-

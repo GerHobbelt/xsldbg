@@ -102,7 +102,7 @@ xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir)
  */
 void
 xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
-          xmlChar * arg)
+               xmlChar * arg)
 {
     xmlXPathObjectPtr list;
     int i = 0;
@@ -197,7 +197,7 @@ int varCount;
  */
 void *
 xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
-                 void *data ATTRIBUTE_UNUSED, xmlChar * name)
+                      void *data ATTRIBUTE_UNUSED, xmlChar * name)
 {
     if (varCount)
         xsltGenericError(xsltGenericErrorContext, ", %s", name);
@@ -220,60 +220,61 @@ xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
  */
 void
 xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
-                    int type)
+                         int type)
 {
-  varCount = 0;
-  if (!styleCtxt) {
-    xsltGenericError(xsltGenericErrorContext,
-		     "Debuger has no files loaded or libxslt has not reached " \
-		     "a template.\nTry reloading files or taking more steps.\n");
-    return;
-  }
+    varCount = 0;
+    if (!styleCtxt) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Debuger has no files loaded or libxslt has not reached "
+                         "a template.\nTry reloading files or taking more steps.\n");
+        return;
+    }
 
-  if (arg[0] == 0) {
-    /* list variables of type requested */
-    if (type == DEBUG_GLOBAL_VAR) {
-      if (styleCtxt->globalVars){
-	/* list global variables */
-	xsltGenericError(xsltGenericErrorContext,
-			 "\nGlobal variables found: ");
-	xmlHashScan(styleCtxt->globalVars, xslDbgShellPrintNames, NULL);
-      }else{
-	xsltGenericError(xsltGenericErrorContext,
-			 "Libxslt has not initialize variables yet" \
-			 " try stepping to a template");
-      }
+    if (arg[0] == 0) {
+        /* list variables of type requested */
+        if (type == DEBUG_GLOBAL_VAR) {
+            if (styleCtxt->globalVars) {
+                /* list global variables */
+                xsltGenericError(xsltGenericErrorContext,
+                                 "\nGlobal variables found: ");
+                xmlHashScan(styleCtxt->globalVars, xslDbgShellPrintNames,
+                            NULL);
+            } else {
+                xsltGenericError(xsltGenericErrorContext,
+                                 "Libxslt has not initialize variables yet"
+                                 " try stepping to a template");
+            }
+        } else {
+            /* list local variables */
+            if (styleCtxt->varsBase) {
+                xsltStackElemPtr item =
+                    styleCtxt->varsTab[styleCtxt->varsBase];
+                xsltGenericError(xsltGenericErrorContext,
+                                 "\nLocal variables found: ");
+                while (item) {
+                    xsltGenericError(xsltGenericErrorContext, "%s ",
+                                     item->name);
+                    item = item->next;
+                }
+            } else {
+                xsltGenericError(xsltGenericErrorContext,
+                                 "Libxslt has not initialize variables yet"
+                                 " try stepping to a template");
+            }
+        }
+        xsltGenericError(xsltGenericErrorContext, "\n");
     } else {
-      /* list local variables */
-      if (styleCtxt->varsBase){
-	xsltStackElemPtr item =
-	  styleCtxt->varsTab[styleCtxt->varsBase];
-	xsltGenericError(xsltGenericErrorContext,
-			 "\nLocal variables found: ");
-	while (item) {
-	  xsltGenericError(xsltGenericErrorContext, "%s ",
-			   item->name);
-	  item = item->next;
-	}
-      }else{
-	xsltGenericError(xsltGenericErrorContext,
-			 "Libxslt has not initialize variables yet" \
-			 " try stepping to a template");
-      }
-    }
-    xsltGenericError(xsltGenericErrorContext, "\n");
-  } else {
-    /* Display the value of variable */
-    if (arg[0] == '$')
-      xmlShellPrintXPathResult(xmlXPathEval
-			       (arg, styleCtxt->xpathCtxt));
-    else {
-      xmlChar tempbuff[100];
+        /* Display the value of variable */
+        if (arg[0] == '$')
+            xmlShellPrintXPathResult(xmlXPathEval
+                                     (arg, styleCtxt->xpathCtxt));
+        else {
+            xmlChar tempbuff[100];
 
-      xmlStrCpy(tempbuff, "$");
-      xmlStrCat(tempbuff, arg);
-      xmlShellPrintXPathResult(xmlXPathEval(tempbuff,
-					    styleCtxt->xpathCtxt));
+            xmlStrCpy(tempbuff, "$");
+            xmlStrCat(tempbuff, arg);
+            xmlShellPrintXPathResult(xmlXPathEval(tempbuff,
+                                                  styleCtxt->xpathCtxt));
+        }
     }
-  }
 }

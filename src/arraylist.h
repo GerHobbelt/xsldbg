@@ -24,11 +24,10 @@ typedef void (*freeItemFunc) (void *item);
 
 typedef struct _ArrayList ArrayList;
 typedef ArrayList *ArrayListPtr;
-struct _ArrayList
-{
-  int size, count;
-  void **data;
-  freeItemFunc deleteFunction;
+struct _ArrayList {
+    int size, count;
+    void **data;
+    freeItemFunc deleteFunction;
 };
 
 #define DOUBLE_SIZE_MAX_ITEM 10
@@ -43,7 +42,7 @@ struct _ArrayList
  * Returns non-null on success,
  *         0 otherwise
  */
-ArrayListPtr xslArrayListNew (int initialSize, freeItemFunc deleteFunction);
+ArrayListPtr xslArrayListNew(int initialSize, freeItemFunc deleteFunction);
 
 
 /**
@@ -54,7 +53,7 @@ ArrayListPtr xslArrayListNew (int initialSize, freeItemFunc deleteFunction);
  *   has is autoDelete enabled then content with be freed with 
  *   xmlFree
  */
-void xslArrayListFree (ArrayListPtr list);
+void xslArrayListFree(ArrayListPtr list);
 
 
 /**
@@ -65,7 +64,7 @@ void xslArrayListFree (ArrayListPtr list);
  * Returns 1 on success,
  *         0 otherwise
  */
-int xslArrayListEmpty (ArrayListPtr list);
+int xslArrayListEmpty(ArrayListPtr list);
 
 
 /**
@@ -74,7 +73,7 @@ int xslArrayListEmpty (ArrayListPtr list);
  *
  * Returns the maximum number elements this list can contain
  */
-int xslArrayListSize (ArrayListPtr list);
+int xslArrayListSize(ArrayListPtr list);
 
 
 /**
@@ -83,7 +82,7 @@ int xslArrayListSize (ArrayListPtr list);
  *
  * Returns the count of number items in list
  */
-int xslArrayListCount (ArrayListPtr list);
+int xslArrayListCount(ArrayListPtr list);
 
 
 /**
@@ -93,7 +92,7 @@ int xslArrayListCount (ArrayListPtr list);
  *
  * Add item to end of list
  */
-int xslArrayListAdd (ArrayListPtr list, void *item);
+int xslArrayListAdd(ArrayListPtr list, void *item);
 
 
 /**
@@ -103,7 +102,7 @@ int xslArrayListAdd (ArrayListPtr list, void *item);
  *
  * Add item to end of list
  */
-int xslArrayListDelete (ArrayListPtr list, int position);
+int xslArrayListDelete(ArrayListPtr list, int position);
 
 
 /**
@@ -114,6 +113,6 @@ int xslArrayListDelete (ArrayListPtr list, int position);
  * Add non-null if item is valid
  *     NULL otherwise
  */
-void *xslArrayListGet (ArrayListPtr list, int position);
+void *xslArrayListGet(ArrayListPtr list, int position);
 
 #endif

@@ -28,12 +28,12 @@
 
 
 /* private data for search for file names*/
-typedef  struct _fileSearch FileSearch;
+typedef struct _fileSearch FileSearch;
 typedef FileSearch *FileSearchPtr;
-struct _fileSearch{
-  xmlChar *nameInput;
-  xmlChar *absoluteNameMatch;
-  xmlChar *guessedNameMatch;  
+struct _fileSearch {
+    xmlChar *nameInput;
+    xmlChar *absoluteNameMatch;
+    xmlChar *guessedNameMatch;
 };
 
 /* top xml document */
@@ -58,7 +58,7 @@ static xmlChar *workingDirPath = NULL;
 
 FILE *terminalIO;
 static FILE *oldStdin, *oldStdout, *oldStderr;
-char *ttyName, *termName; 
+char *ttyName, *termName;
 
 /**
  * redirectToTerminal:
@@ -66,77 +66,76 @@ char *ttyName, *termName;
  * Returns 1 if successful,
  *         0 if failed
  */
-int 
-openTerminal(xmlChar *device)
+int
+openTerminal(xmlChar * device)
 {
-  int result =0;
-  FILE oldStdout = *stdout;
-  
-  if (!device) /* Failed; there's no device */
-    return result;
+    int result = 0;
+
+    if (!device)                /* Failed; there's no device */
+        return result;
 #ifdef __riscos
-  /*
-     On RISC OS, you get one terminal - the screen.
-     we assume that the parameter is meant to be an output device as
-     per normal - we can use vdu:, rawvdu: or :tt, or a filename for
-     normal VDU output, VDU output without newline expansion,
-     C terminal output with control code escaping, or a raw file
-     respectively.
-     The name passed is expected to be in native file format - no
-     URI escaping here.
-     One assumes that you might use a socket or a pipe here.
-   */
+    /*
+     * On RISC OS, you get one terminal - the screen.
+     * we assume that the parameter is meant to be an output device as
+     * per normal - we can use vdu:, rawvdu: or :tt, or a filename for
+     * normal VDU output, VDU output without newline expansion,
+     * C terminal output with control code escaping, or a raw file
+     * respectively.
+     * The name passed is expected to be in native file format - no
+     * URI escaping here.
+     * One assumes that you might use a socket or a pipe here.
+     */
 
-  if (terminalIO != NULL)
-    fclose(terminalIO);
+    if (terminalIO != NULL)
+        fclose(terminalIO);
 
-  if (device[0]=='\0') {
-    /* look like we are supposed to close the terminal */
-    selectNormalIO();/* shouldn't be needed but just in case */
-  } else {
-    terminalIO = fopen((char *)device,"r+");
-    if (terminalIO != NULL) {
-      termName = (char *)device; /* JRF: Not sure how safe this is */
-      /* This can't be done reliably; really need more thought */
-      result++;
+    if (device[0] == '\0') {
+        /* look like we are supposed to close the terminal */
+        selectNormalIO();       /* shouldn't be needed but just in case */
     } else {
-      xsltGenericError(xsltGenericErrorContext,
-		     "Unable to open terminal %s", device);
-      termName = NULL;
+        terminalIO = fopen((char *) device, "r+");
+        if (terminalIO != NULL) {
+            termName = (char *) device; /* JRF: Not sure how safe this is */
+            /* This can't be done reliably; really need more thought */
+            result++;
+        } else {
+            xsltGenericError(xsltGenericErrorContext,
+                             "Unable to open terminal %s", device);
+            termName = NULL;
+        }
     }
-  }
 #else
 
-#ifdef HAVE_UNISTD /* fix me for WinNT*/
-  if (terminalIO != NULL)
-    fclose(terminalIO);  
+#ifdef HAVE_UNISTD              /* fix me for WinNT */
+    if (terminalIO != NULL)
+        fclose(terminalIO);
 
-  if ((device[0] >= '0') && (device[0] <= '9')){
-    /* look like we are supposed to close the terminal */
-    selectNormalIO();/* shouldn't be needed but just in case */    
-  }else{
-    
-    terminalIO = fopen(device, "r+");
-    if (terminalIO != NULL){
-      termName = device;
-      dup2(fileno(terminalIO), fileno(stdin));
-      dup2(fileno(terminalIO), fileno(stderr));
-      dup2(fileno(terminalIO), fileno(stdout));
-      result++;      
-    }else{
-      xsltGenericError(xsltGenericErrorContext,
-		     "Unable to open terminal %s", device);
-      termName = NULL;
+    if ((device[0] >= '0') && (device[0] <= '9')) {
+        /* look like we are supposed to close the terminal */
+        selectNormalIO();       /* shouldn't be needed but just in case */
+    } else {
+
+        terminalIO = fopen(device, "r+");
+        if (terminalIO != NULL) {
+            termName = device;
+            dup2(fileno(terminalIO), fileno(stdin));
+            dup2(fileno(terminalIO), fileno(stderr));
+            dup2(fileno(terminalIO), fileno(stdout));
+            result++;
+        } else {
+            xsltGenericError(xsltGenericErrorContext,
+                             "Unable to open terminal %s", device);
+            termName = NULL;
+        }
     }
-  }
-    
+
 #else
     xsltGenericError(xsltGenericErrorContext,
-		     "Terminals are no supported by this operating system\n");
+                     "Terminals are no supported by this operating system\n");
 #endif
 
 #endif
-    return result;    
+    return result;
 }
 
 
@@ -145,20 +144,20 @@ openTerminal(xmlChar *device)
  * Return 1 if able to use prevously opened terminal 
  *        0 otherwise
 */
-int 
+int
 selectTerminalIO(void)
 {
-  int result = 0;
-  if (termName){
-    freopen(termName, "w", stdout);
-    freopen(termName, "w", stderr);
-    freopen(termName, "r", stdin);
-    result++;
-  }
-  else
-    result++;
+    int result = 0;
 
-  return result;
+    if (termName) {
+        freopen(termName, "w", stdout);
+        freopen(termName, "w", stderr);
+        freopen(termName, "r", stdin);
+        result++;
+    } else
+        result++;
+
+    return result;
 }
 
 
@@ -168,78 +167,87 @@ selectTerminalIO(void)
  * Returns 1 if able to select orginal stdin, stdout, stderr
  *         0 otherwise
 */
-int 
+int
 selectNormalIO(void)
 {
-  int result = 0;
-  /* another way to do this ? */
+    int result = 0;
+
+    /* another way to do this ? */
 #ifdef UNISTD
-  if (ttyName){
-    freopen(ttyName, "w", stdout);
-    freopen(ttyName, "w", stderr);
-    freopen(ttyName, "r", stdin);
-  }
+    if (ttyName) {
+        freopen(ttyName, "w", stdout);
+        freopen(ttyName, "w", stderr);
+        freopen(ttyName, "r", stdin);
+    }
 #endif
-  result++;
-  return result; 
+    result++;
+    return result;
 }
 
-
 void guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
-			   void *data ATTRIBUTE_UNUSED, xmlChar * name)
+                           void *data ATTRIBUTE_UNUSED, xmlChar * name);
+
+void
+guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
+                      void *data ATTRIBUTE_UNUSED, xmlChar * name)
 {
-  xsltStylesheetPtr style = (xsltStylesheetPtr)payload;
-  FileSearchPtr searchData = (FileSearchPtr)data;
+    xsltStylesheetPtr style = (xsltStylesheetPtr) payload;
+    FileSearchPtr searchData = (FileSearchPtr) data;
 
-  if (style && style->doc && searchData && searchData->nameInput &&
-      (searchData->absoluteNameMatch == NULL)){
-    /* at this point we know that we have not made an absolute match 
-       but we may have made a relative match */
-    if (xmlStrCmp(style->doc->URL, searchData->nameInput) == 0){
-      /* absolute path match great!*/
-      searchData->absoluteNameMatch = (xmlChar*)xmlMemStrdup((char*)style->doc->URL);
-      return;
-    }
+    if (style && style->doc && searchData && searchData->nameInput &&
+        (searchData->absoluteNameMatch == NULL)) {
+        /* at this point we know that we have not made an absolute match 
+         * but we may have made a relative match */
+        if (xmlStrCmp(style->doc->URL, searchData->nameInput) == 0) {
+            /* absolute path match great! */
+            searchData->absoluteNameMatch =
+                (xmlChar *) xmlMemStrdup((char *) style->doc->URL);
+            return;
+        }
 
 
-    /* try to guess we assume that the files are unique */
-    xmlStrCpy(buffer,"__#!__");
-    /* try relative to top stylesheet directory */
-    if (stylePath()){
-	xmlStrCpy(buffer, stylePath());
-	xmlStrCat(buffer, searchData->nameInput);
-    }
-    if (xmlStrCmp(style->doc->URL, buffer) == 0){
-      /* guessed right!*/
-      searchData->guessedNameMatch = (xmlChar*)xmlMemStrdup((char*)buffer);
-      return;
-    }
+        /* try to guess we assume that the files are unique */
+        xmlStrCpy(buffer, "__#!__");
+        /* try relative to top stylesheet directory */
+        if (stylePath()) {
+            xmlStrCpy(buffer, stylePath());
+            xmlStrCat(buffer, searchData->nameInput);
+        }
+        if (xmlStrCmp(style->doc->URL, buffer) == 0) {
+            /* guessed right! */
+            searchData->guessedNameMatch =
+                (xmlChar *) xmlMemStrdup((char *) buffer);
+            return;
+        }
 
-    if (workingPath()){
-	  /* try relative to working directory */
-	  xmlStrCpy(buffer, workingPath());
-	  xmlStrCat(buffer, searchData->nameInput);
-    }
-    if ( xmlStrCmp(style->doc->URL, buffer) == 0){
-      /* guessed right!*/
-      searchData->guessedNameMatch = (xmlChar*)xmlMemStrdup((char*)buffer);
-      return;
-    }
+        if (workingPath()) {
+            /* try relative to working directory */
+            xmlStrCpy(buffer, workingPath());
+            xmlStrCat(buffer, searchData->nameInput);
+        }
+        if (xmlStrCmp(style->doc->URL, buffer) == 0) {
+            /* guessed right! */
+            searchData->guessedNameMatch =
+                (xmlChar *) xmlMemStrdup((char *) buffer);
+            return;
+        }
 
-    if (xmlStrChr(searchData->nameInput, PATHCHAR) == NULL){
-      /* Last try, nameInput contains only a file name, and no path specifiers
-	 Strip of the file name at end of the stylesheet doc URL */
-      char *lastSlash = xmlStrrChr(style->doc->URL, PATHCHAR);
-	  if (lastSlash){
-	    lastSlash++; /* skip the slash */
-	    if (xmlStrCmp(lastSlash, searchData->nameInput) == 0){
-	      /* guessed right!*/
-	      searchData->guessedNameMatch = (xmlChar*)xmlMemStrdup((char*)style->doc->URL);
-	    }
-	  }
+        if (xmlStrChr(searchData->nameInput, PATHCHAR) == NULL) {
+            /* Last try, nameInput contains only a file name, and no path specifiers
+             * Strip of the file name at end of the stylesheet doc URL */
+            char *lastSlash = xmlStrrChr(style->doc->URL, PATHCHAR);
+
+            if (lastSlash) {
+                lastSlash++;    /* skip the slash */
+                if (xmlStrCmp(lastSlash, searchData->nameInput) == 0) {
+                    /* guessed right! */
+                    searchData->guessedNameMatch =
+                        (xmlChar *) xmlMemStrdup((char *) style->doc->URL);
+                }
+            }
+        }
     }
-  }
-}  
+}
 
 /**
  * guessStyleSheetName:
@@ -248,23 +256,25 @@ void guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
  * Returns non-NULL if found,
  *          NULL otherwise
  */
-xmlChar *guessStyleSheetName(xmlChar* name)
+xmlChar *
+guessStyleSheetName(xmlChar * name)
 {
-  xmlChar *result = NULL;
-  FileSearch searchData;
-  searchData.nameInput = name;
-  searchData.absoluteNameMatch = NULL;
-  searchData.guessedNameMatch = NULL;
+    xmlChar *result = NULL;
+    FileSearch searchData;
 
-  if (name){
-    walkStylesheets((xmlHashScanner)guessStyleSheetHelper, &searchData,
-		     getStylesheet());    
-    if (searchData.absoluteNameMatch)
-      result = searchData.absoluteNameMatch;
-    else
-      result =  searchData.guessedNameMatch;
-  }
-  return result;
+    searchData.nameInput = name;
+    searchData.absoluteNameMatch = NULL;
+    searchData.guessedNameMatch = NULL;
+
+    if (name) {
+        walkStylesheets((xmlHashScanner) guessStyleSheetHelper,
+                        &searchData, getStylesheet());
+        if (searchData.absoluteNameMatch)
+            result = searchData.absoluteNameMatch;
+        else
+            result = searchData.guessedNameMatch;
+    }
+    return result;
 }
 
 
@@ -277,7 +287,7 @@ xmlChar *guessStyleSheetName(xmlChar* name)
 xmlChar *
 stylePath(void)
 {
-  return stylePathName;
+    return stylePathName;
 }
 
 /**
@@ -285,10 +295,10 @@ stylePath(void)
  *
  * Return the working directory as set by changeDir function
  */
-xmlChar*
+xmlChar *
 workingPath(void)
 {
-  return workingDirPath;
+    return workingDirPath;
 }
 
 /**
@@ -301,22 +311,23 @@ int
 changeDir(const xmlChar * path)
 {
     int result = 0;
-    const xmlChar endString[2] = {PATHCHAR,'\0'};
+    const xmlChar endString[2] = { PATHCHAR, '\0' };
+
     if (path && chdir((char *) path) == 0) {
-      if (workingDirPath)
-	xmlFree(workingDirPath);
-       /* must have path char at end of path name*/
-      xmlStrCpy(buffer, path);
-      xmlStrCat(buffer, endString);
-      workingDirPath = (xmlChar*)xmlMemStrdup((char*)buffer);
-      result++;
+        if (workingDirPath)
+            xmlFree(workingDirPath);
+        /* must have path char at end of path name */
+        xmlStrCpy(buffer, path);
+        xmlStrCat(buffer, endString);
+        workingDirPath = (xmlChar *) xmlMemStrdup((char *) buffer);
+        result++;
     }
     if (!result)
         xsltGenericError(xsltGenericErrorContext,
-			 "Unable to change to directory %s\n", path);
+                         "Unable to change to directory %s\n", path);
     else
         xsltGenericError(xsltGenericErrorContext,
-			 "Change to directory %s\n", path);
+                         "Change to directory %s\n", path);
     return result;
 }
 
@@ -339,11 +350,12 @@ loadXmlFile(const xmlChar * path, enum File_type file_type)
     switch (file_type) {
         case FILES_XMLFILE_TYPE:
             if (path && xmlStrLen(path)) {
-	      if (isOptionEnabled(OPTIONS_SHELL)) { 
-                xsltGenericError(xsltGenericErrorContext,
-				 "Setting xml data file name to %s\n", path);
-	      }
-	      setStringOption(OPTIONS_DATA_FILE_NAME, path);
+                if (isOptionEnabled(OPTIONS_SHELL)) {
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "Setting xml data file name to %s\n",
+                                     path);
+                }
+                setStringOption(OPTIONS_DATA_FILE_NAME, path);
             }
             top_doc = loadXmlData();
             if (top_doc)
@@ -352,35 +364,40 @@ loadXmlFile(const xmlChar * path, enum File_type file_type)
 
         case FILES_SOURCEFILE_TYPE:
             if (path && xmlStrLen(path)) {
-	      if (isOptionEnabled(OPTIONS_SHELL)) { 
-		xsltGenericError(xsltGenericErrorContext,
-				 "Setting stylesheet file name to %s\n", path);
-	      }
-	      setStringOption(OPTIONS_SOURCE_FILE_NAME, path);
-	    }
+                if (isOptionEnabled(OPTIONS_SHELL)) {
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "Setting stylesheet file name to %s\n",
+                                     path);
+                }
+                setStringOption(OPTIONS_SOURCE_FILE_NAME, path);
+            }
             top_style = loadStylesheet();
-            if (top_style && top_style->doc){
-	      /* look for last slash (or baskslash) of URL*/
-	       char *lastSlash =   (const char*)xmlStrrChr(top_style->doc->URL, PATHCHAR);
-	       const char *docUrl = top_style->doc->URL;
-                result++;		
-		if (docUrl && lastSlash){
-		    stylePathName = (xmlChar*)xmlMemStrdup(docUrl);
-		    stylePathName[lastSlash - docUrl + 1] = '\0';
-		    if (isOptionEnabled(OPTIONS_SHELL)) {   
-		    	xsltGenericError(xsltGenericErrorContext,
-					 "Setting stylesheet base path to %s\n", 
-					 stylePathName);
-		    }
-		}
-	    }
+            if (top_style && top_style->doc) {
+                /* look for last slash (or baskslash) of URL */
+                char *lastSlash =
+                    (const char *) xmlStrrChr(top_style->doc->URL,
+                                              PATHCHAR);
+                const char *docUrl = top_style->doc->URL;
+
+                result++;
+                if (docUrl && lastSlash) {
+                    stylePathName = (xmlChar *) xmlMemStrdup(docUrl);
+                    stylePathName[lastSlash - docUrl + 1] = '\0';
+                    if (isOptionEnabled(OPTIONS_SHELL)) {
+                        xsltGenericError(xsltGenericErrorContext,
+                                         "Setting stylesheet base path to %s\n",
+                                         stylePathName);
+                    }
+                }
+            }
             break;
 
         case FILES_TEMPORARYFILE_TYPE:
             if (!path || !xmlStrLen(path)) {
-                xsltGenericError(xsltGenericErrorContext,"Missing file name\n");
-		break;
-	    }
+                xsltGenericError(xsltGenericErrorContext,
+                                 "Missing file name\n");
+                break;
+            }
             top_doc = loadXmlTemporay(path);
             if (temp_doc)
                 result++;
@@ -414,9 +431,9 @@ freeXmlFile(enum File_type file_type)
         case FILES_SOURCEFILE_TYPE:
             if (top_style)
                 xsltFreeStylesheet(top_style);
-	    if (stylePathName)
-	      xmlFree(stylePathName);
-	    stylePathName = NULL;
+            if (stylePathName)
+                xmlFree(stylePathName);
+            stylePathName = NULL;
             top_style = NULL;
             result++;
             break;
@@ -503,9 +520,10 @@ int
 filesInit(void)
 {
     int result = 0;
+
     terminalIO = NULL;
 #ifdef __riscos
-    ttyName = ":tt"; /* Default tty */
+    ttyName = ":tt";            /* Default tty */
 #endif
 #ifdef HAVE_UNISTD
     ttyName = ttyname(fileno(stdin));
@@ -531,8 +549,9 @@ void
 filesFree(void)
 {
     int result;
-  if (terminalIO != NULL)
-    fclose(terminalIO);  
+
+    if (terminalIO != NULL)
+        fclose(terminalIO);
 
     result = freeXmlFile(FILES_SOURCEFILE_TYPE);
     if (result)
@@ -541,7 +560,7 @@ filesFree(void)
         result = freeXmlFile(FILES_TEMPORARYFILE_TYPE);
     if (!result)
         xsltGenericError(xsltGenericErrorContext,
-			 "Unable to free memory used by xml/xsl files\n");
+                         "Unable to free memory used by xml/xsl files\n");
     if (workingDirPath)
-	xmlFree(workingDirPath);
+        xmlFree(workingDirPath);
 }

@@ -1,12 +1,12 @@
 
 AC_INIT(src/xsldbg.c)
 
-timestamp='2001-11-30'
+timestamp='2001-12-02'
 
 
 XSLDBG_MAJOR_VERSION=0
 XSLDBG_MINOR_VERSION=8
-XSLDBG_MICRO_VERSION=3
+XSLDBG_MICRO_VERSION=4
 PACKAGE=xsldbg
 
 LIBXML_REQUIRED_VERSION=2.4.10
@@ -241,6 +241,11 @@ AC_SUBST(LIBXML_PREFIX)
 AC_SUBST(LIBXML_LIBS)
 AC_SUBST(LIBXML_CFLAGS)
 
+LIBXSLT_PREFIX=""
+AC_ARG_WITH(libxslt-prefix,
+        [  --with-libxslt-prefix=[PFX]		Specify location of libxslt],
+	 LIBXSLT_PREFIX="$withval"
+)
 
 dnl
 dnl find libxslt
@@ -315,14 +320,14 @@ AC_SUBST(XSLDBG_LIBS)
 dnl
 dnl Check for debug support in libxslt
 dnl
-if test "x`$XSLT_CONFIG --libs | grep breakpoint`" != "x"
-then
-    AC_MSG_RESULT(Found debugger support in libxslt)
+dnl if test "x`$XSLT_CONFIG --libs | grep breakpoint`" != "x"
+dnl then
+dnl    AC_MSG_RESULT(Found debugger support in libxslt)
     WITH_DEBUGGER=1
     AC_DEFINE(WITH_DEBUGGER)
-else
-   AC_ERROR(Debugger support not built into libxslt use --with-debugger=yes as option when configuring libxslt)
-fi
+dnl else
+dnl    AC_ERROR(Debugger support not built into libxslt use --with-debugger=yes as option when configuring libxslt)
+dnl fi
 
 
 AC_OUTPUT(

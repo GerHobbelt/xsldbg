@@ -7,16 +7,29 @@
     email                : k_isdale@tpg.com.au
  ***************************************************************************/
 
-#include <breakpoint/breakpoint.h>
 
 #ifndef BREAKPOINT_NEW_H
 #define BREAKPOINT_NEW_H
 
-/* sections commented out like below are just here to clarify the whole picture*/
-/* ##!
+
+#include <string.h>
+#include <libxml/hash.h>
+#include <libxml/debugXML.h>    /* needed for xmlGetLineNo(node) */
+#include <libxml/xpath.h>
+#include <libxml/tree.h>
+#include <libxslt/xsltutils.h>
+#include <libxslt/xsltInternals.h>
+
 #ifdef WITH_XSLT_DEBUG
+#ifndef WITH_XSLT_DEBUG_BREAKPOINTS
 #define WITH_XSLT_DEBUG_BREAKPOINTS
 #endif
+#endif
+
+/* sections commented out like below are just here to clarify the whole picture*/
+
+/* ##!
+
 
 #include <libxml/tree.h>
 #include <libxslt/xsltInternals.h>
@@ -24,53 +37,44 @@
 */
 
 #ifdef __cplusplus
-extern "C"
-{
+extern "C" {
 #endif
 
 /* Define the types of status whilst debugging*/
-  typedef enum
-  {
-    /* ##!
-    DEBUG_NONE,			
-    DEBUG_INIT,
-    DEBUG_STEP,
-    DEBUG_STEPUP,
-    DEBUG_STEPDOWN,
-    DEBUG_NEXT,
-    DEBUG_STOP,
-    DEBUG_CONT,
-    DEBUG_RUN,
-    DEBUG_RUN_RESTART,
-    DEBUG_QUIT,
-    */
-    DEBUG_TRACE = DEBUG_QUIT + 1, 
-    DEBUG_WALK
-  }DebugStatus2;  /* ##!  DebugStatus; 
+    typedef enum {
+        DEBUG_NONE,
+        DEBUG_INIT,
+        DEBUG_STEP,
+        DEBUG_STEPUP,
+        DEBUG_STEPDOWN,
+        DEBUG_NEXT,
+        DEBUG_STOP,
+        DEBUG_CONT,
+        DEBUG_RUN,
+        DEBUG_RUN_RESTART,
+        DEBUG_QUIT,
+        DEBUG_TRACE,
+        DEBUG_WALK
+    } DebugStatus2;
 
-  typedef enum
-  {
-    DEBUG_BREAK_SOURCE = 1,
-    DEBUG_BREAK_DATA
-  }
-  BreakPointType;
+    typedef enum {
+        DEBUG_BREAK_SOURCE = 1,
+        DEBUG_BREAK_DATA
+    } BreakPointType;
 
 #define XSL_TOGGLE_BREAKPOINT -1
-  extern int xslDebugStatus;
+    extern int xslDebugStatus;
 
-  typedef struct _xslBreakPoint xslBreakPoint;
-  typedef xslBreakPoint *xslBreakPointPtr;
-  struct _xslBreakPoint
-  {
-    xmlChar *url;
-    long lineNo;
-    xmlChar *templateName;	
-    int enabled;
-    int type;
-    int id;
-  };
-
-*/
+    typedef struct _xslBreakPoint xslBreakPoint;
+    typedef xslBreakPoint *xslBreakPointPtr;
+    struct _xslBreakPoint {
+        xmlChar *url;
+        long lineNo;
+        xmlChar *templateName;
+        int enabled;
+        int type;
+        int id;
+    };
 
 /*
 -----------------------------------------------------------
@@ -80,21 +84,23 @@ extern "C"
 
 
 /* renamed to avoid clash with libxslt*/
+
 /**
  * activeBreakPoint;
  *
  * Return the last breakPoint that we stoped at
  */
-  xslBreakPointPtr activeBreakPoint (void);
+    xslBreakPointPtr activeBreakPoint(void);
 
 
 /* renamed to avoid clash with libxslt */
+
 /**
  * setActiveBreakPoint:
  * @breakoint : is valid breakpoint or NULL
  *
  */
-  void setActiveBreakPoint (xslBreakPointPtr breakpoint);
+    void setActiveBreakPoint(xslBreakPointPtr breakpoint);
 
 
 /**
@@ -111,8 +117,8 @@ extern "C"
  * Returns break point number if successfull,
  *	    0 otherwise 
 */
-  int xslAddBreakPoint (const xmlChar * url, long lineNumber,
-			const xmlChar * templateName, int type);
+    int xslAddBreakPoint(const xmlChar * url, long lineNumber,
+                         const xmlChar * templateName, int type);
 
 /**
  * xslDeleteBreakPoint:
@@ -123,7 +129,7 @@ extern "C"
  * Returns 1 if successfull,
  *	    0 otherwise
 */
-  int deleteBreakPoint (xslBreakPointPtr breakPoint);
+    int deleteBreakPoint(xslBreakPointPtr breakPoint);
 
 
 /**
@@ -132,7 +138,7 @@ extern "C"
  * Returns 1 if able to empty the breakpoint list of its contents,
  *         0  otherwise
  */
-  int xslEmptyBreakPoint (void);
+    int xslEmptyBreakPoint(void);
 
 
 /**
@@ -144,7 +150,7 @@ extern "C"
  * Returns 1 if successfull,
  *	    0 otherwise
 */
-  int enableBreakPoint (xslBreakPointPtr breakPoint, int enable);
+    int enableBreakPoint(xslBreakPointPtr breakPoint, int enable);
 
 
 /**
@@ -152,7 +158,7 @@ extern "C"
  *
  * Return the number of hash tables of breakPoints with the same line number
  */
-  int xslBreakPointLinesCount (void);
+    int xslBreakPointLinesCount(void);
 
 
 
@@ -164,7 +170,7 @@ extern "C"
  * Returns break point if break point exists at location specified,
  *	    NULL otherwise
 */
-  xslBreakPointPtr getBreakPoint (const xmlChar * url, long lineNumber);
+    xslBreakPointPtr getBreakPoint(const xmlChar * url, long lineNumber);
 
 
 /**
@@ -177,7 +183,7 @@ extern "C"
  * Returns 1 if successfull,
  *	   0 otherwise
  */
-  int printBreakPoint (FILE * file, xslBreakPointPtr breakPoint);
+    int printBreakPoint(FILE * file, xslBreakPointPtr breakPoint);
 
 
 /**
@@ -190,7 +196,7 @@ extern "C"
  * Returns 1  if successfull,  
  *         0 otherwise
 */
-  int xslIsBreakPoint (const xmlChar * url, long lineNumber);
+    int xslIsBreakPoint(const xmlChar * url, long lineNumber);
 
 
 /**
@@ -201,7 +207,7 @@ extern "C"
  * Returns : 1 on success, 
  *           0 otherwise
  */
-  int xslIsBreakPointNode (xmlNodePtr node);
+    int xslIsBreakPointNode(xmlNodePtr node);
 
 /*
 -----------------------------------------------------------
@@ -218,11 +224,12 @@ extern "C"
  *
  * A break point has been found so pass control to user
  */
-  void xslDebugBreak (xmlNodePtr templ, xmlNodePtr node,
-		      xsltTemplatePtr root, xsltTransformContextPtr ctxt);
+    void xslDebugBreak(xmlNodePtr templ, xmlNodePtr node,
+                       xsltTemplatePtr root, xsltTransformContextPtr ctxt);
 
 
 /* renamed to avoid clash with libxslt*/
+
 /**
  * debugInit :
  *
@@ -230,16 +237,17 @@ extern "C"
  * Returns 1 on success,
  *         0 otherwise
  */
-  int debugInit (void);
+    int debugInit(void);
 
 
 /* renamed to avoid clash with libxslt*/
+
 /**
  * debugFree :
  *
  * Free up any memory taken by debugger
  */
-  void debugFree (void);
+    void debugFree(void);
 
 
 /** 
@@ -250,7 +258,7 @@ extern "C"
  * Returns 1 if any breakpoint was reached previously,
  *         0 otherwise
  */
-  int xslDebugGotControl (int reached);
+    int xslDebugGotControl(int reached);
 
 
 
@@ -260,18 +268,15 @@ extern "C"
 -----------------------------------------------------
 */
 
-/* ##!
-  typedef struct _xslCallPointInfo xslCallPointInfo;
-  typedef xslCallPointInfo *xslCallPointInfoPtr;
+    typedef struct _xslCallPointInfo xslCallPointInfo;
+    typedef xslCallPointInfo *xslCallPointInfoPtr;
 
-  struct _xslCallPointInfo
-  {
-    xmlChar *templateName;	
-    xmlChar *url;
-    xslCallPointInfoPtr next;
-  };
+    struct _xslCallPointInfo {
+        xmlChar *templateName;
+        xmlChar *url;
+        xslCallPointInfoPtr next;
+    };
 
-*/
 
 /**
  * xslAddCallInfo:
@@ -281,21 +286,18 @@ extern "C"
  * Returns a reference to the added info if successfull, 
  *         NULL otherwise
  */
-  xslCallPointInfoPtr xslAddCallInfo (const xmlChar * templateName,
-				      const xmlChar * url);
+    xslCallPointInfoPtr xslAddCallInfo(const xmlChar * templateName,
+                                       const xmlChar * url);
 
-/* ##!
-  typedef struct _xslCallPoint xslCallPoint;
-  typedef xslCallPoint *xslCallPointPtr;
+    typedef struct _xslCallPoint xslCallPoint;
+    typedef xslCallPoint *xslCallPointPtr;
 
-  struct _xslCallPoint
-  {
-    xslCallPointInfoPtr info;
-    long lineNo;
-    xslCallPointPtr next;
-  };
+    struct _xslCallPoint {
+        xslCallPointInfoPtr info;
+        long lineNo;
+        xslCallPointPtr next;
+    };
 
-*/
 
 /**
  * xslAddCall:
@@ -306,7 +308,7 @@ extern "C"
  * Returns 1 on success,
  *         0 otherwise 
  */
-  int xslAddCall (xsltTemplatePtr templ, xmlNodePtr source);
+    int xslAddCall(xsltTemplatePtr templ, xmlNodePtr source);
 
 
 /**
@@ -314,7 +316,7 @@ extern "C"
  *
  * Drop the topmost item off the call stack
  */
-  void xslDropCall (void);
+    void xslDropCall(void);
 
 
 /** 
@@ -325,7 +327,7 @@ extern "C"
  * Returns 1 on success,
  *         0 otherwise
  */
-  int xslStepupToDepth (int depth);
+    int xslStepupToDepth(int depth);
 
 
 /** 
@@ -336,7 +338,7 @@ extern "C"
  * Returns 1 on success, 
  *         0 otherwise
  */
-  int xslStepdownToDepth (int depth);
+    int xslStepdownToDepth(int depth);
 
 
 /**
@@ -348,7 +350,7 @@ extern "C"
  * Return non-null a if depth is valid,
  *        NULL otherwise 
  */
-  xslCallPointPtr xslGetCall (int depth);
+    xslCallPointPtr xslGetCall(int depth);
 
 
 /** 
@@ -356,7 +358,7 @@ extern "C"
  *
  * Returns the top of the call stack
  */
-  xslCallPointPtr xslGetCallStackTop (void);
+    xslCallPointPtr xslGetCallStackTop(void);
 
 
 /**
@@ -364,7 +366,7 @@ extern "C"
  *
  * Returns the depth of call stack
  */
-  int xslCallDepth (void);
+    int xslCallDepth(void);
 
 
 /*
@@ -381,7 +383,7 @@ extern "C"
  * Returns 1 on success,
  *         0 otherwise
  */
-  int xslSearchEmpty (void);
+    int xslSearchEmpty(void);
 
 
 /**
@@ -391,7 +393,7 @@ extern "C"
  * Return 1 if able to add @node to top node in search dataBase,
  *        0 otherwise
  */
-  int xslSearchAdd (xmlNodePtr node);
+    int xslSearchAdd(xmlNodePtr node);
 
 /**
  * xslSearchSave:
@@ -400,7 +402,7 @@ extern "C"
  * Return 1 on success,
  *        0 otherwise
  */
-  int xslSearchSave (const xmlChar * fileName);
+    int xslSearchSave(const xmlChar * fileName);
 
   /**
    * xslSearchQuery:
@@ -413,7 +415,7 @@ extern "C"
    * Return 1 on success,
    *        0 otherwise   
    */
-  int xslSearchQuery (const xmlChar * tempFile, const xmlChar * query);
+    int xslSearchQuery(const xmlChar * tempFile, const xmlChar * query);
 
 /**
  * xslFindBreakPointByLineNo:
@@ -426,8 +428,8 @@ extern "C"
  * Returns  line number number if successfull,
  *	    0 otherwise
 */
-  xmlNodePtr xslFindNodeByLineNo (xsltTransformContextPtr ctxt,
-				  const xmlChar * url, long lineNumber);
+    xmlNodePtr xslFindNodeByLineNo(xsltTransformContextPtr ctxt,
+                                   const xmlChar * url, long lineNumber);
 
 /**
  * xslFindTemplateNode: 
@@ -437,8 +439,8 @@ extern "C"
  * Returns : template node found if successfull,
  *           NULL otherwise 
  */
-  xmlNodePtr xslFindTemplateNode (const xsltStylesheetPtr style,
-				  const xmlChar * name);
+    xmlNodePtr xslFindTemplateNode(const xsltStylesheetPtr style,
+                                   const xmlChar * name);
 
 /**
  * xslFindBreakPointByName:
@@ -449,7 +451,7 @@ extern "C"
  * Returns the break point number given the template name is found
  *          0 otherwise
 */
-  xslBreakPointPtr findBreakPointByName (const xmlChar * templateName);
+    xslBreakPointPtr findBreakPointByName(const xmlChar * templateName);
 
 
 /**
@@ -460,7 +462,7 @@ extern "C"
  * Returns break point number found for given the break point id,
  *          0 otherwise 
  */
-  xslBreakPointPtr findBreakPointById (int id);
+    xslBreakPointPtr findBreakPointById(int id);
 
 
 /**
@@ -470,10 +472,11 @@ extern "C"
  * Return the nodes that match the given query on success,
  *        NULL otherwise 
  */
-  xmlXPathObjectPtr xslFindNodesByQuery (const xmlChar * query);
+    xmlXPathObjectPtr xslFindNodesByQuery(const xmlChar * query);
 
 
 /* renamed to avoid clash with libxslt*/
+
 /**
  * walkBreakPoints:
  * @walkFunc: function to callback for each breakpoint found
@@ -482,7 +485,7 @@ extern "C"
  * Walks through all breakpoints calling walkFunc for each. The payload
  *  sent to walkFunc is of type xslBreakPointPtr 
  */
-  void walkBreakPoints (xmlHashScanner walkFunc, void *data);
+    void walkBreakPoints(xmlHashScanner walkFunc, void *data);
 
 
 /**
@@ -494,8 +497,8 @@ extern "C"
  * Walks through all templates calling walkFunc for each. The payload
  *   of walkFunc is of type xsltTemplatePtr
  */
-  void walkTemplates (xmlHashScanner walkFunc, void *data,
-			 xsltStylesheetPtr style);
+    void walkTemplates(xmlHashScanner walkFunc, void *data,
+                       xsltStylesheetPtr style);
 
 
 /**
@@ -507,8 +510,8 @@ extern "C"
  * Walks through all templates calling walkFunc for each. The payload
  *   sent to walkFuc is of type xsltStylesheetPtr
  */
-  void walkStylesheets (xmlHashScanner walkFunc, void *data,
-			   xsltStylesheetPtr style);
+    void walkStylesheets(xmlHashScanner walkFunc, void *data,
+                         xsltStylesheetPtr style);
 
 
 /**
@@ -520,9 +523,11 @@ extern "C"
  * Call walkFunc for each global variable. The payload
  *   sent to walkFunc is of type  xmlNodePtr
  */
-void
-xslWalkGlobals (xmlHashScanner walkFunc, void *data ATTRIBUTE_UNUSED,
-		xsltStylesheetPtr style);
+    void
+     
+        xslWalkGlobals(xmlHashScanner walkFunc,
+                       void *data ATTRIBUTE_UNUSED,
+                       xsltStylesheetPtr style);
 
 /**
  * xslWalkLocals:
@@ -533,9 +538,10 @@ xslWalkGlobals (xmlHashScanner walkFunc, void *data ATTRIBUTE_UNUSED,
  * Walks through all local variables calling walkFunc for each. The payload
  *   of walkFunc is of type xmlNodePtr
  */
-void
-xslWalkLocals (xmlHashScanner walkFunc, void *data,
-	       xsltStylesheetPtr style);
+    void
+     
+        xslWalkLocals(xmlHashScanner walkFunc, void *data,
+                      xsltStylesheetPtr style);
 
 /**
  * xslWalkIncludes:
@@ -546,9 +552,10 @@ xslWalkLocals (xmlHashScanner walkFunc, void *data,
  * Walks through all xsl:include calling walkFunc for each. The payload
  *   of walkFunc is of type xmlNodePtr
  */
-void
-xslWalkIncludes (xmlHashScanner walkFunc, void *data,
-		  xsltStylesheetPtr style);
+    void
+     
+        xslWalkIncludes(xmlHashScanner walkFunc, void *data,
+                        xsltStylesheetPtr style);
 
 /**
  * xslWalkChildNodes:
@@ -559,11 +566,10 @@ xslWalkIncludes (xmlHashScanner walkFunc, void *data,
  * Call walkFunc for each child of @node the payload sent to walkFunc is
  *   a xmlNodePtr
  */
-  void xslWalkChildNodes (xmlHashScanner walkFunc, void *data,
-			  xmlNodePtr node);
+    void xslWalkChildNodes(xmlHashScanner walkFunc, void *data,
+                           xmlNodePtr node);
 
 #ifdef __cplusplus
 }
 #endif
-
 #endif

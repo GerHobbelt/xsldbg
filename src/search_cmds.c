@@ -42,30 +42,33 @@
  *        0 otherwise
  */
 int
-xslDbgShellSearch(xsltTransformContextPtr styleCtxt, xsltStylesheetPtr style,
-		  xmlChar * arg)
+xslDbgShellSearch(xsltTransformContextPtr styleCtxt,
+                  xsltStylesheetPtr style, xmlChar * arg)
 {
     int result = updateSearchData(styleCtxt, style, NULL, DEBUG_ANY_VAR);
     xmlChar buff[DEBUG_BUFFER_SIZE];
-    const xmlChar * sortOption = (xmlChar*)"-sort ";
+    const xmlChar *sortOption = (xmlChar *) "-sort ";
     int sortOptionLen = xmlStrLen(sortOption);
 
     trimString(arg);
-    if (xmlStrLen(arg) == 0){
-      arg = (xmlChar*)"//search/*";
+    if (xmlStrLen(arg) == 0) {
+        arg = (xmlChar *) "//search/*";
     }
-    strncpy((char*)buff, (char*)arg, sortOptionLen); 
-    if (!xmlStrCmp(buff, sortOption)){
-      /* yep do sorting as well*/
-      if (snprintf(buff, DEBUG_BUFFER_SIZE, "--param dosort 1 --param query \"%s\"", 
-		   &arg[sortOptionLen])){
-	result = result && xslSearchQuery(NULL, buff);
-      }
-    }else{
-      if (snprintf(buff, DEBUG_BUFFER_SIZE, "--param dosort 0 --param query \"%s\"", 
-		   arg)){
-	result = result && xslSearchQuery(NULL, buff);
-      }
+    strncpy((char *) buff, (char *) arg, sortOptionLen);
+    if (!xmlStrCmp(buff, sortOption)) {
+        /* yep do sorting as well */
+        if (snprintf
+            (buff, DEBUG_BUFFER_SIZE,
+             "--param dosort 1 --param query \"%s\"",
+             &arg[sortOptionLen])) {
+            result = result && xslSearchQuery(NULL, buff);
+        }
+    } else {
+        if (snprintf
+            (buff, DEBUG_BUFFER_SIZE,
+             "--param dosort 0 --param query \"%s\"", arg)) {
+            result = result && xslSearchQuery(NULL, buff);
+        }
     }
     return result;
 }

@@ -342,60 +342,59 @@ static void
 usage(const char *name)
 {
     xsltGenericError(xsltGenericErrorContext,
-		     "Usage: %s [options] stylesheet file\n", name);
+                     "Usage: %s [options] stylesheet file\n", name);
     xsltGenericError(xsltGenericErrorContext,
-		     "Without any parameters xsldbg starts in command mode, ready"
-		     "for the source and data to be select\n");
+                     "Without any parameters xsldbg starts in command mode, ready"
+                     "for the source and data to be select\n");
+    xsltGenericError(xsltGenericErrorContext, "   Options:\n");
     xsltGenericError(xsltGenericErrorContext,
-		     "   Options:\n");
-   xsltGenericError(xsltGenericErrorContext,
-		    "      --version or -V: show the version of libxml and libxslt used\n");
+                     "      --version or -V: show the version of libxml and libxslt used\n");
     xsltGenericError(xsltGenericErrorContext,
-		     "      --verbose or -v: show logs of what's happening\n");
+                     "      --verbose or -v: show logs of what's happening\n");
     xsltGenericError(xsltGenericErrorContext,
-		     "      --output file or -o file: save to a given file\n");
+                     "      --output file or -o file: save to a given file\n");
     xsltGenericError(xsltGenericErrorContext,
-		     "      --timing: display the time used\n");
+                     "      --timing: display the time used\n");
     xsltGenericError(xsltGenericErrorContext,
-		     "      --repeat: run the transformation 20 times\n");
+                     "      --repeat: run the transformation 20 times\n");
     xsltGenericError(xsltGenericErrorContext,
-		     "      --debug: dump the tree of the result instead\n");
+                     "      --debug: dump the tree of the result instead\n");
     xsltGenericError(xsltGenericErrorContext,
-		     "      --novalid: skip the Dtd loading phase\n");
+                     "      --novalid: skip the Dtd loading phase\n");
     xsltGenericError(xsltGenericErrorContext,
-		     "      --noout: do not dump the result\n");
+                     "      --noout: do not dump the result\n");
     xsltGenericError(xsltGenericErrorContext,
-		     "      --maxdepth val : increase the maximum depth\n");
+                     "      --maxdepth val : increase the maximum depth\n");
 #ifdef LIBXML_HTML_ENABLED
     xsltGenericError(xsltGenericErrorContext,
-		     "      --html: the input document is(are) an HTML file(s)\n");
+                     "      --html: the input document is(are) an HTML file(s)\n");
 #endif
 #ifdef LIBXML_DOCB_ENABLED
     xsltGenericError(xsltGenericErrorContext,
-		     "      --docbook: the input document is SGML docbook\n");
+                     "      --docbook: the input document is SGML docbook\n");
 #endif
     xsltGenericError(xsltGenericErrorContext,
-		     "      --param name value : pass a (parameter,value) pair\n");
+                     "      --param name value : pass a (parameter,value) pair\n");
     xsltGenericError(xsltGenericErrorContext,
-		     "            string values must be quoted like \"'string'\"\n");
+                     "            string values must be quoted like \"'string'\"\n");
     xsltGenericError(xsltGenericErrorContext,
-        "      --nonet refuse to fetch DTDs or entities over network\n");
+                     "      --nonet refuse to fetch DTDs or entities over network\n");
 #ifdef LIBXML_CATALOG_ENABLED
     xsltGenericError(xsltGenericErrorContext,
-        "      --catalogs : use the catalogs from $SGML_CATALOG_FILES\n");
+                     "      --catalogs : use the catalogs from $SGML_CATALOG_FILES\n");
 #endif
 #ifdef LIBXML_XINCLUDE_ENABLED
     xsltGenericError(xsltGenericErrorContext,
-        "      --xinclude : do XInclude processing on document intput\n");
+                     "      --xinclude : do XInclude processing on document intput\n");
 #endif
     xsltGenericError(xsltGenericErrorContext,
-		     "      --profile or --norman : dump profiling informations \n");
+                     "      --profile or --norman : dump profiling informations \n");
     xsltGenericError(xsltGenericErrorContext,
-		     "      --cd <PATH>: change to specfied working directory\n");
+                     "      --cd <PATH>: change to specfied working directory\n");
     xsltGenericError(xsltGenericErrorContext,
-		     "      --shell : start xsldebugger \n");
+                     "      --shell : start xsldebugger \n");
     xsltGenericError(xsltGenericErrorContext,
-		     "      --gdb : run in gdb mode printing out more information");
+                     "      --gdb : run in gdb mode printing out more information");
 }
 
 int
@@ -438,7 +437,8 @@ main(int argc, char **argv)
                     break;
 
                 default:
-                    xsltGenericError(xsltGenericErrorContext,"Too many file names supplied\n");
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "Too many file names supplied\n");
                     result = 0;
             }
             continue;
@@ -465,23 +465,25 @@ main(int argc, char **argv)
         } else if ((!strcmp(argv[i], "-V")) ||
                    (!strcmp(argv[i], "-version")) ||
                    (!strcmp(argv[i], "--version"))) {
-	  xsltGenericError(xsltGenericErrorContext,
-                " xsldbg created by Keith Isdale <k_isdale@tpg.com.au>\n");
             xsltGenericError(xsltGenericErrorContext,
-			     " Version %s, Date created %s\n", VERSION, TIMESTAMP);
+                             " xsldbg created by Keith Isdale <k_isdale@tpg.com.au>\n");
             xsltGenericError(xsltGenericErrorContext,
-			     "Using libxml %s, libxslt %s and libexslt %s\n",
-			     xmlParserVersion, xsltEngineVersion,
-			     exsltLibraryVersion);
+                             " Version %s, Date created %s\n", VERSION,
+                             TIMESTAMP);
             xsltGenericError(xsltGenericErrorContext,
-			     "xsldbg was compiled against libxml %d, libxslt %d and libexslt %d\n",
-			     LIBXML_VERSION, LIBXSLT_VERSION, LIBEXSLT_VERSION);
+                             "Using libxml %s, libxslt %s and libexslt %s\n",
+                             xmlParserVersion, xsltEngineVersion,
+                             exsltLibraryVersion);
             xsltGenericError(xsltGenericErrorContext,
-			     "libxslt %d was compiled against libxml %d\n",
-			     xsltLibxsltVersion, xsltLibxmlVersion);
+                             "xsldbg was compiled against libxml %d, libxslt %d and libexslt %d\n",
+                             LIBXML_VERSION, LIBXSLT_VERSION,
+                             LIBEXSLT_VERSION);
             xsltGenericError(xsltGenericErrorContext,
-			     "libexslt %d was compiled against libxml %d\n",
-			     exsltLibexsltVersion, exsltLibxmlVersion);
+                             "libxslt %d was compiled against libxml %d\n",
+                             xsltLibxsltVersion, xsltLibxmlVersion);
+            xsltGenericError(xsltGenericErrorContext,
+                             "libexslt %d was compiled against libxml %d\n",
+                             exsltLibexsltVersion, exsltLibxmlVersion);
             strcpy(argv[i], "");
         } else if ((!strcmp(argv[i], "-repeat"))
                    || (!strcmp(argv[i], "--repeat"))) {
@@ -604,16 +606,17 @@ main(int argc, char **argv)
                 strcpy(argv[i], "");
             } else {
                 xsltGenericError(xsltGenericErrorContext,
-				 "Missing path name after --cd option\n");
+                                 "Missing path name after --cd option\n");
             }
 
-        } else if ((!strcmp(argv[i], "-gdb")) || (!strcmp(argv[i], "--gdb"))){
-	  /* run in gdb mode printing out more information after each command*/
+        } else if ((!strcmp(argv[i], "-gdb"))
+                   || (!strcmp(argv[i], "--gdb"))) {
+            /* run in gdb mode printing out more information after each command */
             if (result) {
-	      result = enableOption(OPTIONS_GDB, 1);
-	      strcpy(argv[i], "");
-            }	  
-	}else {
+                result = enableOption(OPTIONS_GDB, 1);
+                strcpy(argv[i], "");
+            }
+        } else {
             xsltGenericError(xsltGenericErrorContext,
                              "Unknown option %s\n", argv[i]);
             result = 0;
@@ -642,24 +645,24 @@ main(int argc, char **argv)
      * shell interraction
      */
     if (!isOptionEnabled(OPTIONS_SHELL)) {      /* excecute stylesheet (ie no debugging) */
-        xslDebugStatus = DEBUG_RUN;
-    }else{
-	xsltGenericError(xsltGenericErrorContext,
-			 "XSLDBG %s\n", VERSION);
+        xslDebugStatus = DEBUG_NONE;
+    } else {
+        xslDebugStatus = DEBUG_CONT;
+        xsltGenericError(xsltGenericErrorContext, "XSLDBG %s\n", VERSION);
     }
 
 
     xslDebugGotControl(0);
     while (xslDebugStatus != DEBUG_QUIT) {
-      /* don't force xsldbg to show command prompt */
-      showPrompt = 0;
-      cur = NULL;
-      doc = NULL;
-        if (isOptionEnabled(OPTIONS_SHELL)) {	  
+        /* don't force xsldbg to show command prompt */
+        showPrompt = 0;
+        cur = NULL;
+        doc = NULL;
+        if (isOptionEnabled(OPTIONS_SHELL)) {
             xsltGenericError(xsltGenericErrorContext,
                              "\nStarting stylesheet\n\n");
         }
-        if (xslDebugStatus != DEBUG_RUN &&
+        if (xslDebugStatus != DEBUG_NONE &&
             (getIntOption(OPTIONS_TRACE) == TRACE_OFF))
             xslDebugStatus = DEBUG_STOP;        /* stop as soon as possible */
 
@@ -674,7 +677,7 @@ main(int argc, char **argv)
             if ((cur == NULL) || (cur->errors != 0)) {
                 /*goto a xsldbg command prompt */
                 showPrompt = 1;
-                if (xslDebugStatus == DEBUG_RUN) {
+                if (xslDebugStatus == DEBUG_NONE) {
                     xslDebugStatus = DEBUG_QUIT;        /* panic !! */
                     result = 0;
                 }
@@ -685,7 +688,7 @@ main(int argc, char **argv)
             loadXmlFile(NULL, FILES_XMLFILE_TYPE);
             doc = getMainDoc();
             if (doc == NULL) {
-                if (xslDebugStatus == DEBUG_RUN) {
+                if (xslDebugStatus == DEBUG_NONE) {
                     xslDebugStatus = DEBUG_QUIT;        /* panic !! */
                     result = 0;
                 } else {
@@ -739,7 +742,7 @@ main(int argc, char **argv)
             }
         } else {
             /* Some sort of problem loading source file has occured. Quit? */
-            if (xslDebugStatus == DEBUG_RUN) {
+            if (xslDebugStatus == DEBUG_NONE) {
                 xslDebugStatus = DEBUG_QUIT;    /* Panic!! */
                 result = 0;
             } else {
@@ -750,12 +753,13 @@ main(int argc, char **argv)
 
         if (showPrompt && isOptionEnabled(OPTIONS_SHELL)) {
             xmlDocPtr tempDoc = xmlNewDoc((xmlChar *) "1.0");
-	    xmlNodePtr tempNode = xmlNewNode(NULL, (xmlChar *)"xsldbg_default_node");
-	    if (!tempDoc || !tempNode){
-	      xsldbgFree();
-	      exit(1);		  
-	    }
-	    xmlAddChild((xmlNodePtr)tempDoc, tempNode);
+            xmlNodePtr tempNode =
+                xmlNewNode(NULL, (xmlChar *) "xsldbg_default_node");
+            if (!tempDoc || !tempNode) {
+                xsldbgFree();
+                exit(1);
+            }
+            xmlAddChild((xmlNodePtr) tempDoc, tempNode);
 
             xsltGenericError(xsltGenericErrorContext,
                              "Going straight to "
@@ -763,16 +767,13 @@ main(int argc, char **argv)
                              "work as not all needed have been loaded \n");
             if ((cur == NULL) && (doc == NULL)) {
                 /*no doc's loaded */
-                xslDebugBreak(tempNode, tempNode,
-                              NULL, NULL);
+                xslDebugBreak(tempNode, tempNode, NULL, NULL);
             } else if ((cur != NULL) && (doc == NULL)) {
                 /* stylesheet is loaded */
-	      xslDebugBreak((xmlNodePtr) cur->doc, tempNode,
-                              NULL, NULL);
+                xslDebugBreak((xmlNodePtr) cur->doc, tempNode, NULL, NULL);
             } else if ((cur == NULL) && (doc != NULL)) {
                 /* xml doc is loaded */
-                xslDebugBreak(tempNode, (xmlNodePtr) doc,
-                              NULL, NULL);
+                xslDebugBreak(tempNode, (xmlNodePtr) doc, NULL, NULL);
             } else {
                 /* unexpected problem, both docs are loaded */
                 xslDebugBreak((xmlNodePtr) cur->doc, (xmlNodePtr) doc,
@@ -781,19 +782,19 @@ main(int argc, char **argv)
             xmlFreeDoc(tempDoc);
         } else if (showPrompt && !isOptionEnabled(OPTIONS_SHELL)) {
             xslDebugStatus = DEBUG_QUIT;
-            result = 0;         /* pannic */
+            result = 0;         /* panic */
         }
 
         if (isOptionEnabled(OPTIONS_SHELL)) {
             /* force a refesh of both stlesheet and xml data */
             freeXmlFile(FILES_SOURCEFILE_TYPE);
             freeXmlFile(FILES_XMLFILE_TYPE);
-	}
+        }
     }
 
-    if(!result){
-         xsltGenericError(xsltGenericErrorContext,
-			  "xsldbg is aborting due to unrecoverable errors!\n");
+    if (!result) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "xsldbg is aborting due to unrecoverable errors!\n");
     }
     xsldbgFree();
     xsltCleanupGlobals();
@@ -895,8 +896,8 @@ loadXmlData(void)
         doc =
             xmlParseFile((char *) getStringOption(OPTIONS_DATA_FILE_NAME));
     if (doc == NULL) {
-        xsltGenericError(xsltGenericErrorContext, 
-			 "unable to parse %s\n",
+        xsltGenericError(xsltGenericErrorContext,
+                         "unable to parse %s\n",
                          getStringOption(OPTIONS_DATA_FILE_NAME));
         if (!isOptionEnabled(OPTIONS_SHELL)) {
             xsltGenericError(xsltGenericErrorContext,
@@ -933,7 +934,7 @@ loadXmlTemporay(const xmlChar * path)
 
     doc = NULL;
     if (isOptionEnabled(OPTIONS_TIMING))
-      startTimer();
+        startTimer();
 #ifdef LIBXML_HTML_ENABLED
     if (isOptionEnabled(OPTIONS_HTML))
         doc = htmlParseFile((char *) path, NULL);
@@ -951,7 +952,7 @@ loadXmlTemporay(const xmlChar * path)
     }
 
     if (isOptionEnabled(OPTIONS_TIMING) && (xslDebugStatus != DEBUG_QUIT)) {
-      endTimer("Parsing document %s", path);
+        endTimer("Parsing document %s", path);
     }
     return doc;
 }
@@ -973,7 +974,7 @@ printTemplates(xsltStylesheetPtr style, xmlDocPtr doc)
         xslDbgPrintTemplateNames(ctxt, NULL, NULL, 0, 0);
     } else {
         xsltGenericError(xsltGenericErrorContext,
-			 "Unable to create context : print templates\n");
+                         "Unable to create context : print templates\n");
     }
 }
 
@@ -983,9 +984,9 @@ void catchSigInt(int value ATTRIBUTE_UNUSED);
 void
 catchSigInt(int value ATTRIBUTE_UNUSED)
 {
-		if (xslDebugStatus == DEBUG_RUN){
-			xsldbgFree();
-			exit(1);		
+    if (xslDebugStatus == DEBUG_RUN) {
+        xsldbgFree();
+        exit(1);
     }
 
     if (xslDebugStatus != DEBUG_STOP) {
@@ -1000,7 +1001,7 @@ void catchSigTerm(int value ATTRIBUTE_UNUSED);
 void
 catchSigTerm(int value ATTRIBUTE_UNUSED)
 {
-	xsldbgFree();
+    xsldbgFree();
 }
 
 typedef void (*sighandler_t) (int);
@@ -1024,8 +1025,8 @@ xsldbgInit()
 
         /* catch SIGINT */
         oldHandler = signal(SIGINT, catchSigInt);
-		/* catch SIGTIN tty input available fro child*/
-		signal(SIGTERM, catchSigTerm);
+        /* catch SIGTIN tty input available fro child */
+        signal(SIGTERM, catchSigTerm);
         initialized = 1;
     }
     return result;
@@ -1043,4 +1044,3 @@ xsldbgFree()
     if (oldHandler != SIG_ERR)
         signal(SIGINT, oldHandler);
 }
-

@@ -81,7 +81,7 @@ enum {
 /* for non win32 environments see the macro in xsldebugger/Makefile.am
    Win32 tupe systems see  macro in libxslt/xsltwin32config.h
 */
-#ifndef __riscos /* JRF: Under RISC OS we'll use the sysvar */
+#ifndef __riscos                /* JRF: Under RISC OS we'll use the sysvar */
 #define USE_DOCS_MACRO
 #endif
 

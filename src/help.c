@@ -34,44 +34,45 @@
 void
 helpTop(const xmlChar * args)
 {
-  char buff[500], helpParam[100];
+    char buff[500], helpParam[100];
 
-  const char *docsDirPath = (const char*)getStringOption(OPTIONS_DOCS_PATH);
+    const char *docsDirPath =
+        (const char *) getStringOption(OPTIONS_DOCS_PATH);
 
 
-  if (xmlStrLen(args) > 0) {
-    snprintf(helpParam, 100, "--param help %c'%s'%c", QUOTECHAR, args,
-	     QUOTECHAR);
-  } else
-    strcpy(helpParam, "");
-  if (docsDirPath){
-    snprintf((char *) buff, sizeof(buff), "xsldbg %s"
-	     " --param xsldbg_version %c'%s'%c "
-	     " %s%cxsldoc.xsl %s%cxsldoc.xml | more",
-	     helpParam,
-	     QUOTECHAR, VERSION, QUOTECHAR,
-	     docsDirPath, PATHCHAR,
-	     docsDirPath, PATHCHAR);
-    if ( xslDbgShellExecute((xmlChar*)buff, 1) == 0) {
-      if (docsDirPath)
-	xsltGenericError(xsltGenericErrorContext,
-			 "Help failed : Maybe help files not found in %s or "
-			 "xsldbg not found in path\n", docsDirPath);
-      else
-	xsltGenericError(xsltGenericErrorContext, 
-			 "Unable to find xsldbg or help files\n");
-    }
-  
-  } else{
+    if (xmlStrLen(args) > 0) {
+        snprintf(helpParam, 100, "--param help %c'%s'%c", QUOTECHAR, args,
+                 QUOTECHAR);
+    } else
+        strcpy(helpParam, "");
+    if (docsDirPath) {
+        snprintf((char *) buff, sizeof(buff), "xsldbg %s"
+                 " --param xsldbg_version %c'%s'%c "
+                 " %s%cxsldoc.xsl %s%cxsldoc.xml | more",
+                 helpParam,
+                 QUOTECHAR, VERSION, QUOTECHAR,
+                 docsDirPath, PATHCHAR, docsDirPath, PATHCHAR);
+        if (xslDbgShellExecute((xmlChar *) buff, 1) == 0) {
+            if (docsDirPath)
+                xsltGenericError(xsltGenericErrorContext,
+                                 "Help failed : Maybe help files not found in %s or "
+                                 "xsldbg not found in path\n",
+                                 docsDirPath);
+            else
+                xsltGenericError(xsltGenericErrorContext,
+                                 "Unable to find xsldbg or help files\n");
+        }
+
+    } else {
 #ifdef USE_DOCS_MACRO
-    xsltGenericError(xsltGenericErrorContext,
-		     "Error in seting for USE_DOC_MACRO look at Makefile.am\n");
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error in seting for USE_DOC_MACRO look at Makefile.am\n");
 #else
-    xsltGenericError(xsltGenericErrorContext,
-		      "Required environment variable XSLDBG_DOCS_DIR not set "
-		     "to the directory of xsltproc documentation\n");
+        xsltGenericError(xsltGenericErrorContext,
+                         "Required environment variable XSLDBG_DOCS_DIR not set "
+                         "to the directory of xsltproc documentation\n");
 #endif
-  }
+    }
 }
 
 #else
@@ -79,51 +80,53 @@ helpTop(const xmlChar * args)
 void
 helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
 {
-  xmlChar buff[500];
-  char *docsDirPath = (char*)getStringOption(OPTIONS_DOCS_PATH);
-  if (docsDirPath){
-#ifdef __riscos
-    /* JRF: I'm not calling arbitrary commands without knowing if they
-            exist or not.
-            I'll settle for a simple bit of code and keep this
-            self-contained. */
-    FILE *f;
-    snprintf((char*)buff, sizeof(buff), "%s.xsldoc/txt", docsDirPath);
+    xmlChar buff[500];
+    char *docsDirPath = (char *) getStringOption(OPTIONS_DOCS_PATH);
 
-     f=fopen((char *)buff,"r");
-   if (!f)
-    {
-      /* For now I won't bother with paging - at some point maybe */
-      while (!feof(f))
-      {
-        int read=fread(buff,1,sizeof(buff),f);
-        fwrite(buff,1,read,stdout);
-      }
-      fprintf(stdout,"\n");
-      fclose(f);
-    }
-    else
-	xsltGenericError(xsltGenericErrorContext,
-			 "Help failed : could not open %s\n", buff);
+    if (docsDirPath) {
+#ifdef __riscos
+        /* JRF: I'm not calling arbitrary commands without knowing if they
+         * exist or not.
+         * I'll settle for a simple bit of code and keep this
+         * self-contained. */
+        FILE *f;
+
+        snprintf((char *) buff, sizeof(buff), "%s.xsldoc/txt",
+                 docsDirPath);
+
+        f = fopen((char *) buff, "r");
+        if (!f) {
+            /* For now I won't bother with paging - at some point maybe */
+            while (!feof(f)) {
+                int read = fread(buff, 1, sizeof(buff), f);
+
+                fwrite(buff, 1, read, stdout);
+            }
+            fprintf(stdout, "\n");
+            fclose(f);
+        } else
+            xsltGenericError(xsltGenericErrorContext,
+                             "Help failed : could not open %s\n", buff);
 #else
-    snprintf((char*)buff, sizeof(buff), "more %sxsldoc.txt", docsDirPath);
-    if ( xslDbgShellExecute(buff, 1) == 0) {
-      /* JRF: docsDirPath can't be NULL 'cos it's checked above */
-      xsltGenericError(xsltGenericErrorContext,
-  			 "Help failed : Maybe help files not found in %s or "
-		       "xsldbg not found in path\n", docsDirPath);
-     }
+        snprintf((char *) buff, sizeof(buff), "more %sxsldoc.txt",
+                 docsDirPath);
+        if (xslDbgShellExecute(buff, 1) == 0) {
+            /* JRF: docsDirPath can't be NULL 'cos it's checked above */
+            xsltGenericError(xsltGenericErrorContext,
+                             "Help failed : Maybe help files not found in %s or "
+                             "xsldbg not found in path\n", docsDirPath);
+        }
 #endif
-  }else{
+    } else {
 #ifdef USE_DOCS_MACRO
-    xsltGenericError(xsltGenericErrorContext,
-  "Error in seting for USE_DOCS_MACRO look at Makefile.am\n");
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error in seting for USE_DOCS_MACRO look at Makefile.am\n");
 #else
-    xsltGenericError(xsltGenericErrorContext,
-		     "Required environment variable XSLDBG_DOCS_DIR not set "
-		     "to the directory of xsltproc documentation\n");
+        xsltGenericError(xsltGenericErrorContext,
+                         "Required environment variable XSLDBG_DOCS_DIR not set "
+                         "to the directory of xsltproc documentation\n");
 #endif
-  }
+    }
 }
 
 #endif

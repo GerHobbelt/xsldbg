@@ -252,8 +252,7 @@ enum {                          /* id's for commands of xslDbgShell */
 
     /* searching */
     DEBUG_SEARCH_CMD
-
-    /* NULL */
+        /* NULL */
 };
 
 
@@ -321,8 +320,10 @@ xmlChar *xslDbgShellReadline(xmlChar * prompt);
  * 
  * Returns the last template node found, if any
  */
-xsltTemplatePtr getTemplate(void){
-  return rootCopy;
+xsltTemplatePtr
+getTemplate(void)
+{
+    return rootCopy;
 }
 
 /**
@@ -350,7 +351,7 @@ void xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
               xmlChar * arg, xmlNodePtr source);
 int xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
                               int templateCount);
-void xslDbgPrintCallStack(const xmlChar* arg);
+void xslDbgPrintCallStack(const xmlChar * arg);
 void xsldbgSleep(long delay);
 int xslDbgWalkContinue(void);
 int lookupName(xmlChar * name, xmlChar ** matchList);
@@ -502,62 +503,68 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
  * Print all items found on the callStack
  */
 void
-xslDbgPrintCallStack(const xmlChar* arg)
+xslDbgPrintCallStack(const xmlChar * arg)
 {
-  int callDepth;
-  xslCallPointPtr callPoint;
-  if (arg == NULL){
-    for (callDepth = 1; callDepth <= xslCallDepth(); callDepth++) {
-      callPoint = xslGetCall(callDepth);
-      if (callPoint && callPoint->info) {
-	if (callDepth == 0)
-	  xsltGenericError(xsltGenericErrorContext,
-			   "Call stack contains:\n");
-	xsltGenericError(xsltGenericErrorContext, "#%d template :\"%s\"",
-			 callDepth - 1, callPoint->info->templateName);
-	if (callPoint->info->url)
-	  xsltGenericError(xsltGenericErrorContext,
-			   " in file %s : line %ld \n",
-			   callPoint->info->url, callPoint->lineNo);
-	else
-	  xsltGenericError(xsltGenericErrorContext, "\n");
-      } else {
+    int callDepth;
+    xslCallPointPtr callPoint;
+
+    if (arg == NULL) {
+        for (callDepth = 1; callDepth <= xslCallDepth(); callDepth++) {
+            callPoint = xslGetCall(callDepth);
+            if (callPoint && callPoint->info) {
+                if (callDepth == 0)
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "Call stack contains:\n");
+                xsltGenericError(xsltGenericErrorContext,
+                                 "#%d template :\"%s\"", callDepth - 1,
+                                 callPoint->info->templateName);
+                if (callPoint->info->url)
+                    xsltGenericError(xsltGenericErrorContext,
+                                     " in file %s : line %ld \n",
+                                     callPoint->info->url,
+                                     callPoint->lineNo);
+                else
+                    xsltGenericError(xsltGenericErrorContext, "\n");
+            } else {
 #ifdef WITH_XSLT_DEBUG_PROCESS
-	xsltGenericError(xsltGenericErrorContext,
-			 "Call stack item not found at depth %d :"
-			 " xslDbgPrintCallStack\n", callDepth);
+                xsltGenericError(xsltGenericErrorContext,
+                                 "Call stack item not found at depth %d :"
+                                 " xslDbgPrintCallStack\n", callDepth);
 #endif
-	break;
-      }
-    }
-    if (xslCallDepth() == 0)
-      xsltGenericError(xsltGenericErrorContext,
-		       "No items on call stack\n");
-    else
-      xsltGenericError(xsltGenericErrorContext, "\n");
-  }else{
-    long depth = atol((char*)arg);
-    if (depth >=0 ){
-      callPoint = xslGetCall(depth + 1);
-      if (callPoint && callPoint->info) {
-	xsltGenericError(xsltGenericErrorContext, "#%d template :\"%s\"",
-			 depth, callPoint->info->templateName);
-	/* should alays be present but .. */
-	if (callPoint->info->url)
-	  xsltGenericError(xsltGenericErrorContext,
-			   " in file %s : line %ld \n",
-			   callPoint->info->url, callPoint->lineNo);
-	else
-	  xsltGenericError(xsltGenericErrorContext, "\n");
-      } else {
+                break;
+            }
+        }
+        if (xslCallDepth() == 0)
+            xsltGenericError(xsltGenericErrorContext,
+                             "No items on call stack\n");
+        else
+            xsltGenericError(xsltGenericErrorContext, "\n");
+    } else {
+        long depth = atol((char *) arg);
+
+        if (depth >= 0) {
+            callPoint = xslGetCall(depth + 1);
+            if (callPoint && callPoint->info) {
+                xsltGenericError(xsltGenericErrorContext,
+                                 "#%d template :\"%s\"", depth,
+                                 callPoint->info->templateName);
+                /* should alays be present but .. */
+                if (callPoint->info->url)
+                    xsltGenericError(xsltGenericErrorContext,
+                                     " in file %s : line %ld \n",
+                                     callPoint->info->url,
+                                     callPoint->lineNo);
+                else
+                    xsltGenericError(xsltGenericErrorContext, "\n");
+            } else {
 #ifdef WITH_XSLT_DEBUG_PROCESS
-	xsltGenericError(xsltGenericErrorContext,
-			 "Call stack item not found at depth %d :"
-			 " xslDbgPrintCallStack\n", depth);
+                xsltGenericError(xsltGenericErrorContext,
+                                 "Call stack item not found at depth %d :"
+                                 " xslDbgPrintCallStack\n", depth);
 #endif
-      }
+            }
+        }
     }
-  }
 }
 
 /**
@@ -621,7 +628,7 @@ xslDbgWalkContinue(void)
 
         default:               /* stop walking */
             setIntOption(OPTIONS_WALK_SPEED, WALKSPEED_STOP);
-	    xslDebugStatus = DEBUG_STOP;
+            xslDebugStatus = DEBUG_STOP;
             break;
     }
 
@@ -772,91 +779,103 @@ addBreakPointNode(void *payload, void *data ATTRIBUTE_UNUSED,
                   xmlChar * name ATTRIBUTE_UNUSED)
 {
     xmlNodePtr node = searchBreakPointNode((xslBreakPointPtr) payload);
+
     xslSearchAdd(node);
 }
 
-void 
+void
 addSourceNode(void *payload, void *data ATTRIBUTE_UNUSED,
-	      xmlChar * name ATTRIBUTE_UNUSED){
-  xmlNodePtr node = searchSourceNode((xsltStylesheetPtr)payload);
-  xslSearchAdd(node);
-}
+              xmlChar * name ATTRIBUTE_UNUSED)
+{
+    xmlNodePtr node = searchSourceNode((xsltStylesheetPtr) payload);
 
-void 
-addTemplateNode(void *payload, void *data ATTRIBUTE_UNUSED,
-	      xmlChar * name ATTRIBUTE_UNUSED){
-  xmlNodePtr node = searchTemplateNode(((xsltTemplatePtr)payload)->elem);
-  xslSearchAdd(node);
-}
-
-void 
-addGlobalNode(void *payload, void *data ATTRIBUTE_UNUSED,
-	      xmlChar * name ATTRIBUTE_UNUSED){
-  xmlNodePtr node = searchGlobalNode((xmlNodePtr)payload);
-  xslSearchAdd(node);
-}
-
-void 
-addLocalNode(void *payload, void *data ATTRIBUTE_UNUSED,
-	      xmlChar * name ATTRIBUTE_UNUSED){
-  xmlNodePtr node = searchLocalNode((xmlNodePtr)payload);
-  xslSearchAdd(node);
-}
-
-void 
-addIncludeNode(void *payload, void *data ATTRIBUTE_UNUSED,
-	      xmlChar * name ATTRIBUTE_UNUSED){
-  xmlNodePtr node = searchIncludeNode((xmlNodePtr)payload);
-  xslSearchAdd(node);
+    xslSearchAdd(node);
 }
 
 void
-addCallStackItems(void){
-  xslCallPointPtr item;
-  xmlNodePtr node;
-  int depth;
-  for (depth = xslCallDepth(); depth >0; depth--){
-    item = xslGetCall(depth);
-    if (item){
-      node = searchCallStackNode(item);
-      if (node)
-	xslSearchAdd(node);
+addTemplateNode(void *payload, void *data ATTRIBUTE_UNUSED,
+                xmlChar * name ATTRIBUTE_UNUSED)
+{
+    xmlNodePtr node =
+        searchTemplateNode(((xsltTemplatePtr) payload)->elem);
+    xslSearchAdd(node);
+}
+
+void
+addGlobalNode(void *payload, void *data ATTRIBUTE_UNUSED,
+              xmlChar * name ATTRIBUTE_UNUSED)
+{
+    xmlNodePtr node = searchGlobalNode((xmlNodePtr) payload);
+
+    xslSearchAdd(node);
+}
+
+void
+addLocalNode(void *payload, void *data ATTRIBUTE_UNUSED,
+             xmlChar * name ATTRIBUTE_UNUSED)
+{
+    xmlNodePtr node = searchLocalNode((xmlNodePtr) payload);
+
+    xslSearchAdd(node);
+}
+
+void
+addIncludeNode(void *payload, void *data ATTRIBUTE_UNUSED,
+               xmlChar * name ATTRIBUTE_UNUSED)
+{
+    xmlNodePtr node = searchIncludeNode((xmlNodePtr) payload);
+
+    xslSearchAdd(node);
+}
+
+void
+addCallStackItems(void)
+{
+    xslCallPointPtr item;
+    xmlNodePtr node;
+    int depth;
+
+    for (depth = xslCallDepth(); depth > 0; depth--) {
+        item = xslGetCall(depth);
+        if (item) {
+            node = searchCallStackNode(item);
+            if (node)
+                xslSearchAdd(node);
+        }
     }
-  }
 }
 
 int
-  updateSearchData(xsltTransformContextPtr styleCtxt, xsltStylesheetPtr style,
-		 void *data, int variableTypes)
+updateSearchData(xsltTransformContextPtr styleCtxt,
+                 xsltStylesheetPtr style, void *data, int variableTypes)
 {
-  int result =0;
+    int result = 0;
+
     xslSearchEmpty();
-    xsltGenericError(xsltGenericErrorContext, 
-		     "Updating search database, this may take a while ..\n");
-    /* add items in the call stack to the search dataBase*/
+    xsltGenericError(xsltGenericErrorContext,
+                     "Updating search database, this may take a while ..\n");
+    /* add items in the call stack to the search dataBase */
     addCallStackItems();
     xsltGenericError(xsltGenericErrorContext,
-		     "  Looking for breakpoints \n");
+                     "  Looking for breakpoints \n");
     walkBreakPoints((xmlHashScanner) addBreakPointNode, data);
 
     xsltGenericError(xsltGenericErrorContext,
-		     "  Looking for imports and top level stylesheets \n");
+                     "  Looking for imports and top level stylesheets \n");
     walkStylesheets((xmlHashScanner) addSourceNode, data, style);
-    xsltGenericError(xsltGenericErrorContext,
-		    "  Looking for includes \n");
+    xsltGenericError(xsltGenericErrorContext, "  Looking for includes \n");
     walkIncludes((xmlHashScanner) addIncludeNode, data, style);
     xsltGenericError(xsltGenericErrorContext,
-		    "  Looking for templates \n");
+                     "  Looking for templates \n");
     walkTemplates((xmlHashScanner) addTemplateNode, data, style);
     xsltGenericError(xsltGenericErrorContext,
-		    "  Looking for global variables \n");
+                     "  Looking for global variables \n");
     walkGlobals((xmlHashScanner) addGlobalNode, data, style);
     xsltGenericError(xsltGenericErrorContext,
-		     "  Looking for local variables \n");
+                     "  Looking for local variables \n");
     walkLocals((xmlHashScanner) addLocalNode, data, style);
-    xsltGenericError(xsltGenericErrorContext,
-		     "  Formatting output \n");    
-    xslSearchSave((xmlChar*)"search.data");
+    xsltGenericError(xsltGenericErrorContext, "  Formatting output \n");
+    xslSearchSave((xmlChar *) "search.data");
     result++;
     return result;
 }
@@ -874,36 +893,37 @@ void
 xslDebugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
               xsltTransformContextPtr ctxt)
 {
-    xmlDocPtr tempDoc = NULL; 
+    xmlDocPtr tempDoc = NULL;
     xmlNodePtr tempNode = NULL;
+
     rootCopy = root;
 
     /* select normal input output streams */
     selectNormalIO();
 
-    if (templ == NULL){
-      tempDoc = xmlNewDoc((xmlChar*)"1.0");
-      if (!tempDoc)
-	return;
-      tempNode = xmlNewNode(NULL,(xmlChar*)"xsldbg_default_node");
-      if (!tempNode){
-	xmlFreeDoc(tempDoc);
-	return;
-      } 
-      xmlAddChild((xmlNodePtr)tempDoc, tempNode);     
-      templ = tempNode;
+    if (templ == NULL) {
+        tempDoc = xmlNewDoc((xmlChar *) "1.0");
+        if (!tempDoc)
+            return;
+        tempNode = xmlNewNode(NULL, (xmlChar *) "xsldbg_default_node");
+        if (!tempNode) {
+            xmlFreeDoc(tempDoc);
+            return;
+        }
+        xmlAddChild((xmlNodePtr) tempDoc, tempNode);
+        templ = tempNode;
     }
-    if (node == NULL){
-      tempDoc = xmlNewDoc((xmlChar*)"1.0");
-      if (!tempDoc)
-	return;
-      tempNode = xmlNewNode(NULL,(xmlChar*)"xsldbg_default_node");
-      if (!tempNode){
-	xmlFreeDoc(tempDoc);
-	return;
-      }   
-      xmlAddChild((xmlNodePtr)tempDoc, tempNode);
-      node =  tempNode;
+    if (node == NULL) {
+        tempDoc = xmlNewDoc((xmlChar *) "1.0");
+        if (!tempDoc)
+            return;
+        tempNode = xmlNewNode(NULL, (xmlChar *) "xsldbg_default_node");
+        if (!tempNode) {
+            xmlFreeDoc(tempDoc);
+            return;
+        }
+        xmlAddChild((xmlNodePtr) tempDoc, tempNode);
+        node = tempNode;
     }
     if (root) {
         if (root->match)
@@ -923,10 +943,10 @@ xslDebugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
         }
     }
 
-      xslDbgShell(templ, node, (xmlChar *) "index.xsl",
-		  (xmlShellReadlineFunc) xslDbgShellReadline, stdout, ctxt);
+    xslDbgShell(templ, node, (xmlChar *) "index.xsl",
+                (xmlShellReadlineFunc) xslDbgShellReadline, stdout, ctxt);
     if (tempDoc)
-      xmlFreeDoc(tempDoc);
+        xmlFreeDoc(tempDoc);
 }
 
 
@@ -1007,8 +1027,8 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             xslBreakPointPtr breakPtr = activeBreakPoint();
 
             xsltGenericError(xsltGenericErrorContext,
-                             "Breakpoint in file %s : line %ld \n", breakPtr->url,
-                             breakPtr->lineNo);
+                             "Breakpoint in file %s : line %ld \n",
+                             breakPtr->url, breakPtr->lineNo);
         } else {
             if (xmlGetLineNo(ctxt->node) != -1)
                 xsltGenericError(xsltGenericErrorContext,
@@ -1058,11 +1078,11 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                      "(xsldbg) ? > ");
         prompt[sizeof(prompt) - 1] = 0;
 
-	
+
         /*
          * Get a new command line
          */
-	cmdline = (xmlChar *) ctxt->input((char *) prompt);
+        cmdline = (xmlChar *) ctxt->input((char *) prompt);
         if (cmdline == NULL)
             break;
 
@@ -1177,9 +1197,8 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 {
                     int allFiles = 1, verbose = 1;
 
-                    if (xmlStrLen(arg) && 
-			(xmlStrCmp(arg, "this") == 0)) {
-                            allFiles = 0;
+                    if (xmlStrLen(arg) && (xmlStrCmp(arg, "this") == 0)) {
+                        allFiles = 0;
                     }
 
                     /* be verbose when printing template names */
@@ -1211,43 +1230,43 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     xsltGenericError(xsltGenericErrorContext, "\n");
                 break;
 
-	case DEBUG_FRAME_CMD:
-	  xslDbgPrintCallStack(arg);
-	  break;
+            case DEBUG_FRAME_CMD:
+                xslDbgPrintCallStack(arg);
+                break;
 
-	case DEBUG_STYLESHEETS_CMD:
-	  xslDbgPrintStyleSheets(arg);
-	  break;
+            case DEBUG_STYLESHEETS_CMD:
+                xslDbgPrintStyleSheets(arg);
+                break;
 
                 /* --- Break point related commands --- */
             case DEBUG_BREAK_CMD:
-	      if (xmlStrLen(arg)){
-		if (styleCtxt)
-		  xslDbgShellBreak(arg, styleCtxt->style);
-		else
-		  xslDbgShellBreak(arg, NULL);
-	      }else {
-		/* select current node to break at */
-		xmlChar buff[100];
+                if (xmlStrLen(arg)) {
+                    if (styleCtxt)
+                        xslDbgShellBreak(arg, styleCtxt->style);
+                    else
+                        xslDbgShellBreak(arg, NULL);
+                } else {
+                    /* select current node to break at */
+                    xmlChar buff[100];
 
-		if (ctxt->node->doc && ctxt->node->doc->URL)
-		  snprintf((char *) buff, 99, "-l %s %ld",
-			   ctxt->node->doc->URL,
-			   xmlGetLineNo(ctxt->node));
-		if (styleCtxt)
-		  xslDbgShellBreak(buff, styleCtxt->style);
-		else
-		  xslDbgShellBreak(buff, NULL);
-	      }
-		    
-	      break;
+                    if (ctxt->node->doc && ctxt->node->doc->URL)
+                        snprintf((char *) buff, 99, "-l %s %ld",
+                                 ctxt->node->doc->URL,
+                                 xmlGetLineNo(ctxt->node));
+                    if (styleCtxt)
+                        xslDbgShellBreak(buff, styleCtxt->style);
+                    else
+                        xslDbgShellBreak(buff, NULL);
+                }
+
+                break;
 
             case DEBUG_SHOWBREAK_CMD:
                 xsltGenericError(xsltGenericErrorContext, "\n");
                 printCount = 0; /* printCount will get updated by
                                  * xslDbgPrintBreakPoint */
                 walkBreakPoints((xmlHashScanner) xslDbgPrintBreakPoint,
-                                   NULL);
+                                NULL);
                 if (printCount == 0)
                     xsltGenericError(xsltGenericErrorContext,
                                      "\nNo file break points set:\n");
@@ -1265,8 +1284,8 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
                     if (ctxt->node->doc && ctxt->node->doc->URL)
                         breakPoint = getBreakPoint(ctxt->node->doc->URL,
-                                                      xmlGetLineNo(ctxt->
-                                                                   node));
+                                                   xmlGetLineNo(ctxt->
+                                                                node));
                     if (!breakPoint || !deleteBreakPoint(breakPoint))
                         xsltGenericError(xsltGenericErrorContext,
                                          "Unable to add delete point");
@@ -1281,8 +1300,8 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
                     if (ctxt->node->doc && ctxt->node->doc->URL)
                         breakPoint = getBreakPoint(ctxt->node->doc->URL,
-                                                      xmlGetLineNo(ctxt->
-                                                                   node));
+                                                   xmlGetLineNo(ctxt->
+                                                                node));
                     if (!breakPoint
                         ||
                         (!enableBreakPoint
@@ -1300,8 +1319,8 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
                     if (ctxt->node->doc && ctxt->node->doc->URL)
                         breakPoint = getBreakPoint(ctxt->node->doc->URL,
-                                                      xmlGetLineNo(ctxt->
-                                                                   node));
+                                                   xmlGetLineNo(ctxt->
+                                                                node));
                     if (!breakPoint
                         ||
                         (!enableBreakPoint
@@ -1358,7 +1377,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             case DEBUG_GLOBALS_CMD:
                 if (loadedFiles == 0)
                     xslDbgShellPrintVariable(styleCtxt, arg,
-                                        DEBUG_GLOBAL_VAR);
+                                             DEBUG_GLOBAL_VAR);
                 else
                     xsltGenericError(xsltGenericErrorContext,
                                      "Need to use run command first\n");
@@ -1367,15 +1386,15 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             case DEBUG_LOCALS_CMD:
                 if (loadedFiles == 0)
                     xslDbgShellPrintVariable(styleCtxt, arg,
-                                        DEBUG_LOCAL_VAR);
+                                             DEBUG_LOCAL_VAR);
                 else
                     xsltGenericError(xsltGenericErrorContext,
                                      "Need to use run command first\n");
                 break;
 
 
-		/* It's difficult to put the following commands into 
-		   a separe file so they stay here!*/
+                /* It's difficult to put the following commands into 
+                 * a separe file so they stay here! */
                 /* --- Node selection related commands --- */
             case DEBUG_SOURCE_CMD:
                 if (xmlStrLen(arg) == 0) {
@@ -1393,30 +1412,33 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         break;
                 } else {
                     /* load new stylesheet file, actual loading happens later */
-                     xmlChar *buff = dir;    /* use dir command temp buffer */
+                    xmlChar *buff = dir;        /* use dir command temp buffer */
 
-#ifndef __riscos /* RISC OS has no concept of 'home' directory */
-                        /* replace ~ with home path */
-                        if ((arg[0] == '~') && getenv("HOME")) {
-                            strcpy(buff, getenv("HOME"));
-                            if (xmlStrLen(buff) + xmlStrLen(arg) <
-                                DEBUG_BUFFER_SIZE) {
-                                xmlStrCat(buff, &arg[1]);
-                                setStringOption(OPTIONS_SOURCE_FILE_NAME,
-                                                buff);
-                            } else {
-                                xsltGenericError(xsltGenericErrorContext,
-                                                 "File name too large\n");
-                                break;
-                            }
-                        } else 
-#endif
-			  {
-                            setStringOption(OPTIONS_SOURCE_FILE_NAME, arg);
+#ifndef __riscos                /* RISC OS has no concept of 'home' directory */
+                    /* replace ~ with home path */
+                    if ((arg[0] == '~') && getenv("HOME")) {
+                        strcpy(buff, getenv("HOME"));
+                        if (xmlStrLen(buff) + xmlStrLen(arg) <
+                            DEBUG_BUFFER_SIZE) {
+                            xmlStrCat(buff, &arg[1]);
+                            setStringOption(OPTIONS_SOURCE_FILE_NAME,
+                                            buff);
+                        } else {
+                            xsltGenericError(xsltGenericErrorContext,
+                                             "File name too large\n");
+                            break;
                         }
-                        xsltGenericError(xsltGenericErrorContext,
-                                         "Load of source deferred use run command\n");
-                        loadedFiles = 1;
+                    } else
+#endif
+                    {
+                        setStringOption(OPTIONS_SOURCE_FILE_NAME, arg);
+                    }
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "Load of source deferred use run command\n"
+                                     "Removing all breakpoints\n");
+                    loadedFiles = 1;
+                    /* clear all break points , what else makes sense? */
+                    xslEmptyBreakPoint();
                 }
                 break;
 
@@ -1424,7 +1446,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 if (xmlStrLen(arg) == 0) {
                     if (ctxt->doc == source->doc)
                         lastSourceNode = ctxt->node;
-		    ctxt->doc = doc->doc;
+                    ctxt->doc = doc->doc;
                     ctxt->node = lastDocNode;
                     ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
                     showSource = 0;
@@ -1436,32 +1458,34 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         break;
                 } else {
                     /* load new xml file actual loading hapens later */
-                        xmlChar *buff = dir;    /* use dir command temp buffer */
+                    xmlChar *buff = dir;        /* use dir command temp buffer */
 
-#ifndef __riscos /* RISC OS has no concept of 'home' directory */                        
-			/* replace ~ with home path */
-                        if ((arg[0] == '~') && getenv("HOME")) {
-                            xmlStrCpy(buff, getenv("HOME"));
-                            if (xmlStrLen(buff) + xmlStrLen(arg) <
-                                DEBUG_BUFFER_SIZE) {
-                                xmlStrCat(buff, &arg[1]);
-                                setStringOption(OPTIONS_DATA_FILE_NAME,
-                                                buff);
-                            } else {
-                                xsltGenericError(xsltGenericErrorContext,
-                                                 "File name too large\n");
-                                break;
-                            }
-                        } else 
-#endif
-			  {
-                            setStringOption(OPTIONS_DATA_FILE_NAME, arg);
+#ifndef __riscos                /* RISC OS has no concept of 'home' directory */
+                    /* replace ~ with home path */
+                    if ((arg[0] == '~') && getenv("HOME")) {
+                        xmlStrCpy(buff, getenv("HOME"));
+                        if (xmlStrLen(buff) + xmlStrLen(arg) <
+                            DEBUG_BUFFER_SIZE) {
+                            xmlStrCat(buff, &arg[1]);
+                            setStringOption(OPTIONS_DATA_FILE_NAME, buff);
+                        } else {
+                            xsltGenericError(xsltGenericErrorContext,
+                                             "File name too large\n");
+                            break;
                         }
+                    } else
+#endif
+                    {
+                        setStringOption(OPTIONS_DATA_FILE_NAME, arg);
+                    }
 
-                        loadedFiles = 1;
-                        xsltGenericError(xsltGenericErrorContext,
-                                         "Load of xml data deferred use run command\n");
-									}
+                    loadedFiles = 1;
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "Load of xml data deferred use run command\n"
+                                     "Removing all breakpoints\n");
+                    /* clear all break points , what else makes sense? */
+                    xslEmptyBreakPoint();
+                }
                 break;
 
             case DEBUG_CD_CMD:
@@ -1554,16 +1578,16 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 break;
 
             case DEBUG_SHOWPARAM_CMD:
-	      xslDbgShellShowParam(arg);
+                xslDbgShellShowParam(arg);
                 break;
 
-	case	DEBUG_TTY_CMD:
-	  if (openTerminal(arg))
-	     xsltGenericError(xsltGenericErrorContext,
-			      "Opening terminal %s\n", arg);
-	    selectTerminalIO();	  
-	  break;
-	  
+            case DEBUG_TTY_CMD:
+                if (openTerminal(arg))
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "Opening terminal %s\n", arg);
+                selectTerminalIO();
+                break;
+
 
 
                 /* tracing related commands */
@@ -1577,7 +1601,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     exitShell++;
                 break;
 
-		/* search related commands */
+                /* search related commands */
             case DEBUG_SEARCH_CMD:
                 xslDbgShellSearch(styleCtxt, getStylesheet(), arg);
                 break;
@@ -1587,30 +1611,30 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                                 "Unknown command %s, try help\n", command);
         }
 
-	/* kdbg like to get the marker after every command so here it is */
-	if (isOptionEnabled(OPTIONS_GDB)){
-	  if (ctxt->node && ctxt->node && ctxt->node->doc
-	      && ctxt->node->doc->URL) {
-	    
-	    if (activeBreakPoint() != NULL) {
-	      xslBreakPointPtr breakPtr = activeBreakPoint();
+        /* kdbg like to get the marker after every command so here it is */
+        if (isOptionEnabled(OPTIONS_GDB)) {
+            if (ctxt->node && ctxt->node && ctxt->node->doc
+                && ctxt->node->doc->URL) {
 
-	      xsltGenericError(xsltGenericErrorContext,
-			       "Breakpoint in file %s : line %ld \n", breakPtr->url,
-			       breakPtr->lineNo);
-	    } else {
-	      if (xmlGetLineNo(ctxt->node) != -1)
-                xsltGenericError(xsltGenericErrorContext,
-                                 "Breakpoint at file %s : line %ld \n",
-                                 ctxt->node->doc->URL,
-                                 xmlGetLineNo(ctxt->node));
-	      else
-                xsltGenericError(xsltGenericErrorContext,
-                                 "BreakPoint @ text node in file %s\n",
-                                 ctxt->node->doc->URL);
-	    }
-	  }	  
-	}
+                if (activeBreakPoint() != NULL) {
+                    xslBreakPointPtr breakPtr = activeBreakPoint();
+
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "Breakpoint in file %s : line %ld \n",
+                                     breakPtr->url, breakPtr->lineNo);
+                } else {
+                    if (xmlGetLineNo(ctxt->node) != -1)
+                        xsltGenericError(xsltGenericErrorContext,
+                                         "Breakpoint at file %s : line %ld \n",
+                                         ctxt->node->doc->URL,
+                                         xmlGetLineNo(ctxt->node));
+                    else
+                        xsltGenericError(xsltGenericErrorContext,
+                                         "BreakPoint @ text node in file %s\n",
+                                         ctxt->node->doc->URL);
+                }
+            }
+        }
 
         xmlFree(cmdline);
         cmdline = NULL;
@@ -1628,5 +1652,3 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
     /* send everything to the terminal if opened */
     selectTerminalIO();
 }
-
-

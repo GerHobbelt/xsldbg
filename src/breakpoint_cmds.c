@@ -1,3 +1,4 @@
+
 /***************************************************************************
                           breakpoint_cmds.c  - breakpoint commands for xsldbg
                              -------------------
@@ -91,8 +92,8 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style)
     long lineNo;
     static const xmlChar *errorPrompt =
         (xmlChar *) "Failed to add break point\n";
-    if (style == NULL){
-      style = getStylesheet();
+    if (style == NULL) {
+        style = getStylesheet();
     }
     if (!arg || !style) {
         xsltGenericError(xsltGenericErrorContext,
@@ -115,24 +116,24 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style)
                     /* try to guess whether we are looking for source or data 
                      * break point
                      */
-                    if (strstr((char*)opts[0], ".xsl")){
+                    if (strstr((char *) opts[0], ".xsl")) {
                         type = DEBUG_BREAK_SOURCE;
-			opts[0] = guessStyleSheetName(opts[0]);
-			if (!xslAddBreakPoint(opts[0], lineNo, NULL, type))
-			  xsltGenericError(xsltGenericErrorContext, "%s",
-					   errorPrompt);
-			else{
-			  xmlFree(opts[0]);
-			  result++;
-			}
-		    }else{
+                        opts[0] = guessStyleSheetName(opts[0]);
+                        if (!xslAddBreakPoint(opts[0], lineNo, NULL, type))
+                            xsltGenericError(xsltGenericErrorContext, "%s",
+                                             errorPrompt);
+                        else {
+                            xmlFree(opts[0]);
+                            result++;
+                        }
+                    } else {
                         type = DEBUG_BREAK_DATA;
-			if (!xslAddBreakPoint(opts[0], lineNo, NULL, type))
-			  xsltGenericError(xsltGenericErrorContext, "%s",
-				       errorPrompt);
-			else
-			  result++;
-		    }
+                        if (!xslAddBreakPoint(opts[0], lineNo, NULL, type))
+                            xsltGenericError(xsltGenericErrorContext, "%s",
+                                             errorPrompt);
+                        else
+                            result++;
+                    }
                 }
             } else
                 xsltGenericError(xsltGenericErrorContext,
@@ -338,8 +339,7 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
                 } else {
                     breakPoint = getBreakPoint(opts[0], lineNo);
                     if (breakPoint)
-                        result =
-                            enableBreakPoint(breakPoint, enableType);
+                        result = enableBreakPoint(breakPoint, enableType);
                     else
                         xsltGenericError(xsltGenericErrorContext, "\n%s",
                                          errorPrompt);
@@ -353,7 +353,7 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
         result = 1;
         /*enable/disable all from breakpoints */
         walkBreakPoints((xmlHashScanner) xslDbgEnableBreakPoint,
-                           &enableType);
+                        &enableType);
 
     } else if (sscanf((char *) arg, "%d", &breakPointId)) {
         breakPoint = findBreakPointById(breakPointId);
