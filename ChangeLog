@@ -1,5 +1,6 @@
 Keith Isdale 16th  Feb 2003 <k_isdale@tpg.com.au>
   Update web site address for the download of Igor's Win32 binaries 
+  Fix compile errors under certain configurations 
 
 Keith Isdale 7th  Dec 2002 <k_isdale@tpg.com.au>
    Created "pro" files to aid creation of xsldbg under win32
