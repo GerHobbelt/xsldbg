@@ -7,7 +7,6 @@ SUBDIRS = src tests results docs
 EXTRA_DIST=\
 	Makefile.cvs 			\
 	config_riscos.h  	\
-	xsldbg.kdevprj 		\
-	xsldbg.kdevses 		\
+	config_riscos.h.in  	\
 	xsldbg-config.in  \
 	xsldbgConf.sh.in	

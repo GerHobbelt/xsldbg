@@ -10,11 +10,11 @@ Keith Isdale 10 Feb 2002 <k_isdale@tpg.com.au
 	   created by GNOME documentation tool
   Test build under MSVC 5.0 - OK. Executable file size will be smaller than previous 
 	releases ( about 100Kb )
-  Found bug in "search" command. Abort if no stylesheet has been loaded
+  Found and fixes bug in "search" command. Abort if no stylesheet has been loaded
 	before doing search
 	Found "more" command in WIN32 refuses to accept file name of .\searchresult.txt
-	  Added this problem to limitations. WIN32 users may need to use "type" command 
-	    instead
+	  Added this problem to limitations. WIN32 users may need to use 
+		"shell type .\searchresult.txt" instead
 	TODO! Look at replacing more command.      
   Update docs/en/website/index.html and docs/en/website/win32_install.html
   Created config_riscos.h.in to automate riscos configuration creation
