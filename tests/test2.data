@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!DOCTYPE testcmd SYSTEM "testcmd.dtd">
+<!-- 
+     File : test2.data     
+     Author: Keith Isdale <k_isdale@tpg.com.au>
+     Description: xml data that decribes what to do for "test2"
+     Copyright Reserved Under GPL     
+-->
+<testcmd>
+  <cmd>
+    <test>show</test>
+    <result>
+      <row>
+	<breakpointlist file="test2.xsl" line="11"/>
+      </row>
+    </result>
+  </cmd>
+  <cmd>
+    <test>templates</test>
+    <result>
+      <row>
+	<template name="/" file="test2.xsl" line="11"/>	
+      </row>
+      <row>
+	<template name="html" line="15"/>
+      </row>
+      <row>
+	<template name="head" line="19"/>
+      </row>
+      <row>
+	<template name="body" line="23"/>
+      </row>
+      <row>
+	<template name="h1" line="27"/>
+      </row>
+      <row>
+	<template name="para" line="31"/>
+      </row>
+    </result>
+  </cmd>
+  <cmd>
+    <test>step</test>
+    <result>
+      <row>
+	<breakpoint file="test2.xsl" line="12"/>
+      </row>
+    </result>
+  </cmd>
+
+  <cmd>
+    <test>quit</test>
+  </cmd>
+</testcmd>

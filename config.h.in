@@ -1,0 +1,32 @@
+/* config.h.in.  Generated automatically from configure.in by autoheader.  */
+
+/* Define if you need the GNU extensions to compile */
+#undef _GNU_SOURCE
+#undef WITH_DEBUGGER
+#undef HAVE_ISINF
+#undef HAVE_ISNAN
+#undef HAVE_POW
+#undef HAVE_FLOOR
+#undef HAVE_FABS
+#undef HAVE_READLINE
+#undef HAVE_HISTORY
+#undef TIMESTAMP
+
+/* Define if you have the asctime function.  */
+#undef HAVE_ASCTIME
+
+/* Define if you have the gettimeofday function.  */
+#undef HAVE_GETTIMEOFDAY
+
+/* Define if you have the localtime function.  */
+#undef HAVE_LOCALTIME
+
+/* Define if you have the mktime function.  */
+#undef HAVE_MKTIME
+
+/* Name of package */
+#undef PACKAGE
+
+/* Version number of package */
+#undef VERSION
+

@@ -1,0 +1,199 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="Generator" content="Microsoft Word 97">
+   <meta name="Template" content="C:\PROGRAM FILES\MICROSOFT OFFICE\OFFICE\html.dot">
+   <meta name="GENERATOR" content="Mozilla/4.75 [en] (WinNT; U) [Netscape]">
+   <title>Xsl Debugger</title>
+</head>
+<body link="#0000FF" vlink="#800080">
+<!-- saved from url=(0061)ftp://k_isdale:Smoking@www4.tpg.com.au/xsldebugger/index.html -->
+<h1>
+Introduction</h1>
+xsldbg is a text based tool to debug stylesheets it is similar to the Unix/Linux
+debugger gdb. It uses using the libxslt library by <a href="http://www.xmlsoft.org/XSLT">http://www.xmlsoft.org/XSLT</a>
+<ul>
+<li>
+It is in the pre-beta stage of development. Comments about feature set provided
+are welcome.</li>
+
+<li>
+Only simple simple XSL commands are supported as yet.: Fixed</li>
+
+<li>
+Break points to a specific line in the stylesheet are yet made stable : Done!</li>
+
+<li>
+The debugger suffers from crashes "segmentation faults" which is being
+looked into : Fixed </li>
+
+<li>
+The configure/build scripts need to be redone because they expect KDE to
+be installed : Done!</li>
+</ul>
+
+<h2>
+Todo</h2>
+
+<ul>
+<li>
+Redo configure and build scripts  : Done!</li>
+
+<li>
+Track down all sources of the crashes :-(   : Done!</li>
+
+<li>
+Complete line break points : Done!</li>
+
+<li>
+Complete support all XSL commands : Done! </li>
+
+<li>
+Update documentation : Done!</li>
+
+<li>
+Perform testing</li>
+
+<li>
+Work on a patch for the xemacs module xslt-process to support debugging
+from within xemacs : Done! (modified gdb.el)</li>
+
+<li>
+Look at feasibility of patching kdbg to support xsldbg. Shouldn't be impossible
+:-) Planned </li>
+
+
+<li>
+Update xsldbg when debugger support is built into libxslt. May take a while
+for developer of libxslt to have a chance to get to doing this.</li>
+</ul>
+
+<h2>
+Requirements</h2>
+&nbsp;&nbsp; <a href="http://www.xmlsoft.org/#Downloads">libxml2-2.4.6</a>
+<br>&nbsp;&nbsp;<a href="http://xmlsoft.org/XSLT/#Downloads"> libxslt-1.0.5</a>
+<p>&nbsp; A Linux system&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ( Patches
+to get it to build&nbsp; MSVC project welcome. Just need correct project
+and header files :-)&nbsp; )
+<p>&nbsp; The "more" command is available
+<h2>
+Author</h2>
+The author for the debugging specific code is <a href="mailto:k_isdale@tpg.com.au">Keith
+Isdale</a>
+<h3>
+Licence</h3>
+This tool is available under the <a href="http://www.gnu.org/licenses/licenses.html#GPL">GPL
+licence</a>
+<h2>
+Web sites</h2>
+&nbsp;&nbsp;&nbsp; <a href="http://sourceforge.net/projects/xsldbg">Main
+web site</a>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; <a href="http://www4.tpgi.com.au/users/k_isdale/xsldbg">Alternate&nbsp;
+website</a>
+<h2>
+Documentation</h2>
+&nbsp;&nbsp;&nbsp; <a href="docs/index.html">Program usage and commands</a>
+<h1>
+Installation</h1>
+<p>Extract libxslt-1.0.5_diff.tar.gz and follow instructions provided
+
+<p>
+<p>Extract xsldbg-0.6.2.tar.gz<br />
+&nbsp;&nbsp;&nbsp;&nbsp;configure, build and install xsldbg
+
+
+<h1>
+Testing</h1>
+
+<pre>     To test installation of xsldbg
+
+          <b>cd xsldbg/docs/en</b>
+
+<b>         xsldbg --shell --root / xsldoc.xsl xsldoc.xml</b>
+
+      And you should get a prompt like
+<b>            Starting stylesheet
+
+
+            Reached template :"/"
+
+            Breakpoint 1 in file xsldoc.xsl : line 21
+            (xsldbg) xsl:template > </b></pre>
+
+<p>
+<pre>You then can see the results of continued running through stylsheet by using "cont" command and pressing &lt;ENTER> a few times
+
+<b><i>                     cont</i></b>
+<b><i>                     &lt;ENTER></i></b>
+<b><i>                     &lt;ENTER></i></b>
+<b><i>                     &lt;ENTER></i></b>
+<b><i>                     &lt;ENTER></i></b>
+
+ The overview section of the help file should have printed out.</pre>
+
+<h1>
+&nbsp;</h1>
+
+<h1>
+Help system</h1>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xsldbg is has built using xml/xslt. To help an overview of commands type</pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b><i>help</i></b></pre>
+
+<pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; You can use "help" to get a more detailed information about a command eg</pre>
+
+<pre><b><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; help help</i></b></pre>
+
+<pre><b><i>&nbsp;</i></b></pre>
+
+<h1>
+Command sumamary</h1>
+
+<p><br>A summary of commands you can enter into debugger are
+<pre>
+      Help related : help
+     Running related : {bye|exit|quit},step,stepup,stepdown,
+                            continue,run
+     Template related :templates,where
+     Break point related :break,showbreak,delete,enable
+     Expression viewing(xpath) :cat
+     Node viewing :ls,dir,du,cat,pwd
+     Variable viewing :globals,locals,cat
+     Node selection :source,data,cd
+     File related :validate,load,save,write,free</pre>
+<br>&nbsp;
+<br>&nbsp;
+<h1>
+&nbsp;&nbsp;&nbsp; Version&nbsp; notes</h1>
+&nbsp;
+<p>&nbsp;
+  <p> 1) The File related commands are disable for the moment.<br>
+  <p> 2) When you do a cat on the style source the output is white space stripped
+so it will look different to your original source files. This is not a "bug"! This is the default
+behaviour of the stylesheet processor of libxslt. This tool is intended to be used by other programs
+which can handle formatting the output.
+<p>3) The xsldebugger can be built on windows given correct project files.
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<h1>
+Feedback</h1>
+For problems with this project or web site please use the bug tracking
+system provided by <a href="http://sourceforge.net/tracker/?group_id=35673&atid=415039">Source
+Forge</a>
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<h1>
+Download</h1>
+&nbsp;See <a href="https://sourceforge.net/project/showfiles.php?group_id=35673">sourceforge
+file downloads</a>
+<br>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p><a href="http://sourceforge.net"><img SRC="sflogo.php" ALT="SourceForge Logo" BORDER=0 height=31 width=88></a>
+</body>
+</html>

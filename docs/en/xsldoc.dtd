@@ -1,0 +1,36 @@
+<!-- 
+     File : xsldoc.dtd     
+     Author: Keith Isdale <k_isdale@tpg.com.au>
+     Description: DocType definition for xsldoc.xml
+     Copyright Reserved Under GPL     
+-->
+
+<!ELEMENT xsldoc (overview, cmd+)>
+<!ELEMENT overview (header, body, footer)+>
+<!ELEMENT header (#PCDATA)>
+<!ELEMENT body (title?, para)+>
+<!ELEMENT footer (#PCDATA)>
+<!ELEMENT para (text|list|link)* >
+<!ATTLIST para 
+   title CDATA #IMPLIED
+>
+
+<!ELEMENT list (li+)>
+<!ELEMENT li ( list| text| comment|link)* >
+<!ELEMENT text (#PCDATA)>
+<!ELEMENT title (#PCDATA)>
+
+<!ELEMENT cmd (summary, body? , usage)>
+<!ATTLIST cmd 
+    name CDATA #REQUIRED
+    title CDATA #IMPLIED
+>
+
+<!ELEMENT usage (li+)>
+<!ELEMENT summary (#PCDATA)>
+<!ELEMENT command (#PCDATA)>
+<!ELEMENT link (#PCDATA)>
+<!ATTLIST link href CDATA #REQUIRED>
+
+
+

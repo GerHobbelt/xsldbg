@@ -1,0 +1,64 @@
+foo = 123
+ifdef foo
+bar = ttt
+else
+bar = vvv
+endif
+
+
+
+ifdef fred_item
+KDE_HTML_FILES = \
+index.html \
+base_cmd.html bye_cmd.html cat_cmd.html cd_cmd.html command_chapter.html \
+cont_cmd.html credits_chapter.html data_cmd.html delete_cmd.html\
+dir_cmd.html du_cmd.html dump_cmd.html enable_cmd.html exit_cmd.html \
+free_cmd.html globals_cmd.html help_cmd.html index.html load_cmd.html \
+locals_cmd.html ls_cmd.html overview_chapter.html pwd_cmd.html quit_cmd.html \
+run_cmd.html save_cmd.html showbreak_cmd.html source_cmd.html \
+step_cmd.html stepout_cmd.html templates_cmd.html validate_cmd.html \
+where_cmd.html write_cmd.html xsldoc.html index.cache.bz2  
+else
+KDE_HTML_FILES =
+endif
+
+NORMAL_HTML_FILES = xsldoc.html
+
+EXTRA_DIST = \
+	$(KDE_HTML_FILES) \
+	$(NORMAL_HTML_FILES)
+xsldoc.dtd xsldoc.xml xsldoc.xsl xsldoc2html.xsl xsldoc2db.xsl \
+xsldoc.html 
+
+xsldoc.html: xsldoc.xml xsldoc2html.xsl
+	xsltproc xsldoc2html.xsl xsldoc.xml > xsldoc.html 
+
+ifdef WITH_KDE_HTML
+endif
+
+$(KDE_HTML_FILES): xsldoc2db.xsl xsldoc.xml 
+	xsltproc xsldoc2db.xsl xsldoc.xml > tempdump.xml 
+	meinproc --htdig tempdump.xml > index.cache
+	bzip2 index.cache
+	rm tempdump.xml
+
+
+
+all: xsldoc.html \
+ifdef WITH_KDE_HTML
+	index.html
+endif
+
+clean:
+	rm *.html
+ifdef WITH_KDE_HTML
+	rm *.bz2
+endif
+
+install-data-local:
+	$(mkinstalldirs) $(HTML_DIR)/xsldbg
+	@INSTALL@ -m 0644 $(NORMAL_HTML_FILES) $(HTML_DIR)/xsldbg
+ifdef WITH_KDE_HTML
+	$(mkinstalldirs) $(KDEDIR)/share/doc/HTML/en/khelpcenter/xsldbg
+	@INSTALL@ -m 0644 $(KDE_HTML_FILES) $(KDEDIR)/share/doc/HTML/en/khelpcenter/xsldbg
+endif

@@ -1,0 +1,256 @@
+- redo implemention of src/dbgbreakpoint.c to use hash tables not a fixed 
+    array of breakpoints
+- add new search functions
+- add ability to change varaibles
+- add the ability to validate file and line number (Daniel is working on this)
+- validate the breakpoint API is complete  
+- patch libxslt to use breakpoint API
+
+
+
+Copies of emails about TODO's
+
+------------------------
+
+On Sun, Oct 21, 2001 at 03:33:36AM +0000, k_isdale@tpg.com.au wrote:
+> Hi all,
+>
+> Just some comments about my last post.
+> Yes the breakpoint.[ch] was intended to go into
+> the libxslt/ of libxslt library.
+
+
+  And I'm not sure it's actaully the right place.
+This code is tied to the breakpoint representation
+not to the libxslt internal processing. I think it
+not required to have it inside and hence would prefer
+to have it outside possibly in a separate debugging
+library since it can be compiled and run with informations
+provided by public headers and manipulate only it's
+own defined structures.. But since I have only a
+fraction of the code needed for the integration I
+can't really make a final decision.
+
+> Reguarding xsltaddon I understand the problem
+> with main() being in a library.
+>
+> >problem to be correct. The
+> > entity loader code from xsltproc culd be
+> migrated onto libxslt, xsltProcess
+> > could be made rusable by using parameters
+> instead of global variables
+> > and extracted too, but trying to turn the whole
+> thing as a library, including
+>
+> Yes please !!
+>
+> I think there is now steps
+>  1) finalizing the breakpoint API.  (See my next
+> post to libxslt)
+>  2) put the re-usable code from xsltproc into a
+> libxslt (fiddly but no a big problem. Rewrite
+> some of xsltproc code?)
+>  3) rewriting xsldbg code to make use of the
+> functions added by step 2 (fiddly but no a big
+> problem.)
+>
+> Steps 1 and 3 I'll do when I can
+> Step 2 I'd like some else to tackle (will have no
+> impact on the breakpoint API)
+
+
+  Okay, I will try to do that since I suggested it.
+
+> In my next post I'll have a clean patch for
+> libxslt-1.0.5 (still using xsltaddon :-( , and
+> xsldbg plus its xemacs mode for debugging
+> stylesheets.
+>
+> p.s.
+> Daniel, When setting a value of a variable using
+>   xsltSetVariable do you need to supply a copy of
+> the intended new value after freeing the old
+> value?
+
+
+  Hum, there is no xsltSetVariable() call. Currently
+variable are set by:
+    xsltParseGlobalVariable/xsltEvalGlobalVariables
+    xsltParseGlobalParam/xsltEvalUserParams
+  and the interpreter when it finds a precompiled
+variable declaration in the tree.
+
+> What include file do I need for this? I
+> can't seem to find a mention of these functions,
+> strange.
+
+
+  Right because they were never needed.
+
+Daniel
+------------------------------------
+n Sun, Oct 14, 2001 at 09:24:55PM +0000, k_isdale@tpg.com.au wrote:
+> Hi all,
+>
+> I would like someone to implement this function
+> for me. It is to be included into the breakpoint
+> API. Unless someone else can do it I'm not sure
+> when it can be done. I think it would it take less
+> 50 lines to implement (including comments). This
+> is to be used to validate the given url and line
+> number when adding new break points.
+>
+> -----------------------------
+> Daniel would you prefer this go into libxml/tree.c
+> it could be useful for other tasks? Or maybe be
+> the basis of an exslt function?
+> ---------------------------
+>
+> For a description of the algorithm I had in mind
+> see
+> http://mail.gnome.org/archives/xslt/2001-October/m
+> sg00057.html
+>
+> The interface to be implemented is
+>
+> xmlNodePtr xslfindNearestNode(xsltStylesheetPtr
+> style, const xmlChar * url, long lineNumber, int
+> range);
+> A possible meaning for range is that the "range"
+> must be positive and the accurracy is then
+> +/-range. Where preference is given to the closest
+> node with a line number less than "target" line
+> number
+>
+> You can use the newly added xmlGetLineNo to find
+> the line number of a node. I recommend the use of
+> a recursive helper function but I'll leave that
+> choice to you. The interface for the helper
+> function could be
+>
+> xmlNodePtr xslfindNearest(xmlNodePtr node, const
+> xmlChar * url, long lineNumber, int range);
+> A possible meaning of url is that if it is null
+> then the "search" url is taken from node.
+>
+>
+> Let me know, via k_isdale@tpg.com.au, if you would
+> like to do this. Thanks.
+
+
+  Yes once I have finished the current work in progress.
+Others can step in though.
+
+Daniel
+
+-----------------------------
+Hi all,
+
+I been running xsldbg over docbook.xsl. With no
+breakpoints set it it ran well with only small
+impact on the execution time of the docbook
+stylesheet(s). I found a bug in the finding of
+templates. xsldbg currently looks only at the
+topmost stylesheet for template names. This is
+being fixed.
+
+Also I found some unintentional assumptions I
+made :-( .
+  1) Assumed that the root template specfied
+would be executed at some point
+  2) Assumed the user would know what the
+template names that could be used for the root
+template
+  3) Assumed there would be a reasonable number
+of variables, templates and stylesheet files
+  4) There would only a few breakpoints set at
+any time. This was wrong because docbook.xsl have
+over 500 templates and I allow the user to set
+breakpoints on all templates!
+
+
+Problem 1)
+ Solution: I've added a new function that allow
+the xsldbg.c know if any breakpoints have been
+found at all. If not then breakpoints are set on
+all templates found for the next attempt of
+debugging.
+
+/**
+ * xslDebuggerReached :
+ * @reached : true if debugger has received
+control
+ *
+ * Set flag that debugger has received control to
+value of @reached
+ * returns true if any breakpoint was reached
+previously
+ */
+int xslDebuggerReached(int reached);
+
+
+Problem 2)
+  Solution  If the root template is not found
+then I print out a list of template names and the
+program aborts.
+
+
+Problem 3)
+ Solution : Add ability to print the names of
+matching a query of template names, global
+variables names, stylesheet file names. I think
+this could be added at a later time, and should
+be a module by itself breakpoints/search.[ch].
+But if anyone has time to look at this great. I
+imagine this could be done by writing functions
+to walk though the list of all; template names,
+variables names, stylesheet file names (mostly
+just wrappers over existing hash table
+functions ).
+
+Problem 4)
+ Solution : Change data structure of used by
+breakpoints to a linked list. This would put no
+restrictions on the number of breakpoints that
+could be set.
+
+Question : Is performance an issue for debugging ?
+If so would making a breakpoint hash table might
+be a better solution . Where the "key" for each
+entry in the hash table is calculated by a strcat
+of the string version of the line number and
+stylesheet url. This would mean that for before
+every statement executed the "key" for that
+statement woukd need to be calculate and then
+looked up in the breakpoint hash table. This
+solution would increase the complexity of the
+breakpoint API and increase the probability of
+bugs :(
+
+It would be much appreciate for people to give
+feedback on xsldbg /comment on the breakpoint
+API. It's hard to find bugs in your own
+interfaces/code.
+
+It my intention to make this a valuable tool in
+its own right. Not just a means to step though
+xml/xsl code.
+
+Comments?
+
+ps: There's a explanation of what is needed to
+create GNOME docbook xml at
+http://www.math.sunysb.edu/~kirillov/dbxml/index.h
+tml
+
+Daniel: Have you got list of the interfaces for
+the functions being exported out of xsltproc. Or
+a mockup of what you have in mind.
+
+bye,
+
+Keith
+
+----------------------------
+
+

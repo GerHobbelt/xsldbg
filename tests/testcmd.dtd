@@ -1,0 +1,32 @@
+<!-- 
+     File : testcmd.dtd     
+     Author: Keith Isdale <k_isdale@tpg.com.au>
+     Description: dtd for data to generate tests
+     Copyright Reserved Under GPL     
+-->
+<!ELEMENT testcmd (cmd)+>
+<!ELEMENT cmd (test, result?)>
+<!ELEMENT test (#PCDATA)>
+<!ELEMENT result (row+)>
+<!ELEMENT row (template|breakpoint|breakpointlist)>
+<!ELEMENT template EMPTY>
+<!ELEMENT breakpoint EMPTY>
+<!ELEMENT breakpointlist EMPTY>
+
+<!ATTLIST template 
+    name CDATA #REQUIRED
+    file CDATA #IMPLIED 
+    line CDATA #IMPLIED
+>
+
+<!ATTLIST breakpoint
+    file CDATA #IMPLIED
+    line CDATA #IMPLIED 
+>
+
+<!ATTLIST breakpointlist
+    id CDATA #IMPLIED
+    state CDATA #IMPLIED 
+    file CDATA #IMPLIED 
+    line CDATA #IMPLIED
+>

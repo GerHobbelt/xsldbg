@@ -1,0 +1,24 @@
+* Keith Isdale 3 Nov 2001
+* k_isdale@tpg.com.au
+* Version 0.6.4	
+* Ported xsldbg to use  xmlNoNetExternalEntityLoader in libxml 
+*	(xsldbg.c is a rehash of /xsltproc/xsltproc.c in libxslt)
+*	
+* Split breakpoint API into several small files of cohesive functions
+*	
+* Change libxslt to supply blank implementation of breakpoint API which I 
+*   then override in xsldbg (see files src/dbg*.c)
+*   files affected in libxslt are
+* 	/configure.in, /Makefile.am, /breakpoints/*.[ch]  	
+*
+*	Adapt /configure.in to abort if debugger support not built into libxslt
+*	
+* Keith Isdale 1 Nov 2001
+* k_isdale@tpg.com.au
+* Version 0.6.3	
+* Changed xslDbgPrintTemplateNames so that the order of printing templates so
+	it matches the order it is in file 
+*
+* Added tests directory and build a framework for automated testing
+*	see results directory for the intermediate outputs of testing
+* Added function xslDebugGotControl to breakpoint API (see /breakpoint/dbgmain.c)	
