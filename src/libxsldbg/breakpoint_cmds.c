@@ -24,6 +24,10 @@
 #include "debugXSL.h"
 #include "files.h"
 
+#ifdef USE_XSLDBG_AS_THREAD
+#include "xsldbgmsg.h"
+#endif
+
 /* temp buffer needed occationaly */
 static xmlChar buff[DEBUG_BUFFER_SIZE];
 
@@ -32,24 +36,24 @@ static xmlChar buff[DEBUG_BUFFER_SIZE];
  ----------------------------------------------------*/
 
 /**
- * addSourceBreakPoint:
- * @url : is valid name of stylesheet source
+ * validateSource:
+ * @url : is valid name of a xsl source file
  * @lineNo : lineNo >= 0
  *
- * Returns 1 if able to add specified source break point
+ * Returns 1 if a breakpoint could be set at specified file url and line number
  *         0 otherwise
  */
-int addSourceBreakPoint(xmlChar * url, long lineNo);
+int validateSource(xmlChar ** url, long *lineNo);
 
 /**
- * addDataBreakPoint:
+ * validateData:
  * @url : is valid name of a xml data file
  * @lineNo : lineNo >= 0
  *
- * Returns 1 if able to add specified xml data break point
+ * Returns 1 if a breakpoint could be set at specified file url and line number
  *         0 otherwise
  */
-int addDataBreakPoint(xmlChar * url, long lineNo);
+int validateData(xmlChar ** url, long *lineNo);
 
 
 /* ------------------------------------- 
@@ -111,137 +115,148 @@ xslDbgShellFrameBreak(xmlChar * arg, int stepup)
 
 
 /**
- * addSourceBreakPoint:
- * @url : is valid name of stylesheet source
+ * validateSource:
+ * @url : is valid name of a xsl source file
  * @lineNo : lineNo >= 0
  *
- * Returns 1 if able to add specified source break point
+ * Returns 1 if a breakpoint could be set at specified file url and line number
  *         0 otherwise
  */
 int
-addSourceBreakPoint(xmlChar * url, long lineNo)
+validateSource(xmlChar ** url, long *lineNo)
 {
-    int result = 0;
-    int type;
 
+    int result = 0, type;
     searchInfoPtr searchInf = searchNewInfo(SEARCH_NODE);
     nodeSearchDataPtr searchData = NULL;
 
     if (searchInf && searchInf->data) {
         type = DEBUG_BREAK_SOURCE;
         searchData = (nodeSearchDataPtr) searchInf->data;
-        searchData->lineNo = lineNo;
-        searchData->nameInput = (xmlChar *) xmlMemStrdup((char *) url);
+        if (lineNo != NULL)
+            searchData->lineNo = *lineNo;
+        searchData->nameInput = (xmlChar *) xmlMemStrdup((char *) *url);
         guessStylesheetName(searchInf);
         /* try to verify that the line number is valid */
         if (searchInf->found) {
             /* ok it looks like we've got a valid url */
-            if (searchData->node) {
-                searchInf->found = 0;
-                /* searchData->url will be freed by searchFreeInfo */
-                if (searchData->absoluteNameMatch)
-                    searchData->url = (xmlChar *)
-                        xmlMemStrdup((char *) searchData->
-                                     absoluteNameMatch);
-                else
-                    searchData->url = (xmlChar *)
-                        xmlMemStrdup((char *) searchData->
-                                     guessedNameMatch);
-                url = searchData->url;  /* we don't need another copy of url */
-                /* searchData->node is set to the topmost node in stylesheet */
-                walkChildNodes((xmlHashScanner) scanForNode, searchInf,
-                               searchData->node);
-                if (!searchInf->found) {
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "Warning : Breakpoint at file %s : line %ld doesn't "
-                                     "seem to be valid. But set it anyhow\n",
-                                     url, lineNo);
-                }
-            }
-            if (addBreakPoint(url, lineNo, NULL, type))
-                result++;
+            /* searchData->url will be freed by searchFreeInfo */
+            if (searchData->absoluteNameMatch)
+                searchData->url = (xmlChar *)
+                    xmlMemStrdup((char *) searchData->absoluteNameMatch);
+            else
+                searchData->url = (xmlChar *)
+                    xmlMemStrdup((char *) searchData->guessedNameMatch);
+            if (lineNo != NULL) {
+                /* now to check the line number */
+                if (searchData->node) {
+                    searchInf->found = 0;
+                    /* searchData->node is set to the topmost node in stylesheet */
+                    walkChildNodes((xmlHashScanner) scanForNode, searchInf,
+                                   searchData->node);
+                    if (!searchInf->found) {
+                        xsltGenericError(xsltGenericErrorContext,
+                                         "Warning : Breakpoint at file %s : line %ld doesn't "
+                                         "seem to be valid.\n",
+                                         *url, *lineNo);
+                    }
 
-        } else {
+                    *lineNo = searchData->lineNo;
+                    xmlFree(*url);
+                    *url = xmlStrdup(searchData->url);
+                    result++;
+                }
+
+            } else {
+                /* we've been asked just to check the file name */
+                if (*url)
+                    xmlFree(*url);
+                *url = xmlStrdup(searchData->url);
+                result++;
+            }
+        } else
             xsltGenericError(xsltGenericErrorContext,
                              "Error : Unable to find a stylesheet file whose name contains %s\n",
-                             url);
-        }
-    } else {
-        xsltGenericError(xsltGenericErrorContext,
-                         "Error : Unable to create searchInfo, out of memory?\n");
+                             *url);
     }
 
     if (searchInf)
         searchFreeInfo(searchInf);
+    else
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error : Unable to create searchInfo out of memory?\n");
 
     return result;
 }
 
 
 
+
 /**
- * addDataBreakPoint:
+ * validateData:
  * @url : is valid name of a xml data file
  * @lineNo : lineNo >= 0
  *
- * Returns 1 if able to add specified xml data break point
+ * Returns 1 if a breakpoint could be set at specified file url and line number
  *         0 otherwise
  */
 int
-addDataBreakPoint(xmlChar * url, long lineNo)
+validateData(xmlChar ** url, long *lineNo)
 {
     int result = 0;
-    int type;
     searchInfoPtr searchInf = searchNewInfo(SEARCH_NODE);
 
     nodeSearchDataPtr searchData = NULL;
 
-    type = DEBUG_BREAK_DATA;
-
     if (searchInf && searchInf->data && getMainDoc()) {
         /* try to verify that the line number is valid */
         searchData = (nodeSearchDataPtr) searchInf->data;
-        searchData->lineNo = lineNo;
-        searchData->url = (xmlChar *) xmlMemStrdup((char *) url);
+        if (lineNo != NULL)
+            searchData->lineNo = *lineNo;
+        else
+            searchData->lineNo = -1;
+        searchData->url = (xmlChar *) xmlMemStrdup((char *) *url);
         walkChildNodes((xmlHashScanner) scanForNode, searchInf,
                        (xmlNodePtr) getMainDoc());
 
         /* try to guess file name by adding the prefix of main document */
         if (!searchInf->found) {
-            char *lastSlash ;
-	    lastSlash = xmlStrrChr(getMainDoc()->URL, PATHCHAR);
+            char *lastSlash;
+
+            lastSlash = xmlStrrChr(getMainDoc()->URL, PATHCHAR);
 
             if (lastSlash) {
                 lastSlash++;
                 xmlStrnCpy(buff, getMainDoc()->URL,
                            lastSlash - (char *) getMainDoc()->URL);
                 buff[lastSlash - (char *) getMainDoc()->URL] = '\0';
-                xmlStrCat(buff, url);
+                xmlStrCat(buff, *url);
                 if (searchData->url)
                     xmlFree(searchData->url);
                 searchData->url = (xmlChar *) xmlMemStrdup((char *) buff);
                 walkChildNodes((xmlHashScanner) scanForNode, searchInf,
                                (xmlNodePtr) getMainDoc());
-                if (searchInf->found)
-                    url = searchData->url;
             }
         }
 
-        if (!searchInf->found)
+        if (!searchInf->found){
             xsltGenericError(xsltGenericErrorContext,
                              "Warning ; Breakpoint at file %s : line %ld doesn't "
-                             "seem to be valid. But set it anyhow\n",
-                             url, lineNo);
-
-        if (addBreakPoint(url, lineNo, NULL, type))
+                             "seem to be valid.\n", *url, *lineNo);
+	    result++;
+        }else {
+            if (*url)
+                xmlFree(*url);
+            *url = xmlStrdup(searchData->url);
             result++;
-    } else {
-        xsltGenericError(xsltGenericErrorContext,
-                         "Error : Unable to create searchInfo out of memory?\n");
+        }
     }
 
     if (searchInf)
         searchFreeInfo(searchInf);
+    else
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error : Unable to create searchInfo out of memory?\n");
 
     return result;
 }
@@ -275,7 +290,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
         return result;
     }
     if (arg[0] == '-') {
-        xmlChar *opts[2];
+        xmlChar *opts[2], *url;
 
         if ((xmlStrLen(arg) > 1) && (arg[1] == 'l')) {
             if (splitString(&arg[2], 2, opts) == 2) {
@@ -288,10 +303,21 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                      * break point
                      */
                     trimString(opts[0]);
-                    if (strstr((char *) opts[0], ".xsl"))
-                        result = addSourceBreakPoint(opts[0], lineNo);
-                    else
-                        result = addDataBreakPoint(opts[0], lineNo);
+                    url = xmlMemStrdup(opts[0]);
+                    if (url) {
+                        if (isSourceFile(url)) {
+                            if (validateSource(&url, &lineNo))
+                                result =
+                                    addBreakPoint(url, lineNo, NULL,
+                                                  DEBUG_BREAK_SOURCE);
+                        } else {
+                            if (validateData(&url, &lineNo))
+                                result =
+                                    addBreakPoint(url, lineNo, NULL,
+                                                  DEBUG_BREAK_DATA);
+                        }
+                        xmlFree(url);
+                    }
                 }
             } else
                 xsltGenericError(xsltGenericErrorContext,
@@ -327,7 +353,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
             while (templ) {
                 if (templ->elem && templ->elem->doc
                     && templ->elem->doc->URL) {
-                    url = (xmlChar *)templ->elem->doc->URL;
+                    url = (xmlChar *) templ->elem->doc->URL;
                 } else {
                     url = defaultUrl;
                 }
@@ -374,11 +400,11 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
     if (!result) {
         if (url)
             xsltGenericError(xsltGenericErrorContext,
-                             "Failed to add breakPoint "
+                             "Failed to add breakpoint "
                              "at file %s: line %ld\n", url, lineNo);
         else
             xsltGenericError(xsltGenericErrorContext,
-                             "Failed to some breakPoints\n");
+                             "Failed to add breakpoint(s)\n");
     }
     return result;
 }
@@ -405,7 +431,7 @@ xslDbgShellDelete(xmlChar * arg)
         return result;
 
     if (arg[0] == '-') {
-        xmlChar *opts[2];
+        xmlChar *opts[2], *url = NULL;
 
         if ((xmlStrLen(arg) > 1) && (arg[1] == 'l')) {
             if (splitString(&arg[2], 2, opts) == 2) {
@@ -414,13 +440,22 @@ xslDbgShellDelete(xmlChar * arg)
                                      "\n%s\tUnable to read line number \n",
                                      errorPrompt);
                 } else {
-                    breakPoint = getBreakPoint(opts[0], lineNo);
-                    if (!breakPoint || !deleteBreakPoint(breakPoint))
-                        xsltGenericError(xsltGenericErrorContext,
-                                         "\n%s\tBreak point to '%s' doesn't exist\n",
-                                         errorPrompt, arg);
-                    else
-                        result++;
+                    url = xmlMemStrdup(opts[0]);
+                    if (url) {
+                        if (isSourceFile(url)) {
+                            if (validateSource(&url, NULL))
+                                breakPoint = getBreakPoint(url, lineNo);
+                        } else 
+			  if (validateData(&url, NULL))
+                            breakPoint = getBreakPoint(url, lineNo);
+                        if (!breakPoint || !deleteBreakPoint(breakPoint))
+                            xsltGenericError(xsltGenericErrorContext,
+                                             "\n%s\tBreak point to '%s' doesn't exist\n",
+                                             errorPrompt, arg);
+                        else
+                            result++;
+                        xmlFree(url);
+                    }
                 }
             } else
                 xsltGenericError(xsltGenericErrorContext,
@@ -508,7 +543,7 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
         return result;
 
     if (arg[0] == '-') {
-        xmlChar *opts[2];
+        xmlChar *opts[2], *url = NULL;
 
         if ((xmlStrLen(arg) > 1) && (arg[1] == 'l')) {
             if (splitString(&arg[2], 2, opts) == 2) {
@@ -517,12 +552,22 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
                                      "\n%s\tUnable to read line number \n",
                                      errorPrompt);
                 } else {
-                    breakPoint = getBreakPoint(opts[0], lineNo);
-                    if (breakPoint)
-                        result = enableBreakPoint(breakPoint, enableType);
-                    else
-                        xsltGenericError(xsltGenericErrorContext, "\n%s",
-                                         errorPrompt);
+                    url = xmlStrdup(opts[0]);
+                    if (url) {
+                        if (strstr((char *) url, ".xsl")) {
+                            if (validateSource(&url, NULL))
+                                breakPoint = getBreakPoint(url, lineNo);
+                        } else
+			  if (validateData(&url, NULL))
+                            breakPoint = getBreakPoint(url, lineNo);
+                        if (breakPoint)
+                            result =
+                                enableBreakPoint(breakPoint, enableType);
+                        else
+                            xsltGenericError(xsltGenericErrorContext,
+                                             "\n%s", errorPrompt);
+                        xmlFree(url);
+                    }
                 }
             } else
                 xsltGenericError(xsltGenericErrorContext,
@@ -579,5 +624,9 @@ xslDbgPrintBreakPoint(void *payload, void *data ATTRIBUTE_UNUSED,
         xsltGenericError(xsltGenericErrorContext, " ");
         printBreakPoint(stderr, (xslBreakPointPtr) payload);
         xsltGenericError(xsltGenericErrorContext, "\n");
+#ifdef USE_XSLDBG_AS_THREAD
+        notifyXsldbgApp(XSLDBG_MSG_BREAKPOINT_CHANGED,
+                        (xslBreakPointPtr) payload);
+#endif
     }
 }

@@ -359,6 +359,13 @@ extern FILE *terminalIO;
 #endif
     void filesFree(void);
 
+  /**
+   * isSourceFile:
+   * @fileName : is valid
+   * 
+   * Returns true if @name has the ".xsl" externsion
+   */
+  int isSourceFile(xmlChar* fileName);
 
 #ifdef __cplusplus
 }

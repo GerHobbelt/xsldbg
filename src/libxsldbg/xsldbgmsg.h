@@ -38,8 +38,8 @@
 				    												requested command */
    XSLDBG_MSG_LINE_CHANGED,	     /* 9: Changed to new line number ie a step */
    XSLDBG_MSG_FILE_CHANGED,      /* 10: Loaded source/data file */
-   XSLDBG_MSG_BREAKPOINT_CHANGED, /* 11: Added, deleted or modified a break point*/	
-   XSLDBG_MSG_PARAMETER_CHANGED   /* 12: Added, modified a a libxslt parameter */
+   XSLDBG_MSG_BREAKPOINT_CHANGED, /* 11: Response to a showbreak command */	
+   XSLDBG_MSG_PARAMETER_CHANGED   /* 12: Response to showparam command */
 } XsldbgMessageEnum;
 
 
@@ -69,17 +69,17 @@ typedef enum {
  * XSLDBG_MSG_AWAITING_INPUT,		     				not used
  * XSLDBG_MSG_READ_INPUT,		 					A volitile value of the char* for user input
  * XSLDBG_MSG_PROCESSING_INPUT,  	    		 not used
- * XSLDBG_MSG_PROCESSING_RESULT,      A volitile value of type xsldbgErrorMsgPtr
+ * XSLDBG_MSG_PROCESSING_RESULT,      A volatile value of type xsldbgErrorMsgPtr
  * XSLDBG_MSG_FILE_CHANGED,      	     			not used
- * XSLDBG_MSG_BREAKPOINT_CHANGED      A volitle xsldbgBreakPointPtr of the break point
+ * XSLDBG_MSG_BREAKPOINT_CHANGED      A volatile xslBreakPointPtr of the break point
  *	                                    changed. If NULL then one or more break points have
  *	                                    changed
- *  XSLDBG_MSG_PARAMETER_CHANGED     A volitile ParameterItemPtr of libxslt pameter that changed.
+ *  XSLDBG_MSG_PARAMETER_CHANGED     A volatile ParameterItemPtr of libxslt pameter that changed.
  *                                    If NULL then one or more break points have changed
  *
  * Legend :
  *	        not used  :- value may be NULL but must not be used
- *          volitile  :- value is only guaranteed to be valid for the life the call to
+ *          volatile  :- value is only guaranteed to be valid for the life the call to
  *                       this function. ie make a NEW copy of value if needed for longer
  *                       than that.
  *																

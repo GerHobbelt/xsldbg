@@ -1479,6 +1479,10 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 xsltGenericError(xsltGenericErrorContext, "\n");
                 printCount = 0; /* printCount will get updated by
                                  * xslDbgPrintBreakPoint */
+#ifdef USE_XSLDBG_AS_THREAD
+		/* notify the app of the start of breakpoint list */
+		notifyXsldbgApp(XSLDBG_MSG_BREAKPOINT_CHANGED, NULL);
+#endif
                 walkBreakPoints((xmlHashScanner) xslDbgPrintBreakPoint,
                                 NULL);
                 if (printCount == 0)

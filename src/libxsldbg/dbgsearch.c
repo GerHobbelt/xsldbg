@@ -1067,9 +1067,8 @@ walkChildNodes(xmlHashScanner walkFunc, void *data, xmlNodePtr node)
     while (node && !searchInf->found) {
         (walkFunc) (node, data, NULL);
         child = node->children;
-        while (child && !searchInf->found) {
+        if  (child && !searchInf->found) {
             walkChildNodes(walkFunc, data, child);
-            child = child->next;
         }
         node = node->next;
     }

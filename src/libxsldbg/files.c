@@ -825,3 +825,17 @@ filesFree(void)
     if (workingDirPath)
         xmlFree(workingDirPath);
 }
+
+
+/**
+ * isSourceFile:
+ * @fileName : is valid
+ * 
+ * Returns true if @name has the ".xsl" externsion
+ */
+int isSourceFile(xmlChar* fileName)
+{
+  return strstr((char *) fileName, ".xsl") ||
+    strstr((char *) fileName, ".Xsl") ||
+    strstr((char *) fileName, ".XSL");
+}

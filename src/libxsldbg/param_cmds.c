@@ -67,9 +67,6 @@ xslDbgShellAddParam(xmlChar * arg)
     if (!result)
         xsltGenericError(xsltGenericErrorContext, "%s", errorPrompt);
     else{
-#ifdef USE_XSLDBG_AS_THREAD
-       notifyXsldbgApp(XSLDBG_MSG_PARAMETER_CHANGED, paramItem);
-#endif
       xsltGenericError(xsltGenericErrorContext,"\n");
     }
     return result;
