@@ -28,7 +28,7 @@ xsldoc2kde.xsl
 
 APIDOCS_DIR=apidocs
 
-EXTRA_DIST=$(KDEXSL_FILES) $(APISRC_HEADER_FILES) *.html
+EXTRA_DIST:=$(KDEXSL_FILES) $(APISRC_HEADER_FILES) $(wildcard *.html)
 
 # must use -P or else kdoc will be confused!!
 CPPFLAGS=-E -C -P
@@ -46,7 +46,7 @@ index.cache.bz2 : index.docbook $(DATADIR)/xsldoc.xml
 
 # You only need this to regenerate HTML pages
 if USE_KDEDOCS
-all: index.docbook index.cache.bz2 $(DATADIR)/xsldoc.xml apidocs 
+all: index.docbook index.cache.bz2 $(DATADIR)/xsldoc.xml apidocs index.html
 
 apidocs : $(APIDOCS_DIR)/index.html
 
@@ -57,7 +57,7 @@ $(APIDOCS_DIR)/index.html: $(APISRC_DIR) $(APISRC_HEADER_FILES)
 	@echo ""
 	@echo ""
 	if ! test -d  $(APIDOCS_DIR); then mkdir $(APIDOCS_DIR); fi
-	kdoc -d $(APIDOCS_DIR)  $(APISRC_HEADER_FILES)
+	$(KDEDIR)/bin/kdoc -d $(APIDOCS_DIR)  $(APISRC_HEADER_FILES)
 
 index.html:
 	@echo ""
@@ -100,4 +100,4 @@ clean:
 endif
 
 install-data-local: 
-	if test -d $(KDEDIR) ; then  if ! test -d $(APIDOCS_DIR) ; then mkdir $(APIDOCS_DIR);fi ; $(mkinstalldirs) $(KDEDIR)/share/doc/HTML/en/khelpcenter/xsldbg/;@INSTALL@ -m 0644 index.docbook index.cache.bz2 $(KDEDIR)/share/doc/HTML/en/khelpcenter/xsldbg;ln -fs $(KDEDIR)/share/doc/HTML/en/common $(KDEDIR)/share/doc/HTML/en/khelpcenter/xsldbg/; fi
+	if test -d $(KDEDIR) ; then $(mkinstalldirs) $(DESTDIR)/$(KDEDOC_PREFIX)/share/doc/HTML/en/khelpcenter/xsldbg/;@INSTALL@ -m 0644 index.docbook index.cache.bz2 $(DESTDIR)/$(KDEDOC_PREFIX)/share/doc/HTML/en/khelpcenter/xsldbg;ln -fs $(KDEDIR)/share/doc/HTML/en/common $(DESTDIR)/$(KDEDOC_PREFIX)/share/doc/HTML/en/khelpcenter/xsldbg/; fi

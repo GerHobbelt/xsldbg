@@ -1,4 +1,9 @@
 Keith Isdale 22nd May 2003 <k_isdale@tpg.com.au>
+  Minor documentation updates.
+  First try a creating a xsldbg.spec (GCC 2.9.5 based systems ie Suse8.0) , comments welcome
+  First try a creating a xsldbg.spec (GCC 3.x based systems ie Suse8.1) , comments welcome
+
+Keith Isdale 22nd May 2003 <k_isdale@tpg.com.au>
   Version 3.1.2
   When gdb mode is enabled print out the details of the breakpoint- required for KDbg 1.9.0 
 

@@ -1,4 +1,4 @@
-EXTRA_DIST = *.html *.xsl 
+EXTRA_DIST := $(wildcard *.html)  $(wildcard *.xsl) $(wildcard *.xml) $(wildcard *.txt)
 DATADIR = ..
 XSLDIR = plain
 XSLDBG=$(top_builddir)/src/xsldbgtest
@@ -12,8 +12,8 @@ index.html : xsldoc2html.xsl $(DATADIR)/xsldoc.xml $(XSLDBG)
 	$(XSLDBG) --cd $(DATADIR)  --param xsldbg_version "'$(VERSION)'"  -o $(XSLDIR)/index.html  $(XSLDIR)/xsldoc2html.xsl xsldoc.xml 
  
 install-data-local: all
-	$(mkinstalldirs) $(HTML_DIR)/xsldbg/plain
-	@INSTALL@ -m 0644 $(EXTRA_DIST) $(HTML_DIR)/xsldbg/plain
+	$(mkinstalldirs) $(DESTDIR)/$(HTML_DIR)/xsldbg/plain
+	@INSTALL@ -m 0644 $(EXTRA_DIST) $(DESTDIR)/$(HTML_DIR)/xsldbg/plain
 
 clean:
 	rm -f index.html	

@@ -1,3 +1,4 @@
+
 /***************************************************************************
                           options.h  -  define option related functions
                              -------------------
@@ -32,6 +33,11 @@
 
 
 /* We want skip most of these includes when building documentation */
+
+
+
+
+
 /* ---------------------------------------  
         Misc options
 -------------------------------------------*/
@@ -39,52 +45,59 @@
 /** The largest number lines of text can be print print printing documents
     This is equivant to gdb shorting of evaluation values
  */
+
+
+
+
     /* keep kdoc happy */
     enum OptionsConfigState {
-        OPTIONS_CONFIG_READVALUE = -1, /* Read configuration flag */
-        OPTIONS_CONFIG_READING = 1, /* Configuration file is being read */
+        OPTIONS_CONFIG_READVALUE = -1,  /* Read configuration flag */
+        OPTIONS_CONFIG_READING = 1,     /* Configuration file is being read */
         OPTIONS_CONFIG_WRITING, /* Configuration file is being written */
-        OPTIONS_CONFIG_IDLE /* We are neither reading or writing */
+        OPTIONS_CONFIG_IDLE     /* We are neither reading or writing */
     };
+
+
+
     /* keep kdoc happy */
     enum OptionsTypeEnum {
         OPTIONS_XINCLUDE = 500, /* Use xinclude during xml parsing */
-        OPTIONS_DOCBOOK, /* Use of docbook sgml parsing */
-        OPTIONS_TIMING, /* Use of timing */
-        OPTIONS_PROFILING, /* Use of profiling */
-        OPTIONS_NOVALID, /* Disable file validation */
-        OPTIONS_NOOUT, /* Disables output to stdout */
-        OPTIONS_HTML, /* Enable the use of html parsing */
-        OPTIONS_DEBUG, /* Enable the use of xml tree debugging */
-        OPTIONS_SHELL, /* Enable the use of debugger shell */
-        OPTIONS_GDB, /* Run in gdb modem prints more messages) */
-        OPTIONS_REPEAT, /* The number of times to repeat */
-        OPTIONS_TRACE, /* Trace execution */
-        OPTIONS_WALK_SPEED, /* How fast do we walk through code */
-        OPTIONS_CATALOGS, /* Get the catalogs from SGML_CATALOG_FILES and
+        OPTIONS_DOCBOOK,        /* Use of docbook sgml parsing */
+        OPTIONS_TIMING,         /* Use of timing */
+        OPTIONS_PROFILING,      /* Use of profiling */
+        OPTIONS_NOVALID,        /* Disable file validation */
+        OPTIONS_NOOUT,          /* Disables output to stdout */
+        OPTIONS_HTML,           /* Enable the use of html parsing */
+        OPTIONS_DEBUG,          /* Enable the use of xml tree debugging */
+        OPTIONS_SHELL,          /* Enable the use of debugger shell */
+        OPTIONS_GDB,            /* Run in gdb modem prints more messages) */
+        OPTIONS_REPEAT,         /* The number of times to repeat */
+        OPTIONS_TRACE,          /* Trace execution */
+        OPTIONS_WALK_SPEED,     /* How fast do we walk through code */
+        OPTIONS_CATALOGS,       /* Get the catalogs from SGML_CATALOG_FILES and
                                  * store it in OPTIONS_CATALOG_NAMES */
-        OPTIONS_PREFER_HTML, /* Prefer html output for search results */
-        OPTIONS_AUTOENCODE, /* try to use the encoding from the stylesheet */
-        OPTIONS_UTF8_INPUT, /* All input from user is in UTF-8.This normaly 
+        OPTIONS_PREFER_HTML,    /* Prefer html output for search results */
+        OPTIONS_AUTOENCODE,     /* try to use the encoding from the stylesheet */
+        OPTIONS_UTF8_INPUT,     /* All input from user is in UTF-8.This normaly 
                                  * used when xsldbg is running as a thread */
-        OPTIONS_STDOUT, /* Print all error messages to  stdout, 
+	OPTIONS_STDOUT,        /* Print all error messages to  stdout, 
 				 * normally error messages go to stderr */
-        OPTIONS_VERBOSE, /* Be verbose with messages */
-        OPTIONS_OUTPUT_FILE_NAME, /* what is the output file name */
-        OPTIONS_SOURCE_FILE_NAME, /*  the stylesheet source to use */
-        OPTIONS_DOCS_PATH, /* path of xsldbg's documentation */
-        OPTIONS_CATALOG_NAMES, /* the names of the catalogs to use when catalogs option is active */
-        OPTIONS_ENCODING, /* What encoding to use for standard output */
-        OPTIONS_SEARCH_RESULTS_PATH, /* Where do we store the results of searching */
-        OPTIONS_DATA_FILE_NAME /* xml data file to use */
+        OPTIONS_VERBOSE,        /* Be verbose with messages */
+        OPTIONS_OUTPUT_FILE_NAME,       /* what is the output file name */
+        OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */
+        OPTIONS_DOCS_PATH,      /* path of xsldbg's documentation */
+        OPTIONS_CATALOG_NAMES,  /* the names of the catalogs to use when catalogs option is active */
+        OPTIONS_ENCODING,       /* What encoding to use for standard output */
+        OPTIONS_SEARCH_RESULTS_PATH,    /* Where do we store the results of searching */
+        OPTIONS_DATA_FILE_NAME  /* xml data file to use */
     };
 
     /* define what tracing is used */
     enum TraceModeEnum {
-        TRACE_OFF = 600, /* disable tracing */
-        TRACE_ON, /* enable tracing */
-        TRACE_RUNNING, /* tracing is running */
-        TRACE_FINISHED /* not needed but just in case */
+        TRACE_OFF = 600,        /* disable tracing */
+        TRACE_ON,               /* enable tracing */
+        TRACE_RUNNING,          /* tracing is running */
+        TRACE_FINISHED          /* not needed but just in case */
     };
 
     /* what speeds can we walk through a stylesheet */
@@ -116,11 +129,6 @@
 */
 
 
-
-
-
-
-
 /* The environment variable name on normal systems */
 
 
@@ -131,10 +139,16 @@
     typedef struct _parameterItem parameterItem;
     typedef parameterItem *parameterItemPtr;
     struct _parameterItem {
-        xmlChar *name; /* libxslt parameter name */
-        xmlChar *value; /* libxslt parameter value */
-        int intValue; /* reserved */
+        xmlChar *name;          /* libxslt parameter name */
+        xmlChar *value;         /* libxslt parameter value */
+        int intValue;           /* reserved */
     };
+
+
+
+
+
+
 /** 
  * Initialized the options module
  *
@@ -144,12 +158,23 @@
 
 
     int optionsInit(void);
+
+
+
+
+
+
 /**
  * Free memory used by the options module
  */
 
 
     void optionsFree(void);
+
+
+
+
+
   /**
    * Find the option id for a given option name
    *
@@ -164,6 +189,12 @@
 
 
     int optionsGetOptionID(xmlChar * optionName);
+
+
+
+
+
+
   /**
    * Get the name text for an option
    *
@@ -176,6 +207,11 @@
 
 
     const xmlChar *optionsGetOptionName(OptionTypeEnum ID);
+
+
+
+
+
 /**
  * Set the value of an integer xsldbg option to @p value
  *
@@ -188,6 +224,12 @@
 
 
     int optionsSetIntOption(OptionTypeEnum optionType, int value);
+
+
+
+
+
+
 /**
  * @returns The state of a integer xsldbg option
  *
@@ -196,6 +238,12 @@
 
 
     int optionsGetIntOption(OptionTypeEnum optionType);
+
+
+
+
+
+
 /**
  * Set value for a string xsldbg option to @p value. 
  * Any memory used currently by option @p optionType will be freed
@@ -210,6 +258,12 @@
 
     int optionsSetStringOption(OptionTypeEnum optionType,
                                const xmlChar * value);
+
+
+
+
+
+
 /**
  * Get value for a string xsldbg option of @p optionType
  *
@@ -220,6 +274,11 @@
 
 
     const xmlChar *optionsGetStringOption(OptionTypeEnum optionType);
+
+
+
+
+
   /**
    * Copy volitile options to the working area for xsldbg to be used
    *   just after xsldbg starts its processing loop
@@ -233,6 +292,11 @@
 /*---------------------------------------------
           Parameter related options 
 -------------------------------------------------*/
+
+
+
+
+
 /**
  * Return the list of libxlt parameters
  *
@@ -243,6 +307,12 @@
 
 
     arrayListPtr optionsGetParamItemList(void);
+
+
+
+
+
+
 /**
  * Create a new libxslt parameter item
  *
@@ -256,6 +326,12 @@
 
     parameterItemPtr optionsParamItemNew(const xmlChar * name,
                                          const xmlChar * value);
+
+
+
+
+
+
 /**
  * Free memory used by libxslt parameter item @p item
  *
@@ -264,6 +340,12 @@
 
 
     void optionsParamItemFree(parameterItemPtr item);
+
+
+
+
+
+
 /**
  * Prints all items in parameter list
  *
@@ -273,6 +355,12 @@
 
 
     int optionsPrintParam(int paramId);
+
+
+
+
+
+
 /**
  * Prints all items in parameter list
  *
@@ -282,6 +370,9 @@
 
 
     int optionsPrintParamList(void);
+
+
+
   /**
    * Convert option into a xmlNodePtr
    *
@@ -294,6 +385,12 @@
 
 
     xmlNodePtr optionsNode(OptionTypeEnum optionType);
+
+
+
+
+
+
   /**
    * Read options from document provided. 
    *
@@ -306,6 +403,11 @@
 
 
     int optionsReadDoc(xmlDocPtr doc);
+
+
+
+
+
   /**
    * Save configuation to file specified
    *
@@ -322,6 +424,10 @@
 /* ---------------------------------------------
           Platform specific option functions
 -------------------------------------------------*/
+
+
+
+
   /**
    * Intialize the platform specific options module
    *
@@ -333,6 +439,11 @@
 
 
     int optionsPlatformInit(void);
+
+
+
+
+
   /**
    * Free memory used by the platform specific options module
    *
@@ -342,6 +453,11 @@
 
 
     void optionsPlatformFree(void);
+
+
+
+
+
   /**
    * Return xsldbg's the configuration file name 
    *
@@ -355,6 +471,11 @@
 
 
     xmlChar *optionsConfigFileName(void);
+
+
+
+
+
   /**
    * Load options from configuration file/registry
    *
@@ -366,6 +487,11 @@
 
 
     int optionsLoad(void);
+
+
+
+
+
   /**
    * Save options to configuration file/registry
    *
@@ -377,6 +503,11 @@
 
 
     int optionsSave(void);
+
+
+
+
+
   /**
    * Set/Get the state of configuration loading/saving. Normally only used
    *    by RISC OS
@@ -446,3 +577,7 @@
    * Return the current list of expressions to watch
    */
   arrayListPtr optionsGetWatchList();
+
+
+
+

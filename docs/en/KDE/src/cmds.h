@@ -1,3 +1,4 @@
+
 /***************************************************************************
                           cmds.h  -  A list of valid commands ID's for xsldbg
                              -------------------
@@ -20,8 +21,10 @@
 
 
 /* See the top of debugXSL.c for a list of command names and thier shortcuts */
+
+
 /* Keep kdoc happy*/
-enum CommandsEnum { /* id's for commands of xslDbgShell */
+enum CommandsEnum {             /* id's for commands of xslDbgShell */
     DEBUG_HELP_CMD = 100,
     DEBUG_BYE_CMD,
     DEBUG_EXIT_CMD,
@@ -49,7 +52,7 @@ enum CommandsEnum { /* id's for commands of xslDbgShell */
     DEBUG_DIR_CMD,
     DEBUG_DU_CMD,
     DEBUG_CAT_CMD,
-    DEBUG_PRINT_CMD, /* cat alternative */
+    DEBUG_PRINT_CMD,            /* cat alternative */
     DEBUG_PWD_CMD,
     DEBUG_DUMP_CMD,
     DEBUG_BASE_CMD,
@@ -84,7 +87,7 @@ enum CommandsEnum { /* id's for commands of xslDbgShell */
     DEBUG_DELPARAM_CMD,
     DEBUG_SHOWPARAM_CMD,
     DEBUG_SETOPTION_CMD,
-    DEBUG_OPTIONS_CMD, /* print options */
+    DEBUG_OPTIONS_CMD,          /* print options */
 
     /* extra options/commands */
     DEBUG_TRACE_CMD,
@@ -100,3 +103,6 @@ enum CommandsEnum { /* id's for commands of xslDbgShell */
     DEBUG_SET_CMD
         /* NULL */
 };
+
+
+

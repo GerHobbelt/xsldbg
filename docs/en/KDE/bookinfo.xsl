@@ -18,7 +18,7 @@
       <!-- TRANS:ROLES_OF_TRANSLATORS -->
 
       <copyright>
-        <year>2001</year>
+        <year>2003</year>
         <holder>Keith Isdale</holder>
       </copyright>
 
@@ -36,7 +36,7 @@
          (V.MM.LL), it could be used by automation scripts.
          Do NOT change these in the translation. -->
     
-      <date>13/12/2001</date>
+      <date>24/05/2003</date>
       <releaseinfo><xsl:value-of select="$xsldbg_version"/></releaseinfo>
       <abstract>
         <para>
@@ -45,8 +45,12 @@ What makes it different to other stylesheet debuggers is the ability
 to search for items of interest and trace stylesheet execution. You can
 use the test framework in the tests directory to describe automatic tests
 to be done on the output of stylesheet execution/debugging. This will be 
-useful for quality assurance purposes. Also a good deal of effort has 
-been put into creating a xemacs and KDbg front ends to xsldbg.
+useful for quality assurance purposes. 
+	</para>
+	<para>
+A good deal of effort has been put into, creating a <ulink url="http://www.xemacs.org/">XEmacs</ulink> front end 
+called <ulink url="http://sourceforge.net/project/showfiles.php?group_id=35673&amp;release_id=109542">xsldbg-mode</ulink>, and
+adding support for xsldbg to <ulink url="http://members.nextra.at/johsixt/kdbg.html">KDbg</ulink>.
       </para>
       </abstract>
     </bookinfo>

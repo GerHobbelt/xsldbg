@@ -33,4 +33,3 @@ SOURCES = \
 	xsldbgevent.cpp	    	\
 	xsldbgdebuggerbase.cpp	\
 	xsldbgthread.cpp
-

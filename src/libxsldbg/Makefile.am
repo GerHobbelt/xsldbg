@@ -110,8 +110,8 @@ EXTRA_DIST=\
 lib_LTLIBRARIES = libxsldbg.la
 
 install-exec-hook:
-	if test ! -d $(prefix)/include/libxsldbg ; then  $(mkinstalldirs) $(prefix)/include/libxsldbg ; fi
-	$(INSTALL_DATA) $(noinst_HEADERS) $(prefix)/include/libxsldbg
+	if test ! -d $(DESTDIR)/$(prefix)/include/libxsldbg ; then  $(mkinstalldirs) $(DESTDIR)/$(prefix)/include/libxsldbg ; fi
+	$(INSTALL_DATA) $(noinst_HEADERS) $(DESTDIR)/$(prefix)/include/libxsldbg
 
 clean:
 	rm -f *.o

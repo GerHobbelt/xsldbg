@@ -1,3 +1,4 @@
+
 /**************************************************************************
                           arraylist.h  -  declare the functions for 
                                         implementation of the array list
@@ -29,6 +30,17 @@
  *
  * @author Keith Isdale <k_isdale@tpg.com.au> 
  */
+
+
+
+
+
+
+
+
+
+
+
     typedef void (*freeItemFunc) (void *item);
     /* A dynamic structure behave like a list */
     typedef struct _arrayList arrayList;
@@ -41,6 +53,13 @@
 
 /* what size of the list do we stop automatic doubling of capacity
     if array list size growth is needed */
+
+
+
+
+
+
+
 /**
  * Create a new list with a size of @p initialSize
  *
@@ -54,6 +73,12 @@
 
     arrayListPtr arrayListNew(int initialSize,
                               freeItemFunc deleteFunction);
+
+
+
+
+
+
 /**
  * Free memory assocated with array list, if the array list 
  *   has a valid deleteFunction then content with be freed with 
@@ -64,6 +89,12 @@
 
 
     void arrayListFree(arrayListPtr list);
+
+
+
+
+
+
 /**
  * Empties the list of its content
  *
@@ -75,6 +106,12 @@
 
 
     int arrayListEmpty(arrayListPtr list);
+
+
+
+
+
+
 /**
  * Return the maximum number elements this list can contain
  *
@@ -85,6 +122,12 @@
 
 
     int arrayListSize(arrayListPtr list);
+
+
+
+
+
+
 /**
  * Return the count of number items in list
  * @returns The count of number items in list
@@ -95,6 +138,12 @@
 
 
     int arrayListCount(arrayListPtr list);
+
+
+
+
+
+
 /**
  * Add @p item to @p list
  *
@@ -107,6 +156,12 @@
 
 
     int arrayListAdd(arrayListPtr list, void *item);
+
+
+
+
+
+
 /**
  * @returns 1 if able to delete element in @p list at position @p position,
  *          0 otherwise 
@@ -117,6 +172,12 @@
 
 
     int arrayListDelete(arrayListPtr list, int position);
+
+
+
+
+
+
 /**
  * @returns Non-null if able to retrieve element in @p list at position
  *          @p position,
@@ -128,3 +189,7 @@
 
 
     void *arrayListGet(arrayListPtr list, int position);
+
+
+
+

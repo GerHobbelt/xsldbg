@@ -13,6 +13,7 @@
       <section id="thanks">
         <title>Thanks to </title>
         <para> The writers the libxml and libxsl.</para>
+        <para> <ulink url="http://members.nextra.at/johsixt/">Johannes Sixt</ulink> for helping with adding xsldbg support to KDbg</para>
       </section>
 
     </chapter>

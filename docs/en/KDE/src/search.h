@@ -1,3 +1,4 @@
+
 /* *************************************************************************
                           xslsearch.h  -  public functions for
                                                searching
@@ -31,7 +32,15 @@
 
 
 /* We want skip most of these includes when building documentation*/
+
+
+
+
+
+
+
     /* what types of searches are there */
+
     /* keep kdoc happy */
     enum SearchEnum {
         SEARCH_BREAKPOINT = 400,
@@ -45,10 +54,10 @@
     typedef struct _searchInfo searchInfo;
     typedef searchInfo *searchInfoPtr;
     struct _searchInfo {
-        int found; /* found is 1 if search is finished */
-        int type; /* what type of search see SearchEnum */
-        int error; /* did an error occur */
-        void *data; /* extra data to pass to walkFunc */
+        int found;              /* found is 1 if search is finished */
+        int type;               /* what type of search see SearchEnum */
+        int error;              /* did an error occur */
+        void *data;             /* extra data to pass to walkFunc */
     };
 
 
@@ -56,9 +65,9 @@
     typedef struct _breakPointSearchData breakPointSearchData;
     typedef breakPointSearchData *breakPointSearchDataPtr;
     struct _breakPointSearchData {
-        int id; /* what id to look for, 
+        int id;                 /* what id to look for, 
                                  * if -1 then ignore */
-        xmlChar *templateName; /* template to look for 
+        xmlChar *templateName;  /* template to look for 
                                  * if NULL then ignore */
         breakPointPtr breakPtr; /* the break point found by search */
     };
@@ -68,17 +77,17 @@
     typedef struct _nodeSearchData nodeSearchData;
     typedef nodeSearchData *nodeSearchDataPtr;
     struct _nodeSearchData {
-        long lineNo; /* what line number to look for 
+        long lineNo;            /* what line number to look for 
                                  * if < 0 then ignore */
-        xmlChar *url; /* what URl to look for 
+        xmlChar *url;           /* what URl to look for 
                                  * if NULL then ignore */
-        int fileSearch; /* if true then we are trying 
+        int fileSearch;         /* if true then we are trying 
                                  * to match a file name */
-        xmlChar *nameInput; /* what file/node name are we
+        xmlChar *nameInput;     /* what file/node name are we
                                  * trying to match */
-        xmlChar *guessedNameMatch; /* possible name match */
-        xmlChar *absoluteNameMatch; /* full name match */
-        xmlNodePtr node; /* the node that the match 
+        xmlChar *guessedNameMatch;      /* possible name match */
+        xmlChar *absoluteNameMatch;     /* full name match */
+        xmlNodePtr node;        /* the node that the match 
                                  * occured in */
     };
 
@@ -88,8 +97,12 @@
     struct _variableSearchData {
         xmlChar *name;
         xmlChar *nameURI;
-        xmlChar *select; /* new value to adopt if any */
+        xmlChar *select;        /* new value to adopt if any */
     };
+
+
+
+
 /**
  * Initialize the search module
  *
@@ -100,12 +113,22 @@
 
 
     int searchInit(void);
+
+
+
+
+
 /**
  * Free all memory used by the search module
  */
 
 
     void searchFree(void);
+
+
+
+
+
 /**
  * Create a new search
  *
@@ -117,6 +140,11 @@
 
 
     searchInfoPtr searchNewInfo(SearchEnum type);
+
+
+
+
+
 /**
  * Free memory used by @p info
  *
@@ -126,6 +154,11 @@
 
 
     void searchFreeInfo(searchInfoPtr info);
+
+
+
+
+
 /**
  * Empty the seach dataBase of its contents
  *
@@ -135,6 +168,11 @@
 
 
     int searchEmpty(void);
+
+
+
+
+
 /** 
  * Return the document used for seaching ie the search dataBase
  *
@@ -145,6 +183,11 @@
 
 
     xmlDocPtr searchDoc(void);
+
+
+
+
+
 /**
  * Get the topmost node in the search dataBase
  *
@@ -155,6 +198,11 @@
 
 
     xmlNodePtr searchRootNode(void);
+
+
+
+
+
 /**
  * Add a node to the search dataBase
  *
@@ -166,6 +214,11 @@
 
 
     int searchAdd(xmlNodePtr node);
+
+
+
+
+
 /**
  * Save the search dataBase to @p fileName  
  *
@@ -177,6 +230,11 @@
 
 
     int searchSave(const xmlChar * fileName);
+
+
+
+
+
 /**
  * Send query as parameter for execution of search.xsl using
  *    data stored in @p tempFile 
@@ -194,6 +252,11 @@
 
     int searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
                     const xmlChar * query);
+
+
+
+
+
 /**
  * Update the search dataBase
  * 
@@ -209,6 +272,11 @@
     int updateSearchData(xsltTransformContextPtr styleCtxt,
                          xsltStylesheetPtr style,
                          void *data, VariableTypeEnum variableTypes);
+
+
+
+
+
 /**
  * Test if break point matches criteria given by @p data. If so then 
  *      set @p data->found to 1 and stores  reference to break point found in 
@@ -224,6 +292,11 @@
 
 
     void scanForBreakPoint(void *payload, void *data, xmlChar * name);
+
+
+
+
+
 /**
  * Test if node matches criteria given by @p data if so then 
  *     set @p data->found to 1 and  stores reference to node found in
@@ -238,6 +311,11 @@
 
 
     void scanForNode(void *payload, void *data, xmlChar * name);
+
+
+
+
+
 /**
  * Find the closest line number in file specified that can be a point 
  *
@@ -253,6 +331,11 @@
 
     xmlNodePtr findNodeByLineNo(xsltTransformContextPtr ctxt,
                                 const xmlChar * url, long lineNumber);
+
+
+
+
+
 /**
  * Find a template node
  *
@@ -266,6 +349,11 @@
 
     xmlNodePtr findTemplateNode(xsltStylesheetPtr style,
                                 const xmlChar * name);
+
+
+
+
+
 /**
  * Find the breakpoint at template with "match" or "name" equal 
  *    to templateName
@@ -278,6 +366,11 @@
 
 
     breakPointPtr findBreakPointByName(const xmlChar * templateName);
+
+
+
+
+
 /**
  * Find a break point by its id
  *
@@ -289,6 +382,11 @@
 
 
     breakPointPtr findBreakPointById(int id);
+
+
+
+
+
 /**
  * Find nodes in search dataBase using an xpath query
  *
@@ -300,6 +398,11 @@
 
 
     xmlXPathObjectPtr findNodesByQuery(const xmlChar * query);
+
+
+
+
+
 /**
  * Walks through all break points calling walkFunc for each. The payload
  *  sent to walkFunc is of type breakPointPtr 
@@ -310,6 +413,11 @@
 
 
     void walkBreakPoints(xmlHashScanner walkFunc, void *data);
+
+
+
+
+
 /**
  * Walks through all templates found in @p style calling walkFunc for each.
  *   The payload of walkFunc is of type xsltTemplatePtr
@@ -322,6 +430,11 @@
 
     void walkTemplates(xmlHashScanner walkFunc, void *data,
                        xsltStylesheetPtr style);
+
+
+
+
+
 /**
  * Walks through all stylesheets found in @p style calling walkFunc for
  *   each. The payload sent to walkFunc is of type xsltStylesheetPtr
@@ -334,6 +447,11 @@
 
     void walkStylesheets(xmlHashScanner walkFunc, void *data,
                          xsltStylesheetPtr style);
+
+
+
+
+
 /**
  * Call walkFunc for each global variable found in @p style. The payload
  *   sent to walkFunc is of type xmlNodePtr
@@ -346,6 +464,11 @@
 
     void walkGlobals(xmlHashScanner walkFunc,
                      void *data, xsltStylesheetPtr style);
+
+
+
+
+
 /**
  * Walks through all local variables found in @p style calling 
  *   walkFunc for each. The payload of walkFunc is of type xmlNodePtr
@@ -358,6 +481,11 @@
 
     void walkLocals(xmlHashScanner walkFunc, void *data,
                     xsltStylesheetPtr style);
+
+
+
+
+
 /**
  * Walks through all included stylesheets found in @p style,
  *   calling walkFunc for each. The payload of walkFunc is of
@@ -371,6 +499,11 @@
 
     void walkIncludes(xmlHashScanner walkFunc, void *data,
                       xsltStylesheetPtr style);
+
+
+
+
+
 /**
  * Walks through all xsl:include calling walkFunc for each. The payload
  *   of walkFunc is of type xmlNodePtr
@@ -383,6 +516,11 @@
 
     void walkIncludeInst(xmlHashScanner walkFunc, void *data,
                          xsltStylesheetPtr style);
+
+
+
+
+
 /**
  * Call walkFunc for each child of @p node the payload sent to walkFunc is
  *   a xmlNodePtr
@@ -395,6 +533,12 @@
 
     void walkChildNodes(xmlHashScanner walkFunc, void *data,
                         xmlNodePtr node);
+
+
+
+
+
+
 /**
  * Convert @p breakPtr into search dataBase format
  *
@@ -407,6 +551,11 @@
 
 
     xmlNodePtr searchBreakPointNode(breakPointPtr breakPtr);
+
+
+
+
+
 /**
  * Convert @p templateNode into search dataBase format
  *
@@ -419,6 +568,11 @@
 
 
     xmlNodePtr searchTemplateNode(xmlNodePtr templNode);
+
+
+
+
+
 /**
  * Convert @p globalVariable into search dataBase format
  *
@@ -432,6 +586,11 @@
 
 
     xmlNodePtr searchGlobalNode(xmlNodePtr globalVariable);
+
+
+
+
+
 /** 
  * Convert @p localVariable into search dataBase format
  *
@@ -445,6 +604,11 @@
 
 
     xmlNodePtr searchLocalNode(xmlNodePtr localVariable);
+
+
+
+
+
 /**  
  * Convert @p style into search dataBase format
  *
@@ -456,6 +620,11 @@
 
 
     xmlNodePtr searchSourceNode(xsltStylesheetPtr style);
+
+
+
+
+
 /**
   * Convert @p include into search dataBase format
   *
@@ -469,6 +638,11 @@
 
 
     xmlNodePtr searchIncludeNode(xmlNodePtr include);
+
+
+
+
+
   /**
    *Convert @p include into search dataBase format
    *
@@ -480,6 +654,12 @@
 
 
     xmlNodePtr searchCallStackNode(callPointPtr callStackItem);
+
+
+
+
+
+
   /**
    * Find documentation comment that applies to @p sourceNode. If found convert comment 
    *         into search dataBase format required
@@ -493,3 +673,7 @@
 
 
     xmlNodePtr searchCommentNode(xmlNodePtr node);
+
+
+
+

@@ -1,3 +1,4 @@
+
 /***************************************************************************
                           xsldbg.h  - describe the application level functions
                              -------------------
@@ -29,8 +30,7 @@
  * @author Keith Isdale <k_isdale@tpg.com.au> 
  */
 
-
-
+ 
 /*
  * xsltconfig.h: compile-time version informations for the XSLT engine
  *
@@ -38,6 +38,12 @@
  *
  * daniel@veillard.com
  */
+
+
+
+
+
+
 /**
  * LIBXSLT_DOTTED_VERSION:
  *
@@ -66,6 +72,12 @@
  * is insignifiant and being able to run xsltpoc -v is useful. On
  * by default unless --without-debug is passed to configure
  */
+
+
+
+
+
+
 /**
  * XSLT_NEED_TRIO:
  *
@@ -73,8 +85,6 @@
  * string formatting function, in that case reuse the Trio ones already
  * compiled in the libxml2 library.
  */
-
-
 
 
 
@@ -96,17 +106,76 @@
  *
  * This macro is used to flag unused function parameters to GCC
  */
+
+
+
+
+
+
+
 /**
  * LIBXSLT_PUBLIC:
  *
  * This macro is used to declare PUBLIC variables for Cygwin and for MSC on Windows
  */
+
+
+
+
+
+
+
+
+/* __XML_XSLTCONFIG_H__ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* end of WITH_XSL_DEBUG */
+
 /**
  * ATTRIBUTE_UNUSED:
  *
  * This macro is used to flag unused function parameters to GCC
  */
+
+
+
+
+
 /* We want skip most of these includes when building documentation */
+/* BUILD_DOCS */
+
+
+
+
+
+
+
+
 /**
  * Load the stylesheet and return it 
  *
@@ -116,6 +185,11 @@
 
 
     xsltStylesheetPtr xsldbgLoadStylesheet(void);
+
+
+
+
+
 /**
  * Load the xml data file and return it  
  *
@@ -125,6 +199,11 @@
 
 
     xmlDocPtr xsldbgLoadXmlData(void);
+
+
+
+
+
 /**
  * Load the temporary data file and return it 
  *
@@ -135,3 +214,7 @@
 
 
     xmlDocPtr xsldbgLoadXmlTemporary(const xmlChar * path);
+
+
+
+

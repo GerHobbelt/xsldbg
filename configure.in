@@ -53,12 +53,24 @@ dnl Specific dir for HTML output ?
 dnl
 
 if test "x$with_html_dir" = "x" ; then
-  HTML_DIR='$(prefix)/doc'
+  HTML_DIR='$(prefix)/share/doc/packages'
 else
   HTML_DIR=$with_html_dir
 fi
 AC_SUBST(HTML_DIR)
 
+AC_ARG_WITH(kdedoc-prefix, [  --with-kdedoc-prefix=PATH path to installed docs normaly /opt/kde3])
+
+dnl
+dnl Specific dir for KDE docs output ?
+dnl
+
+if test "x$with_kdedoc_prefix" = "x" ; then
+  KDEDOC_PREFIX="$KDEDIR"
+else
+  KDEDOC_PREFIX=$with_kdedoc_prefix
+fi
+AC_SUBST(KDEDOC_PREFIX)
 
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE(xsldbg, ${VERSION})

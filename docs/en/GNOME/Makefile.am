@@ -101,8 +101,8 @@ clean:
 	rm -f gnome.docbook
 endif
 
-docdir = $(datadir)/gnome/help/xsldbg/EN/
+docdir = $(DESTDIR)/$(datadir)/gnome/help/xsldbg/EN/
 
 install-data-local: 
-	if test -d $(GNOMEDIR) ; then  if ! test -d $(docdir) ; then mkdir -p $(docdir);fi; cp  gnome.docbook $(docdir);fi
+	if test -d $(DESTDIR)/$(GNOMEDIR) ; then  if ! test -d $(docdir) ; then mkdir -p $(docdir);fi; cp  gnome.docbook $(docdir);fi
 

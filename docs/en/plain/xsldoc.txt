@@ -1,11 +1,11 @@
 
-         xsldbg version 3.1.1
+         xsldbg version 3.1.2
          ====================
 
     xsldbg help
     ___________
 
-xsldbg is similar to gdb. It has three major modes of execution of stylesheets.
+xsldbg is a text based tool to debug stylesheets (the eXtensible Stylesheet Language) and has commands similar to the Unix/Linux debugger gdb. It has three major modes of execution of stylesheets.
      Run the whole stylesheet
      Step to next xsl instruction
      Continue until next break point is found, or stylesheet has restarted
@@ -193,7 +193,7 @@ Usage:
 - - - - - - - - - - - - - - - - - - - -
 
 
-Command : DelWatch
+Command : Delwatch
 Summary : Delete a watch expression or remove all watch expressions as displayed by %quot;showwatch." command
 Usage:
 
@@ -346,7 +346,7 @@ Usage:
 - - - - - - - - - - - - - - - - - - - -
 
 
-Command : options
+Command : Options
 Summary : Print the values for xsldbg's option
 Usage:
 
@@ -516,7 +516,7 @@ Usage:
 - - - - - - - - - - - - - - - - - - - -
 
 
-Command : ShowWatch
+Command : Showwatch
 Summary : Show the current expression being watched
 
 Shortcut name: watches

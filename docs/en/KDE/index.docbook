@@ -1,16 +1,19 @@
 <?xml version="1.0"?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd">
-<book><bookinfo><title>Xsldbg 3.1.1</title><subtitle>Command and usage documentation</subtitle><authorgroup><author><firstname>Keith</firstname><surname>Isdale</surname><affiliation><address><email>k_isdale@tpg.com.au</email></address></affiliation></author></authorgroup><copyright><year>2001</year><holder>Keith Isdale</holder></copyright><legalnotice>&FDLNotice;</legalnotice><date>13/12/2001</date><releaseinfo>3.1.1</releaseinfo><abstract><para>
+<book><bookinfo><title>Xsldbg 3.1.2</title><subtitle>Command and usage documentation</subtitle><authorgroup><author><firstname>Keith</firstname><surname>Isdale</surname><affiliation><address><email>k_isdale@tpg.com.au</email></address></affiliation></author></authorgroup><copyright><year>2003</year><holder>Keith Isdale</holder></copyright><legalnotice>&FDLNotice;</legalnotice><date>24/05/2003</date><releaseinfo>3.1.2</releaseinfo><abstract><para>
 xsldbg is a tool intended to help understand stylesheets. 
 What makes it different to other stylesheet debuggers is the ability 
 to search for items of interest and trace stylesheet execution. You can
 use the test framework in the tests directory to describe automatic tests
 to be done on the output of stylesheet execution/debugging. This will be 
-useful for quality assurance purposes. Also a good deal of effort has 
-been put into creating a xemacs and KDbg front ends to xsldbg.
+useful for quality assurance purposes. 
+	</para><para>
+A good deal of effort has been put into, creating a <ulink url="http://www.xemacs.org/">XEmacs</ulink> front end 
+called <ulink url="http://sourceforge.net/project/showfiles.php?group_id=35673&amp;release_id=109542">xsldbg-mode</ulink>, and
+adding support for xsldbg to <ulink url="http://members.nextra.at/johsixt/kdbg.html">KDbg</ulink>.
       </para></abstract></bookinfo><chapter id="overview_chapter"><title>Overview</title><section id="overview1">
-<para>xsldbg is similar to gdb. It has three major modes of execution 
-of stylesheets.
+<para> xsldbg is a text based tool to debug stylesheets (the eXtensible Stylesheet Language) and has 
+commands similar to the Unix/Linux debugger gdb. It has three major modes of execution of stylesheets.
 <informaltable><tgroup cols="1"><tbody><row><entry>Run the whole stylesheet</entry></row><row><entry>Step to next xsl instruction</entry></row><row><entry>Continue until next break point is found, or stylesheet has restarted</entry></row></tbody></tgroup></informaltable></para>
 <section><title>xsldbg command line</title>
 On systems with readline library available you can use the back/forward
@@ -85,7 +88,7 @@ Delete a libxslt parameter
 Delete a template breakpoint
 <para>Shortcut name: d</para>
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>delete<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(To delete breakpoint at current node)</emphasis></markup></entry></row><row><entry>delete   &lt;BREAKPOINT_ID&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(To delete breakpoint at specified break point number)</emphasis></markup></entry></row><row><entry>delete -l &lt;FILENAME&gt; &lt;LINENO&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Delete at specifed file, line number)</emphasis></markup></entry></row><row><entry>delete -l &lt;URI&gt; &lt;LINENO&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Delete at specifed URI, line number)</emphasis></markup></entry></row><row><entry>delete &lt;TEMMPLATENAME&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(To delete break point at named template.)</emphasis></markup></entry></row><row><entry>delete *<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(To delete all break points.)</emphasis></markup></entry></row></tbody></tgroup></table>
-</section><section id="delwatch_cmd"><title id="delwatch_cmd.title">DelWatch</title>
+</section><section id="delwatch_cmd"><title id="delwatch_cmd.title">Delwatch</title>
 Delete a watch expression or remove all watch expressions as displayed by %quot;showwatch.&quot; command
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>delwatch &lt;WATCHID&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Delete a watch expression with given ID)</emphasis></markup></entry></row><row><entry>delwatch *<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Delete all watch expressions)</emphasis></markup></entry></row></tbody></tgroup></table>
 </section><section id="disable_cmd"><title id="disable_cmd.title">Disable</title>
@@ -181,7 +184,7 @@ Print the value that a public ID maps via the current catalog
 Print the value that a system file maps via the current catalog
 <para>Shortcut name : sys</para>
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>system &quot;&lt;SystemID&gt;&quot;</entry></row></tbody></tgroup></table>
-</section><section id="options_cmd"><title id="options_cmd.title">options</title>
+</section><section id="options_cmd"><title id="options_cmd.title">Options</title>
 Print the values for xsldbg's option
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>options</entry></row></tbody></tgroup></table>
 </section><section id="run_cmd"><title id="run_cmd.title">Run</title>
@@ -206,7 +209,7 @@ Set an option for execution of stylesheet
 </section><section id="set_cmd"><title id="set_cmd.title">Set</title>
 Set the value of a variable
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>set &lt;VARIABLE_NAME&gt; &lt;XPATH&gt;</entry></row></tbody></tgroup></table>
-</section><section id="showwatch_cmd"><title id="showwatch_cmd.title">ShowWatch</title>
+</section><section id="showwatch_cmd"><title id="showwatch_cmd.title">Showwatch</title>
 Show the current expression being watched
 <para>Shortcut name: watches</para>
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>showwatch<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Show the currently selected watches and thier values)</emphasis></markup></entry></row><row><entry>showwatch 1<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Enable the automatic printing of watch expressions. This is used by default.)</emphasis></markup></entry></row><row><entry>showwatch 0<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Disable the automatic printing of watch expressions.)</emphasis></markup></entry></row></tbody></tgroup></table>
@@ -255,4 +258,4 @@ Validate the output file generated by stylesheet    (Disabled)
 </section><section id="walk_cmd"><title id="walk_cmd.title">Walk</title>
 Walk through code using a range of speeds
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>walk &lt;SPEED&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Use Ctrl-c to stop execution, &lt;SPEED&gt; is a value between 0 and 9. Where 0 means stop, 1 is very fast, 9 is very slow)</emphasis></markup></entry></row></tbody></tgroup></table>
-</section></chapter><chapter id="credits_chapter"><title>Credits and Licence</title><section><title>Licence</title>&underFDL;&underGPL;</section><section id="thanks"><title>Thanks to </title><para> The writers the libxml and libxsl.</para></section></chapter></book>
+</section></chapter><chapter id="credits_chapter"><title>Credits and Licence</title><section><title>Licence</title>&underFDL;&underGPL;</section><section id="thanks"><title>Thanks to </title><para> The writers the libxml and libxsl.</para><para><ulink url="http://members.nextra.at/johsixt/">Johannes Sixt</ulink> for helping with adding xsldbg support to KDbg</para></section></chapter></book>

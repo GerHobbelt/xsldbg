@@ -1,3 +1,4 @@
+
 /***************************************************************************
                           help.h  -  describe the help support functions
                              -------------------
@@ -27,6 +28,14 @@
  *
  * @author Keith Isdale <k_isdale@tpg.com.au> 
  */
+
+
+
+
+
+
+
+
 /**
  * Display help about the command in @p arg
  *
@@ -40,3 +49,7 @@
 
 
     int helpTop(const xmlChar * args);
+
+
+
+

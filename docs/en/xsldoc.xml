@@ -11,8 +11,8 @@
 <overview>
 <header>xsldbg help</header>
 <body>
-<para>xsldbg is similar to gdb. It has three major modes of execution 
-of stylesheets.
+<para> xsldbg is a text based tool to debug stylesheets (the eXtensible Stylesheet Language) and has 
+commands similar to the Unix/Linux debugger gdb. It has three major modes of execution of stylesheets.
 <list>
 <li>Run the whole stylesheet</li>
 <li>Step to next xsl instruction</li>
@@ -438,7 +438,7 @@ This command has the same effect of entering the commands &quot;step&quot; and t
 
 
 
-<cmd name="options" title="options">
+<cmd name="options" title="Options">
 <summary>Print the values for xsldbg's option</summary>
 <usage>
 <li><text>options</text></li>
@@ -727,7 +727,7 @@ by the names spaces defined in the XSL SOURCE file. eg "xsl:test1"  will be expa
 </usage>
 </cmd>
 
-<cmd name="showwatch" shortcut="watches" title="ShowWatch">
+<cmd name="showwatch" shortcut="watches" title="Showwatch">
 <summary>Show the current expression being watched</summary>
 <body>
 <para>Shortcut name: watches</para>
@@ -748,7 +748,7 @@ by the names spaces defined in the XSL SOURCE file. eg "xsl:test1"  will be expa
 </usage>
 </cmd>
 
-<cmd name="delwatch" title="DelWatch">
+<cmd name="delwatch" title="Delwatch">
 <summary>Delete a watch expression or remove all watch expressions as displayed by %quot;showwatch.&quot; command</summary>
 <usage>
 <li>

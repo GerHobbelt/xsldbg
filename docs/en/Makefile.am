@@ -15,8 +15,8 @@ EXTRA_DIST= xsldoc.xsl xsldoc.xml xsldoc.dtd search.xsl searchhtml.xsl search.dt
 all: xsldoc.txt
 
 install-data-local: all
-	$(mkinstalldirs) $(HTML_DIR)/xsldbg
-	@INSTALL@ -m 0644 $(EXTRA_DIST) $(HTML_DIR)/xsldbg
+	$(mkinstalldirs) $(DESTDIR)/$(HTML_DIR)/xsldbg
+	@INSTALL@ -m 0644 $(EXTRA_DIST) $(DESTDIR)/$(HTML_DIR)/xsldbg
 	@echo "Adding xsldbg's DTD's to default xml catalog /etc/xml/catalog "
 	@echo ""
 	@echo "Warning you may need to edit these by hand using xmlcatalog"
