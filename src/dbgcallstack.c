@@ -9,6 +9,7 @@
 
 #include "config.h"
 
+#ifdef WITH_XSLT_DEBUGGER
 
 /*
 ------------------------------------------------------
@@ -375,3 +376,4 @@ xslCallDepth()
     return result;
 }
 
+#endif
