@@ -6,6 +6,7 @@
 #undef WITH_DEBUG_HELP
 #undef WITH_XSLDBG_DEBUG
 #undef XSLDBG_BIN
+#undef USE_XSLDBG_AS_THREAD
 
 /* Define if you need the GNU extensions to compile */
 #undef _GNU_SOURCE
@@ -16,6 +17,9 @@
 #undef HAVE_FABS
 #undef HAVE_READLINE
 #undef HAVE_HISTORY
+#undef HAVE_QT
+#undef HAVE_PTHREAD
+#undef HAVE_GNOME
 
 /* Define if you have the _stat function.  */
 #undef HAVE__STAT
@@ -55,6 +59,9 @@
 
 /* Define if you have the <nan.h> header file.  */
 #undef HAVE_NAN_H
+
+/* Define if you have the <pthread.h> header file.  */
+#undef HAVE_PTHREAD_H
 
 /* Define if you have the <stdarg.h> header file.  */
 #undef HAVE_STDARG_H

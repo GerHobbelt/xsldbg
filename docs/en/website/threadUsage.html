@@ -3,7 +3,7 @@
 <body>
 <h1>Thread usage</h1>
 <pre>
-A quick summary of how to use xsldbg as a thread.. 
+A quick summary of how to use xsldbg as a thread..
 Please not this is alpha quality code so you should ensure that you don't override any existing xsldbg installation
 
 Requirements
@@ -11,21 +11,21 @@ Requirements
 
 download xsldbg's cvs release taged xsldbg-rel-0-9-7 or later (see xsldbg.sourceforge.net)
   configure xsldbg with at least
-	--enable-shared=no --enable-xsldbgthread=yes --enable-debug=yes
+	--enable-shared=no --enable-xsldbgthread=yes --enable-debug=yes --prefix=&lt;SOME/SAFE/PLACE&gt;
   install as normal
 
 download xsldbgkpart
   configure as normal but may need to specify where you install xsldbg
-      --with-xsldbg-prefix=<SOME/SAFE/PLACE> --enable-debug=yes
+      --with-xsldbg-prefix=&lt;SOME/SAFE/PLACE&gt; --enable-debug=yes
   install as normal as the configure script should find the xsldbg installation :-)
 
 
-Header files to be used 
+Header files to be used
   src/libxsldbg/xsldbgthread.h
   src/libxsldbg/xsldbgmsg.h
   src/libxsldbg/cmds.h
-  src/libqtnotifier/qtnotifier.h	
-		
+  src/libqtnotifier/qtnotifier.h
+
 
 
 Pseudo code for typical usage

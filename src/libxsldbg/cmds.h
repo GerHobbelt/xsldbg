@@ -20,7 +20,7 @@
 #define CMDS_H
 
 /* See the top of debugXSL.c for a list of command names and thier shortcuts */
-typdef enum {             /* id's for commands of xslDbgShell */
+typedef enum {             /* id's for commands of xslDbgShell */
     DEBUG_HELP_CMD = 100,
     DEBUG_BYE_CMD,
     DEBUG_EXIT_CMD,

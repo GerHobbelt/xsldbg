@@ -1,5 +1,5 @@
 
-SUBDIRS = libxsldbg libqtnotifier
+SUBDIRS=libxsldbg libqtnotifier
 
 
 # set the include path found by configure

@@ -17,10 +17,10 @@
  ***************************************************************************/
 
 #include <stdio.h>
-#include "../src/arraylist.h"
-#include "../src/xslbreakpoint.h"
-#include "../src/xslsearch.h"
-#include "../src/options.h"
+#include <libxsldbg/arraylist.h>
+#include <libxsldbg/xslbreakpoint.h>
+#include <libxsldbg/xslsearch.h>
+#include <libxsldbg/options.h>
 
 ArrayListPtr createTestList(void);
 ArrayListPtr createParamList(void);

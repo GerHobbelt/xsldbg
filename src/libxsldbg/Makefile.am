@@ -9,7 +9,7 @@ INCLUDES= $(all_includes) -DDOCS_PATH=\"$(HTML_DIR)/xsldbg/\" \
 endif
 
 
-noinst_HEADERS = \
+noinst_HEADERS=\
 	help.h 				\
 	cmds.h				\
 	debugXSL.h 		\
@@ -46,10 +46,9 @@ libxsldbg_la_SOURCES = \
 	os_cmds.c						\
 	param_cmds.c				\
 	trace_cmds.c				\
-	search_cmds.c				\ 	
-	xsldbgthread.c			\
-	xsldbgthread.h			\ 	
-	xsldbgnotifier.h		
+	search_cmds.c				\
+	xsldbgthread.c
+
 
 
 else
@@ -74,8 +73,8 @@ libxsldbg_la_SOURCES = \
 endif
 
 
-EXTRA_DIST = \
-	$(noinst_HEADERS) \
+SOURCES = \
+	$(noinst_HEADERS)
 	help.c		\
 	xsldbg.c 	\
 	debugXSL.c 	\
@@ -93,8 +92,10 @@ EXTRA_DIST = \
 	param_cmds.c		\
 	trace_cmds.c		\
 	search_cmds.c		\
-	xsldbgthread.h		\
-	xsldbgthread.c		\
+	xsldbgthread.h	\
+	xsldbgthread.c		
+
+EXTRA_DIST=\
 	readme.txt
 
 
