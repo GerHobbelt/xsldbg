@@ -23,7 +23,7 @@
 #include "xsldbg.h"
 #include "debugXSL.h"
 #include "options.h"
-#include "xslsearch.h"
+#include "search.h"
 
 /* -----------------------------------------
    
@@ -52,7 +52,7 @@ xslDbgShellSearch(xsltTransformContextPtr styleCtxt,
     const xmlChar *sortOption = (xmlChar *) "-sort ";
     int sortOptionLen = xmlStrLen(sortOption);
 
-    if (getStringOption(OPTIONS_DOCS_PATH) == NULL) {
+    if (optionsGetStringOption(OPTIONS_DOCS_PATH) == NULL) {
         xsltGenericError(xsltGenericErrorContext,
                          "No path to documentation aborting searching\n");
 #ifdef USE_DOCS_MACRO

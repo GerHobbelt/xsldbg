@@ -17,8 +17,8 @@
  *                                                                         *
  ************************************************************************* */
 
-#ifndef XSLCALLPOINT_H
-#define XSLCALLPOINT_H
+#ifndef XSLCALLSTACK_H
+#define XSLCALLSTACK_H
 
 /**
  * Provide a call stack support
@@ -29,7 +29,7 @@
  */
 
 #ifndef BUILD_DOCS
-#include "xslbreakpoint.h"
+#include "breakpoint.h"
 #endif
 
 #ifdef WITH_XSLT_DEBUG
@@ -44,20 +44,20 @@ extern "C" {
 
 
 
-    typedef struct _xslCallPointInfo xslCallPointInfo;
-    typedef xslCallPointInfo *xslCallPointInfoPtr;
-    struct _xslCallPointInfo {
+    typedef struct _callPointInfo callPointInfo;
+    typedef callPointInfo *callPointInfoPtr;
+    struct _callPointInfo {
         xmlChar *templateName;
         xmlChar *url;
-        xslCallPointInfoPtr next;
+        callPointInfoPtr next;
     };
 
-    typedef struct _xslCallPoint xslCallPoint;
-    typedef xslCallPoint *xslCallPointPtr;
-    struct _xslCallPoint {
-        xslCallPointInfoPtr info;
+    typedef struct _callPoint callPoint;
+    typedef callPoint *callPointPtr;
+    struct _callPoint {
+        callPointInfoPtr info;
         long lineNo;
-        xslCallPointPtr next;
+        callPointPtr next;
     };
 
 
@@ -79,6 +79,7 @@ extern "C" {
       callStackInit(void);
 
 
+
 #ifdef USE_GNOME_DOCS
 
 /**
@@ -93,42 +94,10 @@ extern "C" {
 
 
 
-
 #ifdef USE_GNOME_DOCS
 
 /**
- * addCallInfo:
- * @templatename: Template name to add
- * @url: The url for the template
- *
- * Add template "call" to call stack
- *
- * Returns A reference to the added info if successful, 
- *          NULL otherwise
- */
-#else
-#ifdef USE_KDE_DOCS
-
-/**
- * Add template "call" to call stack
- *
- * @returns A reference to the added info if successful, 
- *          NULL otherwise
- *
- * @param templateName Template name to add
- * @param url The url for the template
- */
-#endif
-#endif
-    xslCallPointInfoPtr addCallInfo(const xmlChar * templateName,
-                                    const xmlChar * url);
-
-
-
-#ifdef USE_GNOME_DOCS
-
-/**
- * addCall:
+ * callStackAdd:
  * @templ: The current template being applied
  * @source: The source node being processed
  *
@@ -151,13 +120,14 @@ extern "C" {
    */
 #endif
 #endif
-    int addCall(xsltTemplatePtr templ, xmlNodePtr source);
+    int callStackAdd(xsltTemplatePtr templ, xmlNodePtr source);
 
 
 #ifdef USE_GNOME_DOCS
 
 /**
- * dropCall:
+ * callStackDrop:
+ *
  *
  * Drop the topmost item off the call stack
  */
@@ -169,13 +139,13 @@ extern "C" {
  */
 #endif
 #endif
-    void dropCall(void);
+    void callStackDrop(void);
 
 
 #ifdef USE_GNOME_DOCS
 
 /** 
- * stepupToDepth:
+ * callStackStepup:
  * @depth:The frame depth to step up to  
  *             0 < @depth <= callDepth()
  *
@@ -198,13 +168,13 @@ extern "C" {
  */
 #endif
 #endif
-    int stepupToDepth(int depth);
+    int callStackStepup(int depth);
 
 
 #ifdef USE_GNOME_DOCS
 
 /** 
- * stepdownToDepth:
+ * callStackStepdown:
  * @depth: The frame depth to step down to, 
  *             0 < @depth <= callDepth()
  *
@@ -227,13 +197,13 @@ extern "C" {
  */
 #endif
 #endif
-    int stepdownToDepth(int depth);
+    int callStackStepdown(int depth);
 
 
 #ifdef USE_GNOME_DOCS
 
 /**
- * getCall:
+ * callStackGet:
  * @depth: 0 < @depth <= callDepth()
  *
  * Retrieve the call point at specified call depth 
@@ -254,17 +224,17 @@ extern "C" {
  */
 #endif
 #endif
-    xslCallPointPtr getCall(int depth);
+    callPointPtr callStackGet(int depth);
 
 
 #ifdef USE_GNOME_DOCS
 
 /** 
- * getCallStackTop:
+ * callStackGetTop:
  *
  * Get the top item in the call stack
  *
- * Returns the top of the call stack
+ * Returns The top of the call stack
  */
 #else
 #ifdef USE_KDE_DOCS
@@ -276,17 +246,17 @@ extern "C" {
  */
 #endif
 #endif
-    xslCallPointPtr getCallStackTop(void);
+    callPointPtr callStackGetTop(void);
 
 
 #ifdef USE_GNOME_DOCS
 
 /**
- * callDepth:
+ * callStackGetDepth:
  *
  * Return the depth of call stack
  *
- * Returns the depth of call stack
+ * Returns The depth of call stack
  */
 #else
 #ifdef USE_KDE_DOCS
@@ -296,7 +266,7 @@ extern "C" {
  */
 #endif
 #endif
-    int callDepth(void);
+    int callStackGetDepth(void);
 
 #ifdef __cplusplus
 }

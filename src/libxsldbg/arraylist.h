@@ -47,9 +47,9 @@ extern "C" {
 
     typedef void (*freeItemFunc) (void *item);
     /* A dynamic structure behave like a list */
-    typedef struct _ArrayList ArrayList;
-    typedef ArrayList *ArrayListPtr;
-    struct _ArrayList {
+    typedef struct _arrayList arrayList;
+    typedef arrayList *arrayListPtr;
+    struct _arrayList {
         int size, count;
         void **data;
         freeItemFunc deleteFunction;
@@ -87,8 +87,10 @@ extern "C" {
  */
 #endif
 #endif
-    ArrayListPtr arrayListNew(int initialSize,
+    arrayListPtr arrayListNew(int initialSize,
                               freeItemFunc deleteFunction);
+
+
 
 #ifdef USE_GNOME_DOCS
 
@@ -112,7 +114,7 @@ extern "C" {
  */
 #endif
 #endif
-    void arrayListFree(ArrayListPtr list);
+    void arrayListFree(arrayListPtr list);
 
 
 
@@ -140,7 +142,8 @@ extern "C" {
  */
 #endif
 #endif
-    int arrayListEmpty(ArrayListPtr list);
+    int arrayListEmpty(arrayListPtr list);
+
 
 
 #ifdef USE_GNOME_DOCS
@@ -165,7 +168,8 @@ extern "C" {
  */
 #endif
 #endif
-    int arrayListSize(ArrayListPtr list);
+    int arrayListSize(arrayListPtr list);
+
 
 
 #ifdef USE_GNOME_DOCS
@@ -190,7 +194,8 @@ extern "C" {
 #endif
 #endif
 
-    int arrayListCount(ArrayListPtr list);
+    int arrayListCount(arrayListPtr list);
+
 
 
 #ifdef USE_GNOME_DOCS
@@ -219,7 +224,8 @@ extern "C" {
  */
 #endif
 #endif
-    int arrayListAdd(ArrayListPtr list, void *item);
+    int arrayListAdd(arrayListPtr list, void *item);
+
 
 
 #ifdef USE_GNOME_DOCS
@@ -246,7 +252,8 @@ extern "C" {
  */
 #endif
 #endif
-    int arrayListDelete(ArrayListPtr list, int position);
+    int arrayListDelete(arrayListPtr list, int position);
+
 
 
 #ifdef USE_GNOME_DOCS
@@ -275,7 +282,7 @@ extern "C" {
  */
 #endif
 #endif
-    void *arrayListGet(ArrayListPtr list, int position);
+    void *arrayListGet(arrayListPtr list, int position);
 
 
 #ifdef __cplusplus

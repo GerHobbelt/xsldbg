@@ -15,9 +15,39 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <libxml/parser.h>
 #include "stdlib.h"
 #include "xsldbg.h"
 #include "options.h"
+
+  /**
+   * optionsPlatformInit:
+   *
+   * Intialize the platform specific options module
+   *
+   *  This is a platform specific interface
+   *
+   * Returns 1 if sucessful
+   *         0 otherwise  
+   */
+  int optionsPlatformInit(void)
+{
+  return 1;
+}
+
+
+  /**
+   * optionsPlatformFree:
+   *
+   * Free memory used by the platform specific options module
+   *
+   *  This is a platform specific interface
+   *
+   */
+  void optionsPlatformFree(void)
+{
+  /* empty */
+}
 
   /**
    * optionsConfigFileName:
@@ -28,23 +58,14 @@
    */
   xmlChar* optionsConfigFileName(void)
 {
-  xmlChar *result = NULL;
-  const char *homeDir = getenv("HOME");
-  const char *configName = "xsldbg.rc";
-  int bufferSize = 0;
-  if (homeDir){
-    /* give ourselves a bit of room to move */
-    bufferSize = strlen(homeDir) + strlen(configName) + 10;
-    result = (xmlChar*)xmlMalloc(bufferSize);
-    snprintf((char*)result, bufferSize, "%s/%s", homeDir, configName);
-  }
-  return result;
+  return xmlStrdup((xmlChar*)"Choices:XSLDebug.Options");
 }
+
 
   /**
    * optionsLoad:
    *
-   * Load options from configuation file/registry
+   * Load options from configuration file/registry
    *
    * This is a platform specific interface
    * 
@@ -53,5 +74,26 @@
    */
 int optionsLoad(void)
 {
+  int result = 0;
+  xmlDocPtr doc = xmlParseFile(optionsConfigFileName());
+  if (doc)
+    result = optionsReadDoc(doc);
   return 0;
 }
+
+
+  /**
+   * optionsSave:
+   *
+   * Save options to configuration file/registry
+   *
+   * This is a platform specific interface
+   * 
+   * Returns 1 if able to save options
+   *         0 otherwise
+   */
+int optionsSave(void)
+{
+  return optionsSavetoFile(optionsConfigFileName());
+}
+

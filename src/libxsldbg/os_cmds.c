@@ -99,7 +99,7 @@ xslDbgShellExecute(xmlChar * name, int verbose)
             if (verbose)
                 xsltGenericError(xsltGenericErrorContext,
                                  "\nFinished shell command\n");
-            result++;
+            result = 1;
         } else {
             if (verbose)
                 xsltGenericError(xsltGenericErrorContext,

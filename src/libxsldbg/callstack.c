@@ -1,6 +1,6 @@
 
 /***************************************************************************
-                          dbgcallstack.c  -  description
+                          callstack.c  -  call stack implementation 
                              -------------------
     begin                : Fri Nov 2 2001
     copyright            : (C) 2001 by Keith Isdale
@@ -8,25 +8,43 @@
  ***************************************************************************/
 
 #include "xsldbg.h"
-#include "xslbreakpoint.h"
+#include "utils.h"
+#include "breakpoint.h"
 #include "arraylist.h"
-#include "xslcallpoint.h"
+#include "callstack.h"
 #include "xsldbgmsg.h"
 
-/*
-------------------------------------------------------
+
+/*------------------------------------------------------
+                  Private functions
+ -----------------------------------------------------*/
+
+/**
+ * addCallInfo:
+ * @templatename: Template name to add
+ * @url: The url for the template
+ *
+ * Add template "call" to call stack
+ *
+ * Returns A reference to the added info if successful, 
+ *         NULL otherwise
+ */
+    callPointInfoPtr addCallInfo(const xmlChar * templateName,
+                                    const xmlChar * url);
+
+
+/*------------------------------------------------------
                   Xsl call stack related 
------------------------------------------------------
-*/
+-----------------------------------------------------*/
 
 /* keep track of the top and bottom of call stack*/
 
 /* This is the major structure and contains a stack of call points */
-xslCallPointPtr callStackBot, callStackTop;
+callPointPtr callStackBot, callStackTop;
 
 /* save memory by keep only one copy of data used for several 
  items on call stack */
-xslCallPointInfoPtr callInfo;
+callPointInfoPtr callInfo;
 
 /* What frame depth are we to stop at */
 int stopDepth = -1;
@@ -34,6 +52,10 @@ int stopDepth = -1;
 
 /**
  * callStackInit:
+ *
+ * Returns If callStack has been initialized properly and all
+ *               memory required has been obtained,
+ *         0 otherwise
  *
  * Returns 1 if callStack has been initialized properly and all
  *               memory required has been obtained,
@@ -43,13 +65,13 @@ int
 callStackInit(void)
 {
 
-    callInfo = (xslCallPointInfoPtr) xmlMalloc(sizeof(xslCallPointInfo));
+    callInfo = (callPointInfoPtr) xmlMalloc(sizeof(callPointInfo));
     if (callInfo) {
         callInfo->next = NULL;
         callInfo->templateName = NULL;
         callInfo->url = NULL;
     }
-    callStackBot = (xslCallPointPtr) xmlMalloc(sizeof(xslCallPoint));
+    callStackBot = (callPointPtr) xmlMalloc(sizeof(callPoint));
     if (callStackBot) {
         callStackBot->next = NULL;
         callStackBot->info = NULL;
@@ -71,8 +93,8 @@ void
 callStackFree(void)
 {
 
-    xslCallPointInfoPtr curInfo = callInfo, nextInfo;
-    xslCallPointPtr curCall = callStackBot, nextCall;
+    callPointInfoPtr curInfo = callInfo, nextInfo;
+    callPointPtr curCall = callStackBot, nextCall;
 
     /* remove all call info's */
     while (curInfo) {
@@ -106,12 +128,12 @@ callStackFree(void)
  * Add template "call" to call stack
  *
  * Returns A reference to the added info if successful, 
- *          NULL otherwise
+ *         NULL otherwise
  */
-xslCallPointInfoPtr
+callPointInfoPtr
 addCallInfo(const xmlChar * templateName, const xmlChar * url)
 {
-    xslCallPointInfoPtr result = NULL, cur = callInfo;
+    callPointInfoPtr result = NULL, cur = callInfo;
 
     if (!templateName || !url) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
@@ -139,7 +161,7 @@ addCallInfo(const xmlChar * templateName, const xmlChar * url)
     }
 
     if (!result) {
-        result = (xslCallPointInfoPtr) xmlMalloc(sizeof(xslCallPointInfo));
+        result = (callPointInfoPtr) xmlMalloc(sizeof(callPointInfo));
         if (result) {
             cur->next = result;
             result->templateName =
@@ -149,7 +171,7 @@ addCallInfo(const xmlChar * templateName, const xmlChar * url)
         } else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
             xsltGenericError(xsltGenericErrorContext,
-                             "Error : Unable to create xslCallPointInfo from :"
+                             "Error : Unable to create callPointInfo from :"
                              " addCallInfo\n");
 #endif
         }
@@ -159,7 +181,7 @@ addCallInfo(const xmlChar * templateName, const xmlChar * url)
 
 
 /**
- * addCall:
+ * callStackAdd:
  * @templ: The current template being applied
  * @source: The source node being processed
  *
@@ -169,11 +191,11 @@ addCallInfo(const xmlChar * templateName, const xmlChar * url)
  *         0 otherwise
  */
 int
-addCall(xsltTemplatePtr templ, xmlNodePtr source)
+callStackAdd(xsltTemplatePtr templ, xmlNodePtr source)
 {
     int result = 0;
     const char *name = "Default template";
-    xslCallPointInfoPtr info;
+    callPointInfoPtr info;
 
     if (!templ || !source)
         return result;
@@ -181,14 +203,14 @@ addCall(xsltTemplatePtr templ, xmlNodePtr source)
     if (!source->doc || !source->doc->URL) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Error : Invalid document url in call from : addCall\n");
+                         "Error : Invalid document url in call from : callStackAdd\n");
 #endif
         return result;
     }
 
     /* are at a "frame" break point ie "step down" */
     if ((xslDebugStatus == DEBUG_STEPDOWN)
-        && (stopDepth == callDepth())) {
+        && (stopDepth == callStackGetDepth())) {
         xslDebugStatus = DEBUG_STOP;
         stopDepth = 0;
     }
@@ -210,7 +232,7 @@ addCall(xsltTemplatePtr templ, xmlNodePtr source)
     if (!name) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Error : Invalid template name : addCall\n");
+                         "Error : Invalid template name : callStackAdd\n");
 #endif
         return result;
     }
@@ -218,26 +240,26 @@ addCall(xsltTemplatePtr templ, xmlNodePtr source)
     info = addCallInfo((xmlChar *) name, source->doc->URL);
 
     if (info) {
-        xslCallPointPtr cur;
+        callPointPtr cur;
 
-        cur = (xslCallPointPtr) xmlMalloc(sizeof(xslCallPoint));
+        cur = (callPointPtr) xmlMalloc(sizeof(callPoint));
         if (cur) {
             callStackTop->next = cur;
             callStackTop = cur;
             cur->info = info;
             cur->lineNo = xmlGetLineNo(source);
             cur->next = NULL;
-            result++;
+            result = 1;
         } else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
             xsltGenericError(xsltGenericErrorContext,
-                             "Error : Unable to create call point : addCall\n");
+                             "Error : Unable to create call point : callStackAdd\n");
 #endif
         }
     } else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Error : Unable to create call info : addCall\n");
+                         "Error : Unable to create call info : callStackAdd\n");
 #endif
     }
 
@@ -246,18 +268,19 @@ addCall(xsltTemplatePtr templ, xmlNodePtr source)
 
 
 /**
- * dropCall:
+ * callStackDrop:
+ *
  *
  * Drop the topmost item off the call stack
  */
 void
-dropCall(void)
+callStackDrop(void)
 {
 
     if (!callStackBot) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "dropCall failed invalid call stack:"
+                         "callStackDrop failed invalid call stack:"
                          " dbgcallstack.c");
 #endif
         return;
@@ -265,13 +288,13 @@ dropCall(void)
 
     /* are at a "frame" break point ie "step up" */
     if ((xslDebugStatus == DEBUG_STEPUP)
-        && (stopDepth == -1 * callDepth())) {
+        && (stopDepth == -1 * callStackGetDepth())) {
         xslDebugStatus = DEBUG_STOP;
         stopDepth = 0;
     }
 
     if (callStackBot->next) {
-        xslCallPointPtr cur = callStackBot;
+        callPointPtr cur = callStackBot;
 
         while (cur->next && cur->next->next) {
             cur = cur->next;
@@ -283,7 +306,7 @@ dropCall(void)
     } else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "dropCall failed "
+                         "callStackDrop failed "
                          "no items on call stack : dbgcallstack.c");
 #endif
     }
@@ -291,28 +314,29 @@ dropCall(void)
 
 
 /** 
- * stepupToDepth:
+ * callStackStepup:
  * @depth:The frame depth to step up to  
+ *             0 < @depth <= callStackGetDepth()
  *
  * Set the frame depth to step up to
  *
- * Returns 1 on success, 
+ * Returns 1 on success,
  *         0 otherwise
  */
 int
-stepupToDepth(int depth)
+callStackStepup(int depth)
 {
     int result = 0;
 
-    if ((depth > 0) && (depth <= callDepth())) {
+    if ((depth > 0) && (depth <= callStackGetDepth())) {
         stopDepth = -1 * depth;
         xslDebugStatus = DEBUG_STEPUP;
-        result++;
+        result = 1;
     } else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "stepupToDepth failed invalid depth %d: "
-                         " dbgcallstack.c", depth);
+                         "callStackStepup failed invalid depth %d: "
+                         " callstack.c", depth);
 #endif
     }
     return result;
@@ -320,8 +344,9 @@ stepupToDepth(int depth)
 
 
 /** 
- * stepdownToDepth:
- * @depth: The frame depth to step down to 
+ * callStackStepdown:
+ * @depth: The frame depth to step down to, 
+ *             0 < @depth <= callStackGetDepth()
  *
  * Set the frame depth to step down to
  *
@@ -329,18 +354,18 @@ stepupToDepth(int depth)
  *         0 otherwise
  */
 int
-stepdownToDepth(int depth)
+callStackStepdown(int depth)
 {
     int result = 0;
 
-    if ((depth > 0) && (depth >= callDepth())) {
+    if ((depth > 0) && (depth >= callStackGetDepth())) {
         stopDepth = depth;
         xslDebugStatus = DEBUG_STEPDOWN;
-        result++;
+        result = 1;
     } else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "stepdownToDepth failed invalid depth %d: "
+                         "callStackStepdown failed invalid depth %d: "
                          " dbgcallstack.c", depth);
 #endif
     }
@@ -349,32 +374,32 @@ stepdownToDepth(int depth)
 
 
 /**
- * getCall:
- * @depth: 0 < @depth <= callDepth()  
+ * callStackGet:
+ * @depth: 0 < @depth <= callStackGetDepth()  
  *
  * Retrieve the call point at specified call depth 
 
- * Returns non-null if depth is valid,
+ * Returns Non-null if depth is valid,
  *         NULL otherwise 
  */
-xslCallPointPtr
-getCall(int depth)
+callPointPtr
+callStackGet(int depth)
 {
-    xslCallPointPtr result = NULL, cur = callStackBot;
+    callPointPtr result = NULL, cur = callStackBot;
 
     if (!callStackBot) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "getCall failed invalid call stack:"
-                         " dbgcallstack.c");
+                         "callStackGet failed invalid call stack:"
+                         " callstack.c");
 #endif
         return result;
     }
-    if ((depth < 1) && (depth > callDepth())) {
+    if ((depth < 1) && (depth > callStackGetDepth())) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "getCall failed invalid call depth:"
-                         " dbgcallstack.c");
+                         "callStackGet failed invalid call depth:"
+                         " callstack.c");
 #endif
         return result;
     }
@@ -389,8 +414,8 @@ getCall(int depth)
     else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "getCall failed invalid call depth:"
-                         " dbgcallstack.c");
+                         "callStackGet failed invalid call depth:"
+                         " callstack.c");
 #endif
     }
     return result;
@@ -398,30 +423,30 @@ getCall(int depth)
 
 
 /** 
- * getCallStackTop:
+ * callStackGetTop:
  *
  * Get the top item in the call stack
  *
  * Returns The top of the call stack
  */
-xslCallPointPtr
-getCallStackTop(void)
+callPointPtr
+callStackGetTop(void)
 {
     return callStackTop;
 }
 
 
 /** 
- * callDepth:
+ * callStackGetDepth:
  * 
  * Return the depth of call stack
  *
  * Returns The depth of call stack
  */
 int
-callDepth(void)
+callStackGetDepth(void)
 {
-    xslCallPointPtr cur = callStackBot;
+    callPointPtr cur = callStackBot;
     int result = 0;
 
     if (!callStackBot) {
@@ -435,7 +460,7 @@ callDepth(void)
 
 
     while (cur->next) {
-        result++;
+        result = 1;
         cur = cur->next;
     }
     return result;

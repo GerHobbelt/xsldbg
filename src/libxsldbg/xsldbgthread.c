@@ -18,10 +18,11 @@
 
 
 #include "xsldbg.h"
-#include <libxsldbg/xslbreakpoint.h>
+#include "breakpoint.h"
+#include "options.h"
 
-#include <libxsldbg/xsldbgmsg.h>
-#include <libxsldbg/xsldbgthread.h>
+#include "xsldbgmsg.h"
+#include "xsldbgthread.h"
 
 static int threadStatus = XSLDBG_MSG_THREAD_NOTUSED;
 static int inputStatus = XSLDBG_MSG_AWAITING_INPUT;
@@ -34,7 +35,7 @@ static int appReady = 0;
 
 static notifyMessageListPtr notifyList;
 
-ArrayListPtr msgList = NULL;
+arrayListPtr msgList = NULL;
 
 int
 getAppReady(void)
@@ -123,13 +124,22 @@ notifyListStart(XsldbgMessageEnum type)
 {
     int result = 0;
 
-    msgList = arrayListNew(10, NULL);
+    switch(type){
+    case XSLDBG_MSG_INTOPTION_CHANGE:
+    case XSLDBG_MSG_STRINGOPTION_CHANGE:
+      msgList = arrayListNew(10,  (freeItemFunc) optionsParamItemFree);
+      break;
+
+    default:
+	msgList = arrayListNew(10, NULL);
+    }
+
     notifyList =
         (notifyMessageListPtr) xmlMalloc(sizeof(notifyMessageList));
     if (notifyList && msgList) {
         notifyList->type = type;
         notifyList->list = msgList;
-        result++;
+        result = 1;
     }
 
     return result;
@@ -142,7 +152,7 @@ notifyListQueue(const void *data)
 
     if (msgList) {
         arrayListAdd(msgList, (void *) data);
-        result++;
+        result = 1;
     }
     return result;
 }
@@ -155,7 +165,7 @@ notifyListSend(void)
 
     if (notifyList && msgList) {
         notifyXsldbgApp(XSLDBG_MSG_LIST, notifyList);
-        result++;
+        result = 1;
     }
     return result;
 }

@@ -26,6 +26,7 @@
 
 #include "xsldbg.h"
 #include "options.h"
+#include "utils.h"
 #include "debugXSL.h"
 #include "help.h"
 #include <stdlib.h>
@@ -38,6 +39,8 @@
  *
  * Display help about the command in @args
  *
+ * This is a platform specific interface
+ *
  * Returns 1 on success,
  *         0 otherwise
  */
@@ -47,7 +50,7 @@ helpTop(const xmlChar * args)
     char buff[500], helpParam[100];
 
     const char *docsDirPath =
-        (const char *) getStringOption(OPTIONS_DOCS_PATH);
+        (const char *) optionsGetStringOption(OPTIONS_DOCS_PATH);
     int result = 0;
 
 #ifdef __riscos
@@ -77,7 +80,7 @@ helpTop(const xmlChar * args)
                 xsltGenericError(xsltGenericErrorContext,
                                  "Unable to find xsldbg or help files\n");
         } else
-            result++;
+            result = 1;
 
     } else {
         xsltGenericError(xsltGenericErrorContext,
@@ -103,6 +106,8 @@ helpTop(const xmlChar * args)
  *
  * Display help about the command in @args
  *
+ * This is a platform specific interface
+ *
  * Returns 1 on success,
  *         0 otherwise
  */
@@ -111,7 +116,7 @@ helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
 {
     int result = 0;
     xmlChar buff[500];
-    char *docsDirPath = (char *) getStringOption(OPTIONS_DOCS_PATH);
+    char *docsDirPath = (char *) optionsGetStringOption(OPTIONS_DOCS_PATH);
 
     if (docsDirPath) {
         snprintf((char *) buff, sizeof(buff), "more %sxsldoc.txt",
@@ -122,7 +127,7 @@ helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
                              "Help failed : Maybe help files not found in %s or "
                              "more not found in path\n", docsDirPath);
         } else
-            result++;
+            result = 1;
     } else {
         xsltGenericError(xsltGenericErrorContext,
                          "No path to documentation aborting help\n");

@@ -58,7 +58,7 @@ xslDbgEntities(void)
 
             }
             notifyListSend();
-            result++;
+            result = 1;
         } else {
             for (entityIndex = 0;
                  entityIndex < arrayListCount(filesEntityList());
@@ -85,7 +85,7 @@ xslDbgEntities(void)
                                  arrayListCount(filesEntityList()));
             }
 
-            result++;
+            result = 1;
         }
     }
     return result;
@@ -114,7 +114,7 @@ xslDbgSystem(const xmlChar * arg)
     if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
         if (name) {
             notifyXsldbgApp(XSLDBG_MSG_RESOLVE_CHANGE, name);
-            result++;
+            result = 1;
             xmlFree(name);
         } else {
             snprintf(buffer, sizeof(buffer),
@@ -128,7 +128,7 @@ xslDbgSystem(const xmlChar * arg)
             snprintf(buffer, sizeof(buffer),
                      "SystemID %s maps to : %s\n\n", arg, name);
             xmlFree(name);
-            result++;
+            result = 1;
         } else {
             snprintf(buffer, sizeof(buffer),
                      "SystemID %s was not found "
@@ -163,7 +163,7 @@ xslDbgPublic(const xmlChar * arg)
     if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
         if (name) {
             notifyXsldbgApp(XSLDBG_MSG_RESOLVE_CHANGE, name);
-            result++;
+            result = 1;
             xmlFree(name);
         } else {
             snprintf(buffer, sizeof(buffer),
@@ -177,7 +177,7 @@ xslDbgPublic(const xmlChar * arg)
             snprintf(buffer, sizeof(buffer),
                      "PublicID  %s maps to : %s\n\n", arg, name);
             xmlFree(name);
-            result++;
+            result = 1;
         } else {
             snprintf(buffer, sizeof(buffer),
                      "PublicID %s was not found "
@@ -206,8 +206,8 @@ xslDbgEncoding(xmlChar * arg)
 
     if (splitString(arg, 1, opts) == 1) {
         if (filesSetEncoding((char*)opts[0])) {
-            setStringOption(OPTIONS_ENCODING, opts[0]);
-            result++;
+            optionsSetStringOption(OPTIONS_ENCODING, opts[0]);
+            result = 1;
         }
     } else
         xsltGenericError(xsltGenericErrorContext,

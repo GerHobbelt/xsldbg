@@ -27,6 +27,7 @@
 #include "xsldbg.h"
 #include "options.h"
 #include "debugXSL.h"
+#include "utils.h"
 #include "help.h"
 #include <stdlib.h>
 
@@ -38,6 +39,8 @@
  *
  * Display help about the command in @args
  *
+ * This is a platform specific interface
+ *
  * Returns 1 on success,
  *         0 otherwise
  */
@@ -47,7 +50,7 @@ helpTop(const xmlChar * args)
     char buff[500], helpParam[100];
 
     const char *docsDirPath =
-        (const char *) getStringOption(OPTIONS_DOCS_PATH);
+        (const char *) optionsGetStringOption(OPTIONS_DOCS_PATH);
     int result = 0;
 
     docsDirPath = unixfilename(docsDirPath);
@@ -60,7 +63,7 @@ helpTop(const xmlChar * args)
     if (docsDirPath) {
         snprintf((char *) buff, sizeof(buff), "%s %s"
                  " --param xsldbg_version %c'%s'%c "
-                 " %s%cxsldoc.xsl %s%cxsldoc.xml | more",
+                 " %s%cxsldoc.xsl %s%cxsldoc.xml",
                  XSLDBG_BIN, helpParam,
                  QUOTECHAR, VERSION, QUOTECHAR,
                  docsDirPath, PATHCHAR, docsDirPath, PATHCHAR);
@@ -75,7 +78,7 @@ helpTop(const xmlChar * args)
                 xsltGenericError(xsltGenericErrorContext,
                                  "Unable to find xsldbg or help files\n");
         } else
-            result++;
+            result = 1;
 
     } else {
         xsltGenericError(xsltGenericErrorContext,
@@ -101,6 +104,8 @@ helpTop(const xmlChar * args)
  *
  * Display help about the command in @args
  *
+ * This is a platform specific interface
+ *
  * Returns 1 on success,
  *         0 otherwise
  */
@@ -109,7 +114,7 @@ helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
 {
     int result = 0;
     xmlChar buff[500];
-    char *docsDirPath = (char *) getStringOption(OPTIONS_DOCS_PATH);
+    char *docsDirPath = (char *) optionsGetStringOption(OPTIONS_DOCS_PATH);
 
     if (docsDirPath) {
         /* JRF: I'm not calling arbitrary commands without knowing if they
@@ -131,7 +136,7 @@ helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
             }
             fprintf(stdout, "\n");
             fclose(f);
-            result++;
+            result = 1;
         } else {
             xsltGenericError(xsltGenericErrorContext,
                              "Help failed : could not open %s\n", buff);

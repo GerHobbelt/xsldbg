@@ -20,6 +20,9 @@
 #undef VERSION
 #endif
 
+/* We want skip most of these includes when building documentation */
+#ifndef BUILD_DOCS
+
 #include <stdio.h>
 #include <libxml/entities.h>
 #include <libxml/tree.h>
@@ -30,9 +33,11 @@
 #include "xsldbg.h"
 #include "debugXSL.h"
 #include "files.h"
+#include "utils.h"
 #include "options.h"
 #include "xsldbgthread.h"
 
+#endif /* BUILD_DOCS */
 
 
 /* top xml document */
@@ -53,7 +58,7 @@ static xmlChar *stylePathName = NULL;
 /* what is the path for current working directory*/
 static xmlChar *workingDirPath = NULL;
 
-static ArrayListPtr entityNameList = NULL;
+static arrayListPtr entityNameList = NULL;
 
 /* Current encoding to use for standard output*/
 static xmlCharEncodingHandlerPtr stdoutEncoding = NULL;
@@ -133,7 +138,7 @@ openTerminal(xmlChar * device)
 
     if (!device)                /* Failed; there's no device */
         return result;
-#ifdef __riscos
+
     /*
      * On RISC OS, you get one terminal - the screen.
      * we assume that the parameter is meant to be an output device as
@@ -146,168 +151,65 @@ openTerminal(xmlChar * device)
      * One assumes that you might use a socket or a pipe here.
      */
 
-    if (terminalIO)
+    if (terminalIO){
         fclose(terminalIO);
-
-    if (termName) {
-        xmlFree(termName);
-        termName = NULL;
+	terminalIO = NULL;
     }
 
 
-    if (device[0] == '\0') {
-        /* look like we are supposed to close the terminal */
-        selectNormalIO();       /* shouldn't be needed but just in case */
-    } else {
+    switch (device[0]){
+    case '\0':
+    case '0':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':      
+        /* look like we are supposed to close the terminal 
+	   but we've already done that	   
+	 */
+      break;
+
+    case '1':
+      if (termName){
+        terminalIO = fopen((char *) termName, "w");
+        if (terminalIO != NULL) {
+	    xmlFree(termName);
+	  termName = xmlMemStrdup((char *) device);
+	  result = 1;
+        } else {
+            xsltGenericError(xsltGenericErrorContext,
+                             "Unable to open terminal %s\n", termName);
+        }	
+      }else{
+            xsltGenericError(xsltGenericErrorContext,
+                             "Did not previously open terminal\n");
+      }
+      break;
+
+    case '2':
+            xsltGenericError(xsltGenericErrorContext,
+			     "Terminal level 2 not implemented\n");
+      break;
+
+
+    default:
         terminalIO = fopen((char *) device, "w");
         if (terminalIO != NULL) {
+	  if (termName)
+	    xmlFree(termName);
             termName = xmlMemStrdup((char *) device);
-            result++;
+            result = 1;
         } else {
             xsltGenericError(xsltGenericErrorContext,
                              "Unable to open terminal %s\n", device);
         }
-    }
-#else
-
-#ifdef HAVE_UNISTD_H            /* fix me for WinNT */
-
-    if ((device[0] >= '0') && (device[0] <= '9')) {
-        /*set the tty level  */
-        switch (device[0]) {
-
-            case '1':
-                /* redirect only some output to terminal */
-                if (!terminalIO && termName) {
-                    terminalIO = fopen((char *) device, "w");
-                    if (terminalIO) {
-                        result++;
-                    } else {
-                        xsltGenericError(xsltGenericErrorContext,
-                                         "Unable to open terminal %s",
-                                         device);
-                        termName = NULL;
-                    }
-                }
-                break;
-
-
-            case '2':
-                /* redirect everything to the terminal */
-                if (termName && terminalIO) {
-                    /* we have previously sucessfully opened the terminal so just
-                     * go ahead a redirect I/O */
-                    result = freopen(termName, "r", stdin) != NULL;
-                    result = result
-                        && (freopen(termName, "w", stdout) != NULL);
-                    result = result
-                        && (freopen(termName, "w", stderr) != NULL);
-                    if (!result) {
-                        xsltGenericError(xsltGenericErrorContext,
-                                         "Unable to redirect to terminal %s\n",
-                                         termName);
-                    }
-                }
-                break;
-
-            default:
-                /* look like we are supposed to close the terminal */
-                if ((terminalIO != NULL) && (ttyName != NULL)) {
-                    fclose(terminalIO);
-                    freopen(ttyName, "r", stdin);
-                    freopen(ttyName, "w", stdout);
-                    freopen(ttyName, "w", stderr);
-                    terminalIO = NULL;
-                    result++;
-                }
-                break;
-        }
-
-    } else {
-
-        if (terminalIO != NULL)
-            fclose(terminalIO);
-
-        if (termName) {
-            xmlFree(termName);
-            termName = NULL;
-        }
-
-        /* just open the terminal the user will need to provide a
-         * tty level by invoking tty command again with a value of 0 - 9
-         */
-        terminalIO = fopen((char *) device, "w");
-        if (terminalIO != NULL) {
-            termName = xmlMemStrdup((char *) device);
-            /*
-             * dup2(fileno(terminalIO), fileno(stdin));
-             * dup2(fileno(terminalIO), fileno(stderr));
-             * dup2(fileno(terminalIO), fileno(stdout));
-             */
-            result++;
-        } else {
-            xsltGenericError(xsltGenericErrorContext,
-                             "Unable to open terminal %s", device);
-        }
+	
     }
 
-#else
-    xsltGenericError(xsltGenericErrorContext,
-                     "Terminals are no supported by this operating system\n");
-#endif
-
-#endif
     return result;
-}
-
-
-/**
- * selectTerminalIO:
- *
- * Returns 1 if able to use prevously opened terminal 
- *         0 otherwise
-*/
-int
-selectTerminalIO(void)
-{
-    /* No longer used but must remain for the moment
-     * int result = 0;
-     * 
-     * if (termName) {
-     * freopen(termName, "w", stdout);
-     * freopen(termName, "w", stderr);
-     * freopen(termName, "r", stdin);
-     * result++;
-     * } else
-     * result++;
-     * 
-     */
-    return 1;
-}
-
-
-/** 
- * selectNormalIO:
- * 
- * Returns 1 if able to select orginal stdin, stdout, stderr
- *         0 otherwise
-*/
-int
-selectNormalIO(void)
-{
-    /* No longer used but must remain for the moment
-     * int result = 0;
-     * 
-     * #ifdef UNISTD_H
-     * if (ttyName) {
-     * freopen(ttyName, "w", stdout);
-     * freopen(ttyName, "w", stderr);
-     * freopen(ttyName, "r", stdin);
-     * }
-     * #endif
-     * result++;
-     */
-    return 1;
 }
 
 
@@ -532,11 +434,11 @@ guessStylesheetName(searchInfoPtr searchCriteria)
         return;                 /* must supply name of file to look for */
 
     walkStylesheets((xmlHashScanner) guessStylesheetHelper,
-                    searchCriteria, getStylesheet());
+                    searchCriteria, filesGetStylesheet());
     if (!searchCriteria->found) {
         /* try looking in the included stylesheets */
         walkIncludes((xmlHashScanner) guessStylesheetHelper2,
-                     searchCriteria, getStylesheet());
+                     searchCriteria, filesGetStylesheet());
     }
 }
 
@@ -608,7 +510,7 @@ changeDir(const xmlChar * path)
             if (workingDirPath)
                 xmlFree(workingDirPath);
             workingDirPath = (xmlChar *) xmlMemStrdup((char *) buffer);
-            result++;
+            result = 1;
         }
         if (!result)
             xsltGenericError(xsltGenericErrorContext,
@@ -625,7 +527,7 @@ changeDir(const xmlChar * path)
 
 
 /**
- * loadXmlFile:
+ * filesLoadXmlFile:
  * @path: xml file to load
  * @fileType: A valid FileTypeEnum 
  * 
@@ -635,38 +537,38 @@ changeDir(const xmlChar * path)
  *         0 otherwise 
  */
 int
-loadXmlFile(const xmlChar * path, FileTypeEnum fileType)
+filesLoadXmlFile(const xmlChar * path, FileTypeEnum fileType)
 {
     int result = 0;
 
-    if (!freeXmlFile(fileType))
+    if (!filesFreeXmlFile(fileType))
         return result;
 
     switch (fileType) {
         case FILES_XMLFILE_TYPE:
             if (path && xmlStrLen(path)) {
-                if (isOptionEnabled(OPTIONS_SHELL)) {
+                if (optionsGetIntOption(OPTIONS_SHELL)) {
                     xsltGenericError(xsltGenericErrorContext,
                                      "Setting xml data file name to %s\n",
                                      path);
                 }
-                setStringOption(OPTIONS_DATA_FILE_NAME, path);
+                optionsSetStringOption(OPTIONS_DATA_FILE_NAME, path);
             }
-            topDocument = loadXmlData();
+            topDocument = xsldbgLoadXmlData();
             if (topDocument)
-                result++;
+                result = 1;
             break;
 
         case FILES_SOURCEFILE_TYPE:
             if (path && xmlStrLen(path)) {
-                if (isOptionEnabled(OPTIONS_SHELL)) {
+                if (optionsGetIntOption(OPTIONS_SHELL)) {
                     xsltGenericError(xsltGenericErrorContext,
                                      "Setting stylesheet file name to %s\n",
                                      path);
                 }
-                setStringOption(OPTIONS_SOURCE_FILE_NAME, path);
+                optionsSetStringOption(OPTIONS_SOURCE_FILE_NAME, path);
             }
-            topStylesheet = loadStylesheet();
+            topStylesheet = xsldbgLoadStylesheet();
             if (topStylesheet && topStylesheet->doc) {
                 /* look for last slash (or baskslash) of URL */
                 char *lastSlash = xmlStrrChr(topStylesheet->doc->URL,
@@ -674,11 +576,11 @@ loadXmlFile(const xmlChar * path, FileTypeEnum fileType)
                 const char *docUrl =
                     (const char *) topStylesheet->doc->URL;
 
-                result++;
+                result = 1;
                 if (docUrl && lastSlash) {
                     stylePathName = (xmlChar *) xmlMemStrdup(docUrl);
                     stylePathName[lastSlash - docUrl + 1] = '\0';
-                    if (isOptionEnabled(OPTIONS_SHELL)) {
+                    if (optionsGetIntOption(OPTIONS_SHELL)) {
                         xsltGenericError(xsltGenericErrorContext,
                                          "Setting stylesheet base path to %s\n",
                                          stylePathName);
@@ -691,7 +593,7 @@ loadXmlFile(const xmlChar * path, FileTypeEnum fileType)
                 }
 
                 /* try to find encoding for this stylesheet */
-                if (isOptionEnabled(OPTIONS_AUTOENCODE))
+                if (optionsGetIntOption(OPTIONS_AUTOENCODE))
                     filesSetEncoding((char*)topStylesheet->encoding);
             }
             break;
@@ -702,9 +604,9 @@ loadXmlFile(const xmlChar * path, FileTypeEnum fileType)
                                  "Missing file name\n");
                 break;
             }
-            topDocument = loadXmlTemporary(path);
+            topDocument = xsldbgLoadXmlTemporary(path);
             if (tempDocument)
-                result++;
+                result = 1;
             break;
     }
     return result;
@@ -712,7 +614,7 @@ loadXmlFile(const xmlChar * path, FileTypeEnum fileType)
 
 
 /**
- * freeXmlFile:
+ * filesFreeXmlFile:
  * @fileType: A valid FileTypeEnum 
  * 
  * Free memory associated with the xml file 
@@ -721,7 +623,7 @@ loadXmlFile(const xmlChar * path, FileTypeEnum fileType)
  *         0 otherwise
  */
 int
-freeXmlFile(FileTypeEnum fileType)
+filesFreeXmlFile(FileTypeEnum fileType)
 {
     int result = 0, type = fileType;
 
@@ -730,7 +632,7 @@ freeXmlFile(FileTypeEnum fileType)
             if (topDocument)
                 xmlFreeDoc(topDocument);
             topDocument = NULL;
-            result++;
+            result = 1;
             break;
 
         case FILES_SOURCEFILE_TYPE:
@@ -740,14 +642,14 @@ freeXmlFile(FileTypeEnum fileType)
                 xmlFree(stylePathName);
             stylePathName = NULL;
             topStylesheet = NULL;
-            result++;
+            result = 1;
             break;
 
         case FILES_TEMPORARYFILE_TYPE:
             if (tempDocument)
                 xmlFreeDoc(tempDocument);
             tempDocument = NULL;
-            result++;
+            result = 1;
             break;
     }
     return result;
@@ -755,7 +657,7 @@ freeXmlFile(FileTypeEnum fileType)
 
 
 /**
- * getStylesheet:
+ * filesGetStylesheet:
  *
  * Return The topmost stylesheet non-null on success,
  *         NULL otherwise
@@ -764,35 +666,35 @@ freeXmlFile(FileTypeEnum fileType)
  *         NULL otherwise
  */
 xsltStylesheetPtr
-getStylesheet(void)
+filesGetStylesheet(void)
 {
     return topStylesheet;
 }
 
 
 /**
- * getTemporaryDoc:
+ * filesGetTemporaryDoc:
  *
  * Return The current "temporary" document
  *
  * Returns The current "temporary" document
  */
 xmlDocPtr
-getTemporaryDoc(void)
+filesGetTemporaryDoc(void)
 {
     return tempDocument;
 }
 
 
 /**
- * getMainDoc:
+ * filesGetMainDoc:
  *
  * Return The main docment
  *
  * Returns The main docment
  */
 xmlDocPtr
-getMainDoc(void)
+filesGetMainDoc(void)
 {
     return topDocument;
 }
@@ -854,8 +756,12 @@ filesInit(void)
     /* setup the encoding */
     encodeInBuff = xmlBufferCreate();
     encodeOutBuff = xmlBufferCreate();
-    if (entityNameList && encodeInBuff && encodeOutBuff)
-        result++;
+
+    /* check the result so far and lastly perform platform specific
+       initialization*/
+    if (entityNameList && encodeInBuff && encodeOutBuff &&
+	filesPlatformInit())
+        result = 1;
     return result;
 }
 
@@ -878,11 +784,11 @@ filesFree(void)
         termName = NULL;
     }
 
-    result = freeXmlFile(FILES_SOURCEFILE_TYPE);
+    result = filesFreeXmlFile(FILES_SOURCEFILE_TYPE);
     if (result)
-        result = freeXmlFile(FILES_XMLFILE_TYPE);
+        result = filesFreeXmlFile(FILES_XMLFILE_TYPE);
     if (result)
-        result = freeXmlFile(FILES_TEMPORARYFILE_TYPE);
+        result = filesFreeXmlFile(FILES_TEMPORARYFILE_TYPE);
     if (!result)
         xsltGenericError(xsltGenericErrorContext,
                          "Unable to free memory used by xml/xsl files\n");
@@ -910,17 +816,20 @@ filesFree(void)
 
     /* close current encoding */
     filesSetEncoding(NULL);
+
+    /* free any memory used by platform specific files module*/
+    filesPlatformInit();
 }
 
 
 /**
- * isSourceFile:
+ * filesIsSourceFile:
  * @fileName : is valid
  * 
  * Returns true if @name has the ".xsl" externsion
  */
 int
-isSourceFile(xmlChar * fileName)
+filesIsSourceFile(xmlChar * fileName)
 {
     return strstr((char *) fileName, ".xsl") ||
         strstr((char *) fileName, ".Xsl") ||
@@ -995,7 +904,7 @@ filesAddEntityName(const xmlChar * SystemID, const xmlChar * PublicID)
 
 /**
  * filesEntityRef :
- * @uri : Is valid
+ * @ent : Is valid as provided by libxslt
  * @firstNode : Is valid
  * @lastNode : Is Valid
  *
@@ -1069,7 +978,7 @@ filesSetBaseUri(xmlNodePtr node, const xmlChar * uri)
          * xsldbgNs = xmlNewNs(node, XSLDBG_XML_NAMESPACE, BAD_CAST "xsldbg");      
          * if (xsldbgNs){   
          * xmlSetNsProp(node, xsldbgNs, BAD_CAST "uri", uri);  
-         * result++;
+         * result = 1;
          * }
          */
         xmlNewProp(node, BAD_CAST "xsldbg:uri", uri);
@@ -1124,7 +1033,7 @@ filesGetBaseUri(xmlNodePtr node)
  *
  * Returns the list entity names used for documents loaded
  */
-ArrayListPtr
+arrayListPtr
 filesEntityList(void)
 {
     return entityNameList;
@@ -1150,10 +1059,10 @@ filesLoadCatalogs(void)
 
     /* only reload catalogs if something has changed */
     if (intVolitileOptions[catalogOptId] !=
-        isOptionEnabled(OPTIONS_CATALOGS)) {
+        optionsGetIntOption(OPTIONS_CATALOGS)) {
         xmlCatalogCleanup();
         if (intVolitileOptions[catalogOptId] != 0) {
-            if (getStringOption(OPTIONS_CATALOG_NAMES) == NULL) {
+            if (optionsGetStringOption(OPTIONS_CATALOG_NAMES) == NULL) {
 #ifdef __riscos
                 catalogs = getenv("SGML$CatalogFiles");
 #else
@@ -1169,13 +1078,13 @@ filesLoadCatalogs(void)
 #endif
                     return result;
                 } else
-                    setStringOption(OPTIONS_CATALOG_NAMES,
+                    optionsSetStringOption(OPTIONS_CATALOG_NAMES,
                                     (xmlChar *) catalogs);
             } else
-                catalogs = (char *) getStringOption(OPTIONS_CATALOG_NAMES);
+                catalogs = (char *) optionsGetStringOption(OPTIONS_CATALOG_NAMES);
             xmlLoadCatalogs(catalogs);
         }
-        result++;
+        result = 1;
     }
     return result;
 }
@@ -1280,7 +1189,7 @@ filesSetEncoding(const char *encoding)
                                  "Unable to initialize encoding %s",
                                  encoding);
             } else
-                setStringOption(OPTIONS_ENCODING, (xmlChar*) encoding);
+                optionsSetStringOption(OPTIONS_ENCODING, (xmlChar*) encoding);
         } else {
             xsltGenericError(xsltGenericErrorContext,
                              "Invalid encoding %s\n", encoding);
@@ -1290,7 +1199,7 @@ filesSetEncoding(const char *encoding)
         if (stdoutEncoding)
             result = (xmlCharEncCloseFunc(stdoutEncoding) >= 0);
         else
-            result++;
+            result = 1;
         stdoutEncoding = NULL;
     }
     return result;

@@ -49,7 +49,7 @@ int
 xslDbgShellAddParam(xmlChar * arg)
 {
     int result = 0;
-    ParameterItemPtr paramItem = NULL;
+    parameterItemPtr paramItem = NULL;
     static const xmlChar *errorPrompt =
         (xmlChar *) "Failed to add parameter\n";
     xmlChar *opts[2];
@@ -61,8 +61,8 @@ xslDbgShellAddParam(xmlChar * arg)
         return result;
     }
     if ((xmlStrLen(arg) > 1) && splitString(arg, 2, opts) == 2) {
-        paramItem = paramItemNew(opts[0], opts[1]);
-        result = arrayListAdd(getParamItemList(), paramItem);
+        paramItem = optionsParamItemNew(opts[0], opts[1]);
+        result = arrayListAdd(optionsGetParamItemList(), paramItem);
     }
     if (!result)
         xsltGenericError(xsltGenericErrorContext, "%s", errorPrompt);
@@ -104,11 +104,11 @@ xslDbgShellDelParam(xmlChar * arg)
                              errorPrompt);
             return result;
         } else
-            result = arrayListDelete(getParamItemList(), paramId);
+            result = arrayListDelete(optionsGetParamItemList(), paramId);
     } else {
         /* Delete all parameters */
-        arrayListEmpty(getParamItemList());
-        result++;
+        arrayListEmpty(optionsGetParamItemList());
+        result = 1;
     }
     if (!result)
         xsltGenericError(xsltGenericErrorContext, "%s", errorPrompt);
@@ -135,16 +135,16 @@ xslDbgShellShowParam(xmlChar * arg ATTRIBUTE_UNUSED)
 
 #ifdef USE_XSLDBG_AS_THREAD
     int paramIndex = 0;
-    int itemCount = arrayListCount(getParamItemList());
+    int itemCount = arrayListCount(optionsGetParamItemList());
 
     notifyXsldbgApp(XSLDBG_MSG_PARAMETER_CHANGED, NULL);
 
     if (itemCount > 0) {
-        ParameterItemPtr paramItem = NULL;
+        parameterItemPtr paramItem = NULL;
 
         while (paramIndex < itemCount) {
             paramItem =
-                (ParameterItemPtr) arrayListGet(getParamItemList(),
+                (parameterItemPtr) arrayListGet(optionsGetParamItemList(),
                                                 paramIndex++);
             if (paramItem != NULL)
                 notifyXsldbgApp(XSLDBG_MSG_PARAMETER_CHANGED, paramItem);
@@ -152,7 +152,7 @@ xslDbgShellShowParam(xmlChar * arg ATTRIBUTE_UNUSED)
     }
 #endif
 
-    if (printParamList())
+    if (optionsPrintParamList())
         result = 1;
     else
         xsltGenericError(xsltGenericErrorContext,

@@ -33,8 +33,8 @@
 
 /* We want skip most of these includes when building documentation*/
 #ifndef BUILD_DOCS
-#include "xslbreakpoint.h"
-#include "xslcallpoint.h"
+#include "breakpoint.h"
+#include "callstack.h"
 #endif
 
 
@@ -85,7 +85,7 @@ extern "C" {
                                  * if -1 then ignore */
         xmlChar *templateName;  /* template to look for 
                                  * if NULL then ignore */
-        xslBreakPointPtr breakPoint;    /* the break point found by search */
+        breakPointPtr breakPtr;    /* the break point found by search */
     };
 
 
@@ -415,7 +415,7 @@ extern "C" {
 
 /**
  * scanForBreakPoint: 
- * @payload: A valid xslBreakPointPtr 
+ * @payload: A valid breakPointPtr 
  * @data: The criteria to look for and a valid searchInfoPtr of
  *          type SEARCH_BREAKPOINT 
  * @name: Not used 
@@ -434,7 +434,7 @@ extern "C" {
  *         @p data->data->node
  *     otherwise @p data is unchanged
  *
- * @param payload A valid xslBreakPointPtr 
+ * @param payload A valid breakPointPtr 
  * @param data The criteria to look for and a valid searchInfoPtr of
  *          type SEARCH_BREAKPOINT 
  * @param name Not used 
@@ -567,7 +567,7 @@ extern "C" {
 */
 #endif
 #endif
-    xslBreakPointPtr findBreakPointByName(const xmlChar * templateName);
+    breakPointPtr findBreakPointByName(const xmlChar * templateName);
 
 
 #ifdef USE_GNOME_DOCS
@@ -579,7 +579,7 @@ extern "C" {
  * Find a break point by its id
  *
  * Returns The break point with given the break point id if found,
- *          NULL otherwise 
+ *         NULL otherwise 
  */
 #else
 #ifdef USE_KDE_DOCS
@@ -594,14 +594,14 @@ extern "C" {
  */
 #endif
 #endif
-    xslBreakPointPtr findBreakPointById(int id);
+    breakPointPtr findBreakPointById(int id);
 
 
 #ifdef USE_GNOME_DOCS
 
 /**
  * findNodesByQuery:
- * @query: The xpath query to run, see dbgsearch.c for more details
+ * @query: The xpath query to run, see docs/en/search.dtd for more details
  *  
  * Find nodes in search dataBase using an xpath query
  *
@@ -617,8 +617,7 @@ extern "C" {
  * @returns The nodes that match the given query on success,
  *          NULL otherwise 
  *
- * @param query The xpath query to run, see dbgsearch.c or 
- *           search.dtd for more details
+ * @param query The xpath query to run, see docs/en/search.dtd for more details
  */
 #endif
 #endif
@@ -633,14 +632,14 @@ extern "C" {
  * @data: The extra data to pass onto walkFunc
  *
  * Walks through all break points calling walkFunc for each. The payload
- *  sent to walkFunc is of type xslBreakPointPtr 
+ *  sent to walkFunc is of type breakPointPtr 
  */
 #else
 #ifdef USE_KDE_DOCS
 
 /**
  * Walks through all break points calling walkFunc for each. The payload
- *  sent to walkFunc is of type xslBreakPointPtr 
+ *  sent to walkFunc is of type breakPointPtr 
  *
  * @param walkFunc The function to callback for each break point found
  * @param data The extra data to pass onto @p walkFunc
@@ -687,7 +686,7 @@ extern "C" {
  * @style: The stylesheet to start from
  *
  * Walks through all templates calling walkFunc for each. The payload
- *   sent to walkFuc is of type xsltStylesheetPtr
+ *   sent to walkFunc is of type xsltStylesheetPtr
  */
 #else
 #ifdef USE_KDE_DOCS
@@ -824,7 +823,7 @@ extern "C" {
 /**
  * walkChildNodes:
  * @walkFunc: The function to callback for each child/sibling found
- * @data: The extra data to pass onto walker
+ * @data: The extra data to pass onto walkFunc
  * @node: Is valid
  *
  * Call walkFunc for each child of @node the payload sent to walkFunc is
@@ -852,11 +851,11 @@ extern "C" {
 
 /**
  * searchBreakPointNode:
- * @breakPoint: Is valid
+ * @breakPtr: Is valid
  *
- * Convert @p breakPoint into search dataBase format
+ * Convert @breakPtr into search dataBase format
  *
- * Returns @breakPoint as a new xmlNode in search dataBase format 
+ * Returns @breakPtr as a new xmlNode in search dataBase format 
  *               if successful,
  *         NULL otherwise
  */
@@ -864,17 +863,17 @@ extern "C" {
 #ifdef USE_KDE_DOCS
 
 /**
- * Convert @p breakPoint into search dataBase format
+ * Convert @p breakPtr into search dataBase format
  *
- * @returns @p breakPoint as a new xmlNode in search dataBase format 
+ * @returns @p breakPtr as a new xmlNode in search dataBase format 
  *               if successful,
  *          NULL otherwise
  *
- * @param breakPoint Is valid
+ * @param breakPtr Is valid
  */
 #endif
 #endif
-    xmlNodePtr searchBreakPointNode(xslBreakPointPtr breakPoint);
+    xmlNodePtr searchBreakPointNode(breakPointPtr breakPtr);
 
 
 #ifdef USE_GNOME_DOCS
@@ -972,8 +971,8 @@ extern "C" {
  * searchSourceNode:
  * @style: Is valid
  * 
-  * Convert @style into search dataBase format
-  *
+ * Convert @style into search dataBase format
+ *
  * Returns @style as a new xmlNode in search dataBase format if successful,
  *         NULL otherwise
  */
@@ -981,8 +980,8 @@ extern "C" {
 #ifdef USE_KDE_DOCS
 
 /**  
-* Convert @p style into search dataBase format
-*
+ * Convert @p style into search dataBase format
+ *
  * @returns @p style as a new xmlNode in search dataBase format if successful,
  *         NULL otherwise
  *
@@ -1047,7 +1046,7 @@ extern "C" {
    */
 #endif
 #endif
-    xmlNodePtr searchCallStackNode(xslCallPointPtr callStackItem);
+    xmlNodePtr searchCallStackNode(callPointPtr callStackItem);
 
 
 

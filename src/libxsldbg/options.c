@@ -22,6 +22,7 @@
 #include "options.h"
 #include "arraylist.h"
 #include "xsldbgmsg.h"
+#include "utils.h"
 
 
 /* keep track of our integer/boolean options */
@@ -37,7 +38,39 @@ static xmlChar *stringOptions[OPTIONS_DATA_FILE_NAME -
                               OPTIONS_OUTPUT_FILE_NAME + 1];
 
 /* keep track of our parameters */
-static ArrayListPtr parameterList;
+static arrayListPtr parameterList;
+
+
+/* the names for our options
+   Items that start with *_ are options that CANNOT be used by the user
+  Once you set an option you need to give a run command to activate
+  new settings */
+const char *optionNames[] = {
+    "xinclude",                 /* Use xinclude during xml parsing */
+    "docbook",                  /* Use of docbook sgml parsing */
+    "timing",                   /* Use of timing */
+    "profile",                  /* Use of profiling */
+    "novalid",                  /* Disable file validation */
+    "noout",                    /* Disables output to stdout */
+    "html",                     /* Enable the use of html parsing */
+    "debug",                    /* Enable the use of xml tree debugging */
+    "*_shell_*",                /* Enable the use of debugger shell */
+    "gdb",                      /* Run in gdb modem prints more messages */
+    "repeat",                   /* The number of times to repeat */
+    "*_trace_*",                /* Trace execution */
+    "*_walkspeed_*",            /* How fast do we walk through code */
+    "catalogs",                 /* do we use catalogs in SGML_CATALOG_FILES */
+    "preferhtml",               /* Prefer html output for search results */
+    "autoencode",               /* Try to use the encoding from the stylesheet */
+    "verbose",                  /* Be verbose with messages */
+    "output",                   /* what is the output file name */
+    "source",                   /* The stylesheet source to use */
+    "docspath",                 /* Path of xsldbg's documentation */
+    "catalognames",             /* The names of the catalogs to use when the catalogs option is active */
+    "encoding",                 /* What encoding to use for standard output */
+    "data",                     /* The xml data file to use */
+    NULL                        /* indicate end of list */
+};
 
 /** 
  * optionsInit:
@@ -83,19 +116,19 @@ optionsInit(void)
     }
 
     /* init our parameter list */
-    parameterList = arrayListNew(10, (freeItemFunc) paramItemFree);
+    parameterList = arrayListNew(10, (freeItemFunc) optionsParamItemFree);
 
     /* setup the docs path */
-    setStringOption(OPTIONS_DOCS_PATH, docsPath);
+    optionsSetStringOption(OPTIONS_DOCS_PATH, docsPath);
 
-    setIntOption(OPTIONS_TRACE, TRACE_OFF);
-    setIntOption(OPTIONS_WALK_SPEED, WALKSPEED_STOP);
+    optionsSetIntOption(OPTIONS_TRACE, TRACE_OFF);
+    optionsSetIntOption(OPTIONS_WALK_SPEED, WALKSPEED_STOP);
     /* always try to use encoding if found */
-    enableOption(OPTIONS_AUTOENCODE, 1);
+    optionsSetIntOption(OPTIONS_AUTOENCODE, 1);
 
     /* set output default as standard output. Must be changed if not using
      * xsldbg's command line. Or the tty command is used */
-    setStringOption(OPTIONS_OUTPUT_FILE_NAME, NULL);
+    optionsSetStringOption(OPTIONS_OUTPUT_FILE_NAME, NULL);
     return (parameterList != NULL);
 }
 
@@ -103,7 +136,7 @@ optionsInit(void)
 /**
  * optionsFree:
  *
- * Free memory used by options data structures
+ * Free memory used by the options module
  */
 void
 optionsFree(void)
@@ -112,7 +145,7 @@ optionsFree(void)
 
     for (string_option = OPTIONS_OUTPUT_FILE_NAME;
          string_option <= OPTIONS_DATA_FILE_NAME; string_option++) {
-        setStringOption(string_option, NULL);
+        optionsSetStringOption(string_option, NULL);
     }
 
     /* Free up memory used by parameters */
@@ -122,7 +155,7 @@ optionsFree(void)
 
 
 /**
- * enableOption:
+ * optionsSetIntOption:
  * @optionType: A valid boolean option
  * @value: 1 to enable, 0 otherwise
  *
@@ -132,7 +165,7 @@ optionsFree(void)
  *         0 otherwise
  */
 int
-enableOption(OptionTypeEnum optionType, int value)
+optionsSetIntOption(OptionTypeEnum optionType, int value)
 {
     int type = optionType, result = 1;
 
@@ -157,14 +190,14 @@ enableOption(OptionTypeEnum optionType, int value)
              * stylesheet is started
              */
             intVolitileOptions[type - OPTIONS_XINCLUDE] = value;
-            result++;
+            result = 1;
             break;
 
         case OPTIONS_TRACE:
         case OPTIONS_WALK_SPEED:
             intVolitileOptions[type - OPTIONS_XINCLUDE] = value;
             intOptions[type - OPTIONS_XINCLUDE] = value;
-            result++;
+            result = 1;
             break;
 
         default:
@@ -178,7 +211,7 @@ enableOption(OptionTypeEnum optionType, int value)
 
 
 /**
- * isOptionEnabled:
+ * optionsGetIntOption:
  * @optionType: A valid boolean option to query
  *
  * Return the state of a boolean option
@@ -187,7 +220,7 @@ enableOption(OptionTypeEnum optionType, int value)
  *         ie 1 for enabled , 0 for disabled
  */
 int
-isOptionEnabled(OptionTypeEnum optionType)
+optionsGetIntOption(OptionTypeEnum optionType)
 {
     int type = optionType, result = 0;
 
@@ -221,42 +254,11 @@ isOptionEnabled(OptionTypeEnum optionType)
 }
 
 
-/**
- * setIntOption:
- * @optionType: Is a valid integer option
- * @value: Value to adopt
- *
- * Set the value of an integer xsldbg option to @value
- *
- * Returns 1 on success,
- *         0 otherwise
- */
-int
-setIntOption(OptionTypeEnum optionType, int value)
-{
-    return enableOption(optionType, value);
-}
-
 
 /**
- * getIntOption:
- * @optionType: A valid integer option
- *
- * Return the state of an integer option
- *
- * Returns The state of a integer xsldbg option
- */
-int
-getIntOption(OptionTypeEnum optionType)
-{
-    return isOptionEnabled(optionType);
-}
-
-
-/**
- * setStringOption:
+ * optionsSetStringOption:
  * @optionType: A valid string option
- * @value: The Value to copy
+ * @value: The value to copy
  *
  * Set value for a string xsldbg option to @value. 
  * Any memory used currently by option @optionType will be freed
@@ -265,7 +267,7 @@ getIntOption(OptionTypeEnum optionType)
  *         0 otherwise
  */
 int
-setStringOption(OptionTypeEnum optionType, const xmlChar * value)
+optionsSetStringOption(OptionTypeEnum optionType, const xmlChar * value)
 {
     int result = 0;
 
@@ -280,7 +282,7 @@ setStringOption(OptionTypeEnum optionType, const xmlChar * value)
                 (xmlChar *) xmlMemStrdup((char *) value);
         else
             stringOptions[optionId] = NULL;
-        result++;
+        result = 1;
     } else
         xsltGenericError(xsltGenericErrorContext,
                          "Not a valid string xsldbg option %d\n",
@@ -290,7 +292,7 @@ setStringOption(OptionTypeEnum optionType, const xmlChar * value)
 
 
 /**
- * getStringOption:
+ * optionsGetStringOption:
  * @optionType: A valid string option 
  *
  * Get value for a string xsldbg option of @optionType
@@ -298,7 +300,7 @@ setStringOption(OptionTypeEnum optionType, const xmlChar * value)
  * Returns current option value which may be NULL
  */
 const xmlChar *
-getStringOption(OptionTypeEnum optionType)
+optionsGetStringOption(OptionTypeEnum optionType)
 {
     xmlChar *result = NULL;
 
@@ -314,12 +316,13 @@ getStringOption(OptionTypeEnum optionType)
 
 
   /**
-   * copyVolitleOptions:
+   * optionsCopyVolitleOptions:
    *
-   * Copy volitile options to the working area for xsldbg
+   * Copy volitile options to the working area for xsldbg to be used
+   *   just after xsldbg starts its processing loop
    */
 void
-copyVolitleOptions(void)
+optionsCopyVolitleOptions(void)
 {
     int optionId;
 
@@ -329,8 +332,9 @@ copyVolitleOptions(void)
     }
 }
 
+
 /**
- * paramItemNew:
+ * optionsParamItemNew:
  * @name: Is valid 
  * @value: Is valid 
  *
@@ -338,16 +342,20 @@ copyVolitleOptions(void)
  * Returns non-null if sucessful
  *         NULL otherwise
  */
-ParameterItemPtr
-paramItemNew(const xmlChar * name, const xmlChar * value)
+parameterItemPtr
+optionsParamItemNew(const xmlChar * name, const xmlChar * value)
 {
-    ParameterItemPtr result = NULL;
+    parameterItemPtr result = NULL;
 
-    if (name && value) {
-        result = (ParameterItem *) xmlMalloc(sizeof(ParameterItem));
+    if (name) {
+        result = (parameterItem *) xmlMalloc(sizeof(parameterItem));
         if (result) {
             result->name = (xmlChar *) xmlMemStrdup((char *) name);
-            result->value = (xmlChar *) xmlMemStrdup((char *) value);
+	    if (value)
+	      result->value = (xmlChar *) xmlMemStrdup((char *) value);
+	    else
+	      result->value = (xmlChar *) xmlMemStrdup(BAD_CAST "");
+	    result->intValue = -1;
         }
     }
     return result;
@@ -355,13 +363,13 @@ paramItemNew(const xmlChar * name, const xmlChar * value)
 
 
 /**
- * paramItemFree:
+ * optionsParamItemFree:
  * @item: Is valid
  *
  * Free memory used by libxslt parameter item @item
  */
 void
-paramItemFree(ParameterItemPtr item)
+optionsParamItemFree(parameterItemPtr item)
 {
     if (item) {
         if (item->name)
@@ -373,7 +381,7 @@ paramItemFree(ParameterItemPtr item)
 
 
 /**
- * getParamItemList:
+ * optionsGetParamItemList:
  *
  * Return the list of libxlt parameters
  *
@@ -381,15 +389,15 @@ paramItemFree(ParameterItemPtr item)
  *           stylesheet transformation if successful
  *        NULL otherwise
  */
-ArrayListPtr
-getParamItemList(void)
+arrayListPtr
+optionsGetParamItemList(void)
 {
     return parameterList;
 }
 
 
 /**
- * printParam:
+ * optionsPrintParam:
  * @paramId: 0 =< paramID < arrayListCount(getParamList())
  * 
  * Print parameter information
@@ -398,23 +406,23 @@ getParamItemList(void)
  *         0 otherwise
  */
 int
-printParam(int paramId)
+optionsPrintParam(int paramId)
 {
     int result = 0;
-    ParameterItemPtr paramItem =
-        (ParameterItemPtr) arrayListGet(getParamItemList(), paramId);
+    parameterItemPtr paramItem =
+        (parameterItemPtr) arrayListGet(optionsGetParamItemList(), paramId);
     if (paramItem && paramItem->name && paramItem->value) {
         xsltGenericError(xsltGenericErrorContext,
                          " Parameter %d %s=\"%s\"\n", paramId,
                          paramItem->name, paramItem->value);
-        result++;
+        result = 1;
     }
     return result;
 }
 
 
 /**
- * printParamList:
+ * optionsPrintParamList:
  *
  * Prints all items in parameter list
  *
@@ -422,27 +430,201 @@ printParam(int paramId)
  *         0 otherwise
  */
 int
-printParamList(void)
+optionsPrintParamList(void)
 {
     int result = 1;
     int paramIndex = 0;
-    int itemCount = arrayListCount(getParamItemList());
+    int itemCount = arrayListCount(optionsGetParamItemList());
 
     if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
         if (itemCount > 0) {
             while (result && (paramIndex < itemCount)) {
-                result = printParam(paramIndex++);
+                result = optionsPrintParam(paramIndex++);
             }
         }
     } else {
         if (itemCount > 0) {
             xsltGenericError(xsltGenericErrorContext, "\n");
             while (result && (paramIndex < itemCount)) {
-                result = printParam(paramIndex++);
+                result = optionsPrintParam(paramIndex++);
             }
         } else
             xsltGenericError(xsltGenericErrorContext,
                              "\nNo parameters present\n");
     }
     return result;
+}
+
+
+  /**
+   * optionsNode:
+   * @optionType : Is valid, option to convert to a xmlNodePtr 
+   *
+   * Convert option into a xmlNodePtr
+   *
+   * Returns the option @optionType as a xmlNodePtr if successful,
+   *          NULL otherwise
+   */
+  xmlNodePtr optionsNode(OptionTypeEnum optionType)
+{
+  xmlNodePtr node = NULL;
+  char numberBuffer[10];
+  int result = 1;
+
+  numberBuffer[0] = '\0';
+  if (optionType <= OPTIONS_VERBOSE){
+    /* integer option*/
+    node =  xmlNewNode(NULL, (xmlChar *)"intoption");
+    if (node){
+      snprintf(numberBuffer, sizeof(numberBuffer), "%d",
+	       optionsGetIntOption(optionType));
+      result  = result && (xmlNewProp
+			 (node, (xmlChar *) "name",
+			    optionNames[optionType - OPTIONS_XINCLUDE]) != NULL);
+      if (result)
+	result = result && (xmlNewProp(node, (xmlChar *) "value", 
+				      numberBuffer) != NULL);
+      if (!result){
+	xmlFreeNode(node);
+	node = NULL;
+      }
+	
+    }
+  }else{
+    /* string option */
+    node =  xmlNewNode(NULL, (xmlChar *)"stringoption");
+    if (node){
+      result  = result && (xmlNewProp
+			   (node, (xmlChar *) "name",
+			    optionNames[optionType - OPTIONS_XINCLUDE]) != NULL);
+      if (result){
+	if (optionsGetStringOption(optionType))
+	  result  = result && (xmlNewProp
+			   (node, (xmlChar *) "value",
+			    optionsGetStringOption(optionType)) != NULL);
+	else
+	  result  = result && (xmlNewProp
+			       (node, (xmlChar *) "value",
+				(xmlChar *) "") != NULL);
+      }
+
+      if (!result){
+	xmlFreeNode(node);
+	node = NULL;
+      }
+	
+    }
+  }
+  return node;
+}
+
+
+  /**
+   * optionsReadDoc:
+   * @doc : Is valid xsldbg config document, in the format as indicated 
+   *        by config.dtd
+   *
+   * Read options from document provided. 
+   *
+   * Returns 1 if able to read @doc and load options found,
+   *         0 otherwise
+   */
+  int optionsReadDoc(xmlDocPtr doc)
+{
+  int result = 1;
+  xmlChar *name, *value;
+  int optID;
+  xmlNodePtr node;
+  /* very primative search for config node
+   we skip the DTD and then go straight to the first child of 
+   config node*/
+  if (doc && doc->children->next && doc->children->next->children){
+    /* find the first configuration option */
+    node = doc->children->next->children;
+    while (node && result){
+      if (node->type == XML_ELEMENT_NODE){
+	if (xmlStrCmp(node->name, "intoption") == 0){
+            name = xmlGetProp(node, (xmlChar *) "name");
+	    value = xmlGetProp(node, (xmlChar *) "value");
+            if (name && value && (atoi((char*)value) >= 0) ) {
+	      optID = lookupName(name, (xmlChar**) optionNames);
+	      if (optID >= 0)
+		result = optionsSetIntOption(optID + OPTIONS_XINCLUDE, 
+				    atoi((char*)value));
+            }
+	    if (name)
+	      xmlFree(name);
+	    if (value)
+	      xmlFree(value);
+	}else if (xmlStrCmp(node->name, "stringoption") == 0){
+            name = xmlGetProp(node, (xmlChar *) "name");
+	    value = xmlGetProp(node, (xmlChar *) "value");
+            if (name && value ) {
+	      optID = lookupName(name, (xmlChar**) optionNames);
+	      if (optID >= 0)
+		result = optionsSetStringOption(optID + OPTIONS_XINCLUDE, 
+						value);
+            }
+	    if (name)
+	      xmlFree(name);
+	    if (value)
+	      xmlFree(value);	  
+	}
+      }
+      node = node->next;
+    }
+  }
+  return result;
+}
+
+
+
+/**
+ * optionsSavetoFile:
+ * @fileName : Must be NON NULL be a local file that can be written to
+ *
+ * Save configuation to file specified
+ *
+ * Returns 1 if able to save options to @fileName,
+ *         0 otherwise
+ */
+  int optionsSavetoFile(xmlChar *fileName)
+{
+  int result = 1;
+  int index = 0;
+  xmlDocPtr configDoc = xmlNewDoc((xmlChar *) "1.0");
+  xmlNodePtr rootNode = xmlNewNode(NULL, (xmlChar *) "config");
+  xmlNodePtr node = NULL;
+  if (configDoc && rootNode){
+    xmlCreateIntSubset(configDoc,
+		       (xmlChar *) "config", (xmlChar *)
+		       "-//xsldbg//DTD config XML V1.0//EN",
+		       (xmlChar *) "config.dtd");
+    xmlAddChild((xmlNodePtr) configDoc, rootNode);
+    
+    /*now to do the work of adding configuration items */
+    for (index = OPTIONS_XINCLUDE; index <= OPTIONS_DATA_FILE_NAME; index++){
+
+      if (optionNames[index - OPTIONS_XINCLUDE][0] == '*')
+	continue; /* don't save non user options */
+
+      node = optionsNode(index);
+      if (node)
+	xmlAddChild(rootNode, node);
+      else{
+	result = 0;
+	break;
+      }
+    }
+
+    if (result){
+      /* so far so good, now to serialize it to disk*/
+      if (!xmlSaveFormatFile((char*)fileName, configDoc, 1))
+	result = 0;
+    }
+
+    xmlFreeDoc(configDoc);
+  }
+
+  return result;
 }

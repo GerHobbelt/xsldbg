@@ -158,7 +158,7 @@ extern "C" {
         WALKSPEED_8,
         WALKSPEED_9,
         WALKSPEED_SLOW = WALKSPEED_9
-    } unusedOpt3;
+    };
 #endif
 
 /* how many microseconds is each speed increase worth*/
@@ -182,11 +182,12 @@ extern "C" {
 /* used to keep track of libxslt paramters 
  see Parameter related options near end of file
 */
-    typedef struct _ParameterItem ParameterItem;
-    typedef ParameterItem *ParameterItemPtr;
-    struct _ParameterItem {
+    typedef struct _parameterItem parameterItem;
+    typedef parameterItem *parameterItemPtr;
+    struct _parameterItem {
         xmlChar *name;          /* libxslt parameter name */
         xmlChar *value;         /* libxslt parameter value */
+        int intValue;             /* reserved */
     };
 
 
@@ -221,81 +222,23 @@ extern "C" {
 /**
  * optionsFree:
  *
- * Free memory used by options data structures
+ * Free memory used by the options module
  */
 #else
 #ifdef USE_KDE_DOCS
 
 /**
- * Free memory used by options data structures
+ * Free memory used by the options module
  */
 #endif
 #endif
     void optionsFree(void);
 
 
-
 #ifdef USE_GNOME_DOCS
 
 /**
- * enableOption:
- * @optionType: A valid boolean option
- * @value: 1 to enable, 0 otherwise
- *
- * Set the state of a boolean xsldbg option to @value
- *
- * Returns 1 on success,
- *         0 otherwise
- */
-#else
-#ifdef USE_KDE_DOCS
-
-/**
- * Set the state of a boolean xsldbg option to @p value
- *
- * @returns 1 on success,
- *          0 otherwise
- *
- * @param optionType Is a valid boolean option
- * @param value 1 to enable, 0 otherwise
- */
-#endif
-#endif
-    int enableOption(OptionTypeEnum optionType, int value);
-
-
-
-#ifdef USE_GNOME_DOCS
-
-/**
- * isOptionEnabled:
- * @optionType: A valid boolean option to query
- *
- * Return the state of a boolean option
- *
- * Returns The state of a boolean xsldbg option. 
- *         ie 1 for enabled , 0 for disabled
- */
-#else
-#ifdef USE_KDE_DOCS
-
-/**
- * @returns The state of a boolean xsldbg option. 
- *            ie 1 for enabled, 0 for disabled
- *
- * @param optionType Is a valid boolean option to query
-
- */
-#endif
-#endif
-    int isOptionEnabled(OptionTypeEnum optionType);
-
-
-
-#ifdef USE_GNOME_DOCS
-
-/**
- * setIntOption:
+ * optionsSetIntOption:
  * @optionType: Is a valid integer option
  * @value: Value to adopt
  *
@@ -318,14 +261,14 @@ extern "C" {
  */
 #endif
 #endif
-    int setIntOption(OptionTypeEnum optionType, int value);
+    int optionsSetIntOption(OptionTypeEnum optionType, int value);
 
 
 
 #ifdef USE_GNOME_DOCS
 
 /**
- * getIntOption:
+ * optionsGetIntOption:
  * @optionType: A valid integer option
  *
  * Return the state of an integer option
@@ -342,16 +285,16 @@ extern "C" {
  */
 #endif
 #endif
-    int getIntOption(OptionTypeEnum optionType);
+    int optionsGetIntOption(OptionTypeEnum optionType);
 
 
 
 #ifdef USE_GNOME_DOCS
 
 /**
- * setStringOption:
+ * optionsSetStringOption:
  * @optionType: A valid string option
- * @value: The Value to copy
+ * @value: The value to copy
  *
  * Set value for a string xsldbg option to @value. 
  * Any memory used currently by option @optionType will be freed
@@ -374,14 +317,14 @@ extern "C" {
  */
 #endif
 #endif
-    int setStringOption(OptionTypeEnum optionType, const xmlChar * value);
+    int optionsSetStringOption(OptionTypeEnum optionType, const xmlChar * value);
 
 
 
 #ifdef USE_GNOME_DOCS
 
 /**
- * getStringOption:
+ * optionsGetStringOption:
  * @optionType: A valid string option 
  *
  * Get value for a string xsldbg option of @optionType
@@ -400,70 +343,31 @@ extern "C" {
  */
 #endif
 #endif
-    const xmlChar *getStringOption(OptionTypeEnum optionType);
+    const xmlChar *optionsGetStringOption(OptionTypeEnum optionType);
 
 
-  /**
-   * copyVolitleOptions:
-   *
-   * Copy volitile options to the working area for xsldbg
-   */
-    void copyVolitleOptions(void);
+#ifdef USE_GNOME_DOCS
 
   /**
-   * optionNode:
-   * @optionType : Is valid, option to convert to a xmlNodePtr 
+   * optionsCopyVolitleOptions:
    *
-   * Convert option into a xmlNodePtr
-   *
-   * Returns the option @optionType as a xmlNodePtr if successful,
-   *          NULL otherwise
+   * Copy volitile options to the working area for xsldbg to be used
+   *   just after xsldbg starts its processing loop
    */
-  xmlNodePtr optionNode(OptionTypeEnum optionType);
-
+#else
+#ifdef USE_KDE_DOCS
 
   /**
-   * optionsReadDoc:
-   * @doc : Is valid xsldbg config document, in the format as indicated 
-   *        by config.dtd
-   *
-   * Read options from document provided. 
-   * This is a platform specific interface so implementation must be
-   *     provided for non *nix platforms
-   *
-   * Returns 1 if able to read @doc and load options found,
-   *         0 otherwise
+   * Copy volitile options to the working area for xsldbg to be used
+   *   just after xsldbg starts its processing loop
    */
-  int optionsReadDoc(xmlDocPtr doc);
+#endif
+#endif
+    void optionsCopyVolitleOptions(void);
 
 
-  /**
-   * optionsConfigFileName:
-   * 
-   * Returns A copy of the file name that will be used to load xsldbgs
-   *           configuration from,
-   *         NULL otherwise
-   *
-   *  This is a platform specific interface
-   *
-   */
-  xmlChar* optionsConfigFileName(void);
 
-
-  /**
-   * optionsLoad:
-   *
-   * Load options from configuation file/registry
-   *
-   * This is a platform specific interface
-   * 
-   * Returns 1 if able to load options
-   *         0 otherwise
-   */
-  int optionsLoad(void);
-
-
-/* ---------------------------------------------
+/*---------------------------------------------
           Parameter related options 
 -------------------------------------------------*/
 
@@ -471,7 +375,7 @@ extern "C" {
 #ifdef USE_GNOME_DOCS
 
 /**
- * getParamItemList:
+ * optionsGetParamItemList:
  *
  * Return the list of libxlt parameters
  *
@@ -491,14 +395,14 @@ extern "C" {
  */
 #endif
 #endif
-    ArrayListPtr getParamItemList(void);
+    arrayListPtr optionsGetParamItemList(void);
 
 
 
 #ifdef USE_GNOME_DOCS
 
 /**
- * paramItemNew:
+ * optionsParamItemNew:
  * @name: Is valid 
  * @value: Is valid 
  *
@@ -520,7 +424,7 @@ extern "C" {
  */
 #endif
 #endif
-    ParameterItemPtr paramItemNew(const xmlChar * name,
+    parameterItemPtr optionsParamItemNew(const xmlChar * name,
                                   const xmlChar * value);
 
 
@@ -528,7 +432,7 @@ extern "C" {
 #ifdef USE_GNOME_DOCS
 
 /**
- * paramItemFree:
+ * optionsParamItemFree:
  * @item: Is valid
  *
  * Free memory used by libxslt parameter item @item
@@ -543,14 +447,14 @@ extern "C" {
  */
 #endif
 #endif
-    void paramItemFree(ParameterItemPtr item);
+    void optionsParamItemFree(parameterItemPtr item);
 
 
 
 #ifdef USE_GNOME_DOCS
 
 /**
- * printParam:
+ * optionsPrintParam:
  * @paramId: 0 =< paramID < arrayListCount(getParamList())
  * 
  * Print parameter information
@@ -569,14 +473,14 @@ extern "C" {
  */
 #endif
 #endif
-    int printParam(int paramId);
+    int optionsPrintParam(int paramId);
 
 
 
 #ifdef USE_GNOME_DOCS
 
 /**
- * printParamList:
+ * optionsPrintParamList:
  *
  * Prints all items in parameter list
  *
@@ -594,7 +498,239 @@ extern "C" {
  */
 #endif
 #endif
-    int printParamList(void);
+    int optionsPrintParamList(void);
+#ifdef USE_GNOME_DOCS
+
+
+/* ---------------------------------------------
+          Option serialization functions
+-------------------------------------------------*/
+
+  /**
+   * optionNode:
+   * @optionType : Is valid, option to convert to a xmlNodePtr 
+   *
+   * Convert option into a xmlNodePtr
+   *
+   * Returns the option @optionType as a xmlNodePtr if successful,
+   *          NULL otherwise
+   */
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * Convert option into a xmlNodePtr
+   *
+   * @returns The option @p optionType as a xmlNodePtr if successful,
+   *          NULL otherwise
+   *
+   * @param optionType Is valid, option to convert to a xmlNodePtr 
+   *
+   */
+#endif
+#endif
+  xmlNodePtr optionsNode(OptionTypeEnum optionType);
+
+
+
+#ifdef USE_GNOME_DOCS
+
+  /**
+   * optionsReadDoc:
+   * @doc : Is valid xsldbg config document, in the format as indicated 
+   *        by config.dtd
+   *
+   * Read options from document provided. 
+   *
+   * Returns 1 if able to read @doc and load options found,
+   *         0 otherwise
+   */
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * Read options from document provided. 
+   *
+   * @returns 1 if able to read @p doc and load options found,
+   *          0 otherwise
+   *
+   * @param doc Is valid xsldbg config document, in the format as indicated 
+   *        by config.dtd
+   */
+#endif
+#endif
+  int optionsReadDoc(xmlDocPtr doc);
+
+
+#ifdef USE_GNOME_DOCS
+
+  /**
+   * optionsSavetoFile:
+   * @fileName : Must be NON NULL be a local file that can be written to
+   *
+   * Save configuation to file specified
+   *
+   * Returns 1 if able to save options to @fileName,
+   *         0 otherwise
+   */
+#else
+#ifdef USE_KDE_DOCS
+  /**
+   * Save configuation to file specified
+   *
+   * @returns 1 if able to save options to @fileName,
+   *          0 otherwise
+   *
+   * @fileName : Must be NON NULL be a local file that can be written to
+   */
+#endif
+#endif
+  int optionsSavetoFile(xmlChar *fileName);
+
+
+/* ---------------------------------------------
+          Platform specific option functions
+-------------------------------------------------*/
+
+#ifdef USE_GNOME_DOCS
+
+  /**
+   * optionsPlatformInit:
+   *
+   * Intialize the platform specific options module
+   *
+   *  This is a platform specific interface
+   *
+   * Returns 1 if sucessful
+   *         0 otherwise  
+   */
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * Intialize the platform specific options module
+   *
+   *  This is a platform specific interface
+   *
+   * @returns 1 if sucessful
+   *          0 otherwise  
+   */
+#endif
+#endif
+  int optionsPlatformInit(void);
+
+
+#ifdef USE_GNOME_DOCS
+
+  /**
+   * optionsPlatformFree:
+   *
+   * Free memory used by the platform specific options module
+   *
+   *  This is a platform specific interface
+   *
+   */
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * Free memory used by the platform specific options module
+   *
+   *  This is a platform specific interface
+   *
+   */
+#endif
+#endif
+  void optionsPlatformFree(void);
+
+
+#ifdef USE_GNOME_DOCS
+
+  /**
+   * optionsConfigFileName:
+   * 
+   * Return xsldbg's the configuration file name 
+   *
+   * Returns A copy of the file name that will be used to load xsldbgs
+   *           configuration from,
+   *         NULL otherwise
+   *
+   *  This is a platform specific interface
+   *
+   */
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * Return xsldbg's the configuration file name 
+   *
+   * Returns A copy of the file name that will be used to load xsldbgs
+   *           configuration from,
+   *         NULL otherwise
+   *
+   *  This is a platform specific interface
+   *
+   */
+#endif
+#endif
+  xmlChar* optionsConfigFileName(void);
+
+
+#ifdef USE_GNOME_DOCS
+
+  /**
+   * optionsLoad:
+   *
+   * Load options from configuration file/registry
+   *
+   * This is a platform specific interface
+   * 
+   * Returns 1 if able to load options
+   *         0 otherwise
+   */
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * Load options from configuration file/registry
+   *
+   * This is a platform specific interface
+   * 
+   * Returns 1 if able to load options
+   *         0 otherwise
+   */
+#endif
+#endif
+  int optionsLoad(void);
+
+
+#ifdef USE_GNOME_DOCS
+
+  /**
+   * optionsSave:
+   *
+   * Save options to configuration file/registry
+   *
+   * This is a platform specific interface
+   * 
+   * Returns 1 if able to save options
+   *         0 otherwise
+   */
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * Save options to configuration file/registry
+   *
+   * This is a platform specific interface
+   * 
+   * Returns 1 if able to load options
+   *         0 otherwise
+   */
+#endif
+#endif
+  int optionsSave(void);
+
 
 #ifdef __cplusplus
 }

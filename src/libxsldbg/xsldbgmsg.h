@@ -65,7 +65,10 @@ typedef enum {
                                  * command */
     XSLDBG_MSG_RESOLVE_CHANGE,  /* 22: Response to system or
                                  * public command */
-    XSLDBG_MSG_LIST             /* 23 : As list of messages  */
+    XSLDBG_MSG_LIST,             /* 23 : As list of messages  */
+
+    XSLDBG_MSG_INTOPTION_CHANGE, /* 23* Response to options command */
+    XSLDBG_MSG_STRINGOPTION_CHANGE /* 24* Response to options command */
 } XsldbgMessageEnum;
 
 
@@ -100,8 +103,8 @@ typedef enum {
  *                                      otherwise just change in line number 
  *                                      of displayed source/data
  * XSLDBG_MSG_FILE_CHANGED,      		not used
- * XSLDBG_MSG_BREAKPOINT_CHANGED      A xslBreakPointPtr of the breakpoint
- * XSLDBG_MSG_PARAMETER_CHANGED     A ParameterItemPtr of libxslt pameter.
+ * XSLDBG_MSG_BREAKPOINT_CHANGED      A breakPointPtr of the breakpoint
+ * XSLDBG_MSG_PARAMETER_CHANGED     A parameterItemPtr of libxslt pameter.
  * XSLDBG_MSG_TEXTOUT               A char * to buffer for text output 
  * XSLDBG_MSG_FILEOUT               A FILE * for text to output
  * XSLDBG_MSG_LOCALVAR_CHANGED,     A local variable of type xsltStackElemPtr
@@ -109,12 +112,15 @@ typedef enum {
  * XSLDBG_MSG_TEMPLATE_CHANGED,     A template of type xsltTemplatePtr
  * XSLDBG_MSG_SOURCE_CHANGED,           A xsltStylesheetPtr of a normal stylesheet
  * XSLDBG_MSG_INCLUDED_SOURCE_CHANGED  A xmlNodePtr of a included stylsheet 
- * XSLDBG_MSG_CALLSTACK_CHANGED        A xslCallPointPtr of a call stack item
+ * XSLDBG_MSG_CALLSTACK_CHANGED        A callPointPtr of a call stack item
  * XSLDBG_MSG_ENTITIY_CHANGED           A const entityInfoPtr 
  *                                        for the included entity
  * XSLDBG_MSG_RESOLVE_CHANGE           A xmlChar* of URI that 
  *                                        SystemID or PublicID resolves to 
  * XSLDBG_MSG_LIST                     A notifyMessageListPtr
+ *
+ * XSLDBG_MSG_INTOPTION_CHANGE      A paramItemPtr, value is not used
+ * XSLDBG_MSG_STRINGOPTION_CHANGE   A paramItemPtr, intValue is not used 
  *
  *
  * Legend :
@@ -146,7 +152,7 @@ typedef struct _notifyMessageList notifyMessageList;
 typedef notifyMessageList *notifyMessageListPtr;
 struct _notifyMessageList {
     XsldbgMessageEnum type;
-    ArrayListPtr list;
+    arrayListPtr list;
 };
 
 #ifdef __cplusplus

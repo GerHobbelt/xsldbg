@@ -22,7 +22,7 @@
 #include <libxml/valid.h>       /* needed for xmlSplitQName2 */
 #include "xsldbg.h"
 #include "debugXSL.h"
-#include "xslsearch.h"
+#include "search.h"
 
 /*
 void setGlobalVarHelper(void **payload, void *data ATTRIBUTE_UNUSED,
@@ -106,7 +106,7 @@ xslDbgShellSetVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg)
                             if (def->value)
                                 xmlXPathFreeObject(def->value);
                             def->value = xmlXPathNewString(def->select);
-                            result++;
+                            result = 1;
                         } else {
                             xmlFree(selectExpr);
                             xsltGenericError(xsltGenericErrorContext,

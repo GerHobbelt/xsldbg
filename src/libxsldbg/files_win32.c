@@ -17,21 +17,55 @@
  ***************************************************************************/
 
 #include "xsldbg.h"
+#include "files.h"
+
 
 static const char *tempNames[] = {
     "__xsldbg_tmp_file1_txt",
     "__xsldbg_tmp_file2_txt"
 };
 
+  /**
+   * filesPlatformInit:
+   *
+   * Intialize the platform specific files module
+   *
+   *  This is a platform specific interface
+   *
+   *
+   * Returns 1 if sucessful
+   *         0 otherwise  
+   */
+  int filesPlatformInit(void)
+{
+  return 1;
+}
+
+
+  /**
+   * filesPlatformFree:
+   *
+   * Free memory used by the platform specific files module
+   *
+   *  This is a platform specific interface
+   *
+   */
+  void filesPlatformFree(void)
+{
+  /* empty*/
+}
 
   /**
    * filesTempFileName:
-   * @ fileNumber : Nnumber of temp file required
+   * @fileNumber : Number of temp file required
    *
    * Return the name of tempfile. For each call to this function
    *     with the same @fileNumber the same file name will be returned
    *     File number : 0 is used by cat command
    *     File number : 1 is used by profiling output  
+   *
+   *  This is a platform specific interface
+   *
    *
    * Returns The name of temp file to be used for temporary results, 
    *         NULL otherwise

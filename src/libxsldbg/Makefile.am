@@ -13,10 +13,11 @@ noinst_HEADERS=\
 	cmds.h			\
 	debugXSL.h 		\
 	arraylist.h		\
-	xslcallpoint.h		\
-	xslbreakpoint.h		\
-	xslsearch.h		\
+	callstack.h		\
+	breakpoint.h		\
+	search.h		\
 	files.h			\
+	utils.h			\
 	options.h		\
 	xsldbg.h		\
 	xsldbgconfig.h		\
@@ -33,19 +34,21 @@ libxsldbg_la_SOURCES = \
 	xsldbg.c 	\
 	cmds.h		\
 	debugXSL.c 	\
-	dbgarraylist.c	\
-	dbgcallstack.c	\
-	dbgbreakpoint.c \
-	dbgsearch.c	\
+	arraylist.c	\
+	callstack.c	\
+	breakpoint.c 	\
+	search.c	\
+	debug.c		\
 	files.c			\
+	utils.c			\
 	options.c 		\
-	dbgmain.c		\
 	breakpoint_cmds.c 	\
 	template_cmds.c		\
 	nodeview_cmds.c		\
 	os_cmds.c		\
 	file_cmds.c		\
 	param_cmds.c		\
+	option_cmds.c		\
 	trace_cmds.c		\
 	search_cmds.c		\
 	variable_cmds.c		\
@@ -57,20 +60,23 @@ libxsldbg_la_SOURCES = \
 else
 libxsldbg_la_SOURCES = \
 	xsldbg.c 	\
+	cmds.h		\
 	debugXSL.c 	\
-	dbgarraylist.c	\
-	dbgcallstack.c	\
-	dbgbreakpoint.c \
-	dbgsearch.c	\
-	files.c		\
-	options.c 	\
-	dbgmain.c	\
+	arraylist.c	\
+	callstack.c	\
+	breakpoint.c 	\
+	search.c	\
+	debug.c		\
+	files.c			\
+	utils.c			\
+	options.c 		\
 	breakpoint_cmds.c 	\
 	template_cmds.c		\
 	nodeview_cmds.c		\
 	os_cmds.c		\
 	file_cmds.c		\
 	param_cmds.c		\
+	option_cmds.c		\
 	trace_cmds.c		\
 	search_cmds.c		\
 	variable_cmds.c		\
@@ -83,26 +89,27 @@ endif
 
 SOURCES = \
 	$(noinst_HEADERS)
-	help.c		\
 	xsldbg.c 	\
+	cmds.h		\
 	debugXSL.c 	\
-	dbgarraylist.c	\
-	dbgcallstack.c	\
-	dbgbreakpoint.c \
-	dbgsearch.c	\
-	files.c		\
-	options.c 	\
-	dbgmain.c	\
+	arraylist.c	\
+	callstack.c	\
+	breakpoint.c 	\
+	search.c	\
+	debug.c		\
+	files.c			\
+	utils.c			\
+	options.c 		\
 	breakpoint_cmds.c 	\
 	template_cmds.c		\
 	nodeview_cmds.c		\
 	os_cmds.c		\
 	file_cmds.c		\
 	param_cmds.c		\
+	option_cmds.c		\
 	trace_cmds.c		\
 	search_cmds.c		\
 	variable_cmds.c		\
-	xsldbgthread.h		\
 	xsldbgthread.c		\
 	options_unix.c		\
 	files_unix.c		\

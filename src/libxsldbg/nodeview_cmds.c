@@ -26,8 +26,9 @@
 #include "xsldbg.h"
 #include "debugXSL.h"
 #include "arraylist.h"
-#include "xslbreakpoint.h"
+#include "breakpoint.h"
 #include "xsldbgmsg.h"
+#include "xsldbgthread.h" /* for getThreadStatus */
 #include "files.h"
 
 
@@ -90,7 +91,7 @@ xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir)
             xmlShellDir(ctxt, NULL, ctxt->node, NULL);
         else
             xmlShellList(ctxt, NULL, ctxt->node, NULL);
-        result++;               /*assume that this worked */
+        result = 1;               /*assume that this worked */
     } else {
         ctxt->pctxt->node = ctxt->node;
         ctxt->pctxt->node = ctxt->node;
@@ -114,7 +115,7 @@ xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir)
                                              list->nodesetval->
                                              nodeTab[indx], NULL);
                         }
-                        result++;
+                        result = 1;
                         break;
                     }
                 default:
@@ -194,7 +195,7 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
 
     if (!ctxt) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Error: Debuger has no files loaded, try reloading files\n");
+                         "Error: Debugger has no files loaded, try reloading files\n");
         return result;
     }
     if (arg == NULL)
@@ -209,7 +210,7 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
       if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
 	/* send it to the application as an UTF-8 message */
 	xmlShellCat(ctxt, NULL, ctxt->node, NULL);
-	result++;
+	result = 1;
 	return result;
       }
 
@@ -229,7 +230,7 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
 	}
 	xsltGenericError(xsltGenericErrorContext, "\n");
 	fclose(file);
-        result++;
+        result = 1;
       }else
 	xsltGenericError(xsltGenericErrorContext,
 			 "Error: Can't open temporary file %s for xslDbgCat\n",
@@ -300,7 +301,7 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                                              "Error: xpath %s results an in empty set\n",
                                              arg);
                         }
-                        result++;
+                        result = 1;
                         break;
                     }
 
@@ -308,20 +309,20 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                     xsltGenericError(xsltGenericErrorContext,
                                      "%s is a Boolean:%s\n", arg,
                                      xmlBoolToText(list->boolval));
-                    result++;
+                    result = 1;
                     break;
                 case XPATH_NUMBER:
                     xsltGenericError(xsltGenericErrorContext,
                                      "%s is a number:%0g\n", arg,
                                      list->floatval);
-                    result++;
+                    result = 1;
                     break;
                 case XPATH_STRING:
 		  if (list->stringval) {
 		    xsltGenericError(xsltGenericErrorContext,
 				     "%s is a string:%s\n",
 				     arg, list->stringval);
-		    result++;
+		    result = 1;
 		  }
 		  break;
 
@@ -386,7 +387,7 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
     varCount = 0;
     if (!styleCtxt) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Error: Debuger has no files loaded or libxslt has not reached "
+                         "Error: Debugger has no files loaded or libxslt has not reached "
                          "a template.\nTry reloading files or taking more steps.\n");
         return result;
     }
@@ -399,13 +400,13 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
                     notifyListStart(XSLDBG_MSG_GLOBALVAR_CHANGED);
                     /* list global variables */
                     xmlHashScan(styleCtxt->globalVars,
-                                xslDbgShellPrintNames, NULL);
+                                (xmlHashScanner)xslDbgShellPrintNames, NULL);
                     notifyListSend();
                 } else
                     /* list global variables */
                     xmlHashScan(styleCtxt->globalVars,
-                                xslDbgShellPrintNames, NULL);
-                result++;
+                                (xmlHashScanner)xslDbgShellPrintNames, NULL);
+                result = 1;
             } else {
                 if (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)
                     /* Don't show this message when running as a thread as it 
@@ -435,7 +436,7 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
                         item = item->next;
                     }
                 }
-                result++;
+                result = 1;
             } else {
                 if (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)
                     /* Don't show this message when running as a thread as it 
@@ -459,7 +460,7 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
             xmlShellPrintXPathResult(xmlXPathEval(tempbuff,
                                                   styleCtxt->xpathCtxt));
         }
-        result++;
+        result = 1;
     }
     return result;
 }

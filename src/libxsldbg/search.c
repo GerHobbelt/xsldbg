@@ -1,6 +1,6 @@
 
 /***************************************************************************
-                          dbgsearch.c  -  description
+                          search.c  -  search implementation
                              -------------------
     begin                : Fri Nov 2 2001
     copyright            : (C) 2001 by Keith Isdale
@@ -10,8 +10,8 @@
 
 #include "xsldbg.h"
 #include "debugXSL.h"
-#include "xslbreakpoint.h"
-#include "xslsearch.h"
+#include "breakpoint.h"
+#include "search.h"
 #include "options.h"
 #include "files.h"
 
@@ -86,6 +86,48 @@ void
     End private functions
     ---------------------------------------*/
 
+
+/**
+ * searchInit:
+ *
+ * Initialize the search module
+ *
+ * Returns 1 if search structures have been initialized properly and all
+ *               memory required has been obtained,
+ *         0 otherwise
+*/
+int
+searchInit(void)
+{
+    searchDataBase = NULL;
+    searchDataBaseRoot = NULL;
+    lastQuery = NULL;
+    if (!searchEmpty()) {
+#ifdef WITH_XSLT_DEBUG_BREAKPOINTS
+        xmlGenericError(xmlGenericErrorContext,
+                        "Search init failed : memory error\n");
+#endif
+    }
+    return (searchRootNode() != NULL);
+}
+
+
+/**
+ * searchFree:
+ *
+ * Free all memory used by the search module
+ */
+void
+searchFree(void)
+{
+    if (searchDataBase) {
+        xmlFreeDoc(searchDataBase);
+        searchDataBase = NULL;
+        searchDataBaseRoot = NULL;
+    }
+}
+
+
 /**
  * searchNewInfo:
  * @type: What type of search is required
@@ -113,7 +155,7 @@ searchNewInfo(SearchEnum type)
                 if (searchData) {
                     searchData->id = -1;
                     searchData->templateName = NULL;
-                    searchData->breakPoint = NULL;
+                    searchData->breakPtr = NULL;
                     result->data = searchData;
                 } else {
                     xmlFree(result);
@@ -248,47 +290,6 @@ searchFreeInfo(searchInfoPtr info)
 
 
 /**
- * searchInit:
- *
- * Initialize the search module
- *
- * Returns 1 if search structures have been initialized properly and all
- *               memory required has been obtained,
- *         0 otherwise
-*/
-int
-searchInit(void)
-{
-    searchDataBase = NULL;
-    searchDataBaseRoot = NULL;
-    lastQuery = NULL;
-    if (!searchEmpty()) {
-#ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-        xmlGenericError(xmlGenericErrorContext,
-                        "Search init failed : memory error\n");
-#endif
-    }
-    return (searchRootNode() != NULL);
-}
-
-
-/**
- * searchFree:
- *
- * Free all memory used by the search module
- */
-void
-searchFree(void)
-{
-    if (searchDataBase) {
-        xmlFreeDoc(searchDataBase);
-        searchDataBase = NULL;
-        searchDataBaseRoot = NULL;
-    }
-}
-
-
-/**
  * searchEmpty:
  *
  * Empty the seach dataBase of its contents
@@ -360,6 +361,28 @@ searchRootNode(void)
 
 
 /**
+ * searchAdd:
+ * @node: Is valid
+ *
+ * Add a node to the search dataBase
+ *
+ * Returns 1 if able to add @node to top node in search dataBase,
+ *         0 otherwise
+ */
+int
+searchAdd(xmlNodePtr node)
+{
+    int result = 0;
+
+    if (node && searchDataBaseRoot) {
+        xmlAddChild(searchDataBaseRoot, node);
+        result = 1;
+    }
+    return result;
+}
+
+
+/**
  * searchSave:
  * @fileName: A valid file name, or NULL for the default
  *
@@ -392,7 +415,7 @@ searchSave(const xmlChar * fileName)
         searchInput = xmlStrdup(fileName);
 
     if (xmlSaveFormatFile((char*)searchInput, searchDataBase, 1))
-      result++;
+      result = 1;
 
     if (searchInput)
       xmlFree(searchInput);
@@ -402,30 +425,145 @@ searchSave(const xmlChar * fileName)
 
 
 /**
- * searchAdd:
- * @node: Is valid
+ * searchQuery:
+ * @query: The query to run . If NULL then query is "//search/ *"
+ * @tempFile: Where do we load the search dataBase from to execute
+ *             query. If tempFile is NULL "searchresult.xml" is used
+ * @outputFile : Where do we store the result. If NULL
+ *             then default to  "searchresult.html"
+ * 
+ * Send query as parameter for execution of search.xsl using
+ *    data stored in @tempFile 
  *
- * Add a node to the search dataBase
- *
- * Returns 1 if able to add @node to top node in search dataBase,
- *         0 otherwise
+ * Returns 1 on success,
+ *         0 otherwise   
  */
 int
-searchAdd(xmlNodePtr node)
+searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
+            const xmlChar * query)
 {
     int result = 0;
+    const xmlChar *docDirPath = optionsGetStringOption(OPTIONS_DOCS_PATH);
+    xmlChar *searchInput = NULL;
+    xmlChar *searchXSL = NULL;
+    xmlChar *searchOutput = NULL;
 
-    if (node && searchDataBaseRoot) {
-        xmlAddChild(searchDataBaseRoot, node);
-        result++;
+
+    if (!docDirPath)
+        return result;
+
+    /* if a tempFile if provided its up you to make sure that it is correct !! */
+    if (tempFile == NULL) {
+        xmlStrCpy(buffer, stylePath());
+#ifdef __riscos
+        /* RISC OS paths don't end in directory separators */
+        xmlStrCat(buffer, ".searchresult/xml");
+#else
+        xmlStrCat(buffer, "searchresult.xml");
+#endif
+        searchInput = xmlStrdup(buffer);
+#ifdef __riscos
+        /* We're going to pass a native filename to a command that takes URIs,
+         * so we need to convert it */
+        searchInput = xmlStrdup((xmlChar *) unixfilename((char *) buffer));
+#endif
+    } else
+        searchInput = xmlStrdup(tempFile);
+
+    xmlStrCpy(buffer, docDirPath);
+#ifdef __riscos
+    /* RISC OS paths don't end in directory separators */
+    if (optionsGetIntOption(OPTIONS_PREFER_HTML) == 0)
+        xmlStrCat(buffer, ".search/xsl");
+    else
+        xmlStrCat(buffer, ".searchhtml/xsl");
+#else
+    if (optionsGetIntOption(OPTIONS_PREFER_HTML) == 0)
+        xmlStrCat(buffer, "search.xsl");
+    else
+        xmlStrCat(buffer, "searchhtml.xsl");
+#endif
+    searchXSL = xmlStrdup(buffer);
+#ifdef __riscos
+    /* We're going to pass a native filename to a command that takes URIs,
+     * so we need to convert it */
+    searchXSL = xmlStrdup((xmlChar *) unixfilename((char *) buffer));
+#endif
+
+
+    /* if a outputFile if provided its up you to make sure that it is correct */
+    if (outputFile == NULL) {
+        xmlStrCpy(buffer, stylePath());
+#ifdef __riscos
+        /* RISC OS paths don't end in directory separators */
+        if (optionsGetIntOption(OPTIONS_PREFER_HTML) == 0)
+            xmlStrCat(buffer, ".searchresult/txt");
+        else
+            xmlStrCat(buffer, ".searchresult/html");
+#else
+        if (optionsGetIntOption(OPTIONS_PREFER_HTML) == 0)
+            xmlStrCat(buffer, "searchresult.txt");
+        else
+            xmlStrCat(buffer, "searchresult.html");
+#endif
+        searchOutput = xmlStrdup(buffer);
+#ifdef __riscos
+        /* We're going to pass a native filename to a command that takes URIs,
+         * so we need to convert it */
+        searchOutput =
+            xmlStrdup((xmlChar *) unixfilename((char *) buffer));
+#endif
+    } else
+        searchOutput = xmlStrdup(outputFile);
+
+
+    if (!query || (xmlStrlen(query) == 0))
+        query = (xmlChar *) "--param query //search/*";
+    /* see configure.in for the definition of XSLDBG_BIN, the name of our binary */
+
+    if (searchInput && searchXSL && searchOutput) {
+        if (optionsGetIntOption(OPTIONS_CATALOGS) == 0)
+            snprintf((char *) buffer, sizeof(buffer),
+                     "%s -o %s %s %s %s", XSLDBG_BIN,
+                     searchOutput, query, searchXSL, searchInput);
+        else
+            /* assume that we are to use catalogs as well in our query */
+            snprintf((char *) buffer, sizeof(buffer),
+                     "%s --catalogs -o %s %s %s %s", XSLDBG_BIN,
+                     searchOutput, query, searchXSL, searchInput);
+        result = xslDbgShellExecute(buffer, 1);
+#ifndef __risc_os
+        if (result && (optionsGetIntOption(OPTIONS_PREFER_HTML) == 0)) {
+            /* try printing out the file */
+            snprintf((char *) buffer, sizeof(buffer), "more %s",
+                     searchOutput);
+            result = xslDbgShellExecute(buffer, 1);
+        }
+#endif
+        xsltGenericError(xsltGenericErrorContext,
+                         "Transformed %s using %s and saved to %s\n",
+                         searchInput, searchXSL, searchOutput);
+    } else {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Invalid filenames supplied to searchQuery\n");
     }
+
+    if (searchInput)
+        xmlFree(searchInput);
+
+    if (searchXSL)
+        xmlFree(searchXSL);
+
+    if (searchOutput)
+        xmlFree(searchOutput);
+
     return result;
 }
 
 
 /**
  * scanForBreakPoint: 
- * @payload: A valid xslBreakPointPtr 
+ * @payload: A valid breakPointPtr 
  * @data: The criteria to look for and a valid searchInfoPtr of
  *          type SEARCH_BREAKPOINT 
  * @name: Not used 
@@ -439,7 +577,7 @@ void
 scanForBreakPoint(void *payload, void *data,
                   xmlChar * name ATTRIBUTE_UNUSED)
 {
-    xslBreakPointPtr breakPoint = (xslBreakPointPtr) payload;
+    breakPointPtr breakPtr = (breakPointPtr) payload;
     searchInfoPtr searchInf = (searchInfoPtr) data;
     breakPointSearchDataPtr searchData = NULL;
     int found = 0;
@@ -450,16 +588,16 @@ scanForBreakPoint(void *payload, void *data,
 
     searchData = (breakPointSearchDataPtr) searchInf->data;
 
-    if (searchData->id && (breakPoint->id == searchData->id))
+    if (searchData->id && (breakPtr->id == searchData->id))
         found = 1;
-    else if (searchData->templateName && breakPoint->templateName &&
-             (xmlStrCmp(breakPoint->templateName, searchData->templateName)
+    else if (searchData->templateName && breakPtr->templateName &&
+             (xmlStrCmp(breakPtr->templateName, searchData->templateName)
               == 0))
         found = 1;
 
     if (found) {
         searchInf->found = 1;
-        searchData->breakPoint = breakPoint;
+        searchData->breakPtr = breakPtr;
     }
 }
 
@@ -662,10 +800,10 @@ findTemplateNode(xsltStylesheetPtr style, const xmlChar * name)
  * Returns The break point that matches @templateName
  *         NULL otherwise
 */
-xslBreakPointPtr
+breakPointPtr
 findBreakPointByName(const xmlChar * templateName)
 {
-    xslBreakPointPtr result = NULL;
+    breakPointPtr result = NULL;
     searchInfoPtr searchInf = searchNewInfo(SEARCH_BREAKPOINT);
     breakPointSearchDataPtr searchData;
 
@@ -684,7 +822,7 @@ findBreakPointByName(const xmlChar * templateName)
                              templateName);
 #endif
         } else
-            result = searchData->breakPoint;
+            result = searchData->breakPtr;
     }
 
     searchFreeInfo(searchInf);
@@ -700,12 +838,12 @@ findBreakPointByName(const xmlChar * templateName)
  * Find a break point by its id
  *
  * Returns The break point with given the break point id if found,
- *          NULL otherwise 
+ *         NULL otherwise 
  */
-xslBreakPointPtr
+breakPointPtr
 findBreakPointById(int id)
 {
-    xslBreakPointPtr result = NULL;
+    breakPointPtr result = NULL;
     searchInfoPtr searchInf = searchNewInfo(SEARCH_BREAKPOINT);
     breakPointSearchDataPtr searchData;
 
@@ -723,7 +861,7 @@ findBreakPointById(int id)
                              id);
 #endif
         } else
-            result = searchData->breakPoint;
+            result = searchData->breakPtr;
     }
 
     searchFreeInfo(searchInf);
@@ -733,7 +871,7 @@ findBreakPointById(int id)
 
 /**
  * findNodesByQuery:
- * @query: The xpath query to run, see dbgsearch.c for more details
+ * @query: The xpath query to run, see docs/en/search.dtd for more details
  *  
  * Find nodes in search dataBase using an xpath query
  *
@@ -749,142 +887,6 @@ findNodesByQuery(const xmlChar * query ATTRIBUTE_UNUSED)
 }
 
 
-/**
- * searchQuery:
- * @query: The query to run . If NULL then query is "//search/ *"
- * @tempFile: Where do we load the search dataBase from to execute
- *             query. If tempFile is NULL "searchresult.xml" is used
- * @outputFile : Where do we store the result. If NULL
- *             then default to  "searchresult.html"
- * 
- * Send query as parameter for execution of search.xsl using
- *    data stored in @tempFile 
- *
- * Returns 1 on success,
- *         0 otherwise   
- */
-int
-searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
-            const xmlChar * query)
-{
-    int result = 0;
-    const xmlChar *docDirPath = getStringOption(OPTIONS_DOCS_PATH);
-    xmlChar *searchInput = NULL;
-    xmlChar *searchXSL = NULL;
-    xmlChar *searchOutput = NULL;
-
-
-    if (!docDirPath)
-        return result;
-
-    /* if a tempFile if provided its up you to make sure that it is correct !! */
-    if (tempFile == NULL) {
-        xmlStrCpy(buffer, stylePath());
-#ifdef __riscos
-        /* RISC OS paths don't end in directory separators */
-        xmlStrCat(buffer, ".searchresult/xml");
-#else
-        xmlStrCat(buffer, "searchresult.xml");
-#endif
-        searchInput = xmlStrdup(buffer);
-#ifdef __riscos
-        /* We're going to pass a native filename to a command that takes URIs,
-         * so we need to convert it */
-        searchInput = xmlStrdup((xmlChar *) unixfilename((char *) buffer));
-#endif
-    } else
-        searchInput = xmlStrdup(tempFile);
-
-    xmlStrCpy(buffer, docDirPath);
-#ifdef __riscos
-    /* RISC OS paths don't end in directory separators */
-    if (isOptionEnabled(OPTIONS_PREFER_HTML) == 0)
-        xmlStrCat(buffer, ".search/xsl");
-    else
-        xmlStrCat(buffer, ".searchhtml/xsl");
-#else
-    if (isOptionEnabled(OPTIONS_PREFER_HTML) == 0)
-        xmlStrCat(buffer, "search.xsl");
-    else
-        xmlStrCat(buffer, "searchhtml.xsl");
-#endif
-    searchXSL = xmlStrdup(buffer);
-#ifdef __riscos
-    /* We're going to pass a native filename to a command that takes URIs,
-     * so we need to convert it */
-    searchXSL = xmlStrdup((xmlChar *) unixfilename((char *) buffer));
-#endif
-
-
-    /* if a outputFile if provided its up you to make sure that it is correct */
-    if (outputFile == NULL) {
-        xmlStrCpy(buffer, stylePath());
-#ifdef __riscos
-        /* RISC OS paths don't end in directory separators */
-        if (isOptionEnabled(OPTIONS_PREFER_HTML) == 0)
-            xmlStrCat(buffer, ".searchresult/txt");
-        else
-            xmlStrCat(buffer, ".searchresult/html");
-#else
-        if (isOptionEnabled(OPTIONS_PREFER_HTML) == 0)
-            xmlStrCat(buffer, "searchresult.txt");
-        else
-            xmlStrCat(buffer, "searchresult.html");
-#endif
-        searchOutput = xmlStrdup(buffer);
-#ifdef __riscos
-        /* We're going to pass a native filename to a command that takes URIs,
-         * so we need to convert it */
-        searchOutput =
-            xmlStrdup((xmlChar *) unixfilename((char *) buffer));
-#endif
-    } else
-        searchOutput = xmlStrdup(outputFile);
-
-
-    if (!query || (xmlStrlen(query) == 0))
-        query = (xmlChar *) "--param query //search/*";
-    /* see configure.in for the definition of XSLDBG_BIN, the name of our binary */
-
-    if (searchInput && searchXSL && searchOutput) {
-        if (isOptionEnabled(OPTIONS_CATALOGS) == 0)
-            snprintf((char *) buffer, sizeof(buffer),
-                     "%s -o %s %s %s %s", XSLDBG_BIN,
-                     searchOutput, query, searchXSL, searchInput);
-        else
-            /* assume that we are to use catalogs as well in our query */
-            snprintf((char *) buffer, sizeof(buffer),
-                     "%s --catalogs -o %s %s %s %s", XSLDBG_BIN,
-                     searchOutput, query, searchXSL, searchInput);
-        result = xslDbgShellExecute(buffer, 1);
-#ifndef __risc_os
-        if (result && (isOptionEnabled(OPTIONS_PREFER_HTML) == 0)) {
-            /* try printing out the file */
-            snprintf((char *) buffer, sizeof(buffer), "more %s",
-                     searchOutput);
-            result = xslDbgShellExecute(buffer, 1);
-        }
-#endif
-        xsltGenericError(xsltGenericErrorContext,
-                         "Transformed %s using %s and saved to %s\n",
-                         searchInput, searchXSL, searchOutput);
-    } else {
-        xsltGenericError(xsltGenericErrorContext,
-                         "Invalid filenames supplied to searchQuery\n");
-    }
-
-    if (searchInput)
-        xmlFree(searchInput);
-
-    if (searchXSL)
-        xmlFree(searchXSL);
-
-    if (searchOutput)
-        xmlFree(searchOutput);
-
-    return result;
-}
-
 
 /**
  * walkBreakPoints:
@@ -892,7 +894,7 @@ searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
  * @data: The extra data to pass onto walkFunc
  *
  * Walks through all break points calling walkFunc for each. The payload
- *  sent to walkFunc is of type xslBreakPointPtr 
+ *  sent to walkFunc is of type breakPointPtr 
  */
 void
 walkBreakPoints(xmlHashScanner walkFunc, void *data)
@@ -904,7 +906,7 @@ walkBreakPoints(xmlHashScanner walkFunc, void *data)
         return;
 
     for (lineNo = 0; lineNo < breakPointLinesCount(); lineNo++) {
-        hashTable = lineNoItemGet(lineNo);
+        hashTable = breakPointGetLineNoHash(lineNo);
         if (hashTable) {
             xmlHashScan(hashTable, walkFunc, data);
         }
@@ -950,7 +952,7 @@ walkTemplates(xmlHashScanner walkFunc, void *data, xsltStylesheetPtr style)
  * @style: The stylesheet to start from
  *
  * Walks through all templates calling walkFunc for each. The payload
- *   sent to walkFuc is of type xsltStylesheetPtr
+ *   sent to walkFunc is of type xsltStylesheetPtr
  */
 void
 walkStylesheets(xmlHashScanner walkFunc, void *data,
@@ -1081,6 +1083,7 @@ walkLocals(xmlHashScanner walkFunc, void *data, xsltStylesheetPtr style)
 
 }
 
+
 /**
  * walkIncludes:
  * @walkFunc: The function to callback for each included stylesheet
@@ -1166,7 +1169,7 @@ walkIncludeInst(xmlHashScanner walkFunc, void *data,
 /**
  * walkChildNodes:
  * @walkFunc: The function to callback for each child/sibling found
- * @data: The extra data to pass onto walker
+ * @data: The extra data to pass onto walkFunc
  * @node: Is valid
  *
  * Call walkFunc for each child of @node the payload sent to walkFunc is
@@ -1194,49 +1197,49 @@ walkChildNodes(xmlHashScanner walkFunc, void *data, xmlNodePtr node)
 
 /**
  * searchBreakPointNode:
- * @breakPoint: Is valid
+ * @breakPtr: Is valid
  *
- * Convert @p breakPoint into search dataBase format
+ * Convert @breakPtr into search dataBase format
  *
- * Returns @breakPoint as a new xmlNode in search dataBase format 
+ * Returns @breakPtr as a new xmlNode in search dataBase format 
  *               if successful,
  *         NULL otherwise
  */
 xmlNodePtr
-searchBreakPointNode(xslBreakPointPtr breakPoint)
+searchBreakPointNode(breakPointPtr breakPtr)
 {
 
     xmlNodePtr node = NULL;
     int result = 1;
 
-    if (breakPoint) {
+    if (breakPtr) {
         node = xmlNewNode(NULL, (xmlChar *) "breakpoint");
         if (node) {
             /* if unable to create any property failed then result will be equal to 0 */
             result = result
-                && (xmlNewProp(node, (xmlChar *) "url", breakPoint->url) !=
+                && (xmlNewProp(node, (xmlChar *) "url", breakPtr->url) !=
                     NULL);
-            sprintf((char*)buffer, "%ld", breakPoint->lineNo);
+            sprintf((char*)buffer, "%ld", breakPtr->lineNo);
             result = result
                 && (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) buffer)
                     != NULL);
-            if (breakPoint->templateName) {
+            if (breakPtr->templateName) {
                 result = result
                     &&
                     (xmlNewProp
                      (node, (xmlChar *) "template",
-                      breakPoint->templateName) != NULL);
+                      breakPtr->templateName) != NULL);
             }
-            sprintf((char*)buffer, "%d", breakPoint->enabled);
+            sprintf((char*)buffer, "%d", breakPtr->enabled);
             result = result
                 &&
                 (xmlNewProp(node, (xmlChar *) "enabled", (xmlChar *) buffer)
                  != NULL);
-            sprintf((char*)buffer, "%d", breakPoint->type);
+            sprintf((char*)buffer, "%d", breakPtr->type);
             result = result
                 && (xmlNewProp(node, (xmlChar *) "type", (xmlChar *) buffer)
                     != NULL);
-            sprintf((char*)buffer, "%d", breakPoint->id);
+            sprintf((char*)buffer, "%d", breakPtr->id);
             result = result
                 && (xmlNewProp(node, (xmlChar *) "id", (xmlChar *) buffer) !=
                     NULL);
@@ -1316,8 +1319,8 @@ searchTemplateNode(xmlNodePtr templNode)
  * searchGlobalNode:
  * @globalVariable: Is valid
  *
-  * Convert @globalVariable into search dataBase format
-  *
+ * Convert @globalVariable into search dataBase format
+ *
  * Returns @globalVariable as a new xmlNode in search dataBase format 
  *             if successful,
  *         NULL otherwise
@@ -1428,8 +1431,8 @@ searchLocalNode(xmlNodePtr variable)
  * searchSourceNode:
  * @style: Is valid
  * 
-  * Convert @style into search dataBase format
-  *
+ * Convert @style into search dataBase format
+ *
  * Returns @style as a new xmlNode in search dataBase format if successful,
  *         NULL otherwise
  */
@@ -1531,7 +1534,7 @@ searchIncludeNode(xmlNodePtr include)
  *         NULL otherwise
  */
 xmlNodePtr
-searchCallStackNode(xslCallPointPtr callStackItem)
+searchCallStackNode(callPointPtr callStackItem)
 {
     xmlNodePtr node = NULL;
     int result = 1;

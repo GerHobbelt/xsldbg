@@ -1,6 +1,6 @@
 
 /**************************************************************************
-                          debugXSL.h  -  describe the core function of xsldbg
+                          debugXSL.h  -  describes the core xsldbg shell functions
                              -------------------
     begin                : Sun Sep 16 2001
     copyright            : (C) 2001 by Keith Isdale
@@ -41,13 +41,8 @@
 
 /* We want skip most of these includes when building documentation*/
 #ifndef BUILD_DOCS
-#include <stdio.h>
-#include <libxml/tree.h>
-#include <libxml/debugXML.h>
-#include <libxslt/xsltInternals.h>
-#include <libxslt/xsltutils.h>
-#include <libxml/xpath.h>
-#include "xslbreakpoint.h"
+#include "utils.h"
+#include "breakpoint.h"
 #endif
 
 #ifdef __cplusplus
@@ -65,147 +60,69 @@ extern "C" {
  *								*
  ****************************************************************/
 
-/**
- * IS_BLANK:
- * @c:  an UNICODE value (int)
- *
- * Macro to check the following production in the XML spec
- *
- * [3] S ::= (#x20 | #x9 | #xD | #xA)+
- */
-#define IS_BLANK(c) (((c) == 0x20) || ((c) == 0x09) || ((c) == 0xA) ||	\
-                     ((c) == 0x0D))
+/*
+   Note that functions that have a prefix of xslDbgShell are NOT implemented
+      in debugXSL.c unless stated
 
+   All functions with the prefix of debygXSL are implemented in debugXSL.c
+
+ */
 
 #ifdef USE_GNOME_DOCS
 
 /**
- * trimString:
- * @text : A valid string with leading or trailing spaces
+ * debugXSLBreak:
+ * @templ: The source node being executed
+ * @node: The data node being processed
+ * @root: The template being applied to "node"
+ * @ctxt: The transform context for stylesheet being processed
  *
- * Remove leading and trailing spaces off @text
- *         stores result back into @text
- * Returns 1 on success,
- *         0 otherwise
+ * A break point has been found so pass control to user
  */
 #else
 #ifdef USE_KDE_DOCS
 
 /**
- * Remove leading and trailing spaces off @p text
- *         stores result back into @p text
+ * A break point has been found so pass control to user
  *
- * @returns 1 on success,
- *          0 otherwise
- *
- * @param text A valid string with leading or trailing spaces
+ * @param templ The source node being executed
+ * @param node The data node being processed
+ * @param root The template being applied to "node"
+ * @param ctxt transform context for stylesheet being processed
  */
 #endif
 #endif
-    int trimString(xmlChar * text);
-
+    void debugXSLBreak(xmlNodePtr templ, xmlNodePtr node,
+                    xsltTemplatePtr root, xsltTransformContextPtr ctxt);
 
 
 #ifdef USE_GNOME_DOCS
 
 /**
- * splitString:
- * @textIn: The string to split
- * @maxStrings: The max number of strings to put into @out
- * @out: Is valid and at least the size of @maxStrings
- *
- * Split string by white space and put into @out
- *
- * Returns 1 on success,
- *         0 otherwise
- */
-#else
-#ifdef USE_KDE_DOCS
-
-/**
- * Spit string by white space and put into @p out
+ * debugXSLGetTemplate:
  * 
- * @returns 1 on success,
- *          0 otherwise
+ * Get the last template node found, if any
  *
- * @param textIn The string to split
- * @param maxStrings The max number of strings to put into @p out
- * @param out Is valid and at least the size of @p maxStrings
- */
-#endif
-#endif
-    int splitString(xmlChar * textIn, int maxStrings, xmlChar ** out);
-
-
-
-#ifdef USE_GNOME_DOCS
-
-/**
- *  xslDbgShell:
- * @source: The current stylesheet instruction being executed
- * @doc: The current document node being processed
- * @filename: Not used
- * @input: The function to call to when reading commands from stdio
- * @output: Where to put the results
- * @styleCtxt: Is valid 
- *
- * Present to the user the xsldbg shell
+ * Returns The last template node found, if any
  */
 #else
 #ifdef USE_KDE_DOCS
 
-/**
- * Present the xsldbg shell to user and process entered commands
+/** 
+ * Get the last template node found, if any
  *
- * @param source Current stylesheet instruction being executed
- * @param doc Current document node being processed
- * @param filename Not used
- * @param input The function to call to when reading commands from stdio
- * @param output Where to put the results
- * @param styleCtxt Is valid 
+ * @returns the last template node found, if any
  */
 #endif
 #endif
-    void xslDbgShell(xmlNodePtr source, xmlNodePtr doc,
-                     xmlChar * filename,
-                     xmlShellReadlineFunc input,
-                     FILE * output, xsltTransformContextPtr styleCtxt);
-
-
-
-#ifdef USE_GNOME_DOCS
-
-/**
- * xslDbgPrintStyleSheets:
- * @arg: The stylesheets of interests and in UTF-8, is NULL for all stylesheets
- *
- * Print stylesheets that can be found in loaded stylsheet
- *
- * Returns 1 on success,
- *         0 otherwise
- */
-#else
-#ifdef USE_KDE_DOCS
-
-/**
- * Print stylesheets that can be found in loaded stylsheet
- *
- * @returns 1 on success,
- *          0 otherwise
- *
- * @param arg The stylesheets of interests and in UTF-8, is NULL for all stylesheets
- *
- */
-#endif
-#endif
-    int xslDbgPrintStyleSheets(xmlChar * arg);
+    xsltTemplatePtr debugXSLGetTemplate(void);
 
 
 
 /* -----------------------------------------
-
    Break Point related commands
 
+   They are implemented in breakpoint_cmds.c
   ------------------------------------------- */
 
 
@@ -302,7 +219,7 @@ extern "C" {
 #ifdef USE_GNOME_DOCS
 
 /**
- * xslDbgEnableBreakPoint:
+ * xslDbgShellEnableBreakPoint:
  * @payload: A valid xslBreakPointPtr
  * @data: Enable type, a pointer to an integer 
  *         for a value of 
@@ -329,7 +246,9 @@ extern "C" {
 */
 #endif
 #endif
-    void xslDbgEnableBreakPoint(void *payload, void *data, xmlChar * name);
+    void xslDbgShellEnableBreakPoint(void *payload, void *data, xmlChar * name);
+
+
 
 #ifdef USE_GNOME_DOCS
 
@@ -363,7 +282,7 @@ extern "C" {
 #ifdef USE_GNOME_DOCS
 
 /**
- * xslDbgPrintBreakPoint:
+ * xslDbgShellPrintBreakPoint:
  * @payload: A valid xslBreakPointPtr
  * @data: Not used
  * @name: Not used
@@ -382,22 +301,50 @@ extern "C" {
 */
 #endif
 #endif
-    void xslDbgPrintBreakPoint(void *payload, void *data, xmlChar * name);
+    void xslDbgShellPrintBreakPoint(void *payload, void *data, xmlChar * name);
 
 
 
 
 /* -----------------------------------------
-
    Template related commands
 
-  ------------------------------------------- */
+   They are implemented in template_cmds.c
+  ------------------------------------------- */  
+
+#ifdef USE_GNOME_DOCS
+
+/**
+ * xslDbgShellPrintStyleSheets:
+ * @arg: The stylesheets of interests and in UTF-8, is NULL for all stylesheets
+ *
+ * Print stylesheets that can be found in loaded stylsheet
+ *
+ * Returns 1 on success,
+ *         0 otherwise
+ */
+#else
+#ifdef USE_KDE_DOCS
+
+/**
+ * Print stylesheets that can be found in loaded stylsheet
+ *
+ * @returns 1 on success,
+ *          0 otherwise
+ *
+ * @param arg The stylesheets of interests and in UTF-8, is NULL for all stylesheets
+ *
+ */
+#endif
+#endif
+    int xslDbgShellPrintStyleSheets(xmlChar * arg);
+
 
 
 #ifdef USE_GNOME_DOCS
 
 /** 
- * xslDbgPrintTemplateNames:
+ * xslDbgShellPrintTemplateNames:
  * @styleCtxt: Is valid 
  * @ctxt: Not used
  * @arg: Not used
@@ -406,7 +353,7 @@ extern "C" {
  * @allFiles: If 1 then look for all templates in stylsheets found in 
  *                 @styleCtxt
  *             otherwise look in the stylesheet found by 
- *                 debugBreak function
+ *                 debugXSLBreak function
  *
  * Print out the list of template names found that match critieria
 *
@@ -427,74 +374,17 @@ extern "C" {
  * @param allFiles If 1 then look for all templates in stylsheets found in 
  *                 @p styleCtxt
  *             otherwise look in the stylesheet found by 
- *                 debugBreak function
+ *                 debugXSLBreak function
  * @returns 1 on success,
  *          0 otherwise
  */
 #endif
 #endif
-    int xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
+    int xslDbgShellPrintTemplateNames(xsltTransformContextPtr styleCtxt,
                                  xmlShellCtxtPtr ctxt,
                                  xmlChar * arg, int verbose, int allFiles);
 
 
-#ifdef USE_GNOME_DOCS
-
-/**
- * xslDbgPrintTemplateHelper:
- * @templ: Is valid
- * @verbose: Either 1 or 0
- * @templateCount: Is valid
- * @count: Is valid
- * @templateName: template name to print and in UTF-8, may be NULL
- *
- * This display the templates in the same order as they are in the 
- *   stylesheet. If verbose is 1 then print more information
- *   For each template found @templateCount is increased
- *   For each printed template @printCount is increased
- */
-#else
-#ifdef USE_KDE_DOCS
-
-/**
- * This displays the templates in the same order as they are in the 
- *   stylesheet. If verbose is 1 then print more information
- *   For each template found @p templateCount is increased
- *   For each printed template @p printCount is increased
- *
- * @param templ Is valid
- * @param verbose Either 1 or 0
- * @param templateCount Is valid
- * @param count Is valid
- * @param templateName The template name to print and in UTF-8, may be NULL
- */
-#endif
-#endif
-    void xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
-                                   int *templateCount, int *count,
-                                   xmlChar * templateName);
-
-
-#ifdef USE_GNOME_DOCS
-
-/**
- * getTemplate:
- * 
- * Get the last template node found, if any
- *
- * Returns The last template node found, if any
- */
-#else
-#ifdef USE_KDE_DOCS
-
-/** 
- * Get the last template node found, if any
- *
- * @returns the last template node found, if any
- */
-#endif
-#endif
-    xsltTemplatePtr getTemplate(void);
 
 
 /* -----------------------------------------
@@ -612,6 +502,7 @@ extern "C" {
 
    Operating system related commands
 
+   Implemented in os_cmds.c
   ------------------------------------------- */
 
 
@@ -677,6 +568,7 @@ extern "C" {
 
    libxslt parameter related commands
 
+   Implemented in param_cmds.c
   ------------------------------------------- */
 
 
@@ -765,9 +657,71 @@ extern "C" {
     int xslDbgShellShowParam(xmlChar * arg);
 
 
-/* -----------------------------------------
+  /* -----------------------------------------
 
-   Tracing related commands
+   Option related commands
+
+   Implemented in option_cmds.c
+
+  ------------------------------------------- */
+
+#ifdef USE_GNOME_DOCS
+
+/**
+ * xslDbgShellSetOption:
+ * @arg: Is valid, and in the format  <NAME> <VALUE>
+ * 
+ * Set the value of an option 
+ *
+ * Returns 1 on success,
+ *         0 otherwise
+ */
+#else
+#ifdef USE_KDE_DOCS
+
+/**
+ * Set the value of an option 
+ *
+ * @returns 1 on success,
+ *          0 otherwise
+ *
+ * @param arg is valid, and in format   <NAME> <VALUE>
+ * 
+ */
+#endif
+#endif
+  int xslDbgShellSetOption(xmlChar *arg);
+
+
+#ifdef USE_GNOME_DOCS
+
+/**
+ * xslDbgShellOptions:
+ *
+ * Prints out values for user options
+ *
+ * Returns 1 on success,
+ *         0 otherwise
+ */
+#else
+#ifdef USE_KDE_DOCS
+
+/**
+ * Prints out values for user options
+ *
+ * @returns 1 on success,
+ *          0 otherwise
+ */
+#endif
+#endif
+       int xslDbgShellOptions(void);
+
+
+  /* -----------------------------------------
+
+   Tracing, walking related commands
+
+   Implemented in shell.c
 
   ------------------------------------------- */
 
@@ -799,6 +753,7 @@ extern "C" {
     int xslDbgShellTrace(xmlChar * arg);
 
 
+
 #ifdef USE_GNOME_DOCS
 
 /**
@@ -827,10 +782,11 @@ extern "C" {
 
 
 
-/* -----------------------------------------
+  /* -----------------------------------------
    
    Seach related commands
-   
+
+   Implemented in search_cmds.c
   ------------------------------------------- */
 
 
@@ -864,6 +820,14 @@ extern "C" {
                           xsltStylesheetPtr style, xmlChar * arg);
 
 
+/* -----------------------------------------
+   
+   Seach related commands
+
+   Implemented in variable_cmds.c
+  ------------------------------------------- */
+
+#ifdef USE_GNOME_DOCS
 /**
  * xslDbgShellSetVariable:
  * @styleCtxt : Is valid
@@ -875,6 +839,22 @@ extern "C" {
  * Returns 1 on success,
  *         0 otherwise
  */
+#else
+#ifdef USE_KDE_DOCS
+
+/**
+ * Change the value of a global or local variable
+ *
+ * @param styleCtxt Is valid
+ * @param arg Is valid must be in the format of 
+ *         <NAME> = <VALUE>
+ * 
+ * @returns 1 on success,
+ *          0 otherwise
+ */
+#endif
+#endif
+
     int xslDbgShellSetVariable(xsltTransformContextPtr styleCtxt,
                                xmlChar * arg);
 

@@ -45,7 +45,7 @@ int
 xslDbgShellTrace(xmlChar * arg ATTRIBUTE_UNUSED)
 {
     xslDebugStatus = DEBUG_RUN_RESTART;
-    setIntOption(OPTIONS_TRACE, TRACE_ON);
+    optionsSetIntOption(OPTIONS_TRACE, TRACE_ON);
     return 1;
 }
 
@@ -79,8 +79,8 @@ xslDbgShellWalk(xmlChar * arg)
                          "\tAssuming normal speed\n");
         speed = WALKSPEED_NORMAL;
     }
-    result++;
-    setIntOption(OPTIONS_WALK_SPEED, speed);
+    result = 1;
+    optionsSetIntOption(OPTIONS_WALK_SPEED, speed);
     xslDebugStatus = DEBUG_WALK;
 
     return result;

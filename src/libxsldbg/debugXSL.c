@@ -20,7 +20,7 @@
  * Orinal file : debugXML.c : This is a set of routines used for 
  *              debugging the tree produced by the XML parser.
  *
- * New file : debugXSL.c : Debug support version
+ * New file : shell.c : Debug support version
  *
  * See Copyright for the status of this software.
  *
@@ -42,9 +42,10 @@
 #include "xsldbg.h"
 #include "files.h"
 #include "cmds.h"               /* list of command Id's */
+#include "debug.h"
 #include "debugXSL.h"
 #include "options.h"
-#include "xslbreakpoint.h"
+#include "breakpoint.h"
 #include "help.h"
 #include <stdlib.h>
 #include <libxslt/transform.h>  /* needed by source command */
@@ -53,6 +54,7 @@
 #include <stdio.h>
 
 #include <libxsldbg/xsldbgmsg.h>
+#include <libxsldbg/xsldbgthread.h> /* for get thread status */
 #include <libxsldbg/xsldbgio.h>
 
 /* current template being processed */
@@ -250,36 +252,7 @@ enum ShortcutsEnum {
     DEBUG_DESCENDANT_NODE
 };
 
-/* the names for our options
-   Items that start with *_ are options that CANNOT be used by the user
-  Once you set an option you need to give a run command to activate
-  new settings */
-const char *optionNames[] = {
-    "xinclude",                 /* Use xinclude during xml parsing */
-    "docbook",                  /* Use of docbook sgml parsing */
-    "timing",                   /* Use of timing */
-    "profile",                  /* Use of profiling */
-    "novalid",                  /* Disable file validation */
-    "noout",                    /* Disables output to stdout */
-    "html",                     /* Enable the use of html parsing */
-    "debug",                    /* Enable the use of xml tree debugging */
-    "*_shell_*",                /* Enable the use of debugger shell */
-    "gdb",                      /* Run in gdb modem prints more messages */
-    "repeat",                   /* The number of times to repeat */
-    "*_trace_*",                /* Trace execution */
-    "*_walkspeed_*",            /* How fast do we walk through code */
-    "catalogs",                 /* do we use catalogs in SGML_CATALOG_FILES */
-    "preferhtml",               /* Prefer html output for search results */
-    "autoencode",               /* Try to use the encoding from the stylesheet */
-    "verbose",                  /* Be verbose with messages */
-    "output",                   /* what is the output file name */
-    "source",                   /* The stylesheet source to use */
-    "docspath",                 /* Path of xsldbg's documentation */
-    "catalognames",             /* The names of the catalogs to use when the catalogs option is active */
-    "encoding",                 /* What encoding to use for standard output */
-    "data",                     /* The xml data file to use */
-    NULL                        /* indicate end of list */
-};
+
 
 #include <libxml/xpathInternals.h>
 
@@ -348,7 +321,7 @@ void xslDbgSleep(long delay);
  * xslDbgWalkContinue:
  *
  * Delay execution for time as indicated by OPTION_WALK_SPEED
- * Can only be called from within xslDbgShell!
+ * Can only be called from within shellPrompt!
  * OPTION_WALK_SPEED != WALKSPEED_STOP
  *
  * Returns 1 if walk is to continue,
@@ -370,7 +343,7 @@ int lookupName(xmlChar * name, xmlChar ** matchList);
 
 /**
  * addBreakPointNode:
- * @payload : valid xslBreakPointPtr
+ * @payload : valid breakPointPtr
  * @data : not used
  * @name : not used
  * 
@@ -462,6 +435,24 @@ void
  */
 static void xsldbgUpdateFileDetails(xmlNodePtr node);
 
+
+
+/**
+ *  shellPrompt:
+ * @source: The current stylesheet instruction being executed
+ * @doc: The current document node being processed
+ * @filename: Not used
+ * @input: The function to call to when reading commands from stdio
+ * @output: Where to put the results
+ * @styleCtxt: Is valid 
+ *
+ * Present to the user the xsldbg shell
+ */
+    void shellPrompt(xmlNodePtr source, xmlNodePtr doc,
+                     xmlChar * filename,
+                     xmlShellReadlineFunc input,
+                     FILE * output, xsltTransformContextPtr styleCtxt);
+
 /* ------------------------------------- 
     End private functions
 ---------------------------------------*/
@@ -469,14 +460,14 @@ static void xsldbgUpdateFileDetails(xmlNodePtr node);
 
 
 /**
- * getTemplate:
+ * debugXSLGetTemplate:
  * 
  * Return the last template node found, if an
  *
  * Returns The last template node found, if any
  */
 xsltTemplatePtr
-getTemplate(void)
+debugXSLGetTemplate(void)
 {
     return rootCopy;
 }
@@ -559,7 +550,7 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
 
     if (!ctxt) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Error: Debuger has no files loaded, try reloading files\n");
+                         "Error: Debugger has no files loaded, try reloading files\n");
         return result;
     }
     if (arg == NULL)
@@ -590,7 +581,7 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                                          " template :\"%s\"\n",
                                          &arg[offset]);
                         ctxt->node = templateNode;
-                        result++;
+                        result = 1;
                         return result;
                     }
                 } else if (arg[1] == 's') {
@@ -652,7 +643,7 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
 			      xsldbgUpdateFileDetails(ctxt->node);
 			      notifyXsldbgApp(XSLDBG_MSG_LINE_CHANGED, &breakpoint);
 			    }
-                            result++;
+                            result = 1;
                         } else
                             xmlGenericError(xmlGenericErrorContext,
                                             "%s is a %d Node Set\n",
@@ -691,33 +682,33 @@ xslDbgPrintCallStack(const xmlChar * arg)
 {
     int depth;
     int result = 0;
-    xslCallPointPtr callPoint;
+    callPointPtr callPointItem;
 
     if (arg == NULL) {
         if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
             notifyXsldbgApp(XSLDBG_MSG_CALLSTACK_CHANGED, NULL);
-            for (depth = 1; depth <= callDepth(); depth++) {
-                callPoint = getCall(depth);
-                if (callPoint && callPoint->info) {
+            for (depth = 1; depth <= callStackGetDepth(); depth++) {
+                callPointItem = callStackGet(depth);
+                if (callPointItem && callPointItem->info) {
                     notifyXsldbgApp(XSLDBG_MSG_CALLSTACK_CHANGED,
-                                    callPoint);
+                                    callPointItem);
                 }
             }
         } else {
-            for (depth = 1; depth <= callDepth(); depth++) {
-                callPoint = getCall(depth);
-                if (callPoint && callPoint->info) {
+            for (depth = 1; depth <= callStackGetDepth(); depth++) {
+                callPointItem = callStackGet(depth);
+                if (callPointItem && callPointItem->info) {
                     if (depth == 0)
                         xsltGenericError(xsltGenericErrorContext,
                                          "Call stack contains:\n");
                     xsltGenericError(xsltGenericErrorContext,
                                      "#%d template :\"%s\"", depth - 1,
-                                     callPoint->info->templateName);
-                    if (callPoint->info->url)
+                                     callPointItem->info->templateName);
+                    if (callPointItem->info->url)
                         xsltGenericError(xsltGenericErrorContext,
                                          " in file %s : line %ld \n",
-                                         callPoint->info->url,
-                                         callPoint->lineNo);
+                                         callPointItem->info->url,
+                                         callPointItem->lineNo);
                     else
                         xsltGenericError(xsltGenericErrorContext, "\n");
                 } else {
@@ -729,7 +720,7 @@ xslDbgPrintCallStack(const xmlChar * arg)
                     break;
                 }
             }
-            if (callDepth() == 0)
+            if (callStackGetDepth() == 0)
                 xsltGenericError(xsltGenericErrorContext,
                                  "Error: No items on call stack\n");
             else
@@ -748,17 +739,17 @@ xslDbgPrintCallStack(const xmlChar * arg)
         }
 
         if (templateDepth >= 0) {
-            callPoint = getCall(templateDepth + 1);
-            if (callPoint && callPoint->info) {
+            callPointItem = callStackGet(templateDepth + 1);
+            if (callPointItem && callPointItem->info) {
                 xsltGenericError(xsltGenericErrorContext,
                                  "#%d template :\"%s\"", templateDepth,
-                                 callPoint->info->templateName);
+                                 callPointItem->info->templateName);
                 /* should alays be present but .. */
-                if (callPoint->info->url)
+                if (callPointItem->info->url)
                     xsltGenericError(xsltGenericErrorContext,
                                      " in file %s : line %ld \n",
-                                     callPoint->info->url,
-                                     callPoint->lineNo);
+                                     callPointItem->info->url,
+                                     callPointItem->lineNo);
                 else
                     xsltGenericError(xsltGenericErrorContext, "\n");
             } else {
@@ -770,7 +761,7 @@ xslDbgPrintCallStack(const xmlChar * arg)
             }
         }
     }
-    result++;
+    result = 1;
     return result;
 }
 
@@ -810,7 +801,7 @@ xslDbgSleep(long delay)
  * xslDbgWalkContinue:
  *
  * Delay execution for time as indicated by OPTION_WALK_SPEED
- * Can only be called from within xslDbgShell!
+ * Can only be called from within shellPrompt!
  * OPTION_WALK_SPEED != WALKSPEED_STOP
  *
  * Returns 1 if walk is to continue,
@@ -819,7 +810,7 @@ xslDbgSleep(long delay)
 int
 xslDbgWalkContinue(void)
 {
-    int result = 0, speed = getIntOption(OPTIONS_WALK_SPEED);
+    int result = 0, speed = optionsGetIntOption(OPTIONS_WALK_SPEED);
 
     switch (speed) {
         case WALKSPEED_1:
@@ -833,11 +824,11 @@ xslDbgWalkContinue(void)
         case WALKSPEED_9:
             /* see options.h for defintion of WALKDAY */
             xslDbgSleep(speed * WALKDELAY);
-            result++;
+            result = 1;
             break;
 
         default:               /* stop walking */
-            setIntOption(OPTIONS_WALK_SPEED, WALKSPEED_STOP);
+            optionsSetIntOption(OPTIONS_WALK_SPEED, WALKSPEED_STOP);
             xslDebugStatus = DEBUG_STOP;
             break;
     }
@@ -871,110 +862,8 @@ lookupName(xmlChar * name, xmlChar ** matchList)
 
 
 /**
- * trimString:
- * @text : A valid string with leading or trailing spaces
- *
- * Remove leading and trailing spaces off @text
- *         stores result back into @text
- * Returns 1 on success,
- *         0 otherwise
- */
-int
-trimString(xmlChar * text)
-{
-    int result = 0;
-    xmlChar *start, *end;
-
-    if (text) {
-        start = text;
-        end = text + xmlStrLen(text) - 1;
-        while (IS_BLANK(*start) && (start <= end))
-            start++;
-
-        while (IS_BLANK(*end) && (end >= start))
-            end--;
-
-        /* copy  to @text */
-        while (start <= end) {
-            *text = *start;
-            text++;
-            start++;
-        }
-
-        *text = '\0';
-        result++;
-    }
-    return result;
-}
-
-
-/**
- * splitString:
- * @textIn: The string to split
- * @maxStrings: The max number of strings to put into @out
- * @out: Is valid and at least the size of @maxStrings
- *
- * Split string by white space and put into @out
- *
- * Returns 1 on success,
- *         0 otherwise
- */
-int
-splitString(xmlChar * textIn, int maxStrings, xmlChar ** out)
-{
-    int result = 0;
-    int foundQuote = 0;
-
-    while ((*textIn != '\0') && (result < maxStrings)) {
-        /*skip the first spaces ? */
-        while (IS_BLANK(*textIn))
-            textIn++;
-
-        if (*textIn == '\"') {
-            textIn++;
-            foundQuote++;
-        }
-        out[result] = textIn;
-
-        /* look for end of word */
-        if (foundQuote == 0) {
-            while (!IS_BLANK(*textIn) && (*textIn != '\0'))
-                textIn++;
-
-            if (*textIn != '\0') {
-                *textIn = '\0';
-                textIn++;
-            }
-
-            if (xmlStrLen(out[result]) > 0) {
-                result++;
-            }
-        } else {
-            /* look for ending quotation mark */
-            while ((*textIn != '\0') && (*textIn != '\"'))
-                textIn++;
-            if (*textIn == '\0') {
-                xsltGenericError(xsltGenericErrorContext,
-                                 "Error: Unmatched quotes in input\n");
-                return result;
-            }
-            *textIn = '\0';
-            textIn++;           /* skip the '"' which is now a '\0' */
-            foundQuote = 0;
-            result++;
-        }
-
-    }
-
-    if (*textIn != '\0')
-        result = 0;             /* We have not processed all the text givent to us */
-    return result;
-}
-
-
-/**
  * addBreakPointNode:
- * @payload : valid xslBreakPointPtr
+ * @payload : valid breakPointPtr
  * @data : not used
  * @name : not used
  * 
@@ -984,7 +873,7 @@ void
 addBreakPointNode(void *payload, void *data ATTRIBUTE_UNUSED,
                   xmlChar * name ATTRIBUTE_UNUSED)
 {
-    xmlNodePtr node = searchBreakPointNode((xslBreakPointPtr) payload);
+    xmlNodePtr node = searchBreakPointNode((breakPointPtr) payload);
 
     searchAdd(node);
 }
@@ -1088,12 +977,12 @@ addIncludeNode(void *payload, void *data ATTRIBUTE_UNUSED,
 void
 addCallStackItems(void)
 {
-    xslCallPointPtr item;
+    callPointPtr item;
     xmlNodePtr node;
     int depth;
 
-    for (depth = callDepth(); depth > 0; depth--) {
-        item = getCall(depth);
+    for (depth = callStackGetDepth(); depth > 0; depth--) {
+        item = callStackGet(depth);
         if (item) {
             node = searchCallStackNode(item);
             if (node)
@@ -1152,13 +1041,13 @@ updateSearchData(xsltTransformContextPtr styleCtxt ATTRIBUTE_UNUSED,
              "%s/searchresult.xml", stylePath());
     */
     searchSave(NULL);
-    result++;
+    result = 1;
     return result;
 }
 
 
 /**
- * debugBreak:
+ * debugXSLBreak:
  * @templ: The source node being executed
  * @node: The data node being processed
  * @root: The template being applied to "node"
@@ -1167,16 +1056,13 @@ updateSearchData(xsltTransformContextPtr styleCtxt ATTRIBUTE_UNUSED,
  * A break point has been found so pass control to user
  */
 void
-debugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
+debugXSLBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
            xsltTransformContextPtr ctxt)
 {
     xmlDocPtr tempDoc = NULL;
     xmlNodePtr tempNode = NULL;
 
     rootCopy = root;
-
-    /* select normal input output streams */
-    selectNormalIO();
 
     if (templ == NULL) {
         tempDoc = xmlNewDoc((xmlChar *) "1.0");
@@ -1192,7 +1078,7 @@ debugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
     }
 
     if (node == NULL)
-      node = (xmlNodePtr)getMainDoc();
+      node = (xmlNodePtr)filesGetMainDoc();
 
     if (node == NULL) {
         tempDoc = xmlNewDoc((xmlChar *) "1.0");
@@ -1218,13 +1104,13 @@ debugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
 
     if (ctxt && ctxt->node && ctxt->node &&
         ctxt->node->doc && ctxt->node->doc->URL) {
-        if (activeBreakPoint()) {
+        if (breakPointActiveBreakPoint()) {
             xsltGenericError(xsltGenericErrorContext,
-                             "Breakpoint %d ", activeBreakPoint()->id);
+                             "Breakpoint %d ", breakPointActiveBreakPoint()->id);
         }
     }
 
-    xslDbgShell(templ, node, (xmlChar *) "index.xsl",
+    shellPrompt(templ, node, (xmlChar *) "index.xsl",
                 (xmlShellReadlineFunc) xslDbgShellReadline, stdout, ctxt);
     if (tempDoc)
         xmlFreeDoc(tempDoc);
@@ -1234,7 +1120,7 @@ debugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
 /* Highly modified function based on xmlShell */
 
 /**
- *  xslDbgShell:
+ *  shellPrompt:
  * @source: The current stylesheet instruction being executed
  * @doc: The current document node being processed
  * @filename: Not used
@@ -1245,7 +1131,7 @@ debugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
  * Present to the user the xsldbg shell
  */
 void
-xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
+shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             xmlShellReadlineFunc input, FILE * output,
             xsltTransformContextPtr styleCtxt)
 {
@@ -1331,8 +1217,8 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
         if (ctxt->node && ctxt->node && ctxt->node->doc
             && ctxt->node->doc->URL) {
             xmlStrCpy(messageBuffer, "");
-            if (activeBreakPoint() != NULL) {
-                xslBreakPointPtr breakPtr = activeBreakPoint();
+            if (breakPointActiveBreakPoint() != NULL) {
+                breakPointPtr breakPtr = breakPointActiveBreakPoint();
 
                 snprintf((char *) messageBuffer, sizeof(messageBuffer),
                          "Breakpoint in file %s : line %ld \n",
@@ -1553,7 +1439,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     /* be verbose when printing template names */
                     /* if args is not empty then print names this stylesheet */
                     cmdResult =
-                        xslDbgPrintTemplateNames(styleCtxt, ctxt, arg,
+                        xslDbgShellPrintTemplateNames(styleCtxt, ctxt, arg,
                                                  verbose, allFiles);
                     break;
                 }
@@ -1568,7 +1454,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                                          dir);
                     if (ctxt->node && ctxt->node && ctxt->node->doc
                         && ctxt->node->doc->URL)
-                        if (activeBreakPoint() != NULL) {
+                        if (breakPointActiveBreakPoint() != NULL) {
                             xsltGenericError(xsltGenericErrorContext,
                                              " in file %s : line %ld \n",
                                              ctxt->node->doc->URL,
@@ -1592,7 +1478,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 break;
 
             case DEBUG_STYLESHEETS_CMD:
-                cmdResult = xslDbgPrintStyleSheets(arg);
+                cmdResult = xslDbgShellPrintStyleSheets(arg);
                 break;
 
                 /* --- Break point related commands --- */
@@ -1626,15 +1512,15 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             case DEBUG_SHOWBREAK_CMD:
                 if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
                     notifyListStart(XSLDBG_MSG_BREAKPOINT_CHANGED);
-                    walkBreakPoints((xmlHashScanner) xslDbgPrintBreakPoint,
+                    walkBreakPoints((xmlHashScanner) xslDbgShellPrintBreakPoint,
                                     NULL);
                     notifyListSend();
                 } else {
                     xsltGenericError(xsltGenericErrorContext, "\n");
                     printCount = 0;     /* printCount will get updated by
-                                         * xslDbgPrintBreakPoint */
+                                         * xslDbgShellPrintBreakPoint */
 
-                    walkBreakPoints((xmlHashScanner) xslDbgPrintBreakPoint,
+                    walkBreakPoints((xmlHashScanner) xslDbgShellPrintBreakPoint,
                                     NULL);
                     if (printCount == 0)
                         xsltGenericError(xsltGenericErrorContext,
@@ -1651,13 +1537,13 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 if (xmlStrLen(arg))
                     cmdResult = xslDbgShellDelete((xmlChar *) arg);
                 else {
-                    xslBreakPointPtr breakPoint = NULL;
+                    breakPointPtr breakPtr = NULL;
 
                     if (ctxt->node->doc && ctxt->node->doc->URL)
-                        breakPoint =
-                            getBreakPoint(filesGetBaseUri(ctxt->node),
+                        breakPtr =
+                            breakPointGet(filesGetBaseUri(ctxt->node),
                                           xmlGetLineNo(ctxt->node));
-                    if (!breakPoint || !deleteBreakPoint(breakPoint)) {
+                    if (!breakPtr || !breakPointDelete(breakPtr)) {
                         xsltGenericError(xsltGenericErrorContext,
                                          "Error: Unable to delete point\n");
                         cmdResult = 0;
@@ -1670,16 +1556,14 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     cmdResult =
                         xslDbgShellEnable(arg, XSL_TOGGLE_BREAKPOINT);
                 else {
-                    xslBreakPointPtr breakPoint = NULL;
+                    breakPointPtr breakPtr = NULL;
 
                     if (ctxt->node->doc && ctxt->node->doc->URL)
-                        breakPoint =
-                            getBreakPoint(filesGetBaseUri(ctxt->node),
+                        breakPtr =
+                            breakPointGet(filesGetBaseUri(ctxt->node),
                                           xmlGetLineNo(ctxt->node));
-                    if (!breakPoint
-                        ||
-                        (!enableBreakPoint
-                         (breakPoint, !breakPoint->enabled))) {
+                    if (!breakPtr ||
+                        (!breakPointEnable(breakPtr, !breakPtr->enabled))) {
                         xsltGenericError(xsltGenericErrorContext,
                                          "Error: Unable to enable/disable point\n");
                         cmdResult = 0;
@@ -1691,14 +1575,13 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 if (xmlStrLen(arg))
                     cmdResult = xslDbgShellEnable(arg, 0);
                 else {
-                    xslBreakPointPtr breakPoint = NULL;
+                    breakPointPtr breakPtr = NULL;
 
                     if (ctxt->node->doc && ctxt->node->doc->URL)
-                        breakPoint =
-                            getBreakPoint(filesGetBaseUri(ctxt->node),
+                        breakPtr =
+                            breakPointGet(filesGetBaseUri(ctxt->node),
                                           xmlGetLineNo(ctxt->node));
-                    if (!breakPoint
-                        || !enableBreakPoint(breakPoint, 0)) {
+                    if (!breakPtr || !breakPointEnable(breakPtr, 0)) {
                         xsltGenericError(xsltGenericErrorContext,
                                          "Error: Unable to disable point\n");
                         cmdResult = 0;
@@ -1810,7 +1693,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         if (xmlStrLen(buff) + xmlStrLen(arg) <
                             DEBUG_BUFFER_SIZE) {
                             xmlStrCat(buff, &arg[1]);
-                            setStringOption(OPTIONS_SOURCE_FILE_NAME,
+                            optionsSetStringOption(OPTIONS_SOURCE_FILE_NAME,
                                             buff);
                         } else {
                             xsltGenericError(xsltGenericErrorContext,
@@ -1821,14 +1704,14 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     } else
 #endif
                     {
-                        setStringOption(OPTIONS_SOURCE_FILE_NAME, arg);
+                        optionsSetStringOption(OPTIONS_SOURCE_FILE_NAME, arg);
                     }
                     xsltGenericError(xsltGenericErrorContext,
                                      "Load of source deferred use run command\n"
                                      "Removing all breakpoints\n");
                     loadedFiles = 1;
                     /* clear all break points , what else makes sense? */
-                    emptyBreakPoint();
+                    breakPointEmpty();
                 }
                 break;
 
@@ -1863,7 +1746,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         if (xmlStrLen(buff) + xmlStrLen(arg) <
                             DEBUG_BUFFER_SIZE) {
                             xmlStrCat(buff, &arg[1]);
-                            setStringOption(OPTIONS_DATA_FILE_NAME, buff);
+                            optionsSetStringOption(OPTIONS_DATA_FILE_NAME, buff);
                         } else {
                             xsltGenericError(xsltGenericErrorContext,
                                              "File name too large\n");
@@ -1873,7 +1756,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     } else
 #endif
                     {
-                        setStringOption(OPTIONS_DATA_FILE_NAME, arg);
+                        optionsSetStringOption(OPTIONS_DATA_FILE_NAME, arg);
                     }
 
                     loadedFiles = 1;
@@ -1881,16 +1764,16 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                                      "Load of xml data deferred use run command\n"
                                      "Removing all breakpoints\n");
                     /* clear all break points , what else makes sense? */
-                    emptyBreakPoint();
+                    breakPointEmpty();
                 }
                 break;
 
             case DEBUG_OUTPUT_CMD:
                 if (xmlStrLen(arg) > 0) {
                     if (xmlStrCmp(arg, "-") != 0)
-                        setStringOption(OPTIONS_OUTPUT_FILE_NAME, arg);
+                        optionsSetStringOption(OPTIONS_OUTPUT_FILE_NAME, arg);
                     else
-                        setStringOption(OPTIONS_OUTPUT_FILE_NAME, NULL);
+                        optionsSetStringOption(OPTIONS_OUTPUT_FILE_NAME, NULL);
                     cmdResult = 1;
                 } else {
                     xsltGenericError(xsltGenericErrorContext,
@@ -1948,21 +1831,16 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 break;
 
             case DEBUG_LOAD_CMD:
-                xsltGenericError(xsltGenericErrorContext,
-                                 "loading disabled\n");
-                cmdResult = 0;
-                /*
-                 * xmlShellLoad(ctxt, arg, NULL, NULL);
-                 */
+	        cmdResult = optionsLoad();
+		/* restart xsldbg and activate new configuration */
+		if (cmdResult == 1){
+		  xslDebugStatus = DEBUG_RUN_RESTART;
+		  exitShell++;
+		}
                 break;
 
             case DEBUG_SAVE_CMD:
-                xsltGenericError(xsltGenericErrorContext,
-                                 "saving disabled\n");
-                cmdResult = 0;
-                /*
-                 * xmlShellSave(ctxt, arg, NULL, NULL);
-                 */
+                cmdResult = optionsSave();
                 break;
 
             case DEBUG_WRITE_CMD:
@@ -2000,7 +1878,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 break;
 
 
-                /* libxslt parameter related */
+                /* libxslt parameter related commands */
             case DEBUG_ADDPARAM_CMD:
                 cmdResult = xslDbgShellAddParam(arg);
                 break;
@@ -2013,99 +1891,25 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 cmdResult = xslDbgShellShowParam(arg);
                 break;
 
+
+
+		/* option related commmands */
             case DEBUG_SETOPTION_CMD:
-                if (xmlStrLen(arg) > 0) {
-                    xmlChar *opts[2];
-                    long optValue;
-                    long optID;
-
-                    if (splitString(arg, 2, opts) == 2) {
-                        optID =
-                            lookupName(opts[0], (xmlChar **) optionNames);
-                        if (optID >= 0) {
-                            if (optID <=
-                                (OPTIONS_VERBOSE - OPTIONS_XINCLUDE)) {
-                                /* handle setting integer option */
-                                if (!sscanf
-                                    ((char *) opts[1], "%ld", &optValue)) {
-                                    xsltGenericError
-                                        (xsltGenericErrorContext,
-                                         "Error : Unable to parse integer value for option \n");
-                                } else {
-                                    cmdResult =
-                                        setIntOption(optID +
-                                                     OPTIONS_XINCLUDE,
-                                                     optValue);
-                                }
-                            } else {
-                                /* handle setting a string option */
-                                cmdResult =
-                                    setStringOption(optID +
-                                                    OPTIONS_XINCLUDE,
-                                                    opts[1]);
-
-                            }
-                        } else {
-                            xsltGenericError(xsltGenericErrorContext,
-                                             "Error: Unknown option name %s\n",
-                                             opts[0]);
-                        }
-                    } else {
-                        xsltGenericError(xsltGenericErrorContext,
-                                         "Error expected: two arguments to setoption command\n");
-                    }
-                } else {
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "Error: Expected two arguments to setoption command\n");
-                }
+	      cmdResult = xslDbgShellSetOption(arg);
                 break;
 
             case DEBUG_OPTIONS_CMD:
-                {
-                    int optionIndex;
-
-                    xsltGenericError(xsltGenericErrorContext, "\n");
-                    /* Print out the integer options and thier values */
-                    for (optionIndex = OPTIONS_XINCLUDE;
-                         optionIndex <= OPTIONS_VERBOSE; optionIndex++) {
-                        /* skip any non-user options */
-                        if (optionNames[optionIndex - OPTIONS_XINCLUDE][0]
-                            != '*') {
-                            xsltGenericError(xsltGenericErrorContext,
-                                             "Option %s = %d\n",
-                                             optionNames[optionIndex -
-                                                         OPTIONS_XINCLUDE],
-                                             getIntOption(optionIndex));
-                        }
-                    }
-                    /* Print out the string options and thier values */
-                    for (optionIndex = OPTIONS_OUTPUT_FILE_NAME;
-                         optionIndex <= OPTIONS_DATA_FILE_NAME;
-                         optionIndex++) {
-                        if (getStringOption(optionIndex) != NULL) {
-                            xsltGenericError(xsltGenericErrorContext,
-                                             "Option %s = \"%s\"\n",
-                                             optionNames[optionIndex -
-                                                         OPTIONS_XINCLUDE],
-                                             getStringOption(optionIndex));
-                        } else {
-                            xsltGenericError(xsltGenericErrorContext,
-                                             "Option %s = \"\"\n",
-                                             optionNames[optionIndex -
-                                                         OPTIONS_XINCLUDE]);
-                        }
-
-                    }
-                    xsltGenericError(xsltGenericErrorContext, "\n");
-                }
+	      cmdResult = xslDbgShellOptions();
                 break;
 
+
+
+		/* misc commands */
             case DEBUG_TTY_CMD:
                 if (openTerminal(arg)) {
                     xsltGenericError(xsltGenericErrorContext,
                                      "Opening terminal %s\n", arg);
                     cmdResult = 1;
-                    selectTerminalIO();
                 } else
                     cmdResult = 0;
                 break;
@@ -2133,7 +1937,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 /* search related commands */
             case DEBUG_SEARCH_CMD:
                 cmdResult =
-                    xslDbgShellSearch(styleCtxt, getStylesheet(), arg);
+                    xslDbgShellSearch(styleCtxt, filesGetStylesheet(), arg);
                 break;
 
 
@@ -2149,12 +1953,12 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
         }
 
         /* kdbgs like to get the marker after every command so here it is */
-        if (isOptionEnabled(OPTIONS_GDB)) {
+        if (optionsGetIntOption(OPTIONS_GDB)) {
             if (ctxt->node && ctxt->node && ctxt->node->doc
                 && ctxt->node->doc->URL) {
 
-                if (activeBreakPoint() != NULL) {
-                    xslBreakPointPtr breakPtr = activeBreakPoint();
+                if (breakPointActiveBreakPoint() != NULL) {
+                    breakPointPtr breakPtr = breakPointActiveBreakPoint();
 
                     xsltGenericError(xsltGenericErrorContext,
                                      "Breakpoint in file %s : line %ld \n",
@@ -2192,8 +1996,6 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
     xmlFree(ctxt);
     if (cmdline != NULL)
         xmlFree(cmdline);
-    setActiveBreakPoint(0);
+    breakPointSetActiveBreakPoint(0);
 
-    /* send everything to the terminal if opened */
-    selectTerminalIO();
 }

@@ -24,6 +24,7 @@
 #include "debugXSL.h"
 #include "files.h"
 #include "xsldbgmsg.h"
+#include "xsldbgthread.h" /* for getThreadStatus */
 
 static int printCounter;        /* Dangerous name think of a better one */
 
@@ -60,6 +61,24 @@ void
                                      void *data ATTRIBUTE_UNUSED,
                                      xmlChar * name ATTRIBUTE_UNUSED);
 
+
+/**
+ * printTemplateHelper:
+ * @templ: Is valid
+ * @verbose: Either 1 or 0
+ * @templateCount: Is valid
+ * @count: Is valid
+ * @templateName: template name to print and in UTF-8, may be NULL
+ *
+ * This display the templates in the same order as they are in the 
+ *   stylesheet. If verbose is 1 then print more information
+ *   For each template found @templateCount is increased
+ *   For each printed template @printCount is increased
+ */
+    void printTemplateHelper(xsltTemplatePtr templ, int verbose,
+                                   int *templateCount, int *count,
+                                   xmlChar * templateName);
+
 /* ------------------------------------- 
     End private functions
 ---------------------------------------*/
@@ -67,11 +86,11 @@ void
 
 
 /**
- * xslDbgPrintTemplateHelper:
+ * printTemplateHelper:
  * @templ: Is valid
  * @verbose: Either 1 or 0
  * @templateCount: Is valid
- * @printCount: Is valid
+ * @count: Is valid
  * @templateName: template name to print, may be NULL
  *
  * This display the templates in the same order as they are in the 
@@ -80,8 +99,8 @@ void
  *   For each printed template @printCount is increased
  */
 void
-xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
-                          int *templateCount, int *printCount,
+printTemplateHelper(xsltTemplatePtr templ, int verbose,
+                          int *templateCount, int *count,
                           xmlChar * templateName)
 {
     xmlChar *name, *defaultUrl = (xmlChar *) "<n/a>";
@@ -89,8 +108,8 @@ xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
 
     if (templ) {
         *templateCount = *templateCount + 1;
-        xslDbgPrintTemplateHelper(templ->next, verbose,
-                                  templateCount, printCount, templateName);
+        printTemplateHelper(templ->next, verbose,
+                                  templateCount, count, templateName);
         if (templ->elem && templ->elem->doc && templ->elem->doc->URL) {
             url = templ->elem->doc->URL;
         } else {
@@ -107,7 +126,7 @@ xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
                 /*  search for template name supplied failed */
                 /* empty */
             } else {
-                *printCount = *printCount + 1;
+                *count = *count + 1;
                 if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
                     notifyListQueue(templ);
                 } else {
@@ -129,7 +148,7 @@ xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
 
 
 /** 
- * xslDbgPrintTemplateNames:
+ * xslDbgShellPrintTemplateNames:
  * @styleCtxt: Is valid 
  * @ctxt: Not used
  * @arg: Not used
@@ -138,7 +157,7 @@ xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
  * @allFiles: If 1 then look for all templates in stylsheets found in 
  *                 @styleCtxt
  *             otherwise look in the stylesheet found by 
- *                 debugBreak function
+ *                 debugXSLBreak function
  *
  * Print out the list of template names found that match critieria
  *
@@ -146,7 +165,7 @@ xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
  *         0 otherwise
  */
 int
-xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
+xslDbgShellPrintTemplateNames(xsltTransformContextPtr styleCtxt,
                          xmlShellCtxtPtr ctxt ATTRIBUTE_UNUSED,
                          xmlChar * arg, int verbose, int allFiles)
 {
@@ -163,7 +182,7 @@ xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
 
     if (!styleCtxt) {
         xmlGenericError(xmlGenericErrorContext,
-                        "Null styleCtxt supplied to xslDbgPrintTemplateNames\n");
+                        "Null styleCtxt supplied to xslDbgShellPrintTemplateNames\n");
         return result;
     }
 
@@ -171,9 +190,9 @@ xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
         curStyle = styleCtxt->style;
     else {
         /* try to find files in the current stylesheet */
-        /* root copy is set to the stylesheet found by debugBreak */
-        if (getTemplate())
-            curStyle = getTemplate()->style;
+        /* root copy is set to the stylesheet found by debugXSLBreak */
+        if (debugXSLGetTemplate())
+            curStyle = debugXSLGetTemplate()->style;
         else
             curStyle = NULL;
     }
@@ -183,7 +202,7 @@ xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
         while (curStyle) {
             templ = curStyle->templates;
             /* print them out in the order their in the file */
-            xslDbgPrintTemplateHelper(templ, verbose, &templateCount,
+            printTemplateHelper(templ, verbose, &templateCount,
                                       &printCount, arg);
             if (curStyle->next)
                 curStyle = curStyle->next;
@@ -196,7 +215,7 @@ xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
         while (curStyle) {
             templ = curStyle->templates;
             /* print them out in the order their in the file */
-            xslDbgPrintTemplateHelper(templ, verbose, &templateCount,
+            printTemplateHelper(templ, verbose, &templateCount,
                                       &printCount, arg);
             xsltGenericError(xsltGenericErrorContext, "\n");
             if (curStyle->next)
@@ -217,7 +236,7 @@ xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
         }
     }
 
-    result++;
+    result = 1;
     return result;
 }
 
@@ -277,7 +296,7 @@ xslDbgShellPrintStylesheetsHelper2(void *payload,
 
 
 /**
- * xslDbgPrintStyleSheets:
+ * xslDbgShellPrintStyleSheets:
  * @arg: The stylesheets of interests and in UTF-8, is NULL for all stylsheets
  *
  * Print stylesheets that can be found in loaded stylsheet
@@ -286,20 +305,20 @@ xslDbgShellPrintStylesheetsHelper2(void *payload,
  *         0 otherwise
  */
 int
-xslDbgPrintStyleSheets(xmlChar * arg)
+xslDbgShellPrintStyleSheets(xmlChar * arg)
 {
     printCounter = 0;
     if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
         notifyXsldbgApp(XSLDBG_MSG_SOURCE_CHANGED, NULL);
         walkStylesheets((xmlHashScanner) xslDbgShellPrintStylesheetsHelper,
-                        NULL, getStylesheet());
+                        NULL, filesGetStylesheet());
         walkIncludes((xmlHashScanner) xslDbgShellPrintStylesheetsHelper2,
-                     NULL, getStylesheet());
+                     NULL, filesGetStylesheet());
     } else {
         walkStylesheets((xmlHashScanner) xslDbgShellPrintStylesheetsHelper,
-                        NULL, getStylesheet());
+                        NULL, filesGetStylesheet());
         walkIncludes((xmlHashScanner) xslDbgShellPrintStylesheetsHelper2,
-                     NULL, getStylesheet());
+                     NULL, filesGetStylesheet());
         if (printCounter != 0)
             xsltGenericError(xsltGenericErrorContext,
                              "\n\tTotal of %d stylesheets found\n",
