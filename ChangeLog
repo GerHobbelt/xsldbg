@@ -1,5 +1,12 @@
+* Add libxslt parameter commands ie addparam, delparam, showparam
+* Added shell, chdir commands
+* Added trace command 	
+* Upated xsldoc.xml
+* Fixed help.c to pass right parameters when looking for commmand provided 
+*	if provided
+	
 * Keith Isdale 11 Nov 2001
-* Separated parameters from xsldbg.c 
+* Separated parameter storage from xsldbg.c and put into options.[ch]
 * Added files.[ch] 
 	 handles file interaction. But still uses xsldbg.c to do
 *        actual file parsing and loading	

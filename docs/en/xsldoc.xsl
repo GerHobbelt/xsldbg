@@ -93,6 +93,8 @@ Command : <xsl:value-of select="@title"/><xsl:text >
         <xsl:apply-templates select="body"/><xsl:text >      
 </xsl:text>
     </xsl:if>
+    <xsl:text>Usage:
+</xsl:text>
     <xsl:apply-templates select="usage"/>
   </xsl:template>  
 
