@@ -1,7 +1,7 @@
 
 AC_INIT(src/main.c)
 
-timestamp='2003-07-19'
+timestamp='2003-07-27'
 
 
 XSLDBG_MAJOR_VERSION=3
@@ -50,12 +50,27 @@ dnl
 dnl Where are KDE and Qt
 dnl
 
-AC_ARG_WITH(qt-dir, [  --with-qt-dir=PATH path to Qt default uses ($QTDIR)],
-    QT_DIR=$with_qt_dir, QT_DIR='${QTDIR}')
+AC_ARG_WITH(qt-dir, [  --with-qt-dir=PATH path to Qt default uses ($QTDIR) or /usr/lib/qt3 as a last resort],
+    QT_DIR=$with_qt_dir, 
+    if test "x${QTDIR}" != "x" ; then
+	QT_DIR='${QTDIR}'
+    fi
+    )
+if test "x$QT_DIR" = "x"; then
+    QT_DIR="/usr/lib/qt3"
+fi
 AC_SUBST(QT_DIR)
 
-AC_ARG_WITH(kde-dir, [  --with-kde-dir=PATH path to KDE default uses ($KDEDIR)],
-    KDE_DIR=$with_kde_dir, KDE_DIR='${KDEDIR}')
+
+AC_ARG_WITH(kde-dir, [  --with-kde-dir=PATH path to KDE default uses ($KDEDIR) or /opt/kde3 as a last resort],
+    KDE_DIR=$with_kde_dir, 
+    if test "x${KDEDIR}" != "x"; then
+	KDE_DIR='${KDEDIR}'
+    fi
+    )
+if test "x$KDE_DIR" = "x"; then
+    KDE_DIR="/opt/kde3"
+fi
 AC_SUBST(KDE_DIR)
 
 AC_ARG_WITH(gnome-dir, [  --gnome-dir=PATH path to GNOME (/opt/gnome)],
