@@ -4,3 +4,4 @@ AUTOMAKE_OPTIONS = foreign 1.4
 
 SUBDIRS = src tests results docs
 
+EXTRA_DIST=Makefile.cvs
