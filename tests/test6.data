@@ -15,13 +15,13 @@
 <test>trace</test>
 <result>
 <row>
-<breakpoint line="17"/> <!-- xsldbg restarting with tracing on -->
+<breakpoint line="20"/> <!-- xsldbg restarting with tracing on -->
 </row>
 <row>
-<breakpoint line="17"/> 
+<breakpoint line="20"/> 
 </row>
 <row>
-<breakpoint line="18"/>
+<breakpoint line="21"/>
 </row>
 <row>
 <breakpoint line="13"/>
@@ -33,13 +33,13 @@
 <breakpoint line="14"/> 
 </row>
 <row>
-<breakpoint line="19"/>
+<breakpoint line="22"/>
 </row>
 <row>
-<breakpoint line="19"/>
+<breakpoint line="22"/>
 </row>
 <row>
-<breakpoint line="20"/>
+<breakpoint line="23"/>
 </row>
 
 </result>

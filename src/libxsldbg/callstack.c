@@ -21,7 +21,10 @@
 
 /**
  * addCallInfo:
- * @templatename: Template name to add
+ * @templateName: Template name to add 
+ * @templateURI: QName part of template name to add
+ * @modeName: Mode of template
+ * @modeURI: QName part of node of template
  * @url: The url for the template
  *
  * Add template "call" to call stack
@@ -29,8 +32,9 @@
  * Returns A reference to the added info if successful, 
  *         NULL otherwise
  */
-callPointInfoPtr addCallInfo(const xmlChar * templateName,
-                             const xmlChar * url);
+callPointInfoPtr
+addCallInfo(const xmlChar * templateName, const xmlChar *templateURI,
+	    const xmlChar * modeName, const xmlChar* modeURI, const xmlChar * url);
 
 
 /*------------------------------------------------------
@@ -69,6 +73,9 @@ callStackInit(void)
     if (callInfo) {
         callInfo->next = NULL;
         callInfo->templateName = NULL;
+	callInfo->templateURI = NULL;
+	callInfo->modeName = NULL;
+	callInfo->modeURI = NULL;	 
         callInfo->url = NULL;
     }
     callStackBot = (callPointPtr) xmlMalloc(sizeof(callPoint));
@@ -101,6 +108,12 @@ callStackFree(void)
         nextInfo = curInfo->next;
         if (curInfo->templateName)
             xmlFree(curInfo->templateName);
+        if (curInfo->templateURI)
+            xmlFree(curInfo->templateURI);	
+        if (curInfo->modeName)
+            xmlFree(curInfo->modeName);
+        if (curInfo->modeURI)
+            xmlFree(curInfo->modeURI);
         if (curInfo->url)
             xmlFree(curInfo->url);
         curInfo = nextInfo;
@@ -122,7 +135,10 @@ callStackFree(void)
 
 /**
  * addCallInfo:
- * @templatename: Template name to add
+ * @templateName: Template name to add 
+ * @templateURI: QName part of template name to add
+ * @modeName: Mode of template
+ * @modeURI: QName part of node of template
  * @url: The url for the template
  *
  * Add template "call" to call stack
@@ -131,9 +147,11 @@ callStackFree(void)
  *         NULL otherwise
  */
 callPointInfoPtr
-addCallInfo(const xmlChar * templateName, const xmlChar * url)
+addCallInfo(const xmlChar * templateName, const xmlChar *templateURI,
+	    const xmlChar * modeName, const xmlChar* modeURI, const xmlChar * url)
 {
     callPointInfoPtr result = NULL, cur = callInfo;
+    int found;
 
     if (!templateName || !url) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
@@ -151,31 +169,61 @@ addCallInfo(const xmlChar * templateName, const xmlChar * url)
     }
 
     while (cur->next) {
-        if (cur->templateName
-            && !xmlStrCmp(cur->templateName, templateName)
-            && !xmlStrCmp(cur->url, url)) {
+        found = 1;
+        if (templateName && cur->templateName 
+	    && !xmlStrEqual(cur->templateName, templateName)) 
+	    found = 0;
+	if (found && !xmlStrEqual(cur->templateURI, templateURI)) 
+	    found = 0;
+	if (found && !xmlStrEqual(cur->modeName, modeName))
+	    found = 0;
+	if (found && !xmlStrEqual(cur->modeURI, modeURI))
+	    found = 0;
+	if (found && !xmlStrEqual(cur->url, url))
+	   found = 0;
+
+	if (found){
             result = cur;
             break;
         }
         cur = cur->next;
-    }
+      }
 
-    if (!result) {
+    if (!result && cur) {
         result = (callPointInfoPtr) xmlMalloc(sizeof(callPointInfo));
         if (result) {
+	  if ((cur == callInfo) && !cur->templateName &&  !cur->templateURI 
+				 && !cur->modeName && !cur->modeURI 
+				 && !cur->url){
+	    xmlFree(callInfo);
+	    callInfo = result;	    
+	  } else{
             cur->next = result;
-            result->templateName =
-                (xmlChar *) xmlMemStrdup((char *) templateName);
-            result->url = (xmlChar *) xmlMemStrdup((char *) url);
-            result->next = NULL;
-        } else {
+	  }
+	  result->templateName =
+	    (xmlChar *) xmlMemStrdup((char *) templateName);
+	  result->templateURI =
+	    (xmlChar *) xmlMemStrdup((char *) templateURI);
+	  result->modeName =
+                (xmlChar *) xmlMemStrdup((char *) modeName);
+	  result->modeURI =
+	    (xmlChar *) xmlMemStrdup((char *) modeURI);
+	  result->url = (xmlChar *) xmlMemStrdup((char *) url);
+	  result->next = NULL;
+	}else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
             xsltGenericError(xsltGenericErrorContext,
                              "Error : Unable to create callPointInfo from :"
                              " addCallInfo\n");
 #endif
-        }
+	}
     }
+    if (!cur)
+#ifdef WITH_XSLT_DEBUG_BREAKPOINTS
+            xsltGenericError(xsltGenericErrorContext,
+                             "Error : Unable to create callPointInfo from :"
+                             " addCallInfo\n");
+#endif
     return result;
 }
 
@@ -237,7 +285,9 @@ callStackAdd(xsltTemplatePtr templ, xmlNodePtr source)
         return result;
     }
 
-    info = addCallInfo((xmlChar *) name, source->doc->URL);
+    info = addCallInfo((xmlChar *) name, (xmlChar *) templ->nameURI,
+		       (xmlChar *) templ->mode, (xmlChar *) templ->modeURI,
+		       source->doc->URL);
 
     if (info) {
         callPointPtr cur;

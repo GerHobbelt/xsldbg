@@ -175,6 +175,37 @@ extern "C" {
 #endif
     int lookupName(xmlChar * name, xmlChar ** matchList);
 
+#ifdef USE_GNOME_DOCS
+
+/**
+ * fullQName:
+ * @nameURI : QName part of name
+ * @name : Local part of name 
+ *
+ * Join nameURI to name
+ *
+ * Returns a copy of "nameURI:name"
+ *
+ */
+
+#else
+#ifdef USE_KDE_DOCS
+
+/**
+ * Join nameURI to name
+ *
+ * @returns a copy of "nameURI:name"
+
+ * fullQName:
+ * @param nameURI : QName part of name
+ * @param name : Local part of name 
+ *
+ *
+ */
+#endif
+#endif
+
+  xmlChar * fullQName(const xmlChar* nameURI, const xmlChar * name);
 
 #ifdef __cplusplus
 }

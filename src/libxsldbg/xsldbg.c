@@ -658,14 +658,14 @@ xsldbgMain(int argc, char **argv)
 #endif
         if ((!xmlStrCmp(argv[i], "-v")) || (!xmlStrCmp(argv[i], "-verbose"))) {
             xsltSetGenericDebugFunc(stderr, NULL);
-        } else if ((!xmlStrCmp(argv[i], "-o")) ||
-                   (!xmlStrCmp(argv[i], "-output"))) {
+        } else if ((xmlStrEqual(argv[i], "-o")) ||
+                   (xmlStrEqual(argv[i], "-output"))) {
 	    argv[i] = NULL;
 	    i++;
 	    result = xslDbgShellOutput((xmlChar*)argv[i]);
 	    argv[i] = NULL;
-        } else if ((!xmlStrCmp(argv[i], "-V")) ||
-                   (!xmlStrCmp(argv[i], "-version"))) {
+        } else if ((xmlStrEqual(argv[i], "-V")) ||
+                   (xmlStrEqual(argv[i], "-version"))) {
             xsltGenericError(xsltGenericErrorContext,
                              " xsldbg created by Keith Isdale <k_isdale@tpg.com.au>\n");
             xsltGenericError(xsltGenericErrorContext,
@@ -686,14 +686,14 @@ xsldbgMain(int argc, char **argv)
                              "libexslt %d was compiled against libxml %d\n",
                              exsltLibexsltVersion, exsltLibxmlVersion);
             argv[i] = NULL;
-        } else if (!xmlStrCmp(argv[i], "-norman")) {
+        } else if (xmlStrEqual(argv[i], "-norman")) {
             if (result) {
                 result = optionsSetIntOption(OPTIONS_PROFILING, 1);
                 argv[i] = NULL;
             }
-        } else if (!xmlStrCmp(argv[i], "-nonet")) {
+        } else if (xmlStrEqual(argv[i], "-nonet")) {
             xmlSetExternalEntityLoader(xmlNoNetExternalEntityLoader);
-        } else if (!xmlStrCmp(argv[i], "-param")) {
+        } else if (xmlStrEqual(argv[i], "-param")) {
             i++;
             arrayListAdd(optionsGetParamItemList(),
                          optionsParamItemNew((xmlChar *) argv[i],
@@ -704,7 +704,7 @@ xsldbgMain(int argc, char **argv)
                                  "Too many params\n");
                 return (1);
             }
-        } else if (!xmlStrCmp(argv[i], "-maxdepth")) {
+        } else if (xmlStrEqual(argv[i], "-maxdepth")) {
             int value;
 
             argv[i] = NULL;
@@ -716,13 +716,13 @@ xsldbgMain(int argc, char **argv)
             argv[i] = NULL;
 
 
-        } else if (!xmlStrCmp(argv[i], "-repeat")) {
+        } else if (xmlStrEqual(argv[i], "-repeat")) {
             if (optionsGetIntOption(OPTIONS_REPEAT) == 0)
                 optionsSetIntOption(OPTIONS_REPEAT, 20);
             else
                 optionsSetIntOption(OPTIONS_REPEAT, 100);
 
-        } else if (!xmlStrCmp(argv[i], "-cd")) {
+        } else if (xmlStrEqual(argv[i], "-cd")) {
             argv[i] = NULL;
             if (i + 1 < argc) {
                 i++;

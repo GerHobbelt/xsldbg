@@ -15,7 +15,7 @@ require "xsldbgmatch.pl";
     
     if (xsldbgmatch::breakpointMatch( 
              "",  
-               "17",
+               "20",
                  $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -25,7 +25,7 @@ require "xsldbgmatch.pl";
     
     if (xsldbgmatch::breakpointMatch( 
              "",  
-               "17",
+               "20",
                  $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -35,7 +35,7 @@ require "xsldbgmatch.pl";
     
     if (xsldbgmatch::breakpointMatch( 
              "",  
-               "18",
+               "21",
                  $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -75,7 +75,7 @@ require "xsldbgmatch.pl";
     
     if (xsldbgmatch::breakpointMatch( 
              "",  
-               "19",
+               "22",
                  $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -85,7 +85,7 @@ require "xsldbgmatch.pl";
     
     if (xsldbgmatch::breakpointMatch( 
              "",  
-               "19",
+               "22",
                  $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -95,7 +95,7 @@ require "xsldbgmatch.pl";
     
     if (xsldbgmatch::breakpointMatch( 
              "",  
-               "20",
+               "23",
                  $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;

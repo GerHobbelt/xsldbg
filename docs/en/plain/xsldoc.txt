@@ -1,5 +1,5 @@
 
-         xsldbg version 2.2.3
+         xsldbg version 3.0.1
          ====================
 
     xsldbg help
@@ -13,9 +13,11 @@ xsldbg is similar to gdb. It has three major modes of execution of stylesheets.
 On systems with readline library available you can use the back/forward keys to navigate the history of entered commands. On all systems the last entered command can be repeated by just pressing the <ENTER> key.
 If your operating system supports it file names will be expanded.
 
-     TEMPLATENAME : A valid template name. Only to contain ASCI character codes 0x00 to 0x7F
+     TEMPLATE_NAME : A valid template name contains only ASCI character codes 0x00 to 0x7F. And can be a fully qualified name ie "xsl:templateName".
      FILENAME : A valid file name local to the system of the user. It can have a "~" prefix on *nix and CYGWIN platforms. Or environment variables under RISC OS
      URI : A Uniform Resource Identifiers as defined by RFC 2396
+     MODE_NAME The mode of template which can be fully qualified name ie "xsl:modeName".
+     QNAME : A fully qualified name ie "xsl:localPart"
      LINENO : A valid line number in associated <FILENAME>
      NUMBER_OF_FRAMES : a valid line number frames to change position by
      BREAKPOINT_ID : a valid break point number
@@ -78,12 +80,15 @@ xsldbg will try to guess the complete URL given a
      a file name relative to the current working directory of xsldbg
 Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 break -l xsldoc.xsl 26
+Will match a partial or complete QNAME template and or mode name provided. Eg "template" will match any QName with a local part of "template"
 Usage:
 
      break -l <FILENAME> <LINENO>   (To set breakpoint at specified file, line number)
      break -l <URI> <LINENO>   (To set breakpoint at specified URI, line number)
-     break <TEMPLATENAME>   (To break at named template.)
+     break <TEMPLATE_NAME>   (To break at named or matched template.)
+     break <TEMPLATE_NAME> <MODE_NAME>   (To break at named template with given mode.)
      break *   (To break at any template found.)
+     break \*   (To break at the "*" template. Other name that include '*' will not be treated specialy.)
      break   (To break point at current node. Yes that includes xml data nodes!)
 - - - - - - - - - - - - - - - - - - - -
 
@@ -110,7 +115,7 @@ Summary : Change to the path specified by a xpath.
 Usage:
 
      cd <XPATH>
-     cd -t<TEMPLATENAME>   (To changes current SOURCE node to a be xsl template with name <NAME>, but does execute source command)
+     cd -t<TEMPLATE_NAME>   (To changes current SOURCE node to a be xsl template with name <NAME>, but does execute source command)
      cd -s<XPATH>   (An absolute xPath to node within stylesheet)
      cd <SHORTCUT> <XPATH>
      Where SHORTCUT can be either
@@ -282,7 +287,7 @@ Usage:
 
 
 Command : Load
-Summary : Load the xsldbg's options user preferences from disk
+Summary : Load the xsldbg's options and user preferences from disk
 Usage:
 
      load
@@ -366,7 +371,7 @@ Usage:
 
 
 Command : Save
-Summary : Save the xsldbg's options user preferences to disk
+Summary : Save the xsldbg's options and user preferences to disk
 Usage:
 
      save

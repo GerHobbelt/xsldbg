@@ -37,11 +37,11 @@ A:link, A:visited, A:active { text-decoration: underline }
 
 --></style>
 <title>
-           xsldbg 2.2.3 documentation
+           xsldbg 3.0.1 documentation
          </title>
 </head>
 <body bgcolor="#8b7765" text="#000000" link="#000000" vlink="#000000"><table class="listbody"><tr><td>
-<h1 class="cmdth">xsldbg 2.2.3</h1>
+<h1 class="cmdth">xsldbg 3.0.1</h1>
 <h2 class="cmdth">Overview</h2>
 <h3>xsldbg help</h3>
 
@@ -69,9 +69,11 @@ If your operating system supports it file names will be expanded.
 <table class="list"><tr>
 <td width="10"></td>
 <td><table class="listbody">
-<tr><td>TEMPLATENAME : A valid template name. Only to contain ASCI character codes 0x00 to 0x7F    </td></tr>
+<tr><td>TEMPLATE_NAME : A valid template name contains only ASCI character codes 0x00 to 0x7F. And can be a fully qualified name ie &quot;xsl:templateName&quot;.     </td></tr>
 <tr><td>FILENAME : A valid file name local to the system of the user. It can have a &quot;~&quot; prefix on *nix and CYGWIN platforms. Or environment variables under RISC OS    </td></tr>
 <tr><td>URI : A Uniform Resource Identifiers as defined by RFC 2396    </td></tr>
+<tr><td>MODE_NAME The mode of template which can be fully qualified name ie &quot;xsl:modeName&quot;.    </td></tr>
+<tr><td>QNAME : A fully qualified name ie &quot;xsl:localPart&quot;    </td></tr>
 <tr><td>LINENO : A valid line number in associated &lt;FILENAME&gt;    </td></tr>
 <tr><td>NUMBER_OF_FRAMES : a valid line number frames to change position by    </td></tr>
 <tr><td>BREAKPOINT_ID : a valid break point number    </td></tr>
@@ -182,6 +184,8 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </p>
 <p> break -l xsldoc.xsl 26
 </p>
+<p>Will match a partial or complete QNAME template and or mode name provided. Eg &quot;template&quot; will match any QName with a local part of &quot;template&quot;
+</p>
 </td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>
@@ -190,8 +194,10 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <td><table class="listbody">
 <tr><td>break -l &lt;FILENAME&gt; &lt;LINENO&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(To set breakpoint at specified file, line number)</i>    </td></tr>
 <tr><td>break -l &lt;URI&gt; &lt;LINENO&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(To set breakpoint at specified URI, line number)</i>    </td></tr>
-<tr><td>break &lt;TEMPLATENAME&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(To break at named template.)</i>    </td></tr>
+<tr><td>break &lt;TEMPLATE_NAME&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(To break at named or matched template.)</i>    </td></tr>
+<tr><td>break &lt;TEMPLATE_NAME&gt; &lt;MODE_NAME&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(To break at named template with given mode.)</i>    </td></tr>
 <tr><td>break *&nbsp;&nbsp;&nbsp;&nbsp;<i>(To break at any template found.)</i>    </td></tr>
+<tr><td>break \*&nbsp;&nbsp;&nbsp;&nbsp;<i>(To break at the &quot;*&quot; template. Other name that include '*' will not be treated specialy.)</i>    </td></tr>
 <tr><td>break &nbsp;&nbsp;&nbsp;&nbsp;<i>(To break point at current node. Yes that includes xml data nodes!)</i>    </td></tr>
 </table></td>
 </tr>
@@ -231,7 +237,7 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <td width="10"></td>
 <td><table class="listbody">
 <tr><td>cd &lt;XPATH&gt;    </td></tr>
-<tr><td>cd -t&lt;TEMPLATENAME&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(To changes current SOURCE node to a be xsl template with name &lt;NAME&gt;, but does execute source command)</i>    </td></tr>
+<tr><td>cd -t&lt;TEMPLATE_NAME&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(To changes current SOURCE node to a be xsl template with name &lt;NAME&gt;, but does execute source command)</i>    </td></tr>
 <tr><td>cd -s&lt;XPATH&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(An absolute xPath to node within stylesheet)</i>    </td></tr>
 <tr><td>cd   &lt;SHORTCUT&gt; &lt;XPATH&gt;    </td></tr>
 <tr><td>     Where SHORTCUT can be either    </td></tr>
@@ -478,7 +484,7 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </table>
 <br><br><a name="load"></a><table width="100%" class="cmd">
 <th class="cmdth">Load</th>
-<tr class="cmdsummary"><td>Load the xsldbg's options user preferences from disk</td></tr>
+<tr class="cmdsummary"><td>Load the xsldbg's options and user preferences from disk</td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>
 <tr>
@@ -597,7 +603,7 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </table>
 <br><br><a name="save"></a><table width="100%" class="cmd">
 <th class="cmdth">Save</th>
-<tr class="cmdsummary"><td>Save the xsldbg's options user preferences to disk</td></tr>
+<tr class="cmdsummary"><td>Save the xsldbg's options and user preferences to disk</td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>
 <tr>

@@ -23,6 +23,7 @@
 #include "xsldbg.h"
 #include "debugXSL.h"
 #include "files.h"
+#include "utils.h"
 #include "xsldbgmsg.h"
 #include "xsldbgthread.h"       /* for getThreadStatus */
 
@@ -102,47 +103,53 @@ void
 printTemplateHelper(xsltTemplatePtr templ, int verbose,
                     int *templateCount, int *count, xmlChar * templateName)
 {
-    xmlChar *name, *defaultUrl = (xmlChar *) "<n/a>";
+  xmlChar *name, *defaultUrl = (xmlChar *) "<n/a>";
     const xmlChar *url;
 
-    if (templ) {
-        *templateCount = *templateCount + 1;
-        printTemplateHelper(templ->next, verbose,
-                            templateCount, count, templateName);
-        if (templ->elem && templ->elem->doc && templ->elem->doc->URL) {
-            url = templ->elem->doc->URL;
-        } else {
-            url = defaultUrl;
-        }
-        if (templ->match)
-            name = xmlStrdup(templ->match);
-        else
-            name = xmlStrdup(templ->name);
+      if (!templ) 
+        return;
 
-        if (name) {
-            if ((templateName != NULL) &&
-                (xmlStrcmp(templateName, name) != 0)) {
-                /*  search for template name supplied failed */
-                /* empty */
-            } else {
-                *count = *count + 1;
-                if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
-                    notifyListQueue(templ);
-                } else {
-                    if (verbose)
-                        xsltGenericError(xsltGenericErrorContext,
-                                         " template :\"%s\" in file %s : line %ld\n",
-                                         name, url,
-                                         xmlGetLineNo(templ->elem));
-                    else
-                        xsltGenericError(xsltGenericErrorContext,
-                                         "\"%s\" ", name);
-                }
-            }
-            xmlFree(name);
-        }
-        templ = templ->next;
-    }
+	  *templateCount = *templateCount + 1;
+	    printTemplateHelper(templ->next, verbose,
+				templateCount, count, templateName);
+	      if (templ->elem && templ->elem->doc && templ->elem->doc->URL) {
+		url = templ->elem->doc->URL;
+	      } else {
+		url = defaultUrl;
+		  }
+	      if (templ->match)
+		name = xmlStrdup(templ->match);
+	      else
+		name = fullQName(templ->nameURI, templ->name);
+
+	      if (name) {
+		if ((templateName != NULL) &&
+		    (xmlStrcmp(templateName, name) != 0)) {
+		  /*  search for template name supplied failed */
+		  /* empty */
+	        } else {
+		  xmlChar *modeTemp = NULL;
+		    *count = *count + 1;
+		      if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
+			notifyListQueue(templ);
+		      } else {
+			modeTemp = fullQName(templ->modeURI, templ->mode);
+		      }
+		      if (verbose)
+			 xsltGenericError(xsltGenericErrorContext,
+					  " template :\"%s\" mode :\"%s\" in file %s : line %ld\n",
+					  name, modeTemp, url,
+					  xmlGetLineNo(templ->elem));
+		      else
+			xsltGenericError(xsltGenericErrorContext,
+					 "\"%s\" ", name);
+		      if (modeTemp)
+			xmlFree(modeTemp);
+		   }
+	       
+		    xmlFree(name);
+	  
+	        }
 }
 
 

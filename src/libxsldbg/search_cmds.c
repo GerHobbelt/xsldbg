@@ -79,7 +79,7 @@ xslDbgShellSearch(xsltTransformContextPtr styleCtxt,
         arg = (xmlChar *) "//search/*";
     }
     strncpy((char *) buff, (char *) arg, sortOptionLen);
-    if (!xmlStrCmp(buff, sortOption)) {
+    if (xmlStrEqual(buff, sortOption)) {
         /* yep do sorting as well */
         if (snprintf
             ((char *) buff, DEBUG_BUFFER_SIZE,

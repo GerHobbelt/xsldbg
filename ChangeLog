@@ -1,3 +1,34 @@
+Keith Isdale 25 July 2002 <k_isdale@tpg.com.au>
+	Version 3.0.1
+	Break compatability with previous versions due to problems with 
+	   templates with a QName and mode ie
+		name ="xsl:template" mode = "xsl:mode"
+	Update documentaion to be able to create GNOME2 style appplication 
+	   documentation : See /docs/en/GNOME/gnome.docbook
+	Update KDE style documentation
+	Replace !xmlStrCmp with xmlStrEqual 
+	Changed break command to 
+		o Take two arguments a <TEMPLATE_NAME> <MODE_NAME>
+		o Become aware of QName properties for first or second argument 
+			eg 
+			break xsl:templateName xsl:modeName
+		o Only 
+			break *
+		  will cause breakpoints to be set on all templates
+		o To set a breakpoint on the "*" template use
+		        break \*
+		   Other arguments that have a "*" will not be specialy treated 
+		o If <TEMPLATE_NAME> or <MODE_NAME> does not have a non-local part of
+			their QName then a match will be made on all items with the same 
+	                local name. eg
+			    break h1 
+		  	will match on any template with 
+			    o a template name of "h1" 
+			    o a match that has "h1" in as its local name
+	Modified tests to suit changes
+			
+	
+	
 Keith Isdale 13th July 2002 <k_isdale@tpg.com.au>
       	Version 2.2.3
 	Fixed printing of values for xpath expressions

@@ -24,9 +24,8 @@ CPPFLAGS=-E -C -P
 GNOMEXSL_FILES= \
 articleinfo.xsl \
 commands.xsl  	\
-credits.xsl  	\
 overview.xsl  	\
-authors.xsl	\
+about.xsl	\
 xsldoc2gnome.xsl 
 
 APIDOCS_DIR=html

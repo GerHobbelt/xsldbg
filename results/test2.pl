@@ -528,7 +528,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: Unable to find template", 
+             "Error: No templates found", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;

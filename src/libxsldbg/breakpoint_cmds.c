@@ -24,7 +24,8 @@
 #include "debugXSL.h"
 #include "files.h"
 #include "utils.h"
-
+#include <libxml/valid.h>       /* needed for xmlSplitQName2 */
+#include <libxml/xpathInternals.h> /* needed for xmlNSLookup */
 #include "xsldbgthread.h"       /* for getThreadStatus() */
 #include "xsldbgmsg.h"
 
@@ -389,52 +390,117 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                 xsltGenericError(xsltGenericErrorContext,
                                  "Error: break command arguments not in format \"-l <FILE_NAME> <LINE_NUMBER>\"\n");
         }
-    } else if (xmlStrCmp(arg, "*") != 0) {
-        /* Add breakpoint at supplied template name */
-        xmlNodePtr templNode = findTemplateNode(style, arg);
-
-        if (templNode && templNode->doc) {
-            if (!breakPointAdd
-                (templNode->doc->URL, xmlGetLineNo(templNode), arg,
-                 DEBUG_BREAK_SOURCE))
-                xsltGenericError(xsltGenericErrorContext,
-                                 "Error: Breakpoint to template '%s' in file %s :"
-                                 "line %d exists \n", arg,
-                                 templNode->doc->URL,
-                                 xmlGetLineNo(templNode));
-            else
-                result = 1;
-        } else
-            xsltGenericError(xsltGenericErrorContext,
-                             "Error: Unable to find template '%s'\n", arg);
     } else {
         /* add breakpoint at all template names */
-        const xmlChar *name = NULL;
+        xmlChar *opts[2];
+	xmlChar *qName[3];
+        xmlChar *name = NULL, *nameURI = NULL, *mode = NULL, *modeURI = NULL;
 	xmlChar *tempUrl = NULL; /* we must use a non-const xmlChar *
 				   and we are not making a copy
 				   of orginal value so this must not be 
 				   freed */ 
         xmlChar *defaultUrl = (xmlChar *) "<n/a>";
         int newBreakPoints = 0;
+	int allTemplates = 0;
+	int argCount;
+	int found;	
         xsltTemplatePtr templ;
+
+	argCount = splitString(arg, 2, opts);
+	switch (argCount){
+	case 0:
+	  allTemplates = 1;
+	  break;
+	  
+	case 1:
+	  if (xmlStrEqual(arg, "*")){
+	    allTemplates = 1;	    
+	  }else{
+
+	    if (xmlStrEqual(arg, "\\*")){
+	      arg[0] = '*';
+	      arg[1] = '\0';
+	    }
+
+	    name = xmlSplitQName2(opts[0], &nameURI);
+	    if (name == NULL){
+	      name = xmlStrdup(opts[0]);
+	    }else{
+	      if (nameURI){
+		// get the real URI for this namespace
+		const xmlChar *temp = xmlXPathNsLookup(ctxt->xpathCtxt, nameURI);
+		if (temp)
+		  xmlFree(nameURI);
+		nameURI = xmlStrdup(temp);
+	      }
+	      
+	    }
+	  }
+	break;
+
+	case 2:
+            name = xmlSplitQName2(opts[0], &nameURI);
+            if (name == NULL)
+                name = xmlStrdup(opts[0]);
+	    if (nameURI){
+	      // get the real URI for this namespace
+	      const xmlChar *temp = xmlXPathNsLookup(ctxt->xpathCtxt, nameURI);
+	      if (temp)
+		xmlFree(nameURI);
+	      nameURI = xmlStrdup(temp);
+	    }
+            mode = xmlSplitQName2(opts[1], &modeURI);
+            if (mode == NULL)
+                mode = xmlStrdup(opts[1]);
+	    if (modeURI){
+	      // get the real URI for this namespace
+	      const xmlChar *temp = xmlXPathNsLookup(ctxt->xpathCtxt, modeURI);
+	      if (temp)
+		xmlFree(modeURI);
+	      modeURI = xmlStrdup(temp);
+	    }
+	  break;
+
+	default:	  
+	  xsltGenericError(xsltGenericErrorContext,
+                                 "Error: break command arguments not in format \"<TEMPLATE_NAME> <MODE_NAME>. Where <MODE_NAME> is optional \n");
+	  return 0;
+	}
 
         while (style) {
             templ = style->templates;
             while (templ) {
+	        found = 0;
                 if (templ->elem && templ->elem->doc
                     && templ->elem->doc->URL) {
                     tempUrl = (xmlChar *) templ->elem->doc->URL;
                 } else {
                     tempUrl = defaultUrl;
                 }
+		/*
                 if (templ->match)
                     name = templ->match;
                 else
                     name = templ->name;
-
-                if (name) {
+		*/
+		if (allTemplates)
+		  found = 1;
+		else{
+		  if (templ->match){
+		    if (xmlStrEqual(templ->match, name)){
+		      if (!mode || (xmlStrEqual(templ->mode, mode) && 
+				    (!modeURI || xmlStrEqual(templ->modeURI, modeURI))))
+			found = 1;
+		    }
+		  }else{
+			if(xmlStrEqual(templ->name, name) && 
+			   (!nameURI || xmlStrEqual(templ->nameURI, nameURI))) 
+			  found = 1;
+		  }
+		}
+                if (found) {
                     if (!breakPointAdd(tempUrl, xmlGetLineNo(templ->elem),
-                                       name, DEBUG_BREAK_SOURCE)) {
+                                       opts[0], DEBUG_BREAK_SOURCE)) {
                         xsltGenericError(xsltGenericErrorContext,
                                          "Error: Can't add breakPoint to file %s : line %d\n",
                                          tempUrl, xmlGetLineNo(templ->elem));
@@ -465,11 +531,19 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                              newBreakPoints);
         }
 
+        if (name)
+	  xmlFree(name);
+	if (nameURI)
+	  xmlFree(nameURI);
+	if (mode)
+	  xmlFree(mode);
+	if (modeURI)
+	  xmlFree(modeURI);
         if (defaultUrl)
             xmlFree(defaultUrl);
 	if (tempUrl)
 	  url = xmlStrdup(tempUrl);
-    }
+    }  // end add template breakpoints
 
     if (!result) {
         if (url)
@@ -549,7 +623,7 @@ xslDbgShellDelete(xmlChar * arg)
                                  "Error: delete command arguments not in format \"-l <FILE_NAME> <LINE_NUMBER>\" %s\n",
                                  errorPrompt);
         }
-    } else if (!xmlStrCmp("*", arg)) {
+    } else if (xmlStrEqual("*", arg)) {
         result = 1;
         /*remove all from breakpoints */
         breakPointEmpty();
@@ -672,7 +746,7 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
                                  "Error: enable/disable command arguments not in format \"-l <FILE_NAME> <LINE_NUMBER>\" %s\n",
                                  errorPrompt);
         }
-    } else if (!xmlStrCmp("*", arg)) {
+    } else if (xmlStrEqual("*", arg)) {
         result = 1;
         /*enable/disable all from breakpoints */
         walkBreakPoints((xmlHashScanner) xslDbgShellEnableBreakPoint,

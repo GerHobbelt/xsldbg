@@ -620,7 +620,7 @@ int
 xslDbgPrintCallStack(const xmlChar * arg)
 {
     int depth;
-    int result = 0;
+    int result = 1;
     callPointPtr callPointItem;
 
     if (arg == NULL) {
@@ -635,58 +635,86 @@ xslDbgPrintCallStack(const xmlChar * arg)
             }
             notifyListSend();
         } else {
-
+	    xmlChar *nameTemp, *modeTemp; 
             for (depth = callStackGetDepth(); depth >= 1; depth--) {
                 callPointItem = callStackGet(depth);
+		nameTemp = NULL;
+		modeTemp = NULL;
                 if (callPointItem && callPointItem->info) {
                     if (depth == callStackGetDepth()) {
                         xmlChar *curUrl = xsldbgUrl();
                         long curLine = xsldbgLineNo();
-
                         /* if possible list the current location */
                         if (rootCopy && (rootCopy->match || rootCopy->name)
-                            && curUrl) {
-
-                            if (rootCopy->match)
+                            && curUrl) {			    
+			    xmlChar *rootNameTemp, *rootModeTemp;
+			    rootNameTemp = fullQName(rootCopy->nameURI, rootCopy->name);
+			    rootModeTemp = fullQName(rootCopy->modeURI, rootCopy->mode);
+			    if (rootNameTemp && rootModeTemp){
+			      if (rootCopy->match)
                                 xsltGenericError(xsltGenericErrorContext,
-                                                 "#%d template :\"%s\"",
-                                                 depth, rootCopy->match);
-                            else
+                                                 "#%d template :\"%s\"  mode :\"%s\"",
+						 depth, rootCopy->match, 
+						 rootModeTemp);
+			      else
                                 xsltGenericError(xsltGenericErrorContext,
-                                                 "#%d template :\"%s\"",
-                                                 depth, rootCopy->name);
-                            xsltGenericError(xsltGenericErrorContext,
-                                             " in file %s : line %ld\n",
-                                             curUrl, curLine);
+                                                 "#%d template :\"%s\"  mode :\"%s\"",
+                                                 depth, rootNameTemp, rootModeTemp);
+			      xsltGenericError(xsltGenericErrorContext,
+					       " in file %s : line %ld\n",
+					       curUrl, curLine);
+			    }else{
+#ifdef WITH_XSLT_DEBUG_PROCESS
+			      xsltGenericError(xsltGenericErrorContext, "Error : Out Of memory\n");
+#endif
+			      result = 0;
+			    }
+			    if (rootNameTemp)
+			      xmlFree(rootNameTemp);
+			    if (rootModeTemp)
+			      xmlFree(rootModeTemp);
                         } else if (curUrl) {
                             xsltGenericError(xsltGenericErrorContext,
-                                             "#%d template :\"LIBXSLT_DEFAULT\"",
+                                             "#%d template :\"LIBXSLT_DEFAULT\" mode :\"\"",
                                              depth);
                             xsltGenericError(xsltGenericErrorContext,
                                              " in file %s : line %ld\n",
                                              curUrl, curLine);
                         }
-
                         if (curUrl)
                             xmlFree(curUrl);
 
                     }
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "#%d template :\"%s\"", depth - 1,
-                                     callPointItem->info->templateName);
-                    if (callPointItem->info->url)
+		    nameTemp = fullQName(callPointItem->info->templateURI,
+					 callPointItem->info->templateName);
+		    modeTemp = fullQName(callPointItem->info->modeURI,
+					 callPointItem->info->modeName);
+		    if (nameTemp && modeTemp){
+		      xsltGenericError(xsltGenericErrorContext,
+				       "#%d template :\"%s\"  mode :\"%s\"", depth - 1,
+				       nameTemp, modeTemp);
+		      if (callPointItem->info->url)
                         xsltGenericError(xsltGenericErrorContext,
                                          " in file %s : line %ld\n",
                                          callPointItem->info->url,
                                          callPointItem->lineNo);
-                    else
+		      else
                         xsltGenericError(xsltGenericErrorContext, "\n");
+		    }else{
+#ifdef WITH_XSLT_DEBUG_PROCESS
+		      xsltGenericError(xsltGenericErrorContext, "Error : Out Of memory\n");
+		      
+#endif
+		      result = 0;
+		    }
+		    
                 } else {
 #ifdef WITH_XSLT_DEBUG_PROCESS
                     xsltGenericError(xsltGenericErrorContext,
                                      "Error: Call stack item not found at depth %d :"
                                      " xslDbgPrintCallStack\n", depth);
 #endif
+		    result = 0;
                     break;
                 }
             }
@@ -705,6 +733,7 @@ xslDbgPrintCallStack(const xmlChar * arg)
              * thread always provide NO params to the where command */
             xsltGenericError(xsltGenericErrorContext,
                              "Error: Notification of a frame not supported\n");
+	    result = 0;
             return result;
         }
 
@@ -728,10 +757,10 @@ xslDbgPrintCallStack(const xmlChar * arg)
                                  "Error: Call stack item not found at templateDepth %d :"
                                  " xslDbgPrintCallStack\n", depth);
 #endif
+		result = 0;
             }
         }
     }
-    result = 1;
     return result;
 }
 
@@ -1044,24 +1073,29 @@ debugXSLBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
         node = tempNode;
     }
     if (root) {
+        xmlChar *nameTemp = NULL, *modeTemp = NULL;
+	nameTemp = fullQName(root->nameURI, root->name);
+	modeTemp = fullQName(root->modeURI, root->mode);
         if (terminalIO == NULL) {
             if (root->match)
                 xsltGenericError(xsltGenericErrorContext,
-                                 "\nReached template :\"%s\"\n",
-                                 root->match);
+                                 "\nReached template :\"%s\" mode:\"%s\"\n",
+                                 root->match, modeTemp);
             else
                 xsltGenericError(xsltGenericErrorContext,
-                                 "\nReached template :\"%s\"\n",
-                                 root->name);
+                                 "\nReached template :\"%s\" mode:\"%s\"\n",
+                                 nameTemp, modeTemp);
         } else {
             if ((xslDebugStatus == DEBUG_TRACE) ||
                 (xslDebugStatus == DEBUG_WALK)) {
                 if (root->match)
-                    fprintf(terminalIO,
-                            "\nReached template :\"%s\"\n", root->match);
+		  fprintf(terminalIO,
+			  "\nReached template :\"%s\" mode:\"%s\"\n",
+			    root->match, modeTemp);
                 else
-                    fprintf(terminalIO,
-                            "\nReached template :\"%s\"\n", root->name);
+		  fprintf(terminalIO,
+			  "\nReached template :\"%s\" mode:\"%s\"\n",
+			  nameTemp, modeTemp);
             }
         }
     }

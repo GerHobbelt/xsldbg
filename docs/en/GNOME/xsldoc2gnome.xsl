@@ -24,14 +24,15 @@ This is achieved useing $xsldbg_version and $xsldbg_date
 
   <xsl:param name="xsldbg_version" select="'0.5.9'"/>
   <xsl:param name="xsldbg_date" select="'12/13/2001'"/>
+  <xsl:variable name="manrevision" select="'1.0'"/>
+  <xsl:variable name="date" select="$xsldbg_date"/>
   <xsl:param name="use_cs2" select="0"/>
-  <xsl:variable name="doc_version" select="'0.1'"/>
+  <xsl:variable name="doc_version" select="'0.3'"/>
   <xsl:strip-space elements="title list li para entry"/>
   <xsl:include href="articleinfo.xsl"/>
   <xsl:include href="overview.xsl"/>
   <xsl:include href="commands.xsl"/>
-  <xsl:include href="authors.xsl"/>
-  <xsl:include href="credits.xsl"/>
+  <xsl:include href="about.xsl"/>
 
   <xsl:template match="/xsldoc">
     <xsl:call-template name="article_header"/>
@@ -41,18 +42,17 @@ This is achieved useing $xsldbg_version and $xsldbg_date
   <xsl:comment>appropriate code </xsl:comment>
   <xsl:call-template name="overview_section"/>
   <xsl:call-template name="command_section"/>
-  <xsl:call-template name="author_section"/>
-  <xsl:call-template name="credit_section"/> 
+  <xsl:call-template name="about_section"/>
   </article>
   </xsl:template>
 
   <xsl:template match="para">
     <xsl:choose>
       <xsl:when test="@title">
-        <section>
+        <sect2>
            <title><xsl:value-of select="@title"/></title>
            <xsl:apply-templates />
-        </section>
+        </sect2>
       </xsl:when>
       <xsl:otherwise>
         <para>

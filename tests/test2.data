@@ -222,7 +222,7 @@ break /</test>
 <test>break BAD_TEMPLATENAME</test>
 <result>
 <row>
-<matchtext>Error: Unable to find template</matchtext>
+<matchtext>Error: No templates found</matchtext>
 </row>
 </result>
 </cmd>

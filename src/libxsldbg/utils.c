@@ -147,11 +147,41 @@ lookupName(xmlChar * name, xmlChar ** matchList)
         return result;
 
     for (nameIndex = 0; matchList[nameIndex]; nameIndex++) {
-        if (!xmlStrCmp(name, matchList[nameIndex])) {
+        if (xmlStrEqual(name, matchList[nameIndex])) {
             result = nameIndex;
             break;
         }
     }
 
     return result;
+}
+
+/**
+ * fullQName:
+ * @nameURI : QName part of name
+ * @name : Local part of name 
+ *
+ * Join nameURI to name
+ *
+ * Returns a copy of "nameURI:name"
+ *
+ */
+
+xmlChar * fullQName(const xmlChar* nameURI, const xmlChar * name)
+{
+  xmlChar *result = NULL;
+  if (!nameURI && !name)
+    result =  xmlStrdup("");
+  else{
+    if (nameURI == NULL){
+      result = xmlStrdup(name);
+    }else{
+      result = (xmlChar*) xmlMalloc(sizeof(char) * (
+			  strlen(name) +
+			  strlen(nameURI) + 3));
+      if (result)
+	sprintf(result, "%s:%s",  nameURI, name);
+    }
+  }
+  return result;
 }

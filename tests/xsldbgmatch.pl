@@ -7,18 +7,18 @@ sub templateListMatch{
   my ($template, $fileName, $line,  $testName) = @_;
   my $result = 1;
   while (<STDIN>) {
-    if ($_ =~ /^ template :\"(.*)\" in file ([^ ]*) : line ([0-9]*)/) {
+    if ($_ =~ /^ template :\"(.*)\" mode :\"(.*)\" in file ([^ ]*) : line ([0-9]*)/) {
       if (($template ne "") && ($template ne $1 )) {
 	printf "template bad expected \"$template\" found \"$1\"\n";
 	$result = 0;
       }
 
-      if (($fileName ne "") && ($fileName ne $2 )) {
-	printf "file bad expected \"$fileName\" found \"$2\"\n";
+      if (($fileName ne "") && ($fileName ne $3 )) {
+	printf "file bad expected \"$fileName\" found \"$3\"\n";
 	$result = 0;
       }
-      if (($line ne "") && ($line ne $3 )) {
-	printf "line bad expected \"$line\" found \"$3\"\n";
+      if (($line ne "") && ($line ne $4 )) {
+	printf "line bad expected \"$line\" found \"$4\"\n";
 	$result = 0;
       }
       if ($result == 1) {

@@ -11,7 +11,7 @@
   </xsl:template>
 
   <xsl:template match="cmd">
-    <xsl:element name="section">
+    <xsl:element name="sect2">
       <xsl:attribute name="id" >
         <xsl:value-of select="concat(@name, '_cmd')"/>
       </xsl:attribute>

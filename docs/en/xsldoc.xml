@@ -29,9 +29,11 @@ the &lt;ENTER&gt; key.
 If your operating system supports it file names will be expanded. 
 </para>
 <para title="Legend :">
-<list><li>TEMPLATENAME : A valid template name. Only to contain ASCI character codes 0x00 to 0x7F</li>
+<list><li>TEMPLATE_NAME : A valid template name contains only ASCI character codes 0x00 to 0x7F. And can be a fully qualified name ie "xsl:templateName". </li>
 <li>FILENAME : A valid file name local to the system of the user. It can have a &quot;~&quot; prefix on *nix and CYGWIN platforms. Or environment variables under RISC OS</li>
 <li>URI : A Uniform Resource Identifiers as defined by RFC 2396</li>
+<li>MODE_NAME The mode of template which can be fully qualified name ie "xsl:modeName".</li>
+<li>QNAME : A fully qualified name ie "xsl:localPart"</li>
 <li>LINENO : A valid line number in associated &lt;FILENAME&gt;</li>
 <li>NUMBER_OF_FRAMES : a valid line number frames to change position by</li>
 <li>BREAKPOINT_ID : a valid break point number</li>
@@ -48,6 +50,7 @@ If your operating system supports it file names will be expanded.
 <li>DATA : The xml data(document) being/to be processed by the stylesheet. See &lt;FILENAME&gt; and &lt;URI&gt;</li>
 <li>DEVICE_PATH : Is a valid terminal on the operating system</li>
 <li>TTY_LEVEL : Is a valid level of input/output to use</li>
+
 </list>
 </para>
 
@@ -494,6 +497,8 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </para>
 <para> break -l xsldoc.xsl 26
 </para>
+<para>Will match a partial or complete QNAME template and or mode name provided. Eg &quot;template&quot; will match any QName with a local part of &quot;template&quot;
+</para>
 </body>
 <usage>
 <li>
@@ -505,17 +510,26 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <comment>(To set breakpoint at specified URI, line number)</comment>
 </li>
 <li>
-<text>break &lt;TEMPLATENAME&gt;</text>
-<comment>(To break at named template.)</comment>
+<text>break &lt;TEMPLATE_NAME&gt;</text>
+<comment>(To break at named or matched template.)</comment>
+</li>
+<li>
+<text>break &lt;TEMPLATE_NAME&gt; &lt;MODE_NAME&gt;</text>
+<comment>(To break at named template with given mode.)</comment>
 </li>
 <li>
 <text>break *</text>
 <comment>(To break at any template found.)</comment>
 </li>
 <li>
+<text>break \*</text>
+<comment>(To break at the &quot;*&quot; template. Other name that include '*' will not be treated specialy.)</comment>
+</li>
+<li>
 <text>break </text>
 <comment>(To break point at current node. Yes that includes xml data nodes!)</comment>
 </li>
+
 </usage>
 </cmd>
 
@@ -765,7 +779,7 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <text>cd &lt;XPATH&gt;</text>
 </li>
 <li>
-<text>cd -t&lt;TEMPLATENAME&gt;</text>
+<text>cd -t&lt;TEMPLATE_NAME&gt;</text>
 <comment>(To changes current SOURCE node to a be xsl template with name &lt;NAME&gt;, but does execute source command)</comment>
 </li>
 <li>
@@ -805,7 +819,7 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </cmd>
 
 <cmd name="load" title="Load">
-<summary>Load the xsldbg's options user preferences from disk</summary>
+<summary>Load the xsldbg's options and user preferences from disk</summary>
 <usage>
 <li>
 <text>load</text>
@@ -814,7 +828,7 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </cmd>
 
 <cmd name="save" title="Save">
-<summary>Save the xsldbg's options user preferences to disk</summary>
+<summary>Save the xsldbg's options and user preferences to disk</summary>
 <usage>
 <li>
 <text>save</text>

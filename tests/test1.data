@@ -23,19 +23,19 @@
 	<template name="/" file="test1.xsl" line="11"/>	
       </row>
       <row>
-	<template name="html" line="15"/>
+	<template name="html" line="21"/>
       </row>
       <row>
-	<template name="head" line="19"/>
+	<template name="head" line="25"/>
       </row>
       <row>
-	<template name="body" line="23"/>
+	<template name="body" line="29"/>
       </row>
       <row>
-	<template name="h1" line="27"/>
+	<template name="h1" line="33"/>
       </row>
       <row>
-	<template name="para" line="31"/>
+	<template name="para" line="37"/>
       </row>
     </result>
   </cmd>

@@ -40,7 +40,7 @@ require "xsldbgmatch.pl";
     if (xsldbgmatch::templateListMatch( 
              "html", 
                "",  
-                 "15", 
+                 "21", 
                     $testName) == 0){
       $failedTestCount = $failedTestCount + 1;
       $result = 0;
@@ -51,7 +51,7 @@ require "xsldbgmatch.pl";
     if (xsldbgmatch::templateListMatch( 
              "head", 
                "",  
-                 "19", 
+                 "25", 
                     $testName) == 0){
       $failedTestCount = $failedTestCount + 1;
       $result = 0;
@@ -62,7 +62,7 @@ require "xsldbgmatch.pl";
     if (xsldbgmatch::templateListMatch( 
              "body", 
                "",  
-                 "23", 
+                 "29", 
                     $testName) == 0){
       $failedTestCount = $failedTestCount + 1;
       $result = 0;
@@ -73,7 +73,7 @@ require "xsldbgmatch.pl";
     if (xsldbgmatch::templateListMatch( 
              "h1", 
                "",  
-                 "27", 
+                 "33", 
                     $testName) == 0){
       $failedTestCount = $failedTestCount + 1;
       $result = 0;
@@ -84,7 +84,7 @@ require "xsldbgmatch.pl";
     if (xsldbgmatch::templateListMatch( 
              "para", 
                "",  
-                 "31", 
+                 "37", 
                     $testName) == 0){
       $failedTestCount = $failedTestCount + 1;
       $result = 0;

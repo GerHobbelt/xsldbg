@@ -5,14 +5,14 @@
     <sect1 id="overview_section">
       <title>Overview</title>
       <xsl:for-each select="overview/body">
-            <xsl:element name="section">
+            <xsl:element name="sect2">
               <xsl:attribute name="id">
                 <xsl:value-of select="concat('overview', string(position()))"/>
               </xsl:attribute>
               <xsl:apply-templates />
              </xsl:element>
           </xsl:for-each>
-     </sect1>
+    </sect1>
   </xsl:template>
 
 </xsl:stylesheet>

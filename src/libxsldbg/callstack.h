@@ -47,7 +47,8 @@ extern "C" {
     typedef struct _callPointInfo callPointInfo;
     typedef callPointInfo *callPointInfoPtr;
     struct _callPointInfo {
-        xmlChar *templateName;
+        xmlChar *templateName, *templateURI;
+        xmlChar *modeName, *modeURI;
         xmlChar *url;
         callPointInfoPtr next;
     };

@@ -36,8 +36,8 @@
          (V.MM.LL), it could be used by automation scripts.
          Do NOT change these in the translation. -->
     
-      <date>07/12/2001</date>
-      <releaseinfo>0.8.5</releaseinfo>
+      <date>13/12/2001</date>
+      <releaseinfo><xsl:value-of select="$xsldbg_version"/></releaseinfo>
       <abstract>
         <para>
 xsldbg is a tool intended to help understand stylesheets. 
