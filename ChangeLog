@@ -1,4 +1,20 @@
 Keith Isdale 26 July 2002 <k_isdale@tpg.com.au>	
+	Version 3.0.4
+	Fixed output of cat command so that expressions that
+	  result in an string have surrounding single quotes
+	Fixed a segfault when using enable command that would occur 
+		if an invalid line nunber was provided
+	Fixed output of break command when errors occur on setting a template that already exist
+	When setting break point appended mode name to the name of template 
+		at which breakpoint occured. This is slight improvement it is
+		hard to make sense to be made of breakpoints at very complex 
+		templates ig 
+		<xsl:template match="* | @" mode="modeName" />
+	Added support for mode names in breakpoints and updated
+		"show" command to suit
+	
+	
+Keith Isdale 26 July 2002 <k_isdale@tpg.com.au>	
 	Version 3.0.3
 	Fixed typos so that "Error :" to become "Error:"
 	Fixed poutput of templates command when running xsldbg as a thread

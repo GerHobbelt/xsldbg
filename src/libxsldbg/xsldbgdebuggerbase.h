@@ -82,7 +82,8 @@ class XSLDBG_SO_API XsldbgDebuggerBase : public QObject {
 
    /** Add breakpoint to view, First parameter is QString::null
        to indicate start of breakpoint list notfication */
-   void breakpointItem(QString /* fileName*/, int /* lineNumber */, QString /*templateName*/,
+   void breakpointItem(QString /* fileName*/, int /* lineNumber */, 
+		       QString /*templateName*/, QString /* modeName */,
  		      bool /* enabled */, int /* id */);
 
   /** Add global variable to view, First parameter is QString::null

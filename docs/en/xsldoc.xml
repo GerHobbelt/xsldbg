@@ -28,6 +28,10 @@ the &lt;ENTER&gt; key.
 <para>
 If your operating system supports it file names will be expanded. 
 </para>
+<para>Several commands take more that one argument. Some arguments can be 
+ sourrounded by quotes to complex argument to be proceesed as one 
+  argument. eg break quot;* | @quot; would allow you to se a breakpoint on the 
+  template with the name quot;* | @quot;</para>
 <para title="Legend :">
 <list><li>TEMPLATE_NAME : A valid template name contains only ASCI character codes 0x00 to 0x7F. And can be a fully qualified name ie "xsl:templateName". </li>
 <li>FILENAME : A valid file name local to the system of the user. It can have a &quot;~&quot; prefix on *nix and CYGWIN platforms. Or environment variables under RISC OS</li>
@@ -497,7 +501,10 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </para>
 <para> break -l xsldoc.xsl 26
 </para>
-<para>Will match a partial or complete QNAME template and or mode name provided. Eg &quot;template&quot; will match any QName with a local part of &quot;template&quot;
+<para>This command will match a partial or complete QNAME template and or mode name provided. Eg &quot;template&quot; will match any QNAME with a local part of &quot;template&quot;
+</para>
+<para>Any name spaces in the provided QNAME will be expanded as specified 
+by the names spaces defined in the XSL SOURCE file. eg "xsl:test1"  will be expanded to "http://www.w3.org/199/XSL/Transform:test1"
 </para>
 </body>
 <usage>
@@ -541,6 +548,16 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <summary>To display list of template break points.</summary>
 <body>
 <para>Shortcut name: show</para>
+<para>If a mode exists on a template breakpoint then it will
+      be appended to the end of template name for breakpoint. An example of the output is :
+<list>
+<li> Breakpoint 3 enabled for template :&quot;*&quot; in file test1.xsl : line 105</li>
+<li> Breakpoint 2 enabled for template :&quot;* testMode&quot; in file test1.xsl : line 109</li>
+<li> Breakpoint 1 enabled for template :&quot;* http://www.w3.org/1999/XSL/Transform:testMode&quot; in file test1.xsl : line 113</li>
+<li></li>
+<li>  Total of 3 breakpoints present</li>
+</list>
+</para>
 </body>
 <usage>
 <li>

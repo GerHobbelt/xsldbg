@@ -1,5 +1,5 @@
 
-         xsldbg version 3.0.2
+         xsldbg version 3.0.4
          ====================
 
     xsldbg help
@@ -12,6 +12,7 @@ xsldbg is similar to gdb. It has three major modes of execution of stylesheets.
 
 On systems with readline library available you can use the back/forward keys to navigate the history of entered commands. On all systems the last entered command can be repeated by just pressing the <ENTER> key.
 If your operating system supports it file names will be expanded.
+Several commands take more that one argument. Some arguments can be sourrounded by quotes to complex argument to be proceesed as one argument. eg break quot;* | @quot; would allow you to se a breakpoint on the template with the name quot;* | @quot;
 
      TEMPLATE_NAME : A valid template name contains only ASCI character codes 0x00 to 0x7F. And can be a fully qualified name ie "xsl:templateName".
      FILENAME : A valid file name local to the system of the user. It can have a "~" prefix on *nix and CYGWIN platforms. Or environment variables under RISC OS
@@ -80,7 +81,8 @@ xsldbg will try to guess the complete URL given a
      a file name relative to the current working directory of xsldbg
 Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 break -l xsldoc.xsl 26
-Will match a partial or complete QNAME template and or mode name provided. Eg "template" will match any QName with a local part of "template"
+This command will match a partial or complete QNAME template and or mode name provided. Eg "template" will match any QNAME with a local part of "template"
+Any name spaces in the provided QNAME will be expanded as specified by the names spaces defined in the XSL SOURCE file. eg "xsl:test1" will be expanded to "http://www.w3.org/199/XSL/Transform:test1"
 Usage:
 
      break -l <FILENAME> <LINENO>   (To set breakpoint at specified file, line number)
@@ -462,6 +464,13 @@ Command : Showbreak
 Summary : To display list of template break points.
 
 Shortcut name: show
+If a mode exists on a template breakpoint then it will be appended to the end of template name for breakpoint. An example of the output is :
+     Breakpoint 3 enabled for template :"*" in file test1.xsl : line 105
+     Breakpoint 2 enabled for template :"* testMode" in file test1.xsl : line 109
+     Breakpoint 1 enabled for template :"* http://www.w3.org/1999/XSL/Transform:testMode" in file test1.xsl : line 113
+     
+     Total of 3 breakpoints present
+
 Usage:
 
      showbreak

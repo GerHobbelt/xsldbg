@@ -253,6 +253,7 @@ breakPointItemNew(void)
         breakPtr->url = NULL;
         breakPtr->lineNo = -1;
         breakPtr->templateName = NULL;
+	breakPtr->modeName = NULL;
         breakPtr->enabled = 1;
         breakPtr->id = ++breakPointCounter;
         breakPtr->type = DEBUG_BREAK_SOURCE;
@@ -285,6 +286,8 @@ breakPointItemFree(void *payload, xmlChar * name ATTRIBUTE_UNUSED)
             xmlFree(breakPtr->url);
         if (breakPtr->templateName)
             xmlFree(breakPtr->templateName);
+	if (breakPtr->modeName)
+	  xmlFree(breakPtr->modeName);
         xmlFree(breakPtr);
     }
 }
@@ -333,6 +336,7 @@ breakPointSetActiveBreakPoint(breakPointPtr breakPtr)
  * @lineNumber: @lineNumber >= 0 and is available in url specified and
  *                points to an xml element
  * @templateName: The template name of breakPoint or NULL
+ * @modeName : The mode of breakpoint or NULL
  * @type: Valid BreakPointTypeEnum
  *
  * Add break point at file and line number specified
@@ -342,7 +346,9 @@ breakPointSetActiveBreakPoint(breakPointPtr breakPtr)
 */
 int
 breakPointAdd(const xmlChar * url, long lineNumber,
-              const xmlChar * templateName, BreakPointTypeEnum type)
+              const xmlChar * templateName, 
+	      const xmlChar * modeName,
+	      BreakPointTypeEnum type)
 {
     int result = 0, breakPointType = type;
     xmlHashTablePtr breakPointHash;     /* hash of breakPoints */
@@ -380,9 +386,14 @@ breakPointAdd(const xmlChar * url, long lineNumber,
         breakPtr->lineNo = lineNumber;
         if (templateName)
             breakPtr->templateName =
-                (xmlChar *) xmlMemStrdup((char *) templateName);
+                xmlStrdup( templateName);
         else
             breakPtr->templateName = NULL;
+	if (modeName)
+	    breakPtr->modeName = 
+	      xmlStrdup(modeName);
+	else
+	  breakPtr->modeName = NULL;
         breakPtr->type = breakPointType;
 
         /* add new breakPoint to the right hash table */
@@ -602,7 +613,12 @@ breakPointPrint(FILE * file, breakPointPtr breakPtr)
             fprintf(file, "disabled ");
 
         if (breakPtr->templateName) {
-            fprintf(file, "for template :\"%s\" ", breakPtr->templateName);
+	    if (breakPtr->modeName)
+	      fprintf(file, "for template :\"%s\" mode :\"%s\" ", 
+		      breakPtr->templateName, breakPtr->modeName);
+	    else
+	      fprintf(file, "for template :\"%s\" mode :\"\" ", 
+		      breakPtr->templateName);
         }
 
         if (breakPtr->url) {
@@ -620,9 +636,14 @@ breakPointPrint(FILE * file, breakPointPtr breakPtr)
             xsltGenericError(xsltGenericErrorContext, "disabled ");
 
         if (breakPtr->templateName) {
-            xsltGenericError(xsltGenericErrorContext,
-                             "for template :\"%s\" ",
-                             breakPtr->templateName);
+	    if (breakPtr->modeName)
+	         xsltGenericError(xsltGenericErrorContext,
+		    "for template :\"%s\" mode :\"%s\" ", 
+		     breakPtr->templateName, breakPtr->modeName);
+	    else
+	         xsltGenericError(xsltGenericErrorContext,
+		      "for template :\"%s\" mode :\"\" ", 
+		      breakPtr->templateName);
         }
 
         if (breakPtr->url) {

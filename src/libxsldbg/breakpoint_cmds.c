@@ -205,10 +205,12 @@ validateSource(xmlChar ** url, long *lineNo)
             xsltGenericError(xsltGenericErrorContext,
                              "Error: Unable to find a stylesheet file whose name contains %s\n",
                              *url);
-	    xsltGenericError(xsltGenericErrorContext,
+	    if (lineNo){
+	      xsltGenericError(xsltGenericErrorContext,
 			     "Warning: Breakpoint at file %s : line %ld doesn't "
 			     "seem to be valid.\n",
 			     *url, *lineNo);
+	    }
 	}
     }
 
@@ -376,12 +378,12 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                         if (filesIsSourceFile(url)) {
                             if (validateSource(&url, &lineNo))
                                 result =
-                                    breakPointAdd(url, lineNo, NULL,
+				  breakPointAdd(url, lineNo, NULL, NULL,
                                                   DEBUG_BREAK_SOURCE);
                         } else {
                             if (validateData(&url, &lineNo))
                                 result =
-                                    breakPointAdd(url, lineNo, NULL,
+                                    breakPointAdd(url, lineNo, NULL, NULL,
                                                   DEBUG_BREAK_DATA);
                         }
                     }
@@ -395,7 +397,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
         xmlChar *opts[2];
 	xmlChar *qName[3];
         xmlChar *name = NULL, *nameURI = NULL, *mode = NULL, *modeURI = NULL;
-	xmlChar *templateName = NULL;
+	xmlChar *templateName = NULL, *modeName = NULL;
 	xmlChar *tempUrl = NULL; /* we must use a non-const xmlChar *
 				   and we are not making a copy
 				   of orginal value so this must not be 
@@ -409,19 +411,22 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
         xsltTemplatePtr templ;
 
 	argCount = splitString(arg, 2, opts);
+	if ((argCount == 2) && (xmlStrLen(opts[1]) == 0))
+	    argCount = 1;
+
 	switch (argCount){
 	case 0:
 	  allTemplates = 1;
 	  break;
 	  
 	case 1:
-	  if (xmlStrEqual(arg, (xmlChar*)"*")){
+	  if (xmlStrEqual(opts[0], (xmlChar*)"*")){
 	    allTemplates = 1;	    
 	  }else{
 
-	    if (xmlStrEqual(arg, (xmlChar*)"\\*")){
-	      arg[0] = '*';
-	      arg[1] = '\0';
+	    if (xmlStrEqual(opts[0], (xmlChar*)"\\*")){
+	      opts[0][0] = '*';
+	      opts[0][1] = '\0';
 	    }
 
 	    name = xmlSplitQName2(opts[0], &nameURI);
@@ -500,14 +505,11 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
 				    (!modeURI || xmlStrEqual(templ->modeURI, 
 							     modeURI))))
 			found = 1;
-		    }
-		  else if (templ->match){
-		    if (xmlStrEqual(templ->match, name)){
-		      if (!mode || (xmlStrEqual(templ->mode, mode) && 
-				    (!modeURI || xmlStrEqual(templ->modeURI, 
-							     modeURI))))
-			found = 1;
-		    }
+		  } else if (templ->match){
+		    if ((xmlStrEqual(templ->match, name) &&
+			 (!modeURI || xmlStrEqual(templ->modeURI, 
+						  modeURI))))
+			found = 1;		     
 		  }else{
 			if(xmlStrEqual(templ->name, name) && 
 			   (!nameURI || xmlStrEqual(templ->nameURI, nameURI))) 
@@ -515,22 +517,32 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
 		  }
 	        }
                 if (found) {
-                    if (!breakPointAdd(tempUrl, xmlGetLineNo(templ->elem),
-                                       templateName, DEBUG_BREAK_SOURCE)) {
+		    if (templ->mode)
+		       modeName = 
+			 fullQName(templ->modeURI, templ->mode);
+		    if (!breakPointAdd(tempUrl, 
+					     xmlGetLineNo(templ->elem),
+                                       templateName, modeName, 
+					     DEBUG_BREAK_SOURCE)){
                         xsltGenericError(xsltGenericErrorContext,
                                          "Error: Can't add breakPoint to file %s : line %d\n",
                                          tempUrl, xmlGetLineNo(templ->elem));
                         xsltGenericError(xsltGenericErrorContext,
-                                         "Error: Breakpoint to template '%s' in file %s :"
-                                         " line %d exists \n", name,
+                                         "Error: Breakpoint to template :\"%s\" in file %s :"
+                                         " line %d exists \n", templateName,
                                          templ->elem->doc->URL,
                                          xmlGetLineNo(templ->elem));
-                    } else
+                    } else {
                         newBreakPoints++;
-                }
+		    }
+		}
 		if (templateName){
 		  xmlFree(templateName);
 		  templateName = NULL;
+		}
+		if (modeName){
+		  xmlFree(modeName);
+		  modeName = NULL;
 		}
                 templ = templ->next;
             }

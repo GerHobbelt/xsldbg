@@ -183,8 +183,9 @@ int main(void){
     fprintf(stdout,"Done!\n");
 
     fprintf(stdout, "\nTest for adding two duplicate breakpoints these should fail\n");
-    breakPointAdd((xmlChar*)"index.html", 1, (xmlChar*)"one", DEBUG_BREAK_SOURCE);
-    breakPointAdd((xmlChar*)"index2.html", 4, NULL, DEBUG_BREAK_SOURCE);
+    breakPointAdd((xmlChar*)"index.html", 1, (xmlChar*)"one", NULL,
+		  DEBUG_BREAK_SOURCE);
+    breakPointAdd((xmlChar*)"index2.html", 4, NULL, NULL, DEBUG_BREAK_SOURCE);
     fprintf(stdout,"Done!\n");
 
     
@@ -238,12 +239,12 @@ arrayListPtr createBreakPointList(void){
   if (list){
     /*    breakPointAdd(const xmlChar * url, long lineNumber,
 	  const xmlChar * templateName, int type) */
-    breakPointAdd((xmlChar*)"index.html", 1, (xmlChar*)"one", DEBUG_BREAK_SOURCE);
-    breakPointAdd((xmlChar*)"index2.html", 2, (xmlChar*)"two", DEBUG_BREAK_SOURCE);
-    breakPointAdd((xmlChar*)"index3.html", 3, (xmlChar*)"three", DEBUG_BREAK_SOURCE); 
-    breakPointAdd((xmlChar*)"index2.html", 1, (xmlChar*)"four", DEBUG_BREAK_SOURCE); 
-    breakPointAdd((xmlChar*)"index2.html", 3, NULL, DEBUG_BREAK_SOURCE); 
-    breakPointAdd((xmlChar*)"index2.html", 4, NULL, DEBUG_BREAK_SOURCE); 
+    breakPointAdd((xmlChar*)"index.html", 1, (xmlChar*)"one", NULL, DEBUG_BREAK_SOURCE);
+    breakPointAdd((xmlChar*)"index2.html", 2, (xmlChar*)"two", NULL, DEBUG_BREAK_SOURCE);
+    breakPointAdd((xmlChar*)"index3.html", 3, (xmlChar*)"three", NULL, DEBUG_BREAK_SOURCE); 
+    breakPointAdd((xmlChar*)"index2.html", 1, (xmlChar*)"four", NULL, DEBUG_BREAK_SOURCE); 
+    breakPointAdd((xmlChar*)"index2.html", 3, NULL, NULL, DEBUG_BREAK_SOURCE); 
+    breakPointAdd((xmlChar*)"index2.html", 4, NULL, NULL, DEBUG_BREAK_SOURCE); 
   }
   fprintf(stdout, "Done!\n");
   return list;

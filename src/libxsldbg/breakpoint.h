@@ -128,7 +128,7 @@ extern "C" {
     struct _breakPoint {
         xmlChar *url;
         long lineNo;
-        xmlChar *templateName;
+        xmlChar *templateName, *modeName;
         int enabled;
         BreakPointTypeEnum type;
         int id;
@@ -243,6 +243,7 @@ extern "C" {
  * @lineNumber: @lineNumber >= 0 and is available in url specified and
  *                points to an xml element
  * @templateName: The template name of breakPoint or NULL
+ * @modeName : The mode of breakpoint or NULL
  * @type: Valid BreakPointTypeEnum
  *
  * Add break point at file and line number specified
@@ -264,12 +265,14 @@ extern "C" {
  * @param lineNumber @p lineNumber >= 0 and is available in url specified and
  *                points to an xml element
  * @param temlateName The template name of break point or NULL
+ * @param modeName : The mode of breakpoint or NULL
  * @param type Valid BreakPointTypeEnum
 */
 #endif
 #endif
     int breakPointAdd(const xmlChar * url, long lineNumber,
                       const xmlChar * templateName,
+		      const xmlChar * modeName,
                       BreakPointTypeEnum type);
 
 

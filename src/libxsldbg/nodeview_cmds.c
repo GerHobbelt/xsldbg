@@ -267,7 +267,7 @@ printXPathObject(xmlXPathObjectPtr item, xmlChar* xPath){
 			     
 	  case XPATH_STRING:
 	    if (item->stringval)
-	      fprintf(file, "%s", item->stringval);
+	      fprintf(file, "\'%s\'", item->stringval);
 	    else
 	      fprintf(file, "NULL string value supplied");
 	    break;

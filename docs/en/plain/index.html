@@ -37,11 +37,11 @@ A:link, A:visited, A:active { text-decoration: underline }
 
 --></style>
 <title>
-           xsldbg 3.0.3 documentation
+           xsldbg 3.0.4 documentation
          </title>
 </head>
 <body bgcolor="#8b7765" text="#000000" link="#000000" vlink="#000000"><table class="listbody"><tr><td>
-<h1 class="cmdth">xsldbg 3.0.3</h1>
+<h1 class="cmdth">xsldbg 3.0.4</h1>
 <h2 class="cmdth">Overview</h2>
 <h3>xsldbg help</h3>
 
@@ -65,6 +65,10 @@ the &lt;ENTER&gt; key.
 <p>
 If your operating system supports it file names will be expanded. 
 </p>
+<p>Several commands take more that one argument. Some arguments can be 
+ sourrounded by quotes to complex argument to be proceesed as one 
+  argument. eg break quot;* | @quot; would allow you to se a breakpoint on the 
+  template with the name quot;* | @quot;</p>
 <h3>Legend :</h3>
 <table class="list"><tr>
 <td width="10"></td>
@@ -184,7 +188,10 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </p>
 <p> break -l xsldoc.xsl 26
 </p>
-<p>Will match a partial or complete QNAME template and or mode name provided. Eg &quot;template&quot; will match any QName with a local part of &quot;template&quot;
+<p>This command will match a partial or complete QNAME template and or mode name provided. Eg &quot;template&quot; will match any QNAME with a local part of &quot;template&quot;
+</p>
+<p>Any name spaces in the provided QNAME will be expanded as specified 
+by the names spaces defined in the XSL SOURCE file. eg &quot;xsl:test1&quot;  will be expanded to &quot;http://www.w3.org/199/XSL/Transform:test1&quot;
 </p>
 </td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
@@ -730,6 +737,19 @@ then searchresult.txt is printed to display.
 <tr class="cmdsummary"><td>To display list of template break points.</td></tr>
 <tr class="cmdtr"><td class="cmdtd">
 <p>Shortcut name: show</p>
+<p>If a mode exists on a template breakpoint then it will
+      be appended to the end of template name for breakpoint. An example of the output is :
+<table class="list"><tr>
+<td width="10"></td>
+<td><table class="listbody">
+<tr><td> Breakpoint 3 enabled for template :&quot;*&quot; in file test1.xsl : line 105    </td></tr>
+<tr><td> Breakpoint 2 enabled for template :&quot;* testMode&quot; in file test1.xsl : line 109    </td></tr>
+<tr><td> Breakpoint 1 enabled for template :&quot;* http://www.w3.org/1999/XSL/Transform:testMode&quot; in file test1.xsl : line 113    </td></tr>
+<tr><td>    </td></tr>
+<tr><td>  Total of 3 breakpoints present    </td></tr>
+</table></td>
+</tr></table>
+</p>
 </td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>

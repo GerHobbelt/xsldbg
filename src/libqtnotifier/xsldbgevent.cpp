@@ -466,10 +466,15 @@ void XsldbgEvent::handleBreakpointItem(XsldbgEventData *eventData, const  void *
 	eventData->setText(0, XsldbgDebuggerBase::fromUTF8(breakItem->url));				
 	/* line number*/
 	eventData->setInt(0, (int)breakItem->lineNo);
+
 	/* templateName */
 	eventData->setText(1, XsldbgDebuggerBase::fromUTF8(breakItem->templateName));
+
+	/* modeName */
+	eventData->setText(2, XsldbgDebuggerBase::fromUTF8(breakItem->modeName));
 	/*  enabled state */
 	eventData->setInt(1, (int)breakItem->enabled);
+
 	/* id value */
 	eventData->setInt(2, (int)breakItem->id);
       }
@@ -478,6 +483,7 @@ void XsldbgEvent::handleBreakpointItem(XsldbgEventData *eventData, const  void *
       emit debugger->breakpointItem(eventData->getText(0), /* file name*/
 				    eventData->getInt(0), /* line number*/
 				    eventData->getText(1), /* template name */
+				    eventData->getText(2), /* mode name */
 				    eventData->getInt(1),  /* enabled state*/
 				    eventData->getInt(2)  /* id*/);
     }
