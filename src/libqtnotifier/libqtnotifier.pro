@@ -1,5 +1,5 @@
 TEMPLATE = lib
-CONFIG += qt warn_on release
+CONFIG += qt warn_on release thread
 
 unix:INCLUDEPATH += $(LIBXSLT_PREFIX)/include
 unix:INCLUDEPATH += $(LIBXML_PREFIX)/include/libxml2
@@ -9,12 +9,15 @@ win32:INCLUDEPATH += $(LIBXML_PREFIX)/include
 win32:INCLUDEPATH += $(ICONV_PREFIX)/include
 INCLUDEPATH += ..
 INCLUDEPATH += ../..
-DEFINES += DOCS_PATH=\"$(DOCSPATH)\"
-win32:DEFINES+=WIN32
+DEFINES += DOCS_PATH=\"$(DOCSPATH)\" 
+win32:DEFINES+=WIN32 QT_DLL
+
+# we need runtime information for dynamic casts to work
+win32:TMAKE_CXXFLAGS = -GR
 
 DESTDIR =../../lib
 
-HEADERS += 
+HEADERS += xsldbg
 SOURCES += qtnotifier2.cpp \
            xsldbgdebuggerbase.cpp \
            xsldbgevent.cpp\

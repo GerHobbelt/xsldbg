@@ -103,12 +103,12 @@ XsldbgEvent::XsldbgEvent(XsldbgMessageEnum type, const void *data)
 	list.append(eventData);
     }
     for (int index = 0; index < arrayListCount(msgList->list); index++){
-      msgData = arrayListGet(msgList->list, index);
+      msgData = ::arrayListGet(msgList->list, index);
       eventData = createEventData(msgList->type, msgData);
       if (eventData != 0L)
 	list.append(eventData);      
     }
-    arrayListFree(msgList->list);
+    ::arrayListFree(msgList->list);
     msgList->list = 0L;
     itemType = msgList->type;
   }else{

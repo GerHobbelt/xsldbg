@@ -4,4 +4,11 @@ nb: docs/en/website/index.html includes a quick tutorial about using xsldbg
 
 The MSVC project files are in win32/dsp/
 
+For WIN32 users if you have tmake use
+	src/xsldbg.pro to create xsldbg.exe 
+
+For WIN32 users if you want to create qxsldbg you will need to use  
+	src/libxsldbg/libxsldbg.pro to create xsldbg.lib
+	src/libqtnotifier/libqtnotifier.pro to create qtnofier.lib
+
 The tests and results directories are only used under *nix platforms

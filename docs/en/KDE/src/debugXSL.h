@@ -46,6 +46,12 @@
 /* how may items have been printed */
     extern int printCount;
 
+  /* used to indicated that xsldbg should stop tracing/walking 
+     value : 1 stop tracing at start of next cycle
+     value : 0 normal operation 
+  */
+  extern int xsldbgStop;
+
 /****************************************************************
  *								*
  *	 The XSL shell related structures and functions		*

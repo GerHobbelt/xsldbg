@@ -26,13 +26,13 @@ XsldbgDebuggerBase *_debugger = 0L;
 int notifyXsldbgApp(XsldbgMessageEnum type, const void *data)
 {
     int result = 0;
-    if (getThreadStatus() == XSLDBG_MSG_THREAD_NOTUSED){
+    if (::getThreadStatus() == XSLDBG_MSG_THREAD_NOTUSED){
       return 1;
     }
 
     /* clear the input ready flag as quickly as possible*/
-     if ( getInputStatus() == XSLDBG_MSG_READ_INPUT)
-     	  setInputReady(0);
+     if ( ::getInputStatus() == XSLDBG_MSG_READ_INPUT)
+     	  ::setInputReady(0);
 
      /* state of the thread */
      if (_debugger != 0L){
@@ -44,8 +44,8 @@ int notifyXsldbgApp(XsldbgMessageEnum type, const void *data)
        }
      }
      
-    if (getThreadStatus() == XSLDBG_MSG_THREAD_STOP)
-        xsldbgThreadCleanup();        /* thread has died so cleanup after it */
+    if (::getThreadStatus() == XSLDBG_MSG_THREAD_STOP)
+        ::xsldbgThreadCleanup();        /* thread has died so cleanup after it */
 
     result++; /* at the moment this function will always work */
 

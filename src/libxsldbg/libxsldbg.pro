@@ -1,6 +1,6 @@
 
 TEMPLATE = lib
-CONFIG += qt warn_on release
+CONFIG += qt warn_on release thread
 
 unix:INCLUDEPATH += $(LIBXSLT_PREFIX)/include
 unix:INCLUDEPATH += $(LIBXML_PREFIX)/include/libxml2
@@ -11,7 +11,7 @@ win32:INCLUDEPATH += $(ICONV_PREFIX)/include
 INCLUDEPATH += ..
 INCLUDEPATH += ../..
 DEFINES += DOCS_PATH=\"$(DOCSPATH)\"
-win32:DEFINES += WIN32
+win32:DEFINES += WIN32 QT_DLL
 win32:LIBS += $(LIBXSLT_PREFIX)\lib\libexslt.lib $(LIBXSLT_PREFIX)\lib\libxslt.lib $(LIBXML_PREFIX)\lib\libxml2.lib 
 
 DESTDIR =../../lib
@@ -31,11 +31,10 @@ HEADERS += arraylist.h \
            utils.h \
            xsldbg.h \
            xsldbgconfig.h \
-           xsldbgdebuggerbase.h \
            xsldbgevent.h \
+           xsldbgdebuggerbase.h \
            xsldbgio.h \
            xsldbgmsg.h \
-           xsldbgnotifier.h \
            xsldbgthread.h 
 
 SOURCES += arraylist.c \

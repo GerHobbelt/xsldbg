@@ -184,7 +184,7 @@ xslDbgCatToFile(xmlNodePtr node, FILE * file)
         xmlDocDump(file, (xmlDocPtr) node);
         doc->encoding = encoding;
     } else {
-			xmlElemDump(file, node->doc, node);
+	xmlElemDump(file, node->doc, node);
     }
 }
 

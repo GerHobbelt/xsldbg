@@ -36,6 +36,9 @@
 #include "utils.h"
 #include "options.h"
 #include "xsldbgthread.h"
+#ifdef WIN32
+#include <direct.h>
+#endif
 
 #endif /* BUILD_DOCS */
 
