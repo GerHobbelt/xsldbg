@@ -2,35 +2,70 @@
 DATADIR = ..
 XSLDIR = GNOME
 XSLDBG=$(top_builddir)/src/xsldbg
-DOC_SOURCE_DIR=$(top_builddir)/src
+
+APISRC_DIR=src
+APISRC_FILES= \
+$(APISRC_DIR)/xsldbg.h		\
+$(APISRC_DIR)/help.h		\
+$(APISRC_DIR)/options.h 	\
+$(APISRC_DIR)/arraylist.h	\
+$(APISRC_DIR)/xslbreakpoint_2.h \
+$(APISRC_DIR)/xslcallpoint.h	\
+$(APISRC_DIR)/xslsearch.h	\
+$(APISRC_DIR)/debugXSL.h	\
+$(APISRC_DIR)/files.h	
+
+
+CPPFLAGS=-E -C -P
+
+
+GNOMEXSL_FILES= \
+bookinfo.xsl  	\
+commands.xsl  	\
+credits.xsl  	\
+overview.xsl  	\
+xsldoc2gnome.xsl 
+
+APIDOCS_DIR=apidocs
+
+EXTRA_DIST=$(GNOMEXSL_FILES)
 
 # The name of the module.
-DOC_MODULE=xsldbg-$(VERSION)
+API_MODULE=xsldbg-$(VERSION)
 
 # The top-level SGML file.
-DOC_MAIN_SGML_FILE=xsldbg.sgml
+API_MAIN_SGML_FILE=xsldbg.sgml
 
 $(XSLDBG):
 	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
 
 if USE_GNOMEDOCS
-scan:
-	gtkdoc-scan --module=xsldbg --source-dir=$(DOC_SOURCE_DIR) 
+scan: $(APISRC_FILES)
+	gtkdoc-scan --module=xsldbg --source-dir=$(APISRC_DIR) 
 
 templates: scan
 	 gtkdoc-mktmpl --module=xsldbg
 
 sgml:
-	gtkdoc-mkdb --module=xsldbg --source-dir=$(DOC_SOURCE_DIR)
+	gtkdoc-mkdb --module=xsldbg --source-dir=$(APISRC_DIR)
 
 html:
 	if ! test -d html ; then mkdir html ; fi
-	-cd html && gtkdoc-mkhtml xsldbg ../sgml/$(DOC_MAIN_SGML_FILE)
+	-cd html && gtkdoc-mkhtml xsldbg ../$(API_MAIN_SGML_FILE)
 
 xsldbg-decl-list.txt : templates
 
 xsldbg-sections.txt : scan
 	cp xsldbg-decl-list.txt xsldbg-sections.txt
+
+$(APISRC_DIR): 
+	if ! test -d $(APISRC_DIR) ; then mkdir $(APISRC_DIR) ; fi
+
+# now use the preprocessor to create the GNOME version of 
+#  header suitable to pass onto gtkdoc-*
+$(APISRC_FILES): $(APISRC_DIR)
+	$(CC) -DBUILD_DOCS -DUSE_GNOME_DOCS $(CPPFLAGS) $(top_builddir)/src/$(@F) > $@
+
 
 rebuild: xsldbg-sections.txt templates sgml html
 
@@ -38,8 +73,8 @@ all:
 
 clean:
 	rm -f ./plain/xsldoc.txt
-	rm -rf html sgml tmpl
-	rm xsldbg-*
+	rm -rf html sgml tmpl src
+	rm -f xsldbg-*
 
 
 else

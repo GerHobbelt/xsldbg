@@ -135,11 +135,11 @@ extern "C" {
 
 
 /**
- * xslBreakPointCount:
+ * breakPointLinesCount:
  *
  * Returns the number of hash tables of break points with the same line number
  */
-    int xslBreakPointLinesCount(void);
+    int breakPointLinesCount(void);
 
 
 /**
@@ -298,7 +298,7 @@ extern "C" {
 
 
 /**
- * xslSearchAdd:
+ * searchAdd:
  * @node: a valid node to be added to the topmost node in search dataBase
  *
  * Returns 1 if able to add @node to top node in search dataBase,
@@ -514,7 +514,6 @@ extern "C" {
  * Test if node matches criteria given by @data if so then set @data->found 
  *   to 1 and  stores reference to node found in @data->data->node
  *     otherwise @data is unchanged
- *
 */
     void scanForNode(void *payload, void *data, xmlChar * name);
 

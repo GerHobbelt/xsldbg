@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE xsldoc SYSTEM "xsldoc.dtd">
+<!DOCTYPE xsldoc PUBLIC "-//xsldbg//DTD xsldoc XML V1.0//EN" "xsldoc.dtd">
 <!-- 
      File : xsldoc.xml     
      Author: Keith Isdale <k_isdale@tpg.com.au>
@@ -94,7 +94,7 @@ the &lt;ENTER&gt; key.
 <link href="chdir">chdir</link>,
 <link href="shell">shell</link>,
 <link href="tty">tty</link>
-  
+
 </li>
 
 <li>File related :  
@@ -112,8 +112,11 @@ they are not completed.</para>
 </overview>
 
 <!-- - - - - -  Help related commands - - - - - - - - -  - -->
-<cmd name="help" title="Help">
+<cmd name="help" shortcut="h" title="Help">
 <summary>Display help on command or overiew</summary>
+<body>
+<para>Shortcut name: h</para>
+</body>
 <usage>
 <li>help   <comment>(Show overview of product)</comment></li>
 <li>help &lt;COMMAND&gt; <comment>(Show help about a command)</comment></li>
@@ -130,9 +133,11 @@ they are not completed.</para>
 </usage>
 </cmd>
 
-<cmd name="quit" title="Quit">
+<cmd name="quit" shortcut="q" title="Quit">
 <summary>Exit processing stylesheet as soon as possible.</summary>
+<body>
 <para>Shortcut name: q</para>
+</body>
 <usage>
 <li>
 <text>quit</text>
@@ -149,7 +154,7 @@ they are not completed.</para>
 </usage>
 </cmd>
 
-<cmd name="step" title="Step">
+<cmd name="step" shortcut="s" title="Step">
 <summary>Step until next stylesheet instruction.</summary>
 <body>
 <para>Shortcut name: s</para>
@@ -161,42 +166,44 @@ they are not completed.</para>
 </usage>
 </cmd>
 
-<cmd name="stepup" title="Stepup">
+<cmd name="stepup" shortcut="up" title="Stepup">
 <summary>Step up to a older "call frame".  </summary>
 <body>
 <para>Shortcut name: up</para>
 </body>
-    <usage>
-      <li>
-	<text>stepup </text>
-	<comment>(step up one frame)</comment></li>
-      <li>
-	<text>stepup &lt;NUMBER_OF_FRAMES&gt; </text>
-	<comment>(step up specified number of frames)</comment>
-      </li>
-    </usage>
+<usage>
+<li>
+<text>stepup </text>
+<comment>(step up one frame)</comment></li>
+<li>
+<text>stepup &lt;NUMBER_OF_FRAMES&gt; </text>
+<comment>(step up specified number of frames)</comment>
+</li>
+</usage>
 </cmd>
 
-<cmd name="stepdown" title="Stepdown">
+<cmd name="stepdown" shortcut="down" title="Stepdown">
 <summary>Step down to a newer "call frame".  </summary>
 <body>
 <para>Shortcut name: down</para>
 </body>
-    <usage>
-      <li>
-	<text>stepdown </text>
-	<comment>(step down one frame)</comment>
-      </li>
-      <li>
-	<text>stepdown &lt;NUMBER_OF_FRAMES&gt;</text>
-	<comment>(step down specified number of frames)</comment>
-      </li>
-    </usage>
+<usage>
+<li>
+<text>stepdown </text>
+<comment>(step down one frame)</comment>
+</li>
+<li>
+<text>stepdown &lt;NUMBER_OF_FRAMES&gt;</text>
+<comment>(step down specified number of frames)</comment>
+</li>
+</usage>
 </cmd>
 
-<cmd name="continue" title="Continue">
+<cmd name="continue" shortcut="c" title="Continue">
 <summary>Continue running stylesheet, stopping at any break points found.</summary>
+<body>
 <para>Shortcut name: c</para>
+</body>
 <usage>
 <li>
 <text>continue</text>
@@ -204,9 +211,11 @@ they are not completed.</para>
 </usage>
 </cmd>
 
-<cmd name="run" title="Run">
+<cmd name="run" shortcut="r" title="Run">
 <summary>Restart the stylesheet.</summary>
+<body>
 <para>Shortcut name: r</para>
+</body>
 <usage>
 <li>
 <text>run</text>
@@ -267,9 +276,11 @@ they are not completed.</para>
 </cmd>
 
 <!-- - - - - - - Template related commands - - - - - - - -->
-<cmd name="templates" title="Templates">
+<cmd name="templates" shortcut="t" title="Templates">
 <summary>Print a list of available templates. Search for a template</summary>
+<body>
 <para>Shortcut name: t</para>
+</body>
 <usage>
 <li>
 <text>templates</text>
@@ -281,9 +292,11 @@ they are not completed.</para>
 </usage>
 </cmd>
 
-<cmd name="where" title="Where">
+<cmd name="where" shortcut="w" title="Where">
 <summary>Print a trace of templates calls (frame stack) and print the working directory.</summary>
+<body>
 <para>Shortcut name: w</para>
+</body>
 <usage>
 <li>
 <text>where</text>
@@ -291,19 +304,21 @@ they are not completed.</para>
 </usage>
 </cmd>
 
-<cmd name="frame" title="Frame">
+<cmd name="frame" shortcut="f" title="Frame">
 <summary>Print the stack frame at a given depth</summary>
+<body>
 <para>Shortcut name: f</para>
+</body>
 <usage>
 <li>
 <text>frame &lt;FRAME_DEPTH&gt;</text>
 <comment>(Depth is a number from 0 to the current depth of call stack)</comment>
- 
+
 </li>
 </usage>
 </cmd>
 
-<cmd name="stylesheets" title="Stylesheets">
+<cmd name="stylesheets" shortcut="style" title="Stylesheets">
 <summary>Print out a list of stylesheets loaded</summary>
 <body>
 <para>Shortcut name: style</para>
@@ -316,7 +331,7 @@ they are not completed.</para>
 </cmd>
 
 <!-- - - - -  Break point related commands - - - - - - - -->
-<cmd name="break" title="Break">
+<cmd name="break" shortcut="b" title="Break">
 <summary>Break at a template, at a location in any file loaded, or at the current node. </summary>
 <body>
 <para>Shortcut name: b</para>
@@ -333,26 +348,28 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 </body>
 <usage>
 <li>
-	<text>break -l &lt;FILENAME&gt; &lt;LINENO&gt;</text>
+<text>break -l &lt;FILENAME&gt; &lt;LINENO&gt;</text>
 </li>
 <li>
-	<text>break &lt;TEMPLATENAME&gt;</text>
-	<comment>(To break at named template.)</comment>
+<text>break &lt;TEMPLATENAME&gt;</text>
+<comment>(To break at named template.)</comment>
 </li>
 <li>
-	<text>break *</text>
-	<comment>(To break at any template found.)</comment>
+<text>break *</text>
+<comment>(To break at any template found.)</comment>
 </li>
 <li>
-	<text>break </text>
-	<comment>(To break point at current node. Yes that includes xml data nodes!)</comment>
+<text>break </text>
+<comment>(To break point at current node. Yes that includes xml data nodes!)</comment>
 </li>
 </usage>
 </cmd>
 
-<cmd name="showbreak" title="Showbreak">
+<cmd name="showbreak" shortcut="show" title="Showbreak">
 <summary>To display list of template break points.</summary>
+<body>
 <para>Shortcut name: show</para>
+</body>
 <usage>
 <li>
 <text>showbreak</text>
@@ -361,52 +378,52 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 </cmd>
 
 
-<cmd name="delete" title="Delete">
+<cmd name="delete" shortcut="d" title="Delete">
 <summary>Delete a template breakpoint</summary>
 <body>
 <para>Shortcut name: d</para>
 </body>
 <usage>
 <li>
-	<text>delete</text>
-	<comment>(To delete breakpoint at current node)</comment>
+<text>delete</text>
+<comment>(To delete breakpoint at current node)</comment>
 </li>
 <li>
-	<text>delete   &lt;BREAKPOINT_ID&gt;</text>
-	<comment>(To delete breakpoint at specified break point number)</comment>
+<text>delete   &lt;BREAKPOINT_ID&gt;</text>
+<comment>(To delete breakpoint at specified break point number)</comment>
 </li>
 <li>
-	<text>delete -l &lt;FILENAME&gt; &lt;LINENO&gt;</text>
-	<comment>(Delete at specifed file, line number)</comment>
+<text>delete -l &lt;FILENAME&gt; &lt;LINENO&gt;</text>
+<comment>(Delete at specifed file, line number)</comment>
 </li>
 <li>
-	<text>delete &lt;TEMMPLATENAME&gt;</text>
-	<comment>(To delete break point at named template.)</comment>
+<text>delete &lt;TEMMPLATENAME&gt;</text>
+<comment>(To delete break point at named template.)</comment>
 </li>
 <li>
-	<text>delete *</text>
-	<comment>(To delete all break points.)</comment>
+<text>delete *</text>
+<comment>(To delete all break points.)</comment>
 </li>
 </usage>
 </cmd>
 
-<cmd name="enable" title="Enable">
+<cmd name="enable" shortcut="e" title="Enable">
 <summary>Enable or disable a breakpoint (Toggle enable/disable/)</summary>
 <body>
 <para>Shortcut name: e</para>
 </body>
 <usage>
 <li>
-	<text>enable</text>
-	<comment>(To enable/disable breakpoint at current node)</comment>
+<text>enable</text>
+<comment>(To enable/disable breakpoint at current node)</comment>
 </li>
 <li>
-	<text>enable   &lt;BREAKPOINT_ID&gt;</text>
-	<comment>(To enable/disable breakpoint at specified break point number</comment>
+<text>enable   &lt;BREAKPOINT_ID&gt;</text>
+<comment>(To enable/disable breakpoint at specified break point number</comment>
 </li>
 <li>
-	<text>enable -l &lt;FILENAME&gt; &lt;LINENO&gt;</text>
-	<comment>(Enable/disable breakpoint at specifed file, line number)</comment>
+<text>enable -l &lt;FILENAME&gt; &lt;LINENO&gt;</text>
+<comment>(Enable/disable breakpoint at specifed file, line number)</comment>
 </li>
 </usage>
 </cmd>
@@ -415,16 +432,16 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <summary>Disable a breakpoint</summary>
 <usage>
 <li>
-	<text>disable</text>
-	<comment>(To disable breakpoint at current node)</comment>
+<text>disable</text>
+<comment>(To disable breakpoint at current node)</comment>
 </li>
 <li>
-	<text>disable   &lt;BREAKPOINT_ID&gt;</text>
-	<comment>(To disable breakpoint at specified break point number</comment>
+<text>disable   &lt;BREAKPOINT_ID&gt;</text>
+<comment>(To disable breakpoint at specified break point number</comment>
 </li>
 <li>
-	<text>disable -l &lt;FILENAME&gt; &lt;LINENO&gt;</text>
-	<comment>(Disable breakpoint at specifed file, line number)</comment>
+<text>disable -l &lt;FILENAME&gt; &lt;LINENO&gt;</text>
+<comment>(Disable breakpoint at specifed file, line number)</comment>
 </li>
 </usage>
 </cmd>
@@ -463,10 +480,15 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 
 <cmd name="cat" title="Cat">
 <summary>Print the result of a xpath expression on relative current node.</summary>
-<body>
-<para>Usage : cat &lt;XPATH&gt;</para>
-<para>Usage : cat $&lt;QNAME&gt;       (To view a varaible or parameter)</para>
-</body>
+<usage>
+<li>
+<text>Usage : cat &lt;XPATH&gt;</text>
+<comment>(To view a varaible or parameter)</comment>
+</li>
+<li>
+<text>Usage : cat $&lt;QNAME&gt;</text>
+</li>
+</usage>
 </cmd>
 
 <cmd name="pwd" title="Pwd">
@@ -501,12 +523,12 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <summary>Print a list of global stylesheet variables or parameters. Print the value of a global variable</summary>
 <usage>
 <li>
-	<text>globals</text>
-	<comment>(Print list of all globaly available variables)</comment>
+<text>globals</text>
+<comment>(Print list of all globaly available variables)</comment>
 </li>
 <li>
-	<text>globals &lt;QNAME&gt;</text>
-	<comment>(Print the value of variable specified)</comment>
+<text>globals &lt;QNAME&gt;</text>
+<comment>(Print the value of variable specified)</comment>
 </li>
 </usage>
 </cmd>
@@ -515,12 +537,12 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <summary>Print a list of local stylesheet variables or parameters. Print the value of a local variable</summary>
 <usage>
 <li>
-	<text>locals</text>
-	<comment>(Print list of all locally available variables)</comment>
+<text>locals</text>
+<comment>(Print list of all locally available variables)</comment>
 </li>
 <li>
-	<text>locals &lt;QNAME&gt;</text>
-	<comment>(Print the value of variable specified)</comment>
+<text>locals &lt;QNAME&gt;</text>
+<comment>(Print the value of variable specified)</comment>
 </li>
 </usage>
 </cmd>
@@ -558,21 +580,21 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <summary>Change to the path specified by a xpath.</summary>
 <usage>
 <li>
-	<text>cd &lt;XPATH&gt;</text>
+<text>cd &lt;XPATH&gt;</text>
 </li>
 <li>
-	<text>cd -t&lt;TEMPLATENAME&gt;</text>
-	<comment>(To changes current SOURCE node to a be xsl template with name &lt;NAME&gt;, but does execute source command)</comment>
+<text>cd -t&lt;TEMPLATENAME&gt;</text>
+<comment>(To changes current SOURCE node to a be xsl template with name &lt;NAME&gt;, but does execute source command)</comment>
 </li>
 <li>
-	<text>cd -s&lt;XPATH&gt;</text>
-	<comment>(An absolute xPath to node within stylesheet)</comment>
+<text>cd -s&lt;XPATH&gt;</text>
+<comment>(An absolute xPath to node within stylesheet)</comment>
 </li>
 <li>
-	<text>cd   &lt;SHORTCUT&gt; &lt;XPATH&gt;</text>
+<text>cd   &lt;SHORTCUT&gt; &lt;XPATH&gt;</text>
 </li>
 <li>
-	<text>     Where SHORTCUT can be either</text>
+<text>     Where SHORTCUT can be either</text>
 </li>
 <li>
 <list>
@@ -593,22 +615,47 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <!-- - - - - - File related commands - - - - - -  -->
 <cmd name="validate" title="Validate">
 <summary>Validate the output file generated by stylesheet    (Disabled)</summary>
+<usage>
+<li>
+<text>validate</text>
+</li>
+</usage>
 </cmd>
 
 <cmd name="load" title="Load">
 <summary>Reload stylesheet and data file(s)      (Disabled see run)</summary>
+<usage>
+<li>
+<text>load</text>
+</li>
+</usage>
 </cmd>
 
 <cmd name="save" title="Save">
 <summary>Save the generated data file       (Disabled)</summary>
+<usage>
+<li>
+<text>save</text>
+</li>
+</usage>
 </cmd>
 
 <cmd name="write" title="Write">
 <summary>To be completed</summary>
+<usage>
+<li>
+<text>write</text>
+</li>
+</usage>
 </cmd>
 
 <cmd name="free" title="Free">
 <summary>Free stylesheet and data        (Disabled see run)</summary>
+<usage>
+<li>
+<text>free</text>
+</li>
+</usage>
 </cmd>
 
 <!-- - - - - - - Searching related - - - - - -->
@@ -672,11 +719,11 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 </li>
 <li>
 <text>1 = Terminal output only</text>
-<comment>(Not emplemented yet.)</comment>
+<comment>(Not implemented yet.)</comment>
 </li>
 <li>
 <text>2 = Undefined </text>
-<comment>(Not emplemented yet.)</comment>
+<comment>(Not implemented yet.)</comment>
 </li>
 <li>All other integer values are assumed to mean level 0
 </li>

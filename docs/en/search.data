@@ -1,20 +1,21 @@
 <?xml version="1.0"?>
+<!DOCTYPE search PUBLIC "-//xsldbg//DTD xsldoc XML V1.0//EN" "xsldoc.dtd">
 <search>
-<callstack url="xsldoc.xsl" line="21" template="/"/>
 <source href="xsldoc.xsl"/>
-<template match="cmd" url="xsldoc.xsl" line="88"/>
-<template match="cmd-summary" name="cmd-summary" url="xsldoc.xsl" line="82"/>
-<template match="comment" url="xsldoc.xsl" line="78"/>
-<template match="list | usage" url="xsldoc.xsl" line="68"/>
-<template match="para" url="xsldoc.xsl" line="62"/>
-<template match="text()" url="xsldoc.xsl" line="58"/>
-<template match="header" url="xsldoc.xsl" line="46"/>
-<template match="/" url="xsldoc.xsl" line="21"/>
+<template match="cmd" url="xsldoc.xsl" line="109"/>
+<template match="cmd-summary" name="cmd-summary" url="xsldoc.xsl" line="103"/>
+<template match="comment" url="xsldoc.xsl" line="99"/>
+<template match="list | usage" url="xsldoc.xsl" line="89"/>
+<template match="para" url="xsldoc.xsl" line="83"/>
+<template match="text()" url="xsldoc.xsl" line="79"/>
+<template match="header" url="xsldoc.xsl" line="67"/>
+<template name="helpOnCommand" url="xsldoc.xsl" line="49"/>
+<template match="/" url="xsldoc.xsl" line="23"/>
 <variable url="xsldoc.xsl" line="12" name="overview_node" select="/xsldoc/overview"/>
 <variable url="xsldoc.xsl" line="13" name="command_nodes" select="/xsldoc/cmd"/>
 <variable url="xsldoc.xsl" line="14" name="doc_version" select="'0.5'"/>
 <variable url="xsldoc.xsl" line="15" name="xsldbg_version" select="'0.5.9'"/>
 <variable url="xsldoc.xsl" line="18" name="help" select="'_#_'"/>
-<variable url="xsldoc.xsl" line="22" name="help_cmd" select="$command_nodes[@name=$help]" templmatch="/"/>
+<variable url="xsldoc.xsl" line="19" name="alldoc" select="0"/>
+<variable url="xsldoc.xsl" line="20" name="help_cmd" select="$command_nodes[@name=$help or @shortcut=$help]"/>
 </search>
-

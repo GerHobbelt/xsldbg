@@ -24,9 +24,6 @@
 #include "debugXSL.h"
 #include "files.h"
 
-/* how may items have been printed */
-static int printCount;
-
 /* temp buffer needed occationaly */
 static xmlChar buff[DEBUG_BUFFER_SIZE];
 
@@ -100,9 +97,9 @@ xslDbgShellFrameBreak(xmlChar * arg, int stepup)
     }
 
     if (stepup) {
-        result = xslStepupToDepth(xslCallDepth() - noOfFrames);
+        result = stepupToDepth(callDepth() - noOfFrames);
     } else {
-        result = xslStepdownToDepth(xslCallDepth() + noOfFrames);
+        result = stepdownToDepth(callDepth() + noOfFrames);
     }
 
     if (!result)
@@ -160,7 +157,7 @@ addSourceBreakPoint(xmlChar * url, long lineNo)
                                      url, lineNo);
                 }
             }
-            if (xslAddBreakPoint(url, lineNo, NULL, type))
+            if (addBreakPoint(url, lineNo, NULL, type))
                 result++;
 
         } else {
@@ -234,7 +231,7 @@ addDataBreakPoint(xmlChar * url, long lineNo)
                              "seem to be valid. But set it anyhow\n",
                              url, lineNo);
 
-        if (xslAddBreakPoint(url, lineNo, NULL, type))
+        if (addBreakPoint(url, lineNo, NULL, type))
             result++;
     } else {
         xsltGenericError(xsltGenericErrorContext,
@@ -298,10 +295,10 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                                  "Error : Missing arguments to break command\n");
         }
     } else if (xmlStrCmp(arg, "*") != 0) {
-        xmlNodePtr templNode = xslFindTemplateNode(style, arg);
+        xmlNodePtr templNode = findTemplateNode(style, arg);
 
         if (templNode && templNode->doc) {
-            if (!xslAddBreakPoint
+            if (!addBreakPoint
                 (templNode->doc->URL, xmlGetLineNo(templNode), arg,
                  DEBUG_BREAK_SOURCE))
                 xsltGenericError(xsltGenericErrorContext,
@@ -337,7 +334,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                     name = templ->name;
 
                 if (name) {
-                    if (!xslAddBreakPoint(url, xmlGetLineNo(templ->elem),
+                    if (!addBreakPoint(url, xmlGetLineNo(templ->elem),
                                           name, DEBUG_BREAK_SOURCE)) {
                         xsltGenericError(xsltGenericErrorContext,
                                          "Error : Can't add breakPoint to file %s : line %d\n",
@@ -429,7 +426,7 @@ xslDbgShellDelete(xmlChar * arg)
     } else if (!xmlStrCmp("*", arg)) {
         result = 1;
         /*remove all from breakpoints */
-        xslEmptyBreakPoint();
+        emptyBreakPoint();
 
     } else if (sscanf((char *) arg, "%d", &breakPointId)) {
         breakPoint = findBreakPointById(breakPointId);

@@ -1,4 +1,7 @@
 <!DOCTYPE HTML PUBliC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- Author Keith Isdale <k_isdale@tpg.com.au>
+     Date : Sometime after 8 Dec 2001
+-->
 <html>
 <head>
 <title>Xsl Debugger</title>
@@ -21,7 +24,7 @@
 <li><a href="#Email%20lists">Email lists</a> </li></ul>
 
 <li><a href="#Installation">Installation</a> </li>
-<li><a href="#Testing">Testing</a> </li>
+<li><a href="#Testing">Testing / running example</a> </li>
 <li><a href="#Help%20system">Help system</a> </li>
 <li><a href="#Version%20%20notes">Version notes</a> </li>
 <li><a href="#FAQ">FAQ</a></li>
@@ -137,38 +140,80 @@ for details of other options to configuring xsldbg
 
 
 <!--  - - - - - - - - - -  Testing  - - - - - - - - - -->
-<h1><a name="Testing">Testing</a> </h1>
-<pre>     To test installation of xsldbg<br />
+<h1><a name="Testing">Testing / running example </a> </h1>
+<pre>     To test / try out xsldbg<br />
 <br />
          <b>cd xsldbg/docs/en
 
          xsldbg --shell xsldoc.xsl xsldoc.xml</b>
 
 
-      And you should get the xsldbg prompt like
+      And you should get the xsldbg prompt like 
 
 
-<b>            Starting stylesheet
+<b>
+XSLDBG </b>&lt;VERSION&gt;
+<b>
+Starting stylesheet
 
 
-            Reached template :"/"
-            Breakpoint 1 in file xsldoc.xsl : line 21
-            (xsldbg) xsl:template &gt;
-
-</b>     You then can see the results of continued running through stylesheet by using "cont" command and pressing &lt;ENTER&gt; a few times<br />
-
-<b>                     cont
-<i>                     &lt;ENTER&gt;
-                     &lt;ENTER&gt;
-                     &lt;ENTER&gt;
-                     &lt;ENTER&gt;
-</i>
+Breakpoint at file xsldoc.xsl : line 18
+xsldbg) xsl:param >
 </b>
-       The overview section of the help file should have printed out on the screen.</pre>
-<br />
-<br />
-<br />
 
+You can now start entering commands at the "(xsldbg) .* >" prompt. For example <br />
+
+<b>
+      Breakpoint at file xsldoc.xsl : line 18
+(xsldbg) xsl:param > templates
+ template :"/" in file xsldoc.xsl : line 23
+ template :"helpOnCommand" in file xsldoc.xsl : line 49
+ template :"header" in file xsldoc.xsl : line 67
+ template :"text()" in file xsldoc.xsl : line 79
+ template :"para" in file xsldoc.xsl : line 83
+ template :"list | usage" in file xsldoc.xsl : line 89
+ template :"comment" in file xsldoc.xsl : line 99
+ template :"cmd-summary" in file xsldoc.xsl : line 103
+ template :"cmd" in file xsldoc.xsl : line 109
+
+         Total of 9 templates found
+         Total of 9 templates printed
+(xsldbg) xsl:param > break /
+Size of line list was 0 adding 24 entries
+(xsldbg) xsl:param > break header
+Size of line list was 24 adding 44 entries
+(xsldbg) xsl:param > showbreak
+
+ Breakpoint 1 enabled for template :"/" in file xsldoc.xsl : line 23
+ Breakpoint 2 enabled for template :"header" in file xsldoc.xsl : line 67
+
+         Total of 2 breakPoints present
+(xsldbg) xsl:param > break -l xsldoc.xsl 44
+(xsldbg) xsl:param > showbreak
+
+ Breakpoint 1 enabled for template :"/" in file xsldoc.xsl : line 23
+ Breakpoint 3 enabled in file xsldoc.xsl : line 44
+ Breakpoint 2 enabled for template :"header" in file xsldoc.xsl : line 67
+
+         Total of 3 breakPoints present
+(xsldbg) xsl:param > continue
+
+Reached template :"/"
+Breakpoint 1 Breakpoint in file xsldoc.xsl : line 23
+(xsldbg) xsl:template > continue
+
+Reached template :"/"
+Breakpoint 1 Breakpoint in file xsldoc.xsl : line 23
+(xsldbg) text > continue
+
+Reached template :"header"
+Breakpoint 2 Breakpoint in file xsldoc.xsl : line 67
+(xsldbg) xsl:template >
+</b>
+<br />
+<br />
+To print help just type &quot;help&quot; <br />
+To exit xsldbg just type &quot;exit&quot; <br />
 
 <!--  - - - - - - - - - -  Help system  - - - - - - - - - -->
 <h1><a name="Help_system">Help system</a> </h1>
@@ -197,31 +242,49 @@ for details of other options to configuring xsldbg
 
 <!--  - - - - - - - - - -  FAQ - - - - - - - - - -->
 <h1><a name="FAQ">FAQ</a> </h1>
-<p>Libxslt doesn't compile:
+<h2>Libxslt doesn't compile</h2>
 <ul>
 <li>Check http://xmlsoft.org/XSLT/ and mail.gnome.org/archives/xslt/ for current issues</li>
 <li>Ensure that libxslt was configured with <br />
    <b>&nbsp;&nbsp;--with-debugger &nbsp;&nbsp; --enable-shared=no</b>
 </li>
 </ul>
-</p>
-<p>xsldbg compiles ok but doesn't run when used from command line:
+<h2>Where can I find a binary distribution for xsldbg</h2>
+Sorry I not able to do that at this time, as I'm not sure how to make a generic
+binary that would not come back and haunt me. :-) A submission by someone who can do this would be
+most welcome.
+
+
+<h2>Where's the documentation</h2>
+Plain html documenation is built by default and is found in the &lt;XSLDBG_COMPILE_DIRECTORY&gt;/docs/en/plain
+directory. You can generate either KDE or GNOME style during a compile of xsldbg. Use<br />
+        <b>&nbsp;&nbsp;&nbsp;&nbsp;./configure --help </b><br />
+ To find out how to do that.
+
+<h2>xsldbg compiles ok but doesn't run when used from command line</h2>
 <ul>
 <li>Make sure that you set and exported the correct LD_LIBRARY_PATH</li>
 <li>Make sure that you've configure the correct libxml and libxslt prefix in libxslt, and xsldbg. Check the values supplied to <br />
-<b>&nbsp;&nbsp; --with-libxslt-prefix <br />
-&nbsp;&nbsp; --with-libxml-prefix <br /></b>
+<b>
+&nbsp;&nbsp; --with-libxslt-prefix <br />
+&nbsp;&nbsp; --with-libxml-prefix <br />
+</b>
 </li>
 </ul>
-</p>
-<p>How big is this program: At last count there was over twenty thousand lines of human generated text.
+
+<h2>How big is this program</h2> At last count there was over twenty thousand lines of human generated text.
 Which is about the same size as the libxslt directory in the libxslt distribution.
-</p>
-<p> Why do I get a prompt that looks like: <br /><br />
-&nbsp;&nbsp;&nbsp;&nbsp;<b>(xsldbg) xsldbg_default_node &gt;</b><br /><br />
-&nbsp;&nbsp;&nbsp;&nbsp;For some reason xsldbg could not load or use the specified stylesheet or xml data file.
+
+<h2> Why do I get a strange prompt </h2>
+If the prompt looks like: <br /><br />
+&nbsp;&nbsp;&nbsp;&nbsp;<b>(xsldbg) xsldbg_default_node &gt;<br /><br />
+&nbsp;&nbsp;&nbsp;&nbsp;For some reason xsldbg could not load or use the specified stylesheet or xml data file.</b>
+<br /><br />
 Try using the &quot;source&quot; or &quot;data&quot; commands and then &quot;run&quot;.
-</p>
+
+<h2>What's the deal with all those USE_KDE_DOCS, USE_GNOME_DOCS, BUILD_DOCS</h2>
+They are a mechanism used by docs/en/KDE/Makefile.am and docs/en/GNOME/Makefile.am
+to generate API documenation in the style of KDE and GNOME respectively.
 <br />
 <br />
 

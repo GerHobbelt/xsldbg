@@ -111,7 +111,7 @@ optionsInit(void)
     }
 
     /* init our parameter list */
-    parameterList = xslArrayListNew(10, (freeItemFunc) paramItemFree);
+    parameterList = arrayListNew(10, (freeItemFunc) paramItemFree);
 
     /* setup the docs path */
     setStringOption(OPTIONS_DOCS_PATH, docsPath);
@@ -136,7 +136,7 @@ optionsFree(void)
     }
 
     /* Free up memory used by parameters */
-    xslArrayListFree(parameterList);
+    arrayListFree(parameterList);
 }
 
 
@@ -454,7 +454,7 @@ printParam(int paramId)
 {
     int result = 0;
     ParameterItemPtr paramItem =
-        (ParameterItemPtr) xslArrayListGet(getParamItemList(), paramId);
+        (ParameterItemPtr) arrayListGet(getParamItemList(), paramId);
     if (paramItem && paramItem->name && paramItem->value) {
         xsltGenericError(xsltGenericErrorContext,
                          " Parameter %d %s=\"%s\"\n", paramId,
@@ -477,7 +477,7 @@ printParamList(void)
 {
     int result = 1;
     int paramIndex = 0;
-    int itemCount = xslArrayListCount(getParamItemList());
+    int itemCount = arrayListCount(getParamItemList());
 
     if (itemCount > 0) {
         while (result && (paramIndex < itemCount)) {

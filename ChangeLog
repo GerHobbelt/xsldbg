@@ -1,3 +1,50 @@
+Keith Isdale 10 Dec 2001 <k_isdale@tpg.com.au>
+  Version 0.9.0 
+  Extended xsldoc.dtd so that a "cmd" has a shortcut. Then changed xsldoc.xsl
+	to search on @name or @shortcut
+  Added a sgml catalog file docs/en/CATALOG
+  Updated docs/en/Makefile.am to validate xsldoc.xml
+  Created emails to Daniel, Justin, Igor about xsldbg's status 
+	awaiting reply
+  Fixed xslSearchInit to make use of xslSearchEmpty and 
+	add a doctype to the search dataBase
+  Make printCount a global variable in debugXSL.c, updated debugXSL.h
+  Disable redirection of stdin to terminalIO.
+	Now only the resulting document is written to terminalIO
+	It is planed to also write all output during walk and trace 
+	  to the terminal
+  Changed required libxslt version to 1.0.9
+  	
+	
+Keith Isdale 8/9 Dec 2001 <k_isdale@tpg.com.au>
+   Version 0.8.9
+   Fixed problem with GNOME documentation building
+   Created gnome style documentation
+   Merged KDE style and GNOME style API documentation into 
+	normal *.h files
+   Created new file xslbreakpoint_2.h to temporarily hold the API
+	docs for the breakpoint related functions
+   Created xslcallpoint.h merged KDE and GNOME call stack related
+	API docs into it
+   Created xslsearch.h merged KDE and GNOME searching related API
+	docs into it	
+   Updated docs/en/GNOME/Makefile.am , docs/en/KDE/Makefile.am 
+	to suit new files
+   Fixed bug with xsldbg.c setting OPTIONS_TRACE = TRACE_OFF,
+   Fixed logic of starting xslDebugStatus again!! 
+   Changed configure.in to enable GNOME __or__ KDE style docs to be build
+	a one time
+   Added more entries to FAQ in the website documentation
+   Fixed the website docs it had used "cont" as the short cut to continue
+	instead of "c"
+   Fixed xsldoc.dtd mixed content must have #pcdata first 
+	and the errors that showed up in xsldoc.xml as a result
+   Fixed xsldoc.xml as result of fixes to xsldoc.dtd (as shown up by xmllnt)
+	o made short cut descriptions consistant
+	o fixed minor spelling errors.
+	    			
+	
+		
 Keith Isdale 7 Dec 2001 <k_isdale@tpg.com.au>
   Created KDE style API documentation headers in docs/en/KDE/src
 	updated Makefile.am to suit. Will need to merge these with 

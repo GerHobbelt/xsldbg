@@ -27,7 +27,10 @@ EXTRA_DIST = \
 	files.h			\
 	options.c 		\
 	options.h		\
-	xsldbg.h
+	xsldbg.h		\
+	xslcallpoint.h		\
+	xslsearch.h		\
+	xslbreakpoint_2.h
 
 bin_PROGRAMS = xsldbg
 xsldbg_SOURCES = \

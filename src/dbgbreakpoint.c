@@ -130,7 +130,7 @@ lineNoItemGet(long lineNo)
 #endif
         return NULL;
     } else
-        return (xmlHashTablePtr) xslArrayListGet(breakList, lineNo);
+        return (xmlHashTablePtr) arrayListGet(breakList, lineNo);
 }
 
 
@@ -147,7 +147,7 @@ breakPointInit(void)
     int result = 0;
 
     /* the average file has 395 lines of code so add 100 lines now */
-    breakList = xslArrayListNew(100, lineNoItemFree);
+    breakList = arrayListNew(100, lineNoItemFree);
     if (breakList) {
         /*
          * We don't need to do any thing else, as its done when we add the 
@@ -173,21 +173,21 @@ void
 breakPointFree(void)
 {
     if (breakList)
-        xslArrayListFree(breakList);
+        arrayListFree(breakList);
     breakList = NULL;
 }
 
 
 /**
- * xslEmptyBreakPoint:
+ * emptyBreakPoint:
  *
  * Returns 1 if able to empty the breakpoint list of its contents,
  *         0  otherwise
  */
 int
-xslEmptyBreakPoint(void)
+emptyBreakPoint(void)
 {
-    return xslArrayListEmpty(breakList);
+    return arrayListEmpty(breakList);
 }
 
 
@@ -268,7 +268,7 @@ setActiveBreakPoint(xslBreakPointPtr breakPoint)
 
 
 /**
- * xslAddBreakPoint:
+ * addBreakPoint:
  * @url: url non-null, non-empty file name that has been loaded by
  *                    debugger
  * @lineNumber: lineNumber >= 0 and is available in url specified and
@@ -283,7 +283,7 @@ setActiveBreakPoint(xslBreakPointPtr breakPoint)
  *	   0 otherwise
 */
 int
-xslAddBreakPoint(const xmlChar * url, long lineNumber,
+addBreakPoint(const xmlChar * url, long lineNumber,
                  const xmlChar * templateName, BreakPointTypeEnum type)
 {
     int result = 0, breakPointType = type;
@@ -301,13 +301,13 @@ xslAddBreakPoint(const xmlChar * url, long lineNumber,
     if (!url || (lineNumber == -1)) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Invalid url or line number to xslAddBreakPoint\n");
+                         "Invalid url or line number to addBreakPoint\n");
 #endif
         return result;
     }
 
     /* if breakpoint already exists then don;t add it */
-    if (xslIsBreakPoint(url, lineNumber)) {
+    if (isBreakPoint(url, lineNumber)) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
                          "Breakpoint at file %s: line %d exists\n",
@@ -359,7 +359,7 @@ xslAddBreakPoint(const xmlChar * url, long lineNumber,
                     hash = lineNoItemNew();
                     if (hash) {
                         result = result
-                            && xslArrayListAdd(breakList, hash);
+                            && arrayListAdd(breakList, hash);
                     } else {
                         result = 0;
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
@@ -461,7 +461,7 @@ enableBreakPoint(xslBreakPointPtr breakPoint, int enable)
  * Returns the number of hash tables of break points with the same line number
  */
 int
-xslBreakPointLinesCount(void)
+breakPointLinesCount(void)
 {
     if (!breakList) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
@@ -470,7 +470,7 @@ xslBreakPointLinesCount(void)
 #endif
         return 0;
     } else
-        return xslArrayListCount(breakList);
+        return arrayListCount(breakList);
 }
 
 
@@ -548,7 +548,7 @@ printBreakPoint(FILE * file, xslBreakPointPtr breakPoint)
 
 
 /**
- * xslIsBreakPoint:
+ * isBreakPoint:
  * @url: url non-null, non-empty file name that has been loaded by
  *                    debugger
  * @lineNumber: number >= 0 and is available in url specified
@@ -558,7 +558,7 @@ printBreakPoint(FILE * file, xslBreakPointPtr breakPoint)
  *	   0 otherwise
 */
 int
-xslIsBreakPoint(const xmlChar * url, long lineNumber)
+isBreakPoint(const xmlChar * url, long lineNumber)
 {
     int result = 0;
 
@@ -572,7 +572,7 @@ xslIsBreakPoint(const xmlChar * url, long lineNumber)
 
 
 /**
- * xslIsBreakPointNode:
+ * isBreakPointNode:
  * @node: node != NULL
  *
  * Determine if a node is a break point
@@ -580,7 +580,7 @@ xslIsBreakPoint(const xmlChar * url, long lineNumber)
  *          0 otherwise
  */
 int
-xslIsBreakPointNode(xmlNodePtr node)
+isBreakPointNode(xmlNodePtr node)
 {
     int result = 0;
 
@@ -591,7 +591,7 @@ xslIsBreakPointNode(xmlNodePtr node)
         return result;
 
     if (node->doc->URL) {
-        result = xslIsBreakPoint(node->doc->URL, xmlGetLineNo(node));
+        result = isBreakPoint(node->doc->URL, xmlGetLineNo(node));
     }
 
     return result;

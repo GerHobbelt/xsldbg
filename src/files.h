@@ -19,6 +19,15 @@
 #ifndef FILES_H
 #define FILES_H
 
+#ifdef USE_KDE_DOCS
+/**
+ * Provide a file support
+ *
+ * @short file support
+ *
+ * @author Keith Isdale <k_isdale@tpg.com.au> 
+ */
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -28,13 +37,25 @@ extern "C" {
 #include <unistd.h>             /* need chdir function */
 #endif
 
-/* used by loadXmlFile, freeXmlFile functions */
+extern FILE *terminalIO;
+
+#ifndef USE_KDOC 
+  /* used by loadXmlFile, freeXmlFile functions */
     typedef enum {
         FILES_XMLFILE_TYPE = 100,       /* pick a unique starting point */
         FILES_SOURCEFILE_TYPE,
         FILES_TEMPORARYFILE_TYPE
     } FileTypeEnum;
+#else
+/* used by loadXmlFile, freeXmlFile functions */
+    enum FileTypeEnum {
+        FILES_XMLFILE_TYPE = 100,       /* pick a unique starting point */
+        FILES_SOURCEFILE_TYPE,
+        FILES_TEMPORARYFILE_TYPE
+    };
+#endif
 
+#ifdef USE_GNOME_DOCS
 /**
  * redirectToTerminal:
  * @device: terminal to redirect i/o to , will not work under win32
@@ -43,35 +64,69 @@ extern "C" {
  * Returns 1 if sucessful
  *         0 otherwise
  */
+#else
+#ifdef USE_KDE_DOCS
+
+#endif
+#endif
     int openTerminal(xmlChar * device);
 
 
+
+#ifdef USE_GNOME_DOCS
 /**
  * selectTerminalIO:
  *
  * Returns 1 if able to use prevously opened terminal 
  *         0 otherwise
 */
+#else
+#ifdef USE_KDE_DOCS
+/**
+ * @returns 1 if able to use prevously opened terminal 
+ *          0 otherwise
+*/
+#endif
+#endif
     int selectTerminalIO(void);
 
 
+#ifdef USE_GNOME_DOCS
 /** 
  * selectNormalIO:
  * 
  * Returns 1 if able to select orginal stdin, stdout, stderr
  *         0 otherwise
 */
+#else
+#ifdef USE_KDE_DOCS
+/** 
+ * @returns 1 if able to select orginal stdin, stdout, stderr
+ *          0 otherwise
+*/
+#endif
+#endif
     int selectNormalIO(void);
 
 
+#ifdef USE_GNOME_DOCS
 /**
  * getTemplate:
  * 
  * Returns the last template node found, if any
  */
+#else
+#ifdef USE_KDE_DOCS
+/**
+ * @returns the last template node found, if any
+ */
+#endif
+#endif
     xsltTemplatePtr getTemplate(void);
 
 
+
+#ifdef USE_GNOME_DOCS
 /**
  * guessStyleSheetName:
  * @searchInf : is valid
@@ -80,34 +135,79 @@ extern "C" {
  * Sets the values in @searchinf depending on outcome of search
  * 
  */
+#else
+#ifdef USE_KDE_DOCS
+/**
+ * Open communications to the terminal device @p device
+ *
+ * @returns 1 if sucessful
+ *          0 otherwise
+ *
+ * @param device Terminal to redirect i/o to, will not work under win32
+ */
+#endif
+#endif
     void guessStylesheetName(searchInfoPtr searchInf);
 
 
+
+#ifdef USE_GNOME_DOCS
 /**
  * stylePath:
  *
  * Return the base path for the top stylesheet ie
  *        ie URL minus the actual file name
  */
+#else
+#ifdef USE_KDE_DOCS
+/**
+ * @return the base path for the top stylesheet ie
+ *        ie URL minus the actual file name
+ */
+#endif
+#endif
     xmlChar *stylePath(void);
 
 
+
+#ifdef USE_GNOME_DOCS
 /**
  * workingPath:
  *
  * Return the working directory as set by changeDir function
  */
+#else
+#ifdef USE_KDE_DOCS
+/**
+ * @return the working directory as set by changeDir function
+ */
+#endif
+#endif
     xmlChar *workingPath(void);
 
 
+
+#ifdef USE_GNOME_DOCS
 /**
  * changeDir:
  * @path : path to adopt as new working directory
  *
  * Change working directory to path 
  */
+#else
+#ifdef USE_KDE_DOCS
+/**
+ * Change working directory to path 
+ *
+ * @param path The operating system path(directory) to adopt as 
+ *         new working directory
+ */
+#endif
+#endif
     int changeDir(const xmlChar * path);
 
+
+#ifdef USE_GNOME_DOCS
 /**
  * loadXmlFile:
  * @path : xml file to load
@@ -116,9 +216,21 @@ extern "C" {
  * Returns 1 on success,
  *         0 otherwise 
  */
+#else
+#ifdef USE_KDE_DOCS
+/**
+ * @returns 1 on success,
+ *         0 otherwise 
+ *
+ * @param path The xml file to load
+ * @param type A valid FileTypeEnum
+ */
+#endif
+#endif
     int loadXmlFile(const xmlChar * path, FileTypeEnum fileType);
 
 
+#ifdef USE_GNOME_DOCS
 /**
  * freeXmlFile:
  * @type : a valid FileTypeEnum
@@ -127,9 +239,22 @@ extern "C" {
  * Returns 1 on success,
  *         0 otherwise
  */
+#else
+#ifdef USE_KDE_DOCS
+/**
+ * Free memory associated with the xml file 
+ *
+ * @returns 1 on success,
+ *         0 otherwise
+ *
+ * @param type : a valid FileTypeEnum
+ */
+#endif
+#endif
     int freeXmlFile(FileTypeEnum fileType);
 
 
+#ifdef USE_GNOME_DOCS
 /**
  * getStylesheet:
  *
@@ -137,24 +262,50 @@ extern "C" {
  * Returns non-null on success,
  *         NULL otherwise
  */
+#else
+#ifdef USE_KDE_DOCS
+
+#endif
+#endif
     xsltStylesheetPtr getStylesheet(void);
 
+
+#ifdef USE_GNOME_DOCS
 /**
  * getTemporaryDoc:
  *
  * Returns the current "temporary" document
  */
+#else
+#ifdef USE_KDE_DOCS
+/**
+ * Return the topmost stylesheet 
+ *
+ * @returns non-null on success,
+ *          NULL otherwise
+ */
+#endif
+#endif
     xmlDocPtr getTemporaryDoc(void);
 
 
+#ifdef USE_GNOME_DOCS
 /**
  * getMainDoc:
  *
  * Returns the main docment
  */
+#else
+#ifdef USE_KDE_DOCS
+/**
+ * @returns the main document
+ */
+#endif
+#endif
     xmlDocPtr getMainDoc(void);
 
 
+#ifdef USE_GNOME_DOCS
 /**
  * filesReloaded:
  * @reloaded : if = -1 then ignore @reloaded
@@ -163,23 +314,54 @@ extern "C" {
  * Returns 1 if stylesheet or its xml data file has been "flaged" as reloaded,
  *         0 otherwise
  */
+#else
+#ifdef USE_KDE_DOCS
+/**
+ * @returns 1 if stylesheet or its xml data file has been "flaged" as reloaded,
+ *         0 otherwise
+ *
+ * @param reloaded If = -1 then ignore @p reloaded
+ *             otherwise change the status of files to value of @p reloaded
+ */
+#endif
+#endif
     int filesReloaded(int reloaded);
 
 
+#ifdef USE_GNOME_DOCS
 /**
  * filesInit:
  *
- * Initialize the file related structures
+ * Initialize the file module
  * Returns 1 on success,
  *         0 otherwise
  */
+#else
+#ifdef USE_KDE_DOCS
+/**
+ * Initialize the file module
+ *
+ * @returns 1 on success,
+ *          0 otherwise
+ */
+#endif
+#endif
     int filesInit(void);
 
+
+#ifdef USE_GNOME_DOCS
 /**
  * filesFree:
  *
  * Free memory used by file related structures
  */
+#else
+#ifdef USE_KDE_DOCS
+/**
+ * Free memory used by file related structures
+ */
+#endif
+#endif
     void filesFree(void);
 
 

@@ -85,8 +85,11 @@ void guessStylesheetHelper2(void *payload, void *data,
 
 
 FILE *terminalIO;
+/* No longer needed
 static FILE *oldStdin, *oldStdout, *oldStderr;
 char *ttyName, *termName;
+
+*/
 
 /**
  * redirectToTerminal:
@@ -123,7 +126,7 @@ openTerminal(xmlChar * device)
         /* look like we are supposed to close the terminal */
         selectNormalIO();       /* shouldn't be needed but just in case */
     } else {
-        terminalIO = fopen((char *) device, "r+");
+        terminalIO = fopen((char *) device, "w");
         if (terminalIO != NULL) {
             termName = (char *) device; /* JRF: Not sure how safe this is */
             /* This can't be done reliably; really need more thought */
@@ -136,7 +139,7 @@ openTerminal(xmlChar * device)
     }
 #else
 
-#ifdef HAVE_UNISTD              /* fix me for WinNT */
+#ifdef HAVE_UNISTD_H              /* fix me for WinNT */
     if (terminalIO != NULL)
         fclose(terminalIO);
 
@@ -145,17 +148,21 @@ openTerminal(xmlChar * device)
         selectNormalIO();       /* shouldn't be needed but just in case */
     } else {
 
-        terminalIO = fopen(device, "r+");
+        terminalIO = fopen(device, "w");
         if (terminalIO != NULL) {
+	  /*
             termName = device;
             dup2(fileno(terminalIO), fileno(stdin));
             dup2(fileno(terminalIO), fileno(stderr));
             dup2(fileno(terminalIO), fileno(stdout));
+	  */
             result++;
         } else {
             xsltGenericError(xsltGenericErrorContext,
                              "Unable to open terminal %s", device);
+	    /*
             termName = NULL;
+	    */
         }
     }
 
@@ -178,6 +185,7 @@ openTerminal(xmlChar * device)
 int
 selectTerminalIO(void)
 {
+    /* No longer used but must remain for the moment
     int result = 0;
 
     if (termName) {
@@ -188,7 +196,8 @@ selectTerminalIO(void)
     } else
         result++;
 
-    return result;
+    */
+    return 1;
 }
 
 
@@ -201,10 +210,10 @@ selectTerminalIO(void)
 int
 selectNormalIO(void)
 {
+    /* No longer used but must remain for the moment
     int result = 0;
 
-    /* another way to do this ? */
-#ifdef UNISTD
+#ifdef UNISTD_H
     if (ttyName) {
         freopen(ttyName, "w", stdout);
         freopen(ttyName, "w", stderr);
@@ -212,7 +221,8 @@ selectNormalIO(void)
     }
 #endif
     result++;
-    return result;
+    */
+    return 1;
 }
 
 
@@ -569,7 +579,7 @@ loadXmlFile(const xmlChar * path, FileTypeEnum fileType)
                                  "Missing file name\n");
                 break;
             }
-            topDocument = loadXmlTemporay(path);
+            topDocument = loadXmlTemporary(path);
             if (tempDocument)
                 result++;
             break;

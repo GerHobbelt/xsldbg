@@ -129,7 +129,7 @@ xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
  * @verbose : if 1 then print extra messages about templates found,
  *            otherwise print normal messages only 
  * @allFiles : if 1 then look for all templates in stylsheets found in of @styleCtxt
- *             otherwise look in the stylesheet found by xslDebugBreak function
+ *             otherwise look in the stylesheet found by debugBreak function
  *
  * print out the list of template names found that match critieria   
  */
@@ -159,7 +159,7 @@ xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
         curStyle = styleCtxt->style;
     else {
         /* try to find files in the current stylesheet */
-        /* root copy is set to the stylesheet found by xslDebugBreak */
+        /* root copy is set to the stylesheet found by debugBreak */
         if (getTemplate())
             curStyle = getTemplate()->style;
         else

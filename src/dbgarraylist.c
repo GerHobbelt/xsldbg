@@ -24,7 +24,7 @@
 #endif
 
 /**
- * xslArrayListNew:
+ * arrayListNew:
  * @intialSize: initial size of list
  * @deleteFunction: function to call to free items in the list
  *
@@ -33,13 +33,13 @@
  *         NULL otherwise
  */
 ArrayListPtr
-xslArrayListNew(int initialSize, freeItemFunc deleteFunction)
+arrayListNew(int initialSize, freeItemFunc deleteFunction)
 {
     ArrayListPtr list = NULL;
 
     if (initialSize <= 0) {
         xsltGenericError(xsltGenericErrorContext,
-                         "xslArrayListNew invalid initialSize %d\n",
+                         "arrayListNew invalid initialSize %d\n",
                          initialSize);
     } else
         list = (ArrayListPtr) xmlMalloc(sizeof(ArrayList));
@@ -56,7 +56,7 @@ xslArrayListNew(int initialSize, freeItemFunc deleteFunction)
 
 
 /**
- * xslArrayListFree:
+ * arrayListFree:
  * @list: a valid list
  *
  * Free memory assocated with array list, if the array list 
@@ -64,19 +64,19 @@ xslArrayListNew(int initialSize, freeItemFunc deleteFunction)
  *    useing that deleteFunction
  */
 void
-xslArrayListFree(ArrayListPtr list)
+arrayListFree(ArrayListPtr list)
 {
     if (!list)
         return;
 
-    xslArrayListEmpty(list);
+    arrayListEmpty(list);
     xmlFree(list->data);
     xmlFree(list);
 }
 
 
 /**
- * xslArrayListEmpty:
+ * arrayListEmpty:
  * @list: a valid list
  *
  * Empties the list of its content
@@ -84,7 +84,7 @@ xslArrayListFree(ArrayListPtr list)
  *         0 otherwise
  */
 int
-xslArrayListEmpty(ArrayListPtr list)
+arrayListEmpty(ArrayListPtr list)
 {
     int index, result = 0;
 
@@ -103,13 +103,13 @@ xslArrayListEmpty(ArrayListPtr list)
 
 
 /**
- * xslArrayListSize:
+ * arrayListSize:
  * @list: a valid list
  *
  * Returns the maximum number elements this list can contain
  */
 int
-xslArrayListSize(ArrayListPtr list)
+arrayListSize(ArrayListPtr list)
 {
     int result = 0;
 
@@ -121,13 +121,13 @@ xslArrayListSize(ArrayListPtr list)
 
 
 /**
- * xslArrayListCount:
+ * arrayListCount:
  * @list: a valid list
  *
  * Returns the count of number items in list
  */
 int
-xslArrayListCount(ArrayListPtr list)
+arrayListCount(ArrayListPtr list)
 {
     int result = 0;
 
@@ -139,7 +139,7 @@ xslArrayListCount(ArrayListPtr list)
 
 
 /**
- * xslArrayListAdd:
+ * arrayListAdd:
  * @list: valid list
  * @item: valid item
  *
@@ -147,7 +147,7 @@ xslArrayListCount(ArrayListPtr list)
  *         0 otherwise
  */
 int
-xslArrayListAdd(ArrayListPtr list, void *item)
+arrayListAdd(ArrayListPtr list, void *item)
 {
     int result = 0;
 
@@ -177,15 +177,15 @@ xslArrayListAdd(ArrayListPtr list, void *item)
 
 
 /**
- * xslArrayListDelete:
+ * arrayListDelete:
  * @list: valid list
- * @position: 0 =< position < xslArrayListCount(list)
+ * @position: 0 =< position < arrayListCount(list)
  *
  * Returns 1 if able to delete element in @list at position @position
  *         0 otherwise 
  */
 int
-xslArrayListDelete(ArrayListPtr list, int position)
+arrayListDelete(ArrayListPtr list, int position)
 {
     int result = 0, index;
 
@@ -206,16 +206,16 @@ xslArrayListDelete(ArrayListPtr list, int position)
 
 
 /**
- * xslArrayListGet:
+ * arrayListGet:
  * @list: valid list
- * @position: 0 =< position < xslArrayListCount(list)
+ * @position: 0 =< position < arrayListCount(list)
  *
  * Returns non-null if able to retrieve element in @list at position
  *          @position
  *         NULL otherwise
  */
 void *
-xslArrayListGet(ArrayListPtr list, int position)
+arrayListGet(ArrayListPtr list, int position)
 {
     void *result = NULL;
 

@@ -68,10 +68,15 @@ searchTest_LDFLAGS = $(all_libraries)
 $(XSLDBG):
 	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
 
-../results/%.script ../results/%.pl : %.data testgenerator.xsl
-	$(XSLDBG_EXPORTS) $(XSLDBG) --param baseFileName \'../results/$(*F)\' testgenerator.xsl $(*F).data
+runtests :  $(XSLDBG) coretests $(TESTS) $(TEST_RESULTS)
 
-runtests : $(TESTS) $(TEST_RESULTS) $(XSLDBG)
+# do the tests of core functionality on xsldbg
+coretests: listTest searchTest
+	$(XSLDBG_EXPORTS) ./listTest
+	$(XSLDBG_EXPORTS) ./searchTest
+
+../results/%.script ../results/%.pl : %.data testgenerator.xsl
+	$(XSLDBG_EXPORTS) $(XSLDBG) --param baseFileName \'../results/$(*F)\' testgenerator.xsl $(*F).data 
 
 ../results/%.results : $(TESTS) %.xsl %.xml xsldbgmatch.pl $(XSLDBG)
 	@echo "Running test $(*F)"
@@ -83,9 +88,13 @@ runtests : $(TESTS) $(TEST_RESULTS) $(XSLDBG)
 
 if WITH_PERL
 
-all: $(XSLDBG) listTest searchTest runtests
-	$(XSLDBG_EXPORTS) ./listTest
-	$(XSLDBG_EXPORTS) ./searchTest
+
+all: $(XSLDBG) coretests runtests
+
+# We don't need to install anything
+install-data-local:
+
+install:
 
 clean:
 	rm -f ../results/*.script

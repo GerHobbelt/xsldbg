@@ -20,6 +20,15 @@
 #ifndef XSLDEBUGGER_H
 #define XSLDEBUGGER_H
 
+#ifdef USE_KDE_DOCS
+/**
+ * Provide provide application level services and useful bits and pieces
+ *
+ * @short application functions and useful bits and pieces
+ *
+ * @author Keith Isdale <k_isdale@tpg.com.au> 
+ */
+#endif
 
 #ifdef  WITH_XSLT_DEBUG
 
@@ -66,6 +75,8 @@
 #define LIBXSLT_PUBLIC
 #endif
 
+/* We want skip most of these includes when building documentation */
+#ifndef BUILD_DOCS
 #include <signal.h>
 #include <libxslt/xslt.h>
 #include <libexslt/exslt.h>
@@ -77,6 +88,9 @@
 #else
 #include "config_riscos.h"
 #endif
+
+#endif
+
 
 /* 
   Make things simpler when working between char* and xmlChar*  .
@@ -112,31 +126,73 @@ extern "C" {
 #endif
 
 
+
+#ifdef USE_GNOME_DOCS
 /**
  * loadStylesheet:
+ *
+ * Load the stylesheet and return it 
  *
  * Returns the stylesheet after reloading it if successful
  *         NULL otherwise
  */
+#else
+#ifdef USE_KDE_DOCS
+/**
+ * Load the stylesheet and return it 
+ *
+ * @returns The stylesheet after reloading it if successful
+ *         NULL otherwise
+ */
+#endif
+#endif
     xsltStylesheetPtr loadStylesheet(void);
 
 
+#ifdef USE_GNOME_DOCS
 /**
  * loadXmlData:
+ *
+ * Load the xml data file and return it  
  *
  * Returns the data file after reloading it if successful
  *         NULL otherwise
  */
+#else
+#ifdef USE_KDE_DOCS
+/**
+ * Load the xml data file and return it  
+ *
+ * @returns The stylesheet after reloading it if successful
+ *         NULL otherwise
+ */
+#endif
+#endif
     xmlDocPtr loadXmlData(void);
 
 
+#ifdef USE_GNOME_DOCS
 /**
  * loadXmlTemporary:
+ * @path: The name of temporary file to load 
  *
- * Returns the temporary file after reloading it if successful,
+ * Load the temporary data file and return it 
+ *
+ * Returns The temporary file after reloading it if successful,
  *         NULL otherwise
  */
-    xmlDocPtr loadXmlTemporay(const xmlChar * path);
+#else
+#ifdef USE_KDE_DOCS
+/**
+ * Load the temporary data file and return it 
+ *
+ * @returns The temporary file after reloading it if successful,
+ *         NULL otherwise
+ * @param path The name of temporary file to loa
+ */
+#endif
+#endif
+    xmlDocPtr loadXmlTemporary(const xmlChar * path);
 
 
 #ifdef __cplusplus

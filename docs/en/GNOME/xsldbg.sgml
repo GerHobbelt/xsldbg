@@ -1,0 +1,69 @@
+<!doctype book PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
+<!entity arraylist SYSTEM "sgml/arraylist.sgml">
+<!entity xsldbg-xslbreakpoint-2 SYSTEM "sgml/xslbreakpoint_2.sgml">
+<!entity xslsearch SYSTEM "sgml/xslsearch.sgml">
+<!entity xsldbg-options SYSTEM "sgml/options.sgml">
+<!entity xsldbg-debugXSL SYSTEM "sgml/debugXSL.sgml">
+<!entity xsldbg-help SYSTEM "sgml/help.sgml">
+<!entity xsldbg-xsldbg SYSTEM "sgml/xsldbg.sgml">
+]>
+
+<book>
+  <bookinfo>
+    <title>xsldbg API Reference Manual</title>
+    <authorgroup>
+      <author>
+        <firstname>Keith</firstname>
+        <surname>Isdale</surname>
+        <affiliation>
+	  <address>
+	    <email>k_isdale@tpg.com.au</email>
+	  </address>
+        </affiliation>
+      </author>
+    </authorgroup>
+    <copyright>
+      <year>2001</year>
+      <holder>Keith Isdale</holder>
+    </copyright>	
+
+    <legalnotice>
+      <para>Permission is granted to make and distribute verbatim
+      copies of this manual provided the copyright notice and this
+      permission notice are preserved on all copies.</para>
+
+      <para>Permission is granted to copy and distribute modified
+      versions of this manual under the conditions for verbatim
+      copying, provided also that the entire resulting derived work is
+      distributed under the terms of a permission notice identical to
+      this one.</para>
+
+      <para>Permission is granted to copy and distribute translations
+      of this manual into another language, under the above conditions
+      for modified versions.</para>
+    </legalnotice>
+
+    <abstract>
+      <para>This manual documents the interfaces of xsldbg so as to help in 
+      its maintenance
+      </para>
+    </abstract>
+  </bookinfo>
+
+  <chapter id="libxslt-lib">
+    <title>xsldbg API Reference</title>
+
+    <para>This section contains the API reference for xsldbg. All
+    the public interfaces are documented here. This reference guide is
+    build by extracting comments from the code sources. </para>
+
+    &xsldbg-xsldbg;
+    &xsldbg-help;
+    &arraylist;
+    &xsldbg-options;
+    &xsldbg-debugXSL;
+    &xsldbg-xslbreakpoint-2;
+    &xslsearch;
+
+  </chapter>
+</book>

@@ -56,15 +56,15 @@ int breakPointSearchTest(void)
 
   doc = searchDoc();
   if ((result == 1) && doc){
-    xslSearchAdd(node);
+    searchAdd(node);
     breakPoint->lineNo = 12;
     node = searchBreakPointNode(breakPoint);      
-    xslSearchAdd(node);
+    searchAdd(node);
     breakPoint->lineNo = 13;
     node = searchBreakPointNode(breakPoint);      
-    xslSearchAdd(node);
+    searchAdd(node);
     xmlShellPrintNode(node);
-    xslSearchSave((xmlChar*)"search.data");
+    searchSave((xmlChar*)"search.data");
     /* no need to free doc as it will be done by searchFree function*/
     result++;
   }else{
@@ -157,7 +157,7 @@ changeDir(const xmlChar * path)
  * Start the xsldbg command prompt
  */
 void
-xslDebugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
+debugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
               xsltTransformContextPtr ctxt){
 }
 

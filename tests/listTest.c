@@ -1,5 +1,5 @@
 /***************************************************************************
-                          testList.c - a test stub for the xslArrayList 
+                          testList.c - a test stub for the arrayList 
                                           implementation
                              -------------------
     begin                : Sat Nov 10 2001
@@ -41,11 +41,11 @@ int main(void){
   ArrayListPtr list = createTestList();
   xmlInitMemory();
   if (list){
-  fprintf(stdout, "\nTest free all items. List size now %d\n", xslArrayListCount(list));    
-    for (itemIndex = 0; itemIndex < xslArrayListCount(list); itemIndex++)
-      printf("%s\n", (char*)xslArrayListGet(list, itemIndex));
+  fprintf(stdout, "\nTest free all items. List size now %d\n", arrayListCount(list));    
+    for (itemIndex = 0; itemIndex < arrayListCount(list); itemIndex++)
+      printf("%s\n", (char*)arrayListGet(list, itemIndex));
     fprintf(stdout, "Freeing list now\n");
-    xslArrayListFree(list);
+    arrayListFree(list);
     fprintf(stdout, "Done!\n");
   }else 
     result = 1;
@@ -53,26 +53,26 @@ int main(void){
   list = createTestList();
   if (list){
     fprintf(stdout, "\nTest removing item2\n");
-    xslArrayListDelete(list, 1);
-    for (itemIndex = 0; itemIndex < xslArrayListCount(list); itemIndex++)
-      fprintf(stdout, "%s\n", (char*)xslArrayListGet(list, itemIndex));
+    arrayListDelete(list, 1);
+    for (itemIndex = 0; itemIndex < arrayListCount(list); itemIndex++)
+      fprintf(stdout, "%s\n", (char*)arrayListGet(list, itemIndex));
   
-    fprintf(stdout, "Size now %d\nDone!\n", xslArrayListCount(list));
+    fprintf(stdout, "Size now %d\nDone!\n", arrayListCount(list));
 
     fprintf(stdout, "\nTest removing item1\n");
-    xslArrayListDelete(list, 0);
-    for (itemIndex = 0; itemIndex < xslArrayListCount(list); itemIndex++)
-      fprintf(stdout, "%s\n", (char*)xslArrayListGet(list, itemIndex));
+    arrayListDelete(list, 0);
+    for (itemIndex = 0; itemIndex < arrayListCount(list); itemIndex++)
+      fprintf(stdout, "%s\n", (char*)arrayListGet(list, itemIndex));
   
-    fprintf(stdout, "Size now %d\nDone!\n", xslArrayListCount(list));
+    fprintf(stdout, "Size now %d\nDone!\n", arrayListCount(list));
 
     fprintf(stdout, "\nTest removing last item in list\n");
-    xslArrayListDelete(list, xslArrayListCount(list) -1 );
-    for (itemIndex = 0; itemIndex < xslArrayListCount(list); itemIndex++)
-      fprintf(stdout, "%s\n", (char*)xslArrayListGet(list, itemIndex));
+    arrayListDelete(list, arrayListCount(list) -1 );
+    for (itemIndex = 0; itemIndex < arrayListCount(list); itemIndex++)
+      fprintf(stdout, "%s\n", (char*)arrayListGet(list, itemIndex));
   
-    fprintf(stdout, "Size now %d\nDone!\n", xslArrayListCount(list));
-    xslArrayListFree(list);
+    fprintf(stdout, "Size now %d\nDone!\n", arrayListCount(list));
+    arrayListFree(list);
   }else
     result = 1;
 
@@ -80,13 +80,13 @@ int main(void){
   list = createParamList();
   if (list){
     ParameterItemPtr item;
-    for (itemIndex = 0; itemIndex < xslArrayListCount(list); itemIndex++){
-      item = xslArrayListGet(list, itemIndex);
+    for (itemIndex = 0; itemIndex < arrayListCount(list); itemIndex++){
+      item = arrayListGet(list, itemIndex);
       if (item){
 	fprintf(stdout, "Parameter name :%s  value %s\n", item->name, item->value);
       }
     }    
-    xslArrayListFree(list);
+    arrayListFree(list);
   }
   fprintf(stdout, "Done\n");
 
@@ -183,13 +183,13 @@ int main(void){
     fprintf(stdout,"Done!\n");
 
     fprintf(stdout, "\nTest for adding two duplicate breakpoints these should fail\n");
-    xslAddBreakPoint((xmlChar*)"index.html", 1, (xmlChar*)"one", DEBUG_BREAK_SOURCE);
-    xslAddBreakPoint((xmlChar*)"index2.html", 4, NULL, DEBUG_BREAK_SOURCE);
+    addBreakPoint((xmlChar*)"index.html", 1, (xmlChar*)"one", DEBUG_BREAK_SOURCE);
+    addBreakPoint((xmlChar*)"index2.html", 4, NULL, DEBUG_BREAK_SOURCE);
     fprintf(stdout,"Done!\n");
 
     
     fprintf(stdout, "\nFreeing memory used by breakpoints\n");    
-    xslEmptyBreakPoint();
+    emptyBreakPoint();
   }
   fprintf(stdout,"Done\n");
 
@@ -201,20 +201,20 @@ int main(void){
 }
 
 ArrayListPtr createTestList(void){
-  ArrayListPtr list = xslArrayListNew(3, xmlFree);
+  ArrayListPtr list = arrayListNew(3, xmlFree);
   fprintf(stdout, "Creating test list\n");
   if (list){
-    xslArrayListAdd(list, xmlMemStrdup("item1"));
-    xslArrayListAdd(list, xmlMemStrdup("item2"));
-    xslArrayListAdd(list, xmlMemStrdup("item3"));
-    xslArrayListAdd(list, xmlMemStrdup("item4"));
-    xslArrayListAdd(list, xmlMemStrdup("item5"));
-    xslArrayListAdd(list, xmlMemStrdup("item6"));
-    xslArrayListAdd(list, xmlMemStrdup("item7"));
-    xslArrayListAdd(list, xmlMemStrdup("item8"));
-    xslArrayListAdd(list, xmlMemStrdup("item9"));
-    xslArrayListAdd(list, xmlMemStrdup("item10"));
-    xslArrayListAdd(list, xmlMemStrdup("item11"));
+    arrayListAdd(list, xmlMemStrdup("item1"));
+    arrayListAdd(list, xmlMemStrdup("item2"));
+    arrayListAdd(list, xmlMemStrdup("item3"));
+    arrayListAdd(list, xmlMemStrdup("item4"));
+    arrayListAdd(list, xmlMemStrdup("item5"));
+    arrayListAdd(list, xmlMemStrdup("item6"));
+    arrayListAdd(list, xmlMemStrdup("item7"));
+    arrayListAdd(list, xmlMemStrdup("item8"));
+    arrayListAdd(list, xmlMemStrdup("item9"));
+    arrayListAdd(list, xmlMemStrdup("item10"));
+    arrayListAdd(list, xmlMemStrdup("item11"));
   }
   fprintf(stdout, "Done!\n");
   return list;
@@ -222,11 +222,11 @@ ArrayListPtr createTestList(void){
 
 
 ArrayListPtr createParamList(void){
-  ArrayListPtr list = xslArrayListNew(3, (freeItemFunc)paramItemFree);
+  ArrayListPtr list = arrayListNew(3, (freeItemFunc)paramItemFree);
   if (list){
-    xslArrayListAdd(list, paramItemNew((xmlChar*)"param1", (xmlChar*)"'value1'"));
-    xslArrayListAdd(list, paramItemNew((xmlChar*)"param2", (xmlChar*)"'value2'"));
-    xslArrayListAdd(list, paramItemNew((xmlChar*)"param3", (xmlChar*)"'value3'"));
+    arrayListAdd(list, paramItemNew((xmlChar*)"param1", (xmlChar*)"'value1'"));
+    arrayListAdd(list, paramItemNew((xmlChar*)"param2", (xmlChar*)"'value2'"));
+    arrayListAdd(list, paramItemNew((xmlChar*)"param3", (xmlChar*)"'value3'"));
   }
   return list;
 }
@@ -236,14 +236,14 @@ ArrayListPtr createBreakPointList(void){
   fprintf(stdout, "Creating breakPoint list\n");
   list = xslBreakPointLineList();
   if (list){
-    /*    xslAddBreakPoint(const xmlChar * url, long lineNumber,
+    /*    addBreakPoint(const xmlChar * url, long lineNumber,
 	  const xmlChar * templateName, int type) */
-    xslAddBreakPoint((xmlChar*)"index.html", 1, (xmlChar*)"one", DEBUG_BREAK_SOURCE);
-    xslAddBreakPoint((xmlChar*)"index2.html", 2, (xmlChar*)"two", DEBUG_BREAK_SOURCE);
-    xslAddBreakPoint((xmlChar*)"index3.html", 3, (xmlChar*)"three", DEBUG_BREAK_SOURCE); 
-    xslAddBreakPoint((xmlChar*)"index2.html", 1, (xmlChar*)"four", DEBUG_BREAK_SOURCE); 
-    xslAddBreakPoint((xmlChar*)"index2.html", 3, NULL, DEBUG_BREAK_SOURCE); 
-    xslAddBreakPoint((xmlChar*)"index2.html", 4, NULL, DEBUG_BREAK_SOURCE); 
+    addBreakPoint((xmlChar*)"index.html", 1, (xmlChar*)"one", DEBUG_BREAK_SOURCE);
+    addBreakPoint((xmlChar*)"index2.html", 2, (xmlChar*)"two", DEBUG_BREAK_SOURCE);
+    addBreakPoint((xmlChar*)"index3.html", 3, (xmlChar*)"three", DEBUG_BREAK_SOURCE); 
+    addBreakPoint((xmlChar*)"index2.html", 1, (xmlChar*)"four", DEBUG_BREAK_SOURCE); 
+    addBreakPoint((xmlChar*)"index2.html", 3, NULL, DEBUG_BREAK_SOURCE); 
+    addBreakPoint((xmlChar*)"index2.html", 4, NULL, DEBUG_BREAK_SOURCE); 
   }
   fprintf(stdout, "Done!\n");
   return list;
@@ -267,9 +267,9 @@ void myWalker(void *payload, void *data ATTRIBUTE_UNUSED, xmlChar *name ATTRIBUT
  * @root : The template being applide to "node"
  * @ctxt :
  */
-void xslDebugBreak(xmlNodePtr templ ATTRIBUTE_UNUSED, xmlNodePtr nod ATTRIBUTE_UNUSED,  
+void debugBreak(xmlNodePtr templ ATTRIBUTE_UNUSED, xmlNodePtr nod ATTRIBUTE_UNUSED,  
 		   xsltTemplatePtr root ATTRIBUTE_UNUSED,  xsltTransformContextPtr ctxt ATTRIBUTE_UNUSED){
-  fprintf(stdout, "List test's xslDebugBreak has reached!\n");
+  fprintf(stdout, "List test's debugBreak has reached!\n");
 }
 
 

@@ -10,19 +10,21 @@
 <!ELEMENT header (#PCDATA)>
 <!ELEMENT body (title?, para)+>
 <!ELEMENT footer (#PCDATA)>
-<!ELEMENT para (text|list|link)* >
+<!ELEMENT para (#PCDATA|text|list|link)* >
 <!ATTLIST para 
    title CDATA #IMPLIED
 >
 
 <!ELEMENT list (li+)>
-<!ELEMENT li ( list| text| comment|link)* >
+<!ELEMENT li (#PCDATA |list| text| comment|link)* >
 <!ELEMENT text (#PCDATA)>
 <!ELEMENT title (#PCDATA)>
+<!ELEMENT comment (#PCDATA)>
 
 <!ELEMENT cmd (summary, body? , usage)>
 <!ATTLIST cmd 
     name CDATA #REQUIRED
+    shortcut CDATA #IMPLIED
     title CDATA #IMPLIED
 >
 

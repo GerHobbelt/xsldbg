@@ -17,7 +17,7 @@
        user has not provided a value for 'help' param-->
   <xsl:param name="help" select="'_#_'"/>  
   <xsl:param name="alldoc" select="0"/>
-  <xsl:variable name="help_cmd" select="$command_nodes[@name=$help]"/> 
+  <xsl:variable name="help_cmd" select="$command_nodes[@name=$help or @shortcut=$help]"/> 
 
 
   <xsl:template match="/">

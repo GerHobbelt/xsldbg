@@ -289,9 +289,9 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur, const char *filename)
 
     /* Copy the parameters accross for libxslt */
     for (paramIndex = 0;
-         paramIndex < xslArrayListCount(getParamItemList());
+         paramIndex < arrayListCount(getParamItemList());
          paramIndex++) {
-        paramItem = xslArrayListGet(getParamItemList(), paramIndex);
+        paramItem = arrayListGet(getParamItemList(), paramIndex);
         if (paramItem) {
             params[nbparams] = (char *) paramItem->name;
             params[nbparams + 1] = (char *) paramItem->value;
@@ -352,7 +352,10 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur, const char *filename)
             if (cur->methodURI == NULL) {
                 if (isOptionEnabled(OPTIONS_TIMING))
                     startTimer();
-                xsltSaveResultToFile(stdout, res, cur);
+		if (terminalIO == NULL)
+		  xsltSaveResultToFile(stdout, res, cur);
+		else
+		  xsltSaveResultToFile(terminalIO, res, cur);
                 if (isOptionEnabled(OPTIONS_TIMING))
                     endTimer("Saving result");
             } else {
@@ -361,7 +364,10 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur, const char *filename)
                                      "non standard output xhtml\n");
                     if (isOptionEnabled(OPTIONS_TIMING))
                         startTimer();
-                    xsltSaveResultToFile(stdout, res, cur);
+		    if (terminalIO == NULL)
+		      xsltSaveResultToFile(stdout, res, cur);
+		    else
+		      xsltSaveResultToFile(terminalIO, res, cur);
                     if (isOptionEnabled(OPTIONS_TIMING))
                         endTimer("Saving result");
                 } else {
@@ -613,11 +619,11 @@ main(int argc, char **argv)
         } else if ((!strcmp(argv[i], "-param")) ||
                    (!strcmp(argv[i], "--param"))) {
             i++;
-            xslArrayListAdd(getParamItemList(),
+            arrayListAdd(getParamItemList(),
                             paramItemNew((xmlChar *) argv[i],
                                          (xmlChar *) argv[i + 1]));
             i++;
-            if (xslArrayListCount(getParamItemList()) >= 8) {
+            if (arrayListCount(getParamItemList()) >= 8) {
                 xsltGenericError(xsltGenericErrorContext,
                                  "too many params\n");
                 return (1);
@@ -698,21 +704,19 @@ main(int argc, char **argv)
     }
 
 
-    xslDebugGotControl(0);
+    debugGotControl(0);
     while (xslDebugStatus != DEBUG_QUIT) {
         /* don't force xsldbg to show command prompt */
         showPrompt = 0;
         cur = NULL;
         doc = NULL;
         if (isOptionEnabled(OPTIONS_SHELL)) {
-	    xslDebugStatus = DEBUG_STOP;
-	    xslDebugGotControl(0);
+	    debugGotControl(0);
             xsltGenericError(xsltGenericErrorContext,
                              "\nStarting stylesheet\n\n");
-        }
-        if (xslDebugStatus != DEBUG_NONE &&
-            (getIntOption(OPTIONS_TRACE) == TRACE_OFF))
-            xslDebugStatus = DEBUG_STOP;        /* stop as soon as possible */
+	    if (getIntOption(OPTIONS_TRACE) == TRACE_OFF)
+	      xslDebugStatus = DEBUG_STOP;        /* stop as soon as possible */
+	}
 
         if ((getStringOption(OPTIONS_SOURCE_FILE_NAME) == NULL) ||
             (getStringOption(OPTIONS_DATA_FILE_NAME) == NULL)) {
@@ -753,7 +757,7 @@ main(int argc, char **argv)
 
             if (isOptionEnabled(OPTIONS_SHELL) && (showPrompt == 0)) {
                 if ((xslDebugStatus != DEBUG_QUIT)
-                    && !xslDebugGotControl(-1)) {
+                    && !debugGotControl(-1)) {
                     xsltGenericError(xsltGenericErrorContext,
                                      "\nDebugger never received control\n");
                     /*goto a xsldbg command prompt */
@@ -816,16 +820,16 @@ main(int argc, char **argv)
                              "work as not all needed have been loaded \n");
             if ((cur == NULL) && (doc == NULL)) {
                 /*no doc's loaded */
-                xslDebugBreak(tempNode, tempNode, NULL, NULL);
+                debugBreak(tempNode, tempNode, NULL, NULL);
             } else if ((cur != NULL) && (doc == NULL)) {
                 /* stylesheet is loaded */
-                xslDebugBreak((xmlNodePtr) cur->doc, tempNode, NULL, NULL);
+                debugBreak((xmlNodePtr) cur->doc, tempNode, NULL, NULL);
             } else if ((cur == NULL) && (doc != NULL)) {
                 /* xml doc is loaded */
-                xslDebugBreak(tempNode, (xmlNodePtr) doc, NULL, NULL);
+                debugBreak(tempNode, (xmlNodePtr) doc, NULL, NULL);
             } else {
                 /* unexpected problem, both docs are loaded */
-                xslDebugBreak((xmlNodePtr) cur->doc, (xmlNodePtr) doc,
+                debugBreak((xmlNodePtr) cur->doc, (xmlNodePtr) doc,
                               NULL, NULL);
             }
             xmlFreeDoc(tempDoc);
@@ -971,7 +975,7 @@ loadXmlData(void)
  *         NULL otherwise
  */
 xmlDocPtr
-loadXmlTemporay(const xmlChar * path)
+loadXmlTemporary(const xmlChar * path)
 {
     xmlDocPtr doc = NULL;
 
@@ -1087,6 +1091,8 @@ xsldbgInit()
         result = filesInit();
         if (result)
             result = optionsInit();
+	/* must start with tracing off */
+	setIntOption(OPTIONS_TRACE,TRACE_OFF);
         if (result)
             result = breakPointInit();
         if (result)

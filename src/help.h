@@ -19,17 +19,37 @@
 #ifndef XSLDBG_HELP_H
 #define XSLDBG_HELP_H
 
+#ifdef USE_KDE_DOCS
+/**
+ * Provide a help system for user 
+ *
+ * @short help system support
+ *
+ * @author Keith Isdale <k_isdale@tpg.com.au> 
+ */
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
+#ifdef USE_GNOME_DOCS
 /**
  * helpTop:
- * @args : is valid 
+ * @args : Is valid command or empty string
  *
  * Display help about the command in @arg
  */
+#else
+#ifdef USE_KDE_DOCS
+/**
+ * Display help about the command in @p arg
+ *
+ * @param args Is valid or empty string
+ */
+#endif
+#endif
     void helpTop(const xmlChar * args);
 
 

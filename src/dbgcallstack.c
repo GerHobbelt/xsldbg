@@ -97,7 +97,7 @@ callStackFree(void)
 
 
 /**
- * xslAddCallInfo:
+ * addCallInfo:
  * @templateName: template name to add
  * @url: url for templateName
  *
@@ -105,7 +105,7 @@ callStackFree(void)
  *         NULL otherwise
  */
 xslCallPointInfoPtr
-xslAddCallInfo(const xmlChar * templateName, const xmlChar * url)
+addCallInfo(const xmlChar * templateName, const xmlChar * url)
 {
     xslCallPointInfoPtr result = NULL, cur = callInfo;
 
@@ -113,7 +113,7 @@ xslAddCallInfo(const xmlChar * templateName, const xmlChar * url)
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
                          "Error : Null template name or url:"
-                         " xslAddCallInfo\n");
+                         " addCallInfo\n");
         if (templateName)
             xsltGenericError(xsltGenericErrorContext, "template :'%s'\n",
                              templateName);
@@ -146,7 +146,7 @@ xslAddCallInfo(const xmlChar * templateName, const xmlChar * url)
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
             xsltGenericError(xsltGenericErrorContext,
                              "Error : Unable to create xslCallPointInfo from :"
-                             " xslAddCallInfo\n");
+                             " addCallInfo\n");
 #endif
         }
     }
@@ -155,7 +155,7 @@ xslAddCallInfo(const xmlChar * templateName, const xmlChar * url)
 
 
 /**
- * xslAddCall:
+ * addCall:
  * @templ: current template being applied
  * @source: the source node being processed
  *
@@ -164,7 +164,7 @@ xslAddCallInfo(const xmlChar * templateName, const xmlChar * url)
  *         0 otherwise
  */
 int
-xslAddCall(xsltTemplatePtr templ, xmlNodePtr source)
+addCall(xsltTemplatePtr templ, xmlNodePtr source)
 {
     int result = 0;
     const char *name = "Default template";
@@ -176,14 +176,14 @@ xslAddCall(xsltTemplatePtr templ, xmlNodePtr source)
     if (!source->doc || !source->doc->URL) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Error : Invalid document url in call from : xslAddCall\n");
+                         "Error : Invalid document url in call from : addCall\n");
 #endif
         return result;
     }
 
     /* are at a "frame" break point ie "step down" */
     if ((xslDebugStatus == DEBUG_STEPDOWN)
-        && (stopDepth == xslCallDepth())) {
+        && (stopDepth == callDepth())) {
         xslDebugStatus = DEBUG_STOP;
         stopDepth = 0;
     }
@@ -205,12 +205,12 @@ xslAddCall(xsltTemplatePtr templ, xmlNodePtr source)
     if (!name) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Error : Invalid template name : xslAddCall\n");
+                         "Error : Invalid template name : addCall\n");
 #endif
         return result;
     }
 
-    info = xslAddCallInfo((xmlChar *) name, source->doc->URL);
+    info = addCallInfo((xmlChar *) name, source->doc->URL);
 
     if (info) {
         xslCallPointPtr cur;
@@ -226,13 +226,13 @@ xslAddCall(xsltTemplatePtr templ, xmlNodePtr source)
         } else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
             xsltGenericError(xsltGenericErrorContext,
-                             "Error : Unable to create call point : xslAddCall\n");
+                             "Error : Unable to create call point : addCall\n");
 #endif
         }
     } else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Error : Unable to create call info : xslAddCall\n");
+                         "Error : Unable to create call info : addCall\n");
 #endif
     }
 
@@ -241,18 +241,18 @@ xslAddCall(xsltTemplatePtr templ, xmlNodePtr source)
 
 
 /**
- * xslDropCall:
+ * dropCall:
  *
  * Drop the topmost item off the call stack
  */
 void
-xslDropCall(void)
+dropCall(void)
 {
 
     if (!callStackBot) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "xslDropCall failed invalid call stack:"
+                         "dropCall failed invalid call stack:"
                          " breakpoint.c");
 #endif
         return;
@@ -260,7 +260,7 @@ xslDropCall(void)
 
     /* are at a "frame" break point ie "step up" */
     if ((xslDebugStatus == DEBUG_STEPUP)
-        && (stopDepth == -1 * xslCallDepth())) {
+        && (stopDepth == -1 * callDepth())) {
         xslDebugStatus = DEBUG_STOP;
         stopDepth = 0;
     }
@@ -278,7 +278,7 @@ xslDropCall(void)
     } else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "xslDropCall failed "
+                         "dropCall failed "
                          "no items on call stack : breakpoint.c");
 #endif
     }
@@ -286,7 +286,7 @@ xslDropCall(void)
 
 
 /** 
- * xslStepupToDepth:
+ * stepupToDepth:
  * @depth:the frame depth to step up to  
  *
  * Set the frame depth to step up to
@@ -294,18 +294,18 @@ xslDropCall(void)
  *         0 otherwise
  */
 int
-xslStepupToDepth(int depth)
+stepupToDepth(int depth)
 {
     int result = 0;
 
-    if ((depth > 0) && (depth <= xslCallDepth())) {
+    if ((depth > 0) && (depth <= callDepth())) {
         stopDepth = -1 * depth;
         xslDebugStatus = DEBUG_STEPUP;
         result++;
     } else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "xslStepupToDepth failed invalid depth %d: "
+                         "stepupToDepth failed invalid depth %d: "
                          " breakpoint.c", depth);
 #endif
     }
@@ -314,7 +314,7 @@ xslStepupToDepth(int depth)
 
 
 /** 
- * xslStepdownToDepth:
+ * stepdownToDepth:
  * @depth: the frame depth to step down to 
  *
  * Set the frame depth to step down to
@@ -322,18 +322,18 @@ xslStepupToDepth(int depth)
  *         0 otherwise
  */
 int
-xslStepdownToDepth(int depth)
+stepdownToDepth(int depth)
 {
     int result = 0;
 
-    if ((depth > 0) && (depth >= xslCallDepth())) {
+    if ((depth > 0) && (depth >= callDepth())) {
         stopDepth = depth;
         xslDebugStatus = DEBUG_STEPDOWN;
         result++;
     } else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "xslStepdownToDepth failed invalid depth %d: "
+                         "stepdownToDepth failed invalid depth %d: "
                          " breakpoint.c", depth);
 #endif
     }
@@ -342,8 +342,8 @@ xslStepdownToDepth(int depth)
 
 
 /**
- * xslGetCall:
- * @depth: 0 < depth <= xslCallDepth()  
+ * getCall:
+ * @depth: 0 < depth <= callDepth()  
  *
  * Retrieve the call point at specified call depth 
 
@@ -351,22 +351,22 @@ xslStepdownToDepth(int depth)
  *         NULL otherwise 
  */
 xslCallPointPtr
-xslGetCall(int depth)
+getCall(int depth)
 {
     xslCallPointPtr result = NULL, cur = callStackBot;
 
     if (!callStackBot) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "xslGetCall failed invalid call stack:"
+                         "getCall failed invalid call stack:"
                          " breakpoint.c");
 #endif
         return result;
     }
-    if ((depth < 1) && (depth > xslCallDepth())) {
+    if ((depth < 1) && (depth > callDepth())) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "xslGetCall failed invalid call depth:"
+                         "getCall failed invalid call depth:"
                          " breakpoint.c");
 #endif
         return result;
@@ -382,7 +382,7 @@ xslGetCall(int depth)
     else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "xslGetCall failed invalid call depth:"
+                         "getCall failed invalid call depth:"
                          " breakpoint.c");
 #endif
     }
@@ -391,24 +391,24 @@ xslGetCall(int depth)
 
 
 /** 
- * xslGetCallStackTop:
+ * getCallStackTop:
  *
  * Returns the top of the call stack
  */
 xslCallPointPtr
-xslGetCallStackTop(void)
+getCallStackTop(void)
 {
     return callStackTop;
 }
 
 
 /** 
- * xslCallDepth:
+ * callDepth:
  *
  * Returns the depth of call stack
  */
 int
-xslCallDepth(void)
+callDepth(void)
 {
     xslCallPointPtr cur = callStackBot;
     int result = 0;

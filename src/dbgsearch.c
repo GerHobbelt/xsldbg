@@ -210,17 +210,13 @@ searchFreeInfo(searchInfoPtr info)
 int
 searchInit(void)
 {
-    searchDataBase = xmlNewDoc((xmlChar *) "1.0");
-    lastQuery = NULL;
-    if (searchDataBase == NULL) {
+  searchDataBase = NULL;
+  lastQuery = NULL;
+    if (!searchEmpty()) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xmlGenericError(xmlGenericErrorContext,
                         "Search init failed : memory error\n");
 #endif
-    } else {
-        searchDataBaseRoot = xmlNewNode(NULL, (xmlChar *) "search");
-        if (searchRootNode)
-            xmlAddChild((xmlNodePtr) searchDataBase, searchDataBaseRoot);
     }
     return (searchDataBase != NULL) && (searchRootNode != NULL);
 }
@@ -241,35 +237,40 @@ searchFree(void)
 }
 
 /**
- * xslSearchEmpty:
+ * searchEmpty:
  *
  * Empty the seach data base of its contents
  * Returns 1 on success,
  *         0 otherwise
  */
 int
-xslSearchEmpty(void)
+searchEmpty(void)
 {
     if (searchDataBase) {
         xmlFreeDoc(searchDataBase);
-        searchDataBase = xmlNewDoc((xmlChar *) "1.0");
-        if (searchDataBase) {
-            searchDataBaseRoot = xmlNewNode(NULL, (xmlChar *) "search");
-            if (searchRootNode)
-                xmlAddChild((xmlNodePtr) searchDataBase,
-                            searchDataBaseRoot);
-        }
-        if (lastQuery)
-            xmlFree(lastQuery);
-        lastQuery = NULL;
-        if ((searchDataBase == NULL) || (searchRootNode == NULL)) {
-#ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-            xmlGenericError(xmlGenericErrorContext,
-                            "Seach Empty failed : memory error\n");
-#endif
-        }
     }
-    return (searchDataBase != NULL) && (searchRootNode != NULL);
+    searchDataBase = xmlNewDoc((xmlChar *) "1.0");
+    if (searchDataBase) {
+      xmlCreateIntSubset(searchDataBase, 
+		"search", 
+		"-//xsldbg//DTD xsldoc XML V1.0//EN", 
+		"xsldoc.dtd");
+      searchDataBaseRoot = xmlNewNode(NULL, (xmlChar *) "search");
+      if (searchRootNode)
+	xmlAddChild((xmlNodePtr) searchDataBase,
+		    searchDataBaseRoot);
+    }
+    if (lastQuery)
+      xmlFree(lastQuery);
+    lastQuery = NULL;
+    if ((searchDataBase == NULL) || (searchRootNode == NULL)) {
+#ifdef WITH_XSLT_DEBUG_BREAKPOINTS
+      xmlGenericError(xmlGenericErrorContext,
+		      "Seach Empty failed : memory error\n");
+#endif
+    }
+
+return (searchDataBase != NULL) && (searchRootNode != NULL);
 }
 
 
@@ -302,28 +303,28 @@ searchRootNode(void)
 
 
 /**
- * xslSearchSave:
+ * searchSave:
  * @fileName: valid fileName to save search dataBase to 
  *
  * Returns 1 on success,
  *         0 otherwise
  */
 int
-xslSearchSave(const xmlChar * fileName)
+searchSave(const xmlChar * fileName)
 {
     return xmlSaveFormatFile((char *) fileName, searchDataBase, 1);
 }
 
 
 /**
- * xslSearchAdd:
+ * searchAdd:
  * @node: a valid node to be added to the topmost node in search dataBase
  *
  * Returns 1 on success,
  *         0 otherwise
  */
 int
-xslSearchAdd(xmlNodePtr node)
+searchAdd(xmlNodePtr node)
 {
     int result = 0;
 
@@ -458,7 +459,7 @@ findNodeByLineNoHelper(void *payload, void *data,
  *	    NULL otherwise
 */
 xmlNodePtr
-xslFindNodeByLineNo(xsltTransformContextPtr ctxt,
+findNodeByLineNo(xsltTransformContextPtr ctxt,
                     const xmlChar * url, long lineNumber)
 {
     xmlNodePtr result = NULL;
@@ -467,7 +468,7 @@ xslFindNodeByLineNo(xsltTransformContextPtr ctxt,
 
     if (!searchInf) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Unable to create searchInfo in xslFindNodeByLineNo\n");
+                         "Unable to create searchInfo in findNodeByLineNo\n");
         return result;
     }
 
@@ -475,7 +476,7 @@ xslFindNodeByLineNo(xsltTransformContextPtr ctxt,
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
                          "Invalid ctxt, url or line number to "
-                         "xslFindNodeByLineNo\n");
+                         "findNodeByLineNo\n");
 #endif
         return result;
     }
@@ -503,7 +504,7 @@ xslFindNodeByLineNo(xsltTransformContextPtr ctxt,
 
 
 /**
- * xslFindTemplateNode: 
+ * findTemplateNode: 
  * @style: valid stylesheet collection context to look into
  * @name: template name to look for
  *
@@ -511,7 +512,7 @@ xslFindNodeByLineNo(xsltTransformContextPtr ctxt,
  *         NULL otherwise 
  */
 xmlNodePtr
-xslFindTemplateNode(xsltStylesheetPtr style, const xmlChar * name)
+findTemplateNode(xsltStylesheetPtr style, const xmlChar * name)
 {
     xmlNodePtr result = NULL;
     xmlChar *templName;
@@ -521,7 +522,7 @@ xslFindTemplateNode(xsltStylesheetPtr style, const xmlChar * name)
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
                          "Invalid stylesheet or template name : "
-                         "xslFindTemplateNode\n");
+                         "findTemplateNode\n");
 #endif
         return result;
     }
@@ -552,13 +553,13 @@ xslFindTemplateNode(xsltStylesheetPtr style, const xmlChar * name)
     if (!result)
         xsltGenericError(xsltGenericErrorContext,
                          "Template named '%s' not found :"
-                         " xslFindTemplateNode\n", name);
+                         " findTemplateNode\n", name);
 #endif
     return result;
 }
 
 /**
- * xslFindBreakPointByName:
+ * findBreakPointByName:
  * @templateName: template name to look for
  *
  * Find the breakpoint at template with "match" or "name" equal 
@@ -585,7 +586,7 @@ findBreakPointByName(const xmlChar * templateName)
         if (!searchInf->found) {
             xsltGenericError(xsltGenericErrorContext,
                              "Break point with template name of \"%s\" "
-                             "not found :xslFindBreakPointByName\n",
+                             "not found :findBreakPointByName\n",
                              templateName);
 #endif
         } else
@@ -599,7 +600,7 @@ findBreakPointByName(const xmlChar * templateName)
 
 
 /**
- * xslFindBreakPointById:
+ * findBreakPointById:
  * @id: The break point id to look for
  *
  * Returns the break point with given the break point id if found,
@@ -622,7 +623,7 @@ findBreakPointById(int id)
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         if (!searchInf->found) {
             xsltGenericError(xsltGenericErrorContext,
-                             "Break point id %d not found :xslFindBreakPointById\n",
+                             "Break point id %d not found :findBreakPointById\n",
                              id);
 #endif
         } else
@@ -635,14 +636,14 @@ findBreakPointById(int id)
 
 
 /**
- * xslFindNodesByQuery:
+ * findNodesByQuery:
  * @query: xpath query to run, see dbgsearch.c for more details
  * 
  * Returns the nodes that match the given query on success,
  *         NULL otherwise 
  */
 xmlXPathObjectPtr
-xslFindNodesByQuery(const xmlChar * query ATTRIBUTE_UNUSED)
+findNodesByQuery(const xmlChar * query ATTRIBUTE_UNUSED)
 {
     xmlXPathObjectPtr list = NULL;
 
@@ -651,7 +652,7 @@ xslFindNodesByQuery(const xmlChar * query ATTRIBUTE_UNUSED)
 
 
 /**
- * xslSearchQuery:
+ * searchQuery:
  * @query: query to run . If NULL then query is "//search/*"
  * @tempFile: where do we load the search dataBase from to execute
  *             query. If tempFile is NULL "search.data" is used
@@ -662,7 +663,7 @@ xslFindNodesByQuery(const xmlChar * query ATTRIBUTE_UNUSED)
  *        0 otherwise   
  */
 int
-xslSearchQuery(const xmlChar * tempFile, const xmlChar * query)
+searchQuery(const xmlChar * tempFile, const xmlChar * query)
 {
     int result = 0;
     xmlChar buffer[DEBUG_BUFFER_SIZE];
@@ -708,7 +709,7 @@ walkBreakPoints(xmlHashScanner walkFunc, void *data)
     if (!walkFunc)
         return;
 
-    for (lineNo = 0; lineNo < xslBreakPointLinesCount(); lineNo++) {
+    for (lineNo = 0; lineNo < breakPointLinesCount(); lineNo++) {
         hashTable = lineNoItemGet(lineNo);
         if (hashTable) {
             xmlHashScan(hashTable, walkFunc, data);

@@ -1,5 +1,5 @@
 
-         xsldbg version 0.8.7
+         xsldbg version 0.8.5
          ====================
    
     xsldbg help

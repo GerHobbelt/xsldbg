@@ -54,7 +54,7 @@ xslDbgShellAddParam(xmlChar * arg)
         return result;
     }
     if ((xmlStrLen(arg) > 1) && splitString(arg, 2, opts) == 2) {
-        result = xslArrayListAdd(getParamItemList(),
+        result = arrayListAdd(getParamItemList(),
                                  paramItemNew(opts[0], opts[1]));
     }
     if (!result)
@@ -92,10 +92,10 @@ xslDbgShellDelParam(xmlChar * arg)
                              errorPrompt);
             return result;
         } else
-            result = xslArrayListDelete(getParamItemList(), paramId);
+            result = arrayListDelete(getParamItemList(), paramId);
     } else {
         /* Delete all parameters */
-        xslArrayListEmpty(getParamItemList());
+        arrayListEmpty(getParamItemList());
         result++;
     }
     if (!result)

@@ -132,7 +132,7 @@ const char *shortCommandNames[] = {
     "s",                        /* step */
     "up",                       /*stepup */
     "down",                     /* stepdown */
-    "c",                        /* cont */
+    "c",                        /* continue */
     "r",                        /* run */
 
     "t",                        /* templates */
@@ -524,7 +524,7 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                         offset++;
 
                     templateNode =
-                        xslFindTemplateNode(styleCtxt->style,
+                        findTemplateNode(styleCtxt->style,
                                             &arg[offset]);
                     if (!templateNode) {
                         xsltGenericError(xsltGenericErrorContext,
@@ -622,18 +622,18 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
 void
 xslDbgPrintCallStack(const xmlChar * arg)
 {
-    int callDepth;
+    int depth;
     xslCallPointPtr callPoint;
 
     if (arg == NULL) {
-        for (callDepth = 1; callDepth <= xslCallDepth(); callDepth++) {
-            callPoint = xslGetCall(callDepth);
+        for (depth = 1; depth <= callDepth(); depth++) {
+            callPoint = getCall(depth);
             if (callPoint && callPoint->info) {
-                if (callDepth == 0)
+                if (depth == 0)
                     xsltGenericError(xsltGenericErrorContext,
                                      "Call stack contains:\n");
                 xsltGenericError(xsltGenericErrorContext,
-                                 "#%d template :\"%s\"", callDepth - 1,
+                                 "#%d template :\"%s\"", depth - 1,
                                  callPoint->info->templateName);
                 if (callPoint->info->url)
                     xsltGenericError(xsltGenericErrorContext,
@@ -646,12 +646,12 @@ xslDbgPrintCallStack(const xmlChar * arg)
 #ifdef WITH_XSLT_DEBUG_PROCESS
                 xsltGenericError(xsltGenericErrorContext,
                                  "Call stack item not found at depth %d :"
-                                 " xslDbgPrintCallStack\n", callDepth);
+                                 " xslDbgPrintCallStack\n", depth);
 #endif
                 break;
             }
         }
-        if (xslCallDepth() == 0)
+        if (callDepth() == 0)
             xsltGenericError(xsltGenericErrorContext,
                              "No items on call stack\n");
         else
@@ -660,7 +660,7 @@ xslDbgPrintCallStack(const xmlChar * arg)
         long depth = atol((char *) arg);
 
         if (depth >= 0) {
-            callPoint = xslGetCall(depth + 1);
+            callPoint = getCall(depth + 1);
             if (callPoint && callPoint->info) {
                 xsltGenericError(xsltGenericErrorContext,
                                  "#%d template :\"%s\"", depth,
@@ -916,7 +916,7 @@ addBreakPointNode(void *payload, void *data ATTRIBUTE_UNUSED,
 {
     xmlNodePtr node = searchBreakPointNode((xslBreakPointPtr) payload);
 
-    xslSearchAdd(node);
+    searchAdd(node);
 }
 
 
@@ -934,7 +934,7 @@ addSourceNode(void *payload, void *data ATTRIBUTE_UNUSED,
 {
     xmlNodePtr node = searchSourceNode((xsltStylesheetPtr) payload);
 
-    xslSearchAdd(node);
+    searchAdd(node);
 }
 
 
@@ -952,7 +952,7 @@ addTemplateNode(void *payload, void *data ATTRIBUTE_UNUSED,
 {
     xmlNodePtr node =
         searchTemplateNode(((xsltTemplatePtr) payload)->elem);
-    xslSearchAdd(node);
+    searchAdd(node);
 }
 
 
@@ -970,7 +970,7 @@ addGlobalNode(void *payload, void *data ATTRIBUTE_UNUSED,
 {
     xmlNodePtr node = searchGlobalNode((xmlNodePtr) payload);
 
-    xslSearchAdd(node);
+    searchAdd(node);
 }
 
 
@@ -988,7 +988,7 @@ addLocalNode(void *payload, void *data ATTRIBUTE_UNUSED,
 {
     xmlNodePtr node = searchLocalNode((xmlNodePtr) payload);
 
-    xslSearchAdd(node);
+    searchAdd(node);
 }
 
 
@@ -1006,7 +1006,7 @@ addIncludeNode(void *payload, void *data ATTRIBUTE_UNUSED,
 {
     xmlNodePtr node = searchIncludeNode((xmlNodePtr) payload);
 
-    xslSearchAdd(node);
+    searchAdd(node);
 }
 
 
@@ -1022,12 +1022,12 @@ addCallStackItems(void)
     xmlNodePtr node;
     int depth;
 
-    for (depth = xslCallDepth(); depth > 0; depth--) {
-        item = xslGetCall(depth);
+    for (depth = callDepth(); depth > 0; depth--) {
+        item = getCall(depth);
         if (item) {
             node = searchCallStackNode(item);
             if (node)
-                xslSearchAdd(node);
+                searchAdd(node);
         }
     }
 }
@@ -1050,7 +1050,7 @@ updateSearchData(xsltTransformContextPtr styleCtxt ATTRIBUTE_UNUSED,
 {
     int result = 0;
 
-    xslSearchEmpty();
+    searchEmpty();
     xsltGenericError(xsltGenericErrorContext,
                      "Updating search database, this may take a while ..\n");
     /* add items in the call stack to the search dataBase */
@@ -1075,7 +1075,7 @@ updateSearchData(xsltTransformContextPtr styleCtxt ATTRIBUTE_UNUSED,
                      "  Looking for local variables \n");
     walkLocals((xmlHashScanner) addLocalNode, data, style);
     xsltGenericError(xsltGenericErrorContext, "  Formatting output \n");
-    xslSearchSave((xmlChar *) "search.data");
+    searchSave((xmlChar *) "search.data");
     result++;
     return result;
 }
@@ -1091,7 +1091,7 @@ updateSearchData(xsltTransformContextPtr styleCtxt ATTRIBUTE_UNUSED,
  * Start the xsldbg command prompt
  */
 void
-xslDebugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
+debugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
               xsltTransformContextPtr ctxt)
 {
     xmlDocPtr tempDoc = NULL;
@@ -1206,7 +1206,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
         return;
 
     /* flag that we've received control */
-    xslDebugGotControl(1);
+    debugGotControl(1);
     ctxt->loaded = 0;
     lastSourceNode = source;
     lastDocNode = doc;
@@ -1474,7 +1474,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                                      "\nNo file break points set:\n");
                 else
                     xsltGenericError(xsltGenericErrorContext,
-                                     "\n\t Total of %d breakPoints present\n",
+                                     "\n\t Total of %d break points present\n",
                                      printCount);
                 break;
 
@@ -1640,7 +1640,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                                      "Removing all breakpoints\n");
                     loadedFiles = 1;
                     /* clear all break points , what else makes sense? */
-                    xslEmptyBreakPoint();
+                    emptyBreakPoint();
                 }
                 break;
 
@@ -1686,7 +1686,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                                      "Load of xml data deferred use run command\n"
                                      "Removing all breakpoints\n");
                     /* clear all break points , what else makes sense? */
-                    xslEmptyBreakPoint();
+                    emptyBreakPoint();
                 }
                 break;
 

@@ -24,7 +24,7 @@ struct DebuggerCallbacks {
  -------------------------------------------*/
 
 /**
- * xslHandleDebugger:
+ * handleDebugger:
  * @cur : source node being executed
  * @node : data node being processed
  * @templ : temlate that applies to node
@@ -32,9 +32,9 @@ struct DebuggerCallbacks {
  * 
  * If either cur or node are a breakpoint, or xslDebugStatus in state 
  *   where debugging must occcur at this time, then transfer control
- *   to the xslDebugBreak function
+ *   to the debugBreak function
  */
-void xslHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
+void handleDebugger(xmlNodePtr cur, xmlNodePtr node,
                        xsltTemplatePtr templ,
                        xsltTransformContextPtr ctxt);
 
@@ -68,9 +68,9 @@ debugInit(void)
     result = result && callStackInit();
 
     /* setup debugger callbacks */
-    debuggerDriver.debuggercallback = xslHandleDebugger;
-    debuggerDriver.addcallback = xslAddCall;
-    debuggerDriver.dropcallback = xslDropCall;
+    debuggerDriver.debuggercallback = handleDebugger;
+    debuggerDriver.addcallback = addCall;
+    debuggerDriver.dropcallback = dropCall;
     xsltSetDebuggerCallbacks(3, &debuggerDriver);
     return result;
 }
@@ -90,7 +90,7 @@ debugFree(void)
 
 
 /** 
- * xslDebugGotControl :
+ * debugGotControl :
  * @reached : 1 if debugger has received control, -1 to read is value,
                0 to clear the flag
  *
@@ -99,7 +99,7 @@ debugFree(void)
  *         0 otherwise
  */
 int
-xslDebugGotControl(int reached)
+debugGotControl(int reached)
 {
     static int hasReached;
     int result = hasReached;
@@ -111,7 +111,7 @@ xslDebugGotControl(int reached)
 
 
 /**
- * xslHandleDebugger:
+ * handleDebugger:
  * @cur : source node being executed
  * @node : data node being processed
  * @templ : temlate that applies to node
@@ -119,10 +119,10 @@ xslDebugGotControl(int reached)
  * 
  * If either cur or node are a breakpoint, or xslDebugStatus in state 
  *   where debugging must occcur at this time then transfer control
- *   to the xslDebugBreak function
+ *   to the debugBreak function
  */
 void
-xslHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
+handleDebugger(xmlNodePtr cur, xmlNodePtr node,
                   xsltTemplatePtr templ, xsltTransformContextPtr ctxt)
 {
     setActiveBreakPoint(NULL);
@@ -137,20 +137,20 @@ xslHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
             case DEBUG_TRACE:
                 /* only allow breakpoints at xml elements */
                 if (xmlGetLineNo(cur) != -1)
-                    xslDebugBreak(cur, node, templ, ctxt);
+                    debugBreak(cur, node, templ, ctxt);
                 break;
 
             case DEBUG_STOP:
                 xslDebugStatus = DEBUG_CONT;
                 /* only allow breakpoints at xml elements */
                 if (xmlGetLineNo(cur) != -1)
-                    xslDebugBreak(cur, node, templ, ctxt);
+                    debugBreak(cur, node, templ, ctxt);
                 break;
 
             case DEBUG_STEP:
                 /* only allow breakpoints at xml elements */
                 if (xmlGetLineNo(cur) != -1)
-                    xslDebugBreak(cur, node, templ, ctxt);
+                    debugBreak(cur, node, templ, ctxt);
                 break;
 
             case DEBUG_CONT:
@@ -165,7 +165,7 @@ xslHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
                         if (breakPoint) {
                             if (breakPoint->enabled) {
                                 setActiveBreakPoint(breakPoint);
-                                xslDebugBreak(cur, node, templ, ctxt);
+                                debugBreak(cur, node, templ, ctxt);
                                 return;
                             }
                         }
@@ -177,7 +177,7 @@ xslHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
                         if (breakPoint) {
                             if (breakPoint->enabled) {
                                 setActiveBreakPoint(breakPoint);
-                                xslDebugBreak(cur, node, templ, ctxt);
+                                debugBreak(cur, node, templ, ctxt);
                             }
                         }
                     }
