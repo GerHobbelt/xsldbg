@@ -36,20 +36,20 @@
 
 
 
-    typedef struct _xslCallPointInfo xslCallPointInfo;
-    typedef xslCallPointInfo *xslCallPointInfoPtr;
-    struct _xslCallPointInfo {
+    typedef struct _callPointInfo callPointInfo;
+    typedef callPointInfo *callPointInfoPtr;
+    struct _callPointInfo {
         xmlChar *templateName;
         xmlChar *url;
-        xslCallPointInfoPtr next;
+        callPointInfoPtr next;
     };
 
-    typedef struct _xslCallPoint xslCallPoint;
-    typedef xslCallPoint *xslCallPointPtr;
-    struct _xslCallPoint {
-        xslCallPointInfoPtr info;
+    typedef struct _callPoint callPoint;
+    typedef callPoint *callPointPtr;
+    struct _callPoint {
+        callPointInfoPtr info;
         long lineNo;
-        xslCallPointPtr next;
+        callPointPtr next;
     };
 
 
@@ -59,28 +59,9 @@
 
 
 
+
     void
       callStackFree(void);
-
-
-
-
-
-
-
-/**
- * Add template "call" to call stack
- *
- * @returns A reference to the added info if successful, 
- *          NULL otherwise
- *
- * @param templateName Template name to add
- * @param url The url for the template
- */
-
-
-    xslCallPointInfoPtr addCallInfo(const xmlChar * templateName,
-                                    const xmlChar * url);
 
 
 
@@ -98,7 +79,7 @@
    */
 
 
-    int addCall(xsltTemplatePtr templ, xmlNodePtr source);
+    int callStackAdd(xsltTemplatePtr templ, xmlNodePtr source);
 
 
 
@@ -109,7 +90,7 @@
  */
 
 
-    void dropCall(void);
+    void callStackDrop(void);
 
 
 
@@ -126,7 +107,7 @@
  */
 
 
-    int stepupToDepth(int depth);
+    int callStackStepup(int depth);
 
 
 
@@ -143,7 +124,7 @@
  */
 
 
-    int stepdownToDepth(int depth);
+    int callStackStepdown(int depth);
 
 
 
@@ -159,7 +140,7 @@
  */
 
 
-    xslCallPointPtr getCall(int depth);
+    callPointPtr callStackGet(int depth);
 
 
 
@@ -172,7 +153,7 @@
  */
 
 
-    xslCallPointPtr getCallStackTop(void);
+    callPointPtr callStackGetTop(void);
 
 
 
@@ -183,7 +164,7 @@
  */
 
 
-    int callDepth(void);
+    int callStackGetDepth(void);
 
 
 

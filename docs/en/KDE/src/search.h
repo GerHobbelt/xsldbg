@@ -69,7 +69,7 @@
                                  * if -1 then ignore */
         xmlChar *templateName;  /* template to look for 
                                  * if NULL then ignore */
-        xslBreakPointPtr breakPoint;    /* the break point found by search */
+        breakPointPtr breakPtr;    /* the break point found by search */
     };
 
 
@@ -283,7 +283,7 @@
  *         @p data->data->node
  *     otherwise @p data is unchanged
  *
- * @param payload A valid xslBreakPointPtr 
+ * @param payload A valid breakPointPtr 
  * @param data The criteria to look for and a valid searchInfoPtr of
  *          type SEARCH_BREAKPOINT 
  * @param name Not used 
@@ -365,7 +365,7 @@
 */
 
 
-    xslBreakPointPtr findBreakPointByName(const xmlChar * templateName);
+    breakPointPtr findBreakPointByName(const xmlChar * templateName);
 
 
 
@@ -381,7 +381,7 @@
  */
 
 
-    xslBreakPointPtr findBreakPointById(int id);
+    breakPointPtr findBreakPointById(int id);
 
 
 
@@ -393,8 +393,7 @@
  * @returns The nodes that match the given query on success,
  *          NULL otherwise 
  *
- * @param query The xpath query to run, see dbgsearch.c or 
- *           search.dtd for more details
+ * @param query The xpath query to run, see docs/en/search.dtd for more details
  */
 
 
@@ -406,7 +405,7 @@
 
 /**
  * Walks through all break points calling walkFunc for each. The payload
- *  sent to walkFunc is of type xslBreakPointPtr 
+ *  sent to walkFunc is of type breakPointPtr 
  *
  * @param walkFunc The function to callback for each break point found
  * @param data The extra data to pass onto @p walkFunc
@@ -541,17 +540,17 @@
 
 
 /**
- * Convert @p breakPoint into search dataBase format
+ * Convert @p breakPtr into search dataBase format
  *
- * @returns @p breakPoint as a new xmlNode in search dataBase format 
+ * @returns @p breakPtr as a new xmlNode in search dataBase format 
  *               if successful,
  *          NULL otherwise
  *
- * @param breakPoint Is valid
+ * @param breakPtr Is valid
  */
 
 
-    xmlNodePtr searchBreakPointNode(xslBreakPointPtr breakPoint);
+    xmlNodePtr searchBreakPointNode(breakPointPtr breakPtr);
 
 
 
@@ -611,8 +610,8 @@
 
 
 /**  
-* Convert @p style into search dataBase format
-*
+ * Convert @p style into search dataBase format
+ *
  * @returns @p style as a new xmlNode in search dataBase format if successful,
  *         NULL otherwise
  *
@@ -654,7 +653,7 @@
    */
 
 
-    xmlNodePtr searchCallStackNode(xslCallPointPtr callStackItem);
+    xmlNodePtr searchCallStackNode(callPointPtr callStackItem);
 
 
 

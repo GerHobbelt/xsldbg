@@ -1,6 +1,6 @@
 <HTML>
 <HEAD>
-<TITLE>Source: src/help.h</TITLE>
+<TITLE>Source: src/xsldbg.h</TITLE>
 
 <META NAME="Generator" CONTENT="KDOC ">
 </HEAD>
@@ -10,7 +10,7 @@
 <TD>
 	<TABLE BORDER="0">
 		<TR><TD valign="top" align="left" cellspacing="10">
-		<h1>Source: src/help.h</h1>
+		<h1>Source: src/xsldbg.h</h1>
 		</TD>
 		<TD valign="top" align="right" colspan="1"></TD></TR>
 	</TABLE>
@@ -28,7 +28,7 @@
 <pre>
 
 /***************************************************************************
-                          help.h  -  describe the help support functions
+                          xsldbg.h  - describe the application level functions
                              -------------------
     begin                : Sun Sep 16 2001
     copyright            : (C) 2001 by Keith Isdale
@@ -49,15 +49,34 @@
 
 
 
+
 /**
- * Provide a help system for user 
+ * Provide provide application level services and useful bits and pieces
  *
- * @short help system support
+ * @short application functions and useful bits and pieces
  *
  * @author Keith Isdale <k_isdale@tpg.com.au> 
  */
 
 
+/* end of WITH_XSL_DEBUG */
+
+/**
+ * ATTRIBUTE_UNUSED:
+ *
+ * This macro is used to flag unused function parameters to GCC
+ */
+
+
+
+
+
+
+
+/* We want skip most of these includes when building documentation */
+/* BUILD_DOCS*/
+
+
 
 
 
@@ -65,18 +84,43 @@
 
 
 /**
- * Display help about the command in @p arg
+ * Load the stylesheet and return it 
  *
- *
- *  This is a platform specific interface
- *
- * @param args Is valid or empty string
- * @returns 1 on success,
- *          0 otherwise
+ * @returns The stylesheet after reloading it if successful
+ *         NULL otherwise
  */
 
 
-    int helpTop(const xmlChar * args);
+    xsltStylesheetPtr xsldbgLoadStylesheet(void);
+
+
+
+
+
+/**
+ * Load the xml data file and return it  
+ *
+ * @returns The stylesheet after reloading it if successful
+ *         NULL otherwise
+ */
+
+
+    xmlDocPtr xsldbgLoadXmlData(void);
+
+
+
+
+
+/**
+ * Load the temporary data file and return it 
+ *
+ * @returns The temporary file after reloading it if successful,
+ *         NULL otherwise
+ * @param path The name of temporary file to loa
+ */
+
+
+    xmlDocPtr xsldbgLoadXmlTemporary(const xmlChar * path);
 
 
 
