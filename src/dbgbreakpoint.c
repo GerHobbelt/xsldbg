@@ -9,7 +9,6 @@
 
 #include "config.h"
 
-#ifdef WITH_DEBUGGER
 
 /*
 -----------------------------------------------------------
@@ -392,4 +391,3 @@ xslIsBreakPointNode(xmlNodePtr node)
     return result;
 }
 
-#endif
