@@ -12,7 +12,7 @@
  #undef HAVE_READLINE
  #undef HAVE_HISTORY
  #define TIMESTAMP __DATE__
- #define WITH_DEBUG_HELP 0
+ #define WITH_DEBUG_HELP
 
  /* Define if you have the _stat function.  */
  /* #define HAVE__STAT */
@@ -88,6 +88,6 @@
   extern char *xsldbgCommand; /* Our invocation command */
 
  /* Version number of package */
- #define VERSION "0/9/3"
+ #define VERSION "1/0/2"
 
 

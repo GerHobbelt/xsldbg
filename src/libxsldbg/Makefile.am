@@ -8,7 +8,6 @@ INCLUDES= $(all_includes) -DDOCS_PATH=\"$(HTML_DIR)/xsldbg/\" \
  -DVERSION=\"@VERSION@\" -I .. $(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS)
 endif
 
-
 noinst_HEADERS=\
 	help.h 			\
 	cmds.h			\
@@ -27,9 +26,10 @@ noinst_HEADERS=\
 	xsldbgio.h	
 
 
-if USE_XSLDBG_AS_THREAD
+# Each supported platform will have a small number of platform
+#   specific files
+if RISC_OS
 libxsldbg_la_SOURCES = \
-	help.c		\
 	xsldbg.c 	\
 	cmds.h		\
 	debugXSL.c 	\
@@ -49,13 +49,13 @@ libxsldbg_la_SOURCES = \
 	trace_cmds.c		\
 	search_cmds.c		\
 	variable_cmds.c		\
-	xsldbgthread.c
-
-
+	xsldbgthread.c		\
+	options_riscos.c	\
+	files_riscos.c		\
+	help_riscos.c		
 
 else
 libxsldbg_la_SOURCES = \
-	help.c		\
 	xsldbg.c 	\
 	debugXSL.c 	\
 	dbgarraylist.c	\
@@ -74,7 +74,10 @@ libxsldbg_la_SOURCES = \
 	trace_cmds.c		\
 	search_cmds.c		\
 	variable_cmds.c		\
-	xsldbgthread.c
+	xsldbgthread.c		\
+	options_unix.c		\
+	files_unix.c		\
+	help_unix.c	
 endif
 
 
@@ -99,8 +102,16 @@ SOURCES = \
 	trace_cmds.c		\
 	search_cmds.c		\
 	variable_cmds.c		\
-	xsldbgthread.h	\
-	xsldbgthread.c		
+	xsldbgthread.h		\
+	xsldbgthread.c		\
+	options_unix.c		\
+	files_unix.c		\
+	help_unix.c		\
+	options_riscos.c	\
+	files_riscos.c		\
+	help_riscos.c	
+
+
 
 EXTRA_DIST=\
 	readme.txt

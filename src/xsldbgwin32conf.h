@@ -22,7 +22,7 @@
 
 #define XSLDBG_BIN "xsldbg"
 
-#define VERSION "1.0.0"
+#define VERSION "1.0.2"
 
 #define TIMESTAMP "29th Dec 2001"
 

@@ -119,20 +119,20 @@ xslDbgSystem(const xmlChar * arg)
         } else {
             snprintf(buffer, sizeof(buffer),
                      "SystemID %s was not found "
-                     " in xml catalog \n\n", arg);
+                     " in xml catalog\n\n", arg);
             notifyXsldbgApp(XSLDBG_MSG_RESOLVE_CHANGE, "");
             xsltGenericError(xsltGenericErrorContext, buffer);
         }
     } else {
         if (name) {
             snprintf(buffer, sizeof(buffer),
-                     "SystemID %s maps to : %s \n\n", arg, name);
+                     "SystemID %s maps to : %s\n\n", arg, name);
             xmlFree(name);
             result++;
         } else {
             snprintf(buffer, sizeof(buffer),
                      "SystemID %s was not found "
-                     " in xml catalog \n\n", arg);
+                     " in xml catalog\n\n", arg);
         }
         xsltGenericError(xsltGenericErrorContext, buffer);
     }
@@ -168,20 +168,20 @@ xslDbgPublic(const xmlChar * arg)
         } else {
             snprintf(buffer, sizeof(buffer),
                      "PublicID %s was not found "
-                     " in xml catalog \n\n", arg);
+                     " in xml catalog\n\n", arg);
             notifyXsldbgApp(XSLDBG_MSG_RESOLVE_CHANGE, "");
             xsltGenericError(xsltGenericErrorContext, buffer);
         }
     } else {
         if (name) {
             snprintf(buffer, sizeof(buffer),
-                     "PublicID  %s maps to : %s \n\n", arg, name);
+                     "PublicID  %s maps to : %s\n\n", arg, name);
             xmlFree(name);
             result++;
         } else {
             snprintf(buffer, sizeof(buffer),
                      "PublicID %s was not found "
-                     " in xml catalog \n\n", arg);
+                     " in xml catalog\n\n", arg);
         }
         xsltGenericError(xsltGenericErrorContext, buffer);
     }

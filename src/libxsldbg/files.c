@@ -973,7 +973,6 @@ void
 filesAddEntityName(const xmlChar * SystemID, const xmlChar * PublicID)
 {
     int entityIndex = 0;
-    xmlChar *name2;
     entityInfoPtr tempItem;
 
     if (!SystemID || !filesEntityList())
@@ -1116,40 +1115,6 @@ filesGetBaseUri(xmlNodePtr node)
 }
 
 
-
-static const char *tempNames[] = {
-    "__xsldbg_tmp_file1_txt",
-    "__xsldbg_tmp_file2_txt"
-};
-
-
-  /**
-   * filesTempFileName:
-   * @ fileNumber : Nnumber of temp file required
-   *
-   * Return the name of tempfile. For each call to this function
-   *     with the same @fileNumber the same file name will be returned
-   *     File number : 0 is used by cat command
-   *     File number : 1 is used by profiling output  
-   *
-   * Returns The name of temp file to be used for temporary results, 
-   *         NULL otherwise
-   */
-const char *
-filesTempFileName(int fileNumber)
-{
-
-    const char *result = NULL;
-
-    if ((fileNumber < 0) || ((fileNumber + 1) > (int) sizeof(tempNames)))
-        xsltGenericError(xsltGenericErrorContext,
-                         "Unable to allocate temporary file %d for xsldbg\n",
-                         fileNumber);
-    else
-        result = tempNames[fileNumber];
-
-    return result;
-}
 
 
 /**

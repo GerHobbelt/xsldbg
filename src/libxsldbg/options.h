@@ -410,6 +410,45 @@ extern "C" {
    */
     void copyVolitleOptions(void);
 
+  /**
+   * optionNode:
+   * @optionType : Is valid, option to convert to a xmlNodePtr 
+   *
+   * Convert option into a xmlNodePtr
+   *
+   * Returns the option @optionType as a xmlNodePtr if successful,
+   *          NULL otherwise
+   */
+  xmlNodePtr optionNode(OptionTypeEnum optionType);
+
+
+  /**
+   * optionsRead:
+   * @doc : Is valid xsldbg config document, in the format as indicated 
+   *        by config.dtd
+   *
+   * Read options from document provided. 
+   * This is a platform specific interface so implementation must be
+   *     provided for non *nix platforms
+   *
+   * Returns 1 if able to read @doc and load options found,
+   *         0 otherwise
+   */
+  int optionsRead(xmlDocPtr doc);
+
+
+  /**
+   * optionsConfigFileName:
+   * 
+   * Returns A copy of the file name that will be used to load xsldbgs
+   *           configuration from,
+   *         NULL otherwise
+   *
+   *  This is a platform specific interface
+   *
+   */
+  xmlChar* optionsConfigFileName(void);
+
 /* ---------------------------------------------
           Parameter related options 
 -------------------------------------------------*/

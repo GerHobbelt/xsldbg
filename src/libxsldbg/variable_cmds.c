@@ -110,7 +110,8 @@ xslDbgShellSetVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg)
                         } else {
                             xmlFree(selectExpr);
                             xsltGenericError(xsltGenericErrorContext,
-                                             "Can't change a variable that doesn't use the selectn attribute\n");
+                                             "Can't change a variable " \
+					     "that doesn't use the select attribute\n");
                         }
                     } else
                         xsltGenericError(xsltGenericErrorContext,

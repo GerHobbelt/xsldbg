@@ -1,3 +1,15 @@
+Keith Isdale 29 Jan 2002 <k_isdale@tpg.com.au>
+   Added platform specific interface optionsConfigFileName to 
+	options.h
+   Added optionsRead and optionsNode functions to read/save options	
+   Created options_unix.c, options_win32.c, options_riscos.c to provide
+	platform specific implementation to the options.h interfaces
+   Created help_unix.c, help_win32.c, help_riscos.c to provide
+	platform specific implementation to the help.h interfaces
+   Created files_unix.c, files_win32.c, files_riscos.c to provide
+	platform specific implementation to the files.h interfaces	
+	
+	
 Keith Isdale 28 Jan 2002 <k_isdale@tpg.com.au>
    Version 1.0.2
    Added support for encoding output to standard output ( encoding command )

@@ -1,7 +1,7 @@
 #ifndef XSLDBGCONFIG_H
 #define XSLDBGCONFIG_H
 
-#define USE_XSLDBG_AS_THREAD 1
+#define USE_XSLDBG_AS_THREAD 0
 
 #define XSLDBG_VERSION 1.0.2
 

@@ -528,7 +528,7 @@ usage(const char *name)
 #ifdef LIBXML_CATALOG_ENABLED
 #ifdef __riscos
     xsltGenericError(xsltGenericErrorContext,
-                     "      --catalogs : use the catalogs from SGMLCatalog$Files\n");
+                     "      --catalogs : use the catalogs from SGML$CatalogFiles\n");
 #else
     xsltGenericError(xsltGenericErrorContext,
                      "      --catalogs : use the catalogs from $SGML_CATALOG_FILES\n");

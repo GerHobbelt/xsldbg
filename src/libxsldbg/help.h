@@ -43,6 +43,9 @@ extern "C" {
  *
  * Display help about the command in @arg
  *
+ * This is a platform specific interface
+ *
+ *
  * Returns 1 on success,
  *         0 otherwise
  */
@@ -51,6 +54,9 @@ extern "C" {
 
 /**
  * Display help about the command in @p arg
+ *
+ *
+ *  This is a platform specific interface
  *
  * @param args Is valid or empty string
  * @eturns 1 on success,
