@@ -133,7 +133,7 @@ debugHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
 
     if (!cur && !node) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Soure and doc are NULL can't enter debugger\n");
+                         "XSLT source and XML aata are NULL can't enter debugger\n");
     } else {
 	if (optionsGetIntOption(OPTIONS_GDB)){
 	    int doValidation = 0;
@@ -163,7 +163,7 @@ debugHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
 		    /* breakpoints will either be marked as orphaned or not as needed */
 		    xsldbgValidateBreakpoints = BREAKPOINTS_BEING_VALIDATED;
 		    walkBreakPoints((xmlHashScanner)
-			    xslDbgShellValidateBreakPoint, NULL);
+			    xslDbgShellValidateBreakPoint, ctxt);
 		    if (filesGetStylesheet() && filesGetMainDoc() && templ){
 			xsldbgValidateBreakpoints = BREAKPOINTS_ARE_VALID;
 		    }else{

@@ -1,6 +1,6 @@
 %define name xsldbg
 %define version 3.1.4
-%define release 1_i386
+%define release 1
 %define prefix /usr
 %define kdeprefix /opt/kde3
 %define qtprefix /usr/lib/qt3

@@ -3,6 +3,11 @@ Keith Isdale 22 June 2003 <k_isdale@tpg.com.au>
    Convert xsldbg.spec to be a GCC 3.2, i386, spec file 
    Minor code clean up get rid of some warnings
    Fix Ctrl-C handler so that at most two Ctrl-C's are required to abort xsldbg
+   Enable gdb mode by default, and print extra GDB messages needed for KDbg when verbose mode is set :
+	xsldbg --verbose --gdb ... 
+    Otherwise it the extra messages are annoying
+    Fix crash bug when adding a template breakpoint
+    Started support for orphaned template breakpoints
 
 Keith Isdale 15 June 2003 <k_isdale@tpg.com.au>
    Fixed the specification for test2. All xsldbg automatic tests now pass  

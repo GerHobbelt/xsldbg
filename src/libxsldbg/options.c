@@ -136,6 +136,8 @@ optionsInit(void)
     optionsSetIntOption(OPTIONS_AUTOENCODE, 1);
     /* start up with auto restart turned off */
     optionsSetIntOption(OPTIONS_AUTORESTART, 0); 	
+    /* start up with gdb mode turned on */
+    optionsSetIntOption(OPTIONS_GDB, 1); 	
 
     /* set output default as standard output. Must be changed if not using
      * xsldbg's command line. Or the tty command is used */

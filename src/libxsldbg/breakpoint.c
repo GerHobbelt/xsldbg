@@ -356,7 +356,7 @@ breakPointAdd(const xmlChar * url, long lineNumber,
 	      BreakPointTypeEnum type)
 {
     int result = 0, breakPointType = type;
-    xmlHashTablePtr breakPointHash;     /* hash of breakPoints */
+    xmlHashTablePtr breakPointHash = NULL;     /* hash of breakPoints */
     breakPointPtr breakPtr;
 
     if (!breakList) {
@@ -466,7 +466,8 @@ breakPointAdd(const xmlChar * url, long lineNumber,
 #endif
     }
 
-    if (result && optionsGetIntOption(OPTIONS_GDB) && (xsldbgValidateBreakpoints != BREAKPOINTS_BEING_VALIDATED)){
+    if (result && optionsGetIntOption(OPTIONS_GDB) && optionsGetIntOption(OPTIONS_VERBOSE) &&
+	    (xsldbgValidateBreakpoints != BREAKPOINTS_BEING_VALIDATED)){
       breakPointPrint(NULL, breakPtr);
       xsltGenericError(xsltGenericErrorContext,"\n");
     }

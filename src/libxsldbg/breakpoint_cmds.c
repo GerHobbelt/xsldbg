@@ -36,6 +36,9 @@ static xmlChar buff[DEBUG_BUFFER_SIZE];
 /* needed by breakpoint validation */
 extern int breakPointCounter;
 
+/* we need to have a fake URL and line number for orphaned template breakpoints */
+int orphanedTemplateLineNo = 1;
+const xmlChar *orphanedTemplateURL= (xmlChar*)"http://xsldbg.sourceforge.net/default.xsl"; 
 /* ---------------------------------------------------
    Private function declarations for breakpoint_cmds.c
  ----------------------------------------------------*/
@@ -356,6 +359,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
     long lineNo = -1;
     xmlChar *url = NULL;
     int orphanedBreakPoint = 0;
+
     static const xmlChar *errorPrompt =
         (xmlChar *) "Failed to add break point\n";
 
@@ -445,18 +449,28 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
 				   of orginal value so this must not be 
 				   freed */ 
         xmlChar *defaultUrl = (xmlChar *) "<n/a>";
-        int newBreakPoints = 0;
+        int newBreakPoints = 0, validatedBreakPoints = 0;
 	int allTemplates = 0;
 	int ignoreTemplateNames = 0;
 	int argCount;
 	int found;	
         xsltTemplatePtr templ;
-	if (orphanedBreakPoint){
-	    xsltGenericError(xsltGenericErrorContext,
-		    "Error: Can't add orphaned breakpoint to a template \n");
-	    return 0;
+	if (orphanedBreakPoint || !ctxt){
+	    /* Add an orphaned template breakpoint we will need to call this function later to 
+		activate the breakpoint */
+	    breakPointPtr brk;
+		result =
+		    breakPointAdd(orphanedTemplateURL, orphanedTemplateLineNo, arg, NULL,
+			    DEBUG_BREAK_SOURCE);
+	    brk = breakPointGet(orphanedTemplateURL, orphanedTemplateLineNo++);
+	    if (brk){
+		brk->flags |= BREAKPOINT_ORPHANED;
+	    }else{
+		xsltGenericError(xsltGenericErrorContext,
+			"Error: Unable to find added breakpoint");
+	    }
+	    return result;
 	}
-
 
 	argCount = splitString(arg, 2, opts);
 	if ((argCount == 2) && (xmlStrLen(opts[1]) == 0))
@@ -565,23 +579,43 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
 		  }
 	        }
                 if (found) {
+		    int templateLineNo = xmlGetLineNo(templ->elem);
+		    breakPointPtr searchPtr = breakPointGet(tempUrl, templateLineNo);
+
 		    if (templ->mode)
 		       modeName = 
 			 fullQName(templ->modeURI, templ->mode);
-		    if (!breakPointAdd(tempUrl, 
-					     xmlGetLineNo(templ->elem),
-                                       templateName, modeName, 
-					     DEBUG_BREAK_SOURCE)){
-                        xsltGenericError(xsltGenericErrorContext,
-                                         "Error: Can't add breakPoint to file %s : line %d\n",
-                                         tempUrl, xmlGetLineNo(templ->elem));
-                        xsltGenericError(xsltGenericErrorContext,
-                                         "Error: Breakpoint to template :\"%s\" in file %s :"
-                                         " line %d exists \n", templateName,
-                                         templ->elem->doc->URL,
-                                         xmlGetLineNo(templ->elem));
-                    } else {
-                        newBreakPoints++;
+		    
+		    
+		    if (!searchPtr){
+			if (breakPointAdd(tempUrl, templateLineNo,
+					   templateName, modeName, 
+						 DEBUG_BREAK_SOURCE)){
+			    newBreakPoints++;
+			}	
+		    }else{
+			
+			if ((templateLineNo != searchPtr->lineNo ) || !xmlStrEqual(tempUrl, searchPtr->url)){
+			    int lastId = searchPtr->id;
+			    int lastCounter = breakPointCounter;
+			    /* we have a new location for breakpoint */
+			    if (breakPointDelete(searchPtr)){
+				if (breakPointAdd(tempUrl, templateLineNo, templateName, modeName,DEBUG_BREAK_SOURCE)){ 
+				    searchPtr = breakPointGet(tempUrl, templateLineNo);
+				    if (searchPtr){
+					searchPtr->id = lastId;
+					result = 1;
+					breakPointCounter = lastCounter;
+					xsltGenericError(xsltGenericErrorContext,
+						"Information: Breakpoint validation has caused Breakpoint %d to be re-created\n", 
+						searchPtr->id);
+					validatedBreakPoints++;
+				    }
+				}
+			    }
+			}else{
+			    validatedBreakPoints++;
+			}
 		    }
 		}
 		if (templateName){
@@ -600,15 +634,17 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                 style = style->imports;
         }
 
-        if (newBreakPoints == 0) {
+        if ((newBreakPoints == 0) && (validatedBreakPoints == 0)) {
             xsltGenericError(xsltGenericErrorContext,
                              "Error: No templates found or unable to add any breakPoints\n ");
             url = NULL;         /* flag that we've printed partial error message about the problem url */
         } else {
             result = 1;
-            xsltGenericError(xsltGenericErrorContext,
+	    if (newBreakPoints){
+		xsltGenericError(xsltGenericErrorContext,
                              "Information: Added %d new breakPoints\n",
                              newBreakPoints);
+	    }
         }
 
         if (name)
@@ -619,7 +655,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
 	  xmlFree(mode);
 	if (modeURI)
 	  xmlFree(modeURI);
-        if (defaultUrl)
+        if (defaultUrl && !xmlStrEqual((xmlChar*)"<n/a>", defaultUrl))
             xmlFree(defaultUrl);
 	if (tempUrl)
 	  url = xmlStrdup(tempUrl);
@@ -880,6 +916,105 @@ xslDbgShellPrintBreakPoint(void *payload, void *data ATTRIBUTE_UNUSED,
     }
 }
 
+
+/* Validiate a breakpoint at a given URL and line number  
+    breakPtr and copy must be valid
+*/
+static int validateBreakPoint(breakPointPtr breakPtr, breakPointPtr copy)
+{
+
+    int result = 0;
+    if (!breakPtr || !copy){
+	xsltGenericError(xsltGenericErrorContext,
+		"Warning: NULL arguments passed to validateBreakPoint\n");
+	return result;
+    }
+
+    if (filesIsSourceFile(breakPtr->url)) {
+	result = validateSource(&copy->url, &copy->lineNo);
+    } else {
+	result = validateData(&copy->url, &copy->lineNo);
+    }
+    if (result)
+	breakPtr->flags &= BREAKPOINT_ALLFLAGS ^ BREAKPOINT_ORPHANED;
+    else 
+	breakPtr->flags |= BREAKPOINT_ORPHANED;
+
+    if ( breakPtr->flags & BREAKPOINT_ORPHANED){
+	xsltGenericError(xsltGenericErrorContext,
+		"Warning: Breakpoint #%d is orphaned result %d, old flags %d new flags %d\n", 
+		breakPtr->id, result, copy->flags, breakPtr->flags);
+    }
+
+    if (!(breakPtr->flags & BREAKPOINT_ORPHANED) && ((copy->lineNo != breakPtr->lineNo ) || 
+		(xmlStrlen(copy->url) != xmlStrlen(breakPtr->url)) || xmlStrCmp(copy->url, breakPtr->url))){
+	/* we have a new location for breakpoint */
+	int lastCounter = breakPointCounter;
+	copy->templateName = xmlStrdup(breakPtr->templateName);
+	copy->modeName = xmlStrdup(breakPtr->modeName);
+	if (breakPointDelete(breakPtr) && !breakPointGet(copy->url, copy->lineNo)){
+	    if (breakPointAdd(copy->url, copy->lineNo, NULL, NULL, copy->type)){	    
+		breakPtr = breakPointGet(copy->url, copy->lineNo);
+		if (breakPtr){
+		    breakPtr->id = copy->id;
+		    breakPtr->flags = copy->flags;
+		    breakPointCounter = lastCounter; /* compensate for breakPointAdd which always 
+							increments the breakPoint counter */
+		    result = 1;
+		    xsltGenericError(xsltGenericErrorContext,
+
+			    "Information: Breakpoint validation has caused Breakpoint %d to be re-created\n", 
+			    breakPtr->id);
+
+		}
+	    }
+	    if (!result){
+		xsltGenericError(xsltGenericErrorContext,
+			"Warning: Validation of Breakpoint %d failed \n", copy->id);
+	    }
+	}
+    }
+
+    return result;
+}
+
+/* Validiate a breakpoint at a given URL and line number  
+   breakPtr, copy and ctx must be valid
+ */
+static int validateTemplateBreakPoint(breakPointPtr breakPtr, breakPointPtr copy, xsltTransformContextPtr ctxt)
+{
+    int result = 0;
+    int lastCounter = breakPointCounter;
+    if (!breakPtr || !copy || !ctxt){
+	xsltGenericError(xsltGenericErrorContext,
+		"Warning: NULL arguments passed to validateTemplateBreakPoint\n");
+	return result;
+    }
+
+    copy->templateName = xmlStrdup(breakPtr->templateName);
+    if ((xmlStrlen(copy->templateName) == 0) || xmlStrEqual(copy->templateName, (xmlChar*)"*")){
+	if (xmlStrEqual(breakPtr->url, orphanedTemplateURL))
+	    breakPointDelete(breakPtr);
+	if ( xslDbgShellBreak(copy->templateName, NULL, ctxt)){
+	    result = 1;
+	    xsltGenericError(xsltGenericErrorContext,
+		    "Information: Breakpoint validation has caused one or more breakpoints to be re-created\n");
+	}
+    }else{
+	if (xmlStrEqual(breakPtr->url, orphanedTemplateURL))
+	    breakPointDelete(breakPtr);
+	if (xslDbgShellBreak(copy->templateName, NULL, ctxt)){
+	    result = 1;
+	}
+    }
+    xmlFree(copy->templateName);
+    if (!result){
+	xsltGenericError(xsltGenericErrorContext,
+		"Warning: Validation of Breakpoint %d failed \n", copy->id);
+    }
+    return result;
+}
+
 /**
  * xslDbgShellValidateBreakPoint:
  * @payload: A valid breakPointPtr
@@ -887,77 +1022,33 @@ xslDbgShellPrintBreakPoint(void *payload, void *data ATTRIBUTE_UNUSED,
  * @name: Not used
  *
  * Print an warning if a breakpoint is invalid
-*/
-void xslDbgShellValidateBreakPoint(void *payload, void *data ATTRIBUTE_UNUSED,
-                           xmlChar * name ATTRIBUTE_UNUSED)
+
+ */
+void xslDbgShellValidateBreakPoint(void *payload, void *data,
+	xmlChar * name ATTRIBUTE_UNUSED)
 {
-  int result = 0, flags; 
-  if (payload){
-    breakPointPtr breakPtr = (breakPointPtr) payload;
-    breakPoint item;
-    item.lineNo = breakPtr->lineNo;
-    item.url = xmlStrdup(breakPtr->url);
-    if (!item.url){
-	xsltGenericError(xsltGenericErrorContext,
-	    "Warning: Out of memory can't validate Breakpoints\n");
-	return;
-    }
-    
-    if (filesIsSourceFile(breakPtr->url)) {
-      result = validateSource(&item.url, &item.lineNo);
-    } else {
-      result = validateData(&item.url, &item.lineNo);
-    }    
-    flags = breakPtr->flags;
-    if (result)
-       breakPtr->flags &= BREAKPOINT_ALLFLAGS ^ BREAKPOINT_ORPHANED;
-    else 
-       breakPtr->flags |= BREAKPOINT_ORPHANED;
+    int result = 0; 
+    if (payload){
+	breakPointPtr breakPtr = (breakPointPtr) payload;
 
-   if ( breakPtr->flags & BREAKPOINT_ORPHANED){
-	    xsltGenericError(xsltGenericErrorContext,
-		"Warning: Breakpoint #%d is orphaned result %d, old flags %d new flags %d\n", 
-		breakPtr->id, result, flags, breakPtr->flags);
-    }
-
-    if (!(breakPtr->flags & BREAKPOINT_ORPHANED) && ((item.lineNo != breakPtr->lineNo ) || 
-	    (xmlStrlen(item.url) != xmlStrlen(breakPtr->url)) || xmlStrCmp(item.url, breakPtr->url))){
-	/* we have a new location for breakpoint */
-	int lastCounter = breakPointCounter;
-	item.flags = breakPtr->flags;
-	item.type = breakPtr->type;
-	item.id = breakPtr->id;
-	item.templateName = xmlStrdup(breakPtr->templateName);
-	item.modeName = xmlStrdup(breakPtr->modeName);
-	if (!item.templateName || !item.modeName){
-	    if (breakPointDelete(breakPtr) && !breakPointGet(item.url, item.lineNo)){
-		if (breakPointAdd(item.url, item.lineNo, item.templateName, item.modeName, item.type)){	    
-		    breakPtr = breakPointGet(item.url, item.lineNo);
-		    if (breakPtr){
-			breakPtr->id = item.id;
-			breakPtr->flags = item.flags;
-		    	breakPointCounter = lastCounter; /* compensate for breakPointAdd which always 
-							    increments the breakPoint counter */
-			result = 1;
-			xsltGenericError(xsltGenericErrorContext,
-					"Information: Breakpoint validation has caused Breakpoint %d to be re-created\n", 
-					breakPtr->id);
-
-		    }
-		}
-	    }
-	    if (!result){
-		xsltGenericError(xsltGenericErrorContext,
-		    "Warning: Validation of Breakpoint %d failed \n", item.id);
+	breakPoint copy; /* create a copy of the breakpoint */
+	copy.lineNo = breakPtr->lineNo;
+	copy.url = xmlStrdup(breakPtr->url);
+	copy.flags = breakPtr->flags;
+	copy.type = breakPtr->type;
+	copy.id = breakPtr->id;
+	if (copy.url){
+	    if (breakPtr->templateName){
+		/* template name is used to contain the rules to add template breakpoint */
+		result = validateTemplateBreakPoint(breakPtr, &copy, (xsltTransformContextPtr)data);    
+	    }else{
+		result = validateBreakPoint(breakPtr, &copy);
 	    }
 	}else{
-	    xsltGenericError(xsltGenericErrorContext,
-		"Warning: Out of memory can't validate Breakpoints\n");
+	   xsltGenericError(xsltGenericErrorContext,
+		    "Warning: Out of memory can't validate Breakpoints\n");
 	}
-	xmlFree(item.templateName);
-	xmlFree(item.modeName);
+
+	xmlFree(copy.url);
     }
-    
-    xmlFree(item.url);
-  }
 }

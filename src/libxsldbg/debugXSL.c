@@ -204,6 +204,7 @@ const char *shortCommandNames[] = {
     "o",                        /* output file name */
     "cd",
 
+
     /* file related */
     /* "output", already listed */
     "ent",                      /* entities command */
@@ -2071,8 +2072,8 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 cmdResult = 0;
         }
 
-        /* kDbg like to get the marker after every command so here it is */
-        if (optionsGetIntOption(OPTIONS_GDB) && !nextCommandActive
+        /* KDbg likes to get the marker after every command so here it is */
+        if (optionsGetIntOption(OPTIONS_GDB) && optionsGetIntOption(OPTIONS_VERBOSE) && !nextCommandActive
 	     && (commandId != DEBUG_STEPUP_CMD - DEBUG_HELP_CMD)) {
             if (ctxt->node && ctxt->node && 
 		ctxt->node->doc && ctxt->node->doc->URL) {

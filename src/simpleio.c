@@ -67,10 +67,10 @@ xslDbgShellReadline(xmlChar * prompt)
   static char last_read[DEBUG_BUFFER_SIZE] = { '\0' };
 
 #ifdef HAVE_READLINE
+
       xmlChar *line_read;
 
-      if ((optionsGetIntOption(OPTIONS_GDB) == 0) &&
-	(optionsGetIntOption(OPTIONS_STDOUT) == 0)){
+      if (optionsGetIntOption(OPTIONS_STDOUT) == 0){
 	/* Get a line from the user. */
 	line_read = (xmlChar *) readline((char *) prompt);
 	
