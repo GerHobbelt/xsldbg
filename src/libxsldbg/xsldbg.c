@@ -601,6 +601,7 @@ usage(const char *name)
 
 }
 
+
 int
 xsldbgMain(int argc, char **argv)
 {
@@ -691,7 +692,11 @@ xsldbgMain(int argc, char **argv)
                    (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-output"))) {
 	    argv[i] = NULL;
 	    i++;
-	    result = xslDbgShellOutput((xmlChar*)argv[i]);
+#if defined(WIN32) || defined (__CYGWIN__)
+            result = xmlCanonicPath(argv[i]);
+            if (result == NULL)
+#endif
+	    	result = xslDbgShellOutput((xmlChar*)argv[i]);
 	    argv[i] = NULL;
         } else if ((xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-V")) ||
                    (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-version"))) {
@@ -1064,6 +1069,7 @@ xsldbgLoadStylesheet(void)
 }
 
 
+xmlSAXHandler mySAXhdlr;
 
 /**
  * xsldbgLoadXmlData:
@@ -1095,7 +1101,7 @@ xsldbgLoadXmlData(void)
                             NULL);
     else
 #endif
-        doc = xmlSAXParseFile(&xmlDefaultSAXHandler,
+	doc = xmlSAXParseFile(&mySAXhdlr,
 			     (char *) optionsGetStringOption(OPTIONS_DATA_FILE_NAME), 0);
     if (doc == NULL) {
         xsltGenericError(xsltGenericErrorContext,
@@ -1302,12 +1308,20 @@ xsldbgInit()
 	/*
 	 * disable CDATA from being built in the document tree
 	 */
-	xmlDefaultSAXHandlerInit();
+#if LIBXML_VERSION < 20600
+	xmlDefaultSAXHandlerInit ();
 	xmlDefaultSAXHandler.cdataBlock = NULL;
-if (xsldbgHasLineNumberFix){
-	oldGetEntity = xmlDefaultSAXHandler.getEntity;
-	xmlDefaultSAXHandler.getEntity = xsldbgGetEntity;
-}
+	if (xsldbgHasLineNumberFix && (xmlDefaultSAXHandler.getEntity != xsldbgGetEntity)){
+	    oldGetEntity = xmlDefaultSAXHandler.getEntity;
+	    xmlDefaultSAXHandler.getEntity = xsldbgGetEntity;
+	}
+#else
+	xmlSAX2InitDefaultSAXHandler(&mySAXhdlr, 1);
+	if (mySAXhdlr.getEntity != xsldbgGetEntity){
+	    oldGetEntity = mySAXhdlr.getEntity;
+	    mySAXhdlr.getEntity = xsldbgGetEntity;
+	}
+#endif
 
         if (getThreadStatus() != XSLDBG_MSG_THREAD_NOTUSED) {
             initialized = 1;
