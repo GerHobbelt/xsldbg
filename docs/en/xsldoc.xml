@@ -742,7 +742,7 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </cmd>
 
 <cmd name="load" title="Load">
-<summary>Reload stylesheet and data file(s)      (Disabled see run)</summary>
+<summary>Load the xsldbg's options user preferences from disk</summary>
 <usage>
 <li>
 <text>load</text>
@@ -751,7 +751,7 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </cmd>
 
 <cmd name="save" title="Save">
-<summary>Save the generated data file       (Disabled)</summary>
+<summary>Save the xsldbg's options user preferences to disk</summary>
 <usage>
 <li>
 <text>save</text>

@@ -58,11 +58,16 @@
         OPTIONS_REPEAT,         /* The number of times to repeat */
         OPTIONS_TRACE,          /* Trace execution */
         OPTIONS_WALK_SPEED,     /* How fast do we walk through code */
-        OPTIONS_CATALOGS,       /* Use the catlogs from SGML_CATALOG_FILES */
+        OPTIONS_CATALOGS,       /* Get the catalogs from SGML_CATALOG_FILES and
+                                 * store it in OPTIONS_CATALOG_NAMES */
+        OPTIONS_PREFER_HTML,    /* Prefer html output for search results */
+        OPTIONS_AUTOENCODE,     /* try to use the encoding from the stylesheet */
         OPTIONS_VERBOSE,        /* Be verbose with messages */
-        OPTIONS_OUTPUT_FILE_NAME = 550, /* what is the output file name */
+        OPTIONS_OUTPUT_FILE_NAME,       /* what is the output file name */
         OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */
         OPTIONS_DOCS_PATH,      /* path of xsldbg's documentation */
+        OPTIONS_CATALOG_NAMES,  /* the names of the catalogs to use when catalogs option is active */
+        OPTIONS_ENCODING,       /* What encoding to use for standard output */
         OPTIONS_DATA_FILE_NAME  /* xml data file to use */
     };
 
@@ -168,6 +173,8 @@
 
 
 /**
+ * Return the state of a boolean option
+ *
  * @returns The state of a boolean xsldbg option. 
  *            ie 1 for enabled, 0 for disabled
  *
@@ -246,14 +253,121 @@
     const xmlChar *getStringOption(OptionTypeEnum optionType);
 
 
+
+
+
   /**
-   * copyVolitleOptions:
-   *
    * Copy volitile options to the working area for xsldbg
    */
+
+
     void copyVolitleOptions(void);
 
+
+
+
+
+  /**
+   * Convert option into a xmlNodePtr
+   *
+   * @returns The option @p optionType as a xmlNodePtr if successful,
+   *          NULL otherwise
+   *
+   * @param optionType Is valid, option to convert to a xmlNodePtr 
+   *
+   */
+
+
+  xmlNodePtr optionNode(OptionTypeEnum optionType);
+
+
+
+
+
+
+  /**
+   * Read options from document provided. 
+   *
+   * @returns 1 if able to read @p doc and load options found,
+   *          0 otherwise
+   *
+   * @param doc Is valid xsldbg config document, in the format as indicated 
+   *        by config.dtd
+   */
+
+
+  int optionsReadDoc(xmlDocPtr doc);
+
+
 /* ---------------------------------------------
+          Platform specific option functions
+-------------------------------------------------*/
+
+
+
+
+  /**
+   * Intialize the platform specific options module
+   *
+   *  This is a platform specific interface
+   *
+   * @returns 1 if sucessful
+   *          0 otherwise  
+   */
+
+
+  int optionsPlatformInit(void);
+
+
+
+
+
+  /**
+   * Free memory used by the platform specific options module
+   *
+   *  This is a platform specific interface
+   *
+   */
+
+
+  void optionsPlatformFree(void);
+
+
+
+
+
+  /**
+   * Return xsldbg's the configuration file name 
+   *
+   * Returns A copy of the file name that will be used to load xsldbgs
+   *           configuration from,
+   *         NULL otherwise
+   *
+   *  This is a platform specific interface
+   *
+   */
+
+
+  xmlChar* optionsConfigFileName(void);
+
+
+
+
+
+  /**
+   * Load options from configuration file/registry
+   *
+   * This is a platform specific interface
+   * 
+   * Returns 1 if able to load options
+   *         0 otherwise
+   */
+
+
+  int optionsLoad(void);
+
+
+/*---------------------------------------------
           Parameter related options 
 -------------------------------------------------*/
 

@@ -44,7 +44,7 @@
 /*used by xslDbgShell */
 
 /* how may items have been printed */
-extern int printCount;
+    extern int printCount;
 
 /****************************************************************
  *								*
@@ -60,6 +60,7 @@ extern int printCount;
  *
  * [3] S ::= (#x20 | #x9 | #xD | #xA)+
  */
+
 
 
 
@@ -82,6 +83,7 @@ extern int printCount;
 
 
 
+
 /**
  * Spit string by white space and put into @p out
  * 
@@ -95,6 +97,7 @@ extern int printCount;
 
 
     int splitString(xmlChar * textIn, int maxStrings, xmlChar ** out);
+
 
 
 
@@ -128,7 +131,7 @@ extern int printCount;
  * @returns 1 on success,
  *          0 otherwise
  *
- * @param arg The stylesheets of interests, is NULL for all stylsheets
+ * @param arg The stylesheets of interests and in UTF-8, is NULL for all stylesheets
  *
  */
 
@@ -146,18 +149,20 @@ extern int printCount;
 
 
 
+
 /**
  * Set a "frame" break point either up or down from here
  *
  * @returns 1 on success,
  *          0 otherwise
  *
- * @param arg Is valid 
+ * @param arg Is valid  and in UTF-8
  * @param stepup If != 1 then we step up, otherwise step down
  */
 
 
     int xslDbgShellFrameBreak(xmlChar * arg, int stepup);
+
 
 
 
@@ -169,7 +174,7 @@ extern int printCount;
  * @returns 1 on success,
  *          0 otherwise
  *
- * @param arg Is valid
+ * @param arg Is valid and in UTF-8
  * @param style Is valid
  * @param ctxt Is valid
  */
@@ -182,17 +187,19 @@ extern int printCount;
 
 
 
+
 /**
  * Delete break point specified by arg
  *
  * @returns 1 on success,
  *          0 otherwise
  *
- * @param arg Is valid
+ * @param arg Is valid and in UTF-8
  */
 
 
     int xslDbgShellDelete(xmlChar * arg);
+
 
 
 
@@ -214,10 +221,11 @@ extern int printCount;
 
 
 
+
   /**
    * Enable/disable break point specified by arg using enable
    *
-   * @param arg: is valid enable "commmand text"
+   * @param arg: is valid enable "commmand text" and in UTF-8
    * @param enableType : enable break point if 1, disable if 0, toggle if -1
    *
    * @returns 1 if successful,
@@ -225,7 +233,8 @@ extern int printCount;
    */
 
 
-  int xslDbgShellEnable(xmlChar * arg, int enableType);
+    int xslDbgShellEnable(xmlChar * arg, int enableType);
+
 
 
 
@@ -253,6 +262,7 @@ extern int printCount;
 
 
 
+
 /** 
  * Print out the list of template names found that match critieria   
  *
@@ -271,9 +281,9 @@ extern int printCount;
 
 
     int xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
-                                  xmlShellCtxtPtr ctxt,
-                                  xmlChar * arg, int verbose,
-                                  int allFiles);
+                                 xmlShellCtxtPtr ctxt,
+                                 xmlChar * arg, int verbose, int allFiles);
+
 
 
 
@@ -288,13 +298,14 @@ extern int printCount;
  * @param verbose Either 1 or 0
  * @param templateCount Is valid
  * @param count Is valid
- * @param templateName The template name to print, may be NULL
+ * @param templateName The template name to print and in UTF-8, may be NULL
  */
 
 
     void xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
                                    int *templateCount, int *count,
                                    xmlChar * templateName);
+
 
 
 
@@ -318,6 +329,7 @@ extern int printCount;
 
 
 
+
 /**
  * Print list of nodes in either ls or dir format
  *
@@ -325,14 +337,14 @@ extern int printCount;
  *          0 otherwise
  *
  * @param ctxt The current shell context
- * @param arg What xpath to display
+ * @param arg What xpath to display  and in UTF-8
  * @param dir If 1 print in dir mode, 
  *        otherwise ls mode
  */
 
 
-    int xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg,
-                              int dir);
+    int xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir);
+
 
 
 
@@ -347,12 +359,13 @@ extern int printCount;
  *
  * @param styleCtxt Current stylesheet context
  * @param ctxt Current shell context
- * @param arg The xpath to print
+ * @param arg The xpath to print and in UTF-8
  */
 
 
     int xslDbgShellCat(xsltTransformContextPtr styleCtxt,
-                        xmlShellCtxtPtr ctxt, xmlChar * arg);
+                       xmlShellCtxtPtr ctxt, xmlChar * arg);
+
 
 
 
@@ -366,13 +379,13 @@ extern int printCount;
 
  *
  * @param styleCtxt The current stylesheet context 
- * @param arg The name of variable to look for '$' prefix is optional
+ * @param arg The name of variable to look for '$' prefix is optional and in UTF-8
  * @param type Is valid VariableTypeEnum
  */
 
 
     int xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt,
-                                  xmlChar * arg, VariableTypeEnum type);
+                                 xmlChar * arg, VariableTypeEnum type);
 
 
 
@@ -386,15 +399,17 @@ extern int printCount;
 
 
 
+
 /**
  * @returns 1 if able to change xsldbg working direcorty to @p path
  *          0 otherwise
  *
- * @param path Operating system path(directory) to change to
+ * @param path Operating system path(directory) to change to and in UTF-8 
  */
 
 
-    int xslDbgShellChangeWd(const xmlChar * path);
+    int xslDbgShellChangeWd(xmlChar * path);
+
 
 
 
@@ -425,6 +440,7 @@ extern int printCount;
 
 
 
+
 /* 
  * Add a parameter to be sent to libxslt later on
  *
@@ -432,7 +448,7 @@ extern int printCount;
  *          0 otherwise
  *
  * @param arg A string comprised of two words separated by
- *          one or more spaces. 
+ *          one or more spaces which are in UTF-8
  */
 
 
@@ -442,7 +458,9 @@ extern int printCount;
 
 
 
+
 /**
+ * Delete a libxslt parameter that was to be sent to libxslt later on
  *
  * @returns 1 if able to delete parameter @p name,
  *          0 otherwise
@@ -452,6 +470,7 @@ extern int printCount;
 
 
     int xslDbgShellDelParam(xmlChar * arg);
+
 
 
 
@@ -479,6 +498,7 @@ extern int printCount;
 
 
 
+
 /**
  * Start the tracing of the stylesheet. First need to restart it.
  *
@@ -490,6 +510,7 @@ extern int printCount;
 
 
     int xslDbgShellTrace(xmlChar * arg);
+
 
 
 
@@ -517,6 +538,7 @@ extern int printCount;
 
 
 
+
 /**
  * @returns 1 if able to run query with @p arg, 
  *          0 otherwise
@@ -531,18 +553,23 @@ extern int printCount;
                           xsltStylesheetPtr style, xmlChar * arg);
 
 
+
+
 /**
- * xslDbgShellSetVariable:
- * @styleCtxt : Is valid
- * @arg : Is valid must be in the format of 
- *         <NAME> = <VALUE>
- * 
  * Change the value of a global or local variable
  *
- * Returns 1 on success,
- *         0 otherwise
+ * @param styleCtxt Is valid
+ * @param arg Is valid must be in the format of 
+ *         <NAME> = <VALUE>
+ * 
+ * @returns 1 on success,
+ *          0 otherwise
  */
-  int xslDbgShellSetVariable( xsltTransformContextPtr styleCtxt, xmlChar *arg);
+
+
+
+    int xslDbgShellSetVariable(xsltTransformContextPtr styleCtxt,
+                               xmlChar * arg);
 
 
 

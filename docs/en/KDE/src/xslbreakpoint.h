@@ -80,7 +80,7 @@
 
 
     typedef void (*freeItemFunc) (void *item);
- /* A dynamic structure behave like a list*/
+    /* A dynamic structure behave like a list */
     typedef struct _ArrayList ArrayList;
     typedef ArrayList *ArrayListPtr;
     struct _ArrayList {
@@ -110,7 +110,7 @@
 
 
     ArrayListPtr arrayListNew(int initialSize,
-                                 freeItemFunc deleteFunction);
+                              freeItemFunc deleteFunction);
 
 
 
@@ -446,91 +446,127 @@
 
 
 
-/**
- * lineNoItemNew:
- * 
- * Returns a new hash table for break points
- */
+
+
+
+
     xmlHashTablePtr lineNoItemNew(void);
 
 
+
+
+
 /**
- * lineNoItemFree:
- * @item: valid hashtable of break points
- * 
- * Free @item and all its contents
+ * Free @p item and all its contents
+ *
+ * @param item Valid hashtable of break points
  */
+
+
     void lineNoItemFree(void *item);
 
 
+
+
+
 /**
- * lineNoItemDelete:
- * @breakPointHash: is valid
- * @breakPoint: is valid
- * 
- * Returns 1 if able to delete @breakPoint from @breakPointHash,
+ * Returns 1 if able to delete @p breakPoint from @p breakPointHash,
  *         0 otherwise
+ *
+ * @param breakPointHash Is valid
+ * @param breakPoint Is valid
  */
+
+
     int lineNoItemDelete(xmlHashTablePtr breakPointHash,
                          xslBreakPointPtr breakPoint);
 
 
+
+
+
 /**
- * lineNoItemAdd:
- * @breakPointHash: is valid
- * @breakPoint: is valid
+ * Add breakpoint to hash 
  *
- * Returns 1 if able to add @breakPoint to @breakPointHash,
- *         0 otherwise
+ * @param breakPointHash: is valid
+ * @param breakPoint: is valid
+ *
+ * @returns 1 if able to add @p breakPoint to @p breakPointHash,
+ *          0 otherwise
  */
+
+
     int lineNoItemAdd(xmlHashTablePtr breakPointHash,
                       xslBreakPointPtr breakPoint);
 
 
+
+
+
 /**
- * lineNoItemGet:
- * @lineNo: blagh
+ * Return A hash of breakpoints with same line number
  *
- * Returns fred
+ * @param lineNo : Line number of of breakpoints of interest
+ *
+ * @returns A hash of breakpoints with a line number of @p lineNo
  */
+
+
     xmlHashTablePtr lineNoItemGet(long lineNo);
 
 
+
+
+
 /**
- * breakPointInit:
+ * Intialized the breakpoint module 
  *
- * Returns 1 if break points have been initialized properly and all
+ * @returns 1 if breakpoint module has been initialized properly and all
  *               memory required has been obtained,
- *         0 otherwise
+ *          0 otherwise
 */
+
+
     int breakPointInit(void);
 
 
+
+
+
 /**
- * breakPointFree:
- *
- * Free all memory used by break points 
+ * Free all memory used by breakpoint module
  */
+
+
     void breakPointFree(void);
 
 
+
+
+
 /** 
- * breakPointItemNew:
- * 
  * Create a new break point item
- * Returns valid break point with default values set if successful, 
- *         NULL otherwise
+ *
+ * @returns A valid break point with default values set if successful, 
+ *          NULL otherwise
  */
+
+
     xslBreakPointPtr breakPointItemNew(void);
 
 
+
+
+
 /**
- * breakPointItemFree:
- * @payload: valid xslBreakPointPtr 
- * @name: not used
- *
  * Free memory associated with this break point
+ *
+ * @param payload Valid xslBreakPointPtr 
+ * @param name not used
+ *
  */
+
+
     void breakPointItemFree(void *payload, xmlChar * name);
 
 
@@ -575,7 +611,7 @@
  * @returns 1 if successful,
  *	    0 otherwise
  *
- * @param file Is valid
+ * @param file Is valid, or NULL to use libxslt's error display function
  * @param breakPoint A valid break point
  */
 
@@ -617,7 +653,7 @@
     int isBreakPointNode(xmlNodePtr node);
 
 
-ArrayListPtr xslBreakPointLineList(void);
+    ArrayListPtr xslBreakPointLineList(void);
 
 
 

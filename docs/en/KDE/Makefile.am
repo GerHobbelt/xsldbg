@@ -9,11 +9,13 @@ $(APISRC_DIR)/xsldbg.h		\
 $(APISRC_DIR)/help.h		\
 $(APISRC_DIR)/options.h 	\
 $(APISRC_DIR)/arraylist.h	\
-$(APISRC_DIR)/xslbreakpoint.h 	\
-$(APISRC_DIR)/xslcallpoint.h	\
-$(APISRC_DIR)/xslsearch.h	\
+$(APISRC_DIR)/breakpoint.h 	\
+$(APISRC_DIR)/callstack.h	\
+$(APISRC_DIR)/search.h		\
 $(APISRC_DIR)/debugXSL.h	\
-$(APISRC_DIR)/files.h		
+$(APISRC_DIR)/files.h		\
+$(APISRC_DIR)/cmds.h		\
+$(APISRC_DIR)/utils.h
 
 APISRC_SOURCE_FILES=\
 $(top_builddir)/src/*.c

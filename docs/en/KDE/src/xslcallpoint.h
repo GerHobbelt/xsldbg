@@ -1,4 +1,4 @@
- 
+
 /* *************************************************************************
                           xslcallpoint.h  -  public functions for the
                                                the call stack
@@ -39,7 +39,7 @@
     typedef struct _xslCallPointInfo xslCallPointInfo;
     typedef xslCallPointInfo *xslCallPointInfoPtr;
     struct _xslCallPointInfo {
-      xmlChar *templateName; 
+        xmlChar *templateName;
         xmlChar *url;
         xslCallPointInfoPtr next;
     };
@@ -51,6 +51,19 @@
         long lineNo;
         xslCallPointPtr next;
     };
+
+
+
+    int
+      callStackInit(void);
+
+
+
+    void
+      callStackFree(void);
+
+
+
 
 
 
@@ -67,7 +80,8 @@
 
 
     xslCallPointInfoPtr addCallInfo(const xmlChar * templateName,
-                                       const xmlChar * url);
+                                    const xmlChar * url);
+
 
 
 
@@ -84,7 +98,8 @@
    */
 
 
-int addCall(xsltTemplatePtr templ, xmlNodePtr source);
+    int addCall(xsltTemplatePtr templ, xmlNodePtr source);
+
 
 
 
@@ -95,6 +110,7 @@ int addCall(xsltTemplatePtr templ, xmlNodePtr source);
 
 
     void dropCall(void);
+
 
 
 
@@ -115,6 +131,7 @@ int addCall(xsltTemplatePtr templ, xmlNodePtr source);
 
 
 
+
 /** 
  * Set the frame depth to step down to
  *
@@ -127,6 +144,7 @@ int addCall(xsltTemplatePtr templ, xmlNodePtr source);
 
 
     int stepdownToDepth(int depth);
+
 
 
 
@@ -146,6 +164,7 @@ int addCall(xsltTemplatePtr templ, xmlNodePtr source);
 
 
 
+
 /**  
  * Get the top item in the call stack
  *
@@ -154,6 +173,7 @@ int addCall(xsltTemplatePtr templ, xmlNodePtr source);
 
 
     xslCallPointPtr getCallStackTop(void);
+
 
 
 

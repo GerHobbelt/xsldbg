@@ -1,5 +1,5 @@
 
-         xsldbg version 1.0.2
+         xsldbg version 2.0.0
          ====================
    
     xsldbg help
@@ -274,7 +274,7 @@ Usage:
 
 
 Command : Load  
-Summary : Reload stylesheet and data file(s)      (Disabled see run)
+Summary : Load the xsldbg's options user preferences from disk
 Usage:
  
      load
@@ -356,7 +356,7 @@ Usage:
 
 
 Command : Save  
-Summary : Save the generated data file       (Disabled)
+Summary : Save the xsldbg's options user preferences to disk
 Usage:
  
      save

@@ -1,13 +1,14 @@
 <!DOCTYPE book PUBLIC "-//Davenport//DTD DocBook V3.0//EN" [
-<!ENTITY xsldbg-xslsearch SYSTEM "sgml/xslsearch.sgml">
-<!ENTITY xsldbg-xslcallpoint SYSTEM "sgml/xslcallpoint.sgml">
-<!ENTITY xsldbg-xslbreakpoint-2 SYSTEM "sgml/xslbreakpoint.sgml">
+<!ENTITY xsldbg-search SYSTEM "sgml/search.sgml">
+<!ENTITY xsldbg-callstack SYSTEM "sgml/callstack.sgml">
+<!ENTITY xsldbg-breakpoint SYSTEM "sgml/breakpoint.sgml">
 <!ENTITY xsldbg-files SYSTEM "sgml/files.sgml">
 <!ENTITY xsldbg-help SYSTEM "sgml/help.sgml">
 <!ENTITY xsldbg-options SYSTEM "sgml/options.sgml">
 <!ENTITY xsldbg-xsldbg SYSTEM "sgml/xsldbg.sgml">
 <!ENTITY xsldbg-arraylist SYSTEM "sgml/arraylist.sgml">
 <!ENTITY xsldbg-debugXSL SYSTEM "sgml/debugXSL.sgml">
+<!ENTITY xsldbg-utils SYSTEM "sgml/utils.sgml">
 ]>
 
 <book>
@@ -65,9 +66,10 @@
     &xsldbg-arraylist;
     &xsldbg-options;
     &xsldbg-debugXSL;
-    &xsldbg-xslbreakpoint-2;
-    &xsldbg-xslcallpoint;
-    &xsldbg-xslsearch; 
+    &xsldbg-breakpoint;
+    &xsldbg-callstack;
+    &xsldbg-search; 
+    &xsldbg-utils;
 
   </chapter>
 </book>

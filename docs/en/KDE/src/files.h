@@ -60,16 +60,16 @@
 
 
 
-  /* what types of searches are there */
-  
+    /* what types of searches are there */
+
     /* keep kdoc happy */
-    enum SearchEnum{
+    enum SearchEnum {
         SEARCH_BREAKPOINT = 400,
         SEARCH_NODE,
         SEARCH_XSL,
-	SEARCH_VARIABLE
+        SEARCH_VARIABLE
     };
- 
+
 
     /* define a common structure to be used when searching */
     typedef struct _searchInfo searchInfo;
@@ -77,7 +77,7 @@
     struct _searchInfo {
         int found;              /* found is 1 if search is finished */
         int type;               /* what type of search see SearchEnum */
-        int error;              /* did an error occur */  
+        int error;              /* did an error occur */
         void *data;             /* extra data to pass to walkFunc */
     };
 
@@ -116,9 +116,9 @@
     typedef struct _variableSearchData variableSearchData;
     typedef variableSearchData *variableSearchDataPtr;
     struct _variableSearchData {
-      xmlChar *name;
-      xmlChar *nameURI;
-      xmlChar *select; /* new value to adopt if any */
+        xmlChar *name;
+        xmlChar *nameURI;
+        xmlChar *select;        /* new value to adopt if any */
     };
 
 
@@ -271,8 +271,8 @@
  */
 
 
-    int searchQuery(const xmlChar * tempFile, const xmlChar *outputFile, 
-		    const xmlChar * query);
+    int searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
+                    const xmlChar * query);
 
 
 
@@ -726,7 +726,7 @@
 
 
     typedef void (*freeItemFunc) (void *item);
- /* A dynamic structure behave like a list*/
+    /* A dynamic structure behave like a list */
     typedef struct _ArrayList ArrayList;
     typedef ArrayList *ArrayListPtr;
     struct _ArrayList {
@@ -756,7 +756,7 @@
 
 
     ArrayListPtr arrayListNew(int initialSize,
-                                 freeItemFunc deleteFunction);
+                              freeItemFunc deleteFunction);
 
 
 
@@ -891,123 +891,277 @@
 
 
 
-  typedef struct _entityInfo entityInfo;
-  typedef entityInfo *entityInfoPtr;
-  struct _entityInfo{
-    xmlChar *SystemID;
-    xmlChar *PublicID;
-  };
-
-/**
- * xslDbgEntities:
- * 
- * Print list of entites found 
- *
- * Returns 1 on sucess,
- *         0 otherwise
- */
-int xslDbgEntities();
+    typedef struct _entityInfo entityInfo;
+    typedef entityInfo *entityInfoPtr;
+    struct _entityInfo {
+        xmlChar *SystemID;
+        xmlChar *PublicID;
+    };
 
 
-/**
- * xslDbgSystem:
- * @arg : Is valid
- * 
- * Print what a system file @arg maps to via the current xml catalog
- *
- * Returns 1 on sucess,
- *         0 otherwise
- */
-  int xslDbgSystem(xmlChar *arg);
 
-/**
- * xslDbgPublic:
- * @arg : Is valid
- * 
- * Print what a public ID @arg maps to via the current xml catalog
- *
- * Returns 1 on sucess,
- *         0 otherwise
- */
-int xslDbgPublic(xmlChar *arg);
+  /*-----------------------------------------------------------
+    File commands
+    -----------------------------------------------------------*/
+
+
+
+
+
+
+    int xslDbgEntities(void);
+
+
+
 
 
   /**
-   * filesEntityRef :
-   * @uri : Is valid
-   * @firstNode : Is valid
-   * @lastNode : Is Valid
+   * Print what a system file @p arg maps to via the current xml catalog
    *
-   * Fixes the nodes from firstNode to lastNode so that debugging can occur
+   * @param arg Is valid in UTF-8
+   * 
+   * @returns 1 on sucess,
+   *          0 otherwise
    */
+
+
+    int xslDbgSystem(const xmlChar * arg);
+
+
+
+
+
+  /**
+   * Print what a public ID @p arg maps to via the current xml catalog
+   *
+   * @param arg Is valid PublicID in UTF-8
+   * 
+   * @returns 1 on sucess,
+   *          0 otherwise
+   */
+
+
+    int xslDbgPublic(const xmlChar * arg);
+
+
+
+
+
+  /**
+   * Set current encoding to use for output to standard output
+   *
+   * @param arg Is valid encoding supported by libxml2
+   *
+   *
+   * Returns 1 on sucess,
+   */
+
+
+    int xslDbgEncoding(xmlChar * arg);
+
+
+
+
+  /*-----------------------------------------------------------
+    General function for working with files
+    -----------------------------------------------------------*/
+
+
+
+
+  /**
+   * Fixes the nodes from firstNode to lastNode so that debugging can occur
+   *
+   * @param uri Is valid
+   * @param firstNode Is valid
+   * @param lastNode Is Valid
+   */
+
+
     void filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode,
                         xmlNodePtr lastNode);
 
+
+
+
+
   /**
-   * filesEntityList:
-   *
    * Return the list entity names used for documents loaded
    *
-   * Returns the list entity names used for documents loaded
+   * @returns The list entity names used for documents loaded
    */
-  ArrayListPtr filesEntityList();
 
 
- /**
-   * filesSetBaseUri:
-   * @node : Is valid and has a doc parent
-   * @uri : Is Valid
-   * 
+    ArrayListPtr filesEntityList(void);
+
+
+
+
+
+  /**
    * Set the base uri for this node. Function is used when xml file
    *    has external entities in its DTD
    * 
-   * Returns 1 if successful,
-   *        0 otherwise
+   * @param node Is valid and has a doc parent
+   * @param uri Is Valid
+   * 
+   * @returns 1 if successful,
+   *          0 otherwise
    */
+
+
     int filesSetBaseUri(xmlNodePtr node, const xmlChar * uri);
 
 
+
+
+
   /**
-   * filesGetBaseUri:
-   * @node : Is valid and has a doc parent
-   * 
    * Get a copy of the base uri for this node. Function is most usefull 
    *  used when xml file  has external entities in its DTD
    * 
-   * Returns the a copy of the base uri for this node,
-   *         NULL otherwise
+   * @param node : Is valid and has a doc parent
+   * 
+   * @returns The a copy of the base uri for this node,
+   *          NULL otherwise
    */
+
+
     xmlChar *filesGetBaseUri(xmlNodePtr node);
 
 
+
+
+
   /**
-   * filesTempFileName:
-   * @ fileNumber : Nnumber of temp file required
+   * Return the name of tempfile requested.
+   * @param fleNumber : Number of temp file required
+   *     where @p fileNumber is 
+   *      0 : file name used by cat command
+   *      1 : file name used by profiling output
    *
-   * Return the name of tempfile. For each call to this function
-   *     with the same @fileNumber the same file name will be returned
-   *     File number : 0 is used by cat command
-   *     File number : 1 is used by profiling output  
+   *  This is a platform specific interface
    *
    * Returns The name of temp file to be used for temporary results if sucessful,
    *         NULL otherwise
    */
+
+
     const char *filesTempFileName(int fileNumber);
 
+
+
+
+
+  /*-----------------------------------------------------------
+    Platform specific file functions
+    -----------------------------------------------------------*/
+
+
+
+
+
   /**
-   * filesLoadCatalogs:
+   * Intialize the platform specific files module
    *
+   *  This is a platform specific interface
+   *
+   * @returns 1 if sucessful
+   *          0 otherwise  
+   */
+
+
+    int filesPlatformInit(void);
+
+
+
+
+
+  /**
+   * Free memory used by the platform specific files module
+   *
+   *  This is a platform specific interface
+   *
+   */
+
+
+    void filesPlatformFree(void);
+
+
+
+  /*--------------------------------
+    Misc functions
+    ----------------------------------*/
+
+
+
+
+
+  /**
    * Load the catalogs specifed by OPTIONS_CATALOG_NAMES if 
    *      OPTIONS_CATALOGS is enabled
-   * Returns 1 if sucessful
-   *         0 otherwise   
+   *
+   * @returns 1 if sucessful
+   *          0 otherwise   
    */
-  int filesLoadCatalogs(void);
+
+
+    int filesLoadCatalogs(void);
 
 
 
 
-/* used by loadXmlFile, freeXmlFile functions */
+
+  /**
+   * Return  A  string of converted @text
+   *
+   * @param text Is valid, text to translate from UTF-8, 
+   *
+   * Returns  A  string of converted @text, may be NULL
+   */
+
+
+    xmlChar *filesEncode(const xmlChar * text);
+
+
+
+
+
+  /**
+   * Return  A  string of converted @text
+   *
+   * @param test Is valid, text to translate from current encoding to UTF-8, 
+   *
+   * Returns  A  string of converted @text, may be NULL
+   */
+
+
+    xmlChar *filesDecode(const xmlChar * text);
+
+
+
+
+
+  /**
+   * Opens encoding for all standard output to @p encoding. If  @p encoding 
+   *        is NULL then close current encoding and use UTF-8 as output encoding
+   *
+   * @param encoding Is a valid encoding supported by the iconv library or NULL
+   *
+   * Returns 1 if successful in setting the encoding of all standard output
+   *           to @p encoding
+   *         0 otherwise
+   */
+
+
+    int filesSetEncoding(const char *encoding);
+
+
+
+
+
+
+    /* used by loadXmlFile, freeXmlFile functions */
     enum FileTypeEnum {
         FILES_XMLFILE_TYPE = 100,       /* pick a unique starting point */
         FILES_SOURCEFILE_TYPE,
@@ -1019,6 +1173,14 @@ int xslDbgPublic(xmlChar *arg);
 
 
 
+  /**
+   * Open communications to the terminal device @p device
+   *
+   * @param device Terminal to redirect i/o to , will not work under win32
+   *
+   * @returns 1 if sucessful
+   *          0 otherwise
+   */
 
 
     int openTerminal(xmlChar * device);
@@ -1028,10 +1190,12 @@ int xslDbgPublic(xmlChar *arg);
 
 
 
-/**
- * @returns 1 if able to use prevously opened terminal 
- *          0 otherwise
-*/
+  /**
+   * Select the terminal for i/o
+   *
+   * @returns 1 if able to use prevously opened terminal 
+   *          0 otherwise
+   */
 
 
     int selectTerminalIO(void);
@@ -1040,10 +1204,12 @@ int xslDbgPublic(xmlChar *arg);
 
 
 
-/** 
- * @returns 1 if able to select orginal stdin, stdout, stderr
- *          0 otherwise
-*/
+  /** 
+   * Select standard i/o
+   *
+   * @returns 1 if able to select orginal stdin, stdout, stderr
+   *          0 otherwise
+   */
 
 
     int selectNormalIO(void);
@@ -1052,14 +1218,12 @@ int xslDbgPublic(xmlChar *arg);
 
 
 
-/**
- * Open communications to the terminal device @p device
- *
- * @returns 1 if sucessful
- *          0 otherwise
- *
- * @param device Terminal to redirect i/o to, will not work under win32
- */
+  /**
+   * Try to find a matching stylesheet name
+   * Sets the values in @p searchinf depending on outcome of search
+   *
+   * @param searchInf Is valid
+   */
 
 
     void guessStylesheetName(searchInfoPtr searchInf);
@@ -1069,10 +1233,13 @@ int xslDbgPublic(xmlChar *arg);
 
 
 
-/**
- * @return the base path for the top stylesheet ie
- *        ie URL minus the actual file name
- */
+  /**
+   * Return the base path for the top stylesheet ie
+   *        ie URL minus the actual file name
+   *
+   * @returns The base path for the top stylesheet ie
+   *        ie URL minus the actual file name
+   */
 
 
     xmlChar *stylePath(void);
@@ -1082,9 +1249,11 @@ int xslDbgPublic(xmlChar *arg);
 
 
 
-/**
- * @return the working directory as set by changeDir function
- */
+  /** 
+   * Return the working directory as set by changeDir function
+   *
+   * @return the working directory as set by changeDir function
+   */
 
 
     xmlChar *workingPath(void);
@@ -1094,15 +1263,15 @@ int xslDbgPublic(xmlChar *arg);
 
 
 
-/**
- * Change working directory to path 
- *
- * @param path The operating system path(directory) to adopt as 
- *         new working directory
- *
- * @returns 1 on success,
- *          0 otherwise
- */
+  /**
+   * Change working directory to path 
+   *
+   * @param path The operating system path(directory) to adopt as 
+   *         new working directory
+   *
+   * @returns 1 on success,
+   *          0 otherwise
+   */
 
 
     int changeDir(const xmlChar * path);
@@ -1111,15 +1280,15 @@ int xslDbgPublic(xmlChar *arg);
 
 
 
-/**
- * Load specified file type, freeing any memory previously used 
- *
- * @returns 1 on success,
- *         0 otherwise 
- *
- * @param path The xml file to load
- * @param fileType A valid FileTypeEnum
- */
+  /**
+   * Load specified file type, freeing any memory previously used 
+   *
+   * @returns 1 on success,
+   *         0 otherwise 
+   *
+   * @param path The xml file to load
+   * @param fileType A valid FileTypeEnum
+   */
 
 
     int loadXmlFile(const xmlChar * path, FileTypeEnum fileType);
@@ -1128,14 +1297,14 @@ int xslDbgPublic(xmlChar *arg);
 
 
 
-/**
- * Free memory associated with the xml file 
- *
- * @returns 1 on success,
- *         0 otherwise
- *
- * @param fileType : A valid FileTypeEnum
- */
+  /**
+   * Free memory associated with the xml file 
+   *
+   * @returns 1 on success,
+   *         0 otherwise
+   *
+   * @param fileType : A valid FileTypeEnum
+   */
 
 
     int freeXmlFile(FileTypeEnum fileType);
@@ -1144,6 +1313,12 @@ int xslDbgPublic(xmlChar *arg);
 
 
 
+  /**
+   * Return the topmost stylesheet 
+   *
+   * @returns Non-null on success,
+   *         NULL otherwise
+   */
 
 
     xsltStylesheetPtr getStylesheet(void);
@@ -1152,12 +1327,12 @@ int xslDbgPublic(xmlChar *arg);
 
 
 
-/**
- * Return the topmost stylesheet 
- *
- * @returns non-null on success,
- *          NULL otherwise
- */
+  /** 
+   * Return the current "temporary" document
+   *
+   * @returns non-null on success,
+   *          NULL otherwise
+   */
 
 
     xmlDocPtr getTemporaryDoc(void);
@@ -1166,9 +1341,11 @@ int xslDbgPublic(xmlChar *arg);
 
 
 
-/**
- * @returns the main document
- */
+  /** 
+   * Return the main docment
+   *
+   * @returns the main document
+   */
 
 
     xmlDocPtr getMainDoc(void);
@@ -1177,13 +1354,13 @@ int xslDbgPublic(xmlChar *arg);
 
 
 
-/**
- * @returns 1 if stylesheet or its xml data file has been "flaged" as reloaded,
- *         0 otherwise
- *
- * @param reloaded If = -1 then ignore @p reloaded
- *             otherwise change the status of files to value of @p reloaded
- */
+  /**
+   * @returns 1 if stylesheet or its xml data file has been "flaged" as reloaded,
+   *         0 otherwise
+   *
+   * @param reloaded If = -1 then ignore @p reloaded
+   *             otherwise change the status of files to value of @p reloaded
+   */
 
 
     int filesReloaded(int reloaded);
@@ -1192,12 +1369,12 @@ int xslDbgPublic(xmlChar *arg);
 
 
 
-/**
- * Initialize the file module
- *
- * @returns 1 on success,
- *          0 otherwise
- */
+  /**
+   * Initialize the file module
+   *
+   * @returns 1 on success,
+   *          0 otherwise
+   */
 
 
     int filesInit(void);
@@ -1206,20 +1383,21 @@ int xslDbgPublic(xmlChar *arg);
 
 
 
-/**
- * Free memory used by file related structures
- */
+  /**
+   * Free memory used by file related structures
+   */
 
 
     void filesFree(void);
 
-  /**
-   * isSourceFile:
-   * @fileName : is valid
-   * 
-   * Returns true if @name has the ".xsl" externsion
-   */
+
+
+
+
+
+
     int isSourceFile(xmlChar * fileName);
+
 
 
 

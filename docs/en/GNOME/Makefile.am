@@ -9,11 +9,13 @@ $(APISRC_DIR)/xsldbg.h		\
 $(APISRC_DIR)/help.h		\
 $(APISRC_DIR)/options.h 	\
 $(APISRC_DIR)/arraylist.h	\
-$(APISRC_DIR)/xslbreakpoint.h 	\
-$(APISRC_DIR)/xslcallpoint.h	\
-$(APISRC_DIR)/xslsearch.h	\
+$(APISRC_DIR)/breakpoint.h 	\
+$(APISRC_DIR)/callstack.h	\
+$(APISRC_DIR)/search.h		\
 $(APISRC_DIR)/debugXSL.h	\
-$(APISRC_DIR)/files.h	
+$(APISRC_DIR)/files.h		\
+$(APISRC_DIR)/cmds.h		\
+$(APISRC_DIR)/utils.h	
 
 
 CPPFLAGS=-E -C -P
@@ -45,7 +47,7 @@ if USE_GNOMEDOCS
 # we need both headers and source to make GNOME docs
 # so just copy the source across
 scan: $(APISRC_FILES)
-	cp $(top_builddir)/src/*.c $(APISRC_DIR)
+	cp $(top_builddir)/src/libxsldbg/*.c $(APISRC_DIR)
 	gtkdoc-scan --module=xsldbg --source-dir=$(APISRC_DIR) 
 
 templates: scan
@@ -84,6 +86,7 @@ all: appDocs rebuild
 clean:
 	rm -rf html sgml tmpl src
 	rm -f xsldbg-*
+	rm -f gnome.docbook index.html
 
 very-clean: clean
 	rm -f *.*~

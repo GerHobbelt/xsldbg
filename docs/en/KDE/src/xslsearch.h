@@ -39,16 +39,16 @@
 
 
 
-  /* what types of searches are there */
-  
+    /* what types of searches are there */
+
     /* keep kdoc happy */
-    enum SearchEnum{
+    enum SearchEnum {
         SEARCH_BREAKPOINT = 400,
         SEARCH_NODE,
         SEARCH_XSL,
-	SEARCH_VARIABLE
+        SEARCH_VARIABLE
     };
- 
+
 
     /* define a common structure to be used when searching */
     typedef struct _searchInfo searchInfo;
@@ -56,7 +56,7 @@
     struct _searchInfo {
         int found;              /* found is 1 if search is finished */
         int type;               /* what type of search see SearchEnum */
-        int error;              /* did an error occur */  
+        int error;              /* did an error occur */
         void *data;             /* extra data to pass to walkFunc */
     };
 
@@ -95,9 +95,9 @@
     typedef struct _variableSearchData variableSearchData;
     typedef variableSearchData *variableSearchDataPtr;
     struct _variableSearchData {
-      xmlChar *name;
-      xmlChar *nameURI;
-      xmlChar *select; /* new value to adopt if any */
+        xmlChar *name;
+        xmlChar *nameURI;
+        xmlChar *select;        /* new value to adopt if any */
     };
 
 
@@ -250,8 +250,8 @@
  */
 
 
-    int searchQuery(const xmlChar * tempFile, const xmlChar *outputFile, 
-		    const xmlChar * query);
+    int searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
+                    const xmlChar * query);
 
 
 

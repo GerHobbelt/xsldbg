@@ -39,9 +39,12 @@
 /**
  * Display help about the command in @p arg
  *
+ *
+ *  This is a platform specific interface
+ *
  * @param args Is valid or empty string
- * @eturns 1 on success,
- *         0 otherwise
+ * @returns 1 on success,
+ *          0 otherwise
  */
 
 
