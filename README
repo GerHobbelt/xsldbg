@@ -4,10 +4,14 @@ nb: docs/en/website/index.html includes a quick tutorial about using xsldbg
 
 The MSVC project files are in win32/dsp/
 
-For WIN32 users if you have tmake use
-	src/xsldbg.pro to create xsldbg.exe 
+For WIN32 users using tmake you will need to set
+  LIBXML_PREFIX must be set to the location of libxml
+  LIBXSLT_PREFIX  must be set to the location of libxslt
+  ICONV_PREFIX must be set to the location of iconv
 
-For WIN32 users if you want to create qxsldbg you will need to use  
+  Use src/xsldbg.pro to create xsldbg.exe 
+
+  If you want to create qxsldbg you will need to use  
 	src/libxsldbg/libxsldbg.pro to create xsldbg.lib
 	src/libqtnotifier/libqtnotifier.pro to create qtnofier.lib
 
