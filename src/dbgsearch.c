@@ -10,7 +10,7 @@
 
 #include "config.h"
 
-#ifdef WITH_XSL_DEBUGGER
+#ifdef WITH_DEBUGGER
 
 /*
 -----------------------------------------------------------

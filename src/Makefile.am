@@ -1,6 +1,7 @@
 bin_PROGRAMS = xsldbg
 xsldbg_SOURCES = \
 	xsldbg.c 	\
+	files.c		\
 	debugXSL.c 	\
 	dbgbreakpoint.c	\
 	dbgcallstack.c 	\
@@ -10,12 +11,13 @@ xsldbg_SOURCES = \
 xsldbg_LDADD   = 
 
 EXTRA_DIST = \
-	help.h help.c 		\
+	help.c help.h 		\
 	debugXSL.c debugXSL.h 	\
 	dbgbreakpoint.c		\
 	dbgcallstack.c 		\
 	dbgsearch.c		\
 	dbgmain.c		\
+	files.c files.h		\
 	xsldbg.h
 
 bin_PROGRAMS = xsldbg

@@ -1,7 +1,7 @@
 
 AC_INIT(src/xsldbg.c)
 
-timestamp='2001-11-06'
+timestamp='2001-11-10'
 
 
 XSLDBG_MAJOR_VERSION=0

@@ -10,7 +10,7 @@
 
 #include "config.h"
 
-#ifdef WITH_XSLT_DEBUGGER
+#ifdef WITH_DEBUGGER
 
 /*
 -----------------------------------------------------------
