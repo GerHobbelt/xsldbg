@@ -88,7 +88,7 @@
   extern char *xsldbgCommand; /* Our invocation command */
 
  /* Version number of package */
- #define VERSION "3/0/7"
+ #define VERSION "3/0/9"
 
 
 

@@ -14,4 +14,9 @@
 </xsl:text>
   </xsl:template>
 
+  <xsl:template match="data">
+    <xsl:text>Hi there from data
+</xsl:text>
+	<xsl:apply-templates />
+  </xsl:template>
 </xsl:stylesheet>

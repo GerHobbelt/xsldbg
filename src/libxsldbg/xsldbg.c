@@ -1218,8 +1218,7 @@ catchSigInt(int value ATTRIBUTE_UNUSED)
 
     if (xslDebugStatus != DEBUG_STOP) {
         /* stop running/walking imediately !! */
-        xslDebugStatus = DEBUG_STOP;
-        optionsSetIntOption(OPTIONS_WALK_SPEED, WALKSPEED_STOP);
+        xsldbgStop = 1;
     }
 }
 

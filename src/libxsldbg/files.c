@@ -1419,7 +1419,7 @@ xsldbgUpdateFileDetails(xmlNodePtr node)
         && (node->doc->URL != NULL)) {
         if (currentUrl != NULL)
             xmlFree(currentUrl);
-        currentUrl = (xmlChar *) xmlMemStrdup((char *) node->doc->URL);
+        currentUrl =  filesGetBaseUri(node);
         currentLineNo = xmlGetLineNo(node);
     }
 }

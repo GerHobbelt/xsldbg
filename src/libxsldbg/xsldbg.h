@@ -33,8 +33,14 @@
  
 #include <libxslt/xsltconfig.h>
 
-#if !defined(WITH_XSLT_DEBUGGER ) && !defined(WITH_DEBUGGER)
- #error "WITH_DEBUGGER MACRO not defined in libxslt maybe you've disable debugger in libxslt"
+
+#if !defined (FORCE_DEBUGGER) &&  (LIBXSLT_VERSION > 10019)
+#  ifndef WITH_XSLT_DEBUGGER
+#     ifndef WITH_DEBUGGER
+#       error "WITH_DEBUGGER MACRO not defined in libxslt maybe you've disable debugger in libxslt. If your are sure then disable this check by defining WITH_FORCE_DEBUGGER. eg.
+       make CFLAGS=\"$CFLAGS -D FORCE_DEBUGGER\""
+#     endif
+#  endif
 #endif
 
 #ifdef  WITH_XSLT_DEBUG

@@ -17,6 +17,14 @@ XSLDBG=$(top_builddir)/src/xsldbgtest
 
 EXTRA_DIST= *.xsl *.xml *.data *.pl *.dtd testcoverage.txt
 
+if WITH_TEST10
+   TEST10_PERL=../results/test10.pl 
+   TEST10_SCRIPT=../results/test10.script
+else
+   TEST10_PER =
+   TEST10_SCRIPT=
+endif
+
 TESTS = \
 	../results/test1.pl \
 	../results/test2.pl \
@@ -27,7 +35,7 @@ TESTS = \
 	../results/test7.pl \
 	../results/test8.pl \
 	../results/test9.pl \
-	../results/test10.pl \
+	$(TEST10_PERL)	    \
 	../results/test11.pl \
 	../results/test12.pl \
 	../results/test13.pl 
@@ -42,7 +50,7 @@ TEST_SCRIPT = \
 	../results/test7.script \
 	../results/test8.script	\
 	../results/test9.script \
-	../results/test10.script \
+	$(TEST10_SCRIPT) 	\
 	../results/test11.script \
 	../results/test12.script \
 	../results/test13.script

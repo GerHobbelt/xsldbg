@@ -1,3 +1,13 @@
+Keith Isdale 4 Aug 2002 <k_isdale@tpg.com
+       Version 3.0.9
+       Fixed handling of stopping xsldbg when tracing or walking 
+	 and running xsldbg as a thread
+       Fixed generation of file name when stoped at an external entity and
+	  running xsldbg as a thread
+       Fixed the check of xmlSetEntityReferenceFunc in libxml2 so that 
+		if it is not present skip test 10 
+	
+	
 Keith Isdale 31 July 2002 <k_isdale@tpg.com.au>
 	Version 3.0.8
 	Fixed bugs found by Robert JACOLIN, in
@@ -11,9 +21,13 @@ Keith Isdale 31 July 2002 <k_isdale@tpg.com.au>
 	     if you care about html versions of this style of documenation
      
 	Bug watch!! if using autoconf version 2.5.X you may need to supply the 
-	  aditional argument of 
-	    --target=NONE 
-	  so that it will configure properly
+	    aditional argument of 
+	        --target=NONE 
+	    to configure so that it will complete sucessfully.
+	
+	Bug watch!! I've updated Makefile.cvs to remove extra files that should
+	    be built on each platorm. You may need to edit this if your build 
+	    system does replace them correctly. 
 	
 	
 Keith Isdale 31 July 2002 <k_isdale@tpg.com.au>

@@ -75,6 +75,8 @@ int showWatchesActive = 1;
 
 extern FILE *terminalIO;
 
+int xsldbgStop = 0;
+
 /* valid commands of xslDbgShell */
 const char *commandNames[] = {
     "help",
@@ -1238,6 +1240,14 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
     ctxt->input = input;
     ctxt->output = output;
     ctxt->filename = (char *) xmlStrdup((xmlChar *) filename);
+
+
+    if (xsldbgStop == 1){
+        xslDebugStatus = DEBUG_STOP;
+	optionsSetIntOption(OPTIONS_TRACE,  TRACE_OFF);
+        optionsSetIntOption(OPTIONS_WALK_SPEED, WALKSPEED_STOP);
+	xsldbgStop = 0;
+    }
 
     /* let any listener know that we got to a new line */
     if (xslDebugStatus != DEBUG_TRACE) {

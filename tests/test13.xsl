@@ -14,6 +14,7 @@
   <!-- Test the guesing stylesheet and XML file name -->
   <xsl:template match="/">
     <xsl:call-template name="fred" />
+    <xsl:apply-templates />
   </xsl:template>
 
 </xsl:stylesheet>

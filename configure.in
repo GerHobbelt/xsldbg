@@ -1,12 +1,12 @@
 
 AC_INIT(src/main.c)
 
-timestamp='2002-08-01'
+timestamp='2002-08-04'
 
 
 XSLDBG_MAJOR_VERSION=3
 XSLDBG_MINOR_VERSION=0
-XSLDBG_MICRO_VERSION=8
+XSLDBG_MICRO_VERSION=9
 PACKAGE=xsldbg
 
 dnl
@@ -480,6 +480,7 @@ AC_SUBST(LIBXSLT_LIBS)
 AC_SUBST(LIBXSLT_CFLAGS)
 
 
+RUNTEST10 = "true"
 XSLDBG_LIBDIR="${prefix}/lib"
 XSLDBG_INCLUDEDIR="-I${prefix}/include"
 # EXTRA_LIBS=""
@@ -493,8 +494,14 @@ AC_CHECK_LIB(xml2, xmlSetEntityReferenceFunc,
   [AC_DEFINE(HAVE_INCLUDE_FIX)],
   [AC_MSG_RESULT(
 !!Warning!!  The version of libxml2 installed does not support 
-	debugging of files included as entities. See --enable-includefix
-)])
+	debugging of files included as entities. Test 10 will be skipped 
+	as it will fail.   You will not be able to set breakpoints on external 
+        entities. Try upgrading your libxml2. 
+	See also --enable-includefix)	
+	RUNTEST10 = "false"		
+	])
+
+AM_CONDITIONAL(WITH_TEST10, test "$RUNTEST10" != "false")
 
 AC_ARG_ENABLE(includefix, [  --enable-includefix   Do you want to force the use of include fix (no)],
 	[if test "x${enableval}" = "xyes" 
