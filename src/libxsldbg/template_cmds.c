@@ -188,7 +188,7 @@ xslDbgShellPrintTemplateNames(xsltTransformContextPtr styleCtxt,
     }
 
     if (!styleCtxt) {
-        xmlGenericError(xmlGenericErrorContext,
+        xsltGenericError(xsltGenericErrorContext,
                         "Error: Unable to print templates, No stylesheet properly loaded\n");
         return result;
     }

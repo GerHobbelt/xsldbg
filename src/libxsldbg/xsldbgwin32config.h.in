@@ -46,5 +46,7 @@
 #define strncasecmp _strnicmp
 #endif
 
+#define LIBXML_THREAD_ENABLED
+
 
 #endif

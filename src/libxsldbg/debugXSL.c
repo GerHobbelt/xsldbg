@@ -293,7 +293,6 @@ enum ShortcutsEnum {
 #include <libxml/debugXML.h>
 #include <libxml/HTMLtree.h>
 #include <libxml/HTMLparser.h>
-#include <libxml/xmlerror.h>
 
 
 /* -----------------------------------------
@@ -604,11 +603,11 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                             }
                             result = 1;
                         } else
-                            xmlGenericError(xmlGenericErrorContext,
+                            xsltGenericError(xsltGenericErrorContext,
                                             "%s is a %d Node Set\n",
                                             arg, list->nodesetval->nodeNr);
                     } else {
-                        xmlGenericError(xmlGenericErrorContext,
+                        xsltGenericError(xsltGenericErrorContext,
                                         "%s is a empty Node Set\n ", arg);
                     }
                     break;
@@ -618,7 +617,7 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
             }
             xmlXPathFreeObject(list);
         } else {
-            xmlGenericError(xmlGenericErrorContext,
+            xsltGenericError(xsltGenericErrorContext,
                             "Error: %s no such node\n", arg);
         }
         ctxt->pctxt->node = NULL;
@@ -2066,7 +2065,7 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 break;
 
             default:
-                xmlGenericError(xmlGenericErrorContext,
+                xsltGenericError(xsltGenericErrorContext,
                                 "Error: Unknown command %s, try help\n",
                                 command);
                 cmdResult = 0;

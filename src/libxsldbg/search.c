@@ -104,7 +104,7 @@ searchInit(void)
     lastQuery = NULL;
     if (!searchEmpty()) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-        xmlGenericError(xmlGenericErrorContext,
+        xsltGenericError(xsltGenericErrorContext,
                         "Error: Search init failed memory error\n");
 #endif
     }
@@ -319,7 +319,7 @@ searchEmpty(void)
     lastQuery = NULL;
     if (searchRootNode() == NULL) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-        xmlGenericError(xmlGenericErrorContext,
+        xsltGenericError(xsltGenericErrorContext,
                         "Error: Seach Empty failed memory error\n");
 #endif
     }

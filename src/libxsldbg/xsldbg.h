@@ -82,12 +82,6 @@
 
 /* We want skip most of these includes when building documentation */
 #ifndef BUILD_DOCS
-
-#include <libxslt/xslt.h>
-#include <libexslt/exslt.h>
-#include <libxslt/xsltutils.h>
-#include <libxsldbg/breakpoint.h>
-
 #ifndef __riscos
 #  ifndef WIN32
 #     include "config.h"
@@ -103,6 +97,12 @@
 #  include "config_riscos.h"
 #  include "libxml/riscos.h"
 #endif
+
+#include <libxslt/xslt.h>
+#include <libexslt/exslt.h>
+#include <libxslt/xsltutils.h>
+#include <libxsldbg/breakpoint.h>
+
 
 #endif /* BUILD_DOCS */
 

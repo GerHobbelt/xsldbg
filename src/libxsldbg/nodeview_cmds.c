@@ -139,7 +139,7 @@ xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir)
             }
             xmlXPathFreeObject(list);
         } else {
-            xmlGenericError(xmlGenericErrorContext,
+            xsltGenericError(xsltGenericErrorContext,
                             "Error: %s no such node\n", arg);
         }
         ctxt->pctxt->node = NULL;
@@ -249,7 +249,7 @@ printXPathObject(xmlXPathObjectPtr item, xmlChar* xPath){
 						nodeTab[indx], file);
 	      }
 	    } else {
-	      xsltGenericError(xmlGenericErrorContext,
+	      xsltGenericError(xsltGenericErrorContext,
 			       "Error: XPath %s results an "
 			       "in empty set\n", xPath);
 	    }
