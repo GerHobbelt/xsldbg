@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE testcmd SYSTEM "testcmd.dtd">
+<!-- 
+     File : test9.data     
+     Author: Keith Isdale <k_isdale@tpg.com.au>
+     Description: xml data that describes what to do for "test11"
+     Copyright Reserved Under GPL     
+-->
+<testcmd>
+<cmd>
+<test>quit</test>
+</cmd>
+</testcmd>
+
+<!-- initialization code for xemacs -->
+<!--
+Local Variables:
+mode: sgml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+-->

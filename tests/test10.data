@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<!DOCTYPE testcmd SYSTEM "testcmd.dtd">
+<!-- 
+     File : test10.data     
+     Author: Keith Isdale <k_isdale@tpg.com.au>
+     Description: xml data that describes what to do for "test10"
+       Test the ability to set break points at XML file entities 
+       and changing variables 
+     Copyright Reserved Under GPL     
+-->
+<testcmd>
+<!-- Check if we can set the break points at xml entities -->
+<cmd>
+<test>break -l test1.xml 8
+break -l test2.xml 9
+break -l test3.xml 9
+break -l test4.xml 9
+showbreak</test>
+<result>
+<row>
+<breakpointlist file="test1.xml" line="8" />	
+<breakpointlist file="test2.xml" line="9" />	
+<breakpointlist file="test3.xml" line="9"  />	
+<breakpointlist file="test4.xml" line="9"  />	
+</row>
+</result>
+</cmd>
+
+<!-- See if we XML breakpoints are reachable by xsldbg. 
+Try to stop at text2.xml line 9-->
+<cmd>
+<test>delete *
+break -l test2.xml 9
+data
+run
+continue</test>
+<result>
+<row>
+<breakpoint file="test2.xml" line="9"/>
+</row>
+</result>
+</cmd>
+
+<!-- at the end of this xsldbg will be stopped at test10.xsl line 24-->
+<cmd>
+<test>delete *
+run
+break -l test10.xsl 24
+continue</test>
+</cmd>
+
+<!-- First set $item to a string value -->
+<cmd>
+<test>cat $item
+set item 5678
+cat $item</test>
+<result>
+<row>
+<matchtext>1234</matchtext>
+</row>
+<row>
+<matchtext>5678</matchtext>
+</row>
+</result>
+</cmd>
+
+<!-- Now set $item to a document node -->
+<cmd>
+<test>set item //html[1]/body/h1
+cat $item</test>
+<result>
+<row>
+<matchtext>&lt;h1&gt;test1&lt;/h1&gt;</matchtext>
+</row>
+</result>
+</cmd>
+<cmd>
+<test>quit</test>
+</cmd>
+</testcmd>
+
+
+<!-- initialization code for xemacs -->
+<!--
+Local Variables:
+mode: sgml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+-->
