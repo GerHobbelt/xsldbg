@@ -22,9 +22,9 @@
 
 #define XSLDBG_BIN "xsldbg"
 
-#define VERSION "0.9.7"
+#define VERSION "0.9.8"
 
-#define TIMESTAMP "18th Dec 2001"
+#define TIMESTAMP "29th Dec 2001"
 
 #ifndef WITH_DEBUGGER
 #define WITH_DEBUGGER
@@ -37,5 +37,6 @@
 #if defined _MSC_VER
 #define snprintf _snprintf
 #endif
+
 
 #endif

@@ -81,6 +81,7 @@ static void guessStylesheetHelper2(void *payload, void *data,
                                    xmlChar * name ATTRIBUTE_UNUSED);
 
 
+
   /**
    * fileNewEntityOffset:
    * @url : is valid
@@ -89,7 +90,8 @@ static void guessStylesheetHelper2(void *payload, void *data,
    * Returns a valid enityOffsetPtr if succesful,
    *         NULL otherwise
    */
-static entityOffsetPtr fileNewEntityOffset(const xmlChar * url, const xmlChar *parentUri);
+static entityOffsetPtr fileNewEntityOffset(const xmlChar * url,
+                                           const xmlChar * parentUri);
 
 
 
@@ -101,7 +103,8 @@ static entityOffsetPtr fileNewEntityOffset(const xmlChar * url, const xmlChar *p
    */
 static void fileFreeEntityOffset(entityOffsetPtr entOffset);
 
-static void filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode, xmlNodePtr lastNode);
+static void filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode,
+                           xmlNodePtr lastNode);
 
 
 /* ------------------------------------- 
@@ -589,21 +592,39 @@ changeDir(const xmlChar * path)
     int result = 0;
     const xmlChar endString[2] = { PATHCHAR, '\0' };
 
-    if (path && chdir((char *) path) == 0) {
-        if (workingDirPath)
-            xmlFree(workingDirPath);
-        /* must have path char at end of path name */
+
+    if (path) {
+
+#ifndef __riscos                /* RISC OS has no concept of 'home' directory */
+        /* replace ~ with home path */
+        if ((*path == '~') && getenv("HOME")) {
+            xmlStrCpy(buffer, getenv("HOME"));
+            xmlStrCat(buffer, path + 1);
+            /* must have path char at end of path name */
+            xmlStrCat(buffer, endString);
+        }else
+	  xmlStrCpy(buffer, path);	  
+#else
         xmlStrCpy(buffer, path);
+#endif
+        /* must have path char at end of path name */
         xmlStrCat(buffer, endString);
-        workingDirPath = (xmlChar *) xmlMemStrdup((char *) buffer);
-        result++;
-    }
-    if (!result)
+
+        if (chdir((char *) buffer) == 0) {
+            if (workingDirPath)
+                xmlFree(workingDirPath);
+            workingDirPath = (xmlChar *) xmlMemStrdup((char *) buffer);
+            result++;
+        }
+	if (!result)
         xsltGenericError(xsltGenericErrorContext,
                          "Unable to change to directory %s\n", path);
-    else
-        xsltGenericError(xsltGenericErrorContext,
-                         "Change to directory %s\n", path);
+	else
+	  xsltGenericError(xsltGenericErrorContext,
+			   "Change to directory %s\n", path);
+    }else
+      xsltGenericError(xsltGenericErrorContext,
+		       "Null Input to changeDir %s %d\n", __FILE__, __LINE__);
     return result;
 }
 
@@ -823,7 +844,9 @@ filesInit(void)
     topStylesheet = NULL;
     entityOffsetList =
         arrayListNew(4, (freeItemFunc) fileFreeEntityOffset);
+#ifdef  HAVE_INCLUDE_FIX
     xmlSetEntityReferenceFunc(filesEntityRef);
+#endif
     result = (entityOffsetList != NULL);
     return result;
 }
@@ -883,16 +906,16 @@ isSourceFile(xmlChar * fileName)
    *         NULL otherwise
    */
 entityOffsetPtr
-fileNewEntityOffset(const xmlChar * url, const xmlChar *parentUri)
+fileNewEntityOffset(const xmlChar * url, const xmlChar * parentUri)
 {
     entityOffsetPtr result =
         (entityOffsetPtr) xmlMalloc(sizeof(entityOffset));
     if (result) {
         result->uri = xmlStrdup(url);
         result->offset = 0;
-	result->lineCount = 0;
-	result->parentUri = xmlStrdup(parentUri);
-	result->list = arrayListNew(4, xmlFree);
+        result->lineCount = 0;
+        result->parentUri = xmlStrdup(parentUri);
+        result->list = arrayListNew(4, xmlFree);
     }
 
     return result;
@@ -911,8 +934,8 @@ fileFreeEntityOffset(entityOffsetPtr entOffset)
     if (entOffset) {
         if (entOffset->uri)
             xmlFree(entOffset->uri);
-	if (entOffset->list)
-	  arrayListFree(entOffset->list);
+        if (entOffset->list)
+            arrayListFree(entOffset->list);
         xmlFree(entOffset);
     }
 }
@@ -929,46 +952,46 @@ fileFreeEntityOffset(entityOffsetPtr entOffset)
    * Returns 1 if succesful,
    *         0 otherwise
    */
-  int fileAddEntity(const xmlChar *uri, const xmlChar *parentUri, 
-		    xmlNodePtr firstNode, xmlNodePtr lastNode)
+int
+fileAddEntity(const xmlChar * uri, const xmlChar * parentUri,
+              xmlNodePtr firstNode, xmlNodePtr lastNode)
 {
     int result = 0;
-    entityOffsetPtr entOffset =  fileGetEntityRef(uri);
+    entityOffsetPtr entOffset = fileGetEntityRef(uri);
 
     if (!firstNode || !uri || !parentUri)
-      return result;
+        return result;
 
-    if (!entOffset){
-      entOffset = fileNewEntityOffset(uri, parentUri);
-      if (entOffset)
-	result = arrayListAdd(entityOffsetList, entOffset);
-    }else
-      result = 1;
+    if (!entOffset) {
+        entOffset = fileNewEntityOffset(uri, parentUri);
+        if (entOffset)
+            result = arrayListAdd(entityOffsetList, entOffset);
+    } else
+        result = 1;
 
     /* look for the very last node */
     while (lastNode && lastNode->last)
-      lastNode = lastNode->last;
+        lastNode = lastNode->last;
 
-    if (!lastNode){
-      lastNode = firstNode;
+    if (!lastNode) {
+        lastNode = firstNode;
     }
 
-    while ((lastNode->next || lastNode->children) ){
-      if (lastNode->next)
-	lastNode = lastNode->next;
-      else
-	if (lastNode->children)
-	  lastNode = lastNode->children;
+    while ((lastNode->next || lastNode->children)) {
+        if (lastNode->next)
+            lastNode = lastNode->next;
+        else if (lastNode->children)
+            lastNode = lastNode->children;
     }
 
     if (result && entOffset) {
-      entityOffsetEntryPtr entry = 
-	(entityOffsetEntryPtr)xmlMalloc(sizeof(entityOffsetEntry));
-      if (entry){
-	entry->firstNode = firstNode;
-	entry->lastNode = lastNode;
-        result = arrayListAdd(entOffset->list, entry);
-      }
+        entityOffsetEntryPtr entry =
+            (entityOffsetEntryPtr) xmlMalloc(sizeof(entityOffsetEntry));
+        if (entry) {
+            entry->firstNode = firstNode;
+            entry->lastNode = lastNode;
+            result = arrayListAdd(entOffset->list, entry);
+        }
     }
 
     return result;
@@ -982,23 +1005,23 @@ fileFreeEntityOffset(entityOffsetPtr entOffset)
    * Returns The entity @uri,
    *         NULL otherwise
    */
-entityOffsetPtr fileGetEntityRef(const xmlChar *uri)
+entityOffsetPtr
+fileGetEntityRef(const xmlChar * uri)
 {
-  entityOffsetPtr result = NULL, ent;
-  int entIndex =0;
-  if (entityOffsetList && uri )
-    {
-      for (entIndex = 0; entIndex < arrayListCount(entityOffsetList); entIndex++)
-	{
-	  ent = arrayListGet(entityOffsetList, entIndex);
-	  if (ent && ent->uri && (xmlStrCmp(uri, ent->uri) == 0))
-	    {
-	      result = ent;
-	      break;
-	    }
-	}
+    entityOffsetPtr result = NULL, ent;
+    int entIndex = 0;
+
+    if (entityOffsetList && uri) {
+        for (entIndex = 0; entIndex < arrayListCount(entityOffsetList);
+             entIndex++) {
+            ent = arrayListGet(entityOffsetList, entIndex);
+            if (ent && ent->uri && (xmlStrCmp(uri, ent->uri) == 0)) {
+                result = ent;
+                break;
+            }
+        }
     }
-  return result;
+    return result;
 }
 
 
@@ -1015,7 +1038,7 @@ fileGetEntityOffset(xmlChar * uri)
     long result = 0;
     entityOffsetPtr entOffset = NULL;
 
-    if (entityOffsetList&& uri) {
+    if (entityOffsetList && uri) {
         noElements = arrayListCount(entityOffsetList);
         for (entIndex = 0; entIndex < noElements; entIndex++) {
             entOffset = arrayListGet(entityOffsetList, entIndex);
@@ -1034,13 +1057,14 @@ fileGetEntityOffset(xmlChar * uri)
    * Return the parent of this entity,
    *        or NULL if failed
    */
-  xmlChar *fileGetEntityParent(xmlChar *uri)
+xmlChar *
+fileGetEntityParent(xmlChar * uri)
 {
     int entIndex, noElements;
-    xmlChar* result = NULL;
+    xmlChar *result = NULL;
     entityOffsetPtr entOffset = NULL;
 
-    if (entityOffsetList&& uri) {
+    if (entityOffsetList && uri) {
         noElements = arrayListCount(entityOffsetList);
         for (entIndex = 0; entIndex < noElements; entIndex++) {
             entOffset = arrayListGet(entityOffsetList, entIndex);
@@ -1068,6 +1092,7 @@ fileEmptyEntities()
     lineCount = 0;
 }
 
+#ifdef  HAVE_INCLUDE_FIX
 
 static void fixLineNumbers(void *payload, void *data ATTRIBUTE_UNUSED,
                            xmlChar * name ATTRIBUTE_UNUSED);
@@ -1082,15 +1107,17 @@ fixLineNumbers(void *payload, void *data ATTRIBUTE_UNUSED,
     searchInfoPtr searchInf = (searchInfoPtr) data;
 
     if (!searchInf || !searchInf->data ||
-	!node || (node->type != XML_ELEMENT_NODE))
-      return;
-    else{
-      entityOffsetEntryPtr entry = (entityOffsetEntryPtr)searchInf->data;
-      if (node == entry->lastNode)
-	searchInf->found = 1;
-      if ((long) node->content > lineCount)
-	lineCount = (long) node->content;
-      node->content = (void*) (long)(lineNumberOffset + (long) node->content);
+        !node || (node->type != XML_ELEMENT_NODE))
+        return;
+    else {
+        entityOffsetEntryPtr entry =
+            (entityOffsetEntryPtr) searchInf->data;
+        if (node == entry->lastNode)
+            searchInf->found = 1;
+        if ((long) node->content > lineCount)
+            lineCount = (long) node->content;
+        node->content =
+            (void *) (long) (lineNumberOffset + (long) node->content);
     }
 }
 
@@ -1121,46 +1148,57 @@ fixEntities(xmlDocPtr doc)
         walkChildNodes((xmlHashScanner) maxLineNumber, searchInf,
                        (xmlNodePtr) doc);
         /* round up to nearest number divisible by 10 */
-        lineNumberOffset = ((lineNumberOffset / 10) + 1)*10;
-	for (entIndex = 0; entIndex < arrayListCount(entityOffsetList); entIndex++)
-	  {
-	    entOffset = arrayListGet(entityOffsetList, entIndex);
-	    if (entOffset && entOffset->list){
-	      for (entRefIndex = 0; 
-		     entRefIndex < arrayListCount(entOffset->list);
-		       entRefIndex++)
-		{
-		  entityOffsetEntryPtr entry  = 
-		    (entityOffsetEntryPtr) arrayListGet(entOffset->list, entRefIndex);
-		  if (entry)
-		    {
-		      searchInf->data = entry;
-		      walkChildNodes((xmlHashScanner) fixLineNumbers, searchInf,
-				     entry->firstNode);
-		      searchInf->found = 0; /* reset for next time */
-		      if (entOffset->lineCount == 0)
-			entOffset->lineCount = lineCount;
-		      lineCount =0;
-		    }
-		}
-	      entOffset->offset = lineNumberOffset;
-	      lineNumberOffset += ((entOffset->lineCount / 10) + 1)*10;
-	    }
-	  }
+        lineNumberOffset = ((lineNumberOffset / 10) + 1) * 10;
+        for (entIndex = 0; entIndex < arrayListCount(entityOffsetList);
+             entIndex++) {
+            entOffset = arrayListGet(entityOffsetList, entIndex);
+            if (entOffset && entOffset->list) {
+                for (entRefIndex = 0;
+                     entRefIndex < arrayListCount(entOffset->list);
+                     entRefIndex++) {
+                    entityOffsetEntryPtr entry =
+                        (entityOffsetEntryPtr) arrayListGet(entOffset->
+                                                            list,
+                                                            entRefIndex);
+                    if (entry) {
+                        searchInf->data = entry;
+                        walkChildNodes((xmlHashScanner) fixLineNumbers,
+                                       searchInf, entry->firstNode);
+                        searchInf->found = 0;   /* reset for next time */
+                        if (entOffset->lineCount == 0)
+                            entOffset->lineCount = lineCount;
+                        lineCount = 0;
+                    }
+                }
+                entOffset->offset = lineNumberOffset;
+                lineNumberOffset += ((entOffset->lineCount / 10) + 1) * 10;
+            }
+        }
     }
 
-    if (searchInf){
-      searchInf->data = NULL;
-      searchFreeInfo(searchInf);
+    if (searchInf) {
+        searchInf->data = NULL;
+        searchFreeInfo(searchInf);
     }
     return result;
 }
- 
 
 
-void filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode, xmlNodePtr lastNode)
+
+void
+filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode, xmlNodePtr lastNode)
 {
-  if (firstNode && lastNode && firstNode->next && 
-      (ent->etype == XML_EXTERNAL_GENERAL_PARSED_ENTITY))
-    fileAddEntity(ent->SystemID, ent->doc->URL, firstNode, lastNode);
+    if (firstNode && lastNode && firstNode->next &&
+        (ent->etype == XML_EXTERNAL_GENERAL_PARSED_ENTITY))
+        fileAddEntity(ent->SystemID, ent->doc->URL, firstNode, lastNode);
 }
+
+#else
+
+int
+fixEntities(xmlDocPtr doc)
+{
+  return 1;
+}
+
+#endif

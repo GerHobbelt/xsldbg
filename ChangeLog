@@ -1,4 +1,10 @@
 Keith Isdale 6 Jan 2002 <k_isdale@tpg.com.au>
+   VERSION 0.9.8
+   Made a patch for libxml to fix problems with debugging xml included files
+   Added support functions for src/libxsldbg/files.c
+   Fixed bug in changeDir ( /src/libxslt/files.c ) to make use "~" shortcut
+	
+Keith Isdale 6 Jan 2002 <k_isdale@tpg.com.au>
    Fixed the guessing of file names when using break, delete, enable commands
 
 Keith Isdale 5 Jan 2002 <k_isdale@tpg.com.au>

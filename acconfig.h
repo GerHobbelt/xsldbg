@@ -12,6 +12,7 @@
 #undef WITH_XSLDBG_DEBUG
 #undef XSLDBG_BIN
 #undef USE_XSLDBG_AS_THREAD
+#undef HAVE_INCLUDE_FIX
 
 
 /* Define if you need the GNU extensions to compile */

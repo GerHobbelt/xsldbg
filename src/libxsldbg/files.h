@@ -62,6 +62,7 @@ extern FILE *terminalIO;
   };
 
 
+
   /**
    * fileAddEntity:
    * @uri : Is valid
@@ -83,7 +84,20 @@ extern FILE *terminalIO;
    */
   void fileEmptyEntities(void);
 
+  /**
+   * fixEntities:
+   * @doc : A valid doc completly loaded
+   *
+   * Fix line number of entities in @doc. Must only be called after all included
+   *      have been loaded
+   *
+   * Return 1 if able to fix entities that we know about
+   *        0 otherwise
+   */
+  int fixEntities(xmlDocPtr doc);
 
+
+#ifdef  HAVE_INCLUDE_FIX
   /**
    * fileGetEntiyOffset:
    * @uri : Is valid
@@ -115,18 +129,7 @@ extern FILE *terminalIO;
    */
   xmlChar *fileGetEntityParent(xmlChar *uri);
 
-  /**
-   * fixEntities:
-   * @doc : A valid doc completly loaded
-   *
-   * Fix line number of entities in @doc. Must only be called after all included
-   *      have been loaded
-   *
-   * Return 1 if able to fix entities that we know about
-   *        0 otherwise
-   */
-  int fixEntities(xmlDocPtr doc);
-  
+#endif  
 
 #ifndef USE_KDOC 
   /* used by loadXmlFile, freeXmlFile functions */

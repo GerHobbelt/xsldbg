@@ -7,6 +7,7 @@
 #undef WITH_XSLDBG_DEBUG
 #undef XSLDBG_BIN
 #undef USE_XSLDBG_AS_THREAD
+#undef HAVE_INCLUDE_FIX
 
 /* Define if you need the GNU extensions to compile */
 #undef _GNU_SOURCE
@@ -62,6 +63,9 @@
 
 /* Define if you have the <pthread.h> header file.  */
 #undef HAVE_PTHREAD_H
+
+/* Define if you have the <readline/readline.h> header file.  */
+#undef HAVE_READLINE_READLINE_H
 
 /* Define if you have the <stdarg.h> header file.  */
 #undef HAVE_STDARG_H
