@@ -1,7 +1,8 @@
 *Keith Isdale 7 Nov 2001
 * Applied Daniels patch see
 *	http://mail.gnome.org/archives/xslt/2001-November/msg00015.html
-* Added patch_history directory and stored Daniels path in it
+* Added patch_history directory and stored Daniels patch in it
+* Change to version 0.6.5
 	
 * Keith Isdale  6 Nov 2001
 *	fix of stray '/' in line 54 , found by Justin Fletcher  in help.c
