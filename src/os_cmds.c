@@ -71,18 +71,41 @@ xslDbgShellExecute(xmlChar * name, int verbose)
 {
     int result = 0;
 
-    if (verbose)
+    /* Quick check to see if we have a command processor; embedded systems
+     * may not have such a thing */
+    if (system(NULL) == 0) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Starting shell command \"%s\"\n", name);
-    if (!system((char *) name)) {
-        if (verbose)
-            xsltGenericError(xsltGenericErrorContext,
-                             "\nFinished shell command\n");
-        result++;
+                         "No command processor available for shell command\"%s\"\n",
+                         name);
     } else {
+        int return_code;
+
         if (verbose)
             xsltGenericError(xsltGenericErrorContext,
-                             "\nUnable to run command\n");
+                             "Starting shell command \"%s\"\n", name);
+
+        return_code = system((char *) name);
+        /* JRF: Strictly system returns an implementation defined value -
+         * we are interpreting that value here, so we need
+         * implementation specific code to handle each case */
+
+#ifdef __riscos
+        /* on RISC OS -2 means 'system call failed', otherwise it is the
+         * return code from the sub-program */
+        if (return_code != -2) {
+#else
+        if (return_code == 0) {
+#endif
+            if (verbose)
+                xsltGenericError(xsltGenericErrorContext,
+                                 "\nFinished shell command\n");
+            result++;
+        } else {
+            if (verbose)
+                xsltGenericError(xsltGenericErrorContext,
+                                 "\nUnable to run command (system error %d)\n",
+                                 return_code);
+        }
     }
     return result;
 }

@@ -288,7 +288,7 @@ setActiveBreakPoint(xslBreakPointPtr breakPoint)
 */
 int
 addBreakPoint(const xmlChar * url, long lineNumber,
-                 const xmlChar * templateName, BreakPointTypeEnum type)
+              const xmlChar * templateName, BreakPointTypeEnum type)
 {
     int result = 0, breakPointType = type;
     xmlHashTablePtr breakPointHash;     /* hash of breakPoints */
@@ -362,8 +362,7 @@ addBreakPoint(const xmlChar * url, long lineNumber,
                 while ((lineIndex < newEntries) && result) {
                     hash = lineNoItemNew();
                     if (hash) {
-                        result = result
-                            && arrayListAdd(breakList, hash);
+                        result = result && arrayListAdd(breakList, hash);
                     } else {
                         result = 0;
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS

@@ -1,5 +1,5 @@
 
-         xsldbg version 0.9.1
+         xsldbg version 0.9.2
          ====================
    
     xsldbg help
@@ -327,7 +327,7 @@ Command : Search
 Summary : Search a dataBase of all information gathered from stylesheets loaded
  
 When the search command is issued a file (search.data) will be created in the current directory. You can then process this file with your own stylesheet to present data in a other ways than displayed by default. 
-Depending on the amount of data collected it might take a while to compled this command.      
+Depending on the amount of data collected it might take a while to complete this command.      
 Usage:
  
      search <XPATH>   (See what xpath can be used see search.dtd. The deafault <XPATH> is '//search/*' )

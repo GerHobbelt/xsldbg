@@ -35,6 +35,9 @@
          </xsl:apply-templates>
        </xsl:otherwise>
   </xsl:choose>
+  <xsl:if test="count($query)=0"><xsl:text>No nodes match query
+</xsl:text>
+   </xsl:if> 
   </xsl:template>
 
   <xsl:template match="breakpoint">

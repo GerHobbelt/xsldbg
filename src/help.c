@@ -46,38 +46,40 @@ helpTop(const xmlChar * args)
     const char *docsDirPath =
         (const char *) getStringOption(OPTIONS_DOCS_PATH);
 
-
     if (xmlStrLen(args) > 0) {
         snprintf(helpParam, 100, "--param help %c'%s'%c", QUOTECHAR, args,
                  QUOTECHAR);
     } else
         strcpy(helpParam, "");
     if (docsDirPath) {
-        snprintf((char *) buff, sizeof(buff), "xsldbg %s"
-                 " --param xsldbg_version %c'%s'%c "
-                 " %s%cxsldoc.xsl %s%cxsldoc.xml | more",
-                 helpParam,
+        snprintf((char *) buff, sizeof(buff), "%s %s" \
+		 " --param xsldbg_version %c'%s'%c " \
+		 " %s%cxsldoc.xsl %s%cxsldoc.xml | more",
+                 XSLDBG_BIN, helpParam,
                  QUOTECHAR, VERSION, QUOTECHAR,
                  docsDirPath, PATHCHAR, docsDirPath, PATHCHAR);
         if (xslDbgShellExecute((xmlChar *) buff, 1) == 0) {
             if (docsDirPath)
                 xsltGenericError(xsltGenericErrorContext,
-                                 "Help failed : Maybe help files not found in %s or "
-                                 "xsldbg not found in path\n",
-                                 docsDirPath);
+                                 "Help failed : Maybe help files not found in %s or " \
+				 "xsldbg not found in path\n",
+				 docsDirPath);
+            /* FIXME: Comments not correct - the command is that invoked  */
             else
                 xsltGenericError(xsltGenericErrorContext,
                                  "Unable to find xsldbg or help files\n");
         }
 
     } else {
+	xsltGenericError(xsltGenericErrorContext,
+			 "No path to documentation aborting help\n");
 #ifdef USE_DOCS_MACRO
         xsltGenericError(xsltGenericErrorContext,
-                         "Error in seting for USE_DOC_MACRO look at Makefile.am\n");
+                         "Error in value of USE_DOC_MACRO look at Makefile.am\n");
 #else
         xsltGenericError(xsltGenericErrorContext,
-                         "Required environment variable XSLDBG_DOCS_DIR not set "
-                         "to the directory of xsltproc documentation\n");
+                         "Required environment variable %s is not set " \
+			 "to the directory of xsldbg documentation\n", XSLDBG_DOCS_DIR_VARIABLE);
 #endif
     }
 }
@@ -108,7 +110,7 @@ helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
                  docsDirPath);
 
         f = fopen((char *) buff, "r");
-        if (!f) {
+        if (f) {
             /* For now I won't bother with paging - at some point maybe */
             while (!feof(f)) {
                 int read = fread(buff, 1, sizeof(buff), f);
@@ -126,18 +128,20 @@ helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
         if (xslDbgShellExecute(buff, 1) == 0) {
             /* JRF: docsDirPath can't be NULL 'cos it's checked above */
             xsltGenericError(xsltGenericErrorContext,
-                             "Help failed : Maybe help files not found in %s or "
-                             "xsldbg not found in path\n", docsDirPath);
+                             "Help failed : Maybe help files not found in %s or " \
+			     "more not found in path\n", docsDirPath);
         }
 #endif
     } else {
+	xsltGenericError(xsltGenericErrorContext,
+			 "No path to documentation aborting help\n");
 #ifdef USE_DOCS_MACRO
         xsltGenericError(xsltGenericErrorContext,
-                         "Error in seting for USE_DOCS_MACRO look at Makefile.am\n");
+                         "Error in value of USE_DOCS_MACRO look at Makefile.am\n");
 #else
         xsltGenericError(xsltGenericErrorContext,
-                         "Required environment variable XSLDBG_DOCS_DIR not set "
-                         "to the directory of xsltproc documentation\n");
+                         "Required environment variable %s not set " \
+			 "to the directory of xsldbg documentation\n", XSLDBG_DOCS_DIR_VARIABLE);
 #endif
     }
 }

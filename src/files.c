@@ -85,11 +85,12 @@ void guessStylesheetHelper2(void *payload, void *data,
 
 
 FILE *terminalIO;
+
 /* No longer needed
    static FILE *oldStdin, *oldStdout, *oldStderr;*/
 
-static char *ttyName; /* what is the name of the default terminal */
-static char *termName = NULL; /* what is the name of terminal we are redirected to */
+static char *ttyName;           /* what is the name of the default terminal */
+static char *termName = NULL;   /* what is the name of terminal we are redirected to */
 
 
 /**
@@ -124,11 +125,11 @@ openTerminal(xmlChar * device)
     if (terminalIO)
         fclose(terminalIO);
 
-    if (termName){
-	xmlFree(termName);
-	termName = NULL;
+    if (termName) {
+        xmlFree(termName);
+        termName = NULL;
     }
-    
+
 
     if (device[0] == '\0') {
         /* look like we are supposed to close the terminal */
@@ -136,7 +137,7 @@ openTerminal(xmlChar * device)
     } else {
         terminalIO = fopen((char *) device, "w");
         if (terminalIO != NULL) {
-            termName = xmlMemStrdup(device);
+            termName = xmlMemStrdup((char *) device);
             result++;
         } else {
             xsltGenericError(xsltGenericErrorContext,
@@ -145,79 +146,80 @@ openTerminal(xmlChar * device)
     }
 #else
 
-#ifdef HAVE_UNISTD_H              /* fix me for WinNT */
+#ifdef HAVE_UNISTD_H            /* fix me for WinNT */
 
     if ((device[0] >= '0') && (device[0] <= '9')) {
-      /*set the tty level  */
-      switch(device[0])
-	{
+        /*set the tty level  */
+        switch (device[0]) {
 
-	case '1': 
-	  /* redirect only some output to terminal */
-	  if (!terminalIO && termName){
-	    terminalIO = fopen(device, "w");
-	    if (terminalIO) {
-	      result++;
-	    } else {
-	      xsltGenericError(xsltGenericErrorContext,
-			       "Unable to open terminal %s", device);
-	      termName = NULL;
-	    }
-	  }
-	  break;
+            case '1':
+                /* redirect only some output to terminal */
+                if (!terminalIO && termName) {
+                    terminalIO = fopen(device, "w");
+                    if (terminalIO) {
+                        result++;
+                    } else {
+                        xsltGenericError(xsltGenericErrorContext,
+                                         "Unable to open terminal %s",
+                                         device);
+                        termName = NULL;
+                    }
+                }
+                break;
 
-  
-	case '2':
-	  /* redirect everything to the terminal*/
-	  if (termName && terminalIO)
-	    {
-	      /* we have previously sucessfully opened the terminal so just
-		 go ahead a redirect I/O */
-	      result = freopen(termName, "r", stdin) != NULL;
-	      result = result && (freopen(termName, "w", stdout) != NULL);
-	      result = result && (freopen(termName, "w", stderr) != NULL);
-	      if (!result){
-		xsltGenericError(xsltGenericErrorContext,
-				 "Unable to redirect to terminal %s\n",
-			     termName);
-	      }
-	    }
-	  break;
 
-	default :
-	  /* look like we are supposed to close the terminal */
-	  if ((terminalIO != NULL) && (ttyName != NULL))  {
-	    fclose(terminalIO);
-	    freopen(ttyName, "r", stdin);
-	    freopen(ttyName, "w", stdout);
-	    freopen(ttyName, "w", stderr);
-	    terminalIO = NULL;
-	    result++;
-	    }
-	  break;
-	}
+            case '2':
+                /* redirect everything to the terminal */
+                if (termName && terminalIO) {
+                    /* we have previously sucessfully opened the terminal so just
+                     * go ahead a redirect I/O */
+                    result = freopen(termName, "r", stdin) != NULL;
+                    result = result
+                        && (freopen(termName, "w", stdout) != NULL);
+                    result = result
+                        && (freopen(termName, "w", stderr) != NULL);
+                    if (!result) {
+                        xsltGenericError(xsltGenericErrorContext,
+                                         "Unable to redirect to terminal %s\n",
+                                         termName);
+                    }
+                }
+                break;
+
+            default:
+                /* look like we are supposed to close the terminal */
+                if ((terminalIO != NULL) && (ttyName != NULL)) {
+                    fclose(terminalIO);
+                    freopen(ttyName, "r", stdin);
+                    freopen(ttyName, "w", stdout);
+                    freopen(ttyName, "w", stderr);
+                    terminalIO = NULL;
+                    result++;
+                }
+                break;
+        }
 
     } else {
 
-      if (terminalIO != NULL)
-        fclose(terminalIO);
-      
-      if (termName){
-	xmlFree(termName);
-	termName = NULL;
-      }
+        if (terminalIO != NULL)
+            fclose(terminalIO);
 
-      /* just open the terminal the user will need to provide a
-          tty level by invoking tty command again with a value of 0 - 9
-      */
+        if (termName) {
+            xmlFree(termName);
+            termName = NULL;
+        }
+
+        /* just open the terminal the user will need to provide a
+         * tty level by invoking tty command again with a value of 0 - 9
+         */
         terminalIO = fopen(device, "w");
         if (terminalIO != NULL) {
             termName = xmlMemStrdup(device);
-	    /*
-	      dup2(fileno(terminalIO), fileno(stdin));
-	      dup2(fileno(terminalIO), fileno(stderr));
-	      dup2(fileno(terminalIO), fileno(stdout));
-	    */
+            /*
+             * dup2(fileno(terminalIO), fileno(stdin));
+             * dup2(fileno(terminalIO), fileno(stderr));
+             * dup2(fileno(terminalIO), fileno(stdout));
+             */
             result++;
         } else {
             xsltGenericError(xsltGenericErrorContext,
@@ -245,17 +247,17 @@ int
 selectTerminalIO(void)
 {
     /* No longer used but must remain for the moment
-    int result = 0;
-
-    if (termName) {
-        freopen(termName, "w", stdout);
-        freopen(termName, "w", stderr);
-        freopen(termName, "r", stdin);
-        result++;
-    } else
-        result++;
-
-    */
+     * int result = 0;
+     * 
+     * if (termName) {
+     * freopen(termName, "w", stdout);
+     * freopen(termName, "w", stderr);
+     * freopen(termName, "r", stdin);
+     * result++;
+     * } else
+     * result++;
+     * 
+     */
     return 1;
 }
 
@@ -270,17 +272,17 @@ int
 selectNormalIO(void)
 {
     /* No longer used but must remain for the moment
-    int result = 0;
-
-#ifdef UNISTD_H
-    if (ttyName) {
-        freopen(ttyName, "w", stdout);
-        freopen(ttyName, "w", stderr);
-        freopen(ttyName, "r", stdin);
-    }
-#endif
-    result++;
-    */
+     * int result = 0;
+     * 
+     * #ifdef UNISTD_H
+     * if (ttyName) {
+     * freopen(ttyName, "w", stdout);
+     * freopen(ttyName, "w", stderr);
+     * freopen(ttyName, "r", stdin);
+     * }
+     * #endif
+     * result++;
+     */
     return 1;
 }
 
@@ -810,7 +812,7 @@ filesFree(void)
     if (terminalIO)
         fclose(terminalIO);
     if (termName)
-      xmlFree(termName);
+        xmlFree(termName);
 
     result = freeXmlFile(FILES_SOURCEFILE_TYPE);
     if (result)

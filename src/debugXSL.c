@@ -526,8 +526,7 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                         offset++;
 
                     templateNode =
-                        findTemplateNode(styleCtxt->style,
-                                            &arg[offset]);
+                        findTemplateNode(styleCtxt->style, &arg[offset]);
                     if (!templateNode) {
                         xsltGenericError(xsltGenericErrorContext,
                                          "Template '%s' not found\n",
@@ -1097,7 +1096,7 @@ updateSearchData(xsltTransformContextPtr styleCtxt ATTRIBUTE_UNUSED,
  */
 void
 debugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
-              xsltTransformContextPtr ctxt)
+           xsltTransformContextPtr ctxt)
 {
     xmlDocPtr tempDoc = NULL;
     xmlNodePtr tempNode = NULL;

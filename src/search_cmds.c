@@ -22,6 +22,7 @@
 
 #include "xsldbg.h"
 #include "debugXSL.h"
+#include "options.h"
 #include "breakpointInternals.h"
 
 /* -----------------------------------------
@@ -46,11 +47,27 @@ int
 xslDbgShellSearch(xsltTransformContextPtr styleCtxt,
                   xsltStylesheetPtr style, xmlChar * arg)
 {
-    int result = updateSearchData(styleCtxt, style, NULL, DEBUG_ANY_VAR);
+  int result;
     xmlChar buff[DEBUG_BUFFER_SIZE];
     const xmlChar *sortOption = (xmlChar *) "-sort ";
     int sortOptionLen = xmlStrLen(sortOption);
 
+    if (getStringOption(OPTIONS_DOCS_PATH) == NULL)
+      {
+	xsltGenericError(xsltGenericErrorContext,
+			 "No path to documentation aborting searching\n");
+#ifdef USE_DOCS_MACRO
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error in value of USE_DOCS_MACRO look at Makefile.am\n");
+#else
+        xsltGenericError(xsltGenericErrorContext,
+                         "Required environment variable %s not set " \
+			 "to the directory of xsldbg documentation\n", XSLDBG_DOCS_DIR_VARIABLE);
+#endif
+	return;
+      }
+      
+    result = updateSearchData(styleCtxt, style, NULL, DEBUG_ANY_VAR);
     trimString(arg);
     if (xmlStrLen(arg) == 0) {
         arg = (xmlChar *) "//search/*";

@@ -1,13 +1,19 @@
 
 AC_INIT(src/xsldbg.c)
 
-timestamp='2001-12-14'
+timestamp='2001-12-15'
 
 
 XSLDBG_MAJOR_VERSION=0
 XSLDBG_MINOR_VERSION=9
-XSLDBG_MICRO_VERSION=1
+XSLDBG_MICRO_VERSION=2
 PACKAGE=xsldbg
+
+dnl
+dnl how are we to invoke ourself 
+dnl
+
+AC_DEFINE(XSLDBG_BIN, "xsldbg")
 
 LIBXML_REQUIRED_VERSION=2.4.10
 LIBXSLT_REQUIRED_VERSION=1.0.9
@@ -115,7 +121,7 @@ fi
 
 
 AC_ARG_WITH(mem_debug,
-	[  --with-mem-debug      Add the memory debugging module (off)])
+	[  --with-mem-debug        Add the memory debugging module (off)])
 if test "$with_mem_debug" = "yes" ; then
     echo Enabling memory debug support
     WITH_MEM_DEBUG=1
@@ -126,11 +132,44 @@ AC_SUBST(WITH_MEM_DEBUG)
 
 
 dnl 
+dnl Do we use a compiler macro to specify where documentation is
+dnl
+
+docs_macro=true
+AC_ARG_ENABLE(docs_macro,
+	[  --enable-doc-macro      Use a compiler macro to specify where documentation is (PREFIX/doc/xsldbg/) ],
+	if test "${enableval}" = "no"
+	then
+		docs_macro=false
+		AC_MSG_RESULT(Disabling the use of a compiler macro to specify where documention is.)
+	fi
+)
+if test "x$docs_macro" = "xtrue"
+then
+ AC_DEFINE(USE_DOCS_MACRO, 1)
+ if test "x$prefix" != "x"
+ then
+   AC_MSG_RESULT(xsldbg will look for installed documentation in ${prefix}/xsldbg/doc)
+ else
+   AC_MSG_RESULT(xsldbg will look for installed documentation in ${ac_default_prefix}doc/xsldbg/)
+ fi	
+else
+ AC_MSG_RESULT(
+
+ Warning! Using a environment variable for specifiying location of documentation. 
+     On non risc os systems :  XSLDBG_DOCS_DIR
+     On risc os system : XSLDebugDocs\$Dir
+ See --enable-docs-macro in ./configure
+)
+fi
+
+
+dnl 
 dnl Do we generate KDE style help documention ?
 dnl
 
 AC_ARG_ENABLE(kde_docs,
-	[  --enable-kde-docs    Turn on generation of kde style documentation],
+	[  --enable-kde-docs       Turn on generation of kde style documentation (off)],
 	[case "${enableval}" in
 	yes) kde_docs=true 
 		if test "x$gnome_docs" = "xtrue"
@@ -149,7 +188,7 @@ dnl Do we generate GNOME style help documention ?
 dnl
 
 AC_ARG_ENABLE(gnome_docs,
-	[  --enable-gnome-docs    Turn on generation of gnome style documentation],
+	[  --enable-gnome-docs     Turn on generation of gnome style documentation (off)],
 	[case "${enableval}" in
 	yes) gnome_docs=true 
 		if test "x$kde_docs" = "xtrue"
@@ -163,13 +202,27 @@ AC_ARG_ENABLE(gnome_docs,
 	esac],[gnome_docs=false])
 AM_CONDITIONAL(USE_GNOMEDOCS, test "x$gnome_docs" = "xtrue")
 
+dnl
+dnl Do you want to use the help system
+dnl
+
+AC_ARG_ENABLE(helpsystem, [  --enable-helpsystem     Enable the xsldbg help system (on)])
+if test "x${enableval}" = "xno" ; then
+    AC_MSG_RESULT(Disabling the xsldbg help system)
+    WITH_DEBUG_HELP=0
+else
+    AC_MSG_RESULT(Enabling the xsldbg help system)
+    AC_DEFINE(WITH_DEBUG_HELP)
+    WITH_DEBUG_HELP=1
+fi
+
 
 dnl 
-dnl Where is docbookx.dtd, needed only for generating GNOME docs
+dnl Where is docbookx.dtd, needed only for generating GNOME docs  (can't assume user has GNOME2 with everything setup)
 dnl
 
 DOCBOOK_PREFIX="/usr/share/xml/docbook/"
-AC_ARG_WITH(docbook-prefix, [  --with-docbook-prefix	Set the prefix for docbook (/usr/share/xml/docbook)],
+AC_ARG_WITH(docbook-prefix, [  --with-docbook-prefix	         Set the prefix for docbook (/usr/share/xml/docbook)],
 	DOCBOOK_PREFIX="$withval"	
 )
 AC_SUBST(DOCBOOK_PREFIX)
@@ -179,24 +232,10 @@ dnl What version of docbook needed only by GNOME docs
 dnl
 
 DOCBOOK_VERSION="4.1.2"
-AC_ARG_WITH(docbook-version, [  --with-docbook-version 	  Set the version of docbook (4.1.2)],
+AC_ARG_WITH(docbook-version, [  --with-docbook-version 	 Set the version of docbook (4.1.2)],
 	DOCBOOK_VERSION="$withval"
 )
 AC_SUBST(DOCBOOK_VERSION)
-
-dnl
-dnl Do you want to use the help system
-dnl
-
-AC_ARG_WITH(helpsystem, [  --with-helpsystem            Enable the help system (on)])
-if test "$with_helpsystem" = "no" ; then
-    echo Disabling help system
-    WITH_DEBUG_HELP=0
-else
-    echo Enabling help system 
-    AC_DEFINE(WITH_DEBUG_HELP)
-    WITH_DEBUG_HELP=1
-fi
 
 
 dnl No internationalization (yet ?)
@@ -219,7 +258,7 @@ dnl Mathieu Lacage 30/03/2000
 dnl
 LIBXML_PREFIX=""
 AC_ARG_WITH(libxml-prefix,
-        [  --with-libxml-prefix=[PFX]		Specify location of libxml],
+        [  --with-libxml-prefix=[PFX]     Specify location of libxml],
 	 LIBXML_PREFIX="$withval"
 )
 
@@ -301,7 +340,7 @@ AC_SUBST(LIBXML_CFLAGS)
 
 LIBXSLT_PREFIX=""
 AC_ARG_WITH(libxslt-prefix,
-        [  --with-libxslt-prefix=[PFX]		Specify location of libxslt],
+        [  --with-libxslt-prefix=[PFX]    Specify location of libxslt],
 	 LIBXSLT_PREFIX="$withval"
 )
 

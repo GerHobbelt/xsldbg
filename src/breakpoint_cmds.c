@@ -270,7 +270,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
     }
     if (!arg || !style) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Errror : Debuger has no files loaded, try reloading files\n");
+                         "Errror : Debugger has no files loaded, try reloading files\n");
         return result;
     }
     if (arg[0] == '-') {
@@ -337,7 +337,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
 
                 if (name) {
                     if (!addBreakPoint(url, xmlGetLineNo(templ->elem),
-                                          name, DEBUG_BREAK_SOURCE)) {
+                                       name, DEBUG_BREAK_SOURCE)) {
                         xsltGenericError(xsltGenericErrorContext,
                                          "Error : Can't add breakPoint to file %s : line %d\n",
                                          url, xmlGetLineNo(templ->elem));

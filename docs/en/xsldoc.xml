@@ -664,7 +664,7 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <body>
 <para>When the search command is issued a file (search.data) will be created in the current directory. You can then process this file with your own stylesheet to present data in a other ways than displayed by default.
 </para>
-<para>Depending on the amount of data collected it might take a while to compled this command.
+<para>Depending on the amount of data collected it might take a while to complete this command.
 </para>
 </body>
 <usage>

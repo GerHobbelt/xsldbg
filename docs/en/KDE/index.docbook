@@ -163,7 +163,7 @@ Save the generated data file       (Disabled)
 </section><section id="search_cmd"><title id="search_cmd.title">Search</title>
 Search a dataBase of all information gathered from stylesheets loaded
 <para>When the search command is issued a file (search.data) will be created in the current directory. You can then process this file with your own stylesheet to present data in a other ways than displayed by default.
-</para><para>Depending on the amount of data collected it might take a while to compled this command.
+</para><para>Depending on the amount of data collected it might take a while to complete this command.
 </para>
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>search &lt;XPATH&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(See what xpath can be used see search.dtd. The deafault &lt;XPATH&gt; is '//search/*' )</emphasis></markup></entry></row><row><entry>search -sort &lt;XPATH&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Tell search.xsl to sort the result before outputing it)</emphasis></markup></entry></row></tbody></tgroup></table>
 </section><section id="stepdown_cmd"><title id="stepdown_cmd.title">Stepdown</title>

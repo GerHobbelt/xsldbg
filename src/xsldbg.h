@@ -104,10 +104,6 @@
 #define xmlStrChr(a, b) strchr((char*)(a), b)
 #define xmlStrrChr(a, b) strrchr((char*)(a), b)
 
-/* JRF: Note - I need to think about where these are used - mostly
-        I would prefer to use URIs unless a native filename is explicitly
-        required */
-
 /* what char is use to separate directories in an URI*/
 #define URISEPARATORCHAR '/'
 
@@ -120,7 +116,9 @@
 #define  QUOTECHAR '\"'
 #define  PATHCHAR  '/'
 #endif
-
+/* JRF: Although RISC OS native paths use . as a separator, the arguments
+        to xsldbg are passed in unix or URI form, and thus the above
+        specification is correct. */
 #ifdef __cplusplus
 extern "C" {
 #endif

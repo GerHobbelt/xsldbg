@@ -63,10 +63,13 @@ static int walkSpeed = 0;
 /* do we run in gdb mode (prints out more information )*/
 static int gdbMode = 0;
 
+#if 0                           /* remove a warning */
+
 /* keep track of our inteter options 
   This will be use next beta! For the moment use the individual 
   integers */
 static int intOptions[OPTIONS_VERBOSE - OPTIONS_XINCLUDE + 1];
+#endif
 
 /* keep track of our string options */
 static xmlChar *stringOptions[OPTIONS_DATA_FILE_NAME -
@@ -96,14 +99,17 @@ optionsInit(void)
 #ifdef USE_DOCS_MACRO
     docsPath = (xmlChar *) DOCS_PATH;
 #else
-#ifndef __riscos
-    docsPath = getenv("XSLDBG_DOCS_DIR");
-#else
-    /* JRF NoteToSelf: Requires registration with allocations service -
-     * will need more thought about filename translations */
-    docsPath = (xmlChar *) getenv("XSLDBGDocs$Dir");
+    docsPath = (xmlChar *) getenv(XSLDBG_DOCS_DIR_VARIABLE);
+    if (!docsPath)
+      {
+	xsltGenericError(xsltGenericErrorContext,
+			 "Warning no value for documentation specified in environment variable %s. " \
+			 "No help nor search results will display\n", 
+			XSLDBG_DOCS_DIR_VARIABLE);
+      }
 #endif
-#endif
+
+
 
     for (optionId = 0;
          optionId <= OPTIONS_DATA_FILE_NAME - OPTIONS_OUTPUT_FILE_NAME;

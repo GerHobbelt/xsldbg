@@ -1,4 +1,18 @@
 Keith Isdale 12 Dec 2001 <k_isdale@tpg.com.au>
+  Applied patches for risc os from Justin, 
+	mainly risc os specific, but does include some typos he found and missing casts
+	added the definition of  XSLDBG_DOCS_DIR_VARIABLE to options.[ch] to handle different names 
+	   for docs's path environment variable
+	added USE_DOCS_MACRO to configure.in to simplify selection of docs path	
+  Added AC_DEFINE(XSLDBG_BIN, ... ) to configure.in to handle Justins request for being able to change it		
+  Fixed helpTop and xslDbgShellSearch to give correct message if unable to find documentation 
+  Fixed searchEmpty to used the correct DTD 
+  Added the ability to update the default xmlcatalog see docs/en/Makefile.am
+  Changed AC_ARG_WITH(helpsystem ... to AC_ARG_ENABLE(helpsystem in configure.in (to makes more sense)
+  Fix xsltProcess so that the results of transformation are NOT printed if quit is requested
+	
+	
+Keith Isdale 12 Dec 2001 <k_isdale@tpg.com.au>
   Fixed GNOME docs again!
   Synchronized function comments in header and source (mainly GNOME doc comments)
 	Gnome API docs now look Ok, horay!!

@@ -29,6 +29,9 @@
 #undef VERSION
 #endif
 
+/* Justin's port version - do not merge into core!!! */
+#define RISCOS_PORT_VERSION "1.00"
+
 #include "xsldbg.h"
 #include "options.h"
 #include "files.h"
@@ -105,7 +108,8 @@
 
 #ifndef HAVE_STAT
 #  ifdef HAVE__STAT
-     /* MS C library seems to define stat and _stat. The definition
+
+/* MS C library seems to define stat and _stat. The definition
       *         is identical. Still, mapping them to each other causes a warning. */
 #    ifndef _MSC_VER
 #      define stat(x,y) _stat(x,y)
@@ -113,7 +117,6 @@
 #    define HAVE_STAT
 #  endif
 #endif
-
 
 xmlParserInputPtr xmlNoNetExternalEntityLoader(const char *URL,
                                                const char *ID,
@@ -170,8 +173,8 @@ void
 
 
 /* ------------------------------------- 
-    End private functions
----------------------------------------*/
+   End private functions
+   ---------------------------------------*/
 
 
 /*
@@ -289,8 +292,7 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur, const char *filename)
 
     /* Copy the parameters accross for libxslt */
     for (paramIndex = 0;
-         paramIndex < arrayListCount(getParamItemList());
-         paramIndex++) {
+         paramIndex < arrayListCount(getParamItemList()); paramIndex++) {
         paramItem = arrayListGet(getParamItemList(), paramIndex);
         if (paramItem) {
             params[nbparams] = (char *) paramItem->name;
@@ -352,10 +354,13 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur, const char *filename)
             if (cur->methodURI == NULL) {
                 if (isOptionEnabled(OPTIONS_TIMING))
                     startTimer();
-		if (terminalIO == NULL)
-		  xsltSaveResultToFile(stdout, res, cur);
-		else
-		  xsltSaveResultToFile(terminalIO, res, cur);
+		if (xslDebugStatus != DEBUG_QUIT)
+		  {
+		  if (terminalIO == NULL)
+                    xsltSaveResultToFile(stdout, res, cur);
+		  else
+                    xsltSaveResultToFile(terminalIO, res, cur);
+		}
                 if (isOptionEnabled(OPTIONS_TIMING))
                     endTimer("Saving result");
             } else {
@@ -364,10 +369,10 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur, const char *filename)
                                      "non standard output xhtml\n");
                     if (isOptionEnabled(OPTIONS_TIMING))
                         startTimer();
-		    if (terminalIO == NULL)
-		      xsltSaveResultToFile(stdout, res, cur);
-		    else
-		      xsltSaveResultToFile(terminalIO, res, cur);
+                    if (terminalIO == NULL)
+                        xsltSaveResultToFile(stdout, res, cur);
+                    else
+                        xsltSaveResultToFile(terminalIO, res, cur);
                     if (isOptionEnabled(OPTIONS_TIMING))
                         endTimer("Saving result");
                 } else {
@@ -413,7 +418,7 @@ usage(const char *name)
     xsltGenericError(xsltGenericErrorContext,
                      "      --debug: dump the tree of the result instead\n");
     xsltGenericError(xsltGenericErrorContext,
-                     "      --novalid: skip the Dtd loading phase\n");
+                     "      --novalid: skip the DTD loading phase\n");
     xsltGenericError(xsltGenericErrorContext,
                      "      --noout: do not dump the result\n");
     xsltGenericError(xsltGenericErrorContext,
@@ -431,10 +436,15 @@ usage(const char *name)
     xsltGenericError(xsltGenericErrorContext,
                      "            string values must be quoted like \"'string'\"\n");
     xsltGenericError(xsltGenericErrorContext,
-                     "      --nonet refuse to fetch DTDs or entities over network\n");
+                     "      --nonet : refuse to fetch DTDs or entities over network\n");
 #ifdef LIBXML_CATALOG_ENABLED
+#ifdef __riscos
+    xsltGenericError(xsltGenericErrorContext,
+                     "      --catalogs : use the catalogs from SGMLCatalog$Files\n");
+#else
     xsltGenericError(xsltGenericErrorContext,
                      "      --catalogs : use the catalogs from $SGML_CATALOG_FILES\n");
+#endif
 #endif
 #ifdef LIBXML_XINCLUDE_ENABLED
     xsltGenericError(xsltGenericErrorContext,
@@ -447,7 +457,7 @@ usage(const char *name)
     xsltGenericError(xsltGenericErrorContext,
                      "      --shell : start xsldebugger \n");
     xsltGenericError(xsltGenericErrorContext,
-                     "      --gdb : run in gdb mode printing out more information");
+                     "      --gdb : run in gdb mode printing out more information\n");
 }
 
 int
@@ -458,6 +468,8 @@ main(int argc, char **argv)
 
     /* in some cases we always want to bring up a command prompt */
     int showPrompt;
+
+    /* the xml document we're processing */
     xmlDocPtr doc;
 
     xmlInitMemory();
@@ -598,15 +610,22 @@ main(int argc, char **argv)
                    (!strcmp(argv[i], "--catalogs"))) {
             const char *catalogs;
 
+#ifdef __riscos
+            catalogs = getenv("SGMLCatalog$Files");
+#else
             catalogs = getenv("SGML_CATALOG_FILES");
+#endif
             if (catalogs == NULL) {
+#ifdef __riscos
+                xsltGenericError(xsltGenericErrorContext,
+                                 "Variable SGMLCatalog$Files not set\n");
+#else
                 xsltGenericError(xsltGenericErrorContext,
                                  "Variable $SGML_CATALOG_FILES not set\n");
-            } else {
-                xmlLoadCatalogs(catalogs);
-            }
-            strcpy(argv[i], "");
 #endif
+                strcpy(argv[i], "");
+#endif
+            }
 #ifdef LIBXML_XINCLUDE_ENABLED
         } else if ((!strcmp(argv[i], "-xinclude")) ||
                    (!strcmp(argv[i], "--xinclude"))) {
@@ -620,8 +639,8 @@ main(int argc, char **argv)
                    (!strcmp(argv[i], "--param"))) {
             i++;
             arrayListAdd(getParamItemList(),
-                            paramItemNew((xmlChar *) argv[i],
-                                         (xmlChar *) argv[i + 1]));
+                         paramItemNew((xmlChar *) argv[i],
+                                      (xmlChar *) argv[i + 1]));
             i++;
             if (arrayListCount(getParamItemList()) >= 8) {
                 xsltGenericError(xsltGenericErrorContext,
@@ -640,10 +659,10 @@ main(int argc, char **argv)
             }
             strcpy(argv[i], "");
 
-        /*---------------------------------------- */
+          /*---------------------------------------- */
             /*     Handle xsldbg specific options      */
 
-        /*---------------------------------------- */
+          /*---------------------------------------- */
 
         } else if ((!strcmp(argv[i], "-shell")) ||
                    (!strcmp(argv[i], "--shell"))) {
@@ -711,31 +730,32 @@ main(int argc, char **argv)
         cur = NULL;
         doc = NULL;
         if (isOptionEnabled(OPTIONS_SHELL)) {
-	    debugGotControl(0);
+            debugGotControl(0);
             xsltGenericError(xsltGenericErrorContext,
                              "\nStarting stylesheet\n\n");
-	    if (getIntOption(OPTIONS_TRACE) == TRACE_OFF)
-	      xslDebugStatus = DEBUG_STOP;        /* stop as soon as possible */
-	}
+            if (getIntOption(OPTIONS_TRACE) == TRACE_OFF)
+                xslDebugStatus = DEBUG_STOP;    /* stop as soon as possible */
+        }
 
         if ((getStringOption(OPTIONS_SOURCE_FILE_NAME) == NULL) ||
             (getStringOption(OPTIONS_DATA_FILE_NAME) == NULL)) {
             /* at least on file name has not been set */
             /*goto a xsldbg command prompt */
             showPrompt = 1;
-	    if (getStringOption(OPTIONS_SOURCE_FILE_NAME) == NULL)
-		xsltGenericError(xsltGenericErrorContext,
-				 "No source file supplied\n");
-	    
-	    if (getStringOption(OPTIONS_DATA_FILE_NAME) == NULL)
-	      {
-		xsltGenericError(xsltGenericErrorContext,
-				 "No data file supplied\n");
-		if (getStringOption(OPTIONS_SOURCE_FILE_NAME) != NULL)
-		  xsltGenericError(xsltGenericErrorContext,"Supplied with source file of %s\n",
-				   getStringOption(OPTIONS_SOURCE_FILE_NAME));				       	       
-	      }
-	    
+            if (getStringOption(OPTIONS_SOURCE_FILE_NAME) == NULL)
+                xsltGenericError(xsltGenericErrorContext,
+                                 "No source file supplied\n");
+
+            if (getStringOption(OPTIONS_DATA_FILE_NAME) == NULL) {
+                xsltGenericError(xsltGenericErrorContext,
+                                 "No data file supplied\n");
+                if (getStringOption(OPTIONS_SOURCE_FILE_NAME) != NULL)
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "Supplied with source file of %s\n",
+                                     getStringOption
+                                     (OPTIONS_SOURCE_FILE_NAME));
+            }
+
         } else {
             loadXmlFile(NULL, FILES_SOURCEFILE_TYPE);
             cur = getStylesheet();
@@ -843,7 +863,7 @@ main(int argc, char **argv)
             } else {
                 /* unexpected problem, both docs are loaded */
                 debugBreak((xmlNodePtr) cur->doc, (xmlNodePtr) doc,
-                              NULL, NULL);
+                           NULL, NULL);
             }
             xmlFreeDoc(tempDoc);
         } else if (showPrompt && !isOptionEnabled(OPTIONS_SHELL)) {
@@ -1068,6 +1088,10 @@ catchSigInt(int value ATTRIBUTE_UNUSED)
         xsldbgFree();
         exit(1);
     }
+#ifdef __riscos
+    /* re-catch SIGINT - RISC OS resets the handler when the interupt occurs */
+    signal(SIGINT, catchSigInt);
+#endif
 
     if (xslDebugStatus != DEBUG_STOP) {
         /* stop running/walking imediately !! */
@@ -1112,8 +1136,8 @@ xsldbgInit()
         result = filesInit();
         if (result)
             result = optionsInit();
-	/* must start with tracing off */
-	setIntOption(OPTIONS_TRACE,TRACE_OFF);
+        /* must start with tracing off */
+        setIntOption(OPTIONS_TRACE, TRACE_OFF);
         if (result)
             result = breakPointInit();
         if (result)

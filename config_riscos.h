@@ -1,5 +1,5 @@
- /* config.h_risc.  config.h file needed by risc os
-                        Made by Justin Fletcher */
+/* config_riscos.h.  config.h file needed by risc os
+                          Made by Justin Fletcher */
 
  /* Define if you need the GNU extensions to compile */
  #undef _GNU_SOURCE
@@ -12,6 +12,7 @@
  #undef HAVE_READLINE
  #undef HAVE_HISTORY
  #define TIMESTAMP __DATE__
+ #define WITH_DEBUG_HELP 0
 
  /* Define if you have the _stat function.  */
  /* #define HAVE__STAT */
@@ -79,6 +80,11 @@
  /* Name of package */
  #define PACKAGE "xsldbg"
 
+/* what is the name of the binary */
+ #define XSLDBG_BIN "xsldbg"
+
+
  /* Version number of package */
- #define VERSION "0/7/9"
+ #define VERSION "0/9/1"
+
 

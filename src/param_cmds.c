@@ -56,7 +56,7 @@ xslDbgShellAddParam(xmlChar * arg)
     }
     if ((xmlStrLen(arg) > 1) && splitString(arg, 2, opts) == 2) {
         result = arrayListAdd(getParamItemList(),
-                                 paramItemNew(opts[0], opts[1]));
+                              paramItemNew(opts[0], opts[1]));
     }
     if (!result)
         xsltGenericError(xsltGenericErrorContext, "%s", errorPrompt);

@@ -35,8 +35,7 @@ struct DebuggerCallbacks {
  *   to the debugBreak function
  */
 void handleDebugger(xmlNodePtr cur, xmlNodePtr node,
-                       xsltTemplatePtr templ,
-                       xsltTransformContextPtr ctxt);
+                    xsltTemplatePtr templ, xsltTransformContextPtr ctxt);
 
 /* ------------------------------------- 
     End private functions
@@ -124,7 +123,7 @@ debugGotControl(int reached)
  */
 void
 handleDebugger(xmlNodePtr cur, xmlNodePtr node,
-                  xsltTemplatePtr templ, xsltTransformContextPtr ctxt)
+               xsltTemplatePtr templ, xsltTransformContextPtr ctxt)
 {
     setActiveBreakPoint(NULL);
     if (!cur && !node) {
