@@ -39,7 +39,7 @@
 #include "files.h"
 #include "debugXSL.h"
 #include "options.h"
-#include "arraylist.h"
+#include <breakpoint/arraylist.h>
 #include <breakpoint/breakpoint.h>
 #include <breakpoint/breakpointInternals.h>
 #include "help.h"

@@ -19,7 +19,7 @@
 
 #include "xsldbg.h"
 #include "options.h"
-#include "arraylist.h"
+#include <breakpoint/arraylist.h>
 
 /* Enable the use of xinclude during file parsing*/
 int xinclude = 0;
