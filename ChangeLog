@@ -1,5 +1,10 @@
-* Keith isdale 
-*	"fix of stray '/' in line 54 , found by Justin Fletcher" help.c
+*Keith Isdale 7 Nov 2001
+* Applied Daniels patch see
+*	http://mail.gnome.org/archives/xslt/2001-November/msg00015.html
+* Added patch_history directory and stored Daniels path in it
+	
+* Keith Isdale  6 Nov 2001
+*	fix of stray '/' in line 54 , found by Justin Fletcher  in help.c
 	
 * Keith Isdale 3 Nov 2001
 * k_isdale@tpg.com.au

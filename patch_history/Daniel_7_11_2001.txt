@@ -1,0 +1,84 @@
+Index: configure.in
+===================================================================
+RCS file: /cvsroot/xsldbg/xsldbg/configure.in,v
+retrieving revision 1.2
+diff -c -r1.2 configure.in
+*** configure.in	2001/11/06 03:28:25	1.2
+--- configure.in	2001/11/06 11:29:54
+***************
+*** 1,5 ****
+  
+! AC_INIT(acinclude.m4)
+  
+  timestamp='2001-11-06'
+  
+--- 1,5 ----
+  
+! AC_INIT(src/xsldbg.c)
+  
+  timestamp='2001-11-06'
+  
+***************
+*** 26,31 ****
+--- 26,32 ----
+  AC_SUBST(XSLDBG_VERSION_NUMBER)
+  
+  VERSION=${XSLDBG_VERSION}
++ AC_SUBST(VERSION)
+  
+  dnl enable the following if you want to use autoconf/automake
+  dnl framework from a certain directory (like kde-common)
+Index: docs/en/plain/Makefile.am
+===================================================================
+RCS file: /cvsroot/xsldbg/xsldbg/docs/en/plain/Makefile.am,v
+retrieving revision 1.1.1.1
+diff -c -r1.1.1.1 Makefile.am
+*** docs/en/plain/Makefile.am	2001/11/05 04:50:58	1.1.1.1
+--- docs/en/plain/Makefile.am	2001/11/06 11:29:54
+***************
+*** 4,11 ****
+  
+  all: index.html
+  
+! index.html : xsldoc2html.xsl $(DATADIR)/xsldoc.xml
+! 	xsldbg --cd $(DATADIR)  --param xsldbg_version "'$(VERSION)'"  -o $(XSLDIR)/index.html  $(XSLDIR)/xsldoc2html.xsl xsldoc.xml 
+  
+  install-data-local: all
+  	$(mkinstalldirs) $(HTML_DIR)/xsldbg/plain
+--- 4,14 ----
+  
+  all: index.html
+  
+! $(top_builddir)/src/xsldbg:
+! 	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
+! 
+! index.html : xsldoc2html.xsl $(DATADIR)/xsldoc.xml $(top_builddir)/src/xsldbg
+! 	$(top_builddir)/src/xsldbg --cd $(DATADIR)  --param xsldbg_version "'$(VERSION)'"  -o $(XSLDIR)/index.html  $(XSLDIR)/xsldoc2html.xsl xsldoc.xml 
+  
+  install-data-local: all
+  	$(mkinstalldirs) $(HTML_DIR)/xsldbg/plain
+Index: src/Makefile.am
+===================================================================
+RCS file: /cvsroot/xsldbg/xsldbg/src/Makefile.am,v
+retrieving revision 1.1.1.1
+diff -c -r1.1.1.1 Makefile.am
+*** src/Makefile.am	2001/11/05 04:50:03	1.1.1.1
+--- src/Makefile.am	2001/11/06 11:29:54
+***************
+*** 25,31 ****
+  # set the include path found by configure
+  # cheet a bit because I need HELP_DOC_PATH defined
+  INCLUDES= $(all_includes) -DHELP_DOC_PATH=\"$(HTML_DIR)/xsldbg\" \
+!  $(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS)
+  
+  # the library search path.
+  xsldbg_LDFLAGS = $(all_libraries)
+--- 25,31 ----
+  # set the include path found by configure
+  # cheet a bit because I need HELP_DOC_PATH defined
+  INCLUDES= $(all_includes) -DHELP_DOC_PATH=\"$(HTML_DIR)/xsldbg\" \
+!  -DVERSION=\"@VERSION@\" $(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS)
+  
+  # the library search path.
+  xsldbg_LDFLAGS = $(all_libraries)
+

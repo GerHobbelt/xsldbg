@@ -25,7 +25,7 @@ xsldbg_LDADD = $(XSLDBG_LIBS)
 # set the include path found by configure
 # cheet a bit because I need HELP_DOC_PATH defined
 INCLUDES= $(all_includes) -DHELP_DOC_PATH=\"$(HTML_DIR)/xsldbg\" \
- $(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS)
+ -DVERSION=\"@VERSION@\" $(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS)
 
 # the library search path.
 xsldbg_LDFLAGS = $(all_libraries)
