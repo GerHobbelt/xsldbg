@@ -82,11 +82,12 @@
 
  /* what is the name of the binary (we use a variable that we set in main)
  */
-  #define XSLDBG_BIN (xsldbgCommand==NULL ? "Error No XSLDBG present|M||" :
- xsldbgCommand)
+  #define XSLDBG_BIN (xsldbgCommand==NULL ? \
+                          "Error No XSLDBG present|M||" : \
+                          xsldbgCommand)
   extern char *xsldbgCommand; /* Our invocation command */
 
  /* Version number of package */
- #define VERSION "0/9/2"
+ #define VERSION "0/9/3"
 
 

@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN">
+<html>
+<head>
+  <title>xsldbg Installation for win32</title>
+</head>
+<body>
+
+<h1>xsldbg Installation for win32</h1>
+
+<pre>
+
+xsldbg will ONLY compile when using static libraries there are some exports that still need to be setup
+. And you probably will need to change the include and library paths to suit your configuration.
+Use batch build to select the static libraries.
+
+First copy the files from win32/dsp/libxml2_new_files and replace those in
+  &lt; GNOME-XML &gt;/win32/dsp
+
+Build gnome-xml.
+
+Then copy the files from win32/dsp/libxslt_new_files and replace those in
+  &lt; LIBXSLT &gt;/win32/dsp
+
+Build libxslt.
+
+Warning! Make sure that there is a /D "WITH_DEBUGGER" in your compile options otherwise xsldbg will
+NOT work.
+
+Build xsldbg and run xsldbg without any arguments. See index.html
+
+It is required that xsldbg, be in your system PATH. Also you need to setup your xml catalogs using xmlcatalog otherwise
+you will get warnings when running searches.
+
+You should setup the XML_CATALOG_FILES environment variable to point to your xml catalog. And add search.dtd and xmldoc.dtd to you xml catalog.
+Also you should also set the XSLDBG_DOCS_DIR environment variable to point to &lt; XSLDBG &gt;/docs/en/
+
+
+</pre>
+
+</body>
+</html>

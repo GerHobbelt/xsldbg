@@ -84,7 +84,11 @@
 #include "breakpointInternals.h"
 
 #ifndef __riscos
+#ifndef WIN32
 #include "config.h"
+#else
+#include "xsldbgwin32conf.h"	
+#endif
 #else
 #include "config_riscos.h"
 #endif

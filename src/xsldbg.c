@@ -104,6 +104,7 @@
 #elif defined(HAVE_TIME_H)
 #include <time.h>
 #endif
+
 #endif /* WIN32 */
 
 #ifndef HAVE_STAT
@@ -478,7 +479,15 @@ main(int argc, char **argv)
 
     LIBXML_TEST_VERSION xmlLineNumbersDefault(1);
 
-    xsldbgInit();
+    if (!xsldbgInit())
+	{
+		printf("Internal error, maybe ran out of memory aborting xsldbg\n");
+        xsldbgFree();
+	    xsltCleanupGlobals();
+		xmlCleanupParser();
+		xmlMemoryDump();
+        exit(1);
+	}
 
     if (argc == 1)
         result = enableOption(OPTIONS_SHELL, 1);
@@ -1075,6 +1084,34 @@ printTemplates(xsltStylesheetPtr style, xmlDocPtr doc)
     }
 }
 
+#ifdef WIN32
+/* For the windows world we capture the control event */ 
+BOOL WINAPI handler_routine(DWORD dwCtrlType)
+{
+
+  switch(dwCtrlType)
+    {
+    case CTRL_C_EVENT:
+    case CTRL_BREAK_EVENT:
+    case CTRL_CLOSE_EVENT:
+		catchSigInt(SIGINT);
+	break;
+
+    case CTRL_LOGOFF_EVENT:
+    case CTRL_SHUTDOWN_EVENT:
+        xsldbgFree();
+        exit(1);
+      break;
+
+     default:
+      printf("Unknown control event\n");
+      break;
+    }
+
+  return(TRUE);
+}
+
+#endif
 
 
 /**
@@ -1145,11 +1182,25 @@ xsldbgInit()
         if (result)
             result = searchInit();
 
+#ifndef WIN32
         /* catch SIGINT */
         oldHandler = signal(SIGINT, catchSigInt);
+#else
+	if (result)	{
+	BOOL bSuccess = SetConsoleCtrlHandler(handler_routine, TRUE);	
+	if (bSuccess == TRUE)
+		result++;
+	else
+		result = 0;
+	}
+#endif
+	if (result){
+#ifndef WIN32
         /* catch SIGTIN tty input available fro child */
         signal(SIGTERM, catchSigTerm);
+#endif
         initialized = 1;
+	}
     }
     return result;
 }
@@ -1167,7 +1218,11 @@ xsldbgFree()
     optionsFree();
     breakPointFree();
     searchFree();
-
+#ifndef WIN32
     if (oldHandler != SIG_ERR)
         signal(SIGINT, oldHandler);
+#else
+	SetConsoleCtrlHandler(handler_routine, FALSE);	
+#endif
+
 }

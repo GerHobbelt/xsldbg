@@ -1,16 +1,16 @@
 
 AC_INIT(src/xsldbg.c)
 
-timestamp='2001-12-16'
+timestamp='2001-12-18'
 
 
 XSLDBG_MAJOR_VERSION=0
 XSLDBG_MINOR_VERSION=9
-XSLDBG_MICRO_VERSION=3
+XSLDBG_MICRO_VERSION=5
 PACKAGE=xsldbg
 
 dnl
-dnl how are we to invoke ourself 
+dnl how are we to invoke ourself, or the other stylesheet processor (xsltproc?) 
 dnl
 
 AC_DEFINE(XSLDBG_BIN, "xsldbg")
@@ -483,6 +483,7 @@ AC_SUBST(XSLDBG_EXPORTS)
 AC_OUTPUT(
         Makefile     	
         src/Makefile  	
+	src/xsldbgwin32conf.h
 	tests/Makefile	
 	results/Makefile 	
 	docs/Makefile  		

@@ -34,6 +34,11 @@
 #undef VERSION
 #endif
 
+#ifdef WIN32
+#include <wtypes.h>
+#include <winbase.h> /* needed fort the sleep function*/
+#endif
+
 #include "xsldbg.h"
 #include "files.h"
 #include "debugXSL.h"
@@ -44,6 +49,7 @@
 #include <libxslt/transform.h>  /* needed by source command */
 #include <libxslt/xsltInternals.h>
 #include <stdio.h>
+
 
 /* current template being processed */
 xsltTemplatePtr rootCopy;
@@ -700,10 +706,10 @@ xslDbgSleep(long delay)
     usleep(delay);
 #else
 #ifdef WIN32
-    sleep(delay / 1000);
+    Sleep(delay / 1000);
 #else
     /* try to delay things by doing a lot of floating point 
-     * multiplipation   
+     * multiplication   
      */
     long loop1, loop2;
     float f1 = 1.0000001, f2;
@@ -1252,14 +1258,12 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
         xmlFree(ctxt);
         return;
     }
-#ifdef HAVE_USLEEP
     if (xslDebugStatus == DEBUG_WALK) {
         if (xslDbgWalkContinue()) {
             xmlFree(ctxt);
             return;
         }
     }
-#endif
 
     ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
     if (ctxt->pctxt == NULL) {

@@ -1,8 +1,26 @@
-Keith Isdale 12 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 18 Dec 2001 <k_isdale@tpg.com.au>
+  Version 0.9.5
+  First try at a win32 build, does not use dll's because not 
+	all exports required are in libxslt.def and libxmldef.src
+  Had to create a xmlcatlog.dsp and made it use static libs
+  Made WIN32 specific SIGNIT and SIGTERM handling in see xslInit : xsldbg.c   	
+  Fixed bug that the xmlInit() return value was being ignored
+ 	
+Keith Isdale 17 Dec 2001 <k_isdale@tpg.com.au>
+  Version 0.9.4
+  Replaced config_risc_os.h with file suppled by Justin
+  Added highlighting to tutorial in docs/en/website/index.html
+  Added Justin's name to AUTHORS file, he'll add a complete notice 
+	 to his risc os port
+  Created skeleton installation docs for WIN32 and risc os
+	docs/en/website/(risc_os.install.html, win32_install.html)
+	to be added to cvs later
+	
+Keith Isdale 16 Dec 2001 <k_isdale@tpg.com.au>
   Version 0.9.3
   Applied a small set of patches my Justin
 	
-Keith Isdale 12 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 15 Dec 2001 <k_isdale@tpg.com.au>
   version 0.9.2
   Applied patches for risc os from Justin, 
 	mainly risc os specific, but does include some typos he found and missing casts
@@ -17,7 +35,7 @@ Keith Isdale 12 Dec 2001 <k_isdale@tpg.com.au>
   Fix xsltProcess so that the results of transformation are NOT printed if quit is requested
 	
 	
-Keith Isdale 12 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 14 Dec 2001 <k_isdale@tpg.com.au>
  version 0.9.1
   Fixed GNOME docs again!
   Synchronized function comments in header and source (mainly GNOME doc comments)
@@ -26,7 +44,7 @@ Keith Isdale 12 Dec 2001 <k_isdale@tpg.com.au>
 	remove xslbreakpoint_2.h in cvs later(done!)
 	
 	
-Keith Isdale 12 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 13 Dec 2001 <k_isdale@tpg.com.au>
    added DOCBOOK_PREFIX and DOCBOOK_VERSION to configure.in to be used by docs/en/GNOME/Makefile.am
    fix bug in catchSigInt, control-c tryies to start debugger shell when debugging is disabled
 	 change DEBUG_RUN to DEBUG_NONE	

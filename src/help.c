@@ -30,7 +30,7 @@
 #include "help.h"
 #include <stdlib.h>
 
-#if WITH_DEBUG_HELP
+#ifdef WITH_DEBUG_HELP
 
 /**
  * helpTop:

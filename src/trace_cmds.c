@@ -64,30 +64,24 @@ xslDbgShellWalk(xmlChar * arg)
 {
     int result = 0;
 
-#ifdef HAVE_USLEEP
-    {
-        long speed = WALKSPEED_NORMAL;
+    long speed = WALKSPEED_NORMAL;
 
-        if (xmlStrLen(arg)
-            && !sscanf((char *) arg, "%ld", &speed)) {
-            xsltGenericError(xsltGenericErrorContext,
-                             "\tUnable read speed number assuming normal speed\n");
-            speed = WALKSPEED_NORMAL;
-        }
-        if ((speed < 0) || (speed > 9)) {
-            xsltGenericError(xsltGenericErrorContext,
-                             "Invalid walk speed, use 0 to 9 only\n");
-            xsltGenericError(xsltGenericErrorContext,
-                             "\tAssuming normal speed\n");
-            speed = WALKSPEED_NORMAL;
-        }
-        result++;
-        setIntOption(OPTIONS_WALK_SPEED, speed);
-        xslDebugStatus = DEBUG_WALK;
+    if (xmlStrLen(arg)
+        && !sscanf((char *) arg, "%ld", &speed)) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "\tUnable read speed number assuming normal speed\n");
+        speed = WALKSPEED_NORMAL;
     }
-#else
-    xsltGenericError(xsltGenericErrorContext,
-                     "Walk command not support by this operating system\n");
-#endif
+    if ((speed < 0) || (speed > 9)) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Invalid walk speed, use 0 to 9 only\n");
+        xsltGenericError(xsltGenericErrorContext,
+                         "\tAssuming normal speed\n");
+        speed = WALKSPEED_NORMAL;
+    }
+    result++;
+    setIntOption(OPTIONS_WALK_SPEED, speed);
+    xslDebugStatus = DEBUG_WALK;
+
     return result;
 }

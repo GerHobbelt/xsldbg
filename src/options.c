@@ -122,8 +122,7 @@ optionsInit(void)
 
     /* setup the docs path */
     setStringOption(OPTIONS_DOCS_PATH, docsPath);
-
-    return (parameterList != NULL) && (docsPath != NULL);
+    return (parameterList != NULL);
 }
 
 

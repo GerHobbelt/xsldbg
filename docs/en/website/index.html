@@ -58,13 +58,11 @@
 
 <!--  - - - - - - - - - -  Author - - - - - - - - - -->
 <h2><a name="Requirements">Requirements</a> </h2>
-&nbsp;&nbsp; <a href="http://www.xmlsoft.org/#Downloads">libxml2-2.4.10</a> &nbsp; or greater <br />
-&nbsp;&nbsp; <a href="http://xmlsoft.org/XSLT/#Downloads">libxslt-1.0.9</a> &nbsp; or greater <br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; or <br />
-&nbsp;&nbsp; <a href="ftp://xmlsoft.org/test/libxslt-1.0.8.tar.gz">libxslt-1.0.8 snapshot that has been patched with libxslt-1.0.8_ki_0.8.4.diff from website</a><br />
+&nbsp;&nbsp; <a href="http://www.xmlsoft.org/#Downloads">libxml2-2.4.10  (libxml2-2.4.12 recommended)</a> &nbsp; or greater <br />
+&nbsp;&nbsp; <a href="http://xmlsoft.org/XSLT/#Downloads">libxslt-1.0.9 <font color="red">from GNOME cvs</font> </a> &nbsp; or greater <br />
 
-<p><font size=5 color="#ff0000">Warning!</font>&nbsp; libxslt may not compile with shared library enabled.
-I recommend that libxslt be configured using at least these options <br />
+<p><font size=5 color="red">Warning!</font>&nbsp; libxslt may not compile with shared library enabled as it is has been configured
+for compilation tools that support prelinking. I recommend that libxslt be configured using at least these options <br />
 <b>&nbsp;&nbsp;&nbsp;&nbsp;--with-debugger &nbsp;&nbsp; --enable-shared=no </b>
 <p>      I recommend you get the latest available for your distribution. Try <br />
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="http://rpmfind.net/linux/rpm2html/search.php?query=libxslt&amp;submit=Search+..">libxslt rpmfind search.</a> <br />
@@ -90,7 +88,8 @@ I recommend that libxslt be configured using at least these options <br />
 
 <!--  - - - - - - - - - -  Author - - - - - - - - - -->
 <h2><a name="Author">Author</a> </h2>
-<p>The author for the debugging specific code is <a href="mailto:k_isdale@tpg.com.au">Keith Isdale</a> </p>
+<p>The primary author is <a href="mailto:k_isdale@tpg.com.au">Keith Isdale</a> </p>
+<p>The author for the riscos specific code is <a href="mailto:justin.fletcher@ntlworld.com">Justin Fletcher</a> </p>
 <p>&nbsp;</p>
 
 
@@ -106,9 +105,14 @@ I recommend that libxslt be configured using at least these options <br />
 
 
 <!--  - - - - - - - - - -  Website - - - - - - - - - -->
-<h2><a name="Web_site">Web site</a> s</h2>
+<h2><a name="Web_site">Related web sites</a></h2>
 <p>&nbsp;&nbsp;&nbsp; <a href="http://sourceforge.net/projects/xsldbg">http://xsldbg.sourceforge.net/</a> </p>
 <p>&nbsp;&nbsp;&nbsp; <a href="http://sourceforge.net/projects/xsldbg">http://sourceforge.net/projects/xsldbg</a> </p>
+
+<p>&nbsp;&nbsp;&nbsp; <a href="http://homepage.ntlworld.com/justin.fletcher/XML/">
+  http://homepage.ntlworld.com/justin.fletcher/XML/ (Homepage for author or risc os port of xsldbg)
+                     </a>
+ </p>
 
 
 <!--  - - - - - - - - - -  Email lists  - - - - - - - - - -->
@@ -125,6 +129,14 @@ I recommend that libxslt be configured using at least these options <br />
 <h1><a name="Installation">Installation</a> </h1>
 Extract the latest stable version of xsldbg from <a href="http://sourceforge.net/project/showfiles.php?group_id=35673">http://sourceforge.net/project/showfiles.php?group_id=35673</a>
 In cvs , for example, the 0.8.4 release is tagged &quot;rel-0-8-4&quot; in cvs. See website for details of the latest stable release.<br />
+<p>
+Below is the installation instructions for a default *nix system <br />
+<ul>
+<li>For win32 systems see <a href="win32_install.html">WIN32 installation</a></li>
+<li>For risc os see <a href="risc_os_install.html">risc os installation</a></li>
+</ul>
+</p>
+<p>
 <b>
 &nbsp;&nbsp;&nbsp;&nbsp;make -f&nbsp; Makefile.cvs <br />
 &nbsp;&nbsp;&nbsp; ./configure --enable-shared=no <br />
@@ -137,7 +149,16 @@ for details of other options to configuring xsldbg
 <br />
 <br />
 <br />
-
+<font size=5 color="red">Warning!</font>
+<p> It is expected that
+<ol>
+<li>xsldbg has been added to your PATH of system commands. </li>
+<li>libxml AND libxslt have been fully installed and are available to xsldbg.</li>
+<li>xsldbg's DTD's (search.dtd, xmldoc.dtd) have been added to your XML catalog file. </li>
+</ol>
+The default *nix installation will do these things for you (for the the assumed default *nix configuration) but other operating systems
+have thier own installation requirements.
+</p>
 
 <!--  - - - - - - - - - -  Testing  - - - - - - - - - -->
 <h1><a name="Testing">Testing / running example </a> </h1>
@@ -148,7 +169,7 @@ for details of other options to configuring xsldbg
          xsldbg --shell xsldoc.xsl xsldoc.xml</b>
 
 
-      And you should get the xsldbg prompt like 
+      And you should get the xsldbg prompt like
 
 
 <b>
@@ -161,11 +182,12 @@ Breakpoint at file xsldoc.xsl : line 18
 xsldbg) xsl:param >
 </b>
 
-You can now start entering commands at the "(xsldbg) .* >" prompt. For example <br />
+You can now start entering commands at the "(xsldbg) .* >" prompt. In the example text in
+<b><font color="green">green</font></b> has been typed by the user <br />
 
 <b>
       Breakpoint at file xsldoc.xsl : line 18
-(xsldbg) xsl:param > templates
+(xsldbg) xsl:param > <font color="green">templates</font>
  template :"/" in file xsldoc.xsl : line 23
  template :"helpOnCommand" in file xsldoc.xsl : line 49
  template :"header" in file xsldoc.xsl : line 67
@@ -178,37 +200,37 @@ You can now start entering commands at the "(xsldbg) .* >" prompt. For example <
 
          Total of 9 templates found
          Total of 9 templates printed
-(xsldbg) xsl:param > break /
+(xsldbg) xsl:param > <font color="green">break /</font>
 Size of line list was 0 adding 24 entries
-(xsldbg) xsl:param > break header
+(xsldbg) xsl:param > <font color="green">break header</font>
 Size of line list was 24 adding 44 entries
-(xsldbg) xsl:param > showbreak
+(xsldbg) xsl:param > <font color="green">showbreak</font>
 
  Breakpoint 1 enabled for template :"/" in file xsldoc.xsl : line 23
  Breakpoint 2 enabled for template :"header" in file xsldoc.xsl : line 67
 
          Total of 2 breakPoints present
-(xsldbg) xsl:param > break -l xsldoc.xsl 44
-(xsldbg) xsl:param > showbreak
+(xsldbg) xsl:param > <font color="green">break -l xsldoc.xsl 44</font>
+(xsldbg) xsl:param > <font color="green">showbreak</font>
 
  Breakpoint 1 enabled for template :"/" in file xsldoc.xsl : line 23
  Breakpoint 3 enabled in file xsldoc.xsl : line 44
  Breakpoint 2 enabled for template :"header" in file xsldoc.xsl : line 67
 
          Total of 3 breakPoints present
-(xsldbg) xsl:param > continue
+(xsldbg) xsl:param > <font color="green">continue</font>
 
 Reached template :"/"
 Breakpoint 1 Breakpoint in file xsldoc.xsl : line 23
-(xsldbg) xsl:template > continue
+(xsldbg) xsl:template > <font color="green">continue</font>
 
 Reached template :"/"
 Breakpoint 1 Breakpoint in file xsldoc.xsl : line 23
-(xsldbg) text > continue
+(xsldbg) text > <font color="green">continue</font>
 
 Reached template :"header"
 Breakpoint 2 Breakpoint in file xsldoc.xsl : line 67
-(xsldbg) xsl:template >
+(xsldbg) xsl:template ><font color="green">exit</font>
 </b>
 <br />
 <br />
@@ -233,7 +255,9 @@ To exit xsldbg just type &quot;exit&quot; <br />
 <p>&nbsp;See release notes associated with package.&nbsp; </p>
 <h4>These issues are still current</h4>
 <blockquote>1) The File related commands are disabled for the moment.</blockquote>
-<blockquote>2) When you do a cat on the style source the output is white space stripped so it will look different to your original source files. This is not a "bug"! This is the default behaviour of the stylesheet processor of libxslt. This tool is intended to be used by other programs which can handle formatting the output. </blockquote>
+<blockquote>2) When you do a cat on the style source the output is white space stripped so it will look different to
+your original source files. This is NOT a "bug"! This is the default behaviour of the stylesheet processor of libxslt. This
+tool is intended to be used by other programs which can handle formatting the output. </blockquote>
 <blockquote>3) The xsldebugger can be built on windows given correct project files. <i><font color="#008000">See TODO's</i></font></blockquote>
 <br />
 <br />
