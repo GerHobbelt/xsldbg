@@ -4,9 +4,9 @@ Keith Isdale 1st/2nd/3rd March Feb 2002 <k_isdale@tpg.com.au>
 	Seems to require development versions of autoconf and automake
    	Moved definition of SOURCES in src/libqtnotifier/Makefile.am
    	Merged two definitions of EXTRA_DIST in docs/en/KDE/Makefile.am
-	The files missing and ltmain.sh must be updated by
-		your Cygwin installation (*nix version supplied by
-		default)
+	The files missing and ltmain.sh install-sh must be updated by
+		your Cygwin installation
+
 	Seems to require installation prefix of /usr NOT /usr/local
 		configuration may take a while
 	Avoided the creation of static version of xsldbgtest by 
@@ -20,6 +20,9 @@ Keith Isdale 1st/2nd/3rd March Feb 2002 <k_isdale@tpg.com.au>
    Fixed detection of failed storage of the search dataBase. Print error
 	message if there was a problem
 	
+   Removed dead files 
+	xsldbgconf.h*
+
 	
 Keith Isdale 24rd Feb 2002 <k_isdale@tpg.com.au	
    Version 2.1.4
