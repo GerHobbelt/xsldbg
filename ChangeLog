@@ -1,4 +1,14 @@
-Keith Isdale 07th April 2002 <k_isdale@tpg.com.a
+Keith Isdale 21st April 2002 <k_isdale@tpg.au>
+  Version 2.1.9 
+  Win32 specific udates:
+	o  Added win32/Makefile.msvc, a  make file for building under MSVC 
+	    from command line. This is an experimental method,  
+	    file kindly provided by Igor. You need to edit this file
+	    to suit your installation
+	o  Fixed bug reported by Igor that caused xsldbg to crash 
+
+	
+Keith Isdale 07th April 2002 <k_isdale@tpg.com.au>
   Version 2.1.8
   Merge changes due to qxsldbg for WIN32 
   Added win32/dsp_6_0 for building xsldbg under VC6.0 with 
@@ -7,7 +17,7 @@ Keith Isdale 07th April 2002 <k_isdale@tpg.com.a
   Fixed display of profiling output under qxsldg
   
 	
-Keith Isdale 05th April 2002 <k_isdale@tpg.com.a
+Keith Isdale 05th April 2002 <k_isdale@tpg.com.au>
  Version 2.1.7
  Changes needed by qtxsldbg under WIN32
     Updated xsldbgwin32config.h to support dll declares
@@ -58,7 +68,7 @@ Keith Isdale 1st/2nd/3rd Feb 2002 <k_isdale@tpg.com.au>
 	xsldbgconf.h*
 
 	
-Keith Isdale 24rd Feb 2002 <k_isdale@tpg.com.au	
+Keith Isdale 24rd Feb 2002 <k_isdale@tpg.com.au>
    Version 2.1.4
    Created perl script to run most of the tests in tests directory
 	This should be able to be reused/modified for platforms other than *nix
@@ -73,7 +83,7 @@ Keith Isdale 24rd Feb 2002 <k_isdale@tpg.com.au
    Added further details to tests in tests/*
 
 	
-Keith Isdale 23rd Feb 2002 <k_isdale@tpg.com.au	
+Keith Isdale 23rd Feb 2002 <k_isdale@tpg.com.au>
    Version 2.1.3
    Added support for output file to be specified as "file://" protocol URI
 	Created filesURItoFileName (files.c) and xslDbgShellOutput (file_cmds.c)
@@ -85,7 +95,7 @@ Keith Isdale 23rd Feb 2002 <k_isdale@tpg.com.au
    Simplify filesLoadCatalogs (files.c), updated files effected (xsldbg.c and  file_cmds.c)
    Updated docs/en/xsldoc.xml to suit changes
 	
-Keith Isdale 22th Feb 2002 <k_isdale@tpg.com.au	
+Keith Isdale 22th Feb 2002 <k_isdale@tpg.com.au>	
    Version 2.1.2		
    Applied patches by Justin
    Added searchresultspath option (OPTIONS_SEARCH_RESULTS_PATH), see setoption command
@@ -102,7 +112,7 @@ Keith Isdale 22th Feb 2002 <k_isdale@tpg.com.au
 !Todo!
  cvs add tests/subdir tests/subdir/Makefile.am tests/subdir/test14.xsl tests/subdir/test14.xml tests/test13.xsl tests/test13.xml
 	
-Keith Isdale 20th Feb 2002 <k_isdale@tpg.com.au	
+Keith Isdale 20th Feb 2002 <k_isdale@tpg.com.au>	
   Version 2.1.1		
   Found the WIN32 requires output to be flushed before any input
 	o added fflush to xslDbgWalkContinue (debugXSL.c) 
@@ -129,14 +139,14 @@ Keith Isdale 20th Feb 2002 <k_isdale@tpg.com.au
   cvs add docs/en/website/*.png
 	
 	
-Keith Isdale 19th Feb 2002 <k_isdale@tpg.com.au
+Keith Isdale 19th Feb 2002 <k_isdale@tpg.com.au>
    Version 2.1.0
    Added missing line feeds to some error messages
    Found that win32's chdir fails if candidate path has trailing \\
 	In changeDir strip off extra PATHCHARS (files.c)
 
 	
-Keith Isdale 18 Feb 2002 <k_isdale@tpg.com.au
+Keith Isdale 18 Feb 2002 <k_isdale@tpg.com.au>
   Version 2.0.9
   Changes requested to suit upcomming KDbg release 
      o Disabled the echoing enter commands in gdb mode
@@ -166,7 +176,7 @@ Keith Isdale 18 Feb 2002 <k_isdale@tpg.com.au
 
  cvs add win32/Makefile.am win32/dsp/Makefile.am
 	
-Keith Isdale 17 Feb 2002 <k_isdale@tpg.com.au
+Keith Isdale 17 Feb 2002 <k_isdale@tpg.com.au>
   Version 2.0.8
   Bug fixes suggested by Hannes
 	o  Applied patches to fix the order of values in 
@@ -194,7 +204,7 @@ Keith Isdale 17 Feb 2002 <k_isdale@tpg.com.au
 	
 	
 	
-Keith Isdale 15 Feb 2002 <k_isdale@tpg.com.au
+Keith Isdale 15 Feb 2002 <k_isdale@tpg.com.au>
   Version 2.0.7
   Advised by Hannes that the Makefile.am's were broken :-(
   Read libtool docs again. 
@@ -211,13 +221,13 @@ Keith Isdale 15 Feb 2002 <k_isdale@tpg.com.au
 	tracing or walking through stylesheet
 	 
 	
-Keith Isdale 12 Feb 2002 <k_isdale@tpg.com.au
+Keith Isdale 12 Feb 2002 <k_isdale@tpg.com.au>
   Version 2.0.6
   Depreciated breakPointSetActiveBreakPoint and breakPointGetActiveBreakPoint
 	They now do nothing, removes bug in printing current location and when gdb
 	mode is enabled
 	
-Keith Isdale 10 Feb 2002 <k_isdale@tpg.com.au
+Keith Isdale 10 Feb 2002 <k_isdale@tpg.com.au>
   Version 2.0.5	
   Copied Igor's MSVC project files to win32\dsp\
 	As normal user may need to change paths for location of 
@@ -246,7 +256,7 @@ Keith Isdale 10 Feb 2002 <k_isdale@tpg.com.au
 	 win32/dsp/xsldbg.dsw win32/dsp/libxsldbg.dsp
  cvs remove xsldbg.kdevprj  and xsldbg.kdevses
 	
-Keith Isdale 9 Feb 2002 <k_isdale@tpg.com.au
+Keith Isdale 9 Feb 2002 <k_isdale@tpg.com.au>
   Version 2.0.4
   Tidy the files docs/en/*.dtd
   Put better comments in docs/en///*.xsl to suit xsltdoc.xsl by Fabrice Desré 
@@ -274,7 +284,7 @@ Keith Isdale 9 Feb 2002 <k_isdale@tpg.com.au
 
  cvs add search_v1_1.dtd
 	
-Keith Isdale 7 Feb 2002 <k_isdale@tpg.com.au
+Keith Isdale 7 Feb 2002 <k_isdale@tpg.com.au>
  Version 2.0.3
  Added OPTONS_UTF8_INPUT, Made decoding input optional which allows a program
 	to send UTF-8 to xsldbg. Added "utf8input" to list of known options
@@ -289,7 +299,7 @@ Keith Isdale 7 Feb 2002 <k_isdale@tpg.com.au
  cvs remove dead config files xsldbwing* 
  cvs add xsldbgwin32config.h and xsldbgwin32config.h.in
 	
-Keith Isdale 6 Feb 2002 <k_isdale@tpg.com.au
+Keith Isdale 6 Feb 2002 <k_isdale@tpg.com.au>
   Version 2.0.2
   Fixed includes for libqtnotifier  (missed moc file)
   Fixed Makefile.am for libqtnotifier (missed generation of moc file)
@@ -301,7 +311,7 @@ Keith Isdale 6 Feb 2002 <k_isdale@tpg.com.au
 	and understand.
 	
 	
-Keith Isdale 5 Feb 2002 <k_isdale@tpg.com.au
+Keith Isdale 5 Feb 2002 <k_isdale@tpg.com.au>
   Fixed printing of local and globals to have a space before them
 	ie " Local <VARIABLE_NAME>"
   Fixed set command to be consistant with "setoption" command

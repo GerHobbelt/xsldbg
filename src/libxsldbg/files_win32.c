@@ -54,7 +54,7 @@ filesPlatformInit(void)
                 xmlMalloc(strlen(getenv("TEMP")) +
                           strlen(names[nameIndex]) + 1);
             if (tempNames[nameIndex]) {
-                xmlStrCat(tempNames[nameIndex], getenv("TEMP"));
+                xmlStrCpy(tempNames[nameIndex], getenv("TEMP"));
                 xmlStrCat(tempNames[nameIndex], names[nameIndex]);
             } else {
                 xsltGenericError(xsltGenericErrorContext,
