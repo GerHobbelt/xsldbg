@@ -35,7 +35,9 @@ HEADERS += arraylist.h \
            xsldbgdebuggerbase.h \
            xsldbgio.h \
            xsldbgmsg.h \
-           xsldbgthread.h 
+           xsldbgthread.h \
+	   xsldbgwin32config.h \
+	   xsldbgnotifier.h  
 
 SOURCES += arraylist.c \
            breakpoint.c \

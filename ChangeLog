@@ -1,3 +1,8 @@
+Keith Isdale 7th  Dec 2002 <k_isdale@tpg.com.au>
+   Created "pro" files to aid creation of xsldbg under win32
+   See README for more information  
+   Version 3.1.1
+
 Keith Isdale 14th Sepg 2002 <k_isdale@tpg.com.au>
   Requires/strongly recommend using libxslt-1.0.20 to avoid bug in libxslt that causes segfaults in xsldbg	
 
