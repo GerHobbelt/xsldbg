@@ -29,7 +29,6 @@
 #undef VERSION
 #endif
 
-#include "config.h"
 #include "xsldbg.h"
 #include "options.h"
 #include "files.h"
@@ -654,6 +653,8 @@ main(int argc, char **argv)
     while (xslDebugStatus != DEBUG_QUIT) {
       /* don't force xsldbg to show command prompt */
       showPrompt = 0;
+      cur = NULL;
+      doc = NULL;
         if (isOptionEnabled(OPTIONS_SHELL)) {	  
             xsltGenericError(xsltGenericErrorContext,
                              "\nStarting stylesheet\n\n");
@@ -749,6 +750,12 @@ main(int argc, char **argv)
 
         if (showPrompt && isOptionEnabled(OPTIONS_SHELL)) {
             xmlDocPtr tempDoc = xmlNewDoc((xmlChar *) "1.0");
+	    xmlNodePtr tempNode = xmlNewNode(NULL, "xsldbg_default_node");
+	    if (!tempDoc || !tempNode){
+	      xsldbgFree();
+	      exit(1);		  
+	    }
+	    xmlAddChild((xmlNodePtr)tempDoc, tempNode);
 
             xsltGenericError(xsltGenericErrorContext,
                              "Going straight to "
@@ -756,15 +763,15 @@ main(int argc, char **argv)
                              "work as not all needed have been loaded \n");
             if ((cur == NULL) && (doc == NULL)) {
                 /*no doc's loaded */
-                xslDebugBreak((xmlNodePtr) tempDoc, (xmlNodePtr) tempDoc,
+                xslDebugBreak(tempNode, tempNode,
                               NULL, NULL);
             } else if ((cur != NULL) && (doc == NULL)) {
                 /* stylesheet is loaded */
-                xslDebugBreak((xmlNodePtr) cur->doc, (xmlNodePtr) tempDoc,
+	      xslDebugBreak((xmlNodePtr) cur->doc, tempNode,
                               NULL, NULL);
             } else if ((cur == NULL) && (doc != NULL)) {
                 /* xml doc is loaded */
-                xslDebugBreak((xmlNodePtr) tempDoc, (xmlNodePtr) doc,
+                xslDebugBreak(tempNode, (xmlNodePtr) doc,
                               NULL, NULL);
             } else {
                 /* unexpected problem, both docs are loaded */
@@ -926,7 +933,7 @@ loadXmlTemporay(const xmlChar * path)
 
     doc = NULL;
     if (isOptionEnabled(OPTIONS_TIMING))
-        gettimeofday(&begin, NULL);
+      startTimer();
 #ifdef LIBXML_HTML_ENABLED
     if (isOptionEnabled(OPTIONS_HTML))
         doc = htmlParseFile((char *) path, NULL);
@@ -945,11 +952,7 @@ loadXmlTemporay(const xmlChar * path)
 
     if (isOptionEnabled(OPTIONS_TIMING) && (xslDebugStatus != DEBUG_QUIT)) {
         long msec;
-
-        gettimeofday(&end, NULL);
-        msec = end.tv_sec - begin.tv_sec;
-        msec *= 1000;
-        msec += (end.tv_usec - begin.tv_usec) / 1000;
+	endTimer("Parsing document %s", path, msec);
         xsltGenericError(xsltGenericErrorContext,
                          "Parsing document %s took %ld ms\n", path, msec);
     }
@@ -1038,3 +1041,4 @@ xsldbgFree()
     if (oldHandler != SIG_ERR)
         signal(SIGINT, oldHandler);
 }
+

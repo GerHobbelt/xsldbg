@@ -20,18 +20,11 @@
 #undef VERSION
 #endif
 
-#include "config.h"
 #include "xsldbg.h"
 #include "debugXSL.h"
 #include "files.h"
 #include "options.h"
 #include <stdio.h>
-
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>  
-#endif
-
-
 
 
 /* private data for search for file names*/
@@ -44,78 +37,115 @@ struct _fileSearch{
 };
 
 /* top xml document */
-xmlDocPtr top_doc;
+static xmlDocPtr top_doc;
 
 /* temporary xml document */
-xmlDocPtr temp_doc;
-
-/* top stylsheet */
-xsltStylesheetPtr top_style;
-
-/* what is the base path for top stylesheet */
-xmlChar *stylePathName = NULL;
-
-/* what is the path for current working directory*/
-xmlChar *workingDirPath = NULL;
+static xmlDocPtr temp_doc;
 
 /* used as a scratch pad for temporary results*/
-xmlChar buffer[DEBUG_BUFFER_SIZE];
+static xmlChar buffer[DEBUG_BUFFER_SIZE];
 
-FILE *terminalIn = NULL, *terminalOut = NULL;
+/* top stylsheet */
+static xsltStylesheetPtr top_style;
+
+/* what is the base path for top stylesheet */
+static xmlChar *stylePathName = NULL;
+
+/* what is the path for current working directory*/
+static xmlChar *workingDirPath = NULL;
+
+
+
+FILE *terminalIO;
+static FILE *oldStdin, *oldStdout, *oldStderr;
+char *ttyName, *termName; 
 
 /**
  * redirectToTerminal:
  * @device: terminal to redirect i/o to , will not work under win32
  */
 int 
-redirectToTerminal(xmlChar *device)
+openTerminal(xmlChar *device)
 {
   int result =0;
-#ifndef WIN32 /* fix me for WinNT!! */
-  if (terminalIn != NULL)
-    fclose(terminalIn);  
-  if (terminalOut != NULL)
-    fclose(terminalOut); 
+  FILE oldStdout = *stdout;
   
-  terminalOut = fopen(device, "w+");  
-  if (terminalOut != NULL){
-    /* make sure that stdout and stderr are mapped to our terminalOut*/
-    dup2(fileno(terminalOut), fileno(stdout));
-    dup2(fileno(terminalOut), fileno(stderr));    
-    /*    if (stdout)
-      fclose(stdout);
-    stdout =  terminalOut;
-    if (stderr)
-      fclose(stderr);
-    stderr =  terminalOut;
-    */
-  }
-  terminalIn = fopen(device, "a+"); 
-  if (terminalIn != NULL){
-    /* make sure that stdin is mapped to termimalIn /
-    dup2(fileno(terminalIn), fileno(stdin));
-    /*
-    char *c ;
-    if (stdin)
-      fclose(stdin); 
-    stdin =  terminalIn;
-    */
-  }
-  if (terminalIn && terminalOut){
-    char c = 0;
-    fprintf(stdout,"Hi there\n");
-    while (c != -1){
-      c = getc(stdin);
-      fprintf(stdout, "%c", c);
+  if (!device)
+    return;
+
+#ifdef HAVE_UNISTD /* fix me for WinNT, risc os!! */
+  if (terminalIO != NULL)
+    fclose(terminalIO);  
+
+  if ((device[0] >= '0') && (device[0] <= '9')){
+    /* look like we are supposed to close the terminal */
+    selectNormalIO();/* shouldn't be needed but just in case */    
+  }else{
+    
+    terminalIO = fopen(device, "r+");
+    if (terminalIO != NULL){
+      termName = device;
+      dup2(fileno(terminalIO), fileno(stdin));
+      dup2(fileno(terminalIO), fileno(stderr));
+      dup2(fileno(terminalIO), fileno(stdout));
+      result++;      
+    }else{
+      xsltGenericError(xsltGenericErrorContext,
+		     "Unable to open terminal %s", device);
+      termName = NULL;
     }
-  }else
-    printf("Can't open terminal %s\n" , device);  
-  result++;
-  
+  }
+    
 #else
-    printf ("Terminals are no supported by this operating system\n");
+    xsltGenericError(xsltGenericErrorContext,
+		     "Terminals are no supported by this operating system\n");
 #endif
     return result;    
+}
+
+
+/**
+ * selectTerminal:
+ * Return 1 if able to use prevously opened terminal 
+ *        0 otherwise
+*/
+int 
+selectTerminalIO(void)
+{
+  int result = 0;
+  if (termName){
+    freopen(termName, "w", stdout);
+    freopen(termName, "w", stderr);
+    freopen(termName, "r", stdin);
+    result++;
+  }
+  else
+    result++;
+
+  return result;
+}
+
+
+/** 
+ * selectNormalIO:
+ * 
+ * Returns 1 if able to select orginal stdin, stdout, stderr
+ *         0 otherwise
+*/
+int 
+selectNormalIO(void)
+{
+  int result = 0;
+  /* another way to do this ? */
+#ifdef UNISTD
+  if (ttyName){
+    freopen(ttyName, "w", stdout);
+    freopen(ttyName, "w", stderr);
+    freopen(ttyName, "r", stdin);
+  }
+#endif
+  result++;
+  return result; 
 }
 
 
@@ -242,9 +272,11 @@ changeDir(const xmlChar * path)
       result++;
     }
     if (!result)
-        printf("Unable to change to directory %s\n", path);
+        xsltGenericError(xsltGenericErrorContext,
+			 "Unable to change to directory %s\n", path);
     else
-        printf("Change to directory %s\n", path);
+        xsltGenericError(xsltGenericErrorContext,
+			 "Change to directory %s\n", path);
     return result;
 }
 
@@ -431,7 +463,14 @@ int
 filesInit(void)
 {
     int result = 0;
-
+    terminalIO = NULL;
+#ifdef HAVE_UNISTD
+    ttyName = ttyname(fileno(stdin));
+    /* save out io for when/if we send debugging to a terminal */
+    oldStdin = stdin;
+    oldStdout = stdout;
+    oldStderr = stderr;
+#endif
     top_doc = NULL;
     temp_doc = NULL;
     top_style = NULL;
@@ -449,11 +488,8 @@ void
 filesFree(void)
 {
     int result;
-  if (terminalIn != NULL)
-    fclose(terminalIn);  
-  if (terminalOut != NULL)
-    fclose(terminalOut);
-
+  if (terminalIO != NULL)
+    fclose(terminalIO);  
 
     result = freeXmlFile(FILES_SOURCEFILE_TYPE);
     if (result)

@@ -8,11 +8,18 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
 
+  <xsl:import href="test_import.xsl"/>
+  <xsl:include href="test_include_top.xsl"/>
   <xsl:strip-space elements="text()"/>
+  <xsl:decimal-format name="test" decimal-separator="."/>
   <xsl:output method="text"/> 
 
   <!-- Test xsl:apply-templates, xsl:call-template, xsl:apply-imports -->
   <xsl:template match="/">
+
+        <!-- test fallback -->
+        <xsl:call-template name="fallback_test"/>
+
         <!-- Basic xsl:apply-templates, xsl:call-template usage -->
         <!-- Test basic usage of xsl:apply-templates -->
         <xsl:apply-templates select="result/data"/>
@@ -48,6 +55,7 @@
 
         <xsl:apply-imports/> <!-- useless but test that we can step to it -->
 
+
   </xsl:template>
 
   <xsl:template match="result">
@@ -70,19 +78,40 @@
 
 
   <xsl:template name="call-template1">
-    <!-- ignore this node content -->
+    <xsl:number value="position()" format="1."/>
   </xsl:template>
 
   <xsl:template name="call-template2">
     <!-- ignore any param provided -->
-    <!-- ignore node content -->
+    <!-- test message -->
+    <xsl:message terminate="no">Message here</xsl:message>
+      <xsl:processing-instruction name="pitest">
+        pi text
+    </xsl:processing-instruction>
   </xsl:template>
 
   <xsl:template name="call-template3">
     <xsl:param name="item">
       <item/>
     </xsl:param>
-    <!-- ignore node content -->
+    <!-- test comments -->
+    <xsl:comment>A text comment.</xsl:comment>
+    <!-- test copy and copy-of -->
+    <xsl:copy>copy text</xsl:copy>
+    <xsl:copy-of select="'copy-of Text'"/>
+  </xsl:template>
+
+<xsl:template name="fallback_test">
+  <result xsl:version="6.1">
+    <xsl:foo-of select="/Fuhrpark">
+	<xsl:fallback>
+          <!-- If we didn't have a xsl element here the text node would not be
+               debuggable -->
+          <xsl:value-of select="1"/>  
+          <xsl:text>An error occoured, foo-of not known</xsl:text>
+	</xsl:fallback>
+      </xsl:foo-of>
+    </result>
   </xsl:template>
 
 </xsl:stylesheet>

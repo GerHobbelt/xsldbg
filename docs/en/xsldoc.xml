@@ -41,8 +41,9 @@ the &lt;ENTER&gt; key.
 <li>COMMAND : a valid command for the xsdbg</li>
 <li>QNAME : a valid variable/parameter name</li>
 <li>SOURCE : the stylesheet being/tobe executed</li>
-<li>DATA : the xml data being/tobe processed by the stylesheet
-</li>
+<li>DATA : the xml data being/tobe processed by the stylesheet</li>
+<li>DEVICE_PATH : is a valid terminal on the operating system</li>
+<li>TTY_LEVEL : is a valid level of input/output to use</li>
 </list>
 </para>
 
@@ -646,6 +647,38 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 <li>
 <text>shell &lt;TEXT&gt;</text>
 <comment>(&lt;TEXT&gt; is the text to be passed to operating system for execution)</comment>
+</li>
+</usage>
+</cmd>
+
+<cmd name="tty" title="Tty">
+<summary>Send input/output to a terminal or  reset to default input/output.</summary>
+<usage>
+<li>
+<text>tty &lt;DEVICE_PATH&gt;</text>
+<comment>(Where  &lt;DEVICE_PATH&gt; is a valid terminal on the operating system)</comment>
+</li>
+<li>
+<text>tty &lt;TTY_LEVEL&gt;</text>
+<comment>(Where &lt;TTY_LEVEL&gt; is a valid level of input/output to use)</comment>
+<list>
+<li>
+<text>Where level is </text>
+</li>
+<li>
+<text>0 = Default input output</text>
+</li>
+<li>
+<text>1 = Terminal output only</text>
+<comment>(Not emplemented yet.)</comment>
+</li>
+<li>
+<text>2 = Undefined </text>
+<comment>(Not emplemented yet.)</comment>
+</li>
+<li>All other integer values are assumed to mean level 0
+</li>
+</list>
 </li>
 </usage>
 </cmd>

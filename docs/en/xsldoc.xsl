@@ -16,13 +16,37 @@
   <!-- We want help to point to a invalid command if stylesheet
        user has not provided a value for 'help' param-->
   <xsl:param name="help" select="'_#_'"/>  
+  <xsl:param name="alldoc" select="0"/>
+  <xsl:variable name="help_cmd" select="$command_nodes[@name=$help]"/> 
 
 
   <xsl:template match="/">
-    <xsl:variable name="help_cmd" select="$command_nodes[@name=$help]"/> 
          xsldbg version <xsl:value-of select="$xsldbg_version"/>
          ====================
+   
+    <xsl:choose>
+      <xsl:when test="$alldoc=0">
+        <xsl:call-template name="helpOnCommand"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="$overview_node"/>
+        <xsl:for-each select="/xsldoc/cmd">
+          <xsl:sort select="@name"/>
+          <xsl:text>- - - - - - - - - - - - - - - - - - - - 
 
+</xsl:text>
+          <xsl:apply-templates select="."/>
+        </xsl:for-each>
+      </xsl:otherwise>
+    </xsl:choose>
+<xsl:text>
+</xsl:text>
+  Help document version <xsl:value-of select="$doc_version"/><xsl:text>
+</xsl:text>
+  </xsl:template>
+  
+
+  <xsl:template name="helpOnCommand">
     <xsl:choose>
     <xsl:when test="count($help_cmd) > 0" >
       <xsl:apply-templates select="$help_cmd" />
@@ -37,12 +61,9 @@
       <xsl:apply-templates select="$overview_node"/>
     </xsl:otherwise>
   </xsl:choose>
-<xsl:text>
-</xsl:text>
-  Help document version <xsl:value-of select="$doc_version"/><xsl:text>
-</xsl:text>
   </xsl:template>
-  
+
+
   <xsl:template match="header">
 <xsl:value-of select="."/>
 <xsl:text>

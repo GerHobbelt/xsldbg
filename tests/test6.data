@@ -33,16 +33,10 @@
 <breakpoint line="14"/> 
 </row>
 <row>
-<breakpoint line="14"/> <!-- libxslt handling test node -->
-</row>
-<row>
 <breakpoint line="19"/>
 </row>
 <row>
 <breakpoint line="19"/>
-</row>
-<row>
-<breakpoint line="19"/> <!-- not sure why this is but it seems ok -->
 </row>
 <row>
 <breakpoint line="20"/>

@@ -20,7 +20,6 @@
 #undef VERSION
 #endif
 
-#include "config.h"
 #include "xsldbg.h"
 #include "debugXSL.h"
 #include "options.h"

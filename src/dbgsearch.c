@@ -8,8 +8,7 @@
  ***************************************************************************/
 
 
-#include "config.h" 
-#include "xsldbg.h" /* needed for xmlStrCpy*/
+#include "xsldbg.h" 
 #include "debugXSL.h"
 #include "breakpointInternals.h"
 #include "options.h"

@@ -7,8 +7,7 @@
     email                : k_isdale@tpg.com.au
  ***************************************************************************/
 
-#include "config.h"
-
+#include "xsldbg.h"
 #include "breakpointInternals.h"
 
 /*
@@ -87,11 +86,10 @@ void
 xslHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
                   xsltTemplatePtr templ, xsltTransformContextPtr ctxt)
 {
-
   setActiveBreakPoint(NULL);
-  if (!cur || !node){
+  if (!cur && !node){
     xsltGenericError(xsltGenericErrorContext,
-		     "Soure or doc NULL can't enter debugger\n");
+		     "Soure and doc are NULL can't enter debugger\n");
   }else{
     switch (xslDebugStatus) {
 
@@ -118,20 +116,24 @@ xslHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
 
     case DEBUG_CONT:
       {
-	xslBreakPointPtr breakPoint =  
-	  getBreakPoint(cur->doc->URL, xmlGetLineNo(cur));
-
-	if (breakPoint) {
-	  if (breakPoint->enabled) {
+	xslBreakPointPtr breakPoint = NULL;
+	if (cur){  
+	  breakPoint = getBreakPoint(cur->doc->URL, xmlGetLineNo(cur));
+	  
+	  if (breakPoint) {
+	    if (breakPoint->enabled) {
 	    setActiveBreakPoint(breakPoint);
 	    xslDebugBreak(cur, node, templ, ctxt);
+	    return;
+	    }
 	  }
-	} else {
+	}
+	if (node){
 	  breakPoint =  
 	    getBreakPoint(node->doc->URL, xmlGetLineNo(node));
 	  if (breakPoint){
 	    if (breakPoint->enabled){
-	     setActiveBreakPoint(breakPoint);
+	      setActiveBreakPoint(breakPoint);
 	      xslDebugBreak(cur, node, templ, ctxt);
 	    }
 	  }

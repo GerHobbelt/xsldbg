@@ -28,9 +28,6 @@
 <row>
 <breakpoint line="19"/>
 </row>
-<row>
-<breakpoint line="19"/> <!-- libxslt handling "item" -->
-</row>
 
 <!-- Result for test -->
 <!-- Test basic usage of xsl:choose -->   
@@ -43,9 +40,7 @@
 <row>
 <breakpoint line="25"/>
 </row>
-<row>
-<breakpoint line="25"/> <!-- libxslt handling "item" -->
-</row>
+
 
 <!-- Result for test -->
 <!-- Test xsl:otherwise child in xsl:choose --> 
@@ -61,9 +56,6 @@
 <row>
 <breakpoint line="36"/>
 </row>
-<row>
-<breakpoint line="36"/> <!-- libxslt handling "item" -->
-</row>
 
 <!-- Result for test -->
 <!-- Test for-each -->
@@ -75,9 +67,6 @@
 </row>
 <row>
 <breakpoint line="43"/>
-</row>
-<row>
-<breakpoint line="43"/><!-- libxslt handling "item" -->
 </row>
 <!-- Ignore any more occurances of 
        <row>

@@ -1,3 +1,15 @@
+* Keith Isdale 29 Nov 2001
+* Change help so that is can either display static text file or respond to 
+*   queries, added docs/en/xsldoc.txt
+*   Removed #include "config.h" from*.c files and replace with 
+*	#include "xsldbg.h", and change xsldbg.h to have
+*	    #include "config" or equivalent. This is to suit risc os
+*       config_risc.h for risc os as supplied by Justin Fletcher
+	
+	
+* Keith Isdale 28 Nov 2001
+* Applied patches by Justin Fletcher to suit risc os	
+	
 * Keith Isdale 27 Nov 2001
 * Converted all functions to work under libxslt-1.0.7	
 * Added OPTIONS_DOCS_PATH to options.[ch] and set help.c and dbgsearch.c 

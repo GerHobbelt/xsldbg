@@ -16,10 +16,13 @@
 <test>trace</test>
 <result>
 <row>
-<breakpoint line="15"/> <!-- xsldbg restarting with tracing on -->
+<breakpoint line="14"/> <!-- xsldbg restarting with tracing on -->
 </row>
 <row>
-<breakpoint line="15"/> 
+<breakpoint line="14"/> 
+</row>
+<row>
+<breakpoint line="14"/> 
 </row>
 
 <!-- simple value selection -->
@@ -27,30 +30,16 @@
 <breakpoint line="16"/>
 </row>
 
-<!-- simple variable assignment -->
-<row>
-<breakpoint line="18"/>
-</row>
 
 <!-- variable assignment -->
 <row>
-<breakpoint line="20"/>
+<breakpoint line="17"/>
 </row>
 <row>
-<breakpoint line="21"/>
+<breakpoint line="18"/>
 </row>
-<row>
-<breakpoint line="21"/>
-</row>
-
-<!-- xsl:number -->
-<row>
-<breakpoint line="24"/>
-</row>
-
 </result>
 </cmd>
-
 
 <cmd>
 <test>quit</test>

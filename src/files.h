@@ -34,8 +34,25 @@ enum File_type {
  * redirectToTerminal:
  * @device: terminal to redirect i/o to , will not work under win32
  */
-int redirectToTerminal(xmlChar *device);
+int openTerminal(xmlChar *device);
 
+
+/**
+ * selectTerminalIO:
+ * Return 1 if able to use prevously opened terminal 
+ *        0 otherwise
+*/
+int selectTerminalIO(void);
+
+
+/** 
+ * selectNormalIO:
+ * 
+ * Returns 1 if able to select orginal stdin, stdout, stderr
+ *         0 otherwise
+*/
+int 
+selectNormalIO(void);
 
 /**
  * guessStyleSheetName:

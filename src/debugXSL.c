@@ -33,7 +33,6 @@
 #ifdef VERSION
 #undef VERSION
 #endif
-#include "config.h"
 
 #include "xsldbg.h"
 #include "files.h"
@@ -44,6 +43,7 @@
 #include <stdlib.h>
 #include <libxslt/transform.h>  /* needed by source command */
 #include <libxslt/xsltInternals.h>
+#include <stdio.h>
 
 
 
@@ -53,6 +53,8 @@ xsltTemplatePtr rootCopy;
 
 /* how may items have been printed */
 int printCount;
+
+extern FILE *terminalIO;
 
 /* valid commands of xslDbgShell */
 const char *commandNames[] = {
@@ -252,8 +254,9 @@ enum {                          /* id's for commands of xslDbgShell */
     DEBUG_WALK_CMD,
 
     /* searching */
-    DEBUG_SEARCH_CMD,
-    /*NULL */
+    DEBUG_SEARCH_CMD
+
+    /* NULL */
 };
 
 
@@ -855,7 +858,7 @@ void
     walkLocals((xmlHashScanner) addLocalNode, data, style);
     xsltGenericError(xsltGenericErrorContext,
 		     "  Formatting output \n");    
-    xslSearchSave("search.data");
+    xslSearchSave((xmlChar*)"search.data");
 }
 
 /*
@@ -871,7 +874,37 @@ void
 xslDebugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
               xsltTransformContextPtr ctxt)
 {
+    xmlDocPtr tempDoc = NULL; 
+    xmlNodePtr tempNode = NULL;
     rootCopy = root;
+
+    /* select normal input output streams */
+    selectNormalIO();
+
+    if (templ == NULL){
+      tempDoc = xmlNewDoc("1.0");
+      if (!tempDoc)
+	return;
+      tempNode = xmlNewNode(NULL,"xsldbg_default_node");
+      if (!tempNode){
+	xmlFreeDoc(tempDoc);
+	return;
+      } 
+      xmlAddChild((xmlNodePtr)tempDoc, tempNode);     
+      templ = tempNode;
+    }
+    if (node == NULL){
+      tempDoc = xmlNewDoc("1.0");
+      if (!tempDoc)
+	return;
+      tempNode = xmlNewNode(NULL,"xsldbg_default_node");
+      if (!tempNode){
+	xmlFreeDoc(tempDoc);
+	return;
+      }   
+      xmlAddChild((xmlNodePtr)tempDoc, tempNode);
+      node =  tempNode;
+    }
     if (root) {
         if (root->match)
             xsltGenericError(xsltGenericErrorContext,
@@ -887,14 +920,13 @@ xslDebugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
         if (activeBreakPoint()) {
             xsltGenericError(xsltGenericErrorContext,
                              "Breakpoint %d ", activeBreakPoint()->id);
-        } else {
-            xsltGenericError(xsltGenericErrorContext, "Breakpoint ");
         }
     }
 
-    xslDbgShell(templ, node, (xmlChar *) "index.xsl",
-                (xmlShellReadlineFunc) xslDbgShellReadline, stdout, ctxt);
-
+      xslDbgShell(templ, node, (xmlChar *) "index.xsl",
+		  (xmlShellReadlineFunc) xslDbgShellReadline, stdout, ctxt);
+    if (tempDoc)
+      xmlFreeDoc(tempDoc);
 }
 
 
@@ -975,17 +1007,17 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             xslBreakPointPtr breakPtr = activeBreakPoint();
 
             xsltGenericError(xsltGenericErrorContext,
-                             "in file %s : line %ld \n", breakPtr->url,
+                             "Breakpoint in file %s : line %ld \n", breakPtr->url,
                              breakPtr->lineNo);
         } else {
             if (xmlGetLineNo(ctxt->node) != -1)
                 xsltGenericError(xsltGenericErrorContext,
-                                 "at file %s : line %ld \n",
+                                 "Breakpoint at file %s : line %ld \n",
                                  ctxt->node->doc->URL,
                                  xmlGetLineNo(ctxt->node));
             else
                 xsltGenericError(xsltGenericErrorContext,
-                                 "@ text node in file %s\n",
+                                 "Breakpoint @ text node in file %s\n",
                                  ctxt->node->doc->URL);
         }
     }
@@ -1030,7 +1062,6 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
         /*
          * Get a new command line
          */
-	/*	cmdline =  xslDbgShellReadline(prompt);*/
 	cmdline = (xmlChar *) ctxt->input((char *) prompt);
         if (cmdline == NULL)
             break;
@@ -1190,24 +1221,26 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
                 /* --- Break point related commands --- */
             case DEBUG_BREAK_CMD:
-                if (styleCtxt) {
-                    if (xmlStrLen(arg))
-                        xslDbgShellBreak(arg, styleCtxt->style);
-                    else {
-                        /* select current node to break at */
-                        xmlChar buff[100];
+	      if (xmlStrLen(arg)){
+		if (styleCtxt)
+		  xslDbgShellBreak(arg, styleCtxt->style);
+		else
+		  xslDbgShellBreak(arg, NULL);
+	      }else {
+		/* select current node to break at */
+		xmlChar buff[100];
 
-                        if (ctxt->node->doc && ctxt->node->doc->URL)
-                            snprintf((char *) buff, 99, "-l %s %ld",
-                                     ctxt->node->doc->URL,
-                                     xmlGetLineNo(ctxt->node));
-                        xslDbgShellBreak(buff, styleCtxt->style);
-                    }
-                } else {
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "Files not loaded try using run command first\n");
-                }
-                break;
+		if (ctxt->node->doc && ctxt->node->doc->URL)
+		  snprintf((char *) buff, 99, "-l %s %ld",
+			   ctxt->node->doc->URL,
+			   xmlGetLineNo(ctxt->node));
+		if (styleCtxt)
+		  xslDbgShellBreak(buff, styleCtxt->style);
+		else
+		  xslDbgShellBreak(buff, NULL);
+	      }
+		    
+	      break;
 
             case DEBUG_SHOWBREAK_CMD:
                 xsltGenericError(xsltGenericErrorContext, "\n");
@@ -1368,6 +1401,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     /* load new stylesheet file, actual loading happens later */
                      xmlChar *buff = dir;    /* use dir command temp buffer */
 
+#ifndef __riscos /* RISC OS has no concept of 'home' directory */
                         /* replace ~ with home path */
                         if ((arg[0] == '~') && getenv("HOME")) {
                             strcpy(buff, getenv("HOME"));
@@ -1381,7 +1415,9 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                                                  "File name too large\n");
                                 break;
                             }
-                        } else {
+                        } else 
+#endif
+			  {
                             setStringOption(OPTIONS_SOURCE_FILE_NAME, arg);
                         }
                         xsltGenericError(xsltGenericErrorContext,
@@ -1394,7 +1430,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 if (xmlStrLen(arg) == 0) {
                     if (ctxt->doc == source->doc)
                         lastSourceNode = ctxt->node;
-                    ctxt->doc = doc->doc;
+		    ctxt->doc = doc->doc;
                     ctxt->node = lastDocNode;
                     ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
                     showSource = 0;
@@ -1408,7 +1444,8 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     /* load new xml file actual loading hapens later */
                         xmlChar *buff = dir;    /* use dir command temp buffer */
 
-                        /* replace ~ with home path */
+#ifndef __riscos /* RISC OS has no concept of 'home' directory */                        
+			/* replace ~ with home path */
                         if ((arg[0] == '~') && getenv("HOME")) {
                             xmlStrCpy(buff, getenv("HOME"));
                             if (xmlStrLen(buff) + xmlStrLen(arg) <
@@ -1421,7 +1458,9 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                                                  "File name too large\n");
                                 break;
                             }
-                        } else {
+                        } else 
+#endif
+			  {
                             setStringOption(OPTIONS_DATA_FILE_NAME, arg);
                         }
 
@@ -1433,7 +1472,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
             case DEBUG_CD_CMD:
                 /* use dir as a working buffer */
-                strncpy(dir, arg, 2);
+                xmlStrnCpy(dir, arg, 2);
                 dir[2] = '\0';
                 shortCutId = lookupName(dir, (xmlChar **) cdShortCuts);
                 if (shortCutId >= 0) {
@@ -1525,7 +1564,10 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 break;
 
 	case	DEBUG_TTY_CMD:
-	  redirectToTerminal(arg);
+	  if (openTerminal(arg))
+	     xsltGenericError(xsltGenericErrorContext,
+			      "Opening terminal %s\n", arg);
+	    selectTerminalIO();	  
 	  break;
 	  
 
@@ -1589,6 +1631,8 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
         xmlFree(cmdline);
     setActiveBreakPoint(0);
 
+    /* send everything to the terminal if opened */
+    selectTerminalIO();
 }
 
 

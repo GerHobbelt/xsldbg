@@ -11,18 +11,12 @@
   <!-- Test xsl:value-of , xsl:variable, xsl:number 
        for test of xsl:param, xsl:with-param see "test2"
    -->
+  <xsl:variable name="fred" select="'man'"/>
 
   <xsl:template match="/">
-    <xsl:value-of select="1"/>
-    
-    <xsl:variable name="fred" select="man"/>
-
     <xsl:variable name="wilma">
       <woman/>
     </xsl:variable>
-    
-    <xsl:number value="1" format="1."/>
-
   </xsl:template>
 
 </xsl:stylesheet>

@@ -14,50 +14,64 @@
 <!-- Result of test -->
 <!-- Basic xsl:apply-templates, xsl:call-template usage -->
 <row>
-<breakpoint line="15"/> <!-- xsldbg restarting with tracing on -->
+<breakpoint line="18"/> <!-- xsldbg restarting with tracing on -->
 </row>
 
-<row>
-<breakpoint line="15"/>
-</row>
-<!-- Test basic usage of xsl:apply-templates -->
 <row>
 <breakpoint line="18"/>
 </row>
+<!-- Test basic usage of xsl:fallback -->
 <row>
-<breakpoint line="59"/>
+<breakpoint line="21"/>
 </row>
+<row>
+<breakpoint line="104"/>
+</row>
+<row>
+<breakpoint line="105"/>
+</row>
+<row>
+<breakpoint line="106"/> <!-- can't debug xsl:fallback parent node  --> 
+</row>
+<row>
+<breakpoint line="110"/>
+</row>
+<row>
+<breakpoint line="110"/>  <!-- text node being proccesed-->
+</row>
+
+<!-- Basic xsl:apply-templates       -->
+<row>
+<breakpoint line="25"/>
+</row>
+<row>
+<breakpoint line="67"/> <!-- name="fred" -->
+</row>
+<row>
+<breakpoint line="67"/> <!-- name="barney" -->
+</row>
+<row>
+<breakpoint line="67"/> <!-- name="wilma" -->
+</row>
+
 
 <!-- Test basic usage of xsl:call-template -->
 <row>
-<breakpoint line="20"/>
+<breakpoint line="27"/>
 </row>
 <row>
-<breakpoint line="72"/>
+<breakpoint line="80"/>
+</row>
+<row>
+<breakpoint line="81"/>
 </row>
 
 <!-- Result of test -->
 <!-- Test xsl:apply-templates with parameter value. 
 Test the ability to step into a xsl:with-param child -->
 <row>
-<breakpoint line="24"/>
+<breakpoint line="31"/>
 </row>
-<row>
-<breakpoint line="25"/>
-</row>
-<row>
-<breakpoint line="26"/> <!-- libxslt processing the "item" node -->
-</row>
-<row>
-<breakpoint line="26"/>
-</row>
-<row>
-<breakpoint line="59"/>
-</row>
-
-<!-- Results of test  -->
-<!-- Test xsl:call-template with parameter value
-Test the ability to step into a xsl:with-param child -->
 <row>
 <breakpoint line="32"/>
 </row>
@@ -65,66 +79,110 @@ Test the ability to step into a xsl:with-param child -->
 <breakpoint line="33"/>
 </row>
 <row>
-<breakpoint line="34"/> <!-- libxslt processing the "item" node -->
+<breakpoint line="67"/> <!-- name="fred" -->
 </row>
 <row>
-<breakpoint line="34"/>
+<breakpoint line="67"/> <!-- name="barney" -->
 </row>
 <row>
-<breakpoint line="76"/>
+<breakpoint line="67"/> <!-- name="wilma" -->
+</row>
+
+
+<!-- Results of test  -->
+<!-- Test xsl:call-template with parameter value
+Test the ability to step into a xsl:with-param child -->
+<row>
+<breakpoint line="39"/>
+</row>
+<row>
+<breakpoint line="40"/>
+</row>
+<row>
+<breakpoint line="41"/>
+</row>
+<row>
+<breakpoint line="84"/>
+</row>
+<row>
+<breakpoint line="87"/>
+</row>
+<row>
+<breakpoint line="87"/> <!-- test node processing -->
+</row>
+<row>
+<breakpoint line="88"/>
+</row>
+<row>
+<breakpoint line="88"/> <!-- test node processing -->
 </row>
 
 <!-- Results for test -->
 <!-- Test ability to step into xsl:param from xsl:apply-templates -->
 <row>
-<breakpoint line="39"/>
+<breakpoint line="46"/>
 </row>
 <row>
-<breakpoint line="64"/>
+<breakpoint line="72"/>
 </row>
 <row>
-<breakpoint line="65"/>
+<breakpoint line="73"/>
 </row>
 <row>
-<breakpoint line="66"/><!--  the step into with-param -->
-</row>
-<row>
-<breakpoint line="66"/>
+<breakpoint line="74"/>
 </row>
 
 <!-- Results for test -->
 <!-- Test ability to step into xsl:param from xsl:call-template -->
 <row>
-<breakpoint line="42"/>
+<breakpoint line="49"/>
 </row>
 <row>
-<breakpoint line="81"/>
+<breakpoint line="93"/>
 </row>
 <row>
-<breakpoint line="82"/>
+<breakpoint line="94"/>
 </row>
 <row>
-<breakpoint line="83"/>
+<breakpoint line="95"/>
 </row>
 <row>
-<breakpoint line="83"/> <!--  the step into with-param -->
+<breakpoint line="98"/>
+</row>
+<row>
+<breakpoint line="98"/>
+</row>
+<row>
+<breakpoint line="100"/>
+</row>
+<row>
+<breakpoint line="100"/>
+</row>
+<row>
+<breakpoint line="101"/>
 </row>
 
 <!-- Result of test -->
 <!-- Test ability to step into xsl:sort from xsl:apply-templates -->
 <row>
-<breakpoint line="45"/>
+<breakpoint line="52"/>
 </row>
 <row>
-<breakpoint line="46"/>
+<breakpoint line="53"/>
 </row>
 <row>
-<breakpoint line="59"/>
+<breakpoint line="67"/> <!-- name="fred" -->
+</row>
+<row>
+<breakpoint line="67"/> <!-- name="barney" -->
+</row>
+<row>
+<breakpoint line="67"/> <!-- name="wilma" -->
 </row>
 
 <!-- Test xsl:apply-templates -->
 <row>
-<breakpoint line="49"/>
+<breakpoint line="56"/>
 </row>
 <!-- End of tests -->
 </result>

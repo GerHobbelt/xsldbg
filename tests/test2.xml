@@ -7,8 +7,10 @@
 -->
 
 <result>
-  <data/>
-  <extra/>
+  <data name="fred"/>
+  <data name="barney"/>
+  <data name="pebbles"/>
+  <extra name="wilma"/>
 </result>
 
 

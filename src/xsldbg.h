@@ -71,12 +71,20 @@
 #include <libexslt/exslt.h>
 #include <libxslt/xsltutils.h>
 #include <breakpoint/breakpoint.h>
-#define xmlStrLen(text) strlen((char*)text)
-#define xmlStrCat(a, b) strcat((char*)a, (char*)b)
-#define xmlStrCmp(a, b) strcmp((char*)a, (char*)b)
-#define xmlStrCpy(a, b) strcpy((char*)a, (char*)b)
-#define xmlStrChr(a, b) strchr((char*)a, b)
-#define xmlStrrChr(a, b) strrchr((char*)a, b)
+
+#ifndef __riscos
+  #include "config.h"
+#else
+  #include "config_risc.h"
+#endif
+
+#define xmlStrLen(text) strlen((char*)(text))
+#define xmlStrCat(a, b) strcat((char*)(a), (char*)(b))
+#define xmlStrCmp(a, b) strcmp((char*)(a), (char*)(b))
+#define xmlStrCpy(a, b) strcpy((char*)(a), (char*)(b))
+#define xmlStrnCpy(a, b, c) strncpy((char*)(a),(char*)(b), c)
+#define xmlStrChr(a, b) strchr((char*)(a), b)
+#define xmlStrrChr(a, b) strrchr((char*)(a), b)
 
     /* Handle the differnces in path and quote character between
      * win32 and Unix/Linux systems */

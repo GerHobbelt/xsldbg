@@ -8,7 +8,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
 
-  <xsl:template match="fred">
+  <xsl:template match="head">
         <xsl:apply-templates/>
   </xsl:template>
 

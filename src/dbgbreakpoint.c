@@ -7,8 +7,7 @@
     email                : k_isdale@tpg.com.au
  ***************************************************************************/
 
-#include "config.h"
-
+#include "xsldbg.h"
 #include "breakpointInternals.h"
 
 

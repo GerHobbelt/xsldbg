@@ -7,8 +7,7 @@
     email                : k_isdale@tpg.com.au
  ***************************************************************************/
 
-#include "config.h"
-
+#include "xsldbg.h"
 #include "breakpointInternals.h"
 
 
@@ -132,8 +131,8 @@ xslAddCallInfo (const xmlChar * templateName, const xmlChar * url)
 
   while (cur->next)
     {
-      if (cur->templateName && !strcmp (cur->templateName, templateName)
-	  && !strcmp (cur->url, url))
+      if (cur->templateName && !xmlStrCmp (cur->templateName, templateName)
+	  && !xmlStrCmp(cur->url, url))
 	{
 	  result = cur;
 	  break;

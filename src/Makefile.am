@@ -4,8 +4,10 @@ INCLUDES= $(all_includes) -DDOCS_PATH=\"$(HTML_DIR)/xsldbg/\" \
  -DVERSION=\"@VERSION@\" $(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS)
 
 EXTRA_DIST = \
-	help.c help.h 		\
-	debugXSL.c debugXSL.h 	\
+	help.c 			\
+	help.h 			\
+	debugXSL.c 		\
+	debugXSL.h 		\
 	dbgmain.c		\
 	dbgarraylist.c		\
 	arraylist.h		\
@@ -30,7 +32,8 @@ EXTRA_DIST = \
 bin_PROGRAMS = xsldbg
 xsldbg_SOURCES = \
 	xsldbg.c 	\
-	files.c	files.h	\
+	files.c		\
+	files.h		\
 	options.c 	\
 	options.h	\
 	dbgmain.c	\
@@ -49,6 +52,7 @@ xsldbg_SOURCES = \
 	trace_cmds.c	\
 	search_cmds.c	\
 	debugXSL.c 	\
+	debugXSL.h	\
 	help.c	
 xsldbg_LDADD   = 
 

@@ -19,12 +19,12 @@
 #undef VERSION
 #endif
 
-#include "config.h"
 #include "xsldbg.h"
 #include "debugXSL.h"
+#include "files.h"
 
 /* how may items have been printed */
-int printCount;
+static int printCount;
 
 
 /* -----------------------------------------
@@ -92,6 +92,9 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style)
     long lineNo;
     static const xmlChar *errorPrompt =
         (xmlChar *) "Failed to add break point\n";
+    if (style == NULL){
+      style = getStylesheet();
+    }
     if (!arg || !style) {
         xsltGenericError(xsltGenericErrorContext,
                          "Debuger has no files loaded, try reloading files\n");
@@ -137,7 +140,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style)
                                  "%s\tMissing arguments to break command\n",
                                  errorPrompt);
         }
-    } else if (strcmp(arg, "*") != 0) {
+    } else if (xmlStrCmp(arg, "*") != 0) {
         xmlNodePtr templNode = xslFindTemplateNode(style, arg);
 
         if (templNode && templNode->doc) {
@@ -249,13 +252,13 @@ xslDbgShellDelete(xmlChar * arg)
                                  "\n%s\tMissing arguments to delete command\n",
                                  errorPrompt);
         }
-    } else if (!strcmp("*", arg)) {
+    } else if (!xmlStrCmp("*", arg)) {
         result = 1;
         /*remove all from breakpoints */
         xslEmptyBreakPoint();
 
     } else if (sscanf((char *) arg, "%d", &breakPointId)) {
-        breakPoint = xslFindBreakPointById(breakPointId);
+        breakPoint = findBreakPointById(breakPointId);
         if (breakPoint) {
             result = deleteBreakPoint(breakPoint);
             if (!result) {
@@ -269,7 +272,7 @@ xslDbgShellDelete(xmlChar * arg)
                              breakPointId);
         }
     } else {
-        breakPoint = xslFindBreakPointByName(arg);
+        breakPoint = findBreakPointByName(arg);
         if (breakPoint) {
             result = deleteBreakPoint(breakPoint);
             if (!result) {
@@ -347,14 +350,14 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
                                  "\n%s\tMissing arguments to enable command\n",
                                  errorPrompt);
         }
-    } else if (!strcmp("*", arg)) {
+    } else if (!xmlStrCmp("*", arg)) {
         result = 1;
         /*enable/disable all from breakpoints */
         walkBreakPoints((xmlHashScanner) xslDbgEnableBreakPoint,
                            &enableType);
 
     } else if (sscanf((char *) arg, "%d", &breakPointId)) {
-        breakPoint = xslFindBreakPointById(breakPointId);
+        breakPoint = findBreakPointById(breakPointId);
         if (breakPoint) {
             result = enableBreakPoint(breakPoint, enableType);
             if (!result) {
@@ -368,7 +371,7 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
                              breakPointId);
         }
     } else {
-        breakPoint = xslFindBreakPointByName(arg);
+        breakPoint = findBreakPointByName(arg);
         if (breakPoint) {
             result = enableBreakPoint(breakPoint, enableType);
         } else
