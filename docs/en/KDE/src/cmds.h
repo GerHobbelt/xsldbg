@@ -22,8 +22,9 @@
 
 /* See the top of debugXSL.c for a list of command names and thier shortcuts */
 
+
 /* Keep kdoc happy*/
- enum CommandsEnum {                  /* id's for commands of xslDbgShell */
+enum CommandsEnum {             /* id's for commands of xslDbgShell */
     DEBUG_HELP_CMD = 100,
     DEBUG_BYE_CMD,
     DEBUG_EXIT_CMD,
@@ -32,6 +33,7 @@
     DEBUG_STEP_CMD,
     DEBUG_STEPUP_CMD,
     DEBUG_STEPDOWN_CMD,
+    DEBUG_NEXT_CMD,
     DEBUG_CONT_CMD,
     DEBUG_RUN_CMD,
 
@@ -90,6 +92,9 @@
     /* extra options/commands */
     DEBUG_TRACE_CMD,
     DEBUG_WALK_CMD,
+    DEBUG_ADDWATCH_CMD,
+    DEBUG_DELWATCH_CMD,
+    DEBUG_SHOWWATCH_CMD,
 
     /* searching */
     DEBUG_SEARCH_CMD,
@@ -97,7 +102,7 @@
     /* variable change */
     DEBUG_SET_CMD
         /* NULL */
- };
+};
 
 
 

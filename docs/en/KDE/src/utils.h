@@ -114,8 +114,26 @@
 */
 
 
-int lookupName(xmlChar * name, xmlChar ** matchList);
+    int lookupName(xmlChar * name, xmlChar ** matchList);
 
+
+
+
+/**
+ * Join nameURI to name
+ *
+ * @returns a copy of "nameURI:name"
+
+ * fullQName:
+ * @param nameURI : QName part of name
+ * @param name : Local part of name 
+ *
+ *
+ */
+
+
+
+  xmlChar * fullQName(const xmlChar* nameURI, const xmlChar * name);
 
 
 

@@ -1,7 +1,7 @@
 default: all
 
 all:
-	rm -f aclocal.m4 config.guess config.sub ltmain.sh
+	rm -f aclocal.m4 config.guess config.sub ltmain.sh depcomp install-sh mkinstalldirs ltconfig missing  
 	libtoolize --automake
 	aclocal
 	autoheader

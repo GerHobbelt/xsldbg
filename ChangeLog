@@ -1,4 +1,22 @@
 Keith Isdale 31 July 2002 <k_isdale@tpg.com.au>
+	Version 3.0.8
+	Fixed bugs found by Robert JACOLIN, in
+	    xsldbg.h check for either WITH_XSLT_DEBUGGER or WITH_DEBUGGER
+	    documentation generation for KDE and GNOME2 try to install 
+		the docbook files if possible so that only need to
+	     to use the configure flags 
+		--enable-kde-docs=yes
+	     or 
+		--enable-gnome-docs=yes
+	     if you care about html versions of this style of documenation
+     
+	Bug watch!! if using autoconf version 2.5.X you may need to supply the 
+	  aditional argument of 
+	    --target=NONE 
+	  so that it will configure properly
+	
+	
+Keith Isdale 31 July 2002 <k_isdale@tpg.com.au>
 	Version 3.0.7
 	Added commands "addwatch", "showwatch" and "delwatch"
 		to support watching of expressions

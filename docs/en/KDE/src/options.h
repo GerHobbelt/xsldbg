@@ -48,6 +48,17 @@
 
 
 
+
+    /* keep kdoc happy */
+    enum OptionsConfigState {
+        OPTIONS_CONFIG_READVALUE = -1,  /* Read configuration flag */
+        OPTIONS_CONFIG_READING = 1,     /* Configuration file is being read */
+        OPTIONS_CONFIG_WRITING, /* Configuration file is being written */
+        OPTIONS_CONFIG_IDLE     /* We are neither reading or writing */
+    };
+
+
+
     /* keep kdoc happy */
     enum OptionsTypeEnum {
         OPTIONS_XINCLUDE = 500, /* Use xinclude during xml parsing */
@@ -67,14 +78,17 @@
                                  * store it in OPTIONS_CATALOG_NAMES */
         OPTIONS_PREFER_HTML,    /* Prefer html output for search results */
         OPTIONS_AUTOENCODE,     /* try to use the encoding from the stylesheet */
-	OPTIONS_UTF8_INPUT,     /* All input from user is in UTF-8.This normaly 
-				   used when xsldbg is running as a thread*/
+        OPTIONS_UTF8_INPUT,     /* All input from user is in UTF-8.This normaly 
+                                 * used when xsldbg is running as a thread */
+	OPTIONS_STDOUT,        /* Print all error messages to  stdout, 
+				 * normally error messages go to stderr */
         OPTIONS_VERBOSE,        /* Be verbose with messages */
         OPTIONS_OUTPUT_FILE_NAME,       /* what is the output file name */
         OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */
         OPTIONS_DOCS_PATH,      /* path of xsldbg's documentation */
         OPTIONS_CATALOG_NAMES,  /* the names of the catalogs to use when catalogs option is active */
         OPTIONS_ENCODING,       /* What encoding to use for standard output */
+        OPTIONS_SEARCH_RESULTS_PATH,    /* Where do we store the results of searching */
         OPTIONS_DATA_FILE_NAME  /* xml data file to use */
     };
 
@@ -127,7 +141,7 @@
     struct _parameterItem {
         xmlChar *name;          /* libxslt parameter name */
         xmlChar *value;         /* libxslt parameter value */
-        int intValue;             /* reserved */
+        int intValue;           /* reserved */
     };
 
 
@@ -174,7 +188,7 @@
    */
 
 
-  int optionsGetOptionID(xmlChar* optionName);
+    int optionsGetOptionID(xmlChar * optionName);
 
 
 
@@ -192,7 +206,7 @@
    */
 
 
-  const xmlChar *optionsGetOptionName(OptionTypeEnum ID);
+    const xmlChar *optionsGetOptionName(OptionTypeEnum ID);
 
 
 
@@ -242,7 +256,8 @@
  */
 
 
-    int optionsSetStringOption(OptionTypeEnum optionType, const xmlChar * value);
+    int optionsSetStringOption(OptionTypeEnum optionType,
+                               const xmlChar * value);
 
 
 
@@ -310,7 +325,7 @@
 
 
     parameterItemPtr optionsParamItemNew(const xmlChar * name,
-                                  const xmlChar * value);
+                                         const xmlChar * value);
 
 
 
@@ -369,7 +384,7 @@
    */
 
 
-  xmlNodePtr optionsNode(OptionTypeEnum optionType);
+    xmlNodePtr optionsNode(OptionTypeEnum optionType);
 
 
 
@@ -387,7 +402,8 @@
    */
 
 
-  int optionsReadDoc(xmlDocPtr doc);
+    int optionsReadDoc(xmlDocPtr doc);
+
 
 
 
@@ -402,7 +418,7 @@
    */
 
 
-  int optionsSavetoFile(xmlChar *fileName);
+    int optionsSavetoFile(xmlChar * fileName);
 
 
 /* ---------------------------------------------
@@ -422,7 +438,7 @@
    */
 
 
-  int optionsPlatformInit(void);
+    int optionsPlatformInit(void);
 
 
 
@@ -436,7 +452,7 @@
    */
 
 
-  void optionsPlatformFree(void);
+    void optionsPlatformFree(void);
 
 
 
@@ -454,7 +470,7 @@
    */
 
 
-  xmlChar* optionsConfigFileName(void);
+    xmlChar *optionsConfigFileName(void);
 
 
 
@@ -470,7 +486,7 @@
    */
 
 
-  int optionsLoad(void);
+    int optionsLoad(void);
 
 
 
@@ -486,7 +502,81 @@
    */
 
 
-  int optionsSave(void);
+    int optionsSave(void);
+
+
+
+
+
+  /**
+   * Set/Get the state of configuration loading/saving. Normally only used
+   *    by RISC OS
+   *
+   *
+   * Returns The current/new value of configuration flag. Where
+   *         @p value means:
+   *           OPTIONS_CONFIG_READVALUE : No change return current 
+   *               value of read configuration flag
+   *           OPTIONS_CONFIG_WRITING  : Clear flag and return 
+   *               OPTIONS_CONFIG_WRITING which mean configuration 
+   *               file is being written
+   *           OPTIONS_CONFIG_READING : Set flag and return 
+   *               OPTIONS_CONFIG_READING, which means configuration
+   *               file is being read
+   *           OPTIONS_CONFIG_IDLE : We are neither reading or writing 
+   *               configuration and return OPTIONS_CONFIG_IDLE
+   *
+   * @param value Is valid
+   *
+   */
+
+
+    int optionsConfigState(OptionsConfigState value);
+
+  /**
+   * optionsAddWatch:
+   * @xPath : A valid xPath to evaluate in a context and 
+   *          has not already been addded
+   *
+   * Add xPath to be evaluated and printed out each time the debugger stops
+   *
+   * Returns 1 if able to add xPath to watched
+   *         0 otherwise
+   */
+  int optionsAddWatch(const xmlChar* xPath);
+
+  /** 
+   * optionsGetWatchID:
+   * @xPath : A valid watch expression that has already been added
+   *
+   * Finds the ID of watch expression previously added
+   *
+   * Returns 0 if not found, 
+   *         otherwise returns the ID of watch expression
+   */
+  int optionsGetWatchID(const xmlChar* xPath);
+
+
+  /**
+   * optionsRemoveWatch:
+   * @watchID : A valid watchID as indicated by last optionsPrintWatches
+   *
+   * Remove the watch with given ID from our list of expressions to watch
+   *
+   * Returns 1 if able to remove to watch expression
+   *         0 otherwise
+   */
+  int optionsRemoveWatch(int watchID);
+
+
+  /**
+   * optionsGetWatchList:
+   * 
+   * Return the current list of expressions to watch
+   *
+   * Return the current list of expressions to watch
+   */
+  arrayListPtr optionsGetWatchList();
 
 
 

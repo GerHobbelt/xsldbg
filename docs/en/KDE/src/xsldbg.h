@@ -30,8 +30,66 @@
  * @author Keith Isdale <k_isdale@tpg.com.au> 
  */
 
+ 
+/*
+ * xsltconfig.h: compile-time version informations for the XSLT engine
+ *
+ * See Copyright for the status of this software.
+ *
+ * daniel@veillard.com
+ */
 
-/* end of WITH_XSL_DEBUG */
+
+
+
+
+
+/**
+ * LIBXSLT_DOTTED_VERSION:
+ *
+ * the version string like "1.2.3"
+ */
+
+
+/**
+ * LIBXSLT_VERSION:
+ *
+ * the version number: 1.2.3 value is 1002003
+ */
+
+
+/**
+ * LIBXSLT_VERSION_STRING:
+ *
+ * the version number string, 1.2.3 value is "1002003"
+ */
+
+
+/**
+ * WITH_XSLT_DEBUG:
+ *
+ * Activate the compilation of the debug reporting. Speed penalty
+ * is insignifiant and being able to run xsltpoc -v is useful. On
+ * by default unless --without-debug is passed to configure
+ */
+
+
+
+
+
+
+/**
+ * WITH_XSLT_DEBUGGER:
+ *
+ * Activate the compilation of the debugger support. Speed penalty
+ * is insignifiant.
+ * On by default unless --without-debugger is passed to configure
+ */
+
+
+
+
+
 
 /**
  * ATTRIBUTE_UNUSED:
@@ -45,8 +103,56 @@
 
 
 
+/**
+ * LIBXSLT_PUBLIC:
+ *
+ * This macro is used to declare PUBLIC variables for Cygwin and for MSC on Windows
+ */
+
+
+
+
+
+
+
+
+/* __XML_XSLTCONFIG_H__ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* end of WITH_XSL_DEBUG */
+
+/**
+ * ATTRIBUTE_UNUSED:
+ *
+ * This macro is used to flag unused function parameters to GCC
+ */
+
+
+
+
+
 /* We want skip most of these includes when building documentation */
-/* BUILD_DOCS*/
+/* BUILD_DOCS */
 
 
 

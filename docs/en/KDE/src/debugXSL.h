@@ -74,7 +74,7 @@
 
 
     void debugXSLBreak(xmlNodePtr templ, xmlNodePtr node,
-                    xsltTemplatePtr root, xsltTransformContextPtr ctxt);
+                       xsltTemplatePtr root, xsltTransformContextPtr ctxt);
 
 
 
@@ -168,7 +168,8 @@
 */
 
 
-    void xslDbgShellEnableBreakPoint(void *payload, void *data, xmlChar * name);
+    void xslDbgShellEnableBreakPoint(void *payload, void *data,
+                                     xmlChar * name);
 
 
 
@@ -201,16 +202,32 @@
 */
 
 
-    void xslDbgShellPrintBreakPoint(void *payload, void *data, xmlChar * name);
+    void xslDbgShellPrintBreakPoint(void *payload, void *data,
+                                    xmlChar * name);
 
 
+
+
+
+
+/**
+ * Print an warning if a breakpoint is invalid
+ *
+ * @param payload Is valid xslBreakPointPtr
+ * @param data Not used
+ * @param name Not used
+*/
+
+
+    void xslDbgShellValidateBreakPoint(void *payload, void *data,
+                                    xmlChar * name);
 
 
 /* -----------------------------------------
    Template related commands
 
    They are implemented in template_cmds.c
-  ------------------------------------------- */  
+  ------------------------------------------- */
 
 
 
@@ -251,8 +268,9 @@
 
 
     int xslDbgShellPrintTemplateNames(xsltTransformContextPtr styleCtxt,
-                                 xmlShellCtxtPtr ctxt,
-                                 xmlChar * arg, int verbose, int allFiles);
+                                      xmlShellCtxtPtr ctxt,
+                                      xmlChar * arg, int verbose,
+                                      int allFiles);
 
 
 
@@ -325,7 +343,86 @@
                                  xmlChar * arg, VariableTypeEnum type);
 
 
+/* -----------------------------------------
 
+   File related command
+
+   Implemented in file_cmds.c
+  ------------------------------------------- */
+
+
+
+/**
+ * xslDbgShellOutput:
+ * @arg : Is valid, either a local file name which will be expanded 
+ *        if needed, or a "file://" protocol URI
+ *
+ * Set the output file name to use
+ *
+ * Returns 1 on success, 
+ *         0 otherwise
+ */
+
+
+  int xslDbgShellOutput(xmlChar *arg);
+
+
+
+
+
+
+
+
+
+    int xslDbgEntities(void);
+
+
+
+
+
+  /**
+   * Print what a system file @p arg maps to via the current xml catalog
+   *
+   * @param arg Is valid in UTF-8
+   * 
+   * @returns 1 on sucess,
+   *          0 otherwise
+   */
+
+
+    int xslDbgSystem(const xmlChar * arg);
+
+
+
+
+
+  /**
+   * Print what a public ID @p arg maps to via the current xml catalog
+   *
+   * @param arg Is valid PublicID in UTF-8
+   * 
+   * @returns 1 on sucess,
+   *          0 otherwise
+   */
+
+
+    int xslDbgPublic(const xmlChar * arg);
+
+
+
+
+
+  /**
+   * Set current encoding to use for output to standard output
+   *
+   * @param arg Is valid encoding supported by libxml2
+   *
+   *
+   * Returns 1 on sucess,
+   */
+
+
+    int xslDbgEncoding(xmlChar * arg);
 
 /* -----------------------------------------
 
@@ -428,13 +525,13 @@
     int xslDbgShellShowParam(xmlChar * arg);
 
 
-  /* -----------------------------------------
-
-   Option related commands
-
-   Implemented in option_cmds.c
-
-  ------------------------------------------- */
+    /* -----------------------------------------
+     * 
+     * Option related commands
+     * 
+     * Implemented in option_cmds.c
+     * 
+     * ------------------------------------------- */
 
 
 
@@ -450,7 +547,7 @@
  */
 
 
-  int xslDbgShellSetOption(xmlChar *arg);
+    int xslDbgShellSetOption(xmlChar * arg);
 
 
 
@@ -464,16 +561,54 @@
  */
 
 
-       int xslDbgShellOptions(void);
+    int xslDbgShellOptions(void);
 
 
-  /* -----------------------------------------
+  /**
+   * xslDbgShellShowWatches:
+   * @styleCtxt: the current stylesheet context
+   * @ctxt: The current shell context
+   * @showWarnings : If 1 then showWarning messages,
+   *                 otherwise do not show warning messages
+   *
+   * Print the current watches and their values
+   *
+   * Returns 1 on success,
+   *         0 otherwise
+   */
+  int xslDbgShellShowWatches(xsltTransformContextPtr styleCtxt, 
+			       xmlShellCtxtPtr ctx,int showWarnings);
 
-   Tracing, walking related commands
+  /**
+   * xslDbgShellAddWatch:
+   * @arg : A valid xPath of expression to watch the value of
+   *
+   * Add expression to list of expressions to watch value of
+   *
+   * Returns 1 on success,
+   *         0 otherwise   
+   */
+  int xslDbgShellAddWatch(xmlChar* arg);
 
-   Implemented in shell.c
+  /**
+   * xslDbgShellDeleteWatch:
+   * @arg : A watch ID to remove
+   *
+   * Delete a given watch ID from our list of expressions to watch
+   *
+   * Returns 1 on success,
+   *         0 otherwise
+   */
+  int xslDbgShellDeleteWatch(xmlChar* arg);
 
-  ------------------------------------------- */
+
+    /* -----------------------------------------
+     * 
+     * Tracing, walking related commands
+     * 
+     * Implemented in shell.c
+     * 
+     * ------------------------------------------- */
 
 
 
@@ -510,12 +645,12 @@
 
 
 
-  /* -----------------------------------------
-   
-   Seach related commands
-
-   Implemented in search_cmds.c
-  ------------------------------------------- */
+    /* -----------------------------------------
+     * 
+     * Seach related commands
+     * 
+     * Implemented in search_cmds.c
+     * ------------------------------------------- */
 
 
 

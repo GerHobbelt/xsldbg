@@ -69,7 +69,7 @@
                                  * if -1 then ignore */
         xmlChar *templateName;  /* template to look for 
                                  * if NULL then ignore */
-        breakPointPtr breakPtr;    /* the break point found by search */
+        breakPointPtr breakPtr; /* the break point found by search */
     };
 
 
@@ -672,7 +672,7 @@
    */
 
 
-  xmlNodePtr searchCommentNode(xmlNodePtr node);
+    xmlNodePtr searchCommentNode(xmlNodePtr node);
 
 
 

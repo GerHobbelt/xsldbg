@@ -40,17 +40,13 @@ $(XSLDBG):
 index.docbook : $(KDEXSL_FILES) $(DATADIR)/xsldoc.xml 
 	$(XSLDBG) --cd $(DATADIR) --param xsldbg_version "'$(VERSION)'"  -o $(XSLDIR)/index.docbook $(XSLDIR)/xsldoc2kde.xsl xsldoc.xml
 
+
 index.cache.bz2 : index.docbook $(DATADIR)/xsldoc.xml 
-	@echo ""
-	@echo ""
-	@echo "Making KDE style application documentation see `pwd`/index.html"
-	@echo ""
-	@echo ""
-	meinproc index.docbook
-	meinproc --htdig index.docbook > index.cache
-	rm -f index.cache.bz2
-	bzip2 index.cache
-	ln -fs $(KDEDIR)/share/doc/HTML/en/common ./
+	if test -f $(KDEDIR)/bin/meinproc; then meinproc --htdig index.docbook > index.cache; rm -f index.cache.bz2; bzip2 index.cache; else echo "Meinproc not found"; fi
+
+# You only need this to regenerate HTML pages
+if USE_KDEDOCS
+all: index.docbook index.cache.bz2 $(DATADIR)/xsldoc.xml apidocs 
 
 apidocs : $(APIDOCS_DIR)/index.html
 
@@ -63,6 +59,15 @@ $(APIDOCS_DIR)/index.html: $(APISRC_DIR) $(APISRC_HEADER_FILES)
 	if ! test -d  $(APIDOCS_DIR); then mkdir $(APIDOCS_DIR); fi
 	kdoc -d $(APIDOCS_DIR)  $(APISRC_HEADER_FILES)
 
+index.html:
+	@echo ""
+	@echo ""
+	@echo "Making KDE style application documentation see `pwd`/index.html"
+	@echo ""
+	@echo ""
+	if test -f $(KDEDIR)/bin/meinproc; then meinproc index.docbook; fi
+	ln -fs $(KDEDIR)/share/doc/HTML/en/common ./
+
 
 $(APISRC_DIR): 
 	if ! test -d $(APISRC_DIR) ; then mkdir $(APISRC_DIR) ; fi
@@ -72,11 +77,6 @@ $(APISRC_DIR):
 #  header suitable to pass onto kdoc
 $(APISRC_HEADER_FILES): $(APISRC_DIR)
 	$(CC) -DUSE_KDOC -DBUILD_DOCS -DUSE_KDE_DOCS $(CPPFLAGS) $(top_builddir)/src/libxsldbg/$(@F) > $@
-
-
-
-if USE_KDEDOCS
-all: index.docbook index.cache.bz2 $(DATADIR)/xsldoc.xml apidocs 
 
 clean: 
 	rm -f index.docbook
@@ -89,16 +89,15 @@ very-clean:clean
 	rm -f *.*~
 	rm -f *~
 
-
-install-data-local: 
-	$(mkinstalldirs) $(KDEDIR)/share/doc/HTML/en/khelpcenter/xsldbg/
-	@INSTALL@ -m 0644 index.docbook index.cache.bz2 $(KDEDIR)/share/doc/HTML/en/khelpcenter/xsldbg
-	ln -fs $(KDEDIR)/share/doc/HTML/en/common $(KDEDIR)/share/doc/HTML/en/khelpcenter/xsldbg/
 else
-# empty
-all:
+
+all: index.docbook index.cache.bz2 
 
 clean:
+	rm -f index.docbook
+	rm -f *.bz2
 
-install-data-local:
 endif
+
+install-data-local: 
+	if test -d $(KDEDIR) ; then  if ! test -d $(APIDOCS_DIR) ; then mkdir $(APIDOCS_DIR);fi ; $(mkinstalldirs) $(KDEDIR)/share/doc/HTML/en/khelpcenter/xsldbg/;@INSTALL@ -m 0644 index.docbook index.cache.bz2 $(KDEDIR)/share/doc/HTML/en/khelpcenter/xsldbg;ln -fs $(KDEDIR)/share/doc/HTML/en/common $(KDEDIR)/share/doc/HTML/en/khelpcenter/xsldbg/; fi

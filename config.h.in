@@ -1,4 +1,10 @@
 /* config.h.in.  Generated automatically from configure.in by autoheader.  */
+/* Define if the C compiler supports BOOL */
+#undef HAVE_BOOL
+
+#undef VERSION
+
+#undef PACKAGE
 
 #undef USE_DOCS_MACRO
 #undef TIMESTAMP
@@ -7,6 +13,7 @@
 #undef XSLDBG_BIN
 #undef USE_XSLDBG_AS_THREAD
 #undef HAVE_INCLUDE_FIX
+
 
 /* Define if you need the GNU extensions to compile */
 #undef _GNU_SOURCE
@@ -21,78 +28,79 @@
 #undef HAVE_PTHREAD
 #undef HAVE_GNOME
 
-/* Define if you have the _stat function.  */
-#undef HAVE__STAT
 
-/* Define if you have the asctime function.  */
-#undef HAVE_ASCTIME
 
-/* Define if you have the gettimeofday function.  */
-#undef HAVE_GETTIMEOFDAY
-
-/* Define if you have the localtime function.  */
-#undef HAVE_LOCALTIME
-
-/* Define if you have the mktime function.  */
-#undef HAVE_MKTIME
-
-/* Define if you have the stat function.  */
-#undef HAVE_STAT
-
-/* Define if you have the usleep function.  */
-#undef HAVE_USLEEP
-
-/* Define if you have the <ansidecl.h> header file.  */
+/* Define if you have the <ansidecl.h> header file. */
 #undef HAVE_ANSIDECL_H
 
-/* Define if you have the <float.h> header file.  */
+/* Define if you have the `asctime' function. */
+#undef HAVE_ASCTIME
+
+/* Define if you have the <float.h> header file. */
 #undef HAVE_FLOAT_H
 
-/* Define if you have the <fp_class.h> header file.  */
+/* Define if you have the <fp_class.h> header file. */
 #undef HAVE_FP_CLASS_H
 
-/* Define if you have the <ieeefp.h> header file.  */
+/* Define if you have the `gettimeofday' function. */
+#undef HAVE_GETTIMEOFDAY
+
+/* Define if you have the <ieeefp.h> header file. */
 #undef HAVE_IEEEFP_H
 
-/* Define if you have the <math.h> header file.  */
+/* Define if you have the `localtime' function. */
+#undef HAVE_LOCALTIME
+
+/* Define if you have the <math.h> header file. */
 #undef HAVE_MATH_H
 
-/* Define if you have the <nan.h> header file.  */
+/* Define if you have the `mktime' function. */
+#undef HAVE_MKTIME
+
+/* Define if you have the <nan.h> header file. */
 #undef HAVE_NAN_H
 
-/* Define if you have the <pthread.h> header file.  */
+/* Define if you have the <pthread.h> header file. */
 #undef HAVE_PTHREAD_H
 
-/* Define if you have the <readline/readline.h> header file.  */
+/* Define if you have the <readline/readline.h> header file. */
 #undef HAVE_READLINE_READLINE_H
 
-/* Define if you have the <stdarg.h> header file.  */
+/* Define if you have the `stat' function. */
+#undef HAVE_STAT
+
+/* Define if you have the <stdarg.h> header file. */
 #undef HAVE_STDARG_H
 
-/* Define if you have the <stdlib.h> header file.  */
+/* Define if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
 
-/* Define if you have the <string.h> header file.  */
+/* Define if you have the <string.h> header file. */
 #undef HAVE_STRING_H
 
-/* Define if you have the <sys/stat.h> header file.  */
+/* Define if you have the <sys/stat.h> header file. */
 #undef HAVE_SYS_STAT_H
 
-/* Define if you have the <sys/time.h> header file.  */
+/* Define if you have the <sys/time.h> header file. */
 #undef HAVE_SYS_TIME_H
 
-/* Define if you have the <sys/types.h> header file.  */
+/* Define if you have the <sys/types.h> header file. */
 #undef HAVE_SYS_TYPES_H
 
-/* Define if you have the <time.h> header file.  */
+/* Define if you have the <time.h> header file. */
 #undef HAVE_TIME_H
 
-/* Define if you have the <unistd.h> header file.  */
+/* Define if you have the <unistd.h> header file. */
 #undef HAVE_UNISTD_H
+
+/* Define if you have the `usleep' function. */
+#undef HAVE_USLEEP
+
+/* Define if you have the `_stat' function. */
+#undef HAVE__STAT
 
 /* Name of package */
 #undef PACKAGE
 
 /* Version number of package */
 #undef VERSION
-

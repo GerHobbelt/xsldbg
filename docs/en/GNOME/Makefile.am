@@ -41,7 +41,11 @@ API_MAIN_SGML_FILE=xsldbg.sgml
 $(XSLDBG):
 	@(cd $(top_builddir)/src ; $(MAKE) xsldbgtest)
 
+gnome.docbook : $(GNOMEXSL_FILES) ../xsldoc.xml
+	$(XSLDBG) --param xsldbg_version "'$(VERSION)'" --param xsldbg_date "'$(TIMESTAMP)'" xsldoc2gnome.xsl ../xsldoc.xml  > gnome.docbook
 
+
+# You only need this to regenerate HTML pages
 if USE_GNOMEDOCS
 # we need both headers and source to make GNOME docs
 # so just copy the source across
@@ -72,15 +76,12 @@ $(APISRC_DIR):
 $(APISRC_FILES): $(APISRC_DIR)
 	$(CC) -DBUILD_DOCS -DUSE_GNOME_DOCS $(CPPFLAGS) $(top_builddir)/src/libxsldbg/$(@F) > $@
 
-gnome.docbook : $(GNOMEXSL_FILES) ../xsldoc.xml
-	$(XSLDBG) --param xsldbg_version "'$(VERSION)'" --param xsldbg_date "'$(TIMESTAMP)'" xsldoc2gnome.xsl ../xsldoc.xml  > gnome.docbook
-
 index.html appDocs : gnome.docbook
 	$(XSLDBG) $(DOCBOOK_PREFIX)/html/docbook.xsl  gnome.docbook > index.html
 
 rebuild: xsldbg-sections.txt templates sgml html
 
-all: appDocs rebuild 
+all: appDocs rebuild gnome.docbook
 
 clean:
 	rm -rf html sgml tmpl src
@@ -94,8 +95,14 @@ very-clean: clean
 
 else
 
-all:
+all: gnome.docbook
 
+clean:
+	rm -f gnome.docbook
 endif
 
+docdir = $(datadir)/gnome/help/xsldbg/EN/
+
+install-data-local: 
+	if test -d $(GNOMEDIR) ; then  if ! test -d $(docdir) ; then mkdir -p $(docdir);fi; cp  gnome.docbook $(docdir);fi
 
