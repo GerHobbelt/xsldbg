@@ -243,6 +243,7 @@ optionsSetIntOption(OptionTypeEnum optionType, int value)
 
             case OPTIONS_TRACE:
             case OPTIONS_WALK_SPEED:
+            case OPTIONS_GDB:
                 intOptions[type - OPTIONS_XINCLUDE] = value;
                 break;
 

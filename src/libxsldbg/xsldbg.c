@@ -748,7 +748,7 @@ xsldbgMain(int argc, char **argv)
                 /* the user might have entered a string option so reject it if so */
                 if ((optID >= OPTIONS_XINCLUDE)
                     && (optID <= OPTIONS_VERBOSE)) {
-                    result = optionsSetIntOption(optID, 1);
+                    result = optionsSetIntOption(optID, optionsGetIntOption(optID) + 1);
                     argv[i] = NULL;
                 } else {
                     xsltGenericError(xsltGenericErrorContext,

@@ -466,7 +466,7 @@ breakPointAdd(const xmlChar * url, long lineNumber,
 #endif
     }
 
-    if (result && optionsGetIntOption(OPTIONS_GDB) && optionsGetIntOption(OPTIONS_VERBOSE) &&
+    if (result && (optionsGetIntOption(OPTIONS_GDB) > 1) && 
 	    (xsldbgValidateBreakpoints != BREAKPOINTS_BEING_VALIDATED)){
       breakPointPrint(NULL, breakPtr);
       xsltGenericError(xsltGenericErrorContext,"\n");

@@ -6,6 +6,11 @@ Keith Isdale 29 June 2003 <k_isdale@tpg.com.au>
 	not yet reached the point where it can determine the templates that exist in the XSLT script.
 	This is because xsldbg assigns a fake XSLT script URL to the template breakpoint in this scenario
 	and then resolves the breakpoint to the requested location when possible.
+  change semantics of gdb option
+	o gdb option has a value of 1 by default
+        o when --gdb is passed on the command the value of the "gdb option" is increased to flag 
+	    that xsldbg should print out the extra information needed by kdbg 
+  Documentation bug fixes
 
 Keith Isdale 22 June 2003 <k_isdale@tpg.com.au>
    Rename xsldbg.suse.8.1.spec to xsldbg.suse.8.0.spec

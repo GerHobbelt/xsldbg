@@ -360,7 +360,7 @@ the first template has been seen by xsldbg. Breakpoints are re-validated shortly
 </table>
 <br><br><a name="delwatch"></a><table width="100%" class="cmd">
 <th class="cmdth">Delwatch</th>
-<tr class="cmdsummary"><td>Delete a watch expression or remove all watch expressions as displayed by %quot;showwatch.&quot; command</td></tr>
+<tr class="cmdsummary"><td>Delete a watch expression or remove all watch expressions as displayed by &quot;showwatch.&quot; command</td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>
 <tr>
@@ -732,12 +732,22 @@ then searchresult.txt is printed to display.
 <tr><td>gdb&nbsp;&nbsp;&nbsp;&nbsp;<i>(Run in gdb compatability mode)</i><table class="list"><tr>
 <td width="10"></td>
 <td><table class="listbody">
-<tr><td>Where this means    </td></tr>
+<tr><td>For a value of 1 this means
+<table class="list"><tr>
+<td width="10"></td>
+<td><table class="listbody">
 <tr><td>Print lots more messages. Increase the frequency of printing &quot;Breapoint at ...&quot;    </td></tr>
 <tr><td>At most GDB_LINES_TO_PRINT lines will be printed when evalating expressions, followed by a &quot;...&quot;. See options.h to change this value, the default is three lines of text    </td></tr>
 <tr><td>Both local and globals will be printed when the &quot;locals&quot; command is issued     </td></tr>
 <tr><td>When printing expresssions with cat/print. The evaluated value will be prefixed by &quot;= &quot;  &lt; EXPRESSION &gt;    </td></tr>
-<tr><td>The use of readline library is disabled as well as repeating last entered command    </td></tr>
+</table></td>
+</tr></table>    </td></tr>
+<tr><td>    </td></tr>
+<tr><td>For a value of 2 this means
+<table class="list"><tr>
+<td width="10"></td>
+<td><table class="listbody"><tr><td>Print messages needed by KDbg as well as the output state above (when value is 1)     </td></tr></table></td>
+</tr></table>    </td></tr>
 </table></td>
 </tr></table>    </td></tr>
 <tr><td>nonet&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true refuse to fetch DTDs or entities over network)</i>    </td></tr>

@@ -2073,7 +2073,7 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
         }
 
         /* KDbg likes to get the marker after every command so here it is */
-        if (optionsGetIntOption(OPTIONS_GDB) && optionsGetIntOption(OPTIONS_VERBOSE) && !nextCommandActive
+        if ((optionsGetIntOption(OPTIONS_GDB) >1) && optionsGetIntOption(OPTIONS_VERBOSE) && !nextCommandActive
 	     && (commandId != DEBUG_STEPUP_CMD - DEBUG_HELP_CMD)) {
             if (ctxt->node && ctxt->node && 
 		ctxt->node->doc && ctxt->node->doc->URL) {

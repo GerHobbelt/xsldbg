@@ -101,7 +101,7 @@
     <xsl:text>
 </xsl:text>
     <xsl:for-each select="li">
-      <xsl:text>     </xsl:text><xsl:apply-templates />
+      <xsl:for-each select="ancestor::node()"><xsl:text>  </xsl:text></xsl:for-each><xsl:apply-templates />
       <xsl:text>
 </xsl:text>
     </xsl:for-each>
