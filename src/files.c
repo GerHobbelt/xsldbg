@@ -22,8 +22,28 @@
 
 #include "config.h"
 #include "xsldbg.h"
+#include "debugXSL.h"
 #include "files.h"
 #include "options.h"
+#include <stdio.h>
+#include <readline.h>
+#include <history.h>
+
+#ifndef WIN32  /* needed for tty usage */
+      #include <sys/types.h>
+       #include <sys/stat.h>
+       #include <fcntl.h>
+#endif
+
+
+/* private data for search for file names*/
+typedef  struct _fileSearch FileSearch;
+typedef FileSearch *FileSearchPtr;
+struct _fileSearch{
+  xmlChar *nameInput;
+  xmlChar *absoluteNameMatch;
+  xmlChar *guessedNameMatch;  
+};
 
 /* top xml document */
 xmlDocPtr top_doc;
@@ -34,6 +54,141 @@ xmlDocPtr temp_doc;
 /* top stylsheet */
 xsltStylesheetPtr top_style;
 
+/* what is the base path for top stylesheet */
+xmlChar *stylePathName = NULL;
+
+/* what is the path for current working directory*/
+xmlChar *workingDirPath = NULL;
+
+/* used as a scratch pad for temporary results*/
+xmlChar buffer[DEBUG_BUFFER_SIZE];
+
+FILE *terminalIn = NULL, *terminalOut = NULL;
+
+/**
+ * redirectToTerminal:
+ * @device: terminal to redirect i/o to , will not work under win32
+ */
+int 
+redirectToTerminal(xmlChar *device)
+{
+  int result =0;
+#ifndef WIN32 /* fix me for WinNT!! */
+  if (terminalIn != NULL)
+    fclose(terminalIn);  
+  if (terminalOut != NULL)
+    fclose(terminalOut); 
+  
+  terminalOut = fopen(device, "w+");  
+  if (terminalOut != NULL){
+    if (stdout)
+      fclose(stdout);
+    *stdout =  *terminalOut;
+    if (stderr)
+      fclose(stderr);
+    *stderr =  *terminalOut;
+  }
+  terminalIn = fopen(device, "a+"); 
+  if (terminalIn != NULL){
+    char *c ;
+    if (stdin)
+      fclose(stdin); 
+    *stdin =  *terminalIn;
+  }
+  if (terminalIn && terminalOut){
+    /*    fprintf(terminalOut, testMsg);    
+    printf(testMsg);
+    */
+  }else
+    printf("Can't open terminal %s\n" , device);  
+  result++;
+  
+#else
+    printf ("Terminals are no supported by this operating system\n");
+#endif
+    return result;    
+}
+
+
+void guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
+                 void *data ATTRIBUTE_UNUSED, xmlChar * name)
+{
+  xsltStylesheetPtr style = (xsltStylesheetPtr)payload;
+  FileSearchPtr searchData = (FileSearchPtr)data;
+  if (style && style->doc && searchData && searchData->nameInput){
+    if (xmlStrCmp(style->doc->URL, searchData->nameInput) == 0){
+      /* absolute path match great!*/
+      searchData->absoluteNameMatch = (xmlChar*)xmlMemStrdup(style->doc->URL);
+    }else{
+      /* try to guess we assume that the files are unique */
+      xmlStrCpy(buffer,"__#!__");
+      if (stylePath()){
+	xmlStrCpy(buffer, stylePath());
+	xmlStrCat(buffer, searchData->nameInput);
+      }
+      if (xmlStrCmp(style->doc->URL, buffer) == 0){
+	/* guessed right!*/
+	searchData->guessedNameMatch = (xmlChar*)xmlMemStrdup(buffer);
+      }else{
+	if (workingPath()){
+	  xmlStrCpy(buffer, workingPath());
+	  xmlStrCat(buffer, searchData->nameInput);
+	}
+	if (xmlStrCmp(style->doc->URL, buffer) == 0){
+	  /* guessed right!*/
+	searchData->guessedNameMatch = (xmlChar*)xmlMemStrdup(buffer);
+	}
+      }
+    }
+  }
+}
+
+
+/**
+ * guessStyleSheetName:
+ *
+ * Try to find a matching stylesheet name
+ * Returns non-NULL if found,
+ *          NULL otherwise
+ */
+xmlChar *guessStyleSheetName(xmlChar* name)
+{
+  xmlChar *result = NULL;
+  FileSearch searchData = {name, NULL, NULL};
+  if (name){
+    xslWalkStylesheets((xmlHashScanner)guessStyleSheetHelper, &searchData,
+		     getStylesheet());    
+    if (searchData.absoluteNameMatch)
+      result = searchData.absoluteNameMatch;
+    else
+      result =  searchData.guessedNameMatch;
+  }
+  return result;
+}
+
+
+/**
+ * stylePath:
+ *
+ * Return the base path for the top stylesheet ie
+ *        ie URL minus the actual file name
+ */
+xmlChar *
+stylePath()
+{
+  return stylePathName;
+}
+
+/**
+ * workingPath:
+ *
+ * Return the working directory as set by changeDir function
+ */
+xmlChar*
+workingPath()
+{
+  return workingDirPath;
+}
 
 /**
  * changeDir:
@@ -45,9 +200,15 @@ int
 changeDir(const xmlChar * path)
 {
     int result = 0;
-
-    if (chdir((char *) path) == 0) {
-        result++;
+    const xmlChar endString[2] = {PATHCHAR,'\0'};
+    if (path && chdir((char *) path) == 0) {
+      if (workingDirPath)
+	xmlFree(workingDirPath);
+       /* must have path char at end of path name*/
+      xmlStrCpy(buffer, path);
+      xmlStrCat(buffer, endString);
+      workingDirPath = (xmlChar*)xmlMemStrdup(buffer);
+      result++;
     }
     if (!result)
         printf("Unable to change to directory %s\n", path);
@@ -85,12 +246,22 @@ loadXmlFile(const xmlChar * path, enum File_type file_type)
 
         case FILES_SOURCEFILE_TYPE:
             if (path && xmlStrLen(path)) {
-                printf("Setting stylesheet file name to %s\n", path);
+	      printf("Setting stylesheet file name to %s\n", path);
                 setStringOption(OPTIONS_SOURCE_FILE_NAME, path);
             }
             top_style = loadStylesheet();
-            if (top_style)
-                result++;
+            if (top_style && top_style->doc){
+	      /* look for last slash (or baskslash) of URL*/
+	       char *lastSlash =   xmlStrrChr(top_style->doc->URL, PATHCHAR);
+	       const char *docUrl = top_style->doc->URL;
+                result++;		
+		if (docUrl && lastSlash){
+		    stylePathName = xmlMemStrdup(docUrl);
+		    stylePathName[lastSlash - docUrl + 1] = '\0';
+		    printf("Setting stylesheet base path to %s\n", 
+			   stylePathName);
+		}
+	    }
             break;
 
         case FILES_TEMPORARYFILE_TYPE:
@@ -131,6 +302,9 @@ freeXmlFile(enum File_type file_type)
         case FILES_SOURCEFILE_TYPE:
             if (top_style)
                 xsltFreeStylesheet(top_style);
+	    if (stylePathName)
+	      xmlFree(stylePathName);
+	    stylePathName = NULL;
             top_style = NULL;
             result++;
             break;
@@ -235,6 +409,11 @@ void
 filesFree(void)
 {
     int result;
+  if (terminalIn != NULL)
+    fclose(terminalIn);  
+  if (terminalOut != NULL)
+    fclose(terminalOut);
+
 
     result = freeXmlFile(FILES_SOURCEFILE_TYPE);
     if (result)
@@ -243,4 +422,6 @@ filesFree(void)
         result = freeXmlFile(FILES_TEMPORARYFILE_TYPE);
     if (!result)
         printf("Unable to free memory used by xml/xsl files\n");
+    if (workingDirPath)
+	xmlFree(workingDirPath);
 }

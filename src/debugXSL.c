@@ -72,6 +72,8 @@ const char *commandNames[] = {
 
     "templates",
     "where",
+    "frame",
+    "stylesheets",
 
     "break",
     "showbreak",
@@ -105,6 +107,7 @@ const char *commandNames[] = {
     /* Operating system related */
     "chdir",
     "shell",
+    "tty",
 
     /* libxslt parameter related */
     "addparam",
@@ -137,6 +140,8 @@ const char *shortCommandNames[] = {
 
     "t",                        /* templates */
     "w",                        /* where */
+    "f",
+    "style",
 
     "b",                        /* break */
     "show",
@@ -170,6 +175,7 @@ const char *shortCommandNames[] = {
     /* Operating system related */
     "chdir",
     "shell",
+    "tty",
 
     /* libxslt parameter related */
     "addparam",
@@ -201,6 +207,8 @@ enum {                          /* id's for commands of xslDbgShell */
 
     DEBUG_TEMPLATES_CMD,
     DEBUG_WHERE_CMD,
+    DEBUG_FRAME_CMD,
+    DEBUG_STYLESHEETS_CMD,
 
     DEBUG_BREAK_CMD,
     DEBUG_SHOWBREAK_CMD,
@@ -234,6 +242,7 @@ enum {                          /* id's for commands of xslDbgShell */
     /* Operating system related */
     DEBUG_CHDIR_CMD,
     DEBUG_SHELL_EXEC_CMD,
+    DEBUG_TTY_CMD,
 
     /* libxslt parameter related */
     DEBUG_ADDPARAM_CMD,
@@ -343,7 +352,7 @@ void xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
               xmlChar * arg, xmlNodePtr source);
 int xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
                               int templateCount);
-void xslDbgPrintCallStack(void);
+void xslDbgPrintCallStack(const xmlChar* arg);
 void xsldbgSleep(long delay);
 int xslDbgWalkContinue(void);
 int lookupName(xmlChar * name, xmlChar ** matchList);
@@ -490,43 +499,67 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
 
 /**
  * xslDbgPrintCallStack:
+ * @arg : the number of frame to print, NULL if all items 
  * 
  * Print all items found on the callStack
  */
 void
-xslDbgPrintCallStack(void)
+xslDbgPrintCallStack(const xmlChar* arg)
 {
-    int callDepth;
-    xslCallPointPtr callPoint;
-
+  int callDepth;
+  xslCallPointPtr callPoint;
+  if (arg == NULL){
     for (callDepth = 1; callDepth <= xslCallDepth(); callDepth++) {
-        callPoint = xslGetCall(callDepth);
-        if (callPoint && callPoint->info) {
-            if (callDepth == 0)
-                xsltGenericError(xsltGenericErrorContext,
-                                 "Call stack contains:\n");
-            xsltGenericError(xsltGenericErrorContext, " template :\"%s\"",
-                             callPoint->info->templateName);
-            if (callPoint->info->url)
-                xsltGenericError(xsltGenericErrorContext,
-                                 " in file %s : line %ld \n",
-                                 callPoint->info->url, callPoint->lineNo);
-            else
-                xsltGenericError(xsltGenericErrorContext, "\n");
-        } else {
+      callPoint = xslGetCall(callDepth);
+      if (callPoint && callPoint->info) {
+	if (callDepth == 0)
+	  xsltGenericError(xsltGenericErrorContext,
+			   "Call stack contains:\n");
+	xsltGenericError(xsltGenericErrorContext, "#%d template :\"%s\"",
+			 callDepth - 1, callPoint->info->templateName);
+	if (callPoint->info->url)
+	  xsltGenericError(xsltGenericErrorContext,
+			   " in file %s : line %ld \n",
+			   callPoint->info->url, callPoint->lineNo);
+	else
+	  xsltGenericError(xsltGenericErrorContext, "\n");
+      } else {
 #ifdef WITH_XSLT_DEBUG_PROCESS
-            xsltGenericError(xsltGenericErrorContext,
-                             "Call stack item not found at depth %d :"
-                             " xslDbgPrintCallStack\n", callDepth);
+	xsltGenericError(xsltGenericErrorContext,
+			 "Call stack item not found at depth %d :"
+			 " xslDbgPrintCallStack\n", callDepth);
 #endif
-            break;
-        }
+	break;
+      }
     }
     if (xslCallDepth() == 0)
-        xsltGenericError(xsltGenericErrorContext,
-                         "No items on call stack\n");
+      xsltGenericError(xsltGenericErrorContext,
+		       "No items on call stack\n");
     else
-        xsltGenericError(xsltGenericErrorContext, "\n");
+      xsltGenericError(xsltGenericErrorContext, "\n");
+  }else{
+    long depth = atoi(arg);
+    if (depth >=0 ){
+      callPoint = xslGetCall(depth + 1);
+      if (callPoint && callPoint->info) {
+	xsltGenericError(xsltGenericErrorContext, "#%d template :\"%s\"",
+			 depth, callPoint->info->templateName);
+	/* should alays be present but .. */
+	if (callPoint->info->url)
+	  xsltGenericError(xsltGenericErrorContext,
+			   " in file %s : line %ld \n",
+			   callPoint->info->url, callPoint->lineNo);
+	else
+	  xsltGenericError(xsltGenericErrorContext, "\n");
+      } else {
+#ifdef WITH_XSLT_DEBUG_PROCESS
+	xsltGenericError(xsltGenericErrorContext,
+			 "Call stack item not found at depth %d :"
+			 " xslDbgPrintCallStack\n", depth);
+#endif
+      }
+    }
+  }
 }
 
 /**
@@ -1113,13 +1146,9 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 {
                     int allFiles = 1, verbose = 1;
 
-                    if (xmlStrLen(arg)) {
-                        if (!xmlStrCmp(arg, "this")) {
+                    if (xmlStrLen(arg) && 
+			(xmlStrCmp(arg, "this") == 0)) {
                             allFiles = 0;
-                        } else {
-                            xsltGenericError(xsltGenericErrorContext,
-                                             "Unknown option %s \n", arg);
-                        }
                     }
 
                     /* be verbose when printing template names */
@@ -1132,7 +1161,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
             case DEBUG_WHERE_CMD:
                 /* Print the current working directory as well */
-                xslDbgPrintCallStack();
+                xslDbgPrintCallStack(NULL);
                 if (!xmlShellPwd(ctxt, (char *) dir, ctxt->node, NULL))
                     xsltGenericError(xsltGenericErrorContext, "%s", dir);
                 if (ctxt->node && ctxt->node && ctxt->node->doc
@@ -1151,6 +1180,13 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     xsltGenericError(xsltGenericErrorContext, "\n");
                 break;
 
+	case DEBUG_FRAME_CMD:
+	  xslDbgPrintCallStack(arg);
+	  break;
+
+	case DEBUG_STYLESHEETS_CMD:
+	  xslDbgPrintStyleSheets(arg);
+	  break;
 
                 /* --- Break point related commands --- */
             case DEBUG_BREAK_CMD:
@@ -1330,11 +1366,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         break;
                 } else {
                     /* load new stylesheet file, actual loading happens later */
-                    xmlChar *response =
-                        (xmlChar *) ctxt->
-                        input((char *) "Load stylesheet file (yes/no)");
-                    if (!strcmp(response, "yes")) {
-                        xmlChar *buff = dir;    /* use dir command temp buffer */
+                     xmlChar *buff = dir;    /* use dir command temp buffer */
 
                         /* replace ~ with home path */
                         if ((arg[0] == '~') && getenv("HOME")) {
@@ -1355,7 +1387,6 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         xsltGenericError(xsltGenericErrorContext,
                                          "Load of source deferred use run command\n");
                         loadedFiles = 1;
-                    }
                 }
                 break;
 
@@ -1375,10 +1406,6 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         break;
                 } else {
                     /* load new xml file actual loading hapens later */
-                    xmlChar *response =
-                        (xmlChar *) ctxt->
-                        input((char *) "Load xml DATA file (yes/no)");
-                    if (!xmlStrCmp(response, "yes")) {
                         xmlChar *buff = dir;    /* use dir command temp buffer */
 
                         /* replace ~ with home path */
@@ -1401,8 +1428,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         loadedFiles = 1;
                         xsltGenericError(xsltGenericErrorContext,
                                          "Load of xml data deferred use run command\n");
-                    }
-                }
+									}
                 break;
 
             case DEBUG_CD_CMD:
@@ -1498,6 +1524,11 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 	      xslDbgShellShowParam(arg);
                 break;
 
+	case	DEBUG_TTY_CMD:
+	  redirectToTerminal(arg);
+	  break;
+	  
+
 
                 /* tracing related commands */
             case DEBUG_TRACE_CMD:
@@ -1520,6 +1551,30 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                                 "Unknown command %s, try help\n", command);
         }
 
+	/* kdbg like to get the marker after every command so here it is */
+	if (isOptionEnabled(OPTIONS_GDB)){
+	  if (ctxt->node && ctxt->node && ctxt->node->doc
+	      && ctxt->node->doc->URL) {
+	    
+	    if (xslActiveBreakPoint() != NULL) {
+	      xslBreakPointPtr breakPtr = xslActiveBreakPoint();
+
+	      xsltGenericError(xsltGenericErrorContext,
+			       "Breakpoint in file %s : line %ld \n", breakPtr->url,
+			       breakPtr->lineNo);
+	    } else {
+	      if (xmlGetLineNo(ctxt->node) != -1)
+                xsltGenericError(xsltGenericErrorContext,
+                                 "Breakpoint at file %s : line %ld \n",
+                                 ctxt->node->doc->URL,
+                                 xmlGetLineNo(ctxt->node));
+	      else
+                xsltGenericError(xsltGenericErrorContext,
+                                 "BreakPoint @ text node in file %s\n",
+                                 ctxt->node->doc->URL);
+	    }
+	  }	  
+	}
 
         xmlFree(cmdline);
         cmdline = NULL;

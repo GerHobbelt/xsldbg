@@ -86,7 +86,7 @@ OBJDUMP = @OBJDUMP@
 PACKAGE = xsldbg
 PERL = perl
 RANLIB = ranlib
-VERSION = 0.7.9
+VERSION = 0.8.0
 WITH_MEM_DEBUG = 0
 WITH_XSLT_DEBUG = 1
 XML_CONFIG = xml2-config
@@ -94,14 +94,14 @@ XSLDBG_INCLUDEDIR = -I${includedir}
 XSLDBG_LIBDIR = -L${libdir}
 XSLDBG_LIBS = -L/usr/local/lib -lxml2 -lz -L/lib -lm -lexslt -L/usr/local/lib -L/lib -lxslt -lxsltbreakpoint -lxml2 -lz -lm -lm -lreadline -lncurses -lhistory
 XSLDBG_MAJOR_VERSION = 0
-XSLDBG_MICRO_VERSION = 9
-XSLDBG_MINOR_VERSION = 7
-XSLDBG_VERSION = 0.7.9
-XSLDBG_VERSION_INFO = 7:9:9
-XSLDBG_VERSION_NUMBER = 709
+XSLDBG_MICRO_VERSION = 0
+XSLDBG_MINOR_VERSION = 8
+XSLDBG_VERSION = 0.8.0
+XSLDBG_VERSION_INFO = 8:0:0
+XSLDBG_VERSION_NUMBER = 800
 XSLT_CONFIG = xslt-config
 
-INCLUDES = $(all_includes)  -DVERSION=\"0.7.9\" 	$(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS)
+INCLUDES = $(all_includes)  -DVERSION=\"0.8.0\" 	$(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS)
 
 
 XSLDBG = $(top_builddir)/src/xsldbg

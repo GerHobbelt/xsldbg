@@ -1,3 +1,18 @@
+* Keith Isdale 26 Nov 2001
+* Fixed errors, and inconsistancies in xsldoc.xml
+*   Changes needed for the xsldbg mode for kdbg
+*          Changed templates command to accept a template name to look for 
+*          Added --gdb option to command line so xsldbg print marker after each command is entered
+*              Added OPTIIONS_GDB to options.h
+*              Added gdbMode to options.c and updated isOptionEnabled and enableOption functions
+* Added stylesheet command to print out a list of stylesheets loaded
+	
+* Keith Isdale 25 Nov 2001
+*   Changes needed for the xsldbg mode for kdbg
+*         Added prefix of #<frame_no> to output where of command	
+*         Added frame command 
+*         Added XSLDBG <version> to prelude of xsldbg	
+	
 * Keith Isdale 21 Nov 2001
 * Changed searching
 *     removed xslWalkVariables, searchVariableNode

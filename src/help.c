@@ -36,16 +36,6 @@ helpTop(const xmlChar * args)
 {
     char buff[300], helpParam[100];
 
-    /* Handle the differnces in path and quote character between
-     * win32 and Unix/Linux systems */
-#ifdef WIN32
-    char quoteChar = ' ';
-    char pathChar = '\\';
-#else
-    char quoteChar = '\"';
-    char pathChar = '/';
-#endif
-
 /* try to make finding help files user friendly by using HELP_DOC_PATH macro*/
 
 /* for non win32 environments see the macro in xsldebugger/Makefile.am
@@ -60,17 +50,17 @@ helpTop(const xmlChar * args)
 #endif
 
     if (strlen(args) > 0) {
-        snprintf(helpParam, 100, "--param help %c'%s'%c", quoteChar, args,
-                 quoteChar);
+        snprintf(helpParam, 100, "--param help %c'%s'%c", QUOTECHAR, args,
+                 QUOTECHAR);
     } else
         strcpy(helpParam, "");
     if (debugDirPath && snprintf((char *) buff, 299, "xsldbg %s"
                                  " --param xsldbg_version %c'%s'%c "
                                  " %s%cxsldoc.xsl %s%cxsldoc.xml | more",
                                  helpParam,
-                                 quoteChar, VERSION, quoteChar,
-                                 debugDirPath, pathChar,
-                                 debugDirPath, pathChar) <= 290) {
+                                 QUOTECHAR, VERSION, QUOTECHAR,
+                                 debugDirPath, PATHCHAR,
+                                 debugDirPath, PATHCHAR) <= 290) {
         if (system(buff)) {
             if (debugDirPath)
                 fprintf(stderr,

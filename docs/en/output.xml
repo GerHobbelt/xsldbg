@@ -5,10 +5,6 @@
     xsldbg help
     ___________
  
-The debugger is similar to gdb. It has three modes of execution of stylesheets. 
-     Run the whole stylesheet
-     Step to next xsl instruction
-     Continue to next break point(a named template)
-
+xsldbg is similar to gdb. It has three modes of execution of stylesheets.
 
   Help document version 0.5

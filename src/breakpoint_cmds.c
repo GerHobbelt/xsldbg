@@ -32,6 +32,8 @@ int printCount;
    BreakPoint related commands
 
   ------------------------------------------- */
+xmlChar buff[DEBUG_BUFFER_SIZE];
+
 
 /**
  * xslFrameBreak:
@@ -111,15 +113,24 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style)
                     /* try to guess whether we are looking for source or data 
                      * break point
                      */
-                    if (strstr(opts[0], ".xsl"))
+                    if (strstr(opts[0], ".xsl")){
                         type = DEBUG_BREAK_SOURCE;
-                    else
+			opts[0] = guessStyleSheetName(opts[0]);
+			if (!xslAddBreakPoint(opts[0], lineNo, NULL, type))
+			  xsltGenericError(xsltGenericErrorContext, "%s",
+					   errorPrompt);
+			else{
+			  xmlFree(opts[0]);
+			  result++;
+			}
+		    }else{
                         type = DEBUG_BREAK_DATA;
-                    if (!xslAddBreakPoint(opts[0], lineNo, NULL, type))
-                        xsltGenericError(xsltGenericErrorContext, "%s",
-                                         errorPrompt);
-                    else
-                        result++;
+			if (!xslAddBreakPoint(opts[0], lineNo, NULL, type))
+			  xsltGenericError(xsltGenericErrorContext, "%s",
+				       errorPrompt);
+			else
+			  result++;
+		    }
                 }
             } else
                 xsltGenericError(xsltGenericErrorContext,

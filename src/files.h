@@ -31,6 +31,41 @@ enum File_type {
 };
 
 /**
+ * redirectToTerminal:
+ * @device: terminal to redirect i/o to , will not work under win32
+ */
+int redirectToTerminal(xmlChar *device);
+
+
+/**
+ * guessStyleSheetName:
+ *
+ * Try to find a matching stylesheet name
+ * Returns non-NULL if found,
+ *          NULL otherwise
+ */
+xmlChar *guessStyleSheetName(xmlChar* name);
+
+
+/**
+ * stylePath:
+ *
+ * Return the base path for the top stylesheet ie
+ *        ie URL minus the actual file name
+ */
+xmlChar *stylePath();
+
+
+/**
+ * workingPath:
+ *
+ * Return the working directory as set by changeDir function
+ */
+xmlChar*
+workingPath();
+
+
+/**
  * changeDir:
  * @path : path to adopt as new working directory
  *

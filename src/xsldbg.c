@@ -378,6 +378,7 @@ usage(const char *name)
     printf("      --profile or --norman : dump profiling informations \n");
     printf("      --cd <PATH>: change to specfied working directory\n");
     printf("      --shell : start xsldebugger \n");
+    printf("      --gdb : run in gdb mode printing out more information");
 }
 
 int
@@ -395,6 +396,8 @@ main(int argc, char **argv)
     LIBXML_TEST_VERSION xmlLineNumbersDefault(1);
 
     xsldbgInit();
+
+    printf("XSLDBG %s\n", VERSION);
 
     if (argc == 1)
         result = enableOption(OPTIONS_SHELL, 1);
@@ -584,7 +587,13 @@ main(int argc, char **argv)
                 printf("Missing path name after --cd option\n");
             }
 
-        } else {
+        } else if ((!strcmp(argv[i], "-gdb")) || (!strcmp(argv[i], "--gdb"))){
+	  /* run in gdb mode printing out more information after each command*/
+            if (result) {
+	      result = enableOption(OPTIONS_GDB, 1);
+	      strcpy(argv[i], "");
+            }	  
+	}else {
             xsltGenericError(xsltGenericErrorContext,
                              "Unknown option %s\n", argv[i]);
             result = 0;
@@ -944,14 +953,22 @@ printTemplates(xsltStylesheetPtr style, xmlDocPtr doc)
 void
 catchSigInt(int value ATTRIBUTE_UNUSED)
 {
+		if (xslDebugStatus == DEBUG_RUN){
+			xsldbgFree();
+			exit(1);		
+    }
+
     if (xslDebugStatus != DEBUG_STOP) {
         /* stop running/walking imediately !! */
         xslDebugStatus = DEBUG_STOP;
         setIntOption(OPTIONS_WALK_SPEED, WALKSPEED_STOP);
-    } else {
-        /* empty, don't want to kill program, 
-         * user will use {exit| bye|quit} command to quit program */
     }
+}
+
+void
+catchSigTerm(int value ATTRIBUTE_UNUSED)
+{
+	xsldbgFree();
 }
 
 typedef void (*sighandler_t) (int);
@@ -975,7 +992,8 @@ xsldbgInit()
 
         /* catch SIGINT */
         oldHandler = signal(SIGINT, catchSigInt);
-
+		/* catch SIGTIN tty input available fro child*/
+		signal(SIGTERM, catchSigTerm);
         initialized = 1;
     }
     return result;

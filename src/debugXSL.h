@@ -100,7 +100,7 @@ extern "C" {
    * xslDbgPrintTemplateNames:
    * @styleCtxt : is valid 
    * @ctxt : not used
-   * @arg : not used
+   * @arg : if non-null then is the template name to look for
    * @verbose : if 1 then print extra messages about templates found,
    *            otherwise print normal messages only 
    * @allFiles : if 1 then look for all templates in stylsheets found in of @styleCtxt
@@ -113,6 +113,13 @@ extern "C" {
                                   int verbose, int allFiles);
 
 
+  /**
+   * xslDbgPrintStyleSheets:
+   * @arg : stylesheets of interests, is NULL for all stylsheets
+   *
+   * Print stylesheets that can be found in loaded stylsheet
+   */
+  void xslDbgPrintStyleSheets(xmlChar * arg);
 
 /* -----------------------------------------
 

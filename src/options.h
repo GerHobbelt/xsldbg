@@ -36,6 +36,7 @@ enum Option_type {
     OPTIONS_HTML,
     OPTIONS_DEBUG,
     OPTIONS_SHELL,
+    OPTIONS_GDB,
     OPTIONS_REPEAT,
     OPTIONS_TRACE,              /* trace the execution */
     OPTIONS_WALK_SPEED,         /* how fast do we walk through code */

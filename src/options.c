@@ -60,6 +60,9 @@ int verbose = 0;
 /* what speed do we walk though code */
 int walkSpeed = 0;
 
+/* do we run in gdb mode (prints out more information )*/
+int gdbMode = 0;
+
 /* keep track of our string options */
 xmlChar *stringOptions[OPTIONS_DATA_FILE_NAME - OPTIONS_OUTPUT_FILE_NAME +
                        1];
@@ -162,6 +165,10 @@ enableOption(enum Option_type option_type, int value)
             shell = value;
             break;
 
+        case OPTIONS_GDB:
+            gdbMode = value;
+            break;
+
         case OPTIONS_REPEAT:
             repeat = value;
             break;
@@ -233,6 +240,10 @@ isOptionEnabled(enum Option_type option_type)
 
         case OPTIONS_SHELL:
             result = shell;
+            break;
+
+        case OPTIONS_GDB:
+            result = gdbMode;
             break;
 
         case OPTIONS_REPEAT:

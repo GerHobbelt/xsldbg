@@ -26,7 +26,7 @@ On all systems the last entered command can be repeated by just pressing
 the &lt;ENTER&gt; key. 
 </para>
 <para title="Legend :">
-<list><li>NAME : a valid template name</li>
+<list><li>TEMPLATENAME : a valid template name</li>
 <li>FILENAME : a valid URL for a stylesheet</li>
 <li>LINENO : a valid line number in associated FILENAME</li>
 <li>NUMBER_OF_FRAMES : a valid line number frames to change position by</li>
@@ -65,7 +65,7 @@ the &lt;ENTER&gt; key.
 </li>
 
 <li>Template related : <link href="templates">templates</link>,
-<link href="where">where</link>
+<link href="where">where</link>, <link href="frame">frame</link>
 </li>
 
 <li>Break point related : <link href="break">break</link>, 
@@ -113,7 +113,7 @@ they are not completed.</para>
 <summary>Display help on command or overiew</summary>
 <usage>
 <li>help   <comment>(Show overview of product)</comment></li>
-<li>help COMMAND <comment>(Show help about a command)</comment></li>
+<li>help &lt;COMMAND&gt; <comment>(Show help about a command)</comment></li>
 </usage>
 </cmd>
 
@@ -224,8 +224,8 @@ they are not completed.</para>
 <summary>Walk through code using a range of speeds</summary>
 <usage>
 <li>
-<text>walk SPEED</text>
-<comment>(Use Ctrl-c to stop execution, SPEED is a value between 0 and 9)</comment>
+<text>walk &lt;SPEED&gt;</text>
+<comment>(Use Ctrl-c to stop execution, &lt;SPEED&gt; is a value between 0 and 9. Where 0 means stop, 1 is very fast, 9 is very slow)</comment>
 </li>
 </usage>
 </cmd>
@@ -235,8 +235,8 @@ they are not completed.</para>
 <summary>Add a libxslt parameter</summary>
 <usage>
 <li>
-<text>addparam QNAME XPATH</text>
-<comment>(No error checking done on the validity of QNAME nor XPATH. This is equivalent to providing --param QNAME XPATH via command line)</comment>
+<text>addparam &lt;QNAME&gt; &lt;XPATH&gt;</text>
+<comment>(No error checking done on the validity of &lt;QNAME&gt; nor &lt;XPATH&gt;. This is equivalent to providing --param &lt;QNAME&gt; &lt;XPATH&gt; via command line)</comment>
 </li>
 </usage>
 </cmd>
@@ -249,7 +249,7 @@ they are not completed.</para>
 <comment>(Delete all parameters present)</comment>
 </li>
 <li>
-<text>delparam PARAM_ID</text>
+<text>delparam &lt;PARAM_ID&gt;</text>
 </li>
 </usage>
 </cmd>
@@ -265,17 +265,21 @@ they are not completed.</para>
 
 <!-- - - - - - - Template related commands - - - - - - - -->
 <cmd name="templates" title="Templates">
-<summary>Print a list of available templates.</summary>
+<summary>Print a list of available templates. Search for a template</summary>
 <para>Shortcut name: t</para>
 <usage>
 <li>
 <text>templates</text>
 </li>
+<li>
+<text>templates &lt;TEMPLATE&gt;</text>
+<comment>(Print details of template named &lt;TEMPLATE&gt; if it can be found)</comment>
+</li>
 </usage>
 </cmd>
 
 <cmd name="where" title="Where">
-<summary>Print a trace of templates calls and print the working directory</summary>
+<summary>Print a trace of templates calls (frame stack) and print the working directory.</summary>
 <para>Shortcut name: w</para>
 <usage>
 <li>
@@ -284,9 +288,33 @@ they are not completed.</para>
 </usage>
 </cmd>
 
+<cmd name="frame" title="Frame">
+<summary>Print the stack frame at a given depth</summary>
+<para>Shortcut name: f</para>
+<usage>
+<li>
+<text>frame &lt;FRAME_DEPTH&gt;</text>
+<comment>(Depth is a number from 0 to the current depth of call stack)</comment>
+ 
+</li>
+</usage>
+</cmd>
+
+<cmd name="stylesheets" title="Stylesheets">
+<summary>Print out a list of stylesheets loaded</summary>
+<body>
+<para>Shortcut name: style</para>
+</body>
+<usage>
+<li>
+<text>stylesheets</text>
+</li>
+</usage>
+</cmd>
+
 <!-- - - - -  Break point related commands - - - - - - - -->
 <cmd name="break" title="Break">
-<summary>Break at a template or a location in a file, or current node. </summary>
+<summary>Break at a template, at a location in any file loaded, or at the current node. </summary>
 <body>
 <para>Shortcut name: b</para>
 </body>
@@ -295,7 +323,7 @@ they are not completed.</para>
 	<text>break -l &lt;FILENAME&gt; &lt;LINENO&gt;</text>
 </li>
 <li>
-	<text>break NAME</text>
+	<text>break &lt;TEMPLATENAME&gt;</text>
 	<comment>(To break at named template.)</comment>
 </li>
 <li>
@@ -339,7 +367,7 @@ they are not completed.</para>
 	<comment>(Delete at specifed file, line number)</comment>
 </li>
 <li>
-	<text>delete NAME</text>
+	<text>delete &lt;TEMMPLATENAME&gt;</text>
 	<comment>(To delete break point at named template.)</comment>
 </li>
 <li>
@@ -423,8 +451,8 @@ they are not completed.</para>
 <cmd name="cat" title="Cat">
 <summary>Print the result of a xpath expression on relative current node.</summary>
 <body>
-<para>Usage : cat XPATH</para>
-<para>Usage : cat $QNAME       (To view a varaible or parameter)</para>
+<para>Usage : cat &lt;XPATH&gt;</para>
+<para>Usage : cat $&lt;QNAME&gt;       (To view a varaible or parameter)</para>
 </body>
 </cmd>
 
@@ -464,7 +492,7 @@ they are not completed.</para>
 	<comment>(Print list of all globaly available variables)</comment>
 </li>
 <li>
-	<text>globals QNAME</text>
+	<text>globals &lt;QNAME&gt;</text>
 	<comment>(Print the value of variable specified)</comment>
 </li>
 </usage>
@@ -478,7 +506,7 @@ they are not completed.</para>
 	<comment>(Print list of all locally available variables)</comment>
 </li>
 <li>
-	<text>locals QNAME</text>
+	<text>locals &lt;QNAME&gt;</text>
 	<comment>(Print the value of variable specified)</comment>
 </li>
 </usage>
@@ -493,7 +521,7 @@ they are not completed.</para>
 <comment>(Switch to the current node in stylesheet.)</comment>
 </li>
 <li>
-<text>source SOURCE</text>
+<text>source &lt;SOURCE&gt;</text>
 <comment>(To change to a new source file.  A leading '~' is replaced by the $HOME environment variable value. May need to use run command to execute it)</comment>
 </li>
 </usage>
@@ -507,7 +535,7 @@ they are not completed.</para>
 <comment>(Switch to the current document node.)</comment>
 </li>
 <li>
-<text>data DATA</text>
+<text>data &lt;DATA&gt;</text>
 <comment>(To change to a new xml data file.  A leading '~' is replaced by the $HOME environment variable value. May need to use run command to process it)</comment>
 </li>
 </usage>
@@ -517,18 +545,18 @@ they are not completed.</para>
 <summary>Change to the path specified by a xpath.</summary>
 <usage>
 <li>
-	<text>cd XPATH</text>
+	<text>cd &lt;XPATH&gt;</text>
 </li>
 <li>
-	<text>cd -tNAME</text>
-	<comment>(To changes current SOURCE node to a be xsl template with name NAME, but does execute source command)</comment>
+	<text>cd -t&lt;TEMPLATENAME&gt;</text>
+	<comment>(To changes current SOURCE node to a be xsl template with name &lt;NAME&gt;, but does execute source command)</comment>
 </li>
 <li>
-	<text>cd -sXPATH</text>
+	<text>cd -s&lt;XPATH&gt;</text>
 	<comment>(An absolute xPath to node within stylesheet)</comment>
 </li>
 <li>
-	<text>cd   &lt;SHORTCUT&gt; XPATH</text>
+	<text>cd   &lt;SHORTCUT&gt; &lt;XPATH&gt;</text>
 </li>
 <li>
 	<text>     Where SHORTCUT can be either</text>
@@ -583,10 +611,10 @@ they are not completed.</para>
 </body>
 <usage>
 <li>
-<text>search XPATH</text><comment>(See what xpath can be used see search.dtd)</comment>
+<text>search &lt;XPATH&gt;</text><comment>(See what xpath can be used see search.dtd)</comment>
 </li>
 <li>
-<text>search -sort XPATH</text><comment>(Enable tell search.xsl to sort the result before outputing it)</comment>
+<text>search -sort &lt;XPATH&gt;</text><comment>(Enable tell search.xsl to sort the result before outputing it)</comment>
 </li>
 </usage>
 </cmd>
@@ -596,7 +624,7 @@ they are not completed.</para>
 <summary>Change the working directory</summary>
 <usage>
 <li>
-<text>chdir PATH</text>
+<text>chdir &lt;PATH&gt;</text>
 <comment>(A relative or absolute path for operating system)</comment>
 </li>
 </usage>
@@ -606,8 +634,8 @@ they are not completed.</para>
 <summary>Execute shell command</summary>
 <usage>
 <li>
-<text>shell TEXT</text>
-<comment>(TEXT is the text to be passed to operating system for execution)</comment>
+<text>shell &lt;TEXT&gt;</text>
+<comment>(&lt;TEXT&gt; is the text to be passed to operating system for execution)</comment>
 </li>
 </usage>
 </cmd>
