@@ -2,10 +2,13 @@ EXTRA_DIST=  *.html *.xsl
 
 DATADIR = ..
 XSLDIR = KDE
+XSLDBG=$(top_builddir)/src/xsldbg
 
+$(XSLDBG):
+	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
 
 index.docbook : xsldoc2kde.xsl $(DATADIR)/xsldoc.xml 
-	xsldbg --cd $(DATADIR) --param xsldbg_version "'$(VERSION)'"  -o $(XSLDIR)/index.docbook $(XSLDIR)/xsldoc2kde.xsl xsldoc.xml
+	$(XSLDBG) --cd $(DATADIR) --param xsldbg_version "'$(VERSION)'"  -o $(XSLDIR)/index.docbook $(XSLDIR)/xsldoc2kde.xsl xsldoc.xml
 
 index.cache.bz2 : index.docbook
 	meinproc index.docbook

@@ -1,9 +1,12 @@
-XSLDBG=../src/xsldbg
+XSLDBG=$(top_builddir)/src/xsldbg
 
 TESTS = ../results/test1.pl ../results/test2.pl
 TEST_RESULTS =../results/test1.results  ../results/test2.results
 
 EXTRA_DIST= *.xsl *.xml *.data *.pl
+
+$(XSLDBG):
+	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
 
 ../results/%.script ../results/%.pl : %.data testgenerator.xsl 
 	$(XSLDBG) --param baseFileName \'../results/$(*F)\' testgenerator.xsl $(*F).data 

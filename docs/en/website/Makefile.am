@@ -1,5 +1,10 @@
 EXTRA_DIST=index.html
 
+XSLDBG=$(top_builddir)/src/xsldbg
+
+$(XSLDBG):
+	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
+
 all:
 
 install-data-local: all

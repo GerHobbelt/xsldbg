@@ -1,5 +1,10 @@
 SUBDIRS = plain KDE GNOME website
 
+XSLDBG=$(top_builddir)/src/xsldbg
+
+$(XSLDBG):
+	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
+
 EXTRA_DIST= xsldoc.xsl xsldoc.xml
 
 install-data-local: all
