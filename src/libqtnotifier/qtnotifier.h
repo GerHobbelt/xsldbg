@@ -19,7 +19,7 @@
 #define QTNOTIFIER
 
 #include <libxsldbg/xsldbgnotifier.h>
-#include <qt.h>
+#include <qobject.h>
 
 
 class QTNotifier : public QObject
