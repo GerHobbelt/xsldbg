@@ -37,11 +37,11 @@ A:link, A:visited, A:active { text-decoration: underline }
 
 --></style>
 <title>
-           xsldbg 3.1.4 documentation
+           xsldbg 3.1.5 documentation
          </title>
 </head>
 <body bgcolor="#8b7765" text="#000000" link="#000000" vlink="#000000"><table class="listbody"><tr><td>
-<h1 class="cmdth">xsldbg 3.1.4</h1>
+<h1 class="cmdth">xsldbg 3.1.5</h1>
 <h2 class="cmdth">Overview</h2>
 <h3>xsldbg help</h3>
 
@@ -210,6 +210,10 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <p>Any name spaces in the provided QNAME will be expanded as specified 
 by the names spaces defined in the XSL SOURCE file. eg &quot;xsl:test1&quot;  will be expanded to &quot;http://www.w3.org/199/XSL/Transform:test1&quot;
 </p>
+<p>A requested breakpoint may need to be resolved to its associated URL and line number. This is done automaticly after 
+the first template has been seen by xsldbg. Breakpoints are re-validated shortly after the start of each run. 
+</p>
+<p>Automatic breakpoint validation is used when gdb mode is enabled - the default behaviour of xsldbg</p>
 </td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>

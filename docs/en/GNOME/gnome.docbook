@@ -99,10 +99,10 @@
 		  </para>
 		</listitem>
 	  </orderedlist></para>
-  </legalnotice><authorgroup><author><firstname>Keith</firstname><surname>Isdale</surname><affiliation><orgname/><address><email>k_isdale@tpg.com.au</email></address></affiliation></author></authorgroup><revhistory><revision><revnumber>xsldbg Manual V1.0</revnumber><date></date><revdescription><para role="author">Keith Isdale
+  </legalnotice><authorgroup><author><firstname>Keith</firstname><surname>Isdale</surname><affiliation><orgname/><address><email>k_isdale@tpg.com.au</email></address></affiliation></author></authorgroup><revhistory><revision><revnumber>xsldbg Manual V1.0</revnumber><date>2003-06-29</date><revdescription><para role="author">Keith Isdale
 	    	<email>k_isdale@tpg.com.au</email></para><para role="publisher"/></revdescription></revision></revhistory><releaseinfo>
-      This manual describes version 3.1.4 of xsldbg. It was
-       last updated on .
+      This manual describes version 3.1.5 of xsldbg. It was
+       last updated on 2003-06-29.
     </releaseinfo><legalnotice><title>Feedback</title><para>To report a bug or make a suggestion regarding xsldbg application or this manual, follow the directions in the <ulink url="http://xsldbg.sourceforge.net"> xsldbg Feedback Page</ulink>. 
       </para></legalnotice></articleinfo><indexterm zone="index"><primary>xsldbg</primary></indexterm><!--please do not change the id; for translations, change lang to --><!--appropriate code --><sect1 id="overview_section"><title>Overview</title><sect2 id="overview1">
 <para> xsldbg is a text based tool to debug stylesheets (the eXtensible Stylesheet Language) and has 
@@ -163,7 +163,9 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </para><para>This command will match a partial or complete QNAME template and or mode name provided. Eg &quot;template&quot; will match any QNAME with a local part of &quot;template&quot;
 </para><para>Any name spaces in the provided QNAME will be expanded as specified 
 by the names spaces defined in the XSL SOURCE file. eg &quot;xsl:test1&quot;  will be expanded to &quot;http://www.w3.org/199/XSL/Transform:test1&quot;
-</para>
+</para><para>A requested breakpoint may need to be resolved to its associated URL and line number. This is done automaticly after 
+the first template has been seen by xsldbg. Breakpoints are re-validated shortly after the start of each run. 
+</para><para>Automatic breakpoint validation is used when gdb mode is enabled - the default behaviour of xsldbg</para>
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>break -l &lt;FILENAME&gt; &lt;LINENO&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(To set breakpoint at specified file, line number)</emphasis></markup></entry></row><row><entry>break -l &lt;URI&gt; &lt;LINENO&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(To set breakpoint at specified URI, line number)</emphasis></markup></entry></row><row><entry>break &lt;TEMPLATE_NAME&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(To break at named or matched template.)</emphasis></markup></entry></row><row><entry>break &lt;TEMPLATE_NAME&gt; &lt;MODE_NAME&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(To break at named template with given mode.)</emphasis></markup></entry></row><row><entry>break &quot;&quot; &lt;MODE_NAME&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(To break at any template that has a given mode name)</emphasis></markup></entry></row><row><entry>break *<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(To break at any template found.)</emphasis></markup></entry></row><row><entry>break \*<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(To break at the &quot;*&quot; template. Other name that include '*' will not be treated specialy.)</emphasis></markup></entry></row><row><entry>break <markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(To break point at current node. Yes that includes xml data nodes!)</emphasis></markup></entry></row></tbody></tgroup></table>
 </sect2><sect2 id="chdir_cmd"><title id="chdir_cmd.title">Chdir</title>
 Change the working directory

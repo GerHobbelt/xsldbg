@@ -538,7 +538,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: Breakpoint to template", 
+             "Warning: Breakpoint at file test2.xsl: line 18 exists", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;

@@ -1,3 +1,12 @@
+Keith Isdale 29 June 2003 <k_isdale@tpg.com.au>
+  Version 3.1.5
+  Fix bug that can cause the warning message not to display when adding a existing template breakpoint
+    - change test2 to suit
+  xsldbg implementation note : no warning will be given for adding an existing template if xsldbg has 
+	not yet reached the point where it can determine the templates that exist in the XSLT script.
+	This is because xsldbg assigns a fake XSLT script URL to the template breakpoint in this scenario
+	and then resolves the breakpoint to the requested location when possible.
+
 Keith Isdale 22 June 2003 <k_isdale@tpg.com.au>
    Rename xsldbg.suse.8.1.spec to xsldbg.suse.8.0.spec
    Convert xsldbg.spec to be a GCC 3.2, i386, spec file 

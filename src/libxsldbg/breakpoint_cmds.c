@@ -614,6 +614,11 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
 				}
 			    }
 			}else{
+			    if (xsldbgValidateBreakpoints != BREAKPOINTS_BEING_VALIDATED){
+				xsltGenericError(xsltGenericErrorContext,
+						"Warning: Breakpoint at file %s: line %d exists\n", 
+						tempUrl, templateLineNo);
+			    }
 			    validatedBreakPoints++;
 			}
 		    }
@@ -803,6 +808,7 @@ xslDbgShellEnableBreakPoint(void *payload, void *data,
  * Returns 1 if successful,
  *         0 otherwise
  */
+
 int
 xslDbgShellEnable(xmlChar * arg, int enableType)
 {

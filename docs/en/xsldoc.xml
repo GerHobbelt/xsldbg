@@ -523,6 +523,10 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <para>Any name spaces in the provided QNAME will be expanded as specified 
 by the names spaces defined in the XSL SOURCE file. eg "xsl:test1"  will be expanded to "http://www.w3.org/199/XSL/Transform:test1"
 </para>
+<para>A requested breakpoint may need to be resolved to its associated URL and line number. This is done automaticly after 
+the first template has been seen by xsldbg. Breakpoints are re-validated shortly after the start of each run. 
+</para>
+<para>Automatic breakpoint validation is used when gdb mode is enabled - the default behaviour of xsldbg</para>
 </body>
 <usage>
 <li>

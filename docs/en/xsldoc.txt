@@ -1,5 +1,5 @@
 
-         xsldbg version 3.1.4
+         xsldbg version 3.1.5
          ====================
 
     xsldbg help
@@ -95,6 +95,8 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 break -l xsldoc.xsl 26
 This command will match a partial or complete QNAME template and or mode name provided. Eg "template" will match any QNAME with a local part of "template"
 Any name spaces in the provided QNAME will be expanded as specified by the names spaces defined in the XSL SOURCE file. eg "xsl:test1" will be expanded to "http://www.w3.org/199/XSL/Transform:test1"
+A requested breakpoint may need to be resolved to its associated URL and line number. This is done automaticly after the first template has been seen by xsldbg. Breakpoints are re-validated shortly after the start of each run.
+Automatic breakpoint validation is used when gdb mode is enabled - the default behaviour of xsldbg
 Usage:
 
      break -l <FILENAME> <LINENO>   (To set breakpoint at specified file, line number)

@@ -230,15 +230,15 @@ break /</test>
 <test>break /
 break /</test>
 <result>
-<row> <!-- breakkpoint exist so we should get an error message -->
-<matchtext>Error: Breakpoint to template</matchtext>
+<row> <!-- breakkpoint exist so we should get a warning message -->
+<matchtext>Warning: Breakpoint at file test2.xsl: line 18 exists</matchtext>
 </row>
 </result>
 </cmd>
 <cmd>
 <test>break -l test2.xsl 18</test>
 <result>
-<row> <!-- breakkpoint exist so we should get an error message -->
+<row> <!-- breakkpoint exist so we should get a warning message -->
 <matchtext>Warning: Breakpoint at file test2.xsl: line 18 exists</matchtext>
 </row>
 </result>
