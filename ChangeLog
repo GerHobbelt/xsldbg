@@ -1,9 +1,9 @@
 Keith Isdale 12 Dec 2001 <k_isdale@tpg.com.au>
   Fixed GNOME docs again!
-  Synchronized function comments in header and source (maily GNOME doc comments)
-	Gnome API docs now look good, horay!!
+  Synchronized function comments in header and source (mainly GNOME doc comments)
+	Gnome API docs now look Ok, horay!!
   Copied xslbreakpoint_2.h to xslbreakpoint.h
-	remove xslbreakpoint_2.h in cvs later
+	remove xslbreakpoint_2.h in cvs later(done!)
 	
 	
 Keith Isdale 12 Dec 2001 <k_isdale@tpg.com.au>
