@@ -1,3 +1,6 @@
+# in subdir we have files need to test the guess of stylesheet and XML file name
+SUBDIRS = subdir
+
 if USE_XSLDBG_AS_THREAD
 # set the include path found by configure
 # cheet a bit because I need DOCS_PATH defined

@@ -29,8 +29,9 @@ the &lt;ENTER&gt; key.
 If your operating system supports it file names will be expanded. 
 </para>
 <para title="Legend :">
-<list><li>TEMPLATENAME : A valid template name</li>
-<li>FILENAME : A valid URI for a stylesheet, xml data, or output. On some operating systems a &quot;~&quot; prefix will be replaced by your home directory path</li>
+<list><li>TEMPLATENAME : A valid template name. Only to contain ASCI character codes 0x00 to 0x7F</li>
+<li>FILENAME : A valid file name local to the system of the user. It can have a &quot;~&quot; prefix on *nix and CYGWIN platforms. Or environment variables under RISC OS</li>
+<li>URI : A Uniform Resource Identifiers as defined by RFC 2396</li>
 <li>LINENO : A valid line number in associated &lt;FILENAME&gt;</li>
 <li>NUMBER_OF_FRAMES : a valid line number frames to change position by</li>
 <li>BREAKPOINT_ID : a valid break point number</li>
@@ -43,8 +44,8 @@ If your operating system supports it file names will be expanded.
 <li>TEXT : Free form text <comment>(no restrictions)</comment></li>
 <li>COMMAND : A valid command for the xsdbg</li>
 <li>QNAME : A valid variable/parameter name</li>
-<li>SOURCE : The stylesheet being/to be executed. See &lt;FILENAME&gt;</li>
-<li>DATA : The xml data(document) being/to be processed by the stylesheet. See &lt;FILENAME&gt;</li>
+<li>SOURCE : The stylesheet being/to be executed. See &lt;FILENAME&gt; and &lt;URI&gt;</li>
+<li>DATA : The xml data(document) being/to be processed by the stylesheet. See &lt;FILENAME&gt; and &lt;URI&gt;</li>
 <li>DEVICE_PATH : Is a valid terminal on the operating system</li>
 <li>TTY_LEVEL : Is a valid level of input/output to use</li>
 </list>
@@ -401,6 +402,10 @@ If your operating system supports it file names will be expanded.
 <text>encoding</text>
 <comment>(What encoding to use for standard output)</comment>
 </li>
+<li>
+<text>searchresultspath</text>
+<comment>Where do we store the results of searching. If this is not set then xsldbg will use the path of the stylesheet</comment>
+</li>
 </list></li>
 </usage>
 </cmd>
@@ -490,6 +495,11 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <usage>
 <li>
 <text>break -l &lt;FILENAME&gt; &lt;LINENO&gt;</text>
+<comment>(To set breakpoint at specified file, line number)</comment>
+</li>
+<li>
+<text>break -l &lt;URI&gt; &lt;LINENO&gt;</text>
+<comment>(To set breakpoint at specified URI, line number)</comment>
 </li>
 <li>
 <text>break &lt;TEMPLATENAME&gt;</text>
@@ -538,6 +548,10 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <comment>(Delete at specifed file, line number)</comment>
 </li>
 <li>
+<text>delete -l &lt;URI&gt; &lt;LINENO&gt;</text>
+<comment>(Delete at specifed URI, line number)</comment>
+</li>
+<li>
 <text>delete &lt;TEMMPLATENAME&gt;</text>
 <comment>(To delete break point at named template.)</comment>
 </li>
@@ -566,6 +580,10 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <text>enable -l &lt;FILENAME&gt; &lt;LINENO&gt;</text>
 <comment>(Enable/disable breakpoint at specifed file, line number)</comment>
 </li>
+<li>
+<text>enable -l &lt;URI&gt; &lt;LINENO&gt;</text>
+<comment>(Enable/disable breakpoint at specifed URI, line number)</comment>
+</li>
 </usage>
 </cmd>
 
@@ -583,6 +601,10 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <li>
 <text>disable -l &lt;FILENAME&gt; &lt;LINENO&gt;</text>
 <comment>(Disable breakpoint at specifed file, line number)</comment>
+</li>
+<li>
+<text>disable -l &lt;URI&gt; &lt;LINENO&gt;</text>
+<comment>(Disable breakpoint at specifed URI, line number)</comment>
 </li>
 </usage>
 </cmd>
@@ -705,7 +727,7 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </li>
 <li>
 <text>source &lt;SOURCE&gt;</text>
-<comment>(To change to a new source file.  A leading '~' is replaced by the $HOME environment variable value. May need to use run command to execute it)</comment>
+<comment>(To change to a new source file.  A leading &quot;~&quot; is replaced by the $HOME environment variable value. Will need to use &quot;run&quot; command to execute it)</comment>
 </li>
 </usage>
 </cmd>
@@ -719,7 +741,7 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </li>
 <li>
 <text>data &lt;DATA&gt;</text>
-<comment>(To change to a new xml data file.  A leading '~' is replaced by the $HOME environment variable value. May need to use run command to process it)</comment>
+<comment>(To change to a new xml data file.  A leading &quot;~&quot; is replaced by the $HOME environment variable value. Will need to use &quot;run&quot; command to process it)</comment>
 </li>
 </usage>
 </cmd>
@@ -812,7 +834,14 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <para>Shortcut name : o</para>
 </body>
 <usage>
-<li><text>output &lt;FILENAME&gt;</text></li>
+<li>
+<text>output &lt;FILENAME&gt;</text>
+<comment>(A local file name. Which can have a &quot;~&quot; prefix on *nix and CYGWIN platforms. Or environment variables under RISC OS)</comment>
+</li>
+<li>
+<text>output &lt;URI&gt;</text>
+<comment>(The &lt;URI&gt; must only use the &quot;file://&quot; protocol. This is then converted to a file name suitable for the operating system)</comment>
+</li>
 <li><text>output -</text><comment>( Send to standard output. Must only be used when using xsldbg's command line prompt )</comment></li>
 </usage>
 </cmd>
@@ -827,38 +856,39 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </usage>
 </cmd>
 
-<cmd name="system" shortcut="sys" title="system">
-<summary>Print the value that a system file maps via the xml catalog</summary>
+<cmd name="system" shortcut="sys" title="System">
+<summary>Print the value that a system file maps via the current catalog</summary>
 <body>
 <para>Shortcut name : sys</para>
 </body>
 <usage>
-<li><text>system</text></li>
+<li>
+<text>system &quot;&lt;SystemID&gt;&quot;</text>
+</li>
 </usage>
 </cmd>
 
 <cmd name="public" shortcut="pub" title="Public">
-<summary>Print the value that a public ID maps via the xml catalog</summary>
+<summary>Print the value that a public ID maps via the current catalog</summary>
 <body>
 <para>Shortcut name : pub</para>
 </body>
 <usage>
-<li></li>
+<li><text>public &quot;&lt;PublicID&gt;&quot;</text>
+</li>
 </usage>
 </cmd>
 <!-- - - - - - - Searching related - - - - - -->
 <cmd name="search" title="Search">
 <summary>Search a dataBase of all information gathered from stylesheets loaded</summary>
 <body>
-<para>All output files are stored in the same directory as the provided stylesheet. searchresults.xml is either transformed by  search.xsl or searchhtml.xsl depending on whether the prefrehtml option is set.
+<para>All output files are stored in, value of the &quot;searchresultspath&quot; option if set, or the same directory as the provided stylesheet. searchresults.xml is normally transformed by  search.xsl, but will be transformed using searchhtml.xsl if the &quot;prefrehtml&quot; option is set.
 </para>
-<para>When the search command is issued a xml file (searchresults.xml) will be created. You can then process this file with your own stylesheet to present data in a other ways. If preferhtml is not used
+<para>When the search command is issued a xml file (searchresults.xml) will be created. You can then process this file with your own stylesheet to present data in a other ways. If &quot;preferhtml&quot; option is not set
 then searchresult.txt is printed to display. 
 </para>
 <para>Depending on the amount of data collected it might take a while to complete this command.
 </para>
-<para>Normally results are sent to searchresults.txt but if preferhtml option is set then 
-use searchresults.html.</para>
 </body>
 <usage>
 <li>

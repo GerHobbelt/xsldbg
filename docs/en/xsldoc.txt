@@ -1,5 +1,5 @@
 
-         xsldbg version 2.0.9
+         xsldbg version 2.1.3
          ====================
 
     xsldbg help
@@ -13,8 +13,9 @@ xsldbg is similar to gdb. It has three major modes of execution of stylesheets.
 On systems with readline library available you can use the back/forward keys to navigate the history of entered commands. On all systems the last entered command can be repeated by just pressing the <ENTER> key.
 If your operating system supports it file names will be expanded.
 
-     TEMPLATENAME : A valid template name
-     FILENAME : A valid URI for a stylesheet, xml data, or output. On some operating systems a "~" prefix will be replaced by your home directory path
+     TEMPLATENAME : A valid template name. Only to contain ASCI character codes 0x00 to 0x7F
+     FILENAME : A valid file name local to the system of the user. It can have a "~" prefix on *nix and CYGWIN platforms. Or environment variables under RISC OS
+     URI : A Uniform Resource Identifiers as defined by RFC 2396
      LINENO : A valid line number in associated <FILENAME>
      NUMBER_OF_FRAMES : a valid line number frames to change position by
      BREAKPOINT_ID : a valid break point number
@@ -27,8 +28,8 @@ If your operating system supports it file names will be expanded.
      TEXT : Free form text   (no restrictions)
      COMMAND : A valid command for the xsdbg
      QNAME : A valid variable/parameter name
-     SOURCE : The stylesheet being/to be executed. See <FILENAME>
-     DATA : The xml data(document) being/to be processed by the stylesheet. See <FILENAME>
+     SOURCE : The stylesheet being/to be executed. See <FILENAME> and <URI>
+     DATA : The xml data(document) being/to be processed by the stylesheet. See <FILENAME> and <URI>
      DEVICE_PATH : Is a valid terminal on the operating system
      TTY_LEVEL : Is a valid level of input/output to use
 
@@ -79,7 +80,8 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 break -l xsldoc.xsl 26
 Usage:
 
-     break -l <FILENAME> <LINENO>
+     break -l <FILENAME> <LINENO>   (To set breakpoint at specified file, line number)
+     break -l <URI> <LINENO>   (To set breakpoint at specified URI, line number)
      break <TEMPLATENAME>   (To break at named template.)
      break *   (To break at any template found.)
      break   (To break point at current node. Yes that includes xml data nodes!)
@@ -144,7 +146,7 @@ Summary : Switch to displaying the current node in xml data. Or change xml data 
 Usage:
 
      data   (Switch to the current document node.)
-     data <DATA>   (To change to a new xml data file.  A leading '~' is replaced by the $HOME environment variable value. May need to use run command to process it)
+     data <DATA>   (To change to a new xml data file.  A leading "~" is replaced by the $HOME environment variable value. Will need to use "run" command to process it)
 - - - - - - - - - - - - - - - - - - - -
 
 
@@ -157,6 +159,7 @@ Usage:
      delete   (To delete breakpoint at current node)
      delete <BREAKPOINT_ID>   (To delete breakpoint at specified break point number)
      delete -l <FILENAME> <LINENO>   (Delete at specifed file, line number)
+     delete -l <URI> <LINENO>   (Delete at specifed URI, line number)
      delete <TEMMPLATENAME>   (To delete break point at named template.)
      delete *   (To delete all break points.)
 - - - - - - - - - - - - - - - - - - - -
@@ -188,6 +191,7 @@ Usage:
      disable   (To disable breakpoint at current node)
      disable <BREAKPOINT_ID>   (To disable breakpoint at specified break point number
      disable -l <FILENAME> <LINENO>   (Disable breakpoint at specifed file, line number)
+     disable -l <URI> <LINENO>   (Disable breakpoint at specifed URI, line number)
 - - - - - - - - - - - - - - - - - - - -
 
 
@@ -216,6 +220,7 @@ Usage:
      enable   (To enable/disable breakpoint at current node)
      enable <BREAKPOINT_ID>   (To enable/disable breakpoint at specified break point number
      enable -l <FILENAME> <LINENO>   (Enable/disable breakpoint at specifed file, line number)
+     enable -l <URI> <LINENO>   (Enable/disable breakpoint at specifed URI, line number)
 - - - - - - - - - - - - - - - - - - - -
 
 
@@ -314,18 +319,19 @@ Summary : Specify the output file name
 Shortcut name : o
 Usage:
 
-     output <FILENAME>
+     output <FILENAME>   (A local file name. Which can have a "~" prefix on *nix and CYGWIN platforms. Or environment variables under RISC OS)
+     output <URI>   (The <URI> must only use the "file://" protocol. This is then converted to a file name suitable for the operating system)
      output -   ( Send to standard output. Must only be used when using xsldbg's command line prompt )
 - - - - - - - - - - - - - - - - - - - -
 
 
 Command : Public
-Summary : Print the value that a public ID maps via the xml catalog
+Summary : Print the value that a public ID maps via the current catalog
 
 Shortcut name : pub
 Usage:
 
-     
+     public "<PublicID>"
 - - - - - - - - - - - - - - - - - - - -
 
 
@@ -368,10 +374,9 @@ Usage:
 Command : Search
 Summary : Search a dataBase of all information gathered from stylesheets loaded
 
-All output files are stored in the same directory as the provided stylesheet. searchresults.xml is either transformed by search.xsl or searchhtml.xsl depending on whether the prefrehtml option is set.
-When the search command is issued a xml file (searchresults.xml) will be created. You can then process this file with your own stylesheet to present data in a other ways. If preferhtml is not used then searchresult.txt is printed to display.
+All output files are stored in, value of the "searchresultspath" option if set, or the same directory as the provided stylesheet. searchresults.xml is normally transformed by search.xsl, but will be transformed using searchhtml.xsl if the "prefrehtml" option is set.
+When the search command is issued a xml file (searchresults.xml) will be created. You can then process this file with your own stylesheet to present data in a other ways. If "preferhtml" option is not set then searchresult.txt is printed to display.
 Depending on the amount of data collected it might take a while to complete this command.
-Normally results are sent to searchresults.txt but if preferhtml option is set then use searchresults.html.
 Usage:
 
      search <XPATH>   (See what xpath can be used see search.dtd. The deafault <XPATH> is '//search/*' )
@@ -431,6 +436,7 @@ Usage:
      docspath   (Path to use when looking for documentation)
      catalognames   (The names of the catalogs to use when the catalogs option is set. Value will be lost if set before setting catalogs option)
      encoding   (What encoding to use for standard output)
+     searchresultspath   Where do we store the results of searching. If this is not set then xsldbg will use the path of the stylesheet
 
 - - - - - - - - - - - - - - - - - - - -
 
@@ -466,7 +472,7 @@ Summary : Switch to displaying the current node in stylesheet. Or change stylesh
 Usage:
 
      source   (Switch to the current node in stylesheet.)
-     source <SOURCE>   (To change to a new source file.  A leading '~' is replaced by the $HOME environment variable value. May need to use run command to execute it)
+     source <SOURCE>   (To change to a new source file.  A leading "~" is replaced by the $HOME environment variable value. Will need to use "run" command to execute it)
 - - - - - - - - - - - - - - - - - - - -
 
 
@@ -513,13 +519,13 @@ Usage:
 - - - - - - - - - - - - - - - - - - - -
 
 
-Command : system
-Summary : Print the value that a system file maps via the xml catalog
+Command : System
+Summary : Print the value that a system file maps via the current catalog
 
 Shortcut name : sys
 Usage:
 
-     system
+     system "<SystemID>"
 - - - - - - - - - - - - - - - - - - - -
 
 

@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- 
+     File : test12.xsl     
+     Author: Keith Isdale <k_isdale@tpg.com.au>
+     Description: stylesheet for test "test12"
+     Copyright Reserved Under GPL     
+-->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
 

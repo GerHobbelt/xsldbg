@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<!-- 
+     File : test13.xml     
+     Author: Keith Isdale <k_isdale@tpg.com.au>
+     Description: xml data for stylesheet for test "test13"
+     Copyright Reserved Under GPL     
+-->
+<!-- A bit rough but define elements needed plus define the entity
+     that we are going to include -->
+<!DOCTYPE result [
+<!ELEMENT result (data)+ >
+<!ELEMENT data (#PCDATA) >
+<!ENTITY extradata SYSTEM "subdir/test14.xml">
+]>
+
+<result>
+  <data>2</data>
+  <data>1</data>
+  <data>3</data>
+  &extradata;
+</result>
+
+
+
+<!-- initialization code for xemacs -->
+<!--
+Local Variables:
+mode: sgml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+-->

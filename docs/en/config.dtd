@@ -13,10 +13,10 @@ Refer to this DTD via
 
 <!-- At the moment only a sequence of integer or string options is 
     supported by xsldbg's configuration file-->
-<!ELEMENT config ((intoption | stringoption)*>
+<!ELEMENT config ((intoption | stringoption))*>
 
 <!-- All configuration elements are to have a name and value attribute -->
-<!ELEMENT % configbase 
+<!ENTITY % configbase 
   "name  CDATA #IMPLIED
    value CDATA #IMPLIED"
 >

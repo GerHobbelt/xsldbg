@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<!-- 
+     File : test14.xml     
+     Author: Keith Isdale <k_isdale@tpg.com.au>
+     Description: second xml data for stylesheet for test "test13". This will
+     be included via an entity refernce so no need for a root node
+     Copyright Reserved Under GPL     
+-->
+
+  <data>5</data>
+  <data>6</data>
+  <data>7</data>
+
+
+<!-- initialization code for xemacs -->
+<!--
+Local Variables:
+mode: sgml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+-->

@@ -122,6 +122,7 @@ xslDbgShellReadline(xmlChar * prompt)
 
     }
 
+void xsldbgThreadCleanup(void);
 
 /* thread has died so cleanup after it not called directly but via
  notifyXsldbgApp*/
