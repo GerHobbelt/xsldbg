@@ -20,6 +20,7 @@
 #include "xsldbg.h"
 #include "files.h"
 #include "utils.h"
+#include "options.h"
 
 /* Note: These are native filenames; they can be accessed directly by fopen,
          etc. But they cannot be operated on to extract components from */
@@ -118,4 +119,64 @@ filesExpandName(const xmlChar * fileName)
         }
     }
     return result;
+}
+
+  /**
+   * filesSearchFileName:
+   * @fileType : Is valid
+   *
+   * Return a copy of the file name to use as an argument to searching
+   *
+   * Returns A copy of the file name to use as an argument to searching
+   */
+  xmlChar *filesSearchFileName(FilesSearchFileNameEnum fileType){
+  xmlChar *result = NULL;
+  int type = fileType;
+  int preferHtml = optionsGetIntOption(OPTIONS_PREFER_HTML);
+  const xmlChar *baseDir = NULL;
+  const xmlChar *name = NULL;
+  static const char* searchNames[] = {
+    /* First list names when prefer html is false*/
+    ".searchresult/xml", /* input  */
+    ".search/xsl",        /* stylesheet to use*/
+    ".searchresult/txt",  /* where to put the result*/
+    /*Now for the names to use when prefer html is true */
+    ".searchresult/xml", /* input  */   
+    ".searchhtml/xsl",    /* stylesheet to use*/
+    ".searchresult/html"  /* where to put the result*/
+  };
+
+  if (!optionsGetStringOption(OPTIONS_DOCS_PATH) || !stylePath()){
+    xsltGenericError(xsltGenericErrorContext,
+		     "Error: Null docs dir path or Null stylesheet path\n");
+    return result;
+  }
+    
+
+  name = (xmlChar*)searchNames[(preferHtml * 3)  + type];
+    switch(type){
+    case FILES_SEARCHINPUT:
+      baseDir = stylePath();
+      break;
+
+    case FILES_SEARCHXSL:
+      baseDir = optionsGetStringOption(OPTIONS_DOCS_PATH);
+      break;
+
+    case FILES_SEARCHRESULT:
+      baseDir = stylePath();
+      break;    
+    }
+    
+    result = xmlMalloc(xmlStrLen(baseDir) + xmlStrLen(name) + 1);
+    if (result){
+      xmlChar* temp = result;
+      xmlStrCpy(result, baseDir);
+      xmlStrCat(result, name);
+      /* We're going to pass a native filename to a command that takes URIs,
+       * so we need to convert it */
+      result = xmlStrdup((xmlChar*) unixfilename(temp));
+      xmlFree(temp);
+    }
+  return result;
 }
