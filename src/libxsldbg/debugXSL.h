@@ -879,6 +879,44 @@ extern "C" {
     int xslDbgShellOptions(void);
 
 
+  /**
+   * xslDbgShellShowWatches:
+   * @styleCtxt: the current stylesheet context
+   * @ctxt: The current shell context
+   * @showWarnings : If 1 then showWarning messages,
+   *                 otherwise do not show warning messages
+   *
+   * Print the current watches and their values
+   *
+   * Returns 1 on success,
+   *         0 otherwise
+   */
+  int xslDbgShellShowWatches(xsltTransformContextPtr styleCtxt, 
+			       xmlShellCtxtPtr ctx,int showWarnings);
+
+  /**
+   * xslDbgShellAddWatch:
+   * @arg : A valid xPath of expression to watch the value of
+   *
+   * Add expression to list of expressions to watch value of
+   *
+   * Returns 1 on success,
+   *         0 otherwise   
+   */
+  int xslDbgShellAddWatch(xmlChar* arg);
+
+  /**
+   * xslDbgShellDeleteWatch:
+   * @arg : A watch ID to remove
+   *
+   * Delete a given watch ID from our list of expressions to watch
+   *
+   * Returns 1 on success,
+   *         0 otherwise
+   */
+  int xslDbgShellDeleteWatch(xmlChar* arg);
+
+
     /* -----------------------------------------
      * 
      * Tracing, walking related commands

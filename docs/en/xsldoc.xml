@@ -39,8 +39,9 @@ If your operating system supports it file names will be expanded.
 <li>MODE_NAME The mode of template which can be fully qualified name ie "xsl:modeName".</li>
 <li>QNAME : A fully qualified name ie "xsl:localPart"</li>
 <li>LINENO : A valid line number in associated &lt;FILENAME&gt;</li>
-<li>NUMBER_OF_FRAMES : a valid line number frames to change position by</li>
-<li>BREAKPOINT_ID : a valid break point number</li>
+<li>NUMBER_OF_FRAMES : A valid line number frames to change position by</li>
+<li>BREAKPOINT_ID : A valid break point number</li>
+<li>WATCH_ID : A valid watch expression number as indicated by showwatch command</li>
 <li>SPEED: speed to walk through code at, between 0 to 9</li>
 <li><comment>(Comment)</comment>: a comment about command meaning or usage</li>
 <li>{ opt1 | opt2 | opt2 .. etc} : Choose one of the opt's</li>
@@ -90,7 +91,7 @@ If your operating system supports it file names will be expanded.
 
 <li>Expression viewing(xpath) : <link href="cat">cat</link></li>
 <li>Node viewing : <link href="ls">ls</link>, <link href="dir">dir</link>, 
-<link href="du">du</link>, <link href="cat">cat</link>, <link href="pwd">pwd</link></li>
+<link href="du">du</link>, <link href="cat">cat</link>, <link href="pwd">pwd</link></li>, <link href="addwatch">addwatch</link>, <link href="showwatch">showwatch</link>, <link href="delwatch">delwatch</link>
 <li>Variable viewing : <link href="globals">globals</link>, 
 <link href="locals">locals</link>, 
 <link href="cat">cat</link>
@@ -712,6 +713,51 @@ by the names spaces defined in the XSL SOURCE file. eg "xsl:test1"  will be expa
 <usage>
 <li>
 <text>pwd</text>
+</li>
+</usage>
+</cmd>
+
+<cmd name="addwatch" shortcut="watch" title="Addwatch">
+<summary>Add an expression to be watched. See showwatch for display watch values</summary>
+<body>
+<para>Shortcut name: watch</para>
+</body>
+<usage>
+<li>addwatch &lt;XPATH&gt;</li>
+</usage>
+</cmd>
+
+<cmd name="showwatch" shortcut="watches" title="ShowWatch">
+<summary>Show the current expression being watched</summary>
+<body>
+<para>Shortcut name: watches</para>
+</body>
+<usage>
+<li>
+<text>showwatch</text>
+<comment>(Show the currently selected watches and thier values)</comment>
+</li>
+<li>
+<text>showwatch 1</text>
+<comment>(Enable the automatic printing of watch expressions. This is used by default.)</comment>
+</li>
+<li>
+<text>showwatch 0</text>
+<comment>(Disable the automatic printing of watch expressions.)</comment>
+</li>
+</usage>
+</cmd>
+
+<cmd name="delwatch" title="DelWatch">
+<summary>Delete a watch expression or remove all watch expressions as displayed by %quot;showwatch.&quot; command</summary>
+<usage>
+<li>
+<text>delwatch &lt;WATCHID&gt;</text>
+<comment>(Delete a watch expression with given ID)</comment>
+</li>
+<li>
+<text>delwatch *</text>
+<comment>(Delete all watch expressions)</comment>
 </li>
 </usage>
 </cmd>

@@ -878,6 +878,52 @@ extern "C" {
 #endif
     int optionsConfigState(OptionsConfigState value);
 
+  /**
+   * optionsAddWatch:
+   * @xPath : A valid xPath to evaluate in a context and 
+   *          has not already been addded
+   *
+   * Add xPath to be evaluated and printed out each time the debugger stops
+   *
+   * Returns 1 if able to add xPath to watched
+   *         0 otherwise
+   */
+  int optionsAddWatch(const xmlChar* xPath);
+
+  /** 
+   * optionsGetWatchID:
+   * @xPath : A valid watch expression that has already been added
+   *
+   * Finds the ID of watch expression previously added
+   *
+   * Returns 0 if not found, 
+   *         otherwise returns the ID of watch expression
+   */
+  int optionsGetWatchID(const xmlChar* xPath);
+
+
+  /**
+   * optionsRemoveWatch:
+   * @watchID : A valid watchID as indicated by last optionsPrintWatches
+   *
+   * Remove the watch with given ID from our list of expressions to watch
+   *
+   * Returns 1 if able to remove to watch expression
+   *         0 otherwise
+   */
+  int optionsRemoveWatch(int watchID);
+
+
+  /**
+   * optionsGetWatchList:
+   * 
+   * Return the current list of expressions to watch
+   *
+   * Return the current list of expressions to watch
+   */
+  arrayListPtr optionsGetWatchList();
+
+
 #ifdef __cplusplus
 }
 #endif

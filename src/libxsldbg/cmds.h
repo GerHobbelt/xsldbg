@@ -90,6 +90,9 @@ typedef enum {                  /* id's for commands of xslDbgShell */
     /* extra options/commands */
     DEBUG_TRACE_CMD,
     DEBUG_WALK_CMD,
+    DEBUG_ADDWATCH_CMD,
+    DEBUG_DELWATCH_CMD,
+    DEBUG_SHOWWATCH_CMD,
 
     /* searching */
     DEBUG_SEARCH_CMD,
@@ -169,6 +172,9 @@ enum CommandsEnum {             /* id's for commands of xslDbgShell */
     /* extra options/commands */
     DEBUG_TRACE_CMD,
     DEBUG_WALK_CMD,
+    DEBUG_ADDWATCH_CMD,
+    DEBUG_DELWATCH_CMD,
+    DEBUG_SHOWWATCH_CMD,
 
     /* searching */
     DEBUG_SEARCH_CMD,

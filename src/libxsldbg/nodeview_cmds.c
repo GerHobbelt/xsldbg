@@ -250,7 +250,7 @@ printXPathObject(xmlXPathObjectPtr item, xmlChar* xPath){
 	      }
 	    } else {
 	      xsltGenericError(xmlGenericErrorContext,
-			       "Error: xpath %s results an "
+			       "Error: XPath %s results an "
 			       "in empty set\n", xPath);
 	    }
 	    break;

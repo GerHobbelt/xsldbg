@@ -114,7 +114,8 @@ xslDbgShellDelParam(xmlChar * arg)
     }
     if (xmlStrLen(arg) > 0) {
         if (splitString(arg, 1, opts) == 1) {
-            if (!sscanf((char *) opts[0], "%ld", &paramId)) {
+            if ((xmlStrlen(opts[0]) == 0) ||
+		!sscanf((char *) opts[0], "%ld", &paramId)) {
                 xsltGenericError(xsltGenericErrorContext,
                                  "Error: Unable to read line number. ");
             } else {

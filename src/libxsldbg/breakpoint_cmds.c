@@ -363,7 +363,8 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
 
         if ((xmlStrLen(arg) > 1) && (arg[1] == 'l')) {
             if (splitString(&arg[2], 2, opts) == 2) {
-                if (!sscanf((char *) opts[1], "%ld", &lineNo)) {
+                if ((xmlStrlen(opts[1]) == 0) || 
+		       !sscanf((char *) opts[1], "%ld", &lineNo)) {
                     xsltGenericError(xsltGenericErrorContext,
                                      "Error: Unable to read line number %s\n",
                                      errorPrompt);
@@ -629,7 +630,8 @@ xslDbgShellDelete(xmlChar * arg)
 
         if ((xmlStrLen(arg) > 1) && (arg[1] == 'l')) {
             if (splitString(&arg[2], 2, opts) == 2) {
-                if (!sscanf((char *) opts[1], "%ld", &lineNo)) {
+                if ((xmlStrlen(opts[1]) == 0) ||
+		    !sscanf((char *) opts[1], "%ld", &lineNo)) {
                     xsltGenericError(xsltGenericErrorContext,
                                      "Error: Unable to read line number. %s\n",
                                      errorPrompt);
@@ -751,7 +753,8 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
 
         if ((xmlStrLen(arg) > 1) && (arg[1] == 'l')) {
             if (splitString(&arg[2], 2, opts) == 2) {
-                if (!sscanf((char *) opts[1], "%ld", &lineNo)) {
+                if ((xmlStrlen(opts[1]) == 0) ||
+		    !sscanf((char *) opts[1], "%ld", &lineNo)) {
                     xsltGenericError(xsltGenericErrorContext,
                                      "Error: Unable to read line number. %s\n",
                                      errorPrompt);

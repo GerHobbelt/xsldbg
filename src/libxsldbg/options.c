@@ -40,6 +40,9 @@ static xmlChar *stringOptions[OPTIONS_DATA_FILE_NAME -
 /* keep track of our parameters */
 static arrayListPtr parameterList;
 
+/* what are the expressions to be printed out when xsldbg stops */
+static arrayListPtr watchExpressionList;
+
 
 /* the names for our options
    Items that start with *_ are options that CANNOT be used by the user
@@ -133,7 +136,12 @@ optionsInit(void)
     /* set output default as standard output. Must be changed if not using
      * xsldbg's command line. Or the tty command is used */
     optionsSetStringOption(OPTIONS_OUTPUT_FILE_NAME, NULL);
-    return (parameterList != NULL);
+
+    /* init our list of expressions to watch which are only a list of 
+     strings ie xmlChar*'s  */
+    watchExpressionList = arrayListNew(10, (freeItemFunc) xmlFree);
+
+    return (parameterList && watchExpressionList);
 }
 
 
@@ -152,9 +160,11 @@ optionsFree(void)
         optionsSetStringOption(string_option, NULL);
     }
 
-    /* Free up memory used by parameters */
+    /* Free up memory used by parameters and watches*/
     arrayListFree(parameterList);
+    arrayListFree(watchExpressionList);
     parameterList = NULL;
+    watchExpressionList = NULL;
 }
 
 
@@ -727,3 +737,99 @@ optionsConfigState(OptionsConfigState value)
 
     return result;
 }
+
+  /**
+   * optionsAddWatch:
+   * @xPath : A valid xPath to evaluate in a context and 
+   *          has not already been addded
+   *
+   * Add xPath to be evaluated and printed out each time the debugger stops
+   *
+   * Returns 1 if able to add xPath to watched
+   *         0 otherwise
+   */
+  int optionsAddWatch(const xmlChar* xPath)
+{
+  int result = 0;
+  if (!xPath || (xmlStrlen(xPath) == 0)){
+           xsltGenericError(xsltGenericErrorContext,
+			    "Error: Invalid XPath supplied to " \
+			    "optionsAddWatch\n");
+  } else{
+    if (optionsGetWatchID(xPath) == 0){
+      xmlChar * nameCopy = xmlStrdup(xPath);
+      if (nameCopy){
+	arrayListAdd(watchExpressionList, nameCopy);
+	result = 1;
+      }
+    }
+  }
+
+  return result;
+}
+
+
+  /** 
+   * optionsGetWatchID:
+   * @xPath : A valid watch expression that has already been added
+   *
+   * Finds the ID of watch expression previously added
+   *
+   * Returns 0 if not found, 
+   *         otherwise returns the ID of watch expression
+   */
+  int optionsGetWatchID(const xmlChar* xPath)
+{
+  int result = 0, counter;
+  xmlChar* watchExpression;
+  if (!xPath){
+           xsltGenericError(xsltGenericErrorContext,
+		       "Error: Invalid xPath supplied" \
+			    " to optionsGeWatchID\n");
+  } else{
+    for ( counter = 0; 
+	  counter < arrayListCount(watchExpressionList); 
+				   counter++){
+      watchExpression = (xmlChar*)arrayListGet(watchExpressionList, counter);
+      if (watchExpression){
+	if (xmlStrEqual(xPath, watchExpression)){
+	  result = counter + 1;
+	  break;
+	}
+      }else{
+	break;
+      }
+    }	    
+  }
+ 
+ return result;
+}
+
+  /**
+   * optionsRemoveWatch:
+   * @watchID : A valid watchID as indicated by last optionsPrintWatches
+   * @showWarnings : Print more error messages if 1, 
+   *                  print less if 0
+   *
+   * Remove the watch with given ID from our list of expressions to watch
+   *
+   * Returns 1 if able to remove to watch expression
+   *         0 otherwise
+   */
+  int optionsRemoveWatch(int watchID)
+{
+  return arrayListDelete(watchExpressionList, watchID - 1);
+}
+
+  /**
+   * optionsGetWatchList:
+   * 
+   * Return the current list of expressions to watch
+   *
+   * Return the current list of expressions to watch
+   */
+  arrayListPtr optionsGetWatchList()
+{
+  return watchExpressionList;
+}
+

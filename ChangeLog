@@ -1,3 +1,8 @@
+Keith Isdale 31 July 2002 <k_isdale@tpg.com.au>
+	Version 3.0.7
+	Added commands "addwatch", "showwatch" and "delwatch"
+		to support watching of expressions
+	
 Keith Isdale 30 July 2002 <k_isdale@tpg.com.au>	
 	Version 3.0.6
 	Fix memory leaks as detected by valgrind

@@ -35,7 +35,7 @@ trimString(xmlChar * text)
     int result = 0;
     xmlChar *start, *end;
 
-    if (text) {
+    if (text && xmlStrlen(text)) {
         start = text;
         end = text + xmlStrLen(text) - 1;
         while (IS_BLANK(*start) && (start <= end))

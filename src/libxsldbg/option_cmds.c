@@ -56,10 +56,11 @@ xslDbgShellSetOption(xmlChar * arg)
             if (optID >= OPTIONS_XINCLUDE) {
                 if (optID <= OPTIONS_VERBOSE) {
                     /* handle setting integer option */
-                    if (!sscanf((char *) opts[1], "%ld", &optValue)) {
+                    if ((xmlStrlen(opts[1]) == 0) ||
+			!sscanf((char *) opts[1], "%ld", &optValue)) {
                         xsltGenericError
                             (xsltGenericErrorContext,
-                             "Error : Unable to parse integer value for option \n");
+                             "Error: Unable to parse integer value for option \n");
                     } else {
                         result = optionsSetIntOption(optID, optValue);
                     }
@@ -179,3 +180,101 @@ xslDbgShellOptions(void)
 
     return result;
 }
+
+
+  /**
+   * xslDbgShellShowWatches:
+   * @styleCtxt: the current stylesheet context
+   * @ctxt: The current shell context
+   * @showWarnings : If 1 then showWarning messages,
+   *                 otherwise do not show warning messages
+   *
+   * Print the current watches and their values
+   *
+   * Returns 1 on success,
+   *         0 otherwise
+   */
+  int xslDbgShellShowWatches(xsltTransformContextPtr styleCtxt, 
+			       xmlShellCtxtPtr ctx,int showWarnings)
+{
+  int result = 0, counter;  
+  xmlChar* watchExpression;  
+  if ((showWarnings == 1) && (arrayListCount(optionsGetWatchList()) == 0)){
+    xsltGenericError(xsltGenericErrorContext, " No expression watches set\n");
+  }
+  for ( counter = 0; 
+	counter < arrayListCount(optionsGetWatchList()); 
+	counter++){
+    watchExpression = (xmlChar*)arrayListGet(optionsGetWatchList(), counter);
+    if (watchExpression){
+      xsltGenericError(xsltGenericErrorContext,
+		       " WatchExpression %d ", counter + 1);
+      result = xslDbgShellCat(styleCtxt, ctx, watchExpression);
+    }else
+      break;
+  }
+
+  return result;
+}
+
+
+  /**
+   * xslDbgShellAddWatch:
+   * @arg : A valid xPath of expression to watch the value of
+   *
+   * Add expression to list of expressions to watch value of
+   *
+   * Returns 1 on success,
+   *         0 otherwise   
+   */
+  int xslDbgShellAddWatch(xmlChar* arg)
+{
+  int result = 0;
+  if (arg){
+    trimString(arg);
+    result = optionsAddWatch(arg);
+    if (!result)
+      xsltGenericError(xsltGenericErrorContext,
+		       "Error: Unable to add expression \"%s\" already " \
+		       "exists or is invalid\n",
+			 arg);
+  }
+  return result;
+}
+
+  /**
+   * xslDbgShellDeleteWatch:
+   * @arg : A watch ID to remove or "*" to remove all watches
+   *
+   * Delete a given watch ID from our list of expressions to watch
+   *
+   * Returns 1 on success,
+   *         0 otherwise
+   */
+  int xslDbgShellDeleteWatch(xmlChar* arg)
+{
+  int result = 0;
+  long watchID;
+  if (arg){
+    trimString(arg);
+    if (arg[0] == '*') {
+      arrayListEmpty(optionsGetWatchList());
+    }else if ((xmlStrlen(arg) == 0) || 
+	      !sscanf((char *) arg, "%ld", &watchID)) {
+      xsltGenericError(xsltGenericErrorContext,
+		       "Error: Unable to read watchID." \
+		       "Failed to delete watch\n");
+      return result;
+    } else {
+      result = optionsRemoveWatch(watchID);
+      if (!result)
+	xsltGenericError(xsltGenericErrorContext,
+			 "Error: Watch expression %d does not exist\n",
+			 watchID);
+    }
+  }
+  return result;
+}
+
+
+

@@ -70,6 +70,9 @@ xmlChar messageBuffer[2000];
    we first do a step, then a step up */
 int nextCommandActive = 0;
 
+/* Do we print the values for watches each time the debugger stops */
+int showWatchesActive = 1;
+
 extern FILE *terminalIO;
 
 /* valid commands of xslDbgShell */
@@ -142,6 +145,9 @@ const char *commandNames[] = {
     /* extra options */
     "trace",
     "walk",
+    "addwatch",
+    "delwatch",
+    "showwatch",
 
     /* searching */
     "search",
@@ -217,10 +223,14 @@ const char *shortCommandNames[] = {
     "delparam",
     "showparam",
     "setoption",
+    "options",
 
     /* extra options/commands */
     "trace",
     "walk",
+    "watch",
+    "delwatch",
+    "watches",
 
     /* searching */
     "search",
@@ -671,7 +681,7 @@ xslDbgPrintCallStack(const xmlChar * arg)
 					       curUrl, curLine);
 			    }else{
 #ifdef WITH_XSLT_DEBUG_PROCESS
-			      xsltGenericError(xsltGenericErrorContext, "Error : Out Of memory\n");
+			      xsltGenericError(xsltGenericErrorContext, "Error: Out Of memory\n");
 #endif
 			      result = 0;
 			    }
@@ -712,7 +722,7 @@ xslDbgPrintCallStack(const xmlChar * arg)
                         xsltGenericError(xsltGenericErrorContext, "\n");
 		    }else{
 #ifdef WITH_XSLT_DEBUG_PROCESS
-		      xsltGenericError(xsltGenericErrorContext, "Error : Out Of memory\n");
+		      xsltGenericError(xsltGenericErrorContext, "Error: Out Of memory\n");
 		      
 #endif
 		      result = 0;
@@ -1275,6 +1285,17 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
         }
     }
+    if (showWatchesActive && (xslDebugStatus == DEBUG_TRACE) || 
+	(xslDebugStatus == DEBUG_WALK)){
+      ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
+      if (ctxt->pctxt) {
+	xslDbgShellShowWatches(styleCtxt, ctxt, 0);
+	xsltGenericError(xsltGenericErrorContext,"\n");
+	xmlXPathFreeContext(ctxt->pctxt);
+	ctxt->pctxt = NULL;
+      }
+    }
+
     if (xslDebugStatus == DEBUG_TRACE) {
 	if (ctxt->filename)
 	  xmlFree(ctxt->filename);
@@ -1296,6 +1317,11 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 	xsltGenericError(xsltGenericErrorContext,
 			 "Error: Out of memory\n");
         return;
+    }
+
+    if (showWatchesActive){
+      xslDbgShellShowWatches(styleCtxt, ctxt, 0);
+      xsltGenericError(xsltGenericErrorContext,"\n");
     }
 
     while (!exitShell && (xslDebugStatus != DEBUG_QUIT)) {
@@ -1570,7 +1596,7 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 break;
 
             case DEBUG_DELETE_CMD:
-                if (xmlStrLen(arg))
+	      if (xmlStrLen(arg))
                     cmdResult = xslDbgShellDelete((xmlChar *) arg);
                 else {
                     breakPointPtr breakPtr = NULL;
@@ -1614,7 +1640,7 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 break;
 
             case DEBUG_DISABLE_CMD:
-                if (xmlStrLen(arg))
+	      if (xmlStrLen(arg))
                     cmdResult = xslDbgShellEnable(arg, 0);
                 else {
                     breakPointPtr breakPtr = NULL;
@@ -1982,6 +2008,36 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 } else
                     cmdResult = 0;
                 break;
+
+	   case DEBUG_ADDWATCH_CMD:
+	     cmdResult = xslDbgShellAddWatch(arg);
+	   break;
+
+	   case DEBUG_DELWATCH_CMD:
+	     cmdResult = xslDbgShellDeleteWatch(arg);	     
+           break;
+
+	   case DEBUG_SHOWWATCH_CMD:
+	     trimString(arg);
+	     switch (arg[0]){
+	     case '\0':
+	       cmdResult = xslDbgShellShowWatches(styleCtxt, ctxt, 1);
+	       break;
+
+	     case '0':
+	     case '1':
+               showWatchesActive = arg[0] - '0';
+	       cmdResult = 1;
+	       break;
+
+	     default:
+	        xsltGenericError(xsltGenericErrorContext,
+				 "Error: showmatch commmand " \
+				 "expected either no arguments or the " \
+				 "values 1 or 0"); 
+	     }
+           break;
+ 
 
                 /* search related commands */
             case DEBUG_SEARCH_CMD:
