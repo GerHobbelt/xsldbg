@@ -92,7 +92,9 @@ the &lt;ENTER&gt; key.
 
 <li>Operating system related :
 <link href="chdir">chdir</link>,
-<link href="shell">shell</link> 
+<link href="shell">shell</link>,
+<link href="tty">tty</link>
+  
 </li>
 
 <li>File related :  

@@ -1,0 +1,49 @@
+This file is to state what xsl elements have been tested and what
+specific tests have been run. Elements have been listed in the same order as in 
+"XML in plain English" by S. Eddy and B . Delong
+
+Legend: NT    = Not tested
+	N/A   = Not applicable 
+	ND    = Not debuggable, or support not implemented
+
+Element		       top	 template
+Name		       level     level
+		       test      test 
+
+apply-imports	       2	 N/A
+apply-templates	       N/A	 2
+attribute	       6	 N/A
+attribute-set	       6	 NT
+call-template	       N/A	 2
+choose		       N/A	 3
+comment		       N/A	 2
+copy		       N/A	 2
+decimal-format	       2	 N/A
+element		       N/A	 6
+fallback	       N/A	 2	 
+for-each	       N/A	 3
+if		       N/A	 3
+import		       2	 NT
+include		       2	 NT
+key		       ND	 ND
+message		       N/A	 2
+namespace-alias	       ND	 ND
+number		       N/A	 2
+otherwise	       N/A	 3
+output		       ND	 ND
+param		       2	 2
+preserve-space	       ND	 ND
+processing-instruction N/A	 2
+sort		       N/A	 2
+strip-space	       ND	 ND
+stylesheet	       ND	 ND
+template	       N/A	 2
+text		       N/A	 7
+transform	       NT	 NT
+value-of	       N/A	 5
+variable		5	 5
+vendor			ND	 ND
+vendor-url		ND	 ND
+version			ND	 ND
+when			N/A	 3
+with-param		N/A	 2
