@@ -8,7 +8,9 @@ $(XSLDBG):
 all:
 	cp ../catalog.xml ./
 	cp ../CATALOG ./
-	cp ../../../win32/dsp/createcatalog.bat ./
+	@echo "The following command will normally be skipped except in builds by maintainer"
+	if test -f ./../../win32/dsp/createcatalog.bat; then cp ../../../win32/dsp/createcatalog.bat ./; fi
+
 install-data-local: all
 #	$(mkinstalldirs) $(HTML_DIR)/xsldbg/website
 #	@INSTALL@ -m 0644 $(EXTRA_DIST) $(HTML_DIR)/xsldbg/website
