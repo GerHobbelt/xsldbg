@@ -21,17 +21,26 @@
 <li><a href="#Author">Author</a> </li>
 <li><a href="#Licence">Licence</a> </li>
 <li><a href="#Documentation">Documention</a> </li>
+<li><a href="#Screen%20shots">Screen shots</a></li>
 <li><a href="#Web%20site">Web site</a> </li>
-<li><a href="#Email%20lists">Email lists</a> </li></ul>
+<li><a href="#Email%20lists">Email lists</a> </li>
+</ul>
 
 <li><a href="#Installation">Installation</a> </li>
-<li><a href="#Testing">Testing / running example</a> </li>
+<li><a href="#Testing">Testing / running example</a></li>
+<ul>
+<li><a href="#xsldbg%20example%20session">Example xsldbg session</a></li>
+<li><a href="#Quantaplus%20example">Example Quanta+ plugin session</a></li>
+<li><a href="#XEmacs%20example">Example XEmacs session using xsldbg-mode</a></li>
+</ul>
 <li><a href="#Help%20system">Help system</a> </li>
 <li><a href="#Version%20notes">Version notes</a> </li>
 <li><a href="#FAQ">FAQ</a></li>
 <li><a href="#Feedback">Feedback</a> </li>
 <li><a href="#Download">Download</a> </li>
-<li><a href="#Completed%20TODO%27s">Completed TODO'S</a> </li></ul>
+<li><a href="#Completed%20TODO%27s">Completed TODO'S</a> </li>
+
+</ul>
 <br />
 <br />
 <!--  - - - - - - - - - -  Introduction - - - - - - - - - -->
@@ -129,6 +138,21 @@ for compilation tools that support prelinking. Configure libxslt with the at lea
 <p>&nbsp;&nbsp;&nbsp; <a href="threadUsage.html">xsldbg thread usage</a> </p>
 
 
+<!--  - - - - - - - - - -  Screen shots - - - - - - - - - -->
+<h2><a name="Screen%20shots">Screen shots</a></h2>
+
+<p>
+<a href="snapshot1.png">Running xsldbg-mode under XEmacs in Linux and WIN32</a>
+</p>
+<p>
+<a href="snapshot2.png">Running the xsldbg plugin in Qunata+.</a>
+</p>
+
+
+
+
+
+
 <!--  - - - - - - - - - -  Website - - - - - - - - - -->
 <h2><a name="Web%20site">Related web sites</a></h2>
 <p>&nbsp;&nbsp;&nbsp; <a href="http://sourceforge.net/projects/xsldbg">http://xsldbg.sourceforge.net/</a> </p>
@@ -190,6 +214,7 @@ have thier own installation requirements.
 
 <!--  - - - - - - - - - -  Testing  - - - - - - - - - -->
 <h1><a name="Testing">Testing / running example </a> </h1>
+<h2><a name="xsldbg%20example%20session">Example xsldbg session</a></h2>
 <pre>     To test / try out xsldbg<br />
 <br />
          <b>cd xsldbg/docs/en
@@ -264,6 +289,43 @@ Breakpoint 2 Breakpoint in file xsldoc.xsl : line 67
 <br />
 To print help just type &quot;help&quot; <br />
 To exit xsldbg just type &quot;exit&quot; <br />
+
+
+<h2><a name="Quantaplus%20example">Example Quanta+ plugin session</a></h2>
+
+Start Quanta as normal. On the toolbar select the "XslDebug" tab. Click the
+"configure" button on the Xsldbg toolbar tab.The Xsldbg inpector/configure dialog
+will then display. Choose the XSL source, XMLData  and Output files using the ".."
+buttons. Click the "Apply" button, then click the "Run" button on the Xsldbg
+toolbar tab. You are now able to use the other button on the Xsldbg toolbar
+tab to set/delete/enable breakpoints.
+<p>
+To set a break point move the cursor to where you want a breakpoint then click the
+"Add a breakpoint" button Xsldbg toolbar tab. Alternatively you can enter the
+details of where you want the breakpoint into the "Breakpoints inspector"
+</p>
+
+
+<h2><a name="XEmacs%20example">Example XEmacs session using xsldbg-mode</a></h2>
+Open an XML file into a buffer, then press &lt;META&gt;-x followed by entering
+&quot;xsldbg-buffer&quot; into the dialog xemacs provides. At the first prompt enter the file name of
+stylesheet to use. At the prompt for "Parameters" enter any extra parameters that
+you would normaly provide to xsldbg via the command line
+<p>
+After xsldbg-mode initializes you will have cursor highlighting the first line
+that xsldbg can debug. Use the right mouse button, the toolbar icon's or enter commands
+direclty into xsldbg's command prompt. The right mouse button menu can be called up on
+text that is &quot;highlighted&quot;
+</p>
+<p>
+To set a breakpoint you can print the  list of templates and then right mouse click
+on the template name listed that you want to stop at. Or move the cursor to where
+you want a breakpoint (The start of a node in the XSLT source or XML DATA) then click
+the "Stop at selected postion" icon.<br />
+
+The "Stop at selected function" button at the moment operates exactly the same as
+the "Stop at selected postion" icon.
+</p>
 
 <!--  - - - - - - - - - -  Help system  - - - - - - - - - -->
 <h1><a name="Help%20system">Help system</a> </h1>

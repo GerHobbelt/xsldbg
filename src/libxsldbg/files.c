@@ -494,11 +494,12 @@ int
 changeDir(const xmlChar * path)
 {
     int result = 0;
+    int charIndex;
     const char endString[2] = { PATHCHAR, '\0' };
     xmlChar *expandedName = NULL;
 
 
-    if (path) {
+    if (path && (xmlStrLen(path) > 0)) {
         expandedName = filesExpandName(path);
     } else {
         xsltGenericError(xsltGenericErrorContext,
@@ -517,16 +518,24 @@ changeDir(const xmlChar * path)
     }
 
     xmlStrCpy(buffer, expandedName);
-    /* must have path char at end of path name */
-    xmlStrCat(buffer, endString);
-    xmlFree(expandedName);
+    /* strip off any extra PATHCHAR's as win32's chdir function 
+       fails if we don't */
+    charIndex = xmlStrLen(buffer) - 1;
+    while (charIndex && (buffer[charIndex] == PATHCHAR)){
+      charIndex--;
+    }
+    buffer[charIndex + 1] = '\0';
+    
 
     if (chdir((char *) buffer) == 0) {
         if (workingDirPath)
             xmlFree(workingDirPath);
+	/* must have path char at end of path name */
+	xmlStrCat(buffer, endString);
         workingDirPath = (xmlChar *) xmlMemStrdup((char *) buffer);
         result = 1;
     }
+    xmlFree(expandedName); /* this will always be valid time*/
     if (!result) {
         xsltGenericError(xsltGenericErrorContext,
                          "Error: Unable to change to directory %s\n",
@@ -834,7 +843,7 @@ filesFree(void)
         xmlFree(currentUrl);
 
     /* free any memory used by platform specific files module */
-    filesPlatformInit();
+    filesPlatformFree();
 }
 
 
@@ -1233,6 +1242,71 @@ filesSetEncoding(const char *encoding)
     return result;
 }
 
+
+
+  /**
+   * filesMoreFile:
+   * @fileName : May be NULL
+   * @file : May be NULL
+   *
+   * Do a "more" like print of file specified by @fileName OR
+   *   @file. If both are provided @file will be used. The content 
+   *   of file chosen must be in UTF-8, and will be  printed in 
+   *   the current encoding selected.The function will pause output 
+   *   after FILES_NO_LINES lines have been printed waiting for
+   *   user to enter "q" to quit or any other text to continue.
+   *
+   * Returns 1 if successful,
+   *         0 otherwise
+   */
+  int filesMoreFile(const xmlChar* fileName, FILE *file)
+{
+  int result = 0;
+  int openedFile = 0;
+  int lineCount;
+  int reachedEof = 0;
+  if (fileName && !file){
+    file = fopen((char*)fileName, "r");     
+    openedFile = 1;/* since we opened the file we must close it */
+  }
+  if (file){
+    while (!feof(file) && !reachedEof){
+      lineCount = 0;
+      while (!feof(file) && (lineCount < FILES_NO_LINES) && 
+	     !reachedEof){
+	if (fgets((char*)buffer, sizeof(buffer), file)){
+	  xsltGenericError(xsltGenericErrorContext,"%s", buffer);
+	  lineCount++;
+	}else{
+	  reachedEof = 1;
+	}		  
+      }
+      
+      if (!feof(file) && !reachedEof){
+	xsltGenericError(xsltGenericErrorContext," ----- more ---- \n");
+	fflush(stderr);
+	if (fgets((char*)buffer, sizeof(buffer), stdin)){
+	  if ((*buffer == 'q') || (*buffer == 'Q'))
+	      reachedEof = 1;
+	}else{
+	  reachedEof = 1;
+	}
+      }
+    }
+    
+    if (openedFile){
+      fclose(file);      
+    }
+    xsltGenericError(xsltGenericErrorContext,"\n");
+    result = 1;
+  }else{
+    	xsltGenericError(xsltGenericErrorContext,
+			 "Error: No valid file provided to print\n");
+  }
+
+
+  return result;
+}
 
 /* TODO in xsldbg 3.x rename these to use files prefix */
 

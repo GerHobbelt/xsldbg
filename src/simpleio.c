@@ -104,6 +104,7 @@ xslDbgShellReadline(xmlChar * prompt)
 
       if (prompt != NULL)
         xsltGenericError(xsltGenericErrorContext, "%s", prompt);
+	  fflush(stderr);
       if (!fgets(line_read, DEBUG_BUFFER_SIZE - 1, stdin))
         return (NULL);
       line_read[DEBUG_BUFFER_SIZE - 1] = 0;

@@ -1,4 +1,4 @@
-EXTRA_DIST=index.html
+EXTRA_DIST=index.html screenshot1.png screenshot2.png
 
 XSLDBG=$(top_builddir)/src/xsldbg
 

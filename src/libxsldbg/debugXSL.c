@@ -782,6 +782,10 @@ xslDbgWalkContinue(void)
 {
     int result = 0, speed = optionsGetIntOption(OPTIONS_WALK_SPEED);
 
+    /* We need to ensure that output is realy sent. Otherwise
+       walking using xemacs under WIN32 will not work */
+    fflush(stderr);
+
     switch (speed) {
         case WALKSPEED_1:
         case WALKSPEED_2:

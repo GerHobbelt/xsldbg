@@ -58,7 +58,26 @@ extern "C" {
     };
 
 
+  /* how many lines do we print before pausing when 
+     performing "more" on a UTF-8 file. See function filesMoreFile */
+#define FILES_NO_LINES 20
 
+  /* Define the types of file names that we are intested in when creating
+     search results */
+#ifndef USE_KDOC
+  typedef enum {
+    FILES_SEARCHINPUT,
+    FILES_SEARCHXSL,
+    FILES_SEARCHRESULT
+  } FilesSearchFileNameEnum;
+#else
+   /* keep kdoc happy */
+  enum  FilesSearchFileNameEnum {
+    FILES_SEARCHINPUT,
+    FILES_SEARCHXSL,
+    FILES_SEACHRESULT
+  };
+#endif
   /*-----------------------------------------------------------
                                File commands
     -----------------------------------------------------------*/
@@ -771,6 +790,47 @@ extern "C" {
     int filesIsSourceFile(xmlChar * fileName);
 
 
+
+#ifdef USE_GNOME_DOCS
+
+  /**
+   * filesMoreFile:
+   * @fileName : May be NULL
+   * @file : May be NULL
+   *
+   * Do a "more" like print of file specified by @fileName OR
+   *   @file. If both are provided @file will be used. The content 
+   *   of file chosen must be in UTF-8, and will be  printed in 
+   *   the current encoding selected.The function will pause output 
+   *   after FILES_NO_LINES lines have been printed waiting for
+   *   user to enter "q" to quit or any other text to continue.
+   *
+   * Returns 1 if successful,
+   *         0 otherwise
+   */
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * Do a "more" like print of file specified by @fileName OR
+   *   @file. If both are provided @file will be used. The content 
+   *   of file chosen must be in UTF-8, and will be  printed in 
+   *   the current encoding selected. The function will pause output 
+   *   after FILES_NO_LINES lines have been printed waiting for
+   *   user to enter "q" to quit or any other text to continue.
+   *
+   * @returns 1 if successful,
+   *          0 otherwise
+   *
+   * @param fileName May be NULL
+   * @param file May be NULL
+   *
+   */
+#endif
+#endif
+  int filesMoreFile(const xmlChar* fileName, FILE *file);
+
+
 #ifdef USE_GNOME_DOCS
 
 /**
@@ -927,6 +987,33 @@ extern "C" {
 #endif
 #endif
   xmlChar* filesExpandName(const xmlChar *fileName);
+
+
+
+#ifdef USE_GNOME_DOCS
+
+  /**
+   * filesSearchFileName:
+   * @fileType : Is valid
+   *
+   * Return a copy of the file name to use as an argument to searching
+   *
+   * Returns A copy of the file name to use as an argument to searching
+   */
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * Return a copy of the file name to use as an argument to searching
+   *
+   * @returns A copy of the file name to use as an argument to searching
+   *
+   * @param fileType Is valid
+   *
+   */
+#endif
+#endif
+  xmlChar * filesSearchFileName(FilesSearchFileNameEnum fileType);
 
 #ifdef __cplusplus
 }

@@ -1,6 +1,34 @@
-Keith Isdale 19 Feb 2002 <k_isdale@tpg.com.au
+Keith Isdale 20th Feb 2002 <k_isdale@tpg.com.au	
+  Version 2.1.1		
+  Found the WIN32 requires output to be flushed before any input
+	o added fflush to xslDbgWalkContinue (debugXSL.c) 
+	o dded fflush to xslDbgShellReadline (simpleio.c)
+  Updated docs/en/website with some screen shots of xsldbg running in 
+	XEmacs and Quata+ and a running example for each.
+  Added filesMoreFile (files.c) to print a file thus removing the dependancy
+	on the "more" command
+  Changed files_unix.c to use temporary files in the "/tmp/" directory. This
+	is to avoid having more temp files than needed
+	o modfied tempNames, filesPlatformInit, filesPlatformFree to suit 
+	o fixed typo in files.c and make use of filesPlatormFree
+  Changed searchQuery (search.c) to make use of filesMoreFile function (files.c)
+	This means that the output will be correct when encoding other than UTF-8
+	is used
+  Found memory allocation of several strings to be wrong causing random seg faults
+	increased memory alocation to allow for the '\0' termination
+  Updated help_win32.c and help_unix.c to make use of filesMoreFile function (files.c)	
+	
+  Justin: Send a patch if you want to change help_riscos.c to make use of filesMoreFle
+ 
+  cvs add docs/en/website/*.png
+	
+	
+Keith Isdale 19th Feb 2002 <k_isdale@tpg.com.au
    Version 2.1.0
    Added missing line feeds to some error messages
+   Found that win32's chdir fails if candidate path has trailing \\
+	In changeDir strip off extra PATHCHARS (files.c)
+
 	
 Keith Isdale 18 Feb 2002 <k_isdale@tpg.com.au
   Version 2.0.9

@@ -29,6 +29,7 @@
 #include "utils.h"
 #include "debugXSL.h"
 #include "help.h"
+#include "files.h"
 #include <stdlib.h>
 
 #ifdef WITH_DEBUG_HELP
@@ -58,12 +59,14 @@ helpTop(const xmlChar * args)
                  QUOTECHAR);
     } else
         xmlStrCpy(helpParam, "");
-    if (docsDirPath) {
+    if (docsDirPath && filesTempFileName(0)) {
         snprintf((char *) buff, sizeof(buff), "%s %s"
                  " --param xsldbg_version %c'%s'%c "
-                 " %s%cxsldoc.xsl %s%cxsldoc.xml | more",
+                 " -o %s "
+		 "%s%cxsldoc.xsl %s%cxsldoc.xml",
                  XSLDBG_BIN, helpParam,
-                 QUOTECHAR, VERSION, QUOTECHAR,
+                 QUOTECHAR, VERSION, QUOTECHAR, 
+		 filesTempFileName(0),
                  docsDirPath, PATHCHAR, docsDirPath, PATHCHAR);
         if (xslDbgShellExecute((xmlChar *) buff, 1) == 0) {
             if (docsDirPath)
@@ -75,8 +78,14 @@ helpTop(const xmlChar * args)
             else
                 xsltGenericError(xsltGenericErrorContext,
                                  "Unable to find xsldbg or help files\n");
-        } else
+        } else{
+	  if (filesMoreFile(filesTempFileName(0), NULL) == 1){
             result = 1;
+	  }else{
+	    xsltGenericError(xsltGenericErrorContext,
+			     "Unable to print help file\n");
+	  }
+	}
 
     } else {
         xsltGenericError(xsltGenericErrorContext,
@@ -113,18 +122,21 @@ helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
 {
     int result = 0;
     xmlChar buff[500];
-    char *docsDirPath = (char *) optionsGetStringOption(OPTIONS_DOCS_PATH);
+    const char *docTextFile = "xsldoc.txt";
+    const char *docsDirPath = (char *) optionsGetStringOption(OPTIONS_DOCS_PATH);
+    xmlChar *fileName = (xmlChar*)xmlMalloc(strlen(docDirPath) + 
+					    strlen(docTextFile) + 1);
 
     if (docsDirPath) {
-        snprintf((char *) buff, sizeof(buff), "more %sxsldoc.txt",
-                 docsDirPath);
-        if (xslDbgShellExecute(buff, 1) == 0) {
-            /* JRF: docsDirPath can't be NULL 'cos it's checked above */
-            xsltGenericError(xsltGenericErrorContext,
-                             "Help failed : Maybe help files not found in %s or "
-                             "more not found in path\n", docsDirPath);
-        } else
-            result = 1;
+      if (!fileName){
+	xsltGenericError(xsltGenericErrorContext,
+			 "Error: Out of memory\n");
+	return result;
+      }
+
+     xmlStrCpy(fileName, docDirPath);
+     XmlStrCat(fileName, docTextFile);
+     result = filesMoreFile(fileName, NULL);
     } else {
         xsltGenericError(xsltGenericErrorContext,
                          "No path to documentation aborting help\n");
@@ -138,6 +150,8 @@ helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
                          XSLDBG_DOCS_DIR_VARIABLE);
 #endif
     }
+
+    xmlFree(fileName);
     return result;
 }
 

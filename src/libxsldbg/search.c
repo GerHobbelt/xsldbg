@@ -445,84 +445,32 @@ searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
             const xmlChar * query)
 {
     int result = 0;
-    const xmlChar *docDirPath = optionsGetStringOption(OPTIONS_DOCS_PATH);
+    /* The file name of where the input is comming from */
     xmlChar *searchInput = NULL;
+    /* The XSL file name to use during transformation of searchInput */
     xmlChar *searchXSL = NULL;
+    /* Where to store the result of transformation */
     xmlChar *searchOutput = NULL;
 
-
-    if (!docDirPath)
-        return result;
-
+ 
     /* if a tempFile if provided its up you to make sure that it is correct !! */
-    if (tempFile == NULL) {
-        xmlStrCpy(buffer, stylePath());
-#ifdef __riscos
-        /* RISC OS paths don't end in directory separators */
-        xmlStrCat(buffer, ".searchresult/xml");
-#else
-        xmlStrCat(buffer, "searchresult.xml");
-#endif
-        searchInput = xmlStrdup(buffer);
-#ifdef __riscos
-        /* We're going to pass a native filename to a command that takes URIs,
-         * so we need to convert it */
-        searchInput = xmlStrdup((xmlChar *) unixfilename((char *) buffer));
-#endif
-    } else
-        searchInput = xmlStrdup(tempFile);
-
-    xmlStrCpy(buffer, docDirPath);
-#ifdef __riscos
-    /* RISC OS paths don't end in directory separators */
-    if (optionsGetIntOption(OPTIONS_PREFER_HTML) == 0)
-        xmlStrCat(buffer, ".search/xsl");
+    if (tempFile == NULL) 
+      searchInput = filesSearchFileName(FILES_SEARCHINPUT);
     else
-        xmlStrCat(buffer, ".searchhtml/xsl");
-#else
-    if (optionsGetIntOption(OPTIONS_PREFER_HTML) == 0)
-        xmlStrCat(buffer, "search.xsl");
-    else
-        xmlStrCat(buffer, "searchhtml.xsl");
-#endif
-    searchXSL = xmlStrdup(buffer);
-#ifdef __riscos
-    /* We're going to pass a native filename to a command that takes URIs,
-     * so we need to convert it */
-    searchXSL = xmlStrdup((xmlChar *) unixfilename((char *) buffer));
-#endif
-
+      searchInput = xmlStrdup(tempFile);
+    
+    searchXSL =  filesSearchFileName(FILES_SEARCHXSL);
 
     /* if a outputFile if provided its up you to make sure that it is correct */
-    if (outputFile == NULL) {
-        xmlStrCpy(buffer, stylePath());
-#ifdef __riscos
-        /* RISC OS paths don't end in directory separators */
-        if (optionsGetIntOption(OPTIONS_PREFER_HTML) == 0)
-            xmlStrCat(buffer, ".searchresult/txt");
-        else
-            xmlStrCat(buffer, ".searchresult/html");
-#else
-        if (optionsGetIntOption(OPTIONS_PREFER_HTML) == 0)
-            xmlStrCat(buffer, "searchresult.txt");
-        else
-            xmlStrCat(buffer, "searchresult.html");
-#endif
-        searchOutput = xmlStrdup(buffer);
-#ifdef __riscos
-        /* We're going to pass a native filename to a command that takes URIs,
-         * so we need to convert it */
-        searchOutput =
-            xmlStrdup((xmlChar *) unixfilename((char *) buffer));
-#endif
-    } else
+    if (outputFile == NULL) 
+      searchOutput =  filesSearchFileName(FILES_SEARCHRESULT);
+     else
         searchOutput = xmlStrdup(outputFile);
-
 
     if (!query || (xmlStrlen(query) == 0))
         query = (xmlChar *) "--param query //search/*";
-    /* see configure.in for the definition of XSLDBG_BIN, the name of our binary */
 
+    /* see configure.in for the definition of XSLDBG_BIN, the name of our binary */
     if (searchInput && searchXSL && searchOutput) {
         if (optionsGetIntOption(OPTIONS_CATALOGS) == 0)
             snprintf((char *) buffer, sizeof(buffer),
@@ -534,14 +482,12 @@ searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
                      "%s --catalogs -o %s %s %s %s", XSLDBG_BIN,
                      searchOutput, query, searchXSL, searchInput);
         result = xslDbgShellExecute(buffer, 1);
-#ifndef __risc_os
+
         if (result && (optionsGetIntOption(OPTIONS_PREFER_HTML) == 0)) {
             /* try printing out the file */
-            snprintf((char *) buffer, sizeof(buffer), "more %s",
-                     searchOutput);
-            result = xslDbgShellExecute(buffer, 1);
+	  result = filesMoreFile(searchOutput, NULL);
         }
-#endif
+
         xsltGenericError(xsltGenericErrorContext,
                          "Information: Transformed %s using %s and saved to %s\n",
                          searchInput, searchXSL, searchOutput);
