@@ -1,6 +1,7 @@
 TEMPLATE	= app
 CONFIG	+= warn_on release console thread
 
+
 unix:INCLUDEPATH += $(LIBXSLT_PREFIX)/include
 unix:INCLUDEPATH += $(LIBXML_PREFIX)/include/libxml2
 unix:INCLUDEPATH += $(INCONV_PREFIX)/include
@@ -25,16 +26,13 @@ HEADERS += arraylist.h \
            files.h \
            help.h \
            options.h \
-           qtnotifier2.h \
            search.h \
            utils.h \
            xsldbg.h \
            xsldbgconfig.h \
-           xsldbgdebuggerbase.h \
            xsldbgevent.h \
            xsldbgio.h \
            xsldbgmsg.h \
-           xsldbgnotifier.h \
            xsldbgthread.h 
 
 SOURCES += libxsldbg/arraylist.c \
