@@ -1,3 +1,4 @@
+
 /***************************************************************************
                           options.h  -  declare the functions for 
                                         implementation of the array list
@@ -22,11 +23,11 @@
 typedef void (*freeItemFunc) (void *item);
 
 typedef struct _ArrayList ArrayList;
-typedef ArrayList * ArrayListPtr;
+typedef ArrayList *ArrayListPtr;
 struct _ArrayList {
-  int size, count;
-  void **data;
-  freeItemFunc deleteFunction;
+    int size, count;
+    void **data;
+    freeItemFunc deleteFunction;
 };
 
 #define DOUBLE_SIZE_MAX_ITEM 10
@@ -41,7 +42,7 @@ struct _ArrayList {
  * Returns non-null on sucess,
  *         0 otherwise
  */
-ArrayListPtr xslArrayListNew(int initialSize,   freeItemFunc deleteFunction);
+ArrayListPtr xslArrayListNew(int initialSize, freeItemFunc deleteFunction);
 
 
 /**
@@ -112,6 +113,6 @@ int xslArrayListDelete(ArrayListPtr list, int position);
  * Add non-null if item is valid
  *     NULL otherwise
  */
-void * xslArrayListGet(ArrayListPtr list, int position);
+void *xslArrayListGet(ArrayListPtr list, int position);
 
 #endif

@@ -16,5 +16,6 @@
 #undef HAVE_READLINE
 #undef HAVE_HISTORY
 #undef TIMESTAMP
+#undef WITH_DEBUG_HELP
 
 

@@ -16,7 +16,10 @@
 <test>trace</test>
 <result>
 <row>
-<breakpoint line="15"/>
+<breakpoint line="15"/> <!-- xsldbg restarting with tracing on -->
+</row>
+<row>
+<breakpoint line="15"/> 
 </row>
 
 <!-- simple value selection -->

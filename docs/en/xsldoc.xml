@@ -86,6 +86,9 @@ the &lt;ENTER&gt; key.
 <link href="cd">cd</link>
 </li>
 
+<li>Searching :<link href="search">search</link>
+</li>
+
 <li>Operating system related :
 <link href="chdir">chdir</link>,
 <link href="shell">shell</link> 
@@ -565,6 +568,27 @@ they are not completed.</para>
 
 <cmd name="free" title="Free">
 <summary>Free stylesheet and data        (Disabled see run)</summary>
+</cmd>
+
+<!-- - - - - - - Searching related - - - - - -->
+<cmd name="search" title="Search">
+<summary>Search a database of all information gathered from styleets loaded</summary>
+<body>
+<para>When the search command is issued a file (search.data) will be created in the current directory. You can then process this file with your own stylessheet to present data in a other ways than displayed by default.
+</para>
+<para>Depending on the amount of data collected it might take a while to compled this command.
+</para>
+<para>At the moment breakpoints are not being sorted properly. Which is being looked at.
+</para>
+</body>
+<usage>
+<li>
+<text>search XPATH</text><comment>(See what xpath can be used see search.dtd)</comment>
+</li>
+<li>
+<text>search -sort XPATH</text><comment>(Enable tell search.xsl to sort the result before outputing it)</comment>
+</li>
+</usage>
 </cmd>
 
 <!-- - - - - Operating system related - - - - -->

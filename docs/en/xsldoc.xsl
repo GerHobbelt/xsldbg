@@ -15,7 +15,7 @@
   <xsl:param name="xsldbg_version" select="'0.5.9'"/>
   <!-- We want help to point to a invalid command if stylesheet
        user has not provided a value for 'help' param-->
-  <xsl:param name="help" select="'_#_'"/>
+  <xsl:param name="help" select="'_#_'"/>  
 
 
   <xsl:template match="/">

@@ -1,3 +1,4 @@
+
 /***************************************************************************
                           options.h  -  define option related functions
                              -------------------
@@ -18,70 +19,69 @@
 #ifndef OPTIONS_H
 #define OPTIONS_H
 
-#include "arraylist.h"
+#include <breakpoint/arraylist.h>
 #include <libxslt/xslt.h>
+
 /* ---------------------------------------  
         Misc parsing related options
 -------------------------------------------*/
 
 enum Option_type {
-  OPTIONS_XINCLUDE = 200,
-  OPTIONS_DOCBOOK ,  
-  OPTIONS_TIMING ,  
-  OPTIONS_PROFILING ,
-  OPTIONS_NOVALID ,
-  OPTIONS_NOOUT ,
-  OPTIONS_HTML ,
-  OPTIONS_DEBUG ,
-  OPTIONS_SHELL ,
-  OPTIONS_REPEAT,
-  OPTIONS_TRACE, /* trace the execution */
-  OPTIONS_WALK_SPEED, /* how fast do we walk through code */
-  OPTIONS_VERBOSE, /* do we print out messages/debuging info */
+    OPTIONS_XINCLUDE = 200,
+    OPTIONS_DOCBOOK,
+    OPTIONS_TIMING,
+    OPTIONS_PROFILING,
+    OPTIONS_NOVALID,
+    OPTIONS_NOOUT,
+    OPTIONS_HTML,
+    OPTIONS_DEBUG,
+    OPTIONS_SHELL,
+    OPTIONS_REPEAT,
+    OPTIONS_TRACE,              /* trace the execution */
+    OPTIONS_WALK_SPEED,         /* how fast do we walk through code */
+    OPTIONS_VERBOSE,            /* do we print out messages/debuging info */
 
-  /* string options */
-  OPTIONS_OUTPUT_FILE_NAME = 220,
-  OPTIONS_ROOT_TEMPLATE_NAME,
-  OPTIONS_SOURCE_FILE_NAME,
-  OPTIONS_DATA_FILE_NAME
+    /* string options */
+    OPTIONS_OUTPUT_FILE_NAME = 220,
+    OPTIONS_SOURCE_FILE_NAME,
+    OPTIONS_DATA_FILE_NAME
 };
 
 /* define what tracing is used */
 enum {
-  TRACE_OFF,
-  TRACE_ON,
-  TRACE_RUNNING,
-  TRACE_FINISHED /* not need but just in case*/
+    TRACE_OFF,
+    TRACE_ON,
+    TRACE_RUNNING,
+    TRACE_FINISHED              /* not need but just in case */
 };
 
 enum {
-  WALKSPEED_0,
-  WALKSPEED_STOP = WALKSPEED_0,
-  WALKSPEED_1,
-  WALKSPEED_FAST = WALKSPEED_1,
-  WALKSPEED_2,
-  WALKSPEED_3,
-  WALKSPEED_4,
-  WALKSPEED_5,
-  WALKSPEED_NORMAL = WALKSPEED_5,
-  WALKSPEED_6,
-  WALKSPEED_7,
-  WALKSPEED_8,
-  WALKSPEED_9,
-  WALKSPEED_SLOW =  WALKSPEED_9
-
+    WALKSPEED_0,
+    WALKSPEED_STOP = WALKSPEED_0,
+    WALKSPEED_1,
+    WALKSPEED_FAST = WALKSPEED_1,
+    WALKSPEED_2,
+    WALKSPEED_3,
+    WALKSPEED_4,
+    WALKSPEED_5,
+    WALKSPEED_NORMAL = WALKSPEED_5,
+    WALKSPEED_6,
+    WALKSPEED_7,
+    WALKSPEED_8,
+    WALKSPEED_9,
+    WALKSPEED_SLOW = WALKSPEED_9
 };
 
 /* how many microseconds is each speed increase worth*/
-#define WALKDELAY 250000 
+#define WALKDELAY 250000
 
 /* used to keep track of libxslt paramters 
  see Parameter related option near end of file
 */
 typedef struct _ParameterItem ParameterItem;
-typedef ParameterItem * ParameterItemPtr;
+typedef ParameterItem *ParameterItemPtr;
 struct _ParameterItem {
-  xmlChar *name, *value;
+    xmlChar *name, *value;
 };
 
 
@@ -92,7 +92,7 @@ struct _ParameterItem {
  * Returns 1 on success,
  *         0 otherwise
  */
-int optionsInit();
+int optionsInit(void);
 
 
 /**
@@ -100,7 +100,7 @@ int optionsInit();
  *
  * Free memory used by options data structures
  */
-void optionsFree();
+void optionsFree(void);
 
 /**
  * enableOption :
@@ -156,7 +156,7 @@ int getIntOption(enum Option_type option_type);
  * Returns 1 on success,
  *         0 otherwise
  */
-int setStringOption(enum Option_type option_type, const char *value);
+int setStringOption(enum Option_type option_type, const xmlChar * value);
 
 
 /**
@@ -166,20 +166,21 @@ int setStringOption(enum Option_type option_type, const char *value);
  * Get value for a string xsldbg option of @type
  * Returns current option value which may be NULL
  */
-const char *getStringOption(enum Option_type option_type);
+const xmlChar *getStringOption(enum Option_type option_type);
 
 
 
 /* ---------------------------------------------
           Parameter related options 
 -------------------------------------------------*/
+
 /**
  * getParamItemList:
  *
  * Return the list of parameters to provide to libxslt when doing 
  *   stylesheet transformation
  */
-ArrayListPtr getParamItemList();
+ArrayListPtr getParamItemList(void);
 
 
 
@@ -192,7 +193,7 @@ ArrayListPtr getParamItemList();
  * Returns non-null if sucessful
  *         0 otherwise
  */
-ParameterItemPtr paramItemNew(const xmlChar *name, const xmlChar *value);
+ParameterItemPtr paramItemNew(const xmlChar * name, const xmlChar * value);
 
 
 /**
@@ -220,6 +221,6 @@ int printParam(int paramId);
  * Returns 1 on success,
  *         0 otherwise
  */
-int printParamList();
+int printParamList(void);
 
 #endif

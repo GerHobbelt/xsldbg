@@ -1,3 +1,4 @@
+
 /***************************************************************************
                           files.h  -  define file related functions
                              -------------------
@@ -15,6 +16,12 @@
  *                                                                         *
  ***************************************************************************/
 
+#ifdef VERSION
+#undef VERSION
+#endif
+
+#include "config.h"
+#include "xsldbg.h"
 #include "files.h"
 #include "options.h"
 
@@ -34,15 +41,19 @@ xsltStylesheetPtr top_style;
  *
  * Change working directory to path 
  */
-int changeDir(const char *path){
-  int result = 0;
-  if (chdir(path) == 0){
-    result++;
-  }
-  if (!result)
-    printf("Unable to change to directory %s\n", path); 
-  else
-    printf("Change to directory %s\n", path); 
+int
+changeDir(const xmlChar * path)
+{
+    int result = 0;
+
+    if (chdir((char *) path) == 0) {
+        result++;
+    }
+    if (!result)
+        printf("Unable to change to directory %s\n", path);
+    else
+        printf("Change to directory %s\n", path);
+    return result;
 }
 
 /**
@@ -52,46 +63,47 @@ int changeDir(const char *path){
  *
  * Returns 1 on success,
  *         0 otherwise 
- */   
-int loadXmlFile(const char *path, enum File_type file_type){
-  int result = 0; 
-  int type = file_type; /* shouldn't be needed but just to be safe */
+ */
+int
+loadXmlFile(const xmlChar * path, enum File_type file_type)
+{
+    int result = 0;
 
-  if (!freeXmlFile(file_type))
+    if (!freeXmlFile(file_type))
+        return result;
+
+    switch (file_type) {
+        case FILES_XMLFILE_TYPE:
+            if (path && xmlStrLen(path)) {
+                printf("Setting xml data file name to %s\n", path);
+                setStringOption(OPTIONS_DATA_FILE_NAME, path);
+            }
+            top_doc = loadXmlData();
+            if (top_doc)
+                result++;
+            break;
+
+        case FILES_SOURCEFILE_TYPE:
+            if (path && xmlStrLen(path)) {
+                printf("Setting stylesheet file name to %s\n", path);
+                setStringOption(OPTIONS_SOURCE_FILE_NAME, path);
+            }
+            top_style = loadStylesheet();
+            if (top_style)
+                result++;
+            break;
+
+        case FILES_TEMPORARYFILE_TYPE:
+            if (!path || !xmlStrLen(path)) {
+                printf("Missing file name\n");
+                break;
+            }
+            top_doc = loadXmlTemporay(path);
+            if (temp_doc)
+                result++;
+            break;
+    }
     return result;
-
-  switch(file_type){
-  case FILES_XMLFILE_TYPE:
-    if (path && strlen(path)){
-      printf("Setting xml data file name to %s\n", path);
-      setStringOption(OPTIONS_DATA_FILE_NAME, path);
-    }
-    top_doc = loadXmlData();
-    if (top_doc)
-      result++;
-    break;
-
-  case FILES_SOURCEFILE_TYPE:
-    if (path && strlen(path)){
-      printf("Setting stylesheet file name to %s\n", path);
-      setStringOption(OPTIONS_SOURCE_FILE_NAME, path);
-    }
-    top_style = loadStyleSheet();
-    if (top_style)
-      result++;
-    break;
-
-  case FILES_TEMPORARYFILE_TYPE:
-    if (!path || !strlen(path)){
-      printf("Missing file name\n");
-      break;
-    }
-    top_doc = loadXmlTemporay(path);
-    if (temp_doc)
-      result++;
-    break;
-  }
-  return result;
 }
 
 
@@ -103,31 +115,34 @@ int loadXmlFile(const char *path, enum File_type file_type){
  * Returns 1 on success,
  *         0 otherwise
  */
-int freeXmlFile(enum File_type file_type){
-  int result = 0, type = file_type;
-  switch(type){
-  case FILES_XMLFILE_TYPE:
-    if (top_doc)
-      xmlFreeDoc(top_doc);
-    top_doc = NULL;
-    result++;
-    break;
+int
+freeXmlFile(enum File_type file_type)
+{
+    int result = 0, type = file_type;
 
-  case FILES_SOURCEFILE_TYPE:
-    if (top_style)
-      xsltFreeStylesheet(top_style);
-    top_style = NULL;
-    result++;
-    break;
+    switch (type) {
+        case FILES_XMLFILE_TYPE:
+            if (top_doc)
+                xmlFreeDoc(top_doc);
+            top_doc = NULL;
+            result++;
+            break;
 
-  case FILES_TEMPORARYFILE_TYPE:
-    if (temp_doc)
-      xmlFreeDoc(temp_doc);
-    temp_doc = NULL;
-    result++;
-    break;
-  }
-  return result;
+        case FILES_SOURCEFILE_TYPE:
+            if (top_style)
+                xsltFreeStylesheet(top_style);
+            top_style = NULL;
+            result++;
+            break;
+
+        case FILES_TEMPORARYFILE_TYPE:
+            if (temp_doc)
+                xmlFreeDoc(temp_doc);
+            temp_doc = NULL;
+            result++;
+            break;
+    }
+    return result;
 }
 
 
@@ -140,8 +155,10 @@ int freeXmlFile(enum File_type file_type){
  * Returns non-null on success,
  *         NULL otherwise
  */
-xsltStylesheetPtr getStylesheet(){
-  return top_style;
+xsltStylesheetPtr
+getStylesheet(void)
+{
+    return top_style;
 }
 
 /**
@@ -149,8 +166,10 @@ xsltStylesheetPtr getStylesheet(){
  *
  * Returns the current "temporary" document
  */
-xmlDocPtr getTemporayDoc(){
-  return temp_doc;
+xmlDocPtr
+getTemporayDoc(void)
+{
+    return temp_doc;
 }
 
 /**
@@ -158,20 +177,31 @@ xmlDocPtr getTemporayDoc(){
  *
  * Returns the main docment
  */
-xmlDocPtr getMainDoc(){
-  return top_doc;
+xmlDocPtr
+getMainDoc(void)
+{
+    return top_doc;
 }
 
 
 /**
+ * filesReloaded:
+ * @reloaded : if = -1 then ignore @reloaded
+ *             otherwise change the status of files to value of @reloaded   
  *
- *
- * Returns 1 if stylesheet or its xml data file has been reloaded ,
+ * Returns 1 if stylesheet or its xml data file has been "flaged" as reloaded,
  *         0 otherwise
  */
-int filesReloaded(int reloaded){
-  int result = 0;
-  return result;
+int
+filesReloaded(int reloaded)
+{
+    static int changed = 0;
+
+    if (reloaded >= 0) {
+        changed = reloaded;
+    }
+
+    return changed;
 }
 
 
@@ -183,15 +213,17 @@ int filesReloaded(int reloaded){
  * Returns 1 on success,
  *         0 otherwise
  */
-int filesInit(){
-  int result = 0;
+int
+filesInit(void)
+{
+    int result = 0;
 
-  top_doc = NULL;
-  temp_doc = NULL;
-  top_style = NULL;
-  result = 1; /* nothing else  to do for the moment*/
+    top_doc = NULL;
+    temp_doc = NULL;
+    top_style = NULL;
+    result = 1;                 /* nothing else  to do for the moment */
 
-  return result;
+    return result;
 }
 
 /**
@@ -199,13 +231,16 @@ int filesInit(){
  *
  * Free memory used by file related structures
  */
-void filesFree(){
-  int result;
-  result  = freeXmlFile(FILES_SOURCEFILE_TYPE);
-  if (result)
-    result  = freeXmlFile(FILES_XMLFILE_TYPE);  
-  if (result)
-    result  = freeXmlFile(FILES_TEMPORARYFILE_TYPE);   
-  if (!result)
-    printf("Unable to free memory used by xml/xsl files\n");
+void
+filesFree(void)
+{
+    int result;
+
+    result = freeXmlFile(FILES_SOURCEFILE_TYPE);
+    if (result)
+        result = freeXmlFile(FILES_XMLFILE_TYPE);
+    if (result)
+        result = freeXmlFile(FILES_TEMPORARYFILE_TYPE);
+    if (!result)
+        printf("Unable to free memory used by xml/xsl files\n");
 }

@@ -13,7 +13,10 @@
 <cmd>
 <test>trace</test>
 <result>
-
+<row>
+<breakpoint line="13"/> 
+<!-- xsldbg restarting with tracing on -->
+</row>
 <row>
 <breakpoint line="13"/>
 </row>

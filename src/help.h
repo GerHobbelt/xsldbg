@@ -1,3 +1,4 @@
+
 /***************************************************************************
                           help.h  -  description
                              -------------------
@@ -21,6 +22,6 @@
 /*
   Separate help functions to make it easier later to extend
  */
-void helpTop(const char* args);
+void helpTop(const xmlChar * args);
 
 #endif

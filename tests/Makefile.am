@@ -27,7 +27,7 @@ TEST_RESULTS = \
 	../results/test8.results
 
 # Define the array list tester
-bin_PROGRAMS = listTest
+bin_PROGRAMS = listTest searchTest
 
 # Define some tests on arraylist 
 listTest_SOURCES = listTest.c 
@@ -36,7 +36,16 @@ listTest_SOURCES = listTest.c
 listTest_LDADD = $(XSLDBG_LIBS) ../src/options.o
 
 # the library search path.
-listTest_LDFLAGS = $(all_libraries) 
+searchTest_LDFLAGS = $(all_libraries) 
+
+# Define some tests on the search dataDase
+searchTest_SOURCES = searchTest.c
+
+# use of configure defined libraries
+searchTest_LDADD = $(XSLDBG_LIBS)
+
+# the library search path.
+searchTest_LDFLAGS = $(all_libraries) 
 
 $(XSLDBG):
 	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
@@ -56,8 +65,9 @@ runtests : $(TESTS) $(TEST_RESULTS) $(XSLDBG)
 
 if WITH_PERL
 
-all: $(XSLDBG) listTest runtests
+all: $(XSLDBG) listTest searchTest runtests
 	./listTest
+	./searchTest
 
 clean:
 	rm -f ../results/*.script

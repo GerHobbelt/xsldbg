@@ -1,3 +1,4 @@
+
 /***************************************************************************
                           files.h  -  define file related functions
                              -------------------
@@ -18,13 +19,16 @@
 #ifndef FILES_H
 #define FILES_H
 
-#include "xsldbg.h"
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>             /* need chdir function */
+#endif
 
 /* used by loadXmlFile function */
-enum File_type{
-   FILES_XMLFILE_TYPE = 100,
-  FILES_SOURCEFILE_TYPE,
-  FILES_TEMPORARYFILE_TYPE};
+enum File_type {
+    FILES_XMLFILE_TYPE = 100,
+    FILES_SOURCEFILE_TYPE,
+    FILES_TEMPORARYFILE_TYPE
+};
 
 /**
  * changeDir:
@@ -32,7 +36,7 @@ enum File_type{
  *
  * Change working directory to path 
  */
-int changeDir(const char *path);
+int changeDir(const xmlChar * path);
 
 /**
  * loadXmlFile:
@@ -41,8 +45,8 @@ int changeDir(const char *path);
  *
  * Returns 1 on success,
  *         0 otherwise 
- */   
-int loadXmlFile(const char *path, enum File_type file_type);
+ */
+int loadXmlFile(const xmlChar * path, enum File_type file_type);
 
 
 /**
@@ -63,14 +67,14 @@ int freeXmlFile(enum File_type file_type);
  * Returns non-null on success,
  *         NULL otherwise
  */
-xsltStylesheetPtr getStylesheet();
+xsltStylesheetPtr getStylesheet(void);
 
 /**
  * getTemporaryDoc:
  *
  * Returns the current "temporary" document
  */
-xmlDocPtr getTemporayDoc();
+xmlDocPtr getTemporayDoc(void);
 
 
 /**
@@ -78,17 +82,19 @@ xmlDocPtr getTemporayDoc();
  *
  * Returns the main docment
  */
-xmlDocPtr getMainDoc();
-
+xmlDocPtr getMainDoc(void);
 
 
 /**
+ * filesReloaded:
+ * @reloaded : if = -1 then ignore @reloaded
+ *             otherwise change the status of files to value of @reloaded   
  *
- *
- * Returns 1 if stylesheet or its xml data file has been reloaded ,
+ * Returns 1 if stylesheet or its xml data file has been "flaged" as reloaded,
  *         0 otherwise
  */
 int filesReloaded(int reloaded);
+
 
 /**
  * filesInit:
@@ -97,16 +103,16 @@ int filesReloaded(int reloaded);
  * Returns 1 on success,
  *         0 otherwise
  */
-int filesInit();
+int filesInit(void);
 
 /**
  * filesFree:
  *
  * Free memory used by file related structures
  */
-void filesFree();
+void filesFree(void);
 
 
 
 
-#endif 
+#endif

@@ -1,3 +1,4 @@
+
 /***************************************************************************
                           xsldbg.h  -  description
                              -------------------
@@ -69,10 +70,34 @@
 #include <libexslt/exslt.h>
 #include <libxslt/xsltutils.h>
 #include <breakpoint/breakpoint.h>
-#include "config.h"
+#define xmlStrLen(text) strlen((char*)text)
+#define xmlStrCat(a, b) strcat((char*)a, (char*)b)
+#define xmlStrCmp(a, b) strcmp((char*)a, (char*)b)
+#define xmlStrCpy(a, b) strcpy((char*)a, (char*)b)
 
-xmlDocPtr loadXmlData();
-xmlDocPtr loadXmlTemporay(const char *path);
-xsltStylesheetPtr loadStyleSheet();
+/**
+ * loadStylesheet:
+ *
+ * Return the stylesheet after reloading it if successful
+ *         NULL otherwise
+ */
+xsltStylesheetPtr loadStylesheet(void);
+
+/**
+ * loadXmlData:
+ *
+ * Return the data file after reloading it if successful
+ *         NULL otherwise
+ */
+xmlDocPtr loadXmlData(void);
+
+
+/**
+ * loadXmlTemporary:
+ *
+ * Return the temporary file after reloading it if successful,
+ *         NULL otherwise
+ */
+xmlDocPtr loadXmlTemporay(const xmlChar * path);
 
 #endif

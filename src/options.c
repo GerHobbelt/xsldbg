@@ -1,3 +1,4 @@
+
 /***************************************************************************
                           options.c  -  provide the implementation for option
                                            related functions
@@ -48,7 +49,7 @@ int debug = 0;
 int repeat = 0;
 
 /* Enable the use of debugger shell */
-int shell = 0 ;
+int shell = 0;
 
 /* trace one execution */
 int trace = 0;
@@ -60,7 +61,8 @@ int verbose = 0;
 int walkSpeed = 0;
 
 /* keep track of our string options */
-xmlChar *stringOptions[ OPTIONS_DATA_FILE_NAME - OPTIONS_OUTPUT_FILE_NAME + 1];
+xmlChar *stringOptions[OPTIONS_DATA_FILE_NAME - OPTIONS_OUTPUT_FILE_NAME +
+                       1];
 
 /* keep track of our parameters */
 ArrayListPtr parameterList;
@@ -72,17 +74,20 @@ ArrayListPtr parameterList;
  * Returns 1 on success,
  *         0 otherwise
  */
-int optionsInit(){
-  int index;
-  for (index = 0; 
-       index <= OPTIONS_DATA_FILE_NAME - OPTIONS_OUTPUT_FILE_NAME; 
-       index++){
-    stringOptions[index] = NULL;
-  }
+int
+optionsInit(void)
+{
+    int index;
 
-  setStringOption(OPTIONS_ROOT_TEMPLATE_NAME, "/");
-  /* init our parameter list*/
-  parameterList = xslArrayListNew(10, (freeItemFunc)paramItemFree); 
+    for (index = 0;
+         index <= OPTIONS_DATA_FILE_NAME - OPTIONS_OUTPUT_FILE_NAME;
+         index++) {
+        stringOptions[index] = NULL;
+    }
+
+    /* init our parameter list */
+    parameterList = xslArrayListNew(10, (freeItemFunc) paramItemFree);
+    return parameterList != NULL;
 }
 
 
@@ -91,16 +96,18 @@ int optionsInit(){
  *
  * Free memory used by options data structures
  */
-void optionsFree(){
-  int string_option;
-  for (string_option = OPTIONS_OUTPUT_FILE_NAME; 
-       string_option <= OPTIONS_DATA_FILE_NAME; 
-       string_option++){
-    setStringOption(string_option, NULL);
-  }  
+void
+optionsFree(void)
+{
+    int string_option;
 
-  /* Free up memory used by parameters*/
-  xslArrayListFree(parameterList);
+    for (string_option = OPTIONS_OUTPUT_FILE_NAME;
+         string_option <= OPTIONS_DATA_FILE_NAME; string_option++) {
+        setStringOption(string_option, NULL);
+    }
+
+    /* Free up memory used by parameters */
+    xslArrayListFree(parameterList);
 }
 
 /**
@@ -113,67 +120,71 @@ void optionsFree(){
  *         0 otherwise
  */
 
-int enableOption(enum Option_type option_type, int value){
-  int type = option_type, result = 1;
-  switch(type){
-  case  OPTIONS_XINCLUDE:
-    xinclude = value;
-    break;
+int
+enableOption(enum Option_type option_type, int value)
+{
+    int type = option_type, result = 1;
 
-  case OPTIONS_DOCBOOK:  
-    docbook = value;
-    break;
+    switch (type) {
+        case OPTIONS_XINCLUDE:
+            xinclude = value;
+            break;
 
-  case OPTIONS_TIMING:  
-    timing = value;
-    break;
+        case OPTIONS_DOCBOOK:
+            docbook = value;
+            break;
 
-  case OPTIONS_PROFILING:
-    profile = value;
-    break;
+        case OPTIONS_TIMING:
+            timing = value;
+            break;
 
-  case OPTIONS_NOVALID:
-    novalid = value;
-    break;
-    
-  case OPTIONS_NOOUT:
-    noout = value;
-    break;
+        case OPTIONS_PROFILING:
+            profile = value;
+            break;
 
-  case OPTIONS_HTML:
-    html = value;
-    break;
+        case OPTIONS_NOVALID:
+            novalid = value;
+            break;
 
-  case OPTIONS_DEBUG:
-    debug = value;
-    break;
+        case OPTIONS_NOOUT:
+            noout = value;
+            break;
 
-  case OPTIONS_SHELL:
-    shell = value;
-    break;
+        case OPTIONS_HTML:
+            html = value;
+            break;
 
-  case OPTIONS_REPEAT:
-    repeat = value;
-    break;
+        case OPTIONS_DEBUG:
+            debug = value;
+            break;
 
-  case OPTIONS_TRACE:
-    trace = value; /* trace execution */
-    break;
+        case OPTIONS_SHELL:
+            shell = value;
+            break;
 
-  case OPTIONS_VERBOSE:
-    verbose = value; /* do we print out extra messages/debuging info */
-    break;
+        case OPTIONS_REPEAT:
+            repeat = value;
+            break;
 
-  case OPTIONS_WALK_SPEED:
-    walkSpeed = value; /* How fast do we walk through code */
-    break;
+        case OPTIONS_TRACE:
+            trace = value;      /* trace execution */
+            break;
 
-  default:
-      xsltGenericError(xsltGenericErrorContext,
-		       "Not a valid boolean xsldbg option %d\n", type);
-      result = 0;
-  }
-  return result;
+        case OPTIONS_VERBOSE:
+            verbose = value;    /* do we print out extra messages/debuging info */
+            break;
+
+        case OPTIONS_WALK_SPEED:
+            walkSpeed = value;  /* How fast do we walk through code */
+            break;
+
+        default:
+            xsltGenericError(xsltGenericErrorContext,
+                             "Not a valid boolean xsldbg option %d\n",
+                             type);
+            result = 0;
+    }
+    return result;
 }
 
 /**
@@ -182,66 +193,70 @@ int enableOption(enum Option_type option_type, int value){
  *
  * retrieve the state of a xsldbg option
  */
-int isOptionEnabled(enum Option_type option_type){
-  int type = option_type, result = 0;
-  switch(type){
-  case  OPTIONS_XINCLUDE:
-    result = xinclude;
-    break;
+int
+isOptionEnabled(enum Option_type option_type)
+{
+    int type = option_type, result = 0;
 
-  case OPTIONS_DOCBOOK:  
-    result = docbook;
-    break;
+    switch (type) {
+        case OPTIONS_XINCLUDE:
+            result = xinclude;
+            break;
 
-  case OPTIONS_TIMING:  
-    result = timing;
-    break;
+        case OPTIONS_DOCBOOK:
+            result = docbook;
+            break;
 
-  case OPTIONS_PROFILING:
-    result = profile;
-    break;
+        case OPTIONS_TIMING:
+            result = timing;
+            break;
 
-  case OPTIONS_NOVALID:
-    return novalid;
-    break;
-    
-  case OPTIONS_NOOUT:
-    return noout;
-    break;
+        case OPTIONS_PROFILING:
+            result = profile;
+            break;
 
-  case OPTIONS_HTML:
-    return html;
-    break;
+        case OPTIONS_NOVALID:
+            return novalid;
+            break;
 
-  case OPTIONS_DEBUG:
-    return debug;
-    break;
+        case OPTIONS_NOOUT:
+            return noout;
+            break;
 
-  case OPTIONS_SHELL:
-    result = shell;    
-    break;
+        case OPTIONS_HTML:
+            return html;
+            break;
 
-  case OPTIONS_REPEAT:
-    result = repeat;
-    break;
+        case OPTIONS_DEBUG:
+            return debug;
+            break;
 
-  case OPTIONS_TRACE:
-    result = trace; /* trace execution */
-    break;    
+        case OPTIONS_SHELL:
+            result = shell;
+            break;
 
-  case OPTIONS_VERBOSE:
-    result = verbose; /* do we print out extra messages/debuging info */
-    break;
+        case OPTIONS_REPEAT:
+            result = repeat;
+            break;
 
-  case OPTIONS_WALK_SPEED:
-    result = walkSpeed; /* How fast do we walk through code */
-    break;
+        case OPTIONS_TRACE:
+            result = trace;     /* trace execution */
+            break;
 
-  default:
-      xsltGenericError(xsltGenericErrorContext,
-		       "Not a valid boolean xsldbg option %d\n", type);
-  }
-  return result;
+        case OPTIONS_VERBOSE:
+            result = verbose;   /* do we print out extra messages/debuging info */
+            break;
+
+        case OPTIONS_WALK_SPEED:
+            result = walkSpeed; /* How fast do we walk through code */
+            break;
+
+        default:
+            xsltGenericError(xsltGenericErrorContext,
+                             "Not a valid boolean xsldbg option %d\n",
+                             type);
+    }
+    return result;
 }
 
 
@@ -254,8 +269,10 @@ int isOptionEnabled(enum Option_type option_type){
  * Returns 1 on success,
  *         0 otherwise
  */
-int setIntOption(enum Option_type option_type, int value){
-  return enableOption(option_type, value);
+int
+setIntOption(enum Option_type option_type, int value)
+{
+    return enableOption(option_type, value);
 }
 
 
@@ -265,8 +282,10 @@ int setIntOption(enum Option_type option_type, int value){
  *
  * retrieve the state of a xsldbg option
  */
-int getIntOption(enum Option_type option_type) {
-  return isOptionEnabled(option_type);
+int
+getIntOption(enum Option_type option_type)
+{
+    return isOptionEnabled(option_type);
 }
 
 /**
@@ -279,22 +298,28 @@ int getIntOption(enum Option_type option_type) {
  * Returns 1 on success,
  *         0 otherwise
  */
-int setStringOption(enum Option_type option_type, const char *value){
-  int result = 0;
-  if ((option_type >= OPTIONS_OUTPUT_FILE_NAME) &&
-      (option_type <= OPTIONS_DATA_FILE_NAME)){
-    int index = option_type - OPTIONS_OUTPUT_FILE_NAME;
-    if (stringOptions[index])
-      xmlFree(stringOptions[index]);
-    if (value)
-      stringOptions[index]= xmlMemStrdup(value);
-    else
-      stringOptions[index] = NULL;
-    result++;
-  }else
-      xsltGenericError(xsltGenericErrorContext,
-		       "Not a valid string xsldbg option %d\n", option_type);
-  return result;
+int
+setStringOption(enum Option_type option_type, const xmlChar * value)
+{
+    int result = 0;
+
+    if ((option_type >= OPTIONS_OUTPUT_FILE_NAME) &&
+        (option_type <= OPTIONS_DATA_FILE_NAME)) {
+        int index = option_type - OPTIONS_OUTPUT_FILE_NAME;
+
+        if (stringOptions[index])
+            xmlFree(stringOptions[index]);
+        if (value)
+            stringOptions[index] =
+                (xmlChar *) xmlMemStrdup((char *) value);
+        else
+            stringOptions[index] = NULL;
+        result++;
+    } else
+        xsltGenericError(xsltGenericErrorContext,
+                         "Not a valid string xsldbg option %d\n",
+                         option_type);
+    return result;
 }
 
 /**
@@ -304,15 +329,19 @@ int setStringOption(enum Option_type option_type, const char *value){
  * Get value for a string xsldbg option of @type
  * Returns current option value which may be NULL
  */
-const char *getStringOption(enum Option_type option_type){
-  xmlChar *result = NULL;
-  if ((option_type >= OPTIONS_OUTPUT_FILE_NAME) &&
-      (option_type <= OPTIONS_DATA_FILE_NAME)){
-    result = stringOptions[option_type - OPTIONS_OUTPUT_FILE_NAME];
-  }else
-      xsltGenericError(xsltGenericErrorContext,
-		       "Not a valid string xsldbg option %d\n", option_type);
-  return result;
+const xmlChar *
+getStringOption(enum Option_type option_type)
+{
+    xmlChar *result = NULL;
+
+    if ((option_type >= OPTIONS_OUTPUT_FILE_NAME) &&
+        (option_type <= OPTIONS_DATA_FILE_NAME)) {
+        result = stringOptions[option_type - OPTIONS_OUTPUT_FILE_NAME];
+    } else
+        xsltGenericError(xsltGenericErrorContext,
+                         "Not a valid string xsldbg option %d\n",
+                         option_type);
+    return result;
 }
 
 
@@ -325,16 +354,19 @@ const char *getStringOption(enum Option_type option_type){
  * Returns non-null if sucessful
  *         0 otherwise
  */
-ParameterItemPtr paramItemNew(const xmlChar *name, const xmlChar *value){
-  ParameterItemPtr result = NULL;
-  if (name && value){
-    result = (ParameterItem*)xmlMalloc(sizeof(ParameterItem));
-    if (result){
-      result->name = xmlMemStrdup(name);
-      result->value = xmlMemStrdup(value);
+ParameterItemPtr
+paramItemNew(const xmlChar * name, const xmlChar * value)
+{
+    ParameterItemPtr result = NULL;
+
+    if (name && value) {
+        result = (ParameterItem *) xmlMalloc(sizeof(ParameterItem));
+        if (result) {
+            result->name = (xmlChar *) xmlMemStrdup((char *) name);
+            result->value = (xmlChar *) xmlMemStrdup((char *) value);
+        }
     }
-  }
-  return result;
+    return result;
 }
 
 
@@ -345,13 +377,15 @@ ParameterItemPtr paramItemNew(const xmlChar *name, const xmlChar *value){
  *
  * free memory used by parameter item
  */
-void paramItemFree(ParameterItemPtr item){
-  if (item){
-    if (item->name)
-      xmlFree(item->name);
-    if (item->value)
-      xmlFree(item->value);
-  }
+void
+paramItemFree(ParameterItemPtr item)
+{
+    if (item) {
+        if (item->name)
+            xmlFree(item->name);
+        if (item->value)
+            xmlFree(item->value);
+    }
 }
 
 /**
@@ -360,8 +394,10 @@ void paramItemFree(ParameterItemPtr item){
  * Return the list of parameters to provide to libxslt when doing 
  *   stylesheet transformation
  */
-ArrayListPtr getParamItemList(){
-  return parameterList;
+ArrayListPtr
+getParamItemList(void)
+{
+    return parameterList;
 }
 
 /**
@@ -372,16 +408,19 @@ ArrayListPtr getParamItemList(){
  * Returns 1 on success,
  *         0 otherwise
  */
-int printParam(int paramId){
-  int result = 0;
-  ParameterItemPtr paramItem = 
-    (ParameterItemPtr)xslArrayListGet(getParamItemList(), paramId);
-  if (paramItem && paramItem->name && paramItem->value){
-    printf(" Parameter %d %s=\"%s\"\n", paramId, 
-	   paramItem->name, paramItem->value);
-    result++;
-  }
-  return result;
+int
+printParam(int paramId)
+{
+    int result = 0;
+    ParameterItemPtr paramItem =
+        (ParameterItemPtr) xslArrayListGet(getParamItemList(), paramId);
+    if (paramItem && paramItem->name && paramItem->value) {
+        xsltGenericError(xsltGenericErrorContext,
+                         " Parameter %d %s=\"%s\"\n", paramId,
+                         paramItem->name, paramItem->value);
+        result++;
+    }
+    return result;
 }
 
 /**
@@ -391,16 +430,20 @@ int printParam(int paramId){
  * Returns 1 on success,
  *         0 otherwise
  */
-int printParamList(){
-  int result = 1;
-  int paramIndex = 0;
-  int itemCount = xslArrayListCount(getParamItemList());
-  if (itemCount > 0){
-    while (result && (paramIndex < itemCount)){
-      result = printParam(paramIndex++);
-    }
-  }else
-    printf("No parameters present\n");
+int
+printParamList(void)
+{
+    int result = 1;
+    int paramIndex = 0;
+    int itemCount = xslArrayListCount(getParamItemList());
 
-  return result;
+    if (itemCount > 0) {
+        while (result && (paramIndex < itemCount)) {
+            result = printParam(paramIndex++);
+        }
+    } else
+        xsltGenericError(xsltGenericErrorContext,
+                         "No parameters present\n");
+
+    return result;
 }
