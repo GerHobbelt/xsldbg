@@ -76,7 +76,11 @@ clean:
 	rm -rf html sgml tmpl src
 	rm -f xsldbg-*
 
-
+very-clean:clean
+	rm -f *.*~
+	rm -f *~
+	rm -f Makefile.in
+	rm -f Makefile
 else
 
 all:
