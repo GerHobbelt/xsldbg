@@ -16,9 +16,9 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "../src/arraylist.h"
-#include "../src/options.h"
+#include <breakpoint/arraylist.h>
 #include <breakpoint/breakpoint.h>
+#include "../src/options.h"
 
 ArrayListPtr createTestList(void);
 ArrayListPtr createParamList(void);
