@@ -2,7 +2,10 @@ default: all
 
 all:
 	rm -f aclocal.m4 config.guess config.sub ltmain.sh depcomp install-sh mkinstalldirs ltconfig missing  
-	libtoolize --automake
+#	Run normal libtoolize     
+	if test -f /usr/bin/libtoolize ; then libtoolize --automake; fi
+#	New version of Mac OS X uses glibtoolize instead    
+	if test -f /usr/bin/glibtoolize ; then glibtoolize --automake; fi
 	aclocal
 	autoheader
 	automake --add-missing

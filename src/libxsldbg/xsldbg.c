@@ -486,13 +486,18 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
 
         xmlFreeDoc(res);
     } else {
-        xsltRunStylesheet(cur, doc, params, (char *)
-                          optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME),
-                          NULL, NULL);
+        xsltTransformContextPtr userCtxt = xsltNewTransformContext(cur, doc);
+        if (userCtxt){
+        xsltRunStylesheetUser(cur, doc, params,
+                          (char *)optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME),
+                          NULL, NULL, NULL, userCtxt);
         if (optionsGetIntOption(OPTIONS_TIMING))
             endTimer("Running stylesheet and saving result");
+        xsltFreeTransformContext(userCtxt);
+        }else{
+                xsltGenericError(xsltGenericErrorContext, "Out of memory\n");
+        }
     }
-
 }
 
 

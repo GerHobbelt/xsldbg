@@ -1,3 +1,10 @@
+Keith Isdale 05 July 2003 <k_isdale@tpg.com.au>
+  Version 3.1.6
+  Mac OS X fixes 
+    o if needed use glibtoolize not libtoolize
+    o don't use -rpath in Makefile.am's
+  Fix cause of crash with newer versions of libxml/libxslt when the -o command line argument is specified
+
 Keith Isdale 29 June 2003 <k_isdale@tpg.com.au>
   Version 3.1.5
   Fix bug that can cause the warning message not to display when adding a existing template breakpoint

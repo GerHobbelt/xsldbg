@@ -924,44 +924,19 @@ void
 
 filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode, xmlNodePtr lastNode)
 {
+    xmlNodePtr node = firstNode;
+    if (!firstNode || !ent || !ent->SystemID ||
+         (ent->etype != XML_EXTERNAL_GENERAL_PARSED_ENTITY) )
+        return;
 
-    if (firstNode && firstNode->next && ent &&
-        (ent->etype == XML_EXTERNAL_GENERAL_PARSED_ENTITY)) {
-
-        if (!firstNode)
-            return;
-
-        /* find the first XML_ELEMENT_NODE */
-        while (firstNode->next && (firstNode->type != XML_ELEMENT_NODE))
-            firstNode = firstNode->next;
-
-        if (lastNode == NULL) {
-            if (ent->SystemID) {
-                if (ent->ExternalID)
-                    filesAddEntityName(ent->SystemID, ent->ExternalID);
-                else
-                    filesAddEntityName(ent->URI, BAD_CAST "");
-		while(firstNode){
-		  filesSetBaseUri(firstNode, ent->URI);
-		  firstNode = firstNode->next;
-		}
-            }
-        } else {
-            if (ent->SystemID) {
-                xmlNodePtr node = firstNode;
-
-                if (ent->ExternalID)
-                    filesAddEntityName(ent->SystemID, ent->ExternalID);
-                else
-                    filesAddEntityName(ent->URI, BAD_CAST "");
-                while (node) {
-                    filesSetBaseUri(node, ent->URI);
-                    node = node->next;
-                }
-            }
-        }
+    if (ent->ExternalID)
+        filesAddEntityName(ent->SystemID, ent->ExternalID);
+    else
+        filesAddEntityName(ent->URI, BAD_CAST "");
+    while (node && (node != lastNode)) {
+        filesSetBaseUri(node, ent->URI);
+        node = node->next;
     }
-
 }
 
 
@@ -983,19 +958,17 @@ filesSetBaseUri(xmlNodePtr node, const xmlChar * uri)
 {
     int result = 0;
 
-    if (!node || !node->doc || !uri)
+    if (!node || !uri)
         return result;
     else {
-        /*
-         * xmlNsPtr xsldbgNs  = xmlSearchNs(node->doc, node, BAD_CAST "xsldbg");
-         * if (!xsldbgNs)
-         * xsldbgNs = xmlNewNs(node, XSLDBG_XML_NAMESPACE, BAD_CAST "xsldbg");      
-         * if (xsldbgNs){   
-         * xmlSetNsProp(node, xsldbgNs, BAD_CAST "uri", uri);  
-         * result = 1;
-         * }
-         */
-        xmlNewProp(node, BAD_CAST "xsldbg:uri", uri);
+        if (node->type == XML_ELEMENT_NODE){
+            xmlChar *xsldbgUrl = xmlGetProp(node, BAD_CAST "xsldbg:uri");
+            if (!xsldbgUrl)
+                xmlNewProp(node, BAD_CAST "xsldbg:uri", uri);
+            else
+                xmlFree(xsldbgUrl);
+        }
+        result = 1;
     }
     return result;
 }

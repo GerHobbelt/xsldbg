@@ -70,8 +70,7 @@ $(top_builddir)/src/libxsldbg/libxsldbg.la:
 # use of configure defined libraries
 listTest_LDADD = ../src/simpleio.o $(top_builddir)/src/libxsldbg/libxsldbg.la $(XSLDBG_TEST_LIBS)
 
-listTest_LDFLAGS = $(XSLDBG_STATIC_FLAGS) $(all_libraries) \
--Wl,-rpath -Wl,$(LIBXML_PREFIX)/lib -Wl,-rpath -Wl,$(LIBXSLT_PREFIX)/lib 
+listTest_LDFLAGS = $(XSLDBG_STATIC_FLAGS) $(all_libraries)
 
 
 
