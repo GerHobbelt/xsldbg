@@ -15,9 +15,15 @@
       <xsl:attribute name="id" >
         <xsl:value-of select="concat(@name, '_cmd')"/>
       </xsl:attribute>
-      <title><xsl:value-of select="@title"/></title>
+      <title id="{@name}_cmd.title"><xsl:value-of select="@title"/></title>
       <xsl:apply-templates />
     </xsl:element>
+  </xsl:template>
+
+  <xsl:template match="link">
+    <link linkend="{@href}_cmd" endterm="{@href}_cmd.title">
+      <xsl:value-of select="@href"/>
+    </link>
   </xsl:template>
 
 </xsl:stylesheet>

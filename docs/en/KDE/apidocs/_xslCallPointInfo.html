@@ -1,0 +1,130 @@
+<HTML>
+<HEAD>
+<TITLE>struct _xslCallPointInfo</TITLE>
+
+<META NAME="Generator" CONTENT="KDOC ">
+</HEAD>
+<BODY bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#000099" alink= "#ffffff">
+<TABLE WIDTH="100%" BORDER="0">
+<TR>
+<TD>
+	<TABLE BORDER="0">
+		<TR><TD valign="top" align="left" cellspacing="10">
+		<h1>struct _xslCallPointInfo</h1>
+		</TD>
+		<TD valign="top" align="right" colspan="1"></TD></TR>
+	</TABLE>
+	<HR>
+	<TABLE BORDER="0">
+		<TR><TH>Definition</TH><TD><code>#include &lt;<A HREF="src___xslcallpoint_h.html">src/xslcallpoint.h</A>&gt;</code></TD></TR>
+<TR><TH><A HREF="full-list-_xslCallPointInfo.html">List of all Methods</A></TH></TR>
+	</TABLE>
+	</TD>
+<TD align="right"><TABLE BORDER="0"><TR><TD><small><A HREF="index-long.html">Annotated List</A></small></TD></TR>
+<TR><TD><small><A HREF="header-list.html">Files</A></small></TD></TR>
+<TR><TD><small><A HREF="all-globals.html">Globals</A></small></TD></TR>
+<TR><TD><small><A HREF="hier.html">Hierarchy</A></small></TD></TR>
+<TR><TD><small><A HREF="index.html">Index</A></small></TD></TR>
+</TABLE></TD></TR></TABLE>
+<h4>Public Types</h4><ul><LI>typedef struct _xslCallPoint  <A HREF="#ref4">xslCallPoint</A>
+</LI>
+<LI>struct <A HREF="_xslCallPointInfo___xslCallPoint.html">_xslCallPoint</A>
+</LI>
+</ul><h4>Public Methods</h4><ul><LI><A HREF="#xslCallPointInfoPtr">xslCallPointInfoPtr</A> &nbsp;<b><A HREF="#ref7">xslAddCallInfo</A></b> (const xmlChar * templateName,
+                                       const xmlChar * url) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref8">xslDropCall</A></b> (void) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref9">xslStepupToDepth</A></b> (int depth) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref10">xslStepdownToDepth</A></b> (int depth) 
+</LI>
+<LI>xslCallPointPtr &nbsp;<b><A HREF="#ref11">xslGetCall</A></b> (int depth) 
+</LI>
+<LI>xslCallPointPtr &nbsp;<b><A HREF="#ref12">xslGetCallStackTop</A></b> (void) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref13">xslCallDepth</A></b> (void) 
+</LI>
+</ul><h4>Public Members</h4><ul><LI>xmlChar *<b><A HREF="#ref1">templateName</A></b></LI>
+<LI>xmlChar *<b><A HREF="#ref2">url</A></b></LI>
+<LI>xslCallPointInfoPtr <b><A HREF="#ref3">next</A></b></LI>
+<LI>typedef xslCallPoint *<b><A HREF="#ref5">xslCallPointPtr</A></b></LI>
+</ul><HR><H2><A NAME="longdesc">Detailed Description</A></H2><A NAME="templateName"></A><A NAME="ref1"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlChar * <strong>templateName</strong>
+</td><td align="right"><h3><strong>templateName</strong></h3></td></tr></table><p></p><A NAME="url"></A><A NAME="ref2"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlChar * <strong>url</strong>
+</td><td align="right"><h3><strong>url</strong></h3></td></tr></table><p></p><A NAME="next"></A><A NAME="ref3"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="#xslCallPointInfoPtr">xslCallPointInfoPtr</A>  <strong>next</strong>
+</td><td align="right"><h3><strong>next</strong></h3></td></tr></table><p></p><A NAME="xslCallPoint"></A><A NAME="ref4"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct _xslCallPoint  <strong>xslCallPoint</strong></td><td align="right"><h3><strong>xslCallPoint</strong></h3></td></tr></table><p></p><A NAME="xslCallPointPtr"></A><A NAME="ref5"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef xslCallPoint * <strong>xslCallPointPtr</strong>
+</td><td align="right"><h3><strong>xslCallPointPtr</strong></h3></td></tr></table><p></p><A NAME="_xslCallPointInfo___xslCallPoint.html"></A><A NAME="ref6"></A><table width="100%"><tr bgcolor="#eeeeee"><td><strong>_xslCallPoint</strong> <small>(struct)</small></td><td align="right"><h3><strong>_xslCallPoint</strong></h3></td></tr></table><p></p><A NAME="xslAddCallInfo"></A><A NAME="ref7"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="#xslCallPointInfoPtr">xslCallPointInfoPtr</A> &nbsp;<strong>xslAddCallInfo</strong> (const xmlChar * templateName,
+                                       const xmlChar * url)
+<br></td><td align="right"><h3><strong>xslAddCallInfo</strong></h3></td></tr></table><p></p><p>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>templateName</i></TD><TD align="left" valign="top">Template name to add
+</TD></TR>
+<TR><TD align="left" valign="top"><i>url</i></TD><TD align="left" valign="top">The url for the template
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: A reference to the added info if successful, 
+          NULL otherwise
+</p>
+<A NAME="xslDropCall"></A><A NAME="ref8"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDropCall</strong> (void)
+<br></td><td align="right"><h3><strong>xslDropCall</strong></h3></td></tr></table><p></p><p>
+ Drop the topmost item off the call stack
+ </p>
+<A NAME="xslStepupToDepth"></A><A NAME="ref9"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslStepupToDepth</strong> (int depth)
+<br></td><td align="right"><h3><strong>xslStepupToDepth</strong></h3></td></tr></table><p></p><p> 
+ Set the frame depth to step up to
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>depth</i></TD><TD align="left" valign="top">The frame depth to step up to  
+            0 < <code>depth</code> <= xslCallDepth()
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+</p>
+<A NAME="xslStepdownToDepth"></A><A NAME="ref10"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslStepdownToDepth</strong> (int depth)
+<br></td><td align="right"><h3><strong>xslStepdownToDepth</strong></h3></td></tr></table><p></p><p> 
+ Set the frame depth to step down to
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>depth</i></TD><TD align="left" valign="top">The frame depth to step down to  
+            0 < <code>depth</code> <= xslCallDepth()
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success, 
+          0 otherwise
+</p>
+<A NAME="xslGetCall"></A><A NAME="ref11"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xslCallPointPtr &nbsp;<strong>xslGetCall</strong> (int depth)
+<br></td><td align="right"><h3><strong>xslGetCall</strong></h3></td></tr></table><p></p><p>
+ Retrieve the call point at specified call depth 
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>depth</i></TD><TD align="left" valign="top">0 < <code>depth</code> <= xslCallDepth()
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: Non-null a if depth is valid,
+          NULL otherwise 
+</p>
+<A NAME="xslGetCallStackTop"></A><A NAME="ref12"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xslCallPointPtr &nbsp;<strong>xslGetCallStackTop</strong> (void)
+<br></td><td align="right"><h3><strong>xslGetCallStackTop</strong></h3></td></tr></table><p></p><p> 
+</p>
+<p><b>Returns</b>: The top of the call stack
+ </p>
+<A NAME="xslCallDepth"></A><A NAME="ref13"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslCallDepth</strong> (void)
+<br></td><td align="right"><h3><strong>xslCallDepth</strong></h3></td></tr></table><p></p><p>
+</p>
+<p><b>Returns</b>: the depth of call stack
+ </p>
+<HR>
+	<table>
+	<tr><td><small>Generated by: keith on linux on Fri Dec  7 22:39:08 2001, using kdoc 2.0a53.</small></td></tr>
+	</table>
+</BODY>
+</HTML>

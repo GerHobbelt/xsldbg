@@ -1,0 +1,537 @@
+<HTML>
+<HEAD>
+<TITLE>struct _searchInfo</TITLE>
+
+<META NAME="Generator" CONTENT="KDOC ">
+</HEAD>
+<BODY bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#000099" alink= "#ffffff">
+<TABLE WIDTH="100%" BORDER="0">
+<TR>
+<TD>
+	<TABLE BORDER="0">
+		<TR><TD valign="top" align="left" cellspacing="10">
+		<h1>struct _searchInfo</h1>
+		</TD>
+		<TD valign="top" align="right" colspan="1"></TD></TR>
+	</TABLE>
+	<HR>
+	<TABLE BORDER="0">
+		<TR><TH>Definition</TH><TD><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></TD></TR>
+<TR><TH><A HREF="full-list-_searchInfo.html">List of all Methods</A></TH></TR>
+	</TABLE>
+	</TD>
+<TD align="right"><TABLE BORDER="0"><TR><TD><small><A HREF="index-long.html">Annotated List</A></small></TD></TR>
+<TR><TD><small><A HREF="header-list.html">Files</A></small></TD></TR>
+<TR><TD><small><A HREF="all-globals.html">Globals</A></small></TD></TR>
+<TR><TD><small><A HREF="hier.html">Hierarchy</A></small></TD></TR>
+<TR><TD><small><A HREF="index.html">Index</A></small></TD></TR>
+</TABLE></TD></TR></TABLE>
+<h4>Public Types</h4><ul><LI>typedef struct _breakPointSearchData  <A HREF="#ref4">breakPointSearchData</A>
+</LI>
+<LI>struct <A HREF="_searchInfo___breakPointSearchData.html">_breakPointSearchData</A>
+</LI>
+<LI>typedef struct _nodeSearchData  <A HREF="#ref7">nodeSearchData</A>
+</LI>
+<LI>struct <A HREF="_searchInfo___nodeSearchData.html">_nodeSearchData</A>
+</LI>
+</ul><h4>Public Methods</h4><ul><LI>int &nbsp;<b><A HREF="#ref10">searchInit</A></b> (void) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref11">searchFree</A></b> (void) 
+</LI>
+<LI><A HREF="#searchInfoPtr">searchInfoPtr</A> &nbsp;<b><A HREF="#ref12">searchNewInfo</A></b> (<A HREF="#SearchEnum">SearchEnum</A> type) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref13">searchFreeInfo</A></b> (<A HREF="#searchInfoPtr">searchInfoPtr</A> info) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref14">searchEmpty</A></b> (void) 
+</LI>
+<LI>xmlDocPtr &nbsp;<b><A HREF="#ref15">searchDoc</A></b> (void) 
+</LI>
+<LI>xmlNodePtr &nbsp;<b><A HREF="#ref16">searchRootNode</A></b> (void) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref17">xslSearchAdd</A></b> (xmlNodePtr node) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref18">xslSearchSave</A></b> (const xmlChar * fileName) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref19">xslSearchQuery</A></b> (const xmlChar * tempFile, const xmlChar * query) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref20">updateSearchData</A></b> (xsltTransformContextPtr styleCtxt,
+                         xsltStylesheetPtr style,
+                         void *data, VariableTypeEnum variableTypes) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref21">scanForBreakPoint</A></b> (void *payload, void *data, xmlChar * name) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref22">scanForNode</A></b> (void *payload, void *data, xmlChar * name) 
+</LI>
+<LI>xmlNodePtr &nbsp;<b><A HREF="#ref23">xslFindNodeByLineNo</A></b> (xsltTransformContextPtr ctxt,
+                                   const xmlChar * url, long lineNumber) 
+</LI>
+<LI>xmlNodePtr &nbsp;<b><A HREF="#ref24">xslFindTemplateNode</A></b> (const xsltStylesheetPtr style,
+                                   const xmlChar * name) 
+</LI>
+<LI><A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> &nbsp;<b><A HREF="#ref25">findBreakPointByName</A></b> (const xmlChar * templateName) 
+</LI>
+<LI><A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> &nbsp;<b><A HREF="#ref26">findBreakPointById</A></b> (int id) 
+</LI>
+<LI>xmlXPathObjectPtr &nbsp;<b><A HREF="#ref27">xslFindNodesByQuery</A></b> (const xmlChar * query) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref28">walkBreakPoints</A></b> (xmlHashScanner walkFunc, void *data) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref29">walkTemplates</A></b> (xmlHashScanner walkFunc, void *data,
+                       xsltStylesheetPtr style) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref30">walkStylesheets</A></b> (xmlHashScanner walkFunc, void *data,
+                         xsltStylesheetPtr style) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref31">xslWalkGlobals</A></b> (xmlHashScanner walkFunc,
+                        void *data, xsltStylesheetPtr style) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref32">xslWalkLocals</A></b> (xmlHashScanner walkFunc, void *data,
+                       xsltStylesheetPtr style) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref33">xslWalkIncludes</A></b> (xmlHashScanner walkFunc, void *data,
+                         xsltStylesheetPtr style) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref34">walkIncludeInst</A></b> (xmlHashScanner walkFunc, void *data,
+                         xsltStylesheetPtr style) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref35">xslWalkChildNodes</A></b> (xmlHashScanner walkFunc, void *data,
+                           xmlNodePtr node) 
+</LI>
+<LI>xmlNodePtr &nbsp;<b><A HREF="#ref36">searchBreakPointNode</A></b> (<A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> breakPoint) 
+</LI>
+<LI>xmlNodePtr &nbsp;<b><A HREF="#ref37">searchTemplateNode</A></b> (xmlNodePtr templNode) 
+</LI>
+<LI>xmlNodePtr &nbsp;<b><A HREF="#ref38">searchGlobalNode</A></b> (xmlNodePtr globalVariable) 
+</LI>
+<LI>xmlNodePtr &nbsp;<b><A HREF="#ref39">searchLocalNode</A></b> (xmlNodePtr localVariable) 
+</LI>
+<LI>xmlNodePtr &nbsp;<b><A HREF="#ref40">searchSourceNode</A></b> (xsltStylesheetPtr style) 
+</LI>
+<LI>xmlNodePtr &nbsp;<b><A HREF="#ref41">searchIncludeNode</A></b> (xmlNodePtr include) 
+</LI>
+</ul><h4>Public Members</h4><ul><LI>int <b><A HREF="#ref1">found</A></b></LI>
+<LI>int <b><A HREF="#ref2">type</A></b></LI>
+<LI>void *<b><A HREF="#ref3">data</A></b></LI>
+<LI>typedef breakPointSearchData *<b><A HREF="#ref5">breakPointSearchDataPtr</A></b></LI>
+<LI>typedef nodeSearchData *<b><A HREF="#ref8">nodeSearchDataPtr</A></b></LI>
+</ul><HR><H2><A NAME="longdesc">Detailed Description</A></H2><A NAME="found"></A><A NAME="ref1"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int  <strong>found</strong>
+</td><td align="right"><h3><strong>found</strong></h3></td></tr></table><p></p><A NAME="type"></A><A NAME="ref2"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int  <strong>type</strong>
+</td><td align="right"><h3><strong>type</strong></h3></td></tr></table><p></p><A NAME="data"></A><A NAME="ref3"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void * <strong>data</strong>
+</td><td align="right"><h3><strong>data</strong></h3></td></tr></table><p></p><A NAME="breakPointSearchData"></A><A NAME="ref4"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct _breakPointSearchData  <strong>breakPointSearchData</strong></td><td align="right"><h3><strong>breakPointSearchData</strong></h3></td></tr></table><p></p><A NAME="breakPointSearchDataPtr"></A><A NAME="ref5"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef breakPointSearchData * <strong>breakPointSearchDataPtr</strong>
+</td><td align="right"><h3><strong>breakPointSearchDataPtr</strong></h3></td></tr></table><p></p><A NAME="_searchInfo___breakPointSearchData.html"></A><A NAME="ref6"></A><table width="100%"><tr bgcolor="#eeeeee"><td><strong>_breakPointSearchData</strong> <small>(struct)</small></td><td align="right"><h3><strong>_breakPointSearchData</strong></h3></td></tr></table><p></p><A NAME="nodeSearchData"></A><A NAME="ref7"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct _nodeSearchData  <strong>nodeSearchData</strong></td><td align="right"><h3><strong>nodeSearchData</strong></h3></td></tr></table><p></p><A NAME="nodeSearchDataPtr"></A><A NAME="ref8"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef nodeSearchData * <strong>nodeSearchDataPtr</strong>
+</td><td align="right"><h3><strong>nodeSearchDataPtr</strong></h3></td></tr></table><p></p><A NAME="_searchInfo___nodeSearchData.html"></A><A NAME="ref9"></A><table width="100%"><tr bgcolor="#eeeeee"><td><strong>_nodeSearchData</strong> <small>(struct)</small></td><td align="right"><h3><strong>_nodeSearchData</strong></h3></td></tr></table><p></p><A NAME="searchInit"></A><A NAME="ref10"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>searchInit</strong> (void)
+<br></td><td align="right"><h3><strong>searchInit</strong></h3></td></tr></table><p></p><p>
+</p>
+<p><b>Returns</b>: 1 if search structures have been initialized properly and all
+               memory required has been obtained,
+          0 otherwise
+</p>
+<A NAME="searchFree"></A><A NAME="ref11"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>searchFree</strong> (void)
+<br></td><td align="right"><h3><strong>searchFree</strong></h3></td></tr></table><p></p><p>
+ Free all memory used by searching 
+ </p>
+<A NAME="searchNewInfo"></A><A NAME="ref12"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="#searchInfoPtr">searchInfoPtr</A> &nbsp;<strong>searchNewInfo</strong> (<A HREF="#SearchEnum">SearchEnum</A> type)
+<br></td><td align="right"><h3><strong>searchNewInfo</strong></h3></td></tr></table><p></p><p>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>type</i></TD><TD align="left" valign="top">What type of search is required
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: valid search info pointer if successful
+          NULL otherwise
+</p>
+<A NAME="searchFreeInfo"></A><A NAME="ref13"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>searchFreeInfo</strong> (<A HREF="#searchInfoPtr">searchInfoPtr</A> info)
+<br></td><td align="right"><h3><strong>searchFreeInfo</strong></h3></td></tr></table><p></p><p>
+ Free memory used by <code>info</code>
+</p>
+<p></p>
+<p> </p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>info</i></TD><TD align="left" valign="top">A valid search info
+</TD></TR>
+</TABLE></P>
+<A NAME="searchEmpty"></A><A NAME="ref14"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>searchEmpty</strong> (void)
+<br></td><td align="right"><h3><strong>searchEmpty</strong></h3></td></tr></table><p></p><p>
+ Empty the seach data base of its contents
+</p>
+<p></p>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+ </p>
+<A NAME="searchDoc"></A><A NAME="ref15"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlDocPtr &nbsp;<strong>searchDoc</strong> (void)
+<br></td><td align="right"><h3><strong>searchDoc</strong></h3></td></tr></table><p></p><p>
+ Returns the document used for searching
+         Dangerous function to use! Does NOT return a copy of 
+             search data  so don't free it
+ </p>
+<A NAME="searchRootNode"></A><A NAME="ref16"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlNodePtr &nbsp;<strong>searchRootNode</strong> (void)
+<br></td><td align="right"><h3><strong>searchRootNode</strong></h3></td></tr></table><p></p><p>
+ Returns the topmost xml node in search dataBase.
+         Dangerous function to use! Does NOT return a copy of 
+             search root node  so don't free it
+ </p>
+<A NAME="xslSearchAdd"></A><A NAME="ref17"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslSearchAdd</strong> (xmlNodePtr node)
+<br></td><td align="right"><h3><strong>xslSearchAdd</strong></h3></td></tr></table><p></p><p>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>node</i></TD><TD align="left" valign="top">A valid node to be added to the topmost node in search dataBase
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 if able to add <code>node</code> to top node in search dataBase,
+          0 otherwise
+</p>
+<A NAME="xslSearchSave"></A><A NAME="ref18"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslSearchSave</strong> (const xmlChar * fileName)
+<br></td><td align="right"><h3><strong>xslSearchSave</strong></h3></td></tr></table><p></p><p>
+ Save the search dataBase to <code>fileName</code>  
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>fileName</i></TD><TD align="left" valign="top">Valid file name
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+</p>
+<A NAME="xslSearchQuery"></A><A NAME="ref19"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslSearchQuery</strong> (const xmlChar * tempFile, const xmlChar * query)
+<br></td><td align="right"><h3><strong>xslSearchQuery</strong></h3></td></tr></table><p></p><p>
+ Send query as parameter for execution of search.xsl using
+    data stored in <code>tempFile</code> 
+</p>
+<p></p>
+<p></p>
+<p> </p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>query</i></TD><TD align="left" valign="top">Query to run. If NULL then <code>query</code> defaults to "//search/ *"
+</TD></TR>
+<TR><TD align="left" valign="top"><i>tempFile</i></TD><TD align="left" valign="top">Where do we load the search dataBase from to execute
+             query. If <code>tempFile</code> is NULL default is "search.data"
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise   
+</p>
+<A NAME="updateSearchData"></A><A NAME="ref20"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>updateSearchData</strong> (xsltTransformContextPtr styleCtxt,
+                         xsltStylesheetPtr style,
+                         void *data, VariableTypeEnum variableTypes)
+<br></td><td align="right"><h3><strong>updateSearchData</strong></h3></td></tr></table><p></p><p>
+ Returns 1 if able to update the search dataBase,
+         0 otherwise
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>styleCtxt</i></TD><TD align="left" valign="top">Not used
+</TD></TR>
+<TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">Is valid
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">Not used but MUST be NULL for the moment
+</TD></TR>
+<TR><TD align="left" valign="top"><i>variableTypes</i></TD><TD align="left" valign="top">What types of variables to look
+ </TD></TR>
+</TABLE></P>
+<A NAME="scanForBreakPoint"></A><A NAME="ref21"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>scanForBreakPoint</strong> (void *payload, void *data, xmlChar * name)
+<br></td><td align="right"><h3><strong>scanForBreakPoint</strong></h3></td></tr></table><p></p><p>
+ Test if break point matches criteria given by <code>data</code>. If so then 
+      set <code>data</code>->found to 1 and stores  reference to break point found in 
+         <code>data</code>->data->node
+     otherwise <code>data</code> is unchanged
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>payload</i></TD><TD align="left" valign="top">A valid xslBreakPointPtr 
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">The criteria to look for and a valid searchInfoPtr of
+          type SEARCH_BREAKPOINT 
+</TD></TR>
+<TR><TD align="left" valign="top"><i>name</i></TD><TD align="left" valign="top">Not used 
+</TD></TR>
+</TABLE></P>
+<A NAME="scanForNode"></A><A NAME="ref22"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>scanForNode</strong> (void *payload, void *data, xmlChar * name)
+<br></td><td align="right"><h3><strong>scanForNode</strong></h3></td></tr></table><p></p><p>
+ Test if node matches criteria given by <code>data</code> if so then 
+     set <code>data</code>->found to 1 and  stores reference to node found in
+     <code>data</code>->data->node.
+  otherwise <code>data</code> is unchanged
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>payload</i></TD><TD align="left" valign="top">A valid xmlNodePtr
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">The criteria to look for and a valid searchInfo of
+          type SEARCH_NODE 
+</TD></TR>
+<TR><TD align="left" valign="top"><i>name</i></TD><TD align="left" valign="top">Not used
+</TD></TR>
+</TABLE></P>
+<A NAME="xslFindNodeByLineNo"></A><A NAME="ref23"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlNodePtr &nbsp;<strong>xslFindNodeByLineNo</strong> (xsltTransformContextPtr ctxt,
+                                   const xmlChar * url, long lineNumber)
+<br></td><td align="right"><h3><strong>xslFindNodeByLineNo</strong></h3></td></tr></table><p></p><p>
+ Find the closest line number in file specified that can be a point 
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>ctxt</i></TD><TD align="left" valign="top">Valid ctxt to look into
+</TD></TR>
+<TR><TD align="left" valign="top"><i>url</i></TD><TD align="left" valign="top">Non-null, non-empty file name that has been loaded by
+           debugger
+</TD></TR>
+<TR><TD align="left" valign="top"><i>lineNumber</i></TD><TD align="left" valign="top"><code>lineNumber</code> >= 0 and is available in url specified
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: The node at line number specified if successful,
+	    NULL otherwise
+</p>
+<A NAME="xslFindTemplateNode"></A><A NAME="ref24"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlNodePtr &nbsp;<strong>xslFindTemplateNode</strong> (const xsltStylesheetPtr style,
+                                   const xmlChar * name)
+<br></td><td align="right"><h3><strong>xslFindTemplateNode</strong></h3></td></tr></table><p></p><p>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">Valid stylesheet collection to look into 
+</TD></TR>
+<TR><TD align="left" valign="top"><i>name</i></TD><TD align="left" valign="top">Valid template name to look for
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: The template node found if successful,
+          NULL otherwise 
+</p>
+<A NAME="findBreakPointByName"></A><A NAME="ref25"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> &nbsp;<strong>findBreakPointByName</strong> (const xmlChar * templateName)
+<br></td><td align="right"><h3><strong>findBreakPointByName</strong></h3></td></tr></table><p></p><p>
+ Find the breakpoint at template with "match" or "name" equal 
+    to templateName
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>templateName</i></TD><TD align="left" valign="top">Valid template name to look for
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: The break point that matches <code>templateName</code>
+          NULL otherwise
+</p>
+<A NAME="findBreakPointById"></A><A NAME="ref26"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> &nbsp;<strong>findBreakPointById</strong> (int id)
+<br></td><td align="right"><h3><strong>findBreakPointById</strong></h3></td></tr></table><p></p><p>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>id</i></TD><TD align="left" valign="top">The break point id to look for
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: The break point with given the break point id if found,
+          NULL otherwise 
+</p>
+<A NAME="xslFindNodesByQuery"></A><A NAME="ref27"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlXPathObjectPtr &nbsp;<strong>xslFindNodesByQuery</strong> (const xmlChar * query)
+<br></td><td align="right"><h3><strong>xslFindNodesByQuery</strong></h3></td></tr></table><p></p><p>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>query</i></TD><TD align="left" valign="top">The xpath query to run, see dbgsearch.c or 
+           search.dtd for more details
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: The nodes that match the given query on success,
+          NULL otherwise 
+</p>
+<A NAME="walkBreakPoints"></A><A NAME="ref28"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>walkBreakPoints</strong> (xmlHashScanner walkFunc, void *data)
+<br></td><td align="right"><h3><strong>walkBreakPoints</strong></h3></td></tr></table><p></p><p>
+ Walks through all break points calling walkFunc for each. The payload
+  sent to walkFunc is of type xslBreakPointPtr 
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>walkFunc</i></TD><TD align="left" valign="top">The function to callback for each breakpoint found
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">The extra data to pass onto <code>walkFunc</code>
+ </TD></TR>
+</TABLE></P>
+<A NAME="walkTemplates"></A><A NAME="ref29"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>walkTemplates</strong> (xmlHashScanner walkFunc, void *data,
+                       xsltStylesheetPtr style)
+<br></td><td align="right"><h3><strong>walkTemplates</strong></h3></td></tr></table><p></p><p>
+ Walks through all templates found in <code>style</code> calling walkFunc for each.
+   The payload of walkFunc is of type xsltTemplatePtr
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>walkFunc</i></TD><TD align="left" valign="top">The function to callback for each template found
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">The extra data to pass onto <code>walkFunc</code>
+</TD></TR>
+<TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">The stylesheet to start from
+ </TD></TR>
+</TABLE></P>
+<A NAME="walkStylesheets"></A><A NAME="ref30"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>walkStylesheets</strong> (xmlHashScanner walkFunc, void *data,
+                         xsltStylesheetPtr style)
+<br></td><td align="right"><h3><strong>walkStylesheets</strong></h3></td></tr></table><p></p><p>
+ Walks through all stylesheets found in <code>style</code> calling walkFunc for
+   each. The payload sent to walkFunc is of type xsltStylesheetPtr
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>walkFunc</i></TD><TD align="left" valign="top">The function to callback for each stylesheet found
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">The extra data to pass onto <code>walkFunc</code>
+</TD></TR>
+<TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">The stylesheet to start from
+ </TD></TR>
+</TABLE></P>
+<A NAME="xslWalkGlobals"></A><A NAME="ref31"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslWalkGlobals</strong> (xmlHashScanner walkFunc,
+                        void *data, xsltStylesheetPtr style)
+<br></td><td align="right"><h3><strong>xslWalkGlobals</strong></h3></td></tr></table><p></p><p>
+ Call walkFunc for each global variable found in <code>style</code>. The payload
+   sent to walkFunc is of type xmlNodePtr
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>walkFunc</i></TD><TD align="left" valign="top">The function to callback for each gobal variable found
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">The extra data to pass onto <code>walkFunc</code>
+</TD></TR>
+<TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">The stylesheet to start from
+ </TD></TR>
+</TABLE></P>
+<A NAME="xslWalkLocals"></A><A NAME="ref32"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslWalkLocals</strong> (xmlHashScanner walkFunc, void *data,
+                       xsltStylesheetPtr style)
+<br></td><td align="right"><h3><strong>xslWalkLocals</strong></h3></td></tr></table><p></p><p>
+ Walks through all local variables found in <code>style</code> calling 
+   walkFunc for each. The payload of walkFunc is of type xmlNodePtr
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>walkFunc</i></TD><TD align="left" valign="top">The function to callback for each local variable found
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">The extra data to pass onto <code>walkFunc</code>
+</TD></TR>
+<TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">The stylesheet to start from
+ </TD></TR>
+</TABLE></P>
+<A NAME="xslWalkIncludes"></A><A NAME="ref33"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslWalkIncludes</strong> (xmlHashScanner walkFunc, void *data,
+                         xsltStylesheetPtr style)
+<br></td><td align="right"><h3><strong>xslWalkIncludes</strong></h3></td></tr></table><p></p><p>
+ Walks through all included stylesheets found in <code>style</code>,
+   calling walkFunc for each. The payload of walkFunc is of
+   type xmlNodePtr
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>walkFunc</i></TD><TD align="left" valign="top">The function to callback for each included stylesheet
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">The extra data to pass onto <code>walkFunc</code>
+</TD></TR>
+<TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">The stylesheet to start from
+ </TD></TR>
+</TABLE></P>
+<A NAME="walkIncludeInst"></A><A NAME="ref34"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>walkIncludeInst</strong> (xmlHashScanner walkFunc, void *data,
+                         xsltStylesheetPtr style)
+<br></td><td align="right"><h3><strong>walkIncludeInst</strong></h3></td></tr></table><p></p><p>
+ Walks through all xsl:include calling walkFunc for each. The payload
+   of walkFunc is of type xmlNodePtr
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>walkFunc</i></TD><TD align="left" valign="top">The function to callback for each xsl:include instruction found
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">The extra data to pass onto <code>walkFunc</code>
+</TD></TR>
+<TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">The stylesheet to start from
+ </TD></TR>
+</TABLE></P>
+<A NAME="xslWalkChildNodes"></A><A NAME="ref35"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslWalkChildNodes</strong> (xmlHashScanner walkFunc, void *data,
+                           xmlNodePtr node)
+<br></td><td align="right"><h3><strong>xslWalkChildNodes</strong></h3></td></tr></table><p></p><p>
+ Call walkFunc for each child of <code>node</code> the payload sent to walkFunc is
+   a xmlNodePtr
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>walkFunc</i></TD><TD align="left" valign="top">The function to callback for each child/sibling found
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">The extra data to pass onto <code>walkFunc</code>
+</TD></TR>
+<TR><TD align="left" valign="top"><i>node</i></TD><TD align="left" valign="top">Valid xmlNodePtr
+ </TD></TR>
+</TABLE></P>
+<A NAME="searchBreakPointNode"></A><A NAME="ref36"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlNodePtr &nbsp;<strong>searchBreakPointNode</strong> (<A HREF="#xslBreakPointPtr">xslBreakPointPtr</A> breakPoint)
+<br></td><td align="right"><h3><strong>searchBreakPointNode</strong></h3></td></tr></table><p></p><p>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>breakPoint</i></TD><TD align="left" valign="top">A valid break point 
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: <code>breakPoint</code> as a new xmlNode in search dataBase format 
+               if successful,
+          NULL otherwise
+</p>
+<A NAME="searchTemplateNode"></A><A NAME="ref37"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlNodePtr &nbsp;<strong>searchTemplateNode</strong> (xmlNodePtr templNode)
+<br></td><td align="right"><h3><strong>searchTemplateNode</strong></h3></td></tr></table><p></p><p>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>templNode</i></TD><TD align="left" valign="top">A valid template node
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: <code>templNode</code> as a new xmlNode in search dataBase format 
+               if successful,
+          NULL otherwise
+</p>
+<A NAME="searchGlobalNode"></A><A NAME="ref38"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlNodePtr &nbsp;<strong>searchGlobalNode</strong> (xmlNodePtr globalVariable)
+<br></td><td align="right"><h3><strong>searchGlobalNode</strong></h3></td></tr></table><p></p><p> 
+</p>
+<p></p>
+<p> </p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>globalVariable</i></TD><TD align="left" valign="top">A valid xmlNodePtr node
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: <code>globalVariable</code> as a new xmlNode in search dataBase 
+               format if successful,
+          NULL otherwise
+</p>
+<A NAME="searchLocalNode"></A><A NAME="ref39"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlNodePtr &nbsp;<strong>searchLocalNode</strong> (xmlNodePtr localVariable)
+<br></td><td align="right"><h3><strong>searchLocalNode</strong></h3></td></tr></table><p></p><p> 
+</p>
+<p></p>
+<p> </p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>localVariable</i></TD><TD align="left" valign="top">A valid xmlNodePtr node
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: <code>localVariable</code> as a new xmlNode in search dataBase 
+              format if successful,
+         NULL otherwise
+</p>
+<A NAME="searchSourceNode"></A><A NAME="ref40"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlNodePtr &nbsp;<strong>searchSourceNode</strong> (xsltStylesheetPtr style)
+<br></td><td align="right"><h3><strong>searchSourceNode</strong></h3></td></tr></table><p></p><p>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">A valid stylesheet
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: <code>style</code> as a new xmlNode in search dataBase format if successful,
+         NULL otherwise
+</p>
+<A NAME="searchIncludeNode"></A><A NAME="ref41"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlNodePtr &nbsp;<strong>searchIncludeNode</strong> (xmlNodePtr include)
+<br></td><td align="right"><h3><strong>searchIncludeNode</strong></h3></td></tr></table><p></p><p>
+</p>
+<p></p>
+<p> </p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>include</i></TD><TD align="left" valign="top">A valid xsl:include instruction
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: <code>include</code> as a new xmlNode in search dataBase format
+              if successful,
+         NULL otherwise
+</p>
+<HR>
+	<table>
+	<tr><td><small>Generated by: keith on linux on Fri Dec  7 22:39:08 2001, using kdoc 2.0a53.</small></td></tr>
+	</table>
+</BODY>
+</HTML>

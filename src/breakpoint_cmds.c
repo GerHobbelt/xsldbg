@@ -488,7 +488,7 @@ xslDbgEnableBreakPoint(void *payload, void *data,
 /**
  * xslDbgShellEnable:
  * @arg : is valid
- * @enable : enable break point if 1, disable if 0, toggle if -1
+ * @enableType : enable break point if 1, disable if 0, toggle if -1
  *
  * Enable/disable break point specified by arg using enable 
  *      type of @enableType

@@ -1,12 +1,12 @@
 
 AC_INIT(src/xsldbg.c)
 
-timestamp='2001-12-06'
+timestamp='2001-12-07'
 
 
 XSLDBG_MAJOR_VERSION=0
 XSLDBG_MINOR_VERSION=8
-XSLDBG_MICRO_VERSION=6
+XSLDBG_MICRO_VERSION=8
 PACKAGE=xsldbg
 
 LIBXML_REQUIRED_VERSION=2.4.10
@@ -147,9 +147,13 @@ AC_ARG_ENABLE(gnome_docs,
 	[  --enable-gnome-docs    Turn on generation of gnome style documentation],
 	[case "${enableval}" in
 	yes) gnome_docs=true 
-		AC_MSG_RESULT(Enabling gnome style documentation);;
+dnl
+dnl gnome docs are broken 
+dnl		AC_MSG_RESULT(Enabling GNOMEe style documentation);;
+	AC_MSG_ERROR(Sorry the GNOME docs are broken at the moment. Suggestions on 
+how to fix the would be appreciated);;
 	no)  gnome_docs=false 
-		AC_MSG_RESULT(Disabling gnome style documentation);;
+		AC_MSG_RESULT(Disabling GNOME style documentation);;
 	*) AC_MSG_ERROR(bad value ${enableval} for --enable-gnome-docs) ;;
 	esac],[gnome_docs=false])
 AM_CONDITIONAL(USE_GNOMEDOCS, test "x$gnome_docs" = "xtrue")

@@ -45,7 +45,7 @@
   </xsl:template>
  
 
- <xsl:template select="body">
+ <xsl:template match="body">
     <xsl:apply-templates select="*"/>
   </xsl:template>
   
@@ -91,15 +91,17 @@
 
 
   <xsl:template match="comment">
-    <xsl:value-of select="."/>
+    <markup>      
+      <xsl:text disable-output-escaping="yes">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</xsl:text>
+      <emphasis>
+        <xsl:value-of select="."/>
+      </emphasis>
+    </markup>
+
   </xsl:template>
 
-  <xsl:template select="summary">
+  <xsl:template match="summary">
     <xsl:value-of select="."/>
-  </xsl:template>
-
-  <xsl:template match="link">
-      <xsl:value-of select="."/>
   </xsl:template>
 
 </xsl:stylesheet>

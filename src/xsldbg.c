@@ -694,7 +694,6 @@ main(int argc, char **argv)
     if (!isOptionEnabled(OPTIONS_SHELL)) {      /* excecute stylesheet (ie no debugging) */
         xslDebugStatus = DEBUG_NONE;
     } else {
-        xslDebugStatus = DEBUG_STOP;
         xsltGenericError(xsltGenericErrorContext, "XSLDBG %s\n", VERSION);
     }
 
@@ -706,6 +705,8 @@ main(int argc, char **argv)
         cur = NULL;
         doc = NULL;
         if (isOptionEnabled(OPTIONS_SHELL)) {
+            xslDebugStatus = DEBUG_STOP;
+            xslDebugGotControl(0);
             xsltGenericError(xsltGenericErrorContext,
                              "\nStarting stylesheet\n\n");
         }
@@ -752,7 +753,7 @@ main(int argc, char **argv)
 
             if (isOptionEnabled(OPTIONS_SHELL) && (showPrompt == 0)) {
                 if ((xslDebugStatus != DEBUG_QUIT)
-                    && !xslDebugGotControl(0)) {
+                    && !xslDebugGotControl(-1)) {
                     xsltGenericError(xsltGenericErrorContext,
                                      "\nDebugger never received control\n");
                     /*goto a xsldbg command prompt */

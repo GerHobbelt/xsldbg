@@ -91,6 +91,10 @@ clean:
 	rm -f ../results/*.script
 	rm -f ../results/*.pl
 	rm -f ../results/*.log
+
+very-clean: clean
+	rm -f *.*~
+	rm -f *~
 else
 
 all:

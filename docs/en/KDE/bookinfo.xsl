@@ -36,10 +36,18 @@
          (V.MM.LL), it could be used by automation scripts.
          Do NOT change these in the translation. -->
     
-      <date>23/09/2001</date>
-      <releaseinfo>0.2.0</releaseinfo>
+      <date>07/12/2001</date>
+      <releaseinfo>0.8.5</releaseinfo>
       <abstract>
-        <para>Blagh</para>
+        <para>
+xsldbg is a tool intended to help understand stylesheets. 
+What makes it different to other stylesheet debuggers is the ability 
+to search for items of interest and trace stylesheet execution. You can
+use the test framework in the tests directory to describe automatic tests
+to be done on the output of stylesheet execution/debugging. This will be 
+useful for quality assurance purposes. Also a good deal of effort has 
+been put into creating a xemacs and KDbg front ends to xsldbg.
+      </para>
       </abstract>
     </bookinfo>
   </xsl:template>

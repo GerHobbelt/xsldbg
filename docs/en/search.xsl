@@ -84,10 +84,21 @@
 </xsl:text>
   </xsl:template>
 
-  <xsl:template match="source">
+  <xsl:template match="source|import|include">
       <xsl:text> Source </xsl:text>
       <xsl:value-of select="@href"/>
-      <xsl:if test="@url"> imported from 
+      <xsl:if test="@url"> 
+        <!-- Ok we know we're no the top document so print out 
+             our type and where the xsl:included or xsl:import was placed
+             in parent -->
+        <xsl:choose>
+          <xsl:when test="name()='import'">
+            <xsl:text> imported from </xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+          <xsl:text> included from </xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
         <xsl:value-of select="@url"/>
         <xsl:text> line : </xsl:text><xsl:value-of select="@line"/>
       </xsl:if>

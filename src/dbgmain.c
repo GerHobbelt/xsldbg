@@ -91,7 +91,8 @@ debugFree(void)
 
 /** 
  * xslDebugGotControl :
- * @reached : 1 if debugger has received control, 0 otherwise
+ * @reached : 1 if debugger has received control, -1 to read is value,
+               0 to clear the flag
  *
  * Set flag that debuger has received control to value of @reached
  * Returns 1 if any breakpoint was reached previously,
@@ -103,7 +104,8 @@ xslDebugGotControl(int reached)
     static int hasReached;
     int result = hasReached;
 
-    hasReached = reached;
+    if (reached != -1)
+        hasReached = reached;
     return result;
 }
 

@@ -535,6 +535,7 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                         xsltGenericError(xsltGenericErrorContext,
                                          " template :\"%s\"\n",
                                          &arg[offset]);
+                        ctxt->node = templateNode;
                         return;
                     }
                 } else if (arg[1] == 's') {
@@ -1045,7 +1046,7 @@ addCallStackItems(void)
 int
 updateSearchData(xsltTransformContextPtr styleCtxt ATTRIBUTE_UNUSED,
                  xsltStylesheetPtr style,
-                 void *data, enum VariableTypeEnum variableTypes)
+                 void *data, VariableTypeEnum variableTypes)
 {
     int result = 0;
 

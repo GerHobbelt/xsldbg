@@ -50,7 +50,7 @@ lineNoItemNew(void)
 
 /**
  * lineNoItemFree:
- * @item : valid hashtable of break points
+ * @item: valid hashtable of break points
  * 
  * Free @item and all its contents
  */
@@ -72,8 +72,8 @@ lineNoItemFree(void *item)
 
 /**
  * lineNoItemDelete:
- * @breakPointHash : is valid
- * @breakPoint : is valid
+ * @breakPointHash: is valid
+ * @breakPoint: is valid
  * 
  * Returns 1 if able to delete @breakPoint from @breakPointHash,
  *         0 otherwise
@@ -95,8 +95,8 @@ lineNoItemDelete(xmlHashTablePtr breakPointHash,
 
 /**
  * lineNoItemAdd:
- * @breakPointHash : is valid
- * @breakPoint : is valid
+ * @breakPointHash: is valid
+ * @breakPoint: is valid
  *
  * Returns 1 if able to add @breakPoint to @breakPointHash,
  *         0 otherwise
@@ -114,13 +114,11 @@ lineNoItemAdd(xmlHashTablePtr breakPointHash, xslBreakPointPtr breakPoint)
     return result;
 }
 
-
 /**
  * lineNoItemGet:
- * @lineNo : lineNo >= 0
- *
- * Returns the hash table for this line if successful, 
- *         NULL otherwise
+ * @lineNo: blagh
+ * 
+ * Returns fred
  */
 xmlHashTablePtr
 lineNoItemGet(long lineNo)
@@ -219,8 +217,8 @@ breakPointItemNew(void)
 
 /**
  * breakPointItemFree:
- * @payload : valid xslBreakPointPtr 
- * @name : not used
+ * @payload: valid xslBreakPointPtr 
+ * @name: not used
  *
  * Free memory associated with this break point
  */
@@ -245,7 +243,7 @@ breakPointItemFree(void *payload, xmlChar * name ATTRIBUTE_UNUSED)
 
 
 /**
- * activeBreakPoint(void);
+ * activeBreakPoint;
  *
  * Returns the last break point that we stoped at
  */
@@ -258,7 +256,7 @@ activeBreakPoint(void)
 
 /**
  * setActiveBreakPoint:
- * @breakPoint : is valid break point or NULL
+ * @breakPoint: is valid break point or NULL
  *
  * Set the active break point
  */
@@ -271,22 +269,22 @@ setActiveBreakPoint(xslBreakPointPtr breakPoint)
 
 /**
  * xslAddBreakPoint:
- * @url : url non-null, non-empty file name that has been loaded by
+ * @url: url non-null, non-empty file name that has been loaded by
  *                    debugger
- * @lineNumber : lineNumber >= 0 and is available in url specified and 
+ * @lineNumber: lineNumber >= 0 and is available in url specified and
  *                points to an xml element
- * @temlateName : the template name of breakPoint or NULL
- * @type : DEBUG_BREAK_SOURCE if are we stopping at a xsl source line
+ * @temlateName: the template name of breakPoint or NULL
+ * @type: DEBUG_BREAK_SOURCE if are we stopping at a xsl source line
  *         DEBUG_BREAK_DATA otherwise
  *
- * Add break point at file and line number specifiec
- * Returns  1 if successful,
- *	    0 otherwise 
+ * Add break point at file and line number specified
+ *
+ * Returns 1 if successful,
+ *	   0 otherwise
 */
 int
 xslAddBreakPoint(const xmlChar * url, long lineNumber,
-                 const xmlChar * templateName,
-                 enum BreakPointTypeEnum type)
+                 const xmlChar * templateName, BreakPointTypeEnum type)
 {
     int result = 0, breakPointType = type;
     xmlHashTablePtr breakPointHash;     /* hash of breakPoints */
@@ -379,7 +377,7 @@ xslAddBreakPoint(const xmlChar * url, long lineNumber,
                 } else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
                     xsltGenericError(xsltGenericErrorContext,
-                                     "Unable to create new breakPoint :interal error\n");
+                                     "Unable to create new breakPoint:interal error\n");
 #endif
                     return result;
                 }
@@ -389,7 +387,7 @@ xslAddBreakPoint(const xmlChar * url, long lineNumber,
     } else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Unable to create new breakPoint : memory error\n");
+                         "Unable to create new breakPoint: memory error\n");
 #endif
     }
 
@@ -399,7 +397,7 @@ xslAddBreakPoint(const xmlChar * url, long lineNumber,
 
 /**
  * deleteBreakPoint:
- * @breakPoint : is valid
+ * @breakPoint: is valid
  *
  * Delete the break point specified if it can be found using 
  *    @breakPoint's url and lineNo
@@ -430,8 +428,8 @@ deleteBreakPoint(xslBreakPointPtr breakPoint)
 
 /**
  * enableBreakPoint:
- * @breakpoint : a valid breakpoint
- * @enable : enable break point if 1, disable if 0, toggle if -1
+ * @breakpoint: a valid breakpoint
+ * @enable: enable break point if 1, disable if 0, toggle if -1
  *
  * Enable or disable a break point
  * Returns 1 if successful,
@@ -491,9 +489,9 @@ xslBreakPointLineList(void)
 
 /**
  * getBreakPoint:
- * @url : url non-null, non-empty file name that has been loaded by
+ * @url: url non-null, non-empty file name that has been loaded by
  *                    debugger
- * @lineNumber : number >= 0 and is available in url specified
+ * @lineNumber: number >= 0 and is available in url specified
  * Returns break point if break point exists at location specified,
  *	   NULL otherwise
 */
@@ -513,8 +511,8 @@ getBreakPoint(const xmlChar * url, long lineNumber)
 
 /**
  * printBreakPoint:
- * @file :  is valid
- * @breakPoint : is a valid break point
+ * @file:  is valid
+ * @breakPoint: is a valid break point
  *
  * Print the details of @breakPoint to @file 
  *
@@ -551,9 +549,9 @@ printBreakPoint(FILE * file, xslBreakPointPtr breakPoint)
 
 /**
  * xslIsBreakPoint:
- * @url : url non-null, non-empty file name that has been loaded by
+ * @url: url non-null, non-empty file name that has been loaded by
  *                    debugger
- * @lineNumber : number >= 0 and is available in url specified
+ * @lineNumber: number >= 0 and is available in url specified
  *
  * Determine if there is a break point at file and line number specified
  * Returns 1  if successful,
@@ -575,7 +573,7 @@ xslIsBreakPoint(const xmlChar * url, long lineNumber)
 
 /**
  * xslIsBreakPointNode:
- * @node : node != NULL
+ * @node: node != NULL
  *
  * Determine if a node is a break point
  * Returns  1 on success,

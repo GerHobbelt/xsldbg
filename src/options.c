@@ -63,6 +63,11 @@ static int walkSpeed = 0;
 /* do we run in gdb mode (prints out more information )*/
 static int gdbMode = 0;
 
+/* keep track of our inteter options 
+  This will be use next beta! For the moment use the individual 
+  integers */
+static int intOptions[OPTIONS_VERBOSE - OPTIONS_XINCLUDE + 1];
+
 /* keep track of our string options */
 static xmlChar *stringOptions[OPTIONS_DATA_FILE_NAME -
                               OPTIONS_OUTPUT_FILE_NAME + 1];
@@ -145,7 +150,7 @@ optionsFree(void)
  *         0 otherwise
  */
 int
-enableOption(enum OptionTypeEnum optionType, int value)
+enableOption(OptionTypeEnum optionType, int value)
 {
     int type = optionType, result = 1;
 
@@ -223,7 +228,7 @@ enableOption(enum OptionTypeEnum optionType, int value)
  * Returns the state of a xsldbg option. ie 1 for enabled , 0 for disabled
  */
 int
-isOptionEnabled(enum OptionTypeEnum optionType)
+isOptionEnabled(OptionTypeEnum optionType)
 {
     int type = optionType, result = 0;
 
@@ -303,7 +308,7 @@ isOptionEnabled(enum OptionTypeEnum optionType)
  *         0 otherwise
  */
 int
-setIntOption(enum OptionTypeEnum optionType, int value)
+setIntOption(OptionTypeEnum optionType, int value)
 {
     return enableOption(optionType, value);
 }
@@ -316,7 +321,7 @@ setIntOption(enum OptionTypeEnum optionType, int value)
  * Returns the state of a xsldbg option
  */
 int
-getIntOption(enum OptionTypeEnum optionType)
+getIntOption(OptionTypeEnum optionType)
 {
     return isOptionEnabled(optionType);
 }
@@ -333,7 +338,7 @@ getIntOption(enum OptionTypeEnum optionType)
  *         0 otherwise
  */
 int
-setStringOption(enum OptionTypeEnum optionType, const xmlChar * value)
+setStringOption(OptionTypeEnum optionType, const xmlChar * value)
 {
     int result = 0;
 
@@ -365,7 +370,7 @@ setStringOption(enum OptionTypeEnum optionType, const xmlChar * value)
  * Returns current option value which may be NULL
  */
 const xmlChar *
-getStringOption(enum OptionTypeEnum optionType)
+getStringOption(OptionTypeEnum optionType)
 {
     xmlChar *result = NULL;
 

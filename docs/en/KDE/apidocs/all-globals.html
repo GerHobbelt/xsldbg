@@ -1,0 +1,711 @@
+<HTML>
+<HEAD>
+<TITLE> Globals</TITLE>
+
+<META NAME="Generator" CONTENT="KDOC ">
+</HEAD>
+<BODY bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#000099" alink= "#ffffff">
+<TABLE WIDTH="100%" BORDER="0">
+<TR>
+<TD>
+	<TABLE BORDER="0">
+		<TR><TD valign="top" align="left" cellspacing="10">
+		<h1> Globals</h1>
+		</TD>
+		<TD valign="top" align="right" colspan="1"></TD></TR>
+	</TABLE>
+	<HR>
+	<TABLE BORDER="0">
+		
+	</TABLE>
+	</TD>
+<TD align="right"><TABLE BORDER="0"><TR><TD><small><A HREF="index-long.html">Annotated List</A></small></TD></TR>
+<TR><TD><small><A HREF="header-list.html">Files</A></small></TD></TR>
+<TR><TD><small><A HREF="all-globals.html">Globals</A></small></TD></TR>
+<TR><TD><small><A HREF="hier.html">Hierarchy</A></small></TD></TR>
+<TR><TD><small><A HREF="index.html">Index</A></small></TD></TR>
+</TABLE></TD></TR></TABLE>
+<h3>src/arraylist.h</h3><ul>
+<LI>typedef void &nbsp;(*<b><A HREF="#ref1">freeItemFunc</A></b>) (void *item) 
+</LI>
+<LI>typedef struct _ArrayList  ArrayList
+</LI>
+</ul>
+<h3>src/debugXSL.h</h3><ul>
+<LI>int &nbsp;<b><A HREF="#ref15">trimString</A></b> (xmlChar * text) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref16">splitString</A></b> (xmlChar * textIn, int maxStrings, xmlChar ** out) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref17">xslDbgShell</A></b> (xmlNodePtr source, xmlNodePtr doc,
+                     xmlChar * filename,
+                     xmlShellReadlineFunc input,
+                     FILE * output, xsltTransformContextPtr styleCtxt) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref18">xslDbgPrintStyleSheets</A></b> (xmlChar * arg) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref19">xslDbgShellFrameBreak</A></b> (xmlChar * arg, int stepup) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref20">xslDbgShellBreak</A></b> (xmlChar * arg, xsltStylesheetPtr style,
+                         xsltTransformContextPtr ctxt) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref21">xslDbgShellDelete</A></b> (xmlChar * arg) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref22">xslDbgEnableBreakPoint</A></b> (void *payload, void *data, xmlChar * name) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref23">xslDbgPrintBreakPoint</A></b> (void *payload, void *data, xmlChar * name) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref24">xslDbgPrintTemplateNames</A></b> (xsltTransformContextPtr styleCtxt,
+                                  xmlShellCtxtPtr ctxt,
+                                  xmlChar * arg, int verbose,
+                                  int allFiles) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref25">xslDbgPrintTemplateHelper</A></b> (xsltTemplatePtr templ, int verbose,
+                                   int *templateCount, int *printCount,
+                                   xmlChar * templateName) 
+</LI>
+<LI>xsltTemplatePtr &nbsp;<b><A HREF="#ref26">getTemplate</A></b> (void) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref27">xslDbgShellPrintList</A></b> (xmlShellCtxtPtr ctxt, xmlChar * arg,
+                              int dir) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref28">xslDbgShellCat</A></b> (xsltTransformContextPtr styleCtxt,
+                        xmlShellCtxtPtr ctxt, xmlChar * arg) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref29">xslDbgShellPrintVariable</A></b> (xsltTransformContextPtr styleCtxt,
+                                  xmlChar * arg, VariableTypeEnum type) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref30">xslDbgShellChangeWd</A></b> (const xmlChar * path) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref31">xslDbgShellExecute</A></b> (xmlChar * name, int verbose) 
+</LI>
+<LI>int &nbsp;<b>xslDbgShellAddParam</b> (xmlChar * arg) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref33">xslDbgShellDelParam</A></b> (xmlChar * arg) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref34">xslDbgShellShowParam</A></b> (xmlChar * arg) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref35">xslDbgShellTrace</A></b> (xmlChar * arg) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref36">xslDbgShellWalk</A></b> (xmlChar * arg) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref37">xslDbgShellSearch</A></b> (xsltTransformContextPtr styleCtxt,
+                          xsltStylesheetPtr style, xmlChar * arg) 
+</LI>
+</ul>
+<h3>src/files.h</h3><ul>
+<LI>enum <A HREF="#ref38">FileTypeEnum</A> {        FILES_XMLFILE_TYPE = 100,       
+        FILES_SOURCEFILE_TYPE,
+        FILES_TEMPORARYFILE_TYPE
+    }
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref39">openTerminal</A></b> (xmlChar * device) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref40">selectTerminalIO</A></b> (void) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref41">selectNormalIO</A></b> (void) 
+</LI>
+<LI>xsltTemplatePtr &nbsp;<b><A HREF="#ref42">getTemplate</A></b> (void) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref43">guessStylesheetName</A></b> (<A HREF="#searchInfoPtr">searchInfoPtr</A> searchInf) 
+</LI>
+<LI>xmlChar *&nbsp;<b><A HREF="#ref44">stylePath</A></b> (void) 
+</LI>
+<LI>xmlChar *&nbsp;<b><A HREF="#ref45">workingPath</A></b> (void) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref46">changeDir</A></b> (const xmlChar * path) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref47">loadXmlFile</A></b> (const xmlChar * path, <A HREF="#FileTypeEnum">FileTypeEnum</A> fileType) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref48">freeXmlFile</A></b> (<A HREF="#FileTypeEnum">FileTypeEnum</A> fileType) 
+</LI>
+<LI>xsltStylesheetPtr &nbsp;<b><A HREF="#ref49">getStylesheet</A></b> (void) 
+</LI>
+<LI>xmlDocPtr &nbsp;<b><A HREF="#ref50">getTemporaryDoc</A></b> (void) 
+</LI>
+<LI>xmlDocPtr &nbsp;<b><A HREF="#ref51">getMainDoc</A></b> (void) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref52">filesReloaded</A></b> (int reloaded) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref53">filesInit</A></b> (void) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref54">filesFree</A></b> (void) 
+</LI>
+</ul>
+<h3>src/help.h</h3><ul>
+<LI>void &nbsp;<b><A HREF="#ref58">helpTop</A></b> (const xmlChar * args) 
+</LI>
+</ul>
+<h3>src/options.h</h3><ul>
+<LI>typedef struct _Options  <A HREF="#ref55">Options</A>
+</LI>
+</ul>
+<h3>src/xslbreakpoint.h</h3><ul>
+<LI>typedef struct _xslBreakPoint  <A HREF="#ref5">xslBreakPoint</A>
+</LI>
+</ul>
+<h3>src/xslcallpoint.h</h3><ul>
+<LI>typedef struct _xslCallPointInfo  <A HREF="#ref8">xslCallPointInfo</A>
+</LI>
+</ul>
+<h3>src/xsldbg.h</h3><ul>
+<LI>xsltStylesheetPtr &nbsp;<b><A HREF="#ref59">loadStylesheet</A></b> (void) 
+</LI>
+<LI>xmlDocPtr &nbsp;<b><A HREF="#ref60">loadXmlData</A></b> (void) 
+</LI>
+<LI>xmlDocPtr &nbsp;<b><A HREF="#ref61">loadXmlTemporay</A></b> (const xmlChar * path) 
+</LI>
+</ul>
+<h3>src/xslsearch.h</h3><ul>
+<LI>enum <A HREF="#ref11">SearchEnum</A> {        SEARCH_BREAKPOINT = 400,
+        SEARCH_NODE,
+        SEARCH_XSL
+    }
+</LI>
+<LI>typedef struct _searchInfo  searchInfo
+</LI>
+</ul>
+<h2>Global member Documentation</h2>
+<A NAME="freeItemFunc"></A><A NAME="ref1"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef void &nbsp;(*<strong>freeItemFunc</strong>) (void *item)
+</td><td align="right"><h3>(*<strong>freeItemFunc</strong>)</h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___arraylist_h.html">src/arraylist.h</A>&gt;</code></small></p><p>
+ Provide a fast easy to use array list. Support the basic functions of add
+  delete, empty, count, free
+</p>
+<p></p>
+<p></p>
+<A NAME="ArrayList"></A><A NAME="ref2"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct <A HREF="_ArrayList.html">_ArrayList</A>  <strong>ArrayList</strong></td><td align="right"><h3><strong>ArrayList</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___arraylist_h.html">src/arraylist.h</A>&gt;</code></small></p><A NAME="trimString"></A><A NAME="ref15"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>trimString</strong> (xmlChar * text)
+<br></td><td align="right"><h3><strong>trimString</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
+ Remove leading and trailing spaces off <code>text</code>
+         stores result back into <code>text</code>
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>text</i></TD><TD align="left" valign="top">A valid string with leading or trailing spaces
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+</p>
+<A NAME="splitString"></A><A NAME="ref16"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>splitString</strong> (xmlChar * textIn, int maxStrings, xmlChar ** out)
+<br></td><td align="right"><h3><strong>splitString</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
+ Spit string by white space and put into <code>out</code>
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>textIn</i></TD><TD align="left" valign="top">The string to split
+</TD></TR>
+<TR><TD align="left" valign="top"><i>maxStrings</i></TD><TD align="left" valign="top">The max number of strings to put into <code>out</code>
+</TD></TR>
+<TR><TD align="left" valign="top"><i>out</i></TD><TD align="left" valign="top">Is valid and at least the size of <code>maxStrings</code>
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+</p>
+<A NAME="xslDbgShell"></A><A NAME="ref17"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgShell</strong> (xmlNodePtr source, xmlNodePtr doc,
+                     xmlChar * filename,
+                     xmlShellReadlineFunc input,
+                     FILE * output, xsltTransformContextPtr styleCtxt)
+<br></td><td align="right"><h3><strong>xslDbgShell</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
+ Present the xsldbg shell to user and process entered commands
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>source</i></TD><TD align="left" valign="top">Current stylesheet instruction being executed
+</TD></TR>
+<TR><TD align="left" valign="top"><i>doc</i></TD><TD align="left" valign="top">Current document node being processed
+</TD></TR>
+<TR><TD align="left" valign="top"><i>filename</i></TD><TD align="left" valign="top">Not used
+</TD></TR>
+<TR><TD align="left" valign="top"><i>input</i></TD><TD align="left" valign="top">The function to call to when reading commands from stdio
+</TD></TR>
+<TR><TD align="left" valign="top"><i>output</i></TD><TD align="left" valign="top">Where to put the results
+</TD></TR>
+<TR><TD align="left" valign="top"><i>styleCtxt</i></TD><TD align="left" valign="top">Is valid 
+ </TD></TR>
+</TABLE></P>
+<A NAME="xslDbgPrintStyleSheets"></A><A NAME="ref18"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgPrintStyleSheets</strong> (xmlChar * arg)
+<br></td><td align="right"><h3><strong>xslDbgPrintStyleSheets</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
+ Print stylesheets that can be found in loaded stylsheet
+</p>
+<p></p>
+<p> </p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>arg</i></TD><TD align="left" valign="top">The stylesheets of interests, is NULL for all stylsheets
+</TD></TR>
+</TABLE></P>
+<A NAME="xslDbgShellFrameBreak"></A><A NAME="ref19"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellFrameBreak</strong> (xmlChar * arg, int stepup)
+<br></td><td align="right"><h3><strong>xslDbgShellFrameBreak</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
+ Set a "frame" break point either up or down from here
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>arg</i></TD><TD align="left" valign="top">Is valid 
+</TD></TR>
+<TR><TD align="left" valign="top"><i>stepup</i></TD><TD align="left" valign="top">If != 1 then we step up, otherwise step down
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+</p>
+<A NAME="xslDbgShellBreak"></A><A NAME="ref20"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellBreak</strong> (xmlChar * arg, xsltStylesheetPtr style,
+                         xsltTransformContextPtr ctxt)
+<br></td><td align="right"><h3><strong>xslDbgShellBreak</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
+ Add break point specified by arg
+</p>
+<p></p>
+<p></p>
+<p> </p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>arg</i></TD><TD align="left" valign="top">Is valid
+</TD></TR>
+<TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">Is valid
+</TD></TR>
+<TR><TD align="left" valign="top"><i>ctxt</i></TD><TD align="left" valign="top">Is valid
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+</p>
+<A NAME="xslDbgShellDelete"></A><A NAME="ref21"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellDelete</strong> (xmlChar * arg)
+<br></td><td align="right"><h3><strong>xslDbgShellDelete</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
+ Delete break point specified by arg
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>arg</i></TD><TD align="left" valign="top">Is valid
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+</p>
+<A NAME="xslDbgEnableBreakPoint"></A><A NAME="ref22"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgEnableBreakPoint</strong> (void *payload, void *data, xmlChar * name)
+<br></td><td align="right"><h3><strong>xslDbgEnableBreakPoint</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
+ Enable/disable break points via use of scan of break points
+</p>
+<p></p>
+
+<ul>
+<li>1 enable break point
+</li>
+<li>0 disable break point
+</li>
+<li>-1 toggle enabling of break point 
+</li>
+</ul>
+
+<p>
+</p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>payload</i></TD><TD align="left" valign="top">Is valid xslBreakPointPtr
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">Enable type, a pointer to an integer 
+         for a value of 
+</TD></TR>
+<TR><TD align="left" valign="top"><i>name</i></TD><TD align="left" valign="top">Not used
+</TD></TR>
+</TABLE></P>
+<A NAME="xslDbgPrintBreakPoint"></A><A NAME="ref23"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgPrintBreakPoint</strong> (void *payload, void *data, xmlChar * name)
+<br></td><td align="right"><h3><strong>xslDbgPrintBreakPoint</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
+ Print data given by scan of break points 
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>payload</i></TD><TD align="left" valign="top">Is valid xslBreakPointPtr
+</TD></TR>
+<TR><TD align="left" valign="top"><i>data</i></TD><TD align="left" valign="top">Not used
+</TD></TR>
+<TR><TD align="left" valign="top"><i>name</i></TD><TD align="left" valign="top">Not used
+</TD></TR>
+</TABLE></P>
+<A NAME="xslDbgPrintTemplateNames"></A><A NAME="ref24"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgPrintTemplateNames</strong> (xsltTransformContextPtr styleCtxt,
+                                  xmlShellCtxtPtr ctxt,
+                                  xmlChar * arg, int verbose,
+                                  int allFiles)
+<br></td><td align="right"><h3><strong>xslDbgPrintTemplateNames</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p> 
+ Print out the list of template names found that match critieria   
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>styleCtxt</i></TD><TD align="left" valign="top">Is valid 
+</TD></TR>
+<TR><TD align="left" valign="top"><i>ctxt</i></TD><TD align="left" valign="top">Not used
+</TD></TR>
+<TR><TD align="left" valign="top"><i>arg</i></TD><TD align="left" valign="top">Not used
+</TD></TR>
+<TR><TD align="left" valign="top"><i>verbose</i></TD><TD align="left" valign="top">If 1 then print extra messages about templates found,
+            otherwise print normal messages only 
+</TD></TR>
+<TR><TD align="left" valign="top"><i>allFiles</i></TD><TD align="left" valign="top">If 1 then look for all templates in stylsheets found in 
+                 <code>styleCtxt</code>
+             otherwise look in the stylesheet found by 
+                 xslDebugBreak function
+ </TD></TR>
+</TABLE></P>
+<A NAME="xslDbgPrintTemplateHelper"></A><A NAME="ref25"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgPrintTemplateHelper</strong> (xsltTemplatePtr templ, int verbose,
+                                   int *templateCount, int *printCount,
+                                   xmlChar * templateName)
+<br></td><td align="right"><h3><strong>xslDbgPrintTemplateHelper</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
+ This displays the templates in the same order as they are in the 
+   stylesheet. If verbose is 1 then print more information
+   For each template found <code>templateCount</code> is increased
+   For each printed template <code>printCount</code> is increased
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>templ</i></TD><TD align="left" valign="top">Is valid
+</TD></TR>
+<TR><TD align="left" valign="top"><i>verbose</i></TD><TD align="left" valign="top">Either 1 or 0
+</TD></TR>
+<TR><TD align="left" valign="top"><i>templateCount</i></TD><TD align="left" valign="top">Is valid
+</TD></TR>
+<TR><TD align="left" valign="top"><i>printCount</i></TD><TD align="left" valign="top">Is valid
+</TD></TR>
+<TR><TD align="left" valign="top"><i>templateName</i></TD><TD align="left" valign="top">The template name to print, may be NULL
+ </TD></TR>
+</TABLE></P>
+<A NAME="getTemplate"></A><A NAME="ref26"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xsltTemplatePtr &nbsp;<strong>getTemplate</strong> (void)
+<br></td><td align="right"><h3><strong>getTemplate</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
+ getTemplate:
+</p>
+<p></p>
+<p><b>Returns</b>: the last template node found, if any
+ </p>
+<A NAME="xslDbgShellPrintList"></A><A NAME="ref27"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgShellPrintList</strong> (xmlShellCtxtPtr ctxt, xmlChar * arg,
+                              int dir)
+<br></td><td align="right"><h3><strong>xslDbgShellPrintList</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
+ Print list of nodes in either ls or dir format
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>ctxt</i></TD><TD align="left" valign="top">The current shell context
+</TD></TR>
+<TR><TD align="left" valign="top"><i>arg</i></TD><TD align="left" valign="top">What xpath to display
+</TD></TR>
+<TR><TD align="left" valign="top"><i>dir</i></TD><TD align="left" valign="top">If 1 print in dir mode, 
+        otherwise ls mode
+ </TD></TR>
+</TABLE></P>
+<A NAME="xslDbgShellCat"></A><A NAME="ref28"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgShellCat</strong> (xsltTransformContextPtr styleCtxt,
+                        xmlShellCtxtPtr ctxt, xmlChar * arg)
+<br></td><td align="right"><h3><strong>xslDbgShellCat</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p> 
+ Print the result of an xpath expression. This can include variables
+        if styleCtxt is not NULL
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>styleCtxt</i></TD><TD align="left" valign="top">Current stylesheet context
+</TD></TR>
+<TR><TD align="left" valign="top"><i>ctxt</i></TD><TD align="left" valign="top">Current shell context
+</TD></TR>
+<TR><TD align="left" valign="top"><i>arg</i></TD><TD align="left" valign="top">The xpath to print
+ </TD></TR>
+</TABLE></P>
+<A NAME="xslDbgShellPrintVariable"></A><A NAME="ref29"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>xslDbgShellPrintVariable</strong> (xsltTransformContextPtr styleCtxt,
+                                  xmlChar * arg, VariableTypeEnum type)
+<br></td><td align="right"><h3><strong>xslDbgShellPrintVariable</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
+  Print the value variable specified by args.
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>styleCtxt</i></TD><TD align="left" valign="top">The current stylesheet context 
+</TD></TR>
+<TR><TD align="left" valign="top"><i>arg</i></TD><TD align="left" valign="top">The name of variable to look for '$' prefix is optional
+</TD></TR>
+<TR><TD align="left" valign="top"><i>type</i></TD><TD align="left" valign="top">Is valid VariableTypeEnum
+ </TD></TR>
+</TABLE></P>
+<A NAME="xslDbgShellChangeWd"></A><A NAME="ref30"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellChangeWd</strong> (const xmlChar * path)
+<br></td><td align="right"><h3><strong>xslDbgShellChangeWd</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>path</i></TD><TD align="left" valign="top">Operating system path(directory) to change to
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 if able to change xsldbg working direcorty to <code>path</code>
+          0 otherwise
+</p>
+<A NAME="xslDbgShellExecute"></A><A NAME="ref31"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellExecute</strong> (xmlChar * name, int verbose)
+<br></td><td align="right"><h3><strong>xslDbgShellExecute</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>name</i></TD><TD align="left" valign="top">The name of command string to be executed 
+            by operating system shell
+</TD></TR>
+<TR><TD align="left" valign="top"><i>verbose</i></TD><TD align="left" valign="top">If 1 then print extra debugging messages,
+            normal messages otherwise
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 if able to execute command <code>name</code>,
+          0 otherwise
+</p>
+<A NAME="xslDbgShellAddParam"></A><A NAME="ref32"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellAddParam</strong> (xmlChar * arg)
+<br></td><td align="right"><h3><strong>xslDbgShellAddParam</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><A NAME="xslDbgShellDelParam"></A><A NAME="ref33"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellDelParam</strong> (xmlChar * arg)
+<br></td><td align="right"><h3><strong>xslDbgShellDelParam</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>arg</i></TD><TD align="left" valign="top">A single white space trimmed libxslt parameter number to look for
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 if able to delete parameter <code>name</code>,
+          0 otherwise
+</p>
+<A NAME="xslDbgShellShowParam"></A><A NAME="ref34"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellShowParam</strong> (xmlChar * arg)
+<br></td><td align="right"><h3><strong>xslDbgShellShowParam</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
+ Print list of current paramters
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>arg</i></TD><TD align="left" valign="top">Not used
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+         0 otherwise
+</p>
+<A NAME="xslDbgShellTrace"></A><A NAME="ref35"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellTrace</strong> (xmlChar * arg)
+<br></td><td align="right"><h3><strong>xslDbgShellTrace</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
+ Start the tracing of the stylesheet. First need to restart it.
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>arg</i></TD><TD align="left" valign="top">Not used
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+</p>
+<A NAME="xslDbgShellWalk"></A><A NAME="ref36"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellWalk</strong> (xmlChar * arg)
+<br></td><td align="right"><h3><strong>xslDbgShellWalk</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
+ Start walking through the stylesheet.
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>arg</i></TD><TD align="left" valign="top">An interger between 0 and 9 indicate the speed of walk
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+</p>
+<A NAME="xslDbgShellSearch"></A><A NAME="ref37"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>xslDbgShellSearch</strong> (xsltTransformContextPtr styleCtxt,
+                          xsltStylesheetPtr style, xmlChar * arg)
+<br></td><td align="right"><h3><strong>xslDbgShellSearch</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___debugXSL_h.html">src/debugXSL.h</A>&gt;</code></small></p><p>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>styleCtxt</i></TD><TD align="left" valign="top">Is valid
+</TD></TR>
+<TR><TD align="left" valign="top"><i>style</i></TD><TD align="left" valign="top">Is valid
+</TD></TR>
+<TR><TD align="left" valign="top"><i>arg</i></TD><TD align="left" valign="top">The xpath query to use for searching dataBase
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 if able to run query with <code>arg</code>, 
+          0 otherwise
+</p>
+<A NAME="FileTypeEnum"></A><A NAME="ref38"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>FileTypeEnum</strong> {        FILES_XMLFILE_TYPE = 100,       
+        FILES_SOURCEFILE_TYPE,
+        FILES_TEMPORARYFILE_TYPE
+    }
+</td><td align="right"><h3><strong>FileTypeEnum</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
+ Provide a file support
+</p>
+<p></p>
+<p></p>
+<A NAME="openTerminal"></A><A NAME="ref39"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>openTerminal</strong> (xmlChar * device)
+<br></td><td align="right"><h3><strong>openTerminal</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
+ Open communications to the terminal device <code>device</code>
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>device</i></TD><TD align="left" valign="top">Terminal to redirect i/o to, will not work under win32
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 if sucessful
+          0 otherwise
+</p>
+<A NAME="selectTerminalIO"></A><A NAME="ref40"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>selectTerminalIO</strong> (void)
+<br></td><td align="right"><h3><strong>selectTerminalIO</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
+</p>
+<p><b>Returns</b>: 1 if able to use prevously opened terminal 
+          0 otherwise
+</p>
+<A NAME="selectNormalIO"></A><A NAME="ref41"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>selectNormalIO</strong> (void)
+<br></td><td align="right"><h3><strong>selectNormalIO</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p> 
+</p>
+<p><b>Returns</b>: 1 if able to select orginal stdin, stdout, stderr
+          0 otherwise
+</p>
+<A NAME="getTemplate"></A><A NAME="ref42"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xsltTemplatePtr &nbsp;<strong>getTemplate</strong> (void)
+<br></td><td align="right"><h3><strong>getTemplate</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
+</p>
+<p><b>Returns</b>: the last template node found, if any
+ </p>
+<A NAME="guessStylesheetName"></A><A NAME="ref43"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>guessStylesheetName</strong> (<A HREF="#searchInfoPtr">searchInfoPtr</A> searchInf)
+<br></td><td align="right"><h3><strong>guessStylesheetName</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
+ Try to find a matching stylesheet name
+ Sets the values in <code>searchinf</code> depending on outcome of search
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>searchInf</i></TD><TD align="left" valign="top">Iss valid
+ </TD></TR>
+</TABLE></P>
+<A NAME="stylePath"></A><A NAME="ref44"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlChar *&nbsp;<strong>stylePath</strong> (void)
+<br></td><td align="right"><h3><strong>stylePath</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
+</p>
+<p><b>Returns</b>: the base path for the top stylesheet ie
+        ie URL minus the actual file name
+ </p>
+<A NAME="workingPath"></A><A NAME="ref45"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlChar *&nbsp;<strong>workingPath</strong> (void)
+<br></td><td align="right"><h3><strong>workingPath</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
+</p>
+<p><b>Returns</b>: the working directory as set by changeDir function
+ </p>
+<A NAME="changeDir"></A><A NAME="ref46"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>changeDir</strong> (const xmlChar * path)
+<br></td><td align="right"><h3><strong>changeDir</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
+ Change working directory to path 
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>path</i></TD><TD align="left" valign="top">The operating system path(directory) to adopt as 
+         new working directory
+ </TD></TR>
+</TABLE></P>
+<A NAME="loadXmlFile"></A><A NAME="ref47"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>loadXmlFile</strong> (const xmlChar * path, <A HREF="#FileTypeEnum">FileTypeEnum</A> fileType)
+<br></td><td align="right"><h3><strong>loadXmlFile</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>path</i></TD><TD align="left" valign="top">The xml file to load
+</TD></TR>
+<TR><TD align="left" valign="top"><i>type</i></TD><TD align="left" valign="top">A valid FileTypeEnum
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+         0 otherwise 
+</p>
+<A NAME="freeXmlFile"></A><A NAME="ref48"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>freeXmlFile</strong> (<A HREF="#FileTypeEnum">FileTypeEnum</A> fileType)
+<br></td><td align="right"><h3><strong>freeXmlFile</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
+ Free memory associated with the xml file 
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>type</i></TD><TD align="left" valign="top">: a valid FileTypeEnum
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+         0 otherwise
+</p>
+<A NAME="getStylesheet"></A><A NAME="ref49"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xsltStylesheetPtr &nbsp;<strong>getStylesheet</strong> (void)
+<br></td><td align="right"><h3><strong>getStylesheet</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
+ Return the topmost stylesheet 
+</p>
+<p></p>
+<p><b>Returns</b>: non-null on success,
+          NULL otherwise
+ </p>
+<A NAME="getTemporaryDoc"></A><A NAME="ref50"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlDocPtr &nbsp;<strong>getTemporaryDoc</strong> (void)
+<br></td><td align="right"><h3><strong>getTemporaryDoc</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
+</p>
+<p><b>Returns</b>: the current "temporary" document
+ </p>
+<A NAME="getMainDoc"></A><A NAME="ref51"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlDocPtr &nbsp;<strong>getMainDoc</strong> (void)
+<br></td><td align="right"><h3><strong>getMainDoc</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
+</p>
+<p><b>Returns</b>: the main document
+ </p>
+<A NAME="filesReloaded"></A><A NAME="ref52"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>filesReloaded</strong> (int reloaded)
+<br></td><td align="right"><h3><strong>filesReloaded</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>reloaded</i></TD><TD align="left" valign="top">If = -1 then ignore <code>reloaded</code>
+             otherwise change the status of files to value of <code>reloaded</code>
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 if stylesheet or its xml data file has been "flaged" as reloaded,
+         0 otherwise
+</p>
+<A NAME="filesInit"></A><A NAME="ref53"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>filesInit</strong> (void)
+<br></td><td align="right"><h3><strong>filesInit</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
+ Initialize the file related structures
+</p>
+<p></p>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+ </p>
+<A NAME="filesFree"></A><A NAME="ref54"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>filesFree</strong> (void)
+<br></td><td align="right"><h3><strong>filesFree</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___files_h.html">src/files.h</A>&gt;</code></small></p><p>
+ Free memory used by file related structures
+ </p>
+<A NAME="helpTop"></A><A NAME="ref58"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>helpTop</strong> (const xmlChar * args)
+<br></td><td align="right"><h3><strong>helpTop</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___help_h.html">src/help.h</A>&gt;</code></small></p><p>
+ Display help about the command in <code>arg</code>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>args</i></TD><TD align="left" valign="top">Is valid 
+ </TD></TR>
+</TABLE></P>
+<A NAME="Options"></A><A NAME="ref55"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct <A HREF="_Options.html">_Options</A>  <strong>Options</strong></td><td align="right"><h3><strong>Options</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></small></p><p>
+ Provide a mechanism to change option. The Options structure is not in use,
+   it has been added so that kdoc puts all option related 
+   functions together 
+</p>
+<p></p>
+<p></p>
+<A NAME="xslBreakPoint"></A><A NAME="ref5"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct <A HREF="_xslBreakPoint.html">_xslBreakPoint</A>  <strong>xslBreakPoint</strong></td><td align="right"><h3><strong>xslBreakPoint</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslbreakpoint_h.html">src/xslbreakpoint.h</A>&gt;</code></small></p><p>
+ Provide a basic break point support
+</p>
+<p></p>
+<p></p>
+<A NAME="xslCallPointInfo"></A><A NAME="ref8"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct <A HREF="_xslCallPointInfo.html">_xslCallPointInfo</A>  <strong>xslCallPointInfo</strong></td><td align="right"><h3><strong>xslCallPointInfo</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslcallpoint_h.html">src/xslcallpoint.h</A>&gt;</code></small></p><p>
+ Provide a call stack support
+</p>
+<p></p>
+<p></p>
+<A NAME="loadStylesheet"></A><A NAME="ref59"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xsltStylesheetPtr &nbsp;<strong>loadStylesheet</strong> (void)
+<br></td><td align="right"><h3><strong>loadStylesheet</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xsldbg_h.html">src/xsldbg.h</A>&gt;</code></small></p><p>
+</p>
+<p><b>Returns</b>: The stylesheet after reloading it if successful
+         NULL otherwise
+ </p>
+<A NAME="loadXmlData"></A><A NAME="ref60"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlDocPtr &nbsp;<strong>loadXmlData</strong> (void)
+<br></td><td align="right"><h3><strong>loadXmlData</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xsldbg_h.html">src/xsldbg.h</A>&gt;</code></small></p><p>
+</p>
+<p><b>Returns</b>: The data file after reloading it if successful
+         NULL otherwise
+ </p>
+<A NAME="loadXmlTemporay"></A><A NAME="ref61"></A><table width="100%"><tr bgcolor="#eeeeee"><td>xmlDocPtr &nbsp;<strong>loadXmlTemporay</strong> (const xmlChar * path)
+<br></td><td align="right"><h3><strong>loadXmlTemporay</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xsldbg_h.html">src/xsldbg.h</A>&gt;</code></small></p><p>
+</p>
+<p><b>Returns</b>: The temporary file after reloading it if successful,
+         NULL otherwise
+ </p>
+<A NAME="SearchEnum"></A><A NAME="ref11"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>SearchEnum</strong> {        SEARCH_BREAKPOINT = 400,
+        SEARCH_NODE,
+        SEARCH_XSL
+    }
+</td><td align="right"><h3><strong>SearchEnum</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><p>
+ Provide a searching support
+</p>
+<p></p>
+<p></p>
+<A NAME="searchInfo"></A><A NAME="ref12"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct <A HREF="_searchInfo.html">_searchInfo</A>  <strong>searchInfo</strong></td><td align="right"><h3><strong>searchInfo</strong></h3></td></tr></table><p></p><p><small><code>#include &lt;<A HREF="src___xslsearch_h.html">src/xslsearch.h</A>&gt;</code></small></p><HR>
+	<table>
+	<tr><td><small>Generated by: keith on linux on Fri Dec  7 22:39:08 2001, using kdoc 2.0a53.</small></td></tr>
+	</table>
+</BODY>
+</HTML>

@@ -11,12 +11,12 @@
 <overview>
 <header>xsldbg help</header>
 <body>
-<para>xsldbg is similar to gdb. It has three modes of execution 
+<para>xsldbg is similar to gdb. It has three major modes of execution 
 of stylesheets.
 <list>
 <li>Run the whole stylesheet</li>
 <li>Step to next xsl instruction</li>
-<li>Continue to next break point is found</li>
+<li>Continue until next break point is found, or stylesheet has restarted</li>
 </list>
 </para>
 <para title="xsldbg command line">
@@ -40,7 +40,7 @@ the &lt;ENTER&gt; key.
 <li>TEXT : free form text <comment>(no restricttions)</comment></li>
 <li>COMMAND : a valid command for the xsdbg</li>
 <li>QNAME : a valid variable/parameter name</li>
-<li>SOURCE : the stylesheet being/tobe executed</li>
+<li>SOURCE : the stylesheet being/to be executed</li>
 <li>DATA : the xml data being/tobe processed by the stylesheet</li>
 <li>DEVICE_PATH : is a valid terminal on the operating system</li>
 <li>TTY_LEVEL : is a valid level of input/output to use</li>
@@ -51,7 +51,7 @@ the &lt;ENTER&gt; key.
 <para title="Within xsldbg these commands are available:">
 <list>
 
-<li>Help related : help</li>
+<li>Help related :<link href="help">help</link></li>
 
 <li>Running related : {<link href="bye">bye</link>|<link href="exit">exit</link>|
 <link href="quit">quit</link>}, <link href="step">step</link>, 
@@ -613,7 +613,7 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 
 <!-- - - - - - - Searching related - - - - - -->
 <cmd name="search" title="Search">
-<summary>Search a database of all information gathered from styleets loaded</summary>
+<summary>Search a database of all information gathered from stylsheets loaded</summary>
 <body>
 <para>When the search command is issued a file (search.data) will be created in the current directory. You can then process this file with your own stylessheet to present data in a other ways than displayed by default.
 </para>
@@ -624,7 +624,7 @@ Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
 </body>
 <usage>
 <li>
-<text>search &lt;XPATH&gt;</text><comment>(See what xpath can be used see search.dtd)</comment>
+<text>search &lt;XPATH&gt;</text><comment>(See what xpath can be used see search.dtd. The deafault &lt;XPATH&gt; is '//search/*' )</comment>
 </li>
 <li>
 <text>search -sort &lt;XPATH&gt;</text><comment>(Enable tell search.xsl to sort the result before outputing it)</comment>

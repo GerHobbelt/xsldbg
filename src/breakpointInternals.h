@@ -34,11 +34,11 @@ extern "C" {
 
 /*Indicate what type of variable to print out. 
   Is used by print_variable and searching functions */
-    enum VariableTypeEnum {
+    typedef enum {
         DEBUG_GLOBAL_VAR = 200, /* pick a unique starting point */
         DEBUG_LOCAL_VAR,
         DEBUG_ANY_VAR
-    };
+    } VariableTypeEnum;
 
 /*
 -----------------------------------------------------------
@@ -56,7 +56,7 @@ extern "C" {
 
 /**
  * lineNoItemFree:
- * @item : valid hashtable of break points
+ * @item: valid hashtable of break points
  * 
  * Free @item and all its contents
  */
@@ -65,8 +65,8 @@ extern "C" {
 
 /**
  * lineNoItemDelete:
- * @breakPointHash : is valid
- * @breakPoint : is valid
+ * @breakPointHash: is valid
+ * @breakPoint: is valid
  * 
  * Returns 1 if able to delete @breakPoint from @breakPointHash,
  *         0 otherwise
@@ -77,8 +77,8 @@ extern "C" {
 
 /**
  * lineNoItemAdd:
- * @breakPointHash : is valid
- * @breakPoint : is valid
+ * @breakPointHash: is valid
+ * @breakPoint: is valid
  *
  * Returns 1 if able to add @breakPoint to @breakPointHash,
  *         0 otherwise
@@ -89,10 +89,9 @@ extern "C" {
 
 /**
  * lineNoItemGet:
- * @lineNo : lineNo >= 0
+ * @lineNo: blagh
  *
- * Returns the hash table for this line if successful, 
- *        NULL otherwise
+ * Returns fred
  */
     xmlHashTablePtr lineNoItemGet(long lineNo);
 
@@ -127,8 +126,8 @@ extern "C" {
 
 /**
  * breakPointItemFree:
- * @payload : valid xslBreakPointPtr 
- * @name : not used
+ * @payload: valid xslBreakPointPtr 
+ * @name: not used
  *
  * Free memory associated with this break point
  */
@@ -154,8 +153,8 @@ extern "C" {
 
 /**
  * xslDbgShellEnable:
- * @arg : is valid
- * @enable : enable break point if 1, disable if 0, toggle if -1
+ * @arg: is valid
+ * @enableType: enable break point if 1, disable if 0, toggle if -1
  *
  * Enable/disable break point specified by arg using enable 
  *      type of @enableType
@@ -207,11 +206,11 @@ extern "C" {
 */
 
 /* what types of searches are there */
-    enum SearchEnum {
+    typedef enum {
         SEARCH_BREAKPOINT = 400,        /* pick a unique starting point */
         SEARCH_NODE,
         SEARCH_XSL
-    };
+    } SearchEnum;
 
     /* define a common structure to be used when searching */
     typedef struct _searchInfo searchInfo;
@@ -258,12 +257,12 @@ extern "C" {
  * Returns valid search info pointer if succssfull
  *         NULL otherwise
  */
-    searchInfoPtr searchNewInfo(enum SearchEnum type);
+    searchInfoPtr searchNewInfo(SearchEnum type);
 
 
 /**
  * searchFreeInfo:
- * @info : valid search info
+ * @info: valid search info
  *
  * Free memory used by @info
  */
@@ -300,7 +299,7 @@ extern "C" {
 
 /**
  * xslSearchAdd:
- * @node : a valid node to be added to the topmost node in search dataBase
+ * @node: a valid node to be added to the topmost node in search dataBase
  *
  * Returns 1 if able to add @node to top node in search dataBase,
  *         0 otherwise
@@ -310,7 +309,7 @@ extern "C" {
 
 /**
  * searchSave:
- * @fileName : valid fileName to save search dataBase to 
+ * @fileName: valid fileName to save search dataBase to 
  *
  * Returns 1 on success,
  *         0 otherwise
@@ -321,7 +320,7 @@ extern "C" {
 /**
  * searchQuery:
  * @query: query to run . If NULL then query is "//search/ *"
- * @tempFile : where do we load the search dataBase from to execute
+ * @tempFile: where do we load the search dataBase from to execute
  *             query. If tempFile is NULL "search.data" is used
  * 
  * Send query as parameter for execution of search.xsl using
@@ -354,7 +353,7 @@ extern "C" {
 
 /**
  * searchBreakPointNode:
- * @breakPoint : valid break point 
+ * @breakPoint: valid break point 
  *
  * Returns @breakPoint as a new xmlNode in search dataBase format 
  *               if successful,
@@ -365,7 +364,7 @@ extern "C" {
 
 /**
  * searchTemplateNode:
- * @templNode : valid template node
+ * @templNode: valid template node
  * 
  * Returns @templNode as a new xmlNode in search dataBase format 
  *               if successful,
@@ -376,7 +375,7 @@ extern "C" {
 
 /** 
  * searchGlobalNode:
- * @variable : valid  xmlNodePtr node
+ * @variable: valid  xmlNodePtr node
  * 
  * Returns @style as a new xmlNode in search dataBase format if successful,
  *         NULL otherwise
@@ -396,7 +395,7 @@ extern "C" {
 
 /**
  * searchSourceNode:
- * @style : valid stylesheet
+ * @style: valid stylesheet
  * 
  * Returns @style as a new xmlNode in search dataBase format if successful,
  *         NULL otherwise
@@ -406,7 +405,7 @@ extern "C" {
 
 /**
  * searchIncludeNode:
- * @include : valid xsl:include instruction
+ * @include: valid xsl:include instruction
  * 
  * Returns @include as a new xmlNode in search dataBase format if successful,
  *         NULL otherwise
@@ -416,7 +415,7 @@ extern "C" {
 
 /**
  * searchCallStackNode:
- * @callStackItem : valid callStack item
+ * @callStackItem: valid callStack item
  * 
  * Returns @callStackItem as a new xmlNode in search dataBase format 
  *            if successful,
@@ -428,8 +427,8 @@ extern "C" {
 /**
  * walkLocals:
  * @walkFunc: function to callback for each template found
- * @data : the extra data to pass onto walker
- * @style : the stylesheet to start from
+ * @data: the extra data to pass onto walker
+ * @style: the stylesheet to start from
  *
  * Walks through all templates calling walkFunc for each. The payload
  *     of walkFunc is of type xmlNodePtr.
@@ -441,8 +440,8 @@ extern "C" {
 /**
  * walkIncludes:
  * @walkFunc: function to callback for each included stylesheet
- * @data : the extra data to pass onto walker
- * @style : the stylesheet to start from
+ * @data: the extra data to pass onto walker
+ * @style: the stylesheet to start from
  *
  * Walks through all included stylesheets calling walkFunc for each. 
  *    The payload of walkFunc is of type xmlNodePtr
@@ -454,8 +453,8 @@ extern "C" {
 /**
  * walkIncludeInst:
  * @walkFunc: function to callback for each xsl:include instruction found
- * @data : the extra data to pass onto walker
- * @style : the stylesheet to start from
+ * @data: the extra data to pass onto walker
+ * @style: the stylesheet to start from
  *
  * Walks through all xsl:include's calling walkFunc for each. The payload
  *   of walkFunc is of type xmlNodePtr.
@@ -467,8 +466,8 @@ extern "C" {
 /**
  * walkGlobals:
  * @walkFunc: function to callback for each variable of type @type found
- * @data : the extra data to pass onto walker
- * @styleCtxt : the stylesheet to start from
+ * @data: the extra data to pass onto walker
+ * @styleCtxt: the stylesheet to start from
  *
  * Call walkFunc for each global variable. The payload
  *   sent to walkFunc is of type xmlNodePtr.
@@ -480,8 +479,8 @@ extern "C" {
 /**
  * walkChildNodes:
  * @walkFunc: function to callback for each child/sibling found
- * @data : the extra data to pass onto walker
- * @node : valid xmlNodePtr
+ * @data: the extra data to pass onto walker
+ * @node: valid xmlNodePtr
  *
  * Call walkFunc for each child/sibling of @node the payload sent 
  *     to walkFunc is  a xmlNodePtr
@@ -491,11 +490,11 @@ extern "C" {
 
 
 /**
- *  scanForBreakPoint : 
- * @payload : a valid xslBreakPointPtr 
- * @data : the criteria to look for and a valid searchInfoPtr of
+ *  scanForBreakPoint: 
+ * @payload: a valid xslBreakPointPtr 
+ * @data: the criteria to look for and a valid searchInfoPtr of
  *          type SEARCH_BREAKPOINT 
- * @name : not used 
+ * @name: not used 
  *
  * Test if break point matches criteria given by @data. If so then 
  *      set @data->found to 1 and stores  reference to break point found in 
@@ -506,9 +505,9 @@ extern "C" {
 
 
 /**
- *  scanForNode : 
- * @payload : a valid xmlNodePtr
- * @data : the criteria to look for and a valid searchInfo of
+ *  scanForNode: 
+ * @payload: a valid xmlNodePtr
+ * @data: the criteria to look for and a valid searchInfo of
  *          type SEARCH_NODE 
  * @name: not used
 
@@ -522,17 +521,17 @@ extern "C" {
 
 /**
  * updateSearchData:
- * @styleCtxt : not used
- * @style : is valid
- * @data : not used but MUST be NULL for the moment
- * @variableTypes : what types of variables to look
+ * @styleCtxt: not used
+ * @style: is valid
+ * @data: not used but MUST be NULL for the moment
+ * @variableTypes: what types of variables to look
  *
  * Returns 1 on success,
  *         0 otherwise
  */
     int updateSearchData(xsltTransformContextPtr styleCtxt,
                          xsltStylesheetPtr style,
-                         void *data, enum VariableTypeEnum variableTypes);
+                         void *data, VariableTypeEnum variableTypes);
 
 
 #ifdef __cplusplus

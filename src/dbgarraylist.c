@@ -25,8 +25,8 @@
 
 /**
  * xslArrayListNew:
- * @intialSize : initial size of list
- * @deleteFunction : function to call to free items in the list
+ * @intialSize: initial size of list
+ * @deleteFunction: function to call to free items in the list
  *
  * Create a new list with a size of @initialSize
  * Returns non-null on success,
@@ -57,7 +57,7 @@ xslArrayListNew(int initialSize, freeItemFunc deleteFunction)
 
 /**
  * xslArrayListFree:
- * @list : a valid list
+ * @list: a valid list
  *
  * Free memory assocated with array list, if the array list 
  *   has a valid deleteFunction then content with be freed with 
@@ -77,7 +77,7 @@ xslArrayListFree(ArrayListPtr list)
 
 /**
  * xslArrayListEmpty:
- * @list : a valid list
+ * @list: a valid list
  *
  * Empties the list of its content
  * Returns 1 on success,
@@ -104,7 +104,7 @@ xslArrayListEmpty(ArrayListPtr list)
 
 /**
  * xslArrayListSize:
- * @list : a valid list
+ * @list: a valid list
  *
  * Returns the maximum number elements this list can contain
  */
@@ -122,7 +122,7 @@ xslArrayListSize(ArrayListPtr list)
 
 /**
  * xslArrayListCount:
- * @list : a valid list
+ * @list: a valid list
  *
  * Returns the count of number items in list
  */
@@ -140,8 +140,8 @@ xslArrayListCount(ArrayListPtr list)
 
 /**
  * xslArrayListAdd:
- * @list : valid list
- * @item : valid item
+ * @list: valid list
+ * @item: valid item
  *
  * Returns 1 if able to add @item to end of @list
  *         0 otherwise
@@ -178,8 +178,8 @@ xslArrayListAdd(ArrayListPtr list, void *item)
 
 /**
  * xslArrayListDelete:
- * @list : valid list
- * @position : 0 =< position < xslArrayListCount(list)
+ * @list: valid list
+ * @position: 0 =< position < xslArrayListCount(list)
  *
  * Returns 1 if able to delete element in @list at position @position
  *         0 otherwise 
@@ -207,8 +207,8 @@ xslArrayListDelete(ArrayListPtr list, int position)
 
 /**
  * xslArrayListGet:
- * @list : valid list
- * @position : 0 =< position < xslArrayListCount(list)
+ * @list: valid list
+ * @position: 0 =< position < xslArrayListCount(list)
  *
  * Returns non-null if able to retrieve element in @list at position
  *          @position

@@ -4,7 +4,7 @@
   <xsl:template name="overview_chapter">
     <chapter id="overview_chapter">
       <title>Overview</title>
-          <xsl:for-each select="overview">
+      <xsl:for-each select="overview/body">
             <xsl:element name="section">
               <xsl:attribute name="id">
                 <xsl:value-of select="concat('overview', string(position()))"/>

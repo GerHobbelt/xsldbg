@@ -278,8 +278,7 @@ extern "C" {
  *  Print the value variable specified by args.
  */
     void xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt,
-                                  xmlChar * arg,
-                                  enum VariableTypeEnum type);
+                                  xmlChar * arg, VariableTypeEnum type);
 
 
 

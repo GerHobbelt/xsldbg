@@ -30,7 +30,7 @@ extern "C" {
         Misc parsing related options
 -------------------------------------------*/
 
-    enum OptionTypeEnum {
+    typedef enum {
         OPTIONS_XINCLUDE = 500, /* pick a unique starting point */
         OPTIONS_DOCBOOK,
         OPTIONS_TIMING,
@@ -51,18 +51,20 @@ extern "C" {
         OPTIONS_SOURCE_FILE_NAME,
         OPTIONS_DOCS_PATH,
         OPTIONS_DATA_FILE_NAME
-    };
+    } OptionTypeEnum;
+
+
 
 /* define what tracing is used */
-    enum TraceModeEnum {
+    typedef enum {
         TRACE_OFF = 600,
         TRACE_ON,
         TRACE_RUNNING,
         TRACE_FINISHED          /* not needed but just in case */
-    };
+    } TraceModeEnum;
 
     /* what speeds can we walk through a stylesheet */
-    enum WalkSpeedEnum {
+    typedef enum {
         WALKSPEED_0,            /* must start at zero !! */
         WALKSPEED_STOP = WALKSPEED_0,
         WALKSPEED_1,
@@ -77,7 +79,7 @@ extern "C" {
         WALKSPEED_8,
         WALKSPEED_9,
         WALKSPEED_SLOW = WALKSPEED_9
-    };
+    } WalkSpeedEnum;
 
 /* how many microseconds is each speed increase worth*/
 #define WALKDELAY 250000
@@ -96,7 +98,8 @@ extern "C" {
     typedef struct _ParameterItem ParameterItem;
     typedef ParameterItem *ParameterItemPtr;
     struct _ParameterItem {
-        xmlChar *name, *value;
+        xmlChar *name;
+        xmlChar *value;
     };
 
 
@@ -127,7 +130,7 @@ extern "C" {
  * Returns 1 on success,
  *         0 otherwise
  */
-    int enableOption(enum OptionTypeEnum optionType, int value);
+    int enableOption(OptionTypeEnum optionType, int value);
 
 
 /**
@@ -136,7 +139,7 @@ extern "C" {
  *
  * Returns the state of a xsldbg option. ie 1 for enabled , 0 for disabled
  */
-    int isOptionEnabled(enum OptionTypeEnum optionType);
+    int isOptionEnabled(OptionTypeEnum optionType);
 
 
 /**
@@ -148,7 +151,7 @@ extern "C" {
  * Returns 1 on success,
  *         0 otherwise
  */
-    int setIntOption(enum OptionTypeEnum optionType, int value);
+    int setIntOption(OptionTypeEnum optionType, int value);
 
 
 /**
@@ -157,7 +160,7 @@ extern "C" {
  *
  * Returns the state of a xsldbg option
  */
-    int getIntOption(enum OptionTypeEnum optionType);
+    int getIntOption(OptionTypeEnum optionType);
 
 
 /**
@@ -170,8 +173,7 @@ extern "C" {
  * Returns 1 on success,
  *         0 otherwise
  */
-    int setStringOption(enum OptionTypeEnum optionType,
-                        const xmlChar * value);
+    int setStringOption(OptionTypeEnum optionType, const xmlChar * value);
 
 
 /**
@@ -181,7 +183,7 @@ extern "C" {
  * Get value for a string xsldbg option of @type
  * Returns current option value which may be NULL
  */
-    const xmlChar *getStringOption(enum OptionTypeEnum optionType);
+    const xmlChar *getStringOption(OptionTypeEnum optionType);
 
 
 

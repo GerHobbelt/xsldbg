@@ -68,5 +68,9 @@ xsldbg_LDFLAGS = $(all_libraries)
 clean:
 	rm -f *.o
 
+very-clean:clean
+	rm -f *.*~
+	rm -f *~
+
 
 

@@ -8,6 +8,14 @@
     email                : k_isdale@tpg.com.au
  ***************************************************************************/
 
+/***************************************************************************
+ *                                                                         *
+ *   This program is free software; you can redistribute it and/or modify  *
+ *   it under the terms of the GNU General Public License as published by  *
+ *   the Free Software Foundation; either version 2 of the License, or     *
+ *   (at your option) any later version.                                   *
+ *                                                                         *
+ ************************************************************************* */
 
 #ifndef BREAKPOINT_NEW_H
 #define BREAKPOINT_NEW_H
@@ -34,7 +42,7 @@ extern "C" {
 
 
 /* Define the types of status whilst debugging*/
-    enum DebugStatusEnum {
+    typedef enum {
         DEBUG_NONE,             /* must start at zero !! */
         DEBUG_INIT,
         DEBUG_STEP,
@@ -48,13 +56,13 @@ extern "C" {
         DEBUG_QUIT,
         DEBUG_TRACE,
         DEBUG_WALK
-    };
+    } DebugStatusEnum;
 
 
-    enum BreakPointTypeEnum {
+    typedef enum _BreakPointTypeEnum {
         DEBUG_BREAK_SOURCE = 300,
         DEBUG_BREAK_DATA
-    };
+    } BreakPointTypeEnum;
 
 
 #define XSL_TOGGLE_BREAKPOINT -1
@@ -88,40 +96,40 @@ extern "C" {
 
 /**
  * setActiveBreakPoint:
- * @breakPoint : is valid break point or NULL
+ * @breakPoint: is valid break point or NULL
  *
  * Set the active break point
  */
     void setActiveBreakPoint(xslBreakPointPtr breakPoint);
 
 
-
 /**
  * xslAddBreakPoint:
- * @url : url non-null, non-empty file name that has been loaded by
+ * @url: url non-null, non-empty file name that has been loaded by
  *                    debugger
- * @lineNumber : lineNumber >= 0 and is available in url specified and 
+ * @lineNumber: lineNumber >= 0 and is available in url specified and
  *                points to an xml element
- * @temlateName : the template name of breakPoint or NULL
- * @type : DEBUG_BREAK_SOURCE if are we stopping at a xsl source line
+ * @temlateName: the template name of breakPoint or NULL
+ * @type: DEBUG_BREAK_SOURCE if are we stopping at a xsl source line
  *         DEBUG_BREAK_DATA otherwise
  *
- * Add break point at file and line number specifiec
- * Returns  1 if successful,
- *	    0 otherwise 
+ * Add break point at file and line number specified
+ *
+ * Returns 1 if successful,
+ *	   0 otherwise
 */
     int xslAddBreakPoint(const xmlChar * url, long lineNumber,
                          const xmlChar * templateName,
-                         enum BreakPointTypeEnum type);
+                         BreakPointTypeEnum type);
 
 /**
  * deleteBreakPoint:
- * @breakPoint : is valid
+ * @breakPoint: is valid
  *
  * Delete the break point specified if it can be found using 
  *    @breakPoint's url and lineNo
  * Returns 1 if successful,
- *	    0 otherwise
+ *	   0 otherwise
 */
     int deleteBreakPoint(xslBreakPointPtr breakPoint);
 
@@ -137,8 +145,8 @@ extern "C" {
 
 /**
  * enableBreakPoint:
- * @breakpoint : a valid breakpoint
- * @enable : enable break point if 1, disable if 0, toggle if -1
+ * @breakpoint: a valid breakpoint
+ * @enable: enable break point if 1, disable if 0, toggle if -1
  *
  * Enable or disable a break point
  * Returns 1 if successful,
@@ -157,9 +165,9 @@ extern "C" {
 
 /**
  * getBreakPoint:
- * @url : url non-null, non-empty file name that has been loaded by
+ * @url: url non-null, non-empty file name that has been loaded by
  *                    debugger
- * @lineNumber : number >= 0 and is available in url specified
+ * @lineNumber: lineNumber >= 0 and is available in url specified
  * Returns break point if break point exists at location specified,
  *	   NULL otherwise
 */
@@ -168,8 +176,8 @@ extern "C" {
 
 /**
  * xslPrintBreakPoint:
- * @file : file != NULL
- * @breakpoint : a valid break point
+ * @file: file != NULL
+ * @breakpoint: a valid break point
  *
  * Print the details of @breakPoint to @file
  *
@@ -181,11 +189,11 @@ extern "C" {
 
 /**
  * xslIsBreakPoint:
- * @url : url non-null, non-empty file name that has been loaded by
+ * @url: url non-null, non-empty file name that has been loaded by
  *                    debugger
- * @lineNumber : number >= 0 and is available in url specified
+ * @lineNumber: lineNumber >= 0 and is available in url specified
  *
- * Determine if there is a break point at file and line number specifiec
+ * Determine if there is a break point at file and line number specified
  * Returns 1  if successful,  
  *         0 otherwise
 */
@@ -194,7 +202,7 @@ extern "C" {
 
 /**
  * xslIsBreakPointNode:
- * @node : node != NULL
+ * @node: node != NULL
  *
  * Determine if a node is a break point
  * Returns 1 on success, 
@@ -210,10 +218,10 @@ extern "C" {
 
 /**
  * xslDebugBreak:
- * @templ : The source node being executed
- * @node : The data node being processed
- * @root : The template being applied to "node"
- * @ctxt : transform context for stylesheet being processed
+ * @templ: The source node being executed
+ * @node: The data node being processed
+ * @root: The template being applied to "node"
+ * @ctxt: transform context for stylesheet being processed
  *
  * A break point has been found so pass control to user
  */
@@ -222,7 +230,7 @@ extern "C" {
 
 
 /**
- * debugInit :
+ * debugInit:
  *
  * Initialize debugger allocating any memory needed by debugger
  * Returns 1 on success,
@@ -232,7 +240,7 @@ extern "C" {
 
 
 /**
- * debugFree :
+ * debugFree:
  *
  * Free up any memory taken by debugger
  */
@@ -240,8 +248,8 @@ extern "C" {
 
 
 /** 
- * xslDebugGotControl :
- * @reached : 1 if debugger has received control, 0 otherwise
+ * @reached : 1 if debugger has received control, -1 to read its value,
+               0 to clear the flag
  *
  * Set flag that debuger has received control to value of @reached
  * Returns 1 if any breakpoint was reached previously,
@@ -269,8 +277,8 @@ extern "C" {
 
 /**
  * xslAddCallInfo:
- * @templateName : template name to add
- * @url : url for the template
+ * @templateName: template name to add
+ * @url: url for the template
  *
  * Returns a reference to the added info if successful, 
  *         NULL otherwise
@@ -290,8 +298,8 @@ extern "C" {
 
 /**
  * xslAddCall:
- * @templ : current template being applied
- * @source : the source node being processed
+ * @templ: current template being applied
+ * @source: the source node being processed
  *
  * Add template "call" to call stack
  * Returns 1 on success,
@@ -301,7 +309,7 @@ extern "C" {
 
 
 /**
- * xslDropCall :
+ * xslDropCall:
  *
  * Drop the topmost item off the call stack
  */
@@ -309,8 +317,8 @@ extern "C" {
 
 
 /** 
- * xslStepupToDepth :
- * @depth :the frame depth to step up to  
+ * xslStepupToDepth:
+ * @depth:the frame depth to step up to  
  *             0 < depth <= xslCallDepth()
  *
  * Set the frame depth to step up to
@@ -321,8 +329,8 @@ extern "C" {
 
 
 /** 
- * xslStepdownToDepth :
- * @depth : the frame depth to step down to, 
+ * xslStepdownToDepth:
+ * @depth: the frame depth to step down to, 
  *             0 < depth <= xslCallDepth()
  *
  * Set the frame depth to step down to
@@ -333,8 +341,8 @@ extern "C" {
 
 
 /**
- * xslGetCall :
- * @depth : 0 < depth <= xslCallDepth()
+ * xslGetCall:
+ * @depth: 0 < depth <= xslCallDepth()
  *
  * Retrieve the call point at specified call depth 
 
@@ -345,7 +353,7 @@ extern "C" {
 
 
 /** 
- * xslGetCallStackTop :
+ * xslGetCallStackTop:
  *
  * Returns the top of the call stack
  */
@@ -353,7 +361,7 @@ extern "C" {
 
 
 /**
- * xslCallDepth :
+ * xslCallDepth:
  *
  * Returns the depth of call stack
  */
@@ -379,7 +387,7 @@ extern "C" {
 
 /**
  * xslSearchAdd:
- * @node : a valid node to be added to the topmost node in search dataBase
+ * @node: a valid node to be added to the topmost node in search dataBase
  *
  * Returns 1 if able to add @node to top node in search dataBase,
  *         0 otherwise
@@ -389,7 +397,7 @@ extern "C" {
 
 /**
  * xslSearchSave:
- * @fileName : valid fileName to save search dataBase to 
+ * @fileName: valid fileName to save search dataBase to 
  *
  * Returns 1 on success,
  *         0 otherwise
@@ -400,7 +408,7 @@ extern "C" {
 /**
  * xslSearchQuery:
  * @query: query to run . If NULL then query is "//search/ *"
- * @tempFile : where do we load the search dataBase from to execute
+ * @tempFile: where do we load the search dataBase from to execute
  *             query. If tempFile is NULL "search.data" is used
  * 
  * Send query as parameter for execution of search.xsl using
@@ -413,10 +421,10 @@ extern "C" {
 
 /**
  * xslFindBreakPointByLineNo:
- * @ctxt : valid ctxt to look into
- * @url : url non-null, non-empty file name that has been loaded by
+ * @ctxt: valid ctxt to look into
+ * @url: url non-null, non-empty file name that has been loaded by
  *                    debugger
- * @lineNumber : number >= 0 and is available in url specified
+ * @lineNumber: number >= 0 and is available in url specified
  *
  * Find the closest line number in file specified that can be a point 
  * Returns  node at line number number specified if successfull,
@@ -427,8 +435,8 @@ extern "C" {
 
 /**
  * xslFindTemplateNode: 
- * @style : valid stylesheet collection to look into 
- * @name : template name to look for
+ * @style: valid stylesheet collection to look into 
+ * @name: template name to look for
  *
  * Returns template node found if successful,
  *         NULL otherwise 
@@ -438,7 +446,7 @@ extern "C" {
 
 /**
  * xslFindBreakPointByName:
- * @templateName : template name to look for
+ * @templateName: template name to look for
  *
  * Find the breakpoint at template with "match" or "name" equal 
  *    to templateName
@@ -450,7 +458,7 @@ extern "C" {
 
 /**
  * xslFindBreakPointById:
- * @id : The break point id to look for
+ * @id: The break point id to look for
  *
  * Returns the break point with given the break point id if found,
  *          NULL otherwise 
@@ -471,7 +479,7 @@ extern "C" {
 /**
  * walkBreakPoints:
  * @walkFunc: function to callback for each breakpoint found
- * @data : the extra data to pass onto walker
+ * @data: the extra data to pass onto walker
  *
  * Walks through all break points calling walkFunc for each. The payload
  *  sent to walkFunc is of type xslBreakPointPtr 
@@ -482,8 +490,8 @@ extern "C" {
 /**
  * walkTemplates:
  * @walkFunc: function to callback for each template found
- * @data : the extra data to pass onto walker
- * @style : the stylesheet to start from
+ * @data: the extra data to pass onto walker
+ * @style: the stylesheet to start from
  *
  * Walks through all templates calling walkFunc for each. The payload
  *   of walkFunc is of type xsltTemplatePtr
@@ -495,8 +503,8 @@ extern "C" {
 /**
  * walkStylesheets:
  * @walkFunc: function to callback for each stylesheet found
- * @data : the extra data to pass onto walker
- * @style : the stylesheet to start from
+ * @data: the extra data to pass onto walker
+ * @style: the stylesheet to start from
  *
  * Walks through all templates calling walkFunc for each. The payload
  *   sent to walkFuc is of type xsltStylesheetPtr
@@ -508,8 +516,8 @@ extern "C" {
 /**
  * xslWalkGlobals:
  * @walkFunc: function to callback for each gobal variable found
- * @data : the extra data to pass onto walker
- * @style : the stylesheet to start from
+ * @data: the extra data to pass onto walker
+ * @style: the stylesheet to start from
  *
  * Call walkFunc for each global variable. The payload
  *   sent to walkFunc is of type  xmlNodePtr
@@ -521,8 +529,8 @@ extern "C" {
 /**
  * xslWalkLocals:
  * @walkFunc: function to callback for each local variable found
- * @data : the extra data to pass onto walker
- * @style : the stylesheet to start from
+ * @data: the extra data to pass onto walker
+ * @style: the stylesheet to start from
  *
  * Walks through all local variables calling walkFunc for each. The payload
  *   of walkFunc is of type xmlNodePtr
@@ -534,8 +542,8 @@ extern "C" {
 /**
  * walkIncludes:
  * @walkFunc: function to callback for each included stylesheet
- * @data : the extra data to pass onto walker
- * @style : the stylesheet to start from
+ * @data: the extra data to pass onto walker
+ * @style: the stylesheet to start from
  *
  * Walks through all included stylesheets calling walkFunc for each. The payload
  *   of walkFunc is of type xmlNodePtr
@@ -547,8 +555,8 @@ extern "C" {
 /**
  * walkIncludeInst:
  * @walkFunc: function to callback for each xsl:include instruction found
- * @data : the extra data to pass onto walker
- * @style : the stylesheet to start from
+ * @data: the extra data to pass onto walker
+ * @style: the stylesheet to start from
  *
  * Walks through all xsl:include calling walkFunc for each. The payload
  *   of walkFunc is of type xmlNodePtr
@@ -560,8 +568,8 @@ extern "C" {
 /**
  * xslWalkChildNodes:
  * @walkFunc: function to callback for each child/sibling found
- * @data : the extra data to pass onto walker
- * @node : valid xmlNodePtr
+ * @data: the extra data to pass onto walker
+ * @node: valid xmlNodePtr
  *
  * Call walkFunc for each child of @node the payload sent to walkFunc is
  *   a xmlNodePtr

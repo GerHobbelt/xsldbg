@@ -511,7 +511,7 @@ changeDir(const xmlChar * path)
  *         0 otherwise 
  */
 int
-loadXmlFile(const xmlChar * path, enum FileTypeEnum fileType)
+loadXmlFile(const xmlChar * path, FileTypeEnum fileType)
 {
     int result = 0;
 
@@ -587,7 +587,7 @@ loadXmlFile(const xmlChar * path, enum FileTypeEnum fileType)
  *         0 otherwise
  */
 int
-freeXmlFile(enum FileTypeEnum fileType)
+freeXmlFile(FileTypeEnum fileType)
 {
     int result = 0, type = fileType;
 

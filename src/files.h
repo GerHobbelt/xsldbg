@@ -29,12 +29,11 @@ extern "C" {
 #endif
 
 /* used by loadXmlFile, freeXmlFile functions */
-    enum FileTypeEnum {
+    typedef enum {
         FILES_XMLFILE_TYPE = 100,       /* pick a unique starting point */
         FILES_SOURCEFILE_TYPE,
         FILES_TEMPORARYFILE_TYPE
-    };
-
+    } FileTypeEnum;
 
 /**
  * redirectToTerminal:
@@ -117,7 +116,7 @@ extern "C" {
  * Returns 1 on success,
  *         0 otherwise 
  */
-    int loadXmlFile(const xmlChar * path, enum FileTypeEnum fileType);
+    int loadXmlFile(const xmlChar * path, FileTypeEnum fileType);
 
 
 /**
@@ -128,7 +127,7 @@ extern "C" {
  * Returns 1 on success,
  *         0 otherwise
  */
-    int freeXmlFile(enum FileTypeEnum fileType);
+    int freeXmlFile(FileTypeEnum fileType);
 
 
 /**

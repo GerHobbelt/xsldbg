@@ -1,0 +1,295 @@
+<HTML>
+<HEAD>
+<TITLE>struct _Options</TITLE>
+
+<META NAME="Generator" CONTENT="KDOC ">
+</HEAD>
+<BODY bgcolor="#ffffff" text="#000000" link="#0000ff" vlink="#000099" alink= "#ffffff">
+<TABLE WIDTH="100%" BORDER="0">
+<TR>
+<TD>
+	<TABLE BORDER="0">
+		<TR><TD valign="top" align="left" cellspacing="10">
+		<h1>struct _Options</h1>
+		</TD>
+		<TD valign="top" align="right" colspan="1"></TD></TR>
+	</TABLE>
+	<HR>
+	<TABLE BORDER="0">
+		<TR><TH>Definition</TH><TD><code>#include &lt;<A HREF="src___options_h.html">src/options.h</A>&gt;</code></TD></TR>
+<TR><TH><A HREF="full-list-_Options.html">List of all Methods</A></TH></TR>
+	</TABLE>
+	</TD>
+<TD align="right"><TABLE BORDER="0"><TR><TD><small><A HREF="index-long.html">Annotated List</A></small></TD></TR>
+<TR><TD><small><A HREF="header-list.html">Files</A></small></TD></TR>
+<TR><TD><small><A HREF="all-globals.html">Globals</A></small></TD></TR>
+<TR><TD><small><A HREF="hier.html">Hierarchy</A></small></TD></TR>
+<TR><TD><small><A HREF="index.html">Index</A></small></TD></TR>
+</TABLE></TD></TR></TABLE>
+<h4>Public Types</h4><ul><LI>typedef struct _ParameterItem  <A HREF="#ref2">ParameterItem</A>
+</LI>
+<LI>struct <A HREF="_Options___ParameterItem.html">_ParameterItem</A>
+</LI>
+<LI>enum <A HREF="#ref5">OptionTypeEnum</A> {        OPTIONS_XINCLUDE = 500, 
+        OPTIONS_DOCBOOK,        
+        OPTIONS_TIMING,         
+        OPTIONS_PROFILING,      
+        OPTIONS_NOVALID,        
+        OPTIONS_NOOUT,          
+        OPTIONS_HTML,           
+        OPTIONS_DEBUG,          
+        OPTIONS_SHELL,          
+        OPTIONS_GDB,            
+        OPTIONS_REPEAT,         
+        OPTIONS_TRACE,          
+        OPTIONS_WALK_SPEED,     
+        OPTIONS_VERBOSE,        
+        OPTIONS_OUTPUT_FILE_NAME = 550, 
+        OPTIONS_SOURCE_FILE_NAME,       
+        OPTIONS_DOCS_PATH,      
+        OPTIONS_DATA_FILE_NAME  
+    }
+</LI>
+<LI>enum <A HREF="#ref6">TraceModeEnum</A> {        TRACE_OFF = 600,        
+        TRACE_ON,               
+        TRACE_RUNNING,          
+        TRACE_FINISHED          
+    }
+</LI>
+<LI>enum <A HREF="#ref7">WalkSpeedEnum</A> {        WALKSPEED_0 = 0,
+        WALKSPEED_STOP = WALKSPEED_0,
+        WALKSPEED_1,
+        WALKSPEED_FAST = WALKSPEED_1,
+        WALKSPEED_2,
+        WALKSPEED_3,
+        WALKSPEED_4,
+        WALKSPEED_5,
+        WALKSPEED_NORMAL = WALKSPEED_5,
+        WALKSPEED_6,
+        WALKSPEED_7,
+        WALKSPEED_8,
+        WALKSPEED_9,
+        WALKSPEED_SLOW = WALKSPEED_9
+    }
+</LI>
+</ul><h4>Public Methods</h4><ul><LI>int &nbsp;<b><A HREF="#ref8">optionsInit</A></b> (void) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref9">optionsFree</A></b> (void) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref10">enableOption</A></b> (OptionTypeEnum optionType, int value) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref11">isOptionEnabled</A></b> (OptionTypeEnum optionType) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref12">setIntOption</A></b> (OptionTypeEnum optionType, int value) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref13">getIntOption</A></b> (OptionTypeEnum optionType) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref14">setStringOption</A></b> (OptionTypeEnum optionType, const xmlChar * value) 
+</LI>
+<LI>const xmlChar *&nbsp;<b><A HREF="#ref15">getStringOption</A></b> (OptionTypeEnum optionType) 
+</LI>
+<LI><A HREF="#ArrayListPtr">ArrayListPtr</A> &nbsp;<b><A HREF="#ref16">getParamItemList</A></b> (void) 
+</LI>
+<LI>ParameterItemPtr &nbsp;<b><A HREF="#ref17">paramItemNew</A></b> (const xmlChar * name,
+                                  const xmlChar * value) 
+</LI>
+<LI>void &nbsp;<b><A HREF="#ref18">paramItemFree</A></b> (ParameterItemPtr item) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref19">printParam</A></b> (int paramId) 
+</LI>
+<LI>int &nbsp;<b><A HREF="#ref20">printParamList</A></b> (void) 
+</LI>
+</ul><h4>Public Members</h4><ul><LI>int <b><A HREF="#ref1">unused_variable</A></b></LI>
+<LI>typedef ParameterItem *<b><A HREF="#ref3">ParameterItemPtr</A></b></LI>
+</ul><HR><H2><A NAME="longdesc">Detailed Description</A></H2><A NAME="unused_variable"></A><A NAME="ref1"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int  <strong>unused_variable</strong>
+</td><td align="right"><h3><strong>unused_variable</strong></h3></td></tr></table><p></p><A NAME="ParameterItem"></A><A NAME="ref2"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef struct _ParameterItem  <strong>ParameterItem</strong></td><td align="right"><h3><strong>ParameterItem</strong></h3></td></tr></table><p></p><A NAME="ParameterItemPtr"></A><A NAME="ref3"></A><table width="100%"><tr bgcolor="#eeeeee"><td>typedef ParameterItem * <strong>ParameterItemPtr</strong>
+</td><td align="right"><h3><strong>ParameterItemPtr</strong></h3></td></tr></table><p></p><A NAME="_Options___ParameterItem.html"></A><A NAME="ref4"></A><table width="100%"><tr bgcolor="#eeeeee"><td><strong>_ParameterItem</strong> <small>(struct)</small></td><td align="right"><h3><strong>_ParameterItem</strong></h3></td></tr></table><p></p><A NAME="OptionTypeEnum"></A><A NAME="ref5"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>OptionTypeEnum</strong> {        OPTIONS_XINCLUDE = 500, 
+        OPTIONS_DOCBOOK,        
+        OPTIONS_TIMING,         
+        OPTIONS_PROFILING,      
+        OPTIONS_NOVALID,        
+        OPTIONS_NOOUT,          
+        OPTIONS_HTML,           
+        OPTIONS_DEBUG,          
+        OPTIONS_SHELL,          
+        OPTIONS_GDB,            
+        OPTIONS_REPEAT,         
+        OPTIONS_TRACE,          
+        OPTIONS_WALK_SPEED,     
+        OPTIONS_VERBOSE,        
+        OPTIONS_OUTPUT_FILE_NAME = 550, 
+        OPTIONS_SOURCE_FILE_NAME,       
+        OPTIONS_DOCS_PATH,      
+        OPTIONS_DATA_FILE_NAME  
+    }
+</td><td align="right"><h3><strong>OptionTypeEnum</strong></h3></td></tr></table><p></p><A NAME="TraceModeEnum"></A><A NAME="ref6"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>TraceModeEnum</strong> {        TRACE_OFF = 600,        
+        TRACE_ON,               
+        TRACE_RUNNING,          
+        TRACE_FINISHED          
+    }
+</td><td align="right"><h3><strong>TraceModeEnum</strong></h3></td></tr></table><p></p><A NAME="WalkSpeedEnum"></A><A NAME="ref7"></A><table width="100%"><tr bgcolor="#eeeeee"><td>enum <strong>WalkSpeedEnum</strong> {        WALKSPEED_0 = 0,
+        WALKSPEED_STOP = WALKSPEED_0,
+        WALKSPEED_1,
+        WALKSPEED_FAST = WALKSPEED_1,
+        WALKSPEED_2,
+        WALKSPEED_3,
+        WALKSPEED_4,
+        WALKSPEED_5,
+        WALKSPEED_NORMAL = WALKSPEED_5,
+        WALKSPEED_6,
+        WALKSPEED_7,
+        WALKSPEED_8,
+        WALKSPEED_9,
+        WALKSPEED_SLOW = WALKSPEED_9
+    }
+</td><td align="right"><h3><strong>WalkSpeedEnum</strong></h3></td></tr></table><p></p><A NAME="optionsInit"></A><A NAME="ref8"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>optionsInit</strong> (void)
+<br></td><td align="right"><h3><strong>optionsInit</strong></h3></td></tr></table><p></p><p> 
+ Allocate memory needed by options data structures
+</p>
+<p></p>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+ </p>
+<A NAME="optionsFree"></A><A NAME="ref9"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>optionsFree</strong> (void)
+<br></td><td align="right"><h3><strong>optionsFree</strong></h3></td></tr></table><p></p><p>
+ Free memory used by options data structures
+ </p>
+<A NAME="enableOption"></A><A NAME="ref10"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>enableOption</strong> (OptionTypeEnum optionType, int value)
+<br></td><td align="right"><h3><strong>enableOption</strong></h3></td></tr></table><p></p><p>
+ Set the state of a xsldbg option to <code>value</code>
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>optionType</i></TD><TD align="left" valign="top">Is a valid integer option
+</TD></TR>
+<TR><TD align="left" valign="top"><i>value</i></TD><TD align="left" valign="top">1 to enable, 0 otherwise
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+         0 otherwise
+</p>
+<A NAME="isOptionEnabled"></A><A NAME="ref11"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>isOptionEnabled</strong> (OptionTypeEnum optionType)
+<br></td><td align="right"><h3><strong>isOptionEnabled</strong></h3></td></tr></table><p></p><p>
+</p>
+<p></p>
+<p> </p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>optionType</i></TD><TD align="left" valign="top">Is a valid integer option to query
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: The state of a xsldbg option. ie 1 for enabled, 0 for disabled
+</p>
+<A NAME="setIntOption"></A><A NAME="ref12"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>setIntOption</strong> (OptionTypeEnum optionType, int value)
+<br></td><td align="right"><h3><strong>setIntOption</strong></h3></td></tr></table><p></p><p>
+ Set the value of a xsldbg option to <code>value</code>
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>optionType</i></TD><TD align="left" valign="top">Is a valid integer option
+</TD></TR>
+<TR><TD align="left" valign="top"><i>value</i></TD><TD align="left" valign="top">Is the valid to adopt
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+         0 otherwise
+</p>
+<A NAME="getIntOption"></A><A NAME="ref13"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>getIntOption</strong> (OptionTypeEnum optionType)
+<br></td><td align="right"><h3><strong>getIntOption</strong></h3></td></tr></table><p></p><p>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>optionType</i></TD><TD align="left" valign="top">Is a valid integer option
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: The state of a xsldbg option
+</p>
+<A NAME="setStringOption"></A><A NAME="ref14"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>setStringOption</strong> (OptionTypeEnum optionType, const xmlChar * value)
+<br></td><td align="right"><h3><strong>setStringOption</strong></h3></td></tr></table><p></p><p>
+ Set value for a string xsldbg option to <code>value</code>. 
+ Any memory used currently by option <code>optionType</code> will be freed
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>optionType</i></TD><TD align="left" valign="top">A valid string option
+</TD></TR>
+<TR><TD align="left" valign="top"><i>value</i></TD><TD align="left" valign="top">The value to copy
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+</p>
+<A NAME="getStringOption"></A><A NAME="ref15"></A><table width="100%"><tr bgcolor="#eeeeee"><td>const xmlChar *&nbsp;<strong>getStringOption</strong> (OptionTypeEnum optionType)
+<br></td><td align="right"><h3><strong>getStringOption</strong></h3></td></tr></table><p></p><p>
+ Get value for a string xsldbg option of <code>optionType</code>
+</p>
+<p></p>
+<p></p>
+<p> </p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>optionType</i></TD><TD align="left" valign="top">A valid string option 
+</TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: current option value which may be NULL
+</p>
+<A NAME="getParamItemList"></A><A NAME="ref16"></A><table width="100%"><tr bgcolor="#eeeeee"><td><A HREF="#ArrayListPtr">ArrayListPtr</A> &nbsp;<strong>getParamItemList</strong> (void)
+<br></td><td align="right"><h3><strong>getParamItemList</strong></h3></td></tr></table><p></p><p>
+</p>
+<p><b>Returns</b>: The list of parameters to provide to libxslt when doing 
+              stylesheet transformation if successful
+          NULL otherwise
+ </p>
+<A NAME="paramItemNew"></A><A NAME="ref17"></A><table width="100%"><tr bgcolor="#eeeeee"><td>ParameterItemPtr &nbsp;<strong>paramItemNew</strong> (const xmlChar * name,
+                                  const xmlChar * value)
+<br></td><td align="right"><h3><strong>paramItemNew</strong></h3></td></tr></table><p></p><p>
+ Create a new libxslt parameter item
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>name</i></TD><TD align="left" valign="top">Is valid 
+</TD></TR>
+<TR><TD align="left" valign="top"><i>value</i></TD><TD align="left" valign="top">Is valid 
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: non-null if sucessful
+          NULL otherwise
+</p>
+<A NAME="paramItemFree"></A><A NAME="ref18"></A><table width="100%"><tr bgcolor="#eeeeee"><td>void &nbsp;<strong>paramItemFree</strong> (ParameterItemPtr item)
+<br></td><td align="right"><h3><strong>paramItemFree</strong></h3></td></tr></table><p></p><p>
+ Free memory used by libxslt parameter item <code>item</code>
+</p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>item</i></TD><TD align="left" valign="top">Is valid
+ </TD></TR>
+</TABLE></P>
+<A NAME="printParam"></A><A NAME="ref19"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>printParam</strong> (int paramId)
+<br></td><td align="right"><h3><strong>printParam</strong></h3></td></tr></table><p></p><p>
+ Print parameter information
+</p>
+<p></p>
+<p></p>
+<p><b>Parameters</b>:<TABLE BORDER="0" CELLPADDING="5">
+<TR><TD align="left" valign="top"><i>paramId</i></TD><TD align="left" valign="top">: 0 =< <code>paramID</code> < arrayListCount(getParamList())
+ </TD></TR>
+</TABLE></P>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+</p>
+<A NAME="printParamList"></A><A NAME="ref20"></A><table width="100%"><tr bgcolor="#eeeeee"><td>int &nbsp;<strong>printParamList</strong> (void)
+<br></td><td align="right"><h3><strong>printParamList</strong></h3></td></tr></table><p></p><p>
+ Prints all items in parameter list
+</p>
+<p></p>
+<p><b>Returns</b>: 1 on success,
+          0 otherwise
+ </p>
+<HR>
+	<table>
+	<tr><td><small>Generated by: keith on linux on Fri Dec  7 22:39:08 2001, using kdoc 2.0a53.</small></td></tr>
+	</table>
+</BODY>
+</HTML>

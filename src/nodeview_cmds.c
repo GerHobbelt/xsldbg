@@ -239,7 +239,7 @@ xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
  */
 void
 xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
-                         enum VariableTypeEnum type)
+                         VariableTypeEnum type)
 {
     varCount = 0;
     if (!styleCtxt) {
