@@ -753,6 +753,9 @@ filesInit(void)
     tempDocument = NULL;
     topStylesheet = NULL;
     entityNameList = arrayListNew(4, (freeItemFunc) filesFreeEntityInfo);
+#if defined(HAVE_INCLUDE_FIX) && (LIBXML_VERSION < 20508)
+    xmlSetEntityReferenceFunc(filesEntityRef);
+#endif
 
     /* setup the encoding */
     encodeInBuff = xmlBufferCreate();

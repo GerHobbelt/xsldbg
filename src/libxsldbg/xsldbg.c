@@ -1301,8 +1301,10 @@ xsldbgInit()
 	 */
 	xmlDefaultSAXHandlerInit();
 	xmlDefaultSAXHandler.cdataBlock = NULL;
+#if (LIBXML_VERSION >= 20508)
 	oldGetEntity = xmlDefaultSAXHandler.getEntity;
 	xmlDefaultSAXHandler.getEntity = xsldbgGetEntity;
+#endif
 
         if (getThreadStatus() != XSLDBG_MSG_THREAD_NOTUSED) {
             initialized = 1;
