@@ -22,55 +22,14 @@
 #include "arraylist.h"
 #include "xsldbgmsg.h"
 
-/* Enable the use of xinclude during file parsing*/
-static int xinclude = 0;
 
-/* Enable the use of docbook sgml file parsing */
-static int docbook = 0;
-
-/* Enable the use of timing during file parsing/execution */
-static int timing = 0;
-
-/* Enable the use of profiling during file execution */
-static int profile = 0;
-
-/* Disables validation when parsing files */
-static int novalid = 0;
-
-/* Disables output to stdout */
-static int noout = 0;
-
-/* Enable the use of html parsing */
-static int html = 0;
-
-/* Enable the use of debuging */
-static int debug = 0;
-
-/* Set the number of time to repeat */
-static int repeat = 0;
-
-/* Enable the use of debugger shell */
-static int shell = 0;
-
-/* trace one execution */
-static int trace = 0;
-
- /* do we print out messages/debuging info */
-static int verbose = 0;
-
-/* what speed do we walk though code */
-static int walkSpeed = 0;
-
-/* do we run in gdb mode (prints out more information )*/
-static int gdbMode = 0;
-
-#if 0                           /* remove a warning */
-
-/* keep track of our inteter options 
-  This will be use next beta! For the moment use the individual 
-  integers */
+/* keep track of our integer/boolean options */
 static int intOptions[OPTIONS_VERBOSE - OPTIONS_XINCLUDE + 1];
-#endif
+
+/* make use that use of options are safe by only copying
+   critical values from intVolitleOptions just before stylesheet is started
+ */
+int intVolitileOptions[OPTIONS_VERBOSE - OPTIONS_XINCLUDE + 1];
 
 /* keep track of our string options */
 static xmlChar *stringOptions[OPTIONS_DATA_FILE_NAME -
@@ -110,6 +69,12 @@ optionsInit(void)
 #endif
 
 
+    for (optionId = 0;
+         optionId <= OPTIONS_VERBOSE - OPTIONS_XINCLUDE;
+         optionId++) {
+        intOptions[optionId] = 0;
+	intVolitileOptions[optionId] = 0;
+    }
 
     for (optionId = 0;
          optionId <= OPTIONS_DATA_FILE_NAME - OPTIONS_OUTPUT_FILE_NAME;
@@ -122,6 +87,9 @@ optionsInit(void)
 
     /* setup the docs path */
     setStringOption(OPTIONS_DOCS_PATH, docsPath);
+
+    setIntOption(OPTIONS_TRACE, TRACE_OFF);
+    setIntOption(OPTIONS_WALK_SPEED,  WALKSPEED_STOP);
 
     /* set output default as standard output. Must be changed if not using
      * xsldbg's command line. Or the tty command is used */
@@ -168,60 +136,32 @@ enableOption(OptionTypeEnum optionType, int value)
 
     switch (type) {
         case OPTIONS_XINCLUDE:
-            xinclude = value;
-            break;
-
         case OPTIONS_DOCBOOK:
-            docbook = value;
-            break;
-
         case OPTIONS_TIMING:
-            timing = value;
-            break;
-
         case OPTIONS_PROFILING:
-            profile = value;
-            break;
-
         case OPTIONS_NOVALID:
-            novalid = value;
-            break;
-
         case OPTIONS_NOOUT:
-            noout = value;
-            break;
-
         case OPTIONS_HTML:
-            html = value;
-            break;
-
         case OPTIONS_DEBUG:
-            debug = value;
-            break;
-
         case OPTIONS_SHELL:
-            shell = value;
-            break;
-
         case OPTIONS_GDB:
-            gdbMode = value;
-            break;
-
         case OPTIONS_REPEAT:
-            repeat = value;
-            break;
+        case OPTIONS_CATALOGS:
+        case OPTIONS_VERBOSE:
+	  /* make sure that use of options are safe by only copying
+	     critical values from intVolitleOptions just before 
+	     stylesheet is started
+	  */
+	  intVolitileOptions[type - OPTIONS_XINCLUDE] = value;
+	  result++;
+	  break;
 
         case OPTIONS_TRACE:
-            trace = value;      /* trace execution */
-            break;
-
-        case OPTIONS_VERBOSE:
-            verbose = value;    /* do we print out extra messages/debuging info */
-            break;
-
         case OPTIONS_WALK_SPEED:
-            walkSpeed = value;  /* How fast do we walk through code */
-            break;
+	  intVolitileOptions[type - OPTIONS_XINCLUDE] = value;
+	  intOptions[type - OPTIONS_XINCLUDE] = value;
+	  result++;
+	  break;
 
         default:
             xsltGenericError(xsltGenericErrorContext,
@@ -249,60 +189,22 @@ isOptionEnabled(OptionTypeEnum optionType)
 
     switch (type) {
         case OPTIONS_XINCLUDE:
-            result = xinclude;
-            break;
-
         case OPTIONS_DOCBOOK:
-            result = docbook;
-            break;
-
         case OPTIONS_TIMING:
-            result = timing;
-            break;
-
         case OPTIONS_PROFILING:
-            result = profile;
-            break;
-
         case OPTIONS_NOVALID:
-            return novalid;
-            break;
-
         case OPTIONS_NOOUT:
-            return noout;
-            break;
-
         case OPTIONS_HTML:
-            return html;
-            break;
-
         case OPTIONS_DEBUG:
-            return debug;
-            break;
-
         case OPTIONS_SHELL:
-            result = shell;
-            break;
-
         case OPTIONS_GDB:
-            result = gdbMode;
-            break;
-
         case OPTIONS_REPEAT:
-            result = repeat;
-            break;
-
         case OPTIONS_TRACE:
-            result = trace;     /* trace execution */
-            break;
-
         case OPTIONS_VERBOSE:
-            result = verbose;   /* do we print out extra messages/debuging info */
-            break;
-
+    case OPTIONS_CATALOGS:
         case OPTIONS_WALK_SPEED:
-            result = walkSpeed; /* How fast do we walk through code */
-            break;
+	  result = intOptions[type - OPTIONS_XINCLUDE]; 
+	  break;
 
         default:
             xsltGenericError(xsltGenericErrorContext,
@@ -404,6 +306,21 @@ getStringOption(OptionTypeEnum optionType)
     return result;
 }
 
+
+  /**
+   * copyVolitleOptions:
+   *
+   * Copy volitile options to the working area for xsldbg
+   */
+void copyVolitleOptions(void)
+{
+  int optionId;
+      for (optionId = 0;
+         optionId < OPTIONS_VERBOSE - OPTIONS_XINCLUDE;
+	   optionId++) {
+        intOptions[optionId] = intVolitileOptions[optionId];
+      }
+}
 
 /**
  * paramItemNew:

@@ -18,7 +18,7 @@
 
 
 #include "config.h"
-#include <libxslt/xsltutils.h>
+#include <libxsldbg/xslbreakpoint.h>
 
 #include <libxsldbg/xsldbgmsg.h>
 #include <libxsldbg/xsldbgthread.h>
@@ -32,6 +32,9 @@ static int inputReady = 0;
 /* Is the application ready for a notification message */
 static int appReady = 0;
 
+static notifyMessageListPtr notifyList;
+
+ArrayListPtr msgList = NULL;
 
 int
 getAppReady(void)
@@ -84,9 +87,13 @@ setThreadStatus(XsldbgMessageEnum type)
         case XSLDBG_MSG_THREAD_NOTUSED:
         case XSLDBG_MSG_THREAD_INIT:
         case XSLDBG_MSG_THREAD_RUN:
+	  threadStatus = type;
+	  break;
+
         case XSLDBG_MSG_THREAD_STOP:
         case XSLDBG_MSG_THREAD_DEAD:
-            threadStatus = type;
+	  xslDebugStatus = DEBUG_QUIT;
+	  threadStatus = type;
             break;
 
         default:
@@ -97,7 +104,7 @@ setThreadStatus(XsldbgMessageEnum type)
 
 /* Is input ready yet */
 int
-getInputReady()
+getInputReady(void)
 {
     return inputReady;
 }
@@ -107,4 +114,41 @@ void
 setInputReady(int value)
 {
     inputReady = value;
+}
+
+
+
+int notifyListStart(XsldbgMessageEnum type)
+{
+  int result = 0;
+  msgList = arrayListNew(10, NULL);
+  notifyList = (notifyMessageListPtr)xmlMalloc(sizeof(notifyMessageList));
+  if (notifyList && msgList){    
+    notifyList->type = type;
+    notifyList->list = msgList;
+    result++;
+  }
+    
+  return result;
+}
+
+int notifyListQueue(const void *data)
+{
+  int result = 0;
+  if (msgList){
+    arrayListAdd(msgList, (void*)data);
+    result++;
+  }
+  return result;
+}
+  
+
+int notifyListSend(void)
+{
+  int result = 0;
+  if (notifyList && msgList){
+    notifyXsldbgApp(XSLDBG_MSG_LIST, notifyList);
+    result++;
+  }
+  return result;
 }

@@ -19,13 +19,14 @@
  #define XSLDBGMSG_H
 
 #include <libxml/tree.h> /* needed for the definition of xmlChar */
+#include <libxsldbg/arraylist.h>
 
  typedef enum {
 	 /* thread status */
    XSLDBG_MSG_THREAD_NOTUSED,    /* 0:  Thread are not to be used*/
    XSLDBG_MSG_THREAD_INIT,	  /* 1: The xsldbg thread is initializing */
    XSLDBG_MSG_THREAD_RUN,	 /* 2: The xsldbg thread is running */
-   XSLDBG_MSG_THREAD_STOP,	 /* 3: The xsldbg thread is abou to die */
+   XSLDBG_MSG_THREAD_STOP,	 /* 3: The xsldbg thread is about to die */
    XSLDBG_MSG_THREAD_DEAD,       /* 4: The xsldbg thread died */
 
 	 /* input status ( once thread is running) */		
@@ -34,20 +35,35 @@
    XSLDBG_MSG_PROCESSING_INPUT,  /* 7: Processing user's request*/
 
 	 /* provide more informatiom about state of xsldbg (optional)*/	
-   XSLDBG_MSG_PROCESSING_RESULT,  /* 8: An error occured performing
-				    												requested command */
-   XSLDBG_MSG_LINE_CHANGED,	     /* 9: Changed to new line number ie a step */
+   XSLDBG_MSG_PROCESSING_RESULT,  /* 8: An error occured performing command
+				     requested command */
+   XSLDBG_MSG_LINE_CHANGED,	     /* 9: Changed to new line number 
+					ie a step */
    XSLDBG_MSG_FILE_CHANGED,      /* 10: Loaded source/data file */
-   XSLDBG_MSG_BREAKPOINT_CHANGED, /* 11: Response to a showbreak command */	
+   XSLDBG_MSG_BREAKPOINT_CHANGED, /* 11: Response to a showbreak command */
    XSLDBG_MSG_PARAMETER_CHANGED,   /* 12: Response to showparam command */
    XSLDBG_MSG_TEXTOUT,              /* 13 : Free form text from xsldg */
-   XSLDBG_MSG_FILEOUT,              /* 14 : Free form text in file from xsldg */
-   XSLDBG_MSG_LOCALVAR_CHANGED,   /* 15 : Local variable */
-   XSLDBG_MSG_GLOBALVAR_CHANGED,   /* 16 : Global variable */  
-   XSLDBG_MSG_TEMPLATE_CHANGED,    /* 17 : template details*/
-   XSLDBG_MSG_SOURCE_CHANGED,       /* 18 : a normal stylesheet */ 
-   XSLDBG_MSG_INCLUDED_SOURCE_CHANGED,  /* 19: xmlNodeptr of a included stylesheet */
-   XSLDBG_MSG_CALLSTACK_CHANGED         /* 20: a item on th call stack */
+   XSLDBG_MSG_FILEOUT,              /* 14 : Response to cat commmand, ie
+				       Free form text in file */
+   XSLDBG_MSG_LOCALVAR_CHANGED,   /* 15 : Response to locals command ie a 
+				     local variable */
+   XSLDBG_MSG_GLOBALVAR_CHANGED,   /* 16 : Response to globals command 
+				      ie a global variable */  
+   XSLDBG_MSG_TEMPLATE_CHANGED,    /* 17 : Response to templates commmand 
+				      ie template details*/
+   XSLDBG_MSG_SOURCE_CHANGED,       /* 18 : Response to stylesheets command,
+				       a normal stylesheet */ 
+   XSLDBG_MSG_INCLUDED_SOURCE_CHANGED,  /* 19: Response to stylesheets 
+					   command, a xmlNodeptr of 
+					   a included stylesheet */
+   XSLDBG_MSG_CALLSTACK_CHANGED,        /* 20: Response to where command,
+					    ie a item on the call stack */
+   XSLDBG_MSG_ENTITIY_CHANGED,            /* 21: Response to entities 
+					     command */
+   XSLDBG_MSG_RESOLVE_CHANGE,         /* 22: Response to system or
+				      public command */
+   XSLDBG_MSG_LIST                   /* 23 : As list of messages  */
+
 } XsldbgMessageEnum;
 
 
@@ -61,7 +77,7 @@ typedef enum {
 
 
 /**
- * Notify the KPart that something happened to the xsldbg thread
+ * Notify the application that something happened to the xsldbg thread
  *
  * @param type : A valid XsldbgMessageEnum
  *
@@ -75,17 +91,15 @@ typedef enum {
  * XSLDBG_MSG_THREAD_STOP,		    not used
  * XSLDBG_MSG_THREAD_DEAD,    	     	    not used
  * XSLDBG_MSG_AWAITING_INPUT, 		    not used
- * XSLDBG_MSG_READ_INPUT,		A volitile value of the char* for user input
+ * XSLDBG_MSG_READ_INPUT,		A value of the char* for user input
  * XSLDBG_MSG_PROCESSING_INPUT,  	    not used
- * XSLDBG_MSG_PROCESSING_RESULT,      A volatile value of type xsldbgErrorMsgPtr
- * XSLDBG_MSG_LINE_CHANGED            Is non-NULL if reached breakpoint otherwise 
- *                                         just change in line number of displayed source/data
+ * XSLDBG_MSG_PROCESSING_RESULT,      A value of type xsldbgErrorMsgPtr
+ * XSLDBG_MSG_LINE_CHANGED            Is non-NULL if reached breakpoint 
+ *                                      otherwise just change in line number 
+ *                                      of displayed source/data
  * XSLDBG_MSG_FILE_CHANGED,      		not used
- * XSLDBG_MSG_BREAKPOINT_CHANGED      A volatile xslBreakPointPtr of the break point
- *	                                    changed. If NULL then one or more break points have
- *	                                    changed
- * XSLDBG_MSG_PARAMETER_CHANGED     A volatile ParameterItemPtr of libxslt pameter that changed.
- *                                   If NULL then one or more break points have changed
+ * XSLDBG_MSG_BREAKPOINT_CHANGED      A xslBreakPointPtr of the breakpoint
+ * XSLDBG_MSG_PARAMETER_CHANGED     A ParameterItemPtr of libxslt pameter.
  * XSLDBG_MSG_TEXTOUT               A char * to buffer for text output 
  * XSLDBG_MSG_FILEOUT               A FILE * for text to output
  * XSLDBG_MSG_LOCALVAR_CHANGED,     A local variable of type xsltStackElemPtr
@@ -94,13 +108,21 @@ typedef enum {
  * XSLDBG_MSG_SOURCE_CHANGED,           A xsltStylesheetPtr of a normal stylesheet
  * XSLDBG_MSG_INCLUDED_SOURCE_CHANGED  A xmlNodePtr of a included stylsheet 
  * XSLDBG_MSG_CALLSTACK_CHANGED        A xslCallPointPtr of a call stack item
+ * XSLDBG_MSG_ENTITIY_CHANGED           A const entityInfoPtr 
+ *                                        for the included entity
+ * XSLDBG_MSG_RESOLVE_CHANGE           A xmlChar* of URI that 
+ *                                        SystemID or PublicID resolves to 
+ * XSLDBG_MSG_LIST                     A notifyMessageListPtr
  *
  *
  * Legend :
  *	        not used  :- value may be NULL but must not be used
- *          volatile  :- value is only guaranteed to be valid for the life the call to
- *                       this function. ie make a NEW copy of value if needed for longer
- *                       than that.
+ * 
+ * All values are to treated as volitile and are only guaranteed 
+ *     to be valid for the life of the notification messages. ie make a 
+ *       NEW copy of value if needed for longer  than that.
+ *  Unless stated otherwise, if reponse can return a value and the value is
+ *     NULL then that indicates the start of a list of values
  *																
  *<pre>
  * @returns 1 on sucess
@@ -117,6 +139,14 @@ struct _xsldbgErrorMsg {
   xmlChar *messagefileName; /* used when send large chunks of data  */
 }; 
 
+
+typedef struct _notifyMessageList notifyMessageList;
+typedef notifyMessageList * notifyMessageListPtr;
+struct _notifyMessageList{
+  XsldbgMessageEnum type;
+  ArrayListPtr list;
+};
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -127,6 +157,21 @@ extern "C" {
 			  XsldbgCommandStateEnum commandState, const char *text);
 
  int notifyTextXsldbgApp(XsldbgMessageEnum type, const char *text);
+
+
+  /* The following functions implemented in xsldbgthread.c */
+  int notifyListStart(XsldbgMessageEnum type);
+
+  /* Data must be valid for until the next notifyListStart.
+    Memory pointed to by @data will not be freed. Added @data items
+    queued to list must be of the same data type as required by the
+    XsldbgMessageEnum used with the matching notifyListSend */
+ int notifyListQueue(const void *data);
+  
+  /* The notified application is responsible for free memory used
+   by the ArrayList and notifyMessageList of notify message */
+  int notifyListSend(void);
+  
 
 #ifdef __cplusplus
 }

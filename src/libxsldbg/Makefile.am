@@ -44,6 +44,7 @@ libxsldbg_la_SOURCES = \
 	template_cmds.c		\
 	nodeview_cmds.c		\
 	os_cmds.c		\
+	file_cmds.c		\
 	param_cmds.c		\
 	trace_cmds.c		\
 	search_cmds.c		\
@@ -68,10 +69,12 @@ libxsldbg_la_SOURCES = \
 	template_cmds.c		\
 	nodeview_cmds.c		\
 	os_cmds.c		\
+	file_cmds.c		\
 	param_cmds.c		\
 	trace_cmds.c		\
 	search_cmds.c		\
-	variable_cmds.c		
+	variable_cmds.c		\
+	xsldbgthread.c
 endif
 
 
@@ -91,6 +94,7 @@ SOURCES = \
 	template_cmds.c		\
 	nodeview_cmds.c		\
 	os_cmds.c		\
+	file_cmds.c		\
 	param_cmds.c		\
 	trace_cmds.c		\
 	search_cmds.c		\

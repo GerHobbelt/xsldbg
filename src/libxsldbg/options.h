@@ -62,10 +62,13 @@ extern "C" {
         OPTIONS_REPEAT,         /* The number of times to repeat */
         OPTIONS_TRACE,          /* Trace execution */
         OPTIONS_WALK_SPEED,     /* How fast do we walk through code */
+	OPTIONS_CATALOGS,        /* Get the catalogs from SGML_CATALOG_FILES and
+				  store it in OPTIONS_CATALOG_NAMES */
         OPTIONS_VERBOSE,        /* Be verbose with messages */
         OPTIONS_OUTPUT_FILE_NAME = 520, /* what is the output file name */
         OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */
         OPTIONS_DOCS_PATH,      /* path of xsldbg's documentation */
+	OPTIONS_CATALOG_NAMES,   /* the names of the catalogs to use*/
         OPTIONS_DATA_FILE_NAME  /* xml data file to use */
     } OptionTypeEnum;
 
@@ -114,6 +117,7 @@ extern "C" {
         OPTIONS_REPEAT,         /* The number of times to repeat */
         OPTIONS_TRACE,          /* Trace execution */
         OPTIONS_WALK_SPEED,     /* How fast do we walk through code */
+	OPTIONS_CATALOGS,        /* Use the catlogs from SGML_CATALOG_FILES */
         OPTIONS_VERBOSE,        /* Be verbose with messages */
         OPTIONS_OUTPUT_FILE_NAME = 550, /* what is the output file name */
         OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */
@@ -373,6 +377,12 @@ extern "C" {
     const xmlChar *getStringOption(OptionTypeEnum optionType);
 
 
+  /**
+   * copyVolitleOptions:
+   *
+   * Copy volitile options to the working area for xsldbg
+   */
+  void copyVolitleOptions(void);
 
 /* ---------------------------------------------
           Parameter related options 

@@ -24,7 +24,7 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <libxml/xmlerror.h>
-#include <libxslt/xsltutils.h>
+#include <libxsldbg/xslbreakpoint.h>
 
 #include <libxsldbg/xsldbgmsg.h>
 #include <libxsldbg/xsldbgthread.h>
@@ -103,15 +103,21 @@ xsldbgThreadInit(void)
 }
 
 
-/* free that memory !*/
+/* tell the thread to stop and free that memory !*/
 void
 xsldbgThreadFree(void)
 {
   fprintf(stderr, "xsldbgThreadFree()\n");
     if (getThreadStatus() != XSLDBG_MSG_THREAD_DEAD)
     {
-    	fprintf(stderr, "Warning killing xsldbg thread\n");
-       	setThreadStatus(XSLDBG_MSG_THREAD_STOP);    	
+      int counter;
+      fprintf(stderr, "Killing xsldbg thread\n");
+      setThreadStatus(XSLDBG_MSG_THREAD_STOP);    	
+      for (counter = 0; counter < 11; counter++){
+	if (getThreadStatus() == XSLDBG_MSG_THREAD_DEAD)
+	  break;
+	usleep(250000); /*guess that it will take at most 2.5 seconds to stop */
+      }
     }
    	
 }
@@ -201,9 +207,9 @@ xslDbgShellReadline(xmlChar * prompt)
       usleep(10000);
       /* have we been told to die */
       if (getThreadStatus() ==  XSLDBG_MSG_THREAD_STOP){
-				xsldbgFree();
-				fprintf(stderr, "Killing of thread suceeded\n");
-				pthread_exit(NULL);
+	fprintf(stderr, "About to stop thread\n");
+	xslDebugStatus = DEBUG_QUIT;
+	return NULL;
       }
     }
 
@@ -285,19 +291,20 @@ xsldbgThreadMain(void *data)
   }
 
     setThreadStatus(XSLDBG_MSG_THREAD_RUN);
+    setInputStatus(XSLDBG_MSG_AWAITING_INPUT);
     fprintf(stderr, "Starting thread\n");
 
     /* call the "main of xsldbg" found in debugXSL.c */
     xsldbgMain(defaultArgc, defaultArgv);
     fprintf(stderr, "Stopping thread\n");
-    
-    setThreadStatus(XSLDBG_MSG_THREAD_STOP);
-    notifyXsldbgApp(XSLDBG_MSG_THREAD_STOP, NULL);
-    
-
+         
   for (i = 0; i < defaultArgc; i++){
     xmlFree(defaultArgv[i]);
   }
+
+    setThreadStatus(XSLDBG_MSG_THREAD_DEAD);
+    setInputStatus(XSLDBG_MSG_PROCESSING_INPUT);
+    notifyXsldbgApp(XSLDBG_MSG_THREAD_DEAD, NULL);
     return NULL;
 }
 

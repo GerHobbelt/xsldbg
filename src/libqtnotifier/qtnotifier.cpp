@@ -64,7 +64,6 @@ void QTNotifier::connectNotifier(QObject *listener){
 
 void QTNotifier::doNotify(XsldbgMessageEnum type, const void *data)
 {
-  /*	qDebug("qtnotifer::notifyXsldbgApp");	*/
 	emit notifyXsldbgApp(type, data);
 }
 

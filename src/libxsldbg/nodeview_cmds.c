@@ -295,7 +295,7 @@ xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
                       void *data ATTRIBUTE_UNUSED, xmlChar * name)
 {
   if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
-    notifyXsldbgApp(XSLDBG_MSG_GLOBALVAR_CHANGED, payload);
+    notifyListQueue(payload);
   }else{
     if (varCount)
         xsltGenericError(xsltGenericErrorContext, ", %s", name);
@@ -338,9 +338,13 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
         if (type == DEBUG_GLOBAL_VAR) {
             if (styleCtxt->globalVars) {
 	      if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
-		notifyXsldbgApp(XSLDBG_MSG_GLOBALVAR_CHANGED, NULL);
-	      }
-	      /* list global variables */
+		notifyListStart(XSLDBG_MSG_GLOBALVAR_CHANGED);		
+		/* list global variables */
+                xmlHashScan(styleCtxt->globalVars, xslDbgShellPrintNames,
+                            NULL);
+		notifyListSend();
+	      }else
+		/* list global variables */
                 xmlHashScan(styleCtxt->globalVars, xslDbgShellPrintNames,
                             NULL);
                 result++;
@@ -355,11 +359,12 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
                 xsltStackElemPtr item =
                     styleCtxt->varsTab[styleCtxt->varsBase];
 		if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
-		  notifyXsldbgApp(XSLDBG_MSG_LOCALVAR_CHANGED, NULL);
+		  notifyListStart(XSLDBG_MSG_LOCALVAR_CHANGED);
 		  while (item) {
-		    notifyXsldbgApp(XSLDBG_MSG_LOCALVAR_CHANGED, item);
+		    notifyListQueue(item);
                     item = item->next;
 		  }		  
+		  notifyListSend();
 		}else{
 		  xsltGenericError(xsltGenericErrorContext,
 				   "\nLocal variables found: ");

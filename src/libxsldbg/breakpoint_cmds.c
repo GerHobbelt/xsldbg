@@ -657,8 +657,7 @@ xslDbgPrintBreakPoint(void *payload, void *data ATTRIBUTE_UNUSED,
 
     if (payload) {
       if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
-        notifyXsldbgApp(XSLDBG_MSG_BREAKPOINT_CHANGED,
-                        (xslBreakPointPtr) payload);
+	notifyListQueue(payload);
       }else{
         printCount++;
         xsltGenericError(xsltGenericErrorContext, " ");

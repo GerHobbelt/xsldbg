@@ -37,6 +37,7 @@
 #include "files.h"
 #include "xslbreakpoint.h"
 #include "debugXSL.h"
+#include "xsldbgmsg.h"
 
 /* need to setup catch of SIGINT */
 #include <signal.h>
@@ -75,9 +76,9 @@
 #ifdef LIBXML_XINCLUDE_ENABLED
 #include <libxml/xinclude.h>
 #endif
-#ifdef LIBXML_CATALOG_ENABLED
+
 #include <libxml/catalog.h>
-#endif
+
 #include <libxml/parserInternals.h>
 
 #include <libxslt/xslt.h>
@@ -182,7 +183,7 @@ void
  *  running as a thread otherwise send to stderr
  */
 void
-xsldbgGenericErrorFunc(void *ctx, const char *msg, ...);
+  xsldbgGenericErrorFunc(void *ctx, const char *msg, ...);
 
 
 /* ------------------------------------- 
@@ -215,6 +216,7 @@ startTimer(void)
 static void
 endTimer(const char *format, ...)
 {
+    char timerBuffer[400];
     long msec;
     va_list ap;
 
@@ -227,8 +229,9 @@ endTimer(const char *format, ...)
 #error "endTimer required stdarg functions"
 #endif
     va_start(ap, format);
-    vfprintf(stderr, format, ap);
+    vsnprintf(timerBuffer, sizeof(timerBuffer), format, ap);
     va_end(ap);
+    xsltGenericError(xsltGenericErrorContext, "%s", timerBuffer);
 
     xsltGenericError(xsltGenericErrorContext, " took %ld ms\n", msec);
 }
@@ -294,6 +297,35 @@ endTimer(char *format, ...)
 }
 #endif
 
+void appendToFile(FILE * sourceFile, const xmlChar * destFileName);
+
+/**
+ * Append the data in @sourceFile to file associated with @destFileName
+ */
+void
+appendToFile(FILE * sourceFile, const xmlChar * destFileName)
+{
+    char buffer[500];
+    FILE *destFile = NULL;
+    size_t charsRead = sizeof(buffer);
+
+    if (!sourceFile || !destFileName)
+        return;
+
+    fflush(sourceFile);
+    rewind(sourceFile);
+
+    destFile = fopen(destFileName, "a");
+    if (destFile) {
+        while (!feof(sourceFile) && (charsRead == sizeof(buffer))) {
+            charsRead =
+                fread(buffer, sizeof(char), sizeof(buffer), sourceFile);
+            fwrite(buffer, sizeof(char), charsRead, destFile);
+        }
+        fclose(destFile);
+    }
+}
+
 static void
 xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
 {
@@ -327,9 +359,25 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
         }
     }
 #endif
-    if (isOptionEnabled(OPTIONS_TIMING))
+    if (isOptionEnabled(OPTIONS_TIMING) ||
+        isOptionEnabled(OPTIONS_PROFILING))
         startTimer();
-    if (getStringOption(OPTIONS_OUTPUT_FILE_NAME) == NULL) {
+    if ((getStringOption(OPTIONS_OUTPUT_FILE_NAME) == NULL) ||
+        isOptionEnabled(OPTIONS_SHELL)) {
+        FILE *tempFile = NULL;
+
+        if (getStringOption(OPTIONS_OUTPUT_FILE_NAME) != NULL) {
+            tempFile = fopen("__xsldbg_temp2_txt", "w+");
+            if (!tempFile) {
+                xsltGenericError(xsltGenericErrorContext,
+                                 "Unable to save temporary results to %s\n",
+                                 "__xsldbg_temp2_txt");
+            }else{
+	      fprintf(tempFile, "----------------------------------------\n");
+	      fprintf(tempFile, " Extra information provided by libxslt\n" );
+	      fprintf(tempFile, "----------------------------------------\n");
+	    }
+        }
         if (getIntOption(OPTIONS_REPEAT)) {
             int j;
 
@@ -340,7 +388,10 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
             }
         }
         if (isOptionEnabled(OPTIONS_PROFILING)) {
-            res = xsltProfileStylesheet(cur, doc, params, stderr);
+            if (tempFile) {
+                res = xsltProfileStylesheet(cur, doc, params, tempFile);
+            } else
+                res = xsltProfileStylesheet(cur, doc, params, stderr);
         } else {
             res = xsltApplyStylesheet(cur, doc, params);
         }
@@ -354,29 +405,47 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
         if (res == NULL) {
             xsltGenericError(xsltGenericErrorContext, "no result for %s\n",
                              getStringOption(OPTIONS_OUTPUT_FILE_NAME));
+            if (tempFile)
+                fclose(tempFile);
             return;
         }
         if (isOptionEnabled(OPTIONS_NOOUT)) {
             xmlFreeDoc(res);
+            if (tempFile)
+                fclose(tempFile);
             return;
         }
 #ifdef LIBXML_DEBUG_ENABLED
-        if (isOptionEnabled(OPTIONS_DEBUG))
-            xmlDebugDumpDocument(stdout, res);
-        else {
+        if (isOptionEnabled(OPTIONS_DEBUG)) {
+            if (getStringOption(OPTIONS_OUTPUT_FILE_NAME) == NULL)
+                xmlDebugDumpDocument(stdout, res);
+            else {
+                FILE *outputFile =
+                    fopen(getStringOption(OPTIONS_OUTPUT_FILE_NAME), "w");
+                if (outputFile) {
+                    xmlDebugDumpDocument(outputFile, res);
+                    fclose(outputFile);
+                }else{
+		  xsltGenericError(xsltGenericErrorContext,
+				   "Unable to dump results to %s\n",
+				   getStringOption(OPTIONS_OUTPUT_FILE_NAME));
+		}
+		  
+            }
+        } else {
 #endif
             if (cur->methodURI == NULL) {
                 if (isOptionEnabled(OPTIONS_TIMING))
                     startTimer();
                 if (xslDebugStatus != DEBUG_QUIT) {
                     if (terminalIO == NULL) {
-                        if (getStringOption(OPTIONS_OUTPUT_FILE_NAME) ==
-                            NULL)
+                        if (getStringOption(OPTIONS_OUTPUT_FILE_NAME) == NULL)
                             xsltSaveResultToFile(stdout, res, cur);
-                        else
+                        else {
                             xsltSaveResultToFilename(getStringOption
                                                      (OPTIONS_OUTPUT_FILE_NAME),
                                                      res, cur, 0);
+                        }
                     } else
                         xsltSaveResultToFile(terminalIO, res, cur);
                 }
@@ -411,6 +480,12 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
 #endif
 
         xmlFreeDoc(res);
+        if (tempFile) {
+            appendToFile(tempFile,
+                         getStringOption(OPTIONS_OUTPUT_FILE_NAME));
+            fclose(tempFile);
+        }
+
     } else {
         xsltRunStylesheet(cur, doc, params, (char *)
                           getStringOption(OPTIONS_OUTPUT_FILE_NAME), NULL,
@@ -418,6 +493,7 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
         if (isOptionEnabled(OPTIONS_TIMING))
             endTimer("Running stylesheet and saving result");
     }
+
 }
 
 
@@ -504,13 +580,13 @@ xsldbgMain(int argc, char **argv)
     LIBXML_TEST_VERSION xmlLineNumbersDefault(1);
 
     if (!xsldbgInit()) {
-        fprintf(stderr, 
-		"Internal error, maybe ran out of memory aborting xsldbg\n");
+        fprintf(stderr,
+                "Internal error, maybe ran out of memory aborting xsldbg\n");
         xsldbgFree();
         xsltCleanupGlobals();
         xmlCleanupParser();
         xmlMemoryDump();
-        exit(1);
+        return (1);
     }
 
     if (argc == 1)
@@ -640,27 +716,11 @@ xsldbgMain(int argc, char **argv)
         } else if ((!strcmp(argv[i], "-nonet")) ||
                    (!strcmp(argv[i], "--nonet"))) {
             xmlSetExternalEntityLoader(xmlNoNetExternalEntityLoader);
-#ifdef LIBXML_CATALOG_ENABLED
         } else if ((!strcmp(argv[i], "-catalogs")) ||
                    (!strcmp(argv[i], "--catalogs"))) {
-            const char *catalogs;
 
-#ifdef __riscos
-            catalogs = getenv("SGML$CatalogFiles");
-#else
-            catalogs = getenv("SGML_CATALOG_FILES");
-#endif
-            if (catalogs == NULL) {
-#ifdef __riscos
-                xsltGenericError(xsltGenericErrorContext,
-                                 "Variable SGML$CatalogFiles not set\n");
-#else
-                xsltGenericError(xsltGenericErrorContext,
-                                 "Variable $SGML_CATALOG_FILES not set\n");
-#endif
-                argv[i] = NULL;
-#endif
-            }
+            enableOption(OPTIONS_CATALOGS, 1);
+            argv[i] = NULL;
 #ifdef LIBXML_XINCLUDE_ENABLED
         } else if ((!strcmp(argv[i], "-xinclude")) ||
                    (!strcmp(argv[i], "--xinclude"))) {
@@ -668,7 +728,6 @@ xsldbgMain(int argc, char **argv)
                 result = enableOption(OPTIONS_XINCLUDE, 1);
                 argv[i] = NULL;
             }
-            xsltSetXIncludeDefault(1);
 #endif
         } else if ((!strcmp(argv[i], "-param")) ||
                    (!strcmp(argv[i], "--param"))) {
@@ -754,6 +813,7 @@ xsldbgMain(int argc, char **argv)
     if (!isOptionEnabled(OPTIONS_SHELL)) {      /* excecute stylesheet (ie no debugging) */
         xslDebugStatus = DEBUG_NONE;
     } else {
+        xslDebugStatus = DEBUG_STOP;
         xsltGenericError(xsltGenericErrorContext, "XSLDBG %s\n", VERSION);
     }
 
@@ -764,6 +824,12 @@ xsldbgMain(int argc, char **argv)
         showPrompt = 0;
         cur = NULL;
         doc = NULL;
+        arrayListEmpty(filesEntityList());
+        filesLoadCatalogs();
+        xsltSetXIncludeDefault(isOptionEnabled(OPTIONS_XINCLUDE));
+
+        /* copy the volitile options over to xsldbg */
+        copyVolitleOptions();
 
         if (isOptionEnabled(OPTIONS_SHELL)) {
             debugGotControl(0);
@@ -878,7 +944,7 @@ xsldbgMain(int argc, char **argv)
                 xmlNewNode(NULL, (xmlChar *) "xsldbg_default_node");
             if (!tempDoc || !tempNode) {
                 xsldbgFree();
-                exit(1);
+                return (1);
             }
             xmlAddChild((xmlNodePtr) tempDoc, tempNode);
 
@@ -1181,7 +1247,9 @@ catchSigTerm(int value ATTRIBUTE_UNUSED)
 
 
 typedef void (*sighandler_t) (int);
-sighandler_t oldHandler;
+static sighandler_t oldHandler;
+
+static int initialized = 0;
 
 /**
  * xsldbgInit:
@@ -1192,49 +1260,59 @@ sighandler_t oldHandler;
 int
 xsldbgInit()
 {
-    static int initialized = 0;
+
     int result = 0;
 
     if (!initialized) {
-        debugInit();
-        result = filesInit();
-        if (result)
-            result = optionsInit();
-        /* must start with tracing off */
-        setIntOption(OPTIONS_TRACE, TRACE_OFF);
-        if (result)
-            result = breakPointInit();
-        if (result)
-            result = searchInit();
+        if (!debugInit()) {
+            xsltGenericError(xsltGenericErrorContext,
+                             "Init of debug module failed\n");
+            return result;
+        }
+        if (!filesInit()) {
+            xsltGenericError(xsltGenericErrorContext,
+                             "Init of files module failed\n");
+            return result;
+        }
 
-	/* set up the parser */
-	xmlInitParser();
-	xmlSetGenericErrorFunc(0, xsldbgGenericErrorFunc);	
-	xsltSetGenericErrorFunc(0, xsldbgGenericErrorFunc);	
+        if (!optionsInit()) {
+            xsltGenericError(xsltGenericErrorContext,
+                             "Init of options module failed\n");
+            return result;
+        }
+
+        if (!searchInit()) {
+            xsltGenericError(xsltGenericErrorContext,
+                             "Init of search module failed\n");
+            return result;
+        }
 
 
+
+        /* set up the parser */
+        xmlInitParser();
+        xmlSetGenericErrorFunc(0, xsldbgGenericErrorFunc);
+        xsltSetGenericErrorFunc(0, xsldbgGenericErrorFunc);
+
+        if (getThreadStatus() != XSLDBG_MSG_THREAD_NOTUSED) {
+            initialized = 1;
+            return 1;           /* this is all we need to do when running as a thread */
+        }
 #ifndef WIN32
         /* catch SIGINT */
         oldHandler = signal(SIGINT, catchSigInt);
 #else
-        if (result) {
-            BOOL bSuccess = SetConsoleCtrlHandler(handler_routine, TRUE);
+        if (SetConsoleCtrlHandler(handler_routine, TRUE) != TRUE)
+            return result;
+#endif
 
-            if (bSuccess == TRUE)
-                result++;
-            else
-                result = 0;
-        }
-#endif
-        if (result) {
 #ifndef WIN32
-            /* catch SIGTIN tty input available fro child */
-            signal(SIGTERM, catchSigTerm);
+        /* catch SIGTIN tty input available fro child */
+        signal(SIGTERM, catchSigTerm);
 #endif
-            initialized = 1;
-        }
+        initialized = 1;
     }
-    return result;
+    return 1;
 }
 
 /**
@@ -1255,6 +1333,7 @@ xsldbgFree()
 #else
     SetConsoleCtrlHandler(handler_routine, FALSE);
 #endif
+    initialized = 0;
 
 }
 
@@ -1271,15 +1350,16 @@ char msgBuffer[4000];
  *  running as a thread otherwise send to stderr
  */
 void
-xsldbgGenericErrorFunc(void *ctx, const char *msg, ...) {
+xsldbgGenericErrorFunc(void *ctx, const char *msg, ...)
+{
     va_list args;
 
     va_start(args, msg);
-    if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
-      vsnprintf(msgBuffer, sizeof(msgBuffer), msg, args);
-      notifyTextXsldbgApp(XSLDBG_MSG_TEXTOUT, msgBuffer);
-    }else{
-      vfprintf(stderr, msg, args);
+    if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
+        vsnprintf(msgBuffer, sizeof(msgBuffer), msg, args);
+        notifyTextXsldbgApp(XSLDBG_MSG_TEXTOUT, msgBuffer);
+    } else {
+        vfprintf(stderr, msg, args);
     }
     va_end(args);
 }

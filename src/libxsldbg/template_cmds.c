@@ -23,6 +23,7 @@
 #include "xsldbg.h"
 #include "debugXSL.h"
 #include "files.h"
+#include "xsldbgmsg.h"
 
 static int printCounter;        /* Dangerous name think of a better one */
 
@@ -108,7 +109,7 @@ xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
             } else {
                 *printCount = *printCount + 1;
                 if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
-		  notifyXsldbgApp(XSLDBG_MSG_TEMPLATE_CHANGED, templ);
+		  notifyListQueue(templ);
 		}else{
                 if (verbose)
                     xsltGenericError(xsltGenericErrorContext,
@@ -177,7 +178,7 @@ xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
     }
 
     if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
-      notifyXsldbgApp(XSLDBG_MSG_TEMPLATE_CHANGED, NULL);
+      notifyListStart(XSLDBG_MSG_TEMPLATE_CHANGED);
       while (curStyle) {
         templ = curStyle->templates;
         /* print them out in the order their in the file */
@@ -188,6 +189,7 @@ xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
         else
 	  curStyle = curStyle->imports;
       }
+      notifyListSend();
     }else{
       xsltGenericError(xsltGenericErrorContext, "\n");
       while (curStyle) {
@@ -289,7 +291,7 @@ xslDbgPrintStyleSheets(xmlChar * arg)
       walkStylesheets((xmlHashScanner) xslDbgShellPrintStylesheetsHelper,
 		      NULL, getStylesheet());
       walkIncludes((xmlHashScanner) xslDbgShellPrintStylesheetsHelper2,
-		   NULL, getStylesheet());
+		   NULL, getStylesheet());      
     }else{
       walkStylesheets((xmlHashScanner) xslDbgShellPrintStylesheetsHelper,
 		      NULL, getStylesheet());

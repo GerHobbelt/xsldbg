@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <libxml/entities.h>
 #include <libxml/tree.h>
+#include <libxml/catalog.h>
 
 #include "xsldbg.h"
 #include "debugXSL.h"
@@ -51,7 +52,7 @@ static xmlChar *stylePathName = NULL;
 static xmlChar *workingDirPath = NULL;
 
 
-static ArrayListPtr entityOffsetList = NULL;
+static ArrayListPtr entityNameList = NULL;
 
 /* -----------------------------------------
    Private function declarations for files.c
@@ -84,6 +85,14 @@ static void guessStylesheetHelper(void *payload, void *data,
 static void guessStylesheetHelper2(void *payload, void *data,
                                    xmlChar * name ATTRIBUTE_UNUSED);
 
+
+entityInfoPtr filesNewEntityInfo(const xmlChar* SystemID, 
+				 const xmlChar* PublicID);
+
+void filesFreeEntityInfo(entityInfoPtr info);
+
+void filesAddEntityName(const xmlChar *SystemID,
+			const xmlChar *PublicID);
 
 
 /* ------------------------------------- 
@@ -820,11 +829,12 @@ filesInit(void)
     topDocument = NULL;
     tempDocument = NULL;
     topStylesheet = NULL;
-    entityOffsetList = NULL;
+    entityNameList = arrayListNew(4, (freeItemFunc)filesFreeEntityInfo);
 #ifdef  HAVE_INCLUDE_FIX
     xmlSetEntityReferenceFunc(filesEntityRef);
 #endif
-    result++;                   /*  = (entityOffsetList != NULL); */
+    if (entityNameList != NULL)
+      result++;
     return result;
 }
 
@@ -860,9 +870,9 @@ filesFree(void)
 	workingDirPath = NULL;
     }
 
-    if (entityOffsetList){
-        arrayListFree(entityOffsetList);
-	entityOffsetList = NULL;
+    if (entityNameList){
+        arrayListFree(entityNameList);
+	entityNameList = NULL;
     }
 }
 
@@ -882,6 +892,68 @@ isSourceFile(xmlChar * fileName)
 }
 
 
+
+entityInfoPtr filesNewEntityInfo(const xmlChar* SystemID, 
+				 const xmlChar* PublicID){
+ 
+  entityInfoPtr result = (entityInfoPtr)xmlMalloc(sizeof(entityInfo));
+  if (result){
+    if (SystemID)
+      result->SystemID = xmlStrdup(SystemID);
+    else
+      result->SystemID = xmlStrdup("");
+
+    if (PublicID)
+      result->PublicID = xmlStrdup(PublicID);
+    else
+      result->PublicID = xmlStrdup("");
+  }
+  return result;
+}
+
+void filesFreeEntityInfo(entityInfoPtr info){
+  if (!info)
+    return;
+
+  if (info->SystemID)
+    xmlFree(info->SystemID);
+
+  if (info->PublicID)
+    xmlFree(info->PublicID);
+}
+
+/**
+ * filesAddEntityName:
+ * @name : is valid
+ *
+ * Add name to entity name list of know external entities if 
+ *  it doesn't already exist in list
+ */
+void filesAddEntityName(const xmlChar *SystemID, 
+			const xmlChar *PublicID)
+{
+  int entityIndex = 0;
+  xmlChar *name2;
+  entityInfoPtr tempItem;
+  if (!SystemID || !filesEntityList())
+    return;
+  
+  for (entityIndex = 0; 
+       entityIndex < arrayListCount(filesEntityList());
+       entityIndex++){
+	 tempItem = (entityInfoPtr)arrayListGet(filesEntityList(), 
+						entityIndex);
+	 if (tempItem &&  xmlStrEqual(SystemID,tempItem->SystemID)){
+	     /* name aready exits so don't add it */
+	     return;	   
+	 }
+
+  }
+  
+  tempItem = filesNewEntityInfo(SystemID, PublicID);
+  arrayListAdd(filesEntityList(), tempItem);
+}
+
 /**
  * filesEntityRef :
  * @uri : Is valid
@@ -900,31 +972,31 @@ filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode, xmlNodePtr lastNode)
         if (!firstNode)
             return;
 
-
-
         /* find the first XML_ELEMENT_NODE */
         while (firstNode->next && (firstNode->type != XML_ELEMENT_NODE))
             firstNode = firstNode->next;
 
         if (lastNode == NULL) {
-            xmlChar *uri = xmlStrdup(ent->SystemID);
-
-            if (uri) {
-                filesSetBaseUri(firstNode, uri);
-                xmlFree(uri);
-            }
+	  if (ent->SystemID) {
+	    if (ent->ExternalID)
+	      filesAddEntityName(ent->SystemID, ent->ExternalID);    	      
+	    else
+	      filesAddEntityName(ent->URI, "");
+	    filesSetBaseUri(firstNode, ent->URI);
+	  }
         } else {
-            xmlChar *uri = xmlStrdup(ent->SystemID);
+	  if (ent->SystemID) {
             xmlNodePtr node = firstNode;
-
-            if (uri) {
-                while (node) {
-                    filesSetBaseUri(node, uri);
+	    if (ent->ExternalID)
+	      filesAddEntityName(ent->SystemID, ent->ExternalID);
+	    else
+	      filesAddEntityName(ent->URI, "");
+	    while (node) {
+                    filesSetBaseUri(node, ent->URI);
                     node = node->next;
-                }
-                xmlFree(uri);
-            }
-        }
+	    }
+	  }
+	}
     }
 
 }
@@ -960,7 +1032,7 @@ filesSetBaseUri(xmlNodePtr node, const xmlChar * uri)
          * result++;
          * }
          */
-        xmlSetProp(node, BAD_CAST "xsldbg:uri", uri);
+        xmlNewProp(node, BAD_CAST "xsldbg:uri", uri);
     }
     return result;
 }
@@ -970,8 +1042,8 @@ filesSetBaseUri(xmlNodePtr node, const xmlChar * uri)
    * filesGetBaseUri:
    * @node : Is valid and has a doc parent
    * 
-   * Get the base uri for this node. Function is used when xml file
-   *    has external entities in its DTD
+   * Get a copy of the base uri for this node. Function is most usefull 
+   *  used when xml file  has external entities in its DTD
    * 
    * Returns the a copy of the base uri for this node,
    *         NULL otherwise
@@ -988,12 +1060,16 @@ filesGetBaseUri(xmlNodePtr node)
         /*
          * result =  xmlGetNsProp(node, BAD_CAST "uri", XSLDBG_XML_NAMESPACE);
          */
+      if (node->type == XML_ELEMENT_NODE){
         result = xmlGetProp(node, BAD_CAST "xsldbg:uri");
         if (result)
             break;
-        else
-            node = node->parent;
+        }
+        node = node->parent;
     }
+
+    if (!result && node->doc && node->doc->URL)
+      result = xmlStrdup(node->doc->URL);
 
     return result;
 }
@@ -1012,7 +1088,7 @@ FILE *
 filesCreateTempFile()
 {
 
-    FILE *file = fopen("xsldbg_tmp_file.txt", "w+");
+    FILE *file = fopen("__xsldbg_tmp_file_txt", "w+");
 
     if (file == NULL)
         xsltGenericError(xsltGenericErrorContext,
@@ -1020,3 +1096,62 @@ filesCreateTempFile()
     return file;
 }
 
+
+/**
+ * filesEntityList:
+ *
+ * Return the list entity names used for documents loaded
+ *
+ * Returns the list entity names used for documents loaded
+ */
+ArrayListPtr filesEntityList(){
+  return entityNameList;
+}
+
+
+extern int intVolitileOptions[OPTIONS_VERBOSE - OPTIONS_XINCLUDE + 1];
+
+/**
+ * filesLoadCatalogs:
+ *
+ * Load the catalogs specifed by OPTIONS_CATALOG_NAMES if 
+ *      OPTIONS_CATALOGS is enabled
+ * Returns 1 if sucessful
+ *         0 otherwise   
+ */
+int filesLoadCatalogs(void)
+{
+  int result = 0;
+  int catalogOptId = OPTIONS_CATALOGS - OPTIONS_XINCLUDE; 
+  const char *catalogs;
+
+  /* only reload catalogs if something has changed */
+  if (intVolitileOptions[catalogOptId] != 
+      isOptionEnabled(OPTIONS_CATALOGS)){
+    xmlCatalogCleanup();
+    if (intVolitileOptions[catalogOptId] != 0){
+      if (getStringOption(OPTIONS_CATALOG_NAMES) == NULL){
+#ifdef __riscos
+            catalogs = getenv("SGML$CatalogFiles");
+#else
+            catalogs = getenv("SGML_CATALOG_FILES");
+#endif
+            if (catalogs == NULL) {
+#ifdef __riscos
+                xsltGenericError(xsltGenericErrorContext,
+                                 "Variable SGML$CatalogFiles not set\n");
+#else
+                xsltGenericError(xsltGenericErrorContext,
+                                 "Variable $SGML_CATALOG_FILES not set\n");
+#endif
+		return result;
+	    }else
+	      setStringOption(OPTIONS_CATALOG_NAMES, catalogs);
+      }else
+	catalogs = getStringOption(OPTIONS_CATALOG_NAMES);
+      xmlLoadCatalogs(catalogs);    
+    }
+    result++;
+  }
+  return result;
+}

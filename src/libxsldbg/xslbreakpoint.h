@@ -39,6 +39,7 @@
 
 #include <libxml/tree.h>
 #include <libxslt/xsltInternals.h>
+#include <libxslt/xsltutils.h>
 #include <libxml/xpath.h>
 
 #ifdef __cplusplus

@@ -258,7 +258,7 @@ dropCall(void)
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
                          "dropCall failed invalid call stack:"
-                         " breakpoint.c");
+                         " dbgcallstack.c");
 #endif
         return;
     }
@@ -284,7 +284,7 @@ dropCall(void)
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
                          "dropCall failed "
-                         "no items on call stack : breakpoint.c");
+                         "no items on call stack : dbgcallstack.c");
 #endif
     }
 }
@@ -312,7 +312,7 @@ stepupToDepth(int depth)
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
                          "stepupToDepth failed invalid depth %d: "
-                         " breakpoint.c", depth);
+                         " dbgcallstack.c", depth);
 #endif
     }
     return result;
@@ -341,7 +341,7 @@ stepdownToDepth(int depth)
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
                          "stepdownToDepth failed invalid depth %d: "
-                         " breakpoint.c", depth);
+                         " dbgcallstack.c", depth);
 #endif
     }
     return result;
@@ -366,7 +366,7 @@ getCall(int depth)
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
                          "getCall failed invalid call stack:"
-                         " breakpoint.c");
+                         " dbgcallstack.c");
 #endif
         return result;
     }
@@ -374,7 +374,7 @@ getCall(int depth)
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
                          "getCall failed invalid call depth:"
-                         " breakpoint.c");
+                         " dbgcallstack.c");
 #endif
         return result;
     }
@@ -390,7 +390,7 @@ getCall(int depth)
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
                          "getCall failed invalid call depth:"
-                         " breakpoint.c");
+                         " dbgcallstack.c");
 #endif
     }
     return result;
@@ -423,6 +423,16 @@ callDepth(void)
 {
     xslCallPointPtr cur = callStackBot;
     int result = 0;
+
+    if (!callStackBot) {
+#ifdef WITH_XSLT_DEBUG_BREAKPOINTS
+        xsltGenericError(xsltGenericErrorContext,
+                         "calldepth failed invalid call stack:"
+                         " dbgcallstack.c");
+#endif
+        return result;
+    }
+
 
     while (cur->next) {
         result++;

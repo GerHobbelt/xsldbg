@@ -46,6 +46,47 @@ extern "C" {
 #define XSLDBG_XML_NAMESPACE \
     (const xmlChar *) "http://xsldbg.sourceforge.net/namespace"
 
+  typedef struct _entityInfo entityInfo;
+  typedef entityInfo *entityInfoPtr;
+  struct _entityInfo{
+    xmlChar *SystemID;
+    xmlChar *PublicID;
+  };
+
+/**
+ * xslDbgEntities:
+ * 
+ * Print list of entites found 
+ *
+ * Returns 1 on sucess,
+ *         0 otherwise
+ */
+int xslDbgEntities();
+
+
+/**
+ * xslDbgSystem:
+ * @arg : Is valid
+ * 
+ * Print what a system file @arg maps to via the current xml catalog
+ *
+ * Returns 1 on sucess,
+ *         0 otherwise
+ */
+  int xslDbgSystem(xmlChar *arg);
+
+/**
+ * xslDbgPublic:
+ * @arg : Is valid
+ * 
+ * Print what a public ID @arg maps to via the current xml catalog
+ *
+ * Returns 1 on sucess,
+ *         0 otherwise
+ */
+int xslDbgPublic(xmlChar *arg);
+
+
   /**
    * filesEntityRef :
    * @uri : Is valid
@@ -56,6 +97,15 @@ extern "C" {
    */
     void filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode,
                         xmlNodePtr lastNode);
+
+  /**
+   * filesEntityList:
+   *
+   * Return the list entity names used for documents loaded
+   *
+   * Returns the list entity names used for documents loaded
+   */
+  ArrayListPtr filesEntityList();
 
 
  /**
@@ -76,8 +126,8 @@ extern "C" {
    * filesGetBaseUri:
    * @node : Is valid and has a doc parent
    * 
-   * Get the base uri for this node. Function is used when xml file
-   *    has external entities in its DTD
+   * Get a copy of the base uri for this node. Function is most usefull 
+   *  used when xml file  has external entities in its DTD
    * 
    * Returns the a copy of the base uri for this node,
    *         NULL otherwise
@@ -96,6 +146,15 @@ extern "C" {
    */
     FILE *filesCreateTempFile();
 
+  /**
+   * filesLoadCatalogs:
+   *
+   * Load the catalogs specifed by OPTIONS_CATALOG_NAMES if 
+   *      OPTIONS_CATALOGS is enabled
+   * Returns 1 if sucessful
+   *         0 otherwise   
+   */
+  int filesLoadCatalogs(void);
 
 
 #ifndef USE_KDOC
