@@ -46,11 +46,29 @@ if test "x$prefix" = "xNONE"; then
 fi
 
 
-AC_ARG_WITH(html-dir, [  --with-html-dir=PATH path to installed docs ])
+dnl
+dnl Where are KDE and Qt
+dnl
+
+AC_ARG_WITH(qt-dir, [  --with-qt-dir=PATH path to Qt default uses ($QTDIR)],
+    QT_DIR=$with_qt_dir, QT_DIR='${QTDIR}')
+AC_SUBST(QT_DIR)
+
+AC_ARG_WITH(kde-dir, [  --with-kde-dir=PATH path to KDE default uses ($KDEDIR)],
+    KDE_DIR=$with_kde_dir, KDE_DIR='${KDEDIR}')
+AC_SUBST(KDE_DIR)
+
+AC_ARG_WITH(gnome-dir, [  --gnome-dir=PATH path to GNOME (/opt/gnome)],
+    GNOME_DIR=$with_gnome_dir, GNOME_DIR='/opt/gnome')
+AC_SUBST(GNOME_DIR)
+
 
 dnl
 dnl Specific dir for HTML output ?
 dnl
+
+AC_ARG_WITH(html-dir, [  --with-html-dir=PATH path to installed docs ])
+
 
 if test "x$with_html_dir" = "x" ; then
   HTML_DIR='$(prefix)/share/doc/packages'
@@ -59,23 +77,12 @@ else
 fi
 AC_SUBST(HTML_DIR)
 
-AC_ARG_WITH(kdedoc-prefix, [  --with-kdedoc-prefix=PATH path to installed docs normaly /opt/kde3])
-
-dnl
-dnl Specific dir for KDE docs output ?
-dnl
-
-if test "x$with_kdedoc_prefix" = "x" ; then
-  KDEDOC_PREFIX="$KDEDIR"
-else
-  KDEDOC_PREFIX=$with_kdedoc_prefix
-fi
-AC_SUBST(KDEDOC_PREFIX)
 
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE(xsldbg, ${VERSION})
 AM_MAINTAINER_MODE
 AC_DEFINE_UNQUOTED(TIMESTAMP, "$timestamp")
+TIMESTAMP="$timestamp"
 AC_SUBST(TIMESTAMP)
  
 AC_LANG_C
@@ -283,7 +290,7 @@ AC_ARG_ENABLE(xsldbgthread,
 		AC_MSG_ERROR(PThread library not found))
 
 		AC_MSG_RESULT(Checking for Qt library)
-	    	if test -f "${QTDIR}/include/qt.h"
+	    	if test -f "${QT_DIR}/include/qt.h"
 	    	then
 			AC_DEFINE(HAVE_QT)
 		    	haveqt="true"		

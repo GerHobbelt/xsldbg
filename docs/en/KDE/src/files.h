@@ -1,4 +1,3 @@
-
 /***************************************************************************
                           files.h  -  define file related functions
                              -------------------
@@ -15,14 +14,6 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  ***************************************************************************/
-
-
-
-
-
-
-
-
 /**
  * Provide a file support
  *
@@ -30,13 +21,8 @@
  *
  * @author Keith Isdale <k_isdale@tpg.com.au> 
  */
-
-
-
-
-
-
     extern FILE *terminalIO;
+
 
 
 
@@ -55,6 +41,12 @@
     /* Define the types of file names that we are intested in when creating
      * search results */
 
+
+
+
+
+
+
     /* keep kdoc happy */
     enum FilesSearchFileNameEnum {
         FILES_SEARCHINPUT,
@@ -68,10 +60,6 @@
   /*-----------------------------------------------------------
     General function for working with files
     -----------------------------------------------------------*/
-
-
-
-
   /**
    * Fixes the nodes from firstNode to lastNode so that debugging can occur
    *
@@ -83,11 +71,6 @@
 
     void filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode,
                         xmlNodePtr lastNode);
-
-
-
-
-
   /**
    * Return the list entity names used for documents loaded
    *
@@ -96,11 +79,6 @@
 
 
     arrayListPtr filesEntityList(void);
-
-
-
-
-
   /**
    * Set the base uri for this node. Function is used when xml file
    *    has external entities in its DTD
@@ -114,11 +92,6 @@
 
 
     int filesSetBaseUri(xmlNodePtr node, const xmlChar * uri);
-
-
-
-
-
   /**
    * Get a copy of the base uri for this node. Function is most usefull 
    *  used when xml file  has external entities in its DTD
@@ -131,11 +104,6 @@
 
 
     xmlChar *filesGetBaseUri(xmlNodePtr node);
-
-
-
-
-
   /**
    * Return the name of tempfile requested.
    * @param fleNumber : Number of temp file required
@@ -151,11 +119,6 @@
 
 
     const char *filesTempFileName(int fileNumber);
-
-
-
-
-
   /**
    * Load the catalogs specifed by OPTIONS_CATALOG_NAMES if 
    *      OPTIONS_CATALOGS is enabled
@@ -166,11 +129,6 @@
 
 
     int filesLoadCatalogs(void);
-
-
-
-
-
   /**
    * Return  A  string of converted @text
    *
@@ -181,11 +139,6 @@
 
 
     xmlChar *filesEncode(const xmlChar * text);
-
-
-
-
-
   /**
    * Return  A  string of converted @text
    *
@@ -196,11 +149,6 @@
 
 
     xmlChar *filesDecode(const xmlChar * text);
-
-
-
-
-
   /**
    * Opens encoding for all standard output to @p encoding. If  @p encoding 
    *        is NULL then close current encoding and use UTF-8 as output encoding
@@ -214,22 +162,12 @@
 
 
     int filesSetEncoding(const char *encoding);
-
-
-
-
     /* used by filesLoadXmlFile, filesFreeXmlFile functions */
     enum FileTypeEnum {
-        FILES_XMLFILE_TYPE = 100,       /* pick a unique starting point */
+        FILES_XMLFILE_TYPE = 100, /* pick a unique starting point */
         FILES_SOURCEFILE_TYPE,
         FILES_TEMPORARYFILE_TYPE
     };
-
-
-
-
-
-
   /**
    * Open communications to the terminal device @p device
    *
@@ -241,11 +179,6 @@
 
 
     int openTerminal(xmlChar * device);
-
-
-
-
-
   /**
    * Try to find a matching stylesheet name
    * Sets the values in @p searchinf depending on outcome of search
@@ -255,11 +188,6 @@
 
 
     void guessStylesheetName(searchInfoPtr searchInf);
-
-
-
-
-
   /**
    * Return the base path for the top stylesheet ie
    *        ie URL minus the actual file name
@@ -270,11 +198,6 @@
 
 
     xmlChar *stylePath(void);
-
-
-
-
-
   /** 
    * Return the working directory as set by changeDir function
    *
@@ -283,11 +206,6 @@
 
 
     xmlChar *workingPath(void);
-
-
-
-
-
   /**
    * Change working directory to path 
    *
@@ -300,11 +218,6 @@
 
 
     int changeDir(const xmlChar * path);
-
-
-
-
-
   /**
    * Load specified file type, freeing any memory previously used 
    *
@@ -317,11 +230,6 @@
 
 
     int filesLoadXmlFile(const xmlChar * path, FileTypeEnum fileType);
-
-
-
-
-
   /**
    * Free memory associated with the xml file 
    *
@@ -333,11 +241,6 @@
 
 
     int filesFreeXmlFile(FileTypeEnum fileType);
-
-
-
-
-
   /**
    * Return the topmost stylesheet 
    *
@@ -347,11 +250,6 @@
 
 
     xsltStylesheetPtr filesGetStylesheet(void);
-
-
-
-
-
   /** 
    * Return the current "temporary" document
    *
@@ -361,11 +259,6 @@
 
 
     xmlDocPtr filesGetTemporaryDoc(void);
-
-
-
-
-
   /** 
    * Return the main docment
    *
@@ -374,11 +267,6 @@
 
 
     xmlDocPtr filesGetMainDoc(void);
-
-
-
-
-
   /**
    * @returns 1 if stylesheet or its xml data file has been "flaged" as reloaded,
    *         0 otherwise
@@ -389,11 +277,6 @@
 
 
     int filesReloaded(int reloaded);
-
-
-
-
-
   /**
    * Initialize the file module
    *
@@ -403,22 +286,12 @@
 
 
     int filesInit(void);
-
-
-
-
-
   /**
    * Free memory used by file related structures
    */
 
 
     void filesFree(void);
-
-
-
-
-
   /**
    * Test if filename could be  a stylesheet 
    *
@@ -429,12 +302,6 @@
 
 
     int filesIsSourceFile(xmlChar * fileName);
-
-
-
-
-
-
   /**
    * Do a "more" like print of file specified by @fileName OR
    *   @file. If both are provided @file will be used. The content 
@@ -453,10 +320,6 @@
 
 
     int filesMoreFile(const xmlChar * fileName, FILE * file);
-
-
-
-
   /**
    * Get the base path to be used for storing search results
    *
@@ -465,12 +328,6 @@
 
 
     const xmlChar *filesSearchResultsPath(void);
-
-
-
-
-
-
   /**
    * Return A copy of the conversion of @uri to a file name
    *        that is suitable to be used with the fopen function.
@@ -488,11 +345,6 @@
 
 
   xmlChar *filesURItoFileName(const xmlChar* uri);
-
-
-
-
-
   /** 
    * Update the URL and  line number that we stoped at 
    *
@@ -501,12 +353,6 @@
 
 
     void xsldbgUpdateFileDetails(xmlNodePtr node);
-
-
-
-
-
-
   /**
    * What line number are we at 
    *
@@ -515,11 +361,6 @@
 
 
     int xsldbgLineNo(void);
-
-
-
-
-
   /**
    * What URL did we stop at
    *
@@ -533,11 +374,6 @@
   /*-----------------------------------------------------------
     Platform specific file functions
     -----------------------------------------------------------*/
-
-
-
-
-
   /**
    * Intialize the platform specific files module
    *
@@ -549,11 +385,6 @@
 
 
     int filesPlatformInit(void);
-
-
-
-
-
   /**
    * Free memory used by the platform specific files module
    *
@@ -563,12 +394,6 @@
 
 
     void filesPlatformFree(void);
-
-
-
-
-
-
   /**
    * Converts a fileName to an absolute path
    *          If operating system supports it a leading "~" in the fileName
@@ -583,12 +408,6 @@
 
 
     xmlChar *filesExpandName(const xmlChar * fileName);
-
-
-
-
-
-
   /**
    * Return a copy of the file name to use as an argument to searching
    *
@@ -600,6 +419,3 @@
 
 
     xmlChar *filesSearchFileName(FilesSearchFileNameEnum fileType);
-
-
-

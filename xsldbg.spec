@@ -1,8 +1,10 @@
 %define name xsldbg
-%define version 3.1.2
+%define version 3.1.4
 %define release 1_Suse8.0
 %define prefix /usr
 %define kdeprefix /opt/kde3
+%define qtprefix /usr/lib/qt3
+%define gnomeprefix /opt/gnome
 %define builddir $RPM_BUILD_DIR/%{name}-%{version}
 
 Summary: xsldbg XSLT debugging/execution 
@@ -35,20 +37,13 @@ rm -rf %{builddir}
 touch `find . -type f`
 
 %build
-export KDEDOC_PREFIX=%{kdeprefix}
-if [ -n "$KDEDIR" ]; then
-        export KDEDOC_PREFIX="$KDEDIR"
-fi
+automake
 CXXFLAGS="$RPM_OPT_FLAGS" CFLAGS="$RPM_OPT_FLAGS" ./configure \
-	--prefix=%{prefix} --enable-xsldbgthread --enable-kde-docs --with-html-dir=%{prefix}/share/doc/packages --with-kdedoc-prefix=$KDEDOC_PREFIX
+	--prefix=%{prefix} --enable-xsldbgthread --enable-kde-docs --with-html-dir=%{prefix}/share/doc/packages --with-kde-dir=%{kdeprefix} --with-qt-dir=%{qtprefix} --with-gnome-prefix=%{gnomeprefix}
 make
 
 
 %install
-export KDEDOC_PREFIX=%{kdeprefix}
-if [ -n "$KDEDIR" ]; then
-        export KDEDOC_PREFIX="$KDEDIR"
-fi
 rm -rf $RPM_BUILD_ROOT
 make DESTDIR=$RPM_BUILD_ROOT install-strip
 
@@ -61,8 +56,12 @@ find . -type f | sed -e 's,^\.,\%attr(-\,root\,root) ,' \
 find . -type l | sed 's,^\.,\%attr(-\,root\,root) ,' >> \
 	$RPM_BUILD_DIR/file.list.%{name}
 echo "%docdir %{prefix}/share/packages/xsldbg" >> $RPM_BUILD_DIR/file.list.%{name}
-echo "%docdir $KDEDOC_PREFIX/share/doc/HTML/en/khelpcenter/xsldbg" >> $RPM_BUILD_DIR/file.list.%{name}
+echo "%docdir %{kdeprefix}/share/doc/HTML/en/xsldbg" >> $RPM_BUILD_DIR/file.list.%{name}
 echo "%docdir %{prefix}/share/gnome/help/xsldbg" >> $RPM_BUILD_DIR/file.list.%{name}
+echo "Sleeping for a minute to ensure that the timestamp in index.cashe.bz2 is correct"
+sleep 60
+touch ./%{kdeprefix}/share/doc/HTML/en/xsldbg/index.cache.bz2
+
 
 %clean
 rm -rf $RPM_BUILD_ROOT

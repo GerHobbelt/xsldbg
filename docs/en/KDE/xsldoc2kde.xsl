@@ -8,7 +8,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
 
-  <xsl:output method="xml" doctype-public="-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" 
+  <xsl:output method="xml" doctype-public="-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN" 
     doctype-system="dtd/kdex.dtd"/>
   <xsl:param name="xsldbg_version" select="'0.5.9'"/>
   <xsl:param name="use_cs2" select="0"/>

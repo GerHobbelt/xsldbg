@@ -473,7 +473,7 @@ void XsldbgEvent::handleBreakpointItem(XsldbgEventData *eventData, const  void *
 	/* modeName */
 	eventData->setText(2, XsldbgDebuggerBase::fromUTF8(breakItem->modeName));
 	/*  enabled state */
-	eventData->setInt(1, (int)breakItem->enabled);
+	eventData->setInt(1, (int)(breakItem->flags & BREAKPOINT_ENABLED));
 
 	/* id value */
 	eventData->setInt(2, (int)breakItem->id);

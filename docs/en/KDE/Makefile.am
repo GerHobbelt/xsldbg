@@ -28,7 +28,7 @@ xsldoc2kde.xsl
 
 APIDOCS_DIR=apidocs
 
-EXTRA_DIST:=$(KDEXSL_FILES) $(APISRC_HEADER_FILES) $(wildcard *.html)
+EXTRA_DIST:=$(KDEXSL_FILES) $(APISRC_HEADER_FILES) $(wildcard *.html)  xsldbg.desktop
 
 # must use -P or else kdoc will be confused!!
 CPPFLAGS=-E -C -P
@@ -42,7 +42,7 @@ index.docbook : $(KDEXSL_FILES) $(DATADIR)/xsldoc.xml
 
 
 index.cache.bz2 : index.docbook $(DATADIR)/xsldoc.xml 
-	if test -f $(KDEDIR)/bin/meinproc; then meinproc --htdig index.docbook > index.cache; rm -f index.cache.bz2; bzip2 index.cache;echo "KDE style docs can be found using Konqueror pointed at help:/khelpcenter/xsldbg/index.html"; else echo "Meinproc not found, has KDEDIR been set?"; fi
+	if test -f $(KDE_DIR)/bin/meinproc; then rm -f index.cache.bz2; $(KDE_DIR)/bin/meinproc --cache index.cache.bz2 index.docbook;echo "KDE style docs can be found using Konqueror pointed at help:/xsldbg/index.html"; else echo "Meinproc not found, has KDEDIR been set?"; fi
 
 # You only need this to regenerate HTML pages
 if USE_KDEDOCS
@@ -57,7 +57,7 @@ $(APIDOCS_DIR)/index.html: $(APISRC_DIR) $(APISRC_HEADER_FILES)
 	@echo ""
 	@echo ""
 	if ! test -d  $(APIDOCS_DIR); then mkdir $(APIDOCS_DIR); fi
-	$(KDEDIR)/bin/kdoc -d $(APIDOCS_DIR)  $(APISRC_HEADER_FILES)
+	$(KDE_DIR)/bin/kdoc -d $(APIDOCS_DIR)  $(APISRC_HEADER_FILES)
 
 index.html:
 	@echo ""
@@ -65,8 +65,8 @@ index.html:
 	@echo "Making KDE style application documentation see `pwd`/index.html"
 	@echo ""
 	@echo ""
-	if test -f $(KDEDIR)/bin/meinproc; then meinproc index.docbook; fi
-	ln -fs $(KDEDIR)/share/doc/HTML/en/common ./
+	if test -f $(KDE_DIR)/bin/meinproc; then $(KDE_DIR)/bin/meinproc index.docbook; fi
+	ln -fs $(KDE_DIR)/share/doc/HTML/en/common ./
 
 
 $(APISRC_DIR): 
@@ -99,5 +99,7 @@ clean:
 
 endif
 
+
 install-data-local: 
-	if test -d $(KDEDIR) ; then $(mkinstalldirs) $(DESTDIR)/$(KDEDOC_PREFIX)/share/doc/HTML/en/khelpcenter/xsldbg/;@INSTALL@ -m 0644 index.docbook index.cache.bz2 $(DESTDIR)/$(KDEDOC_PREFIX)/share/doc/HTML/en/khelpcenter/xsldbg;ln -fs $(KDEDIR)/share/doc/HTML/en/common $(DESTDIR)/$(KDEDOC_PREFIX)/share/doc/HTML/en/khelpcenter/xsldbg/; fi
+	if test -d $(KDE_DIR) ; then $(mkinstalldirs) $(DESTDIR)/$(KDE_DIR)/share/doc/HTML/en/xsldbg/;@INSTALL@ -m 0644 index.docbook index.cache.bz2 $(DESTDIR)/$(KDE_DIR)/share/doc/HTML/en/xsldbg;ln -fs $(KDE_DIR)/share/doc/HTML/en/common $(DESTDIR)/$(KDE_DIR)/share/doc/HTML/en/xsldbg/;  $(mkinstalldirs) $(DESTDIR)/$(KDE_DIR)/share/applnk/Development/; @INSTALL@ -m 0644 xsldbg.desktop $(DESTDIR)/$(KDE_DIR)/share/applnk/Development/; fi
+

@@ -101,7 +101,7 @@
 	  </orderedlist></para>
   </legalnotice><authorgroup><author><firstname>Keith</firstname><surname>Isdale</surname><affiliation><orgname/><address><email>k_isdale@tpg.com.au</email></address></affiliation></author></authorgroup><revhistory><revision><revnumber>xsldbg Manual V1.0</revnumber><date></date><revdescription><para role="author">Keith Isdale
 	    	<email>k_isdale@tpg.com.au</email></para><para role="publisher"/></revdescription></revision></revhistory><releaseinfo>
-      This manual describes version 3.1.2 of xsldbg. It was
+      This manual describes version 3.1.4 of xsldbg. It was
        last updated on .
     </releaseinfo><legalnotice><title>Feedback</title><para>To report a bug or make a suggestion regarding xsldbg application or this manual, follow the directions in the <ulink url="http://xsldbg.sourceforge.net"> xsldbg Feedback Page</ulink>. 
       </para></legalnotice></articleinfo><indexterm zone="index"><primary>xsldbg</primary></indexterm><!--please do not change the id; for translations, change lang to --><!--appropriate code --><sect1 id="overview_section"><title>Overview</title><sect2 id="overview1">
@@ -155,6 +155,7 @@ Add an expression to be watched. See showwatch for display watch values
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>addwatch &lt;XPATH&gt;</entry></row></tbody></tgroup></table>
 </sect2><sect2 id="break_cmd"><title id="break_cmd.title">Break</title>
 Break at a template, at a location in a stylesheet or xml file loaded by xsldbg, or at the current node. 
+New for xsldbg 3.1.4: When in gdb compatabilty mode orpaned breakpoints can be set at a specific file and line number and be resolved to an active later on.
 <para>Shortcut name: b</para><para>xsldbg will try to guess the complete URL given a 
 <informaltable><tgroup cols="1"><tbody><row><entry>file name without a path specified.</entry></row><row><entry>a file name in the same directory as the &quot;top&quot; stylesheet loaded</entry></row><row><entry>a file name relative to the current working directory of xsldbg</entry></row></tbody></tgroup></informaltable>
 Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this

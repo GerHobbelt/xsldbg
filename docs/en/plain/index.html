@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<meta content="text/html; charset=ISO-8859-1" http-equiv="Content-Type">
 <style type="text/css"><!--
 TD {font-size: 10pt; font-family: Verdana,Arial,Helvetica}
 BODY {
@@ -37,11 +37,11 @@ A:link, A:visited, A:active { text-decoration: underline }
 
 --></style>
 <title>
-           xsldbg 3.1.3 documentation
+           xsldbg 3.1.4 documentation
          </title>
 </head>
 <body bgcolor="#8b7765" text="#000000" link="#000000" vlink="#000000"><table class="listbody"><tr><td>
-<h1 class="cmdth">xsldbg 3.1.3</h1>
+<h1 class="cmdth">xsldbg 3.1.4</h1>
 <h2 class="cmdth">Overview</h2>
 <h3>xsldbg help</h3>
 
@@ -188,7 +188,8 @@ If your operating system supports it file names will be expanded.
 </table>
 <br><br><a name="break"></a><table width="100%" class="cmd">
 <th class="cmdth">Break</th>
-<tr class="cmdsummary"><td>Break at a template, at a location in a stylesheet or xml file loaded by xsldbg, or at the current node. </td></tr>
+<tr class="cmdsummary"><td>Break at a template, at a location in a stylesheet or xml file loaded by xsldbg, or at the current node. 
+New for xsldbg 3.1.4: When in gdb compatabilty mode orpaned breakpoints can be set at a specific file and line number and be resolved to an active later on.</td></tr>
 <tr class="cmdtr"><td class="cmdtd">
 <p>Shortcut name: b</p>
 <p>xsldbg will try to guess the complete URL given a 
@@ -371,7 +372,7 @@ by the names spaces defined in the XSL SOURCE file. eg &quot;xsl:test1&quot;  wi
 <th class="cmdth">Dir</th>
 <tr class="cmdsummary"><td>Print list of nodes in a similary way to the dir shell command.</td></tr>
 <tr class="cmdtr"><td class="cmdtd">
-<p></p>
+<p>
 </td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>

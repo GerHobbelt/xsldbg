@@ -1,4 +1,3 @@
-
 /**************************************************************************
                           debugXSL.h  -  describes the core xsldbg shell functions
                              -------------------
@@ -30,19 +29,7 @@
  *   break points, inspections of stylesheet source, xml data, stylesheet
  *    variables   Keith Isdale <k_isdale@tpg.com.au>
  */
-
-
-
-
-
-
 /* We want skip most of these includes when building documentation*/
-
-
-
-
-/*used by xslDbgShell */
-
 /* how may items have been printed */
     extern int printCount;
 
@@ -50,7 +37,9 @@
      value : 1 stop tracing at start of next cycle
      value : 0 normal operation 
   */
+
   extern int xsldbgStop;
+  extern int xsldbgValidateBreakpoints;
 
 /****************************************************************
  *								*
@@ -65,10 +54,6 @@
    All functions with the prefix of debygXSL are implemented in debugXSL.c
 
  */
-
-
-
-
 /**
  * A break point has been found so pass control to user
  *
@@ -81,11 +66,6 @@
 
     void debugXSLBreak(xmlNodePtr templ, xmlNodePtr node,
                        xsltTemplatePtr root, xsltTransformContextPtr ctxt);
-
-
-
-
-
 /** 
  * Get the last template node found, if any
  *
@@ -102,11 +82,6 @@
 
    They are implemented in breakpoint_cmds.c
   ------------------------------------------- */
-
-
-
-
-
 /**
  * Set a "frame" break point either up or down from here
  *
@@ -119,12 +94,6 @@
 
 
     int xslDbgShellFrameBreak(xmlChar * arg, int stepup);
-
-
-
-
-
-
 /**
  * Add break point specified by arg
  *
@@ -139,12 +108,6 @@
 
     int xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                          xsltTransformContextPtr ctxt);
-
-
-
-
-
-
 /**
  * Delete break point specified by arg
  *
@@ -156,11 +119,6 @@
 
 
     int xslDbgShellDelete(xmlChar * arg);
-
-
-
-
-
 /**
  * Enable/disable break points via use of scan of break points
  *
@@ -176,12 +134,6 @@
 
     void xslDbgShellEnableBreakPoint(void *payload, void *data,
                                      xmlChar * name);
-
-
-
-
-
-
   /**
    * Enable/disable break point specified by arg using enable
    *
@@ -194,11 +146,6 @@
 
 
     int xslDbgShellEnable(xmlChar * arg, int enableType);
-
-
-
-
-
 /**
  * Print data given by scan of break points 
  *
@@ -210,12 +157,6 @@
 
     void xslDbgShellPrintBreakPoint(void *payload, void *data,
                                     xmlChar * name);
-
-
-
-
-
-
 /**
  * Print an warning if a breakpoint is invalid
  *
@@ -234,10 +175,6 @@
 
    They are implemented in template_cmds.c
   ------------------------------------------- */
-
-
-
-
 /**
  * Print stylesheets that can be found in loaded stylsheet
  *
@@ -250,12 +187,6 @@
 
 
     int xslDbgShellPrintStyleSheets(xmlChar * arg);
-
-
-
-
-
-
 /** 
  * Print out the list of template names found that match critieria   
  *
@@ -286,11 +217,6 @@
    Node viewing related commands
 
   ------------------------------------------- */
-
-
-
-
-
 /**
  * Print list of nodes in either ls or dir format
  *
@@ -305,12 +231,6 @@
 
 
     int xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir);
-
-
-
-
-
-
 /** 
  * Print the result of an xpath expression. This can include variables
  *        if styleCtxt is not NULL
@@ -326,12 +246,6 @@
 
     int xslDbgShellCat(xsltTransformContextPtr styleCtxt,
                        xmlShellCtxtPtr ctxt, xmlChar * arg);
-
-
-
-
-
-
 /**
  *  Print the value variable specified by args.
  *
@@ -355,9 +269,6 @@
 
    Implemented in file_cmds.c
   ------------------------------------------- */
-
-
-
 /**
  * xslDbgShellOutput:
  * @arg : Is valid, either a local file name which will be expanded 
@@ -371,21 +282,7 @@
 
 
   int xslDbgShellOutput(xmlChar *arg);
-
-
-
-
-
-
-
-
-
     int xslDbgEntities(void);
-
-
-
-
-
   /**
    * Print what a system file @p arg maps to via the current xml catalog
    *
@@ -397,11 +294,6 @@
 
 
     int xslDbgSystem(const xmlChar * arg);
-
-
-
-
-
   /**
    * Print what a public ID @p arg maps to via the current xml catalog
    *
@@ -413,11 +305,6 @@
 
 
     int xslDbgPublic(const xmlChar * arg);
-
-
-
-
-
   /**
    * Set current encoding to use for output to standard output
    *
@@ -436,11 +323,6 @@
 
    Implemented in os_cmds.c
   ------------------------------------------- */
-
-
-
-
-
 /**
  * @returns 1 if able to change xsldbg working direcorty to @p path
  *          0 otherwise
@@ -450,12 +332,6 @@
 
 
     int xslDbgShellChangeWd(xmlChar * path);
-
-
-
-
-
-
 /**
  * @returns 1 if able to execute command @p name,
  *          0 otherwise
@@ -478,11 +354,6 @@
 
    Implemented in param_cmds.c
   ------------------------------------------- */
-
-
-
-
-
 /* 
  * Add a parameter to be sent to libxslt later on
  *
@@ -495,12 +366,6 @@
 
 
     int xslDbgShellAddParam(xmlChar * arg);
-
-
-
-
-
-
 /**
  * Delete a libxslt parameter that was to be sent to libxslt later on
  *
@@ -512,12 +377,6 @@
 
 
     int xslDbgShellDelParam(xmlChar * arg);
-
-
-
-
-
-
 /**
  * Print list of current paramters
  *
@@ -538,10 +397,6 @@
      * Implemented in option_cmds.c
      * 
      * ------------------------------------------- */
-
-
-
-
 /**
  * Set the value of an option 
  *
@@ -554,11 +409,6 @@
 
 
     int xslDbgShellSetOption(xmlChar * arg);
-
-
-
-
-
 /**
  * Prints out values for user options
  *
@@ -582,8 +432,8 @@
    * Returns 1 on success,
    *         0 otherwise
    */
-  int xslDbgShellShowWatches(xsltTransformContextPtr styleCtxt, 
-			       xmlShellCtxtPtr ctx,int showWarnings);
+  int xslDbgShellShowWatches(xsltTransformContextPtr styleCtxt,
+                               xmlShellCtxtPtr ctx,int showWarnings);
 
   /**
    * xslDbgShellAddWatch:
@@ -615,11 +465,6 @@
      * Implemented in shell.c
      * 
      * ------------------------------------------- */
-
-
-
-
-
 /**
  * Start the tracing of the stylesheet. First need to restart it.
  *
@@ -631,12 +476,6 @@
 
 
     int xslDbgShellTrace(xmlChar * arg);
-
-
-
-
-
-
 /**
  * Start walking through the stylesheet.
  *
@@ -657,11 +496,6 @@
      * 
      * Implemented in search_cmds.c
      * ------------------------------------------- */
-
-
-
-
-
 /**
  * @returns 1 if able to run query with @p arg, 
  *          0 otherwise
@@ -682,10 +516,6 @@
 
    Implemented in variable_cmds.c
   ------------------------------------------- */
-
-
-
-
 /**
  * Change the value of a global or local variable
  *
@@ -701,6 +531,8 @@
 
     int xslDbgShellSetVariable(xsltTransformContextPtr styleCtxt,
                                xmlChar * arg);
+
+
 
 
 

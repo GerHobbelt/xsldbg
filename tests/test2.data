@@ -239,7 +239,7 @@ break /</test>
 <test>break -l test2.xsl 18</test>
 <result>
 <row> <!-- breakkpoint exist so we should get an error message -->
-<matchtext>Error: Breakpoint at file</matchtext>
+<matchtext>Warning: Breakpoint at file test2.xsl: line 18 exists</matchtext>
 </row>
 </result>
 </cmd>
@@ -330,7 +330,7 @@ showbreak</test>
 <test>break -l test2.xsl 18</test>
 <result>
 <row> <!-- breakkpoint exist so we should get an error message -->
-<matchtext>Error: Breakpoint at file</matchtext>
+<matchtext>Warning: Breakpoint at file</matchtext>
 </row>>
 </result>
 </cmd>
@@ -341,7 +341,7 @@ showbreak</test>
 <test>break</test>
 <result>
 <row> <!-- breakkpoint exist so we should get an error message -->
-<matchtext>Error: Breakpoint at file</matchtext>
+<matchtext>Warning: Breakpoint at file</matchtext>
 </row>
 </result>
 </cmd>

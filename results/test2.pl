@@ -548,7 +548,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: Breakpoint at file", 
+             "Warning: Breakpoint at file test2.xsl: line 18 exists", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -663,7 +663,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: Breakpoint at file", 
+             "Warning: Breakpoint at file", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -675,7 +675,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: Breakpoint at file", 
+             "Warning: Breakpoint at file", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;

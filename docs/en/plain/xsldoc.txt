@@ -1,5 +1,5 @@
 
-         xsldbg version 3.1.2
+         xsldbg version 3.1.4
          ====================
 
     xsldbg help
@@ -84,6 +84,7 @@ Usage:
 
 Command : Break
 Summary : Break at a template, at a location in a stylesheet or xml file loaded by xsldbg, or at the current node. 
+New for xsldbg 3.1.4: When in gdb compatabilty mode orpaned breakpoints can be set at a specific file and line number and be resolved to an active later on.
 
 Shortcut name: b
 xsldbg will try to guess the complete URL given a

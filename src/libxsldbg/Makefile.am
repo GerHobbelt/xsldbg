@@ -2,7 +2,7 @@
 # cheet a bit because I need DOCS_PATH defined
 if USE_XSLDBG_AS_THREAD
 INCLUDES= $(all_includes) -DDOCS_PATH=\"$(HTML_DIR)/xsldbg/\" \
- -DVERSION=\"@VERSION@\" -I .. $(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS) -I $(QTDIR)/include
+ -DVERSION=\"@VERSION@\" -I .. $(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS) -I $(QT_DIR)/include
 else
 INCLUDES= $(all_includes) -DDOCS_PATH=\"$(HTML_DIR)/xsldbg/\" \
  -DVERSION=\"@VERSION@\" -I .. $(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS)

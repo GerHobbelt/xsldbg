@@ -1,4 +1,11 @@
-Keith Isdale 1st,9th,14 June 2003 <k_isdale@tpg.com.au>
+Keith Isdale 15 June 2003 <k_isdale@tpg.com.au>
+   Fixed the specification for test2. All xsldbg automatic tests now pass  
+   Update spec files to new vesion
+   Updated configure.in, Makefile.am, spec files to make use of explicit specification of KDE, Qt and GMOME dir's (handy during RPM builds)
+   Fixed KDE help centre docs to now they are found in help:/xsldbg/index.html.
+   Added a xsldbg.desktop file for KDE which is placed into Development menu
+
+Keith Isdale 1st,9th,14,15 June 2003 <k_isdale@tpg.com.au>
   Version 3.1.4
   Completed implementation to support orphaned breakpoints for KDbg 1.9.0, and when in xsldbg is running in gdb compatbility mode
   This means that you can set a breakpoint at a line number for a file that has not been loaded yet 
@@ -12,7 +19,7 @@ Keith Isdale 1st,9th,14 June 2003 <k_isdale@tpg.com.au>
 	<xsldbgprompt> continue
 	Breakpoint at file ../docs/en/xsldoc.xsl : line 31
     	<xsldbgprompt>
-   Fixed the specification for test10. All xsldbg automatic tests now pass  
+   Fixed the specification for and test10
 
 
 Keith Isdale 31st May 2003 <k_isdale@tpg.com.au>

@@ -1,4 +1,3 @@
-
 /**************************************************************************
                           utils.c  -  declaration for misc utils this is
                                        mixed bag of functions so it is
@@ -19,32 +18,15 @@
  *   (at your option) any later version.                                   *
  *                                                                         *
  **************************************************************************/
-
-
-
-
-
-
-
-
 /* 
   Make things simpler when working between char* and xmlChar*  .
    By definition a char is the same size as an xmlChar(unsigned char). 
 */
-
-
-
 /* what char is use to separate directories in an URI*/
 
 
     /* Handle the differences in path and quote character between
      * win32 and *nix systems */
-
-
-
-
-
-
 /* JRF: Although RISC OS native paths use . as a separator, the arguments
         to xsldbg are passed in unix or URI form, and thus the above
         specification is correct. */
@@ -59,12 +41,6 @@
  *
  * [3] S ::= (#x20 | #x9 | #xD | #xA)+
  */
-
-
-
-
-
-
 /**
  * Remove leading and trailing spaces off @p text
  *         stores result back into @p text
@@ -77,11 +53,6 @@
 
 
     int trimString(xmlChar * text);
-
-
-
-
-
 /**
  * Spit string by white space and put into @p out
  * 
@@ -95,12 +66,6 @@
 
 
     int splitString(xmlChar * textIn, int maxStrings, xmlChar ** out);
-
-
-
-
-
-
 /** 
  * Lookup and name in a list
  *
@@ -115,10 +80,6 @@
 
 
     int lookupName(xmlChar * name, xmlChar ** matchList);
-
-
-
-
 /**
  * Join nameURI to name
  *
@@ -134,6 +95,3 @@
 
 
   xmlChar * fullQName(const xmlChar* nameURI, const xmlChar * name);
-
-
-

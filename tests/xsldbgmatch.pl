@@ -160,7 +160,7 @@ sub textMatch{
     my $firstLine = $_;
     my $errorText = "";
     while (<STDIN>) {
-	if ($_ =~ $textValue){
+	if ($_ =~ /.*($textValue).*/){
 	    $result = 1;
 	    print "Text match \n  text \"$textValue\"\n";
 	    return $result;

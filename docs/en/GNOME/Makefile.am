@@ -51,17 +51,17 @@ if USE_GNOMEDOCS
 # so just copy the source across
 scan: $(APISRC_FILES)
 	cp $(top_builddir)/src/libxsldbg/*.c $(APISRC_DIR)
-	gtkdoc-scan --module=xsldbg --source-dir=$(APISRC_DIR) 
+	$(GNOME_DIR)/bin/gtkdoc-scan --module=xsldbg --source-dir=$(APISRC_DIR) 
 
 templates: scan
-	 gtkdoc-mktmpl --module=xsldbg
+	 $(GNOME_DIR)/bin/gtkdoc-mktmpl --module=xsldbg
 
 sgml:
-	gtkdoc-mkdb --module=xsldbg --source-dir=$(APISRC_DIR)
+	$(GNOME_DIR)/bin/gtkdoc-mkdb --module=xsldbg --source-dir=$(APISRC_DIR)
 
 $(APIDOCS_DIR): $(API_MAIN_SGML_FILE)
 	if ! test -d $(APIDOCS_DIR) ; then mkdir $(APIDOCS_DIR) ; fi
-	-cd $(APIDOCS_DIR) && gtkdoc-mkhtml xsldbg ../$(API_MAIN_SGML_FILE)
+	-cd $(APIDOCS_DIR) && $(GNOME_DIR)/bin/gtkdoc-mkhtml xsldbg ../$(API_MAIN_SGML_FILE)
 
 xsldbg-decl-list.txt : templates
 
@@ -101,8 +101,8 @@ clean:
 	rm -f gnome.docbook
 endif
 
-docdir = $(DESTDIR)/$(datadir)/gnome/help/xsldbg/EN/
+docdir = $(DESTDIR)/$(GNOME_DIR)/gnome/help/xsldbg/EN/
 
 install-data-local: 
-	if test -d $(DESTDIR)/$(GNOMEDIR) ; then  if ! test -d $(docdir) ; then mkdir -p $(docdir);fi; cp  gnome.docbook $(docdir);fi
+	if test -d $(DESTDIR)/$(GNOME_DIR) ; then  if ! test -d $(docdir) ; then mkdir -p $(docdir);fi; cp  gnome.docbook $(docdir);fi
 
