@@ -22,7 +22,7 @@
 
 #define XSLDBG_BIN "xsldbg"
 
-#define VERSION "2.0.8"
+#define VERSION "2.0.9"
 
 #define TIMESTAMP __DATE__
 

@@ -771,8 +771,8 @@ extern "C" {
     int filesIsSourceFile(xmlChar * fileName);
 
 
-
 #ifdef USE_GNOME_DOCS
+
 /**
  * xsldbgUpdateFileDetails:
  * @node : A valid node
@@ -781,6 +781,7 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
+
   /** 
    * Update the URL and  line number that we stoped at 
    *
@@ -790,6 +791,52 @@ extern "C" {
 #endif
   void xsldbgUpdateFileDetails(xmlNodePtr node);
 
+
+
+#ifdef USE_GNOME_DOCS
+
+  /**
+   * xsldbgLineNo:
+   *
+   * What line number are we at 
+   *
+   * Returns The current line number of xsldbg, may be -1
+   **/
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * What line number are we at 
+   *
+   * @returns The current line number of xsldbg, may be -1
+   **/
+#endif
+#endif
+    int xsldbgLineNo(void);
+
+
+#ifdef USE_GNOME_DOCS
+
+  /**
+   * xsldbgUrl:
+   * 
+   * What URL did we stop at
+   *
+   * Returns A NEW copy of URL stopped at. Caller must free memory for URL,   
+   *         may be NULL
+   */
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * What URL did we stop at
+   *
+   * @returns A NEW copy of URL stopped at. Caller must free memory for URL,   
+   *         may be NULL
+   */
+#endif
+#endif
+    xmlChar *xsldbgUrl(void);
 
   /*-----------------------------------------------------------
     Platform specific file functions
@@ -846,6 +893,40 @@ extern "C" {
 #endif
 #endif
     void filesPlatformFree(void);
+
+
+
+#ifdef USE_GNOME_DOCS
+
+  /**
+   * filesExpandName:
+   * @fileName : A valid fileName
+   *
+   * Converts a fileName to an absolute path
+   *          If operating system supports it a leading "~" in the fileName
+   *          will be converted to the user's home path. Otherwise
+   *          the same name will be returned
+   *
+   * Returns A copy of the converted @fileName or a copy of 
+   *           the @fileName as supplied. May return NULL
+   */
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * Converts a fileName to an absolute path
+   *          If operating system supports it a leading "~" in the fileName
+   *          will be converted to the user's home path. Otherwise
+   *          the same name will be returned
+   *
+   * Returns A copy of the converted @p fileName or a copy of 
+   *           the @p fileName as supplied. May return NULL
+   *
+   * @param fileName A valid fileName
+   */
+#endif
+#endif
+  xmlChar* filesExpandName(const xmlChar *fileName);
 
 #ifdef __cplusplus
 }

@@ -194,166 +194,133 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
     xmlXPathObjectPtr list;
     int result = 0;
 
-    if (!styleCtxt || !ctxt) {
+    if (!styleCtxt || !ctxt || !ctxt->node) {
         xsltGenericError(xsltGenericErrorContext,
                          "Error: Unable to cat/print expression, No stylesheet properly loaded\n");
         return result;
     }
-    if (arg == NULL)
-        arg = (xmlChar *) "";
 
-    if (arg[0] == 0) {
-        /* do a cat of the current node */
-        const char *fileName = filesTempFileName(0);
-        FILE *file;
+    if ((arg == NULL) || (xmlStrLen(arg) == 0))
+        arg = (xmlChar *) ".";
 
-        if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
-            /* send it to the application as an UTF-8 message */
-            xmlShellCat(ctxt, NULL, ctxt->node, NULL);
-            result = 1;
-            return result;
-        }
-
-        if (!fileName) {
-            xsltGenericError(xsltGenericErrorContext,
-                             "Error: Can't create temporary file for xslDbgCat\n");
-            return result;
-        }
-
-        file = fopen(fileName, "w+");
-        if (file) {
-            xslShellCat(ctxt->node, file);
-            fflush(file);
-            rewind(file);
-            while (!feof(file)
-                   && fgets((char *) buffer, sizeof(buffer), file)) {
-                xsltGenericError(xsltGenericErrorContext, "%s", buffer);
-            }
-            xsltGenericError(xsltGenericErrorContext, "\n");
-            fclose(file);
-            result = 1;
-        } else
-            xsltGenericError(xsltGenericErrorContext,
-                             "Error: Can't open temporary file %s for xslDbgCat\n",
-                             fileName);
+    ctxt->pctxt->node = ctxt->node;
+    if (!styleCtxt) {
+        list = xmlXPathEval((xmlChar *) arg, ctxt->pctxt);
     } else {
+        xmlNodePtr savenode = styleCtxt->xpathCtxt->node;
+
         ctxt->pctxt->node = ctxt->node;
-        if (!styleCtxt) {
-            list = xmlXPathEval((xmlChar *) arg, ctxt->pctxt);
-        } else {
-            xmlNodePtr savenode = styleCtxt->xpathCtxt->node;
+        styleCtxt->xpathCtxt->node = ctxt->node;
+        if (!xmlXPathNsLookup(styleCtxt->xpathCtxt, (xmlChar *) "xsl"))
+            xmlXPathRegisterNs(styleCtxt->xpathCtxt, (xmlChar *) "xsl",
+                               XSLT_NAMESPACE);
+        list = xmlXPathEval((xmlChar *) arg, styleCtxt->xpathCtxt);
+        styleCtxt->xpathCtxt->node = savenode;
+    }
+    if (list != NULL) {
+        switch (list->type) {
+            case XPATH_NODESET:{
+                    int indx;
 
-            ctxt->pctxt->node = ctxt->node;
-            styleCtxt->xpathCtxt->node = ctxt->node;
-            if (!xmlXPathNsLookup(styleCtxt->xpathCtxt, (xmlChar *) "xsl"))
-                xmlXPathRegisterNs(styleCtxt->xpathCtxt, (xmlChar *) "xsl",
-                                   XSLT_NAMESPACE);
-            list = xmlXPathEval((xmlChar *) arg, styleCtxt->xpathCtxt);
-            styleCtxt->xpathCtxt->node = savenode;
-        }
-        if (list != NULL) {
-            switch (list->type) {
-                case XPATH_NODESET:{
-                        int indx;
+                    if (list->nodesetval) {
+                        const char *fileName = filesTempFileName(0);
+                        FILE *file;
 
-                        if (list->nodesetval) {
-                            const char *fileName = filesTempFileName(0);
-                            FILE *file;
-
-                            if (!fileName)
-                                break;
-                            file = fopen(fileName, "w+");
-                            if (!file) {
-                                xsltGenericError
-                                    (xsltGenericErrorContext,
-                                     "Error: Unable to save temporary"
-                                     "results to %s\n", fileName);
-                                break;
-                            } else {
-                                for (indx = 0;
-                                     indx < list->nodesetval->nodeNr;
-                                     indx++) {
-                                    xslShellCat(list->nodesetval->
-                                                nodeTab[indx], file);
-                                }
-
+                        if (!fileName)
+                            break;
+                        file = fopen(fileName, "w+");
+                        if (!file) {
+                            xsltGenericError
+                                (xsltGenericErrorContext,
+                                 "Error: Unable to save temporary"
+                                 "results to %s\n", fileName);
+                            break;
+                        } else {
+                            fprintf(file, "= %s\n", arg);
+                            for (indx = 0;
+                                 indx < list->nodesetval->nodeNr; indx++) {
+                                xslShellCat(list->nodesetval->
+                                            nodeTab[indx], file);
                             }
-                            if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
-                                fclose(file);
-                                /* send the data to application */
-                                notifyXsldbgApp(XSLDBG_MSG_FILEOUT,
-                                                fileName);
-                            } else {
-                                int lineCount = 0, gdbModeEnabled = 0;
 
-                                /* save the value of option to speed things up
-                                 * a bit */
-                                gdbModeEnabled =
-                                    optionsGetIntOption(OPTIONS_GDB);
-                                rewind(file);
+                        }
+                        if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
+                            fclose(file);
+                            /* send the data to application */
+                            notifyXsldbgApp(XSLDBG_MSG_FILEOUT, fileName);
+                        } else {
+                            int lineCount = 0, gdbModeEnabled = 0;
 
-                                /* when gdb mode is enable then only print the first
-                                 * GDB_LINES_TO_PRINT lines */
-                                while (!feof(file)) {
-                                    if (fgets
-                                        ((char *) buffer, sizeof(buffer),
-                                         file))
+                            /* save the value of option to speed things up
+                             * a bit */
+                            gdbModeEnabled =
+                                optionsGetIntOption(OPTIONS_GDB);
+                            rewind(file);
+
+                            /* when gdb mode is enable then only print the first
+                             * GDB_LINES_TO_PRINT lines */
+                            while (!feof(file)) {
+                                if (fgets
+                                    ((char *) buffer, sizeof(buffer),
+                                     file))
+                                    xsltGenericError
+                                        (xsltGenericErrorContext, "%s",
+                                         buffer);
+                                if (gdbModeEnabled) {
+                                    lineCount++;
+                                    /* there is an overhead of two lines
+                                     * when print expression values */
+                                    if (lineCount ==
+                                        GDB_LINES_TO_PRINT + 2) {
                                         xsltGenericError
-                                            (xsltGenericErrorContext, "%s",
-                                             buffer);
-                                    if (gdbModeEnabled) {
-                                        lineCount++;
-                                        if (lineCount ==
-                                            GDB_LINES_TO_PRINT) {
-                                            xsltGenericError
-                                                (xsltGenericErrorContext,
-                                                 "...");
-                                            break;
-                                        }
+                                            (xsltGenericErrorContext,
+                                             "...");
+                                        break;
                                     }
                                 }
-                                xsltGenericError
-                                    (xsltGenericErrorContext, "\n");
                             }
-                        } else {
-                            xsltGenericError(xmlGenericErrorContext,
-                                             "Error: xpath %s results an "
-                                             "in empty set\n", arg);
+                            xsltGenericError
+                                (xsltGenericErrorContext, "\n");
                         }
-                        result = 1;
-                        break;
+                    } else {
+                        xsltGenericError(xmlGenericErrorContext,
+                                         "Error: xpath %s results an "
+                                         "in empty set\n", arg);
                     }
-
-                case XPATH_BOOLEAN:
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "%s\n", xmlBoolToText(list->boolval));
                     result = 1;
                     break;
+                }
 
-                case XPATH_NUMBER:
+            case XPATH_BOOLEAN:
+                xsltGenericError(xsltGenericErrorContext,
+                                 "= %s\n%s\n", arg,
+                                 xmlBoolToText(list->boolval));
+                result = 1;
+                break;
+
+            case XPATH_NUMBER:
+                xsltGenericError(xsltGenericErrorContext,
+                                 "= %s\n%0g\n", arg, list->floatval);
+                result = 1;
+                break;
+
+            case XPATH_STRING:
+                if (list->stringval) {
                     xsltGenericError(xsltGenericErrorContext,
-                                     "%0g\n", list->floatval);
+                                     "= %s\n%s\n", arg, list->stringval);
                     result = 1;
-                    break;
+                }
+                break;
 
-                case XPATH_STRING:
-                    if (list->stringval) {
-                        xsltGenericError(xsltGenericErrorContext,
-                                         "%s\n", list->stringval);
-                        result = 1;
-                    }
-                    break;
-
-                default:
-                    xmlShellPrintXPathError(list->type, (char *) arg);
-            }
-            xmlXPathFreeObject(list);
-        } else {
-            xsltGenericError(xsltGenericErrorContext,
-                             "Error: %s no such node\n", arg);
+            default:
+                xmlShellPrintXPathError(list->type, (char *) arg);
         }
-        ctxt->pctxt->node = NULL;
+        xmlXPathFreeObject(list);
+    } else {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error: %s no such node\n", arg);
     }
+    ctxt->pctxt->node = NULL;
     return result;
 }
 
@@ -489,14 +456,16 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
         }
     } else {
         /* Display the value of variable */
-        if (arg[0] == '$')
+        if (arg[0] == '$') {
+            xsltGenericError(xsltGenericErrorContext, "= %s\n", arg);
             xmlShellPrintXPathResult(xmlXPathEval
                                      (arg, styleCtxt->xpathCtxt));
-        else {
+        } else {
             xmlChar tempbuff[100];
 
             xmlStrCpy(tempbuff, "$");
             xmlStrCat(tempbuff, arg);
+            xsltGenericError(xsltGenericErrorContext, "= %s\n", tempbuff);
             xmlShellPrintXPathResult(xmlXPathEval(tempbuff,
                                                   styleCtxt->xpathCtxt));
         }

@@ -2,3 +2,6 @@ See docs/en/website/index.html and docs/en/plain/index.html for latest informati
   
 nb: docs/en/website/index.html includes a quick tutorial about using xsldbg
 
+The MSVC project files are in win32/dsp/
+
+The tests and results directories are only used under *nix platforms

@@ -1,5 +1,5 @@
 
-         xsldbg version 2.0.8
+         xsldbg version 2.0.9
          ====================
 
     xsldbg help
@@ -11,10 +11,11 @@ xsldbg is similar to gdb. It has three major modes of execution of stylesheets.
      Continue until next break point is found, or stylesheet has restarted
 
 On systems with readline library available you can use the back/forward keys to navigate the history of entered commands. On all systems the last entered command can be repeated by just pressing the <ENTER> key.
+If your operating system supports it file names will be expanded.
 
-     TEMPLATENAME : a valid template name
-     FILENAME : a valid URL for a stylesheet, xml data, or output
-     LINENO : a valid line number in associated FILENAME
+     TEMPLATENAME : A valid template name
+     FILENAME : A valid URI for a stylesheet, xml data, or output. On some operating systems a "~" prefix will be replaced by your home directory path
+     LINENO : A valid line number in associated <FILENAME>
      NUMBER_OF_FRAMES : a valid line number frames to change position by
      BREAKPOINT_ID : a valid break point number
      SPEED: speed to walk through code at, between 0 to 9
@@ -22,14 +23,14 @@ On systems with readline library available you can use the back/forward keys to 
      { opt1 | opt2 | opt2 .. etc} : Choose one of the opt's
      XPATH : a xpath selection of node(s)
      PARAM_ID : a valid parameter number as indicated by showparam command
-     PATH : a path to change working directory to
-     TEXT : free form text   (no restrictions)
-     COMMAND : a valid command for the xsdbg
-     QNAME : a valid variable/parameter name
-     SOURCE : the stylesheet being/to be executed
-     DATA : the xml data(document) being/to be processed by the stylesheet
-     DEVICE_PATH : is a valid terminal on the operating system
-     TTY_LEVEL : is a valid level of input/output to use
+     PATH : A path to change working directory to On some operating systems a "~" prefix will be replaced by your home directory path
+     TEXT : Free form text   (no restrictions)
+     COMMAND : A valid command for the xsdbg
+     QNAME : A valid variable/parameter name
+     SOURCE : The stylesheet being/to be executed. See <FILENAME>
+     DATA : The xml data(document) being/to be processed by the stylesheet. See <FILENAME>
+     DEVICE_PATH : Is a valid terminal on the operating system
+     TTY_LEVEL : Is a valid level of input/output to use
 
 
      Help related :help
@@ -408,6 +409,8 @@ Usage:
      Print lots more messages. Increase the frequency of printing "Breapoint at ..."
      At most GDB_LINES_TO_PRINT lines will be printed when evalating expressions, followed by a "...". See options.h to change this value, the default is three lines of text
      Both local and globals will be printed when the "locals" command is issued
+     When printing expresssions with cat/print. The evaluated value will be prefixed by "= " < EXPRESSION >
+     The use of readline library is disabled as well as repeating last entered command
 
      nonet   (If <INTEGER_VALUE> is true refuse to fetch DTDs or entities over network)
      novalid   (If <INTEGER_VALUE> is true skip the DTD loading phase)
@@ -492,6 +495,7 @@ Command : Stepup
 Summary : Step up to a older "call frame".  
 
 Shortcut name: up
+This is not an accurate command, xsldbg will stop as close as it can.
 Usage:
 
      stepup   (step up one frame)

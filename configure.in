@@ -1,12 +1,12 @@
 
 AC_INIT(src/main.c)
 
-timestamp='2002-02-17'
+timestamp='2002-02-18'
 
 
 XSLDBG_MAJOR_VERSION=2
 XSLDBG_MINOR_VERSION=0
-XSLDBG_MICRO_VERSION=8
+XSLDBG_MICRO_VERSION=9
 PACKAGE=xsldbg
 
 dnl
@@ -563,6 +563,8 @@ AC_OUTPUT(
         Makefile     	
         src/Makefile  	
 	src/libxsldbg/xsldbgwin32config.h
+	win32/Makefile
+	win32/dsp/Makefile
 	xsldbg-config
 	config_riscos.h
 	src/libxsldbg/Makefile

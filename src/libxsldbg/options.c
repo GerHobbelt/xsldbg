@@ -423,6 +423,7 @@ optionsPrintParam(int paramId)
     parameterItemPtr paramItem =
         (parameterItemPtr) arrayListGet(optionsGetParamItemList(),
                                         paramId);
+
     if (paramItem && paramItem->name && paramItem->value) {
         xsltGenericError(xsltGenericErrorContext,
                          " Parameter %d %s=\"%s\"\n", paramId,

@@ -566,6 +566,7 @@ xsldbgMain(int argc, char **argv)
 {
     int i, result = 1, noFilesFound = 0;
     xsltStylesheetPtr cur = NULL;
+    xmlChar *expandedName;      /* contains file name with path expansion if any */
 
     /* in some cases we always want to bring up a command prompt */
     int showPrompt;
@@ -605,15 +606,20 @@ xsldbgMain(int argc, char **argv)
         if (!result)
             break;
         if (argv[i][0] != '-') {
+            expandedName = filesExpandName((xmlChar *) argv[i]);
+            if (!expandedName) {
+                result = 0;
+                break;
+            }
             switch (noFilesFound) {
                 case 0:
                     optionsSetStringOption(OPTIONS_SOURCE_FILE_NAME,
-                                           (xmlChar *) argv[i]);
+                                           expandedName);
                     noFilesFound++;
                     break;
                 case 1:
                     optionsSetStringOption(OPTIONS_DATA_FILE_NAME,
-                                           (xmlChar *) argv[i]);
+                                           expandedName);
                     noFilesFound++;
                     break;
 
@@ -622,6 +628,7 @@ xsldbgMain(int argc, char **argv)
                                      "Too many file names supplied\n");
                     result = 0;
             }
+            xmlFree(expandedName);
             continue;
         }
 
@@ -1028,23 +1035,20 @@ xsldbgLoadXmlData(void)
         startTimer();
 #ifdef LIBXML_HTML_ENABLED
     if (optionsGetIntOption(OPTIONS_HTML))
-        doc =
-            htmlParseFile((char *)
-                          optionsGetStringOption(OPTIONS_DATA_FILE_NAME),
-                          NULL);
+        doc = htmlParseFile((char *)
+                            optionsGetStringOption(OPTIONS_DATA_FILE_NAME),
+                            NULL);
     else
 #endif
 #ifdef LIBXML_DOCB_ENABLED
     if (optionsGetIntOption(OPTIONS_DOCBOOK))
-        doc =
-            docbParseFile((char *)
-                          optionsGetStringOption(OPTIONS_DATA_FILE_NAME),
-                          NULL);
+        doc = docbParseFile((char *)
+                            optionsGetStringOption(OPTIONS_DATA_FILE_NAME),
+                            NULL);
     else
 #endif
-        doc =
-            xmlParseFile((char *)
-                         optionsGetStringOption(OPTIONS_DATA_FILE_NAME));
+        doc = xmlParseFile((char *)
+                           optionsGetStringOption(OPTIONS_DATA_FILE_NAME));
     if (doc == NULL) {
         xsltGenericError(xsltGenericErrorContext,
                          "unable to parse %s\n",

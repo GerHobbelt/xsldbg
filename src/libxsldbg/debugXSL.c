@@ -53,9 +53,9 @@
 #include <libxml/debugXML.h>
 #include <stdio.h>
 
-#include <libxsldbg/xsldbgmsg.h>
-#include <libxsldbg/xsldbgthread.h>     /* for get thread status */
-#include <libxsldbg/xsldbgio.h>
+#include "xsldbgmsg.h"
+#include "xsldbgthread.h"       /* for get thread status */
+#include "xsldbgio.h"
 
 /* current template being processed */
 xsltTemplatePtr rootCopy;
@@ -625,28 +625,58 @@ xslDbgPrintCallStack(const xmlChar * arg)
 
     if (arg == NULL) {
         if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
-	    notifyListStart(XSLDBG_MSG_CALLSTACK_CHANGED);
-	    /* we send the oldest frame stack first */
+            notifyListStart(XSLDBG_MSG_CALLSTACK_CHANGED);
+            /* we send the oldest frame stack first */
             for (depth = 1; depth <= callStackGetDepth(); depth++) {
                 callPointItem = callStackGet(depth);
                 if (callPointItem && callPointItem->info) {
-		  notifyListQueue(callPointItem);
+                    notifyListQueue(callPointItem);
                 }
-            }	    
-	    notifyListSend();
+            }
+            notifyListSend();
         } else {
+
             for (depth = callStackGetDepth(); depth >= 1; depth--) {
                 callPointItem = callStackGet(depth);
                 if (callPointItem && callPointItem->info) {
-                    if (depth == 0)
-                        xsltGenericError(xsltGenericErrorContext,
-                                         "Call stack contains:\n");
+                    if (depth == callStackGetDepth()) {
+                        xmlChar *curUrl = xsldbgUrl();
+                        long curLine = xsldbgLineNo();
+
+                        /* if possible list the current location */
+                        if (rootCopy && (rootCopy->match || rootCopy->name)
+                            && curUrl) {
+
+                            if (rootCopy->match)
+                                xsltGenericError(xsltGenericErrorContext,
+                                                 "#%d template :\"%s\"",
+                                                 depth, rootCopy->match);
+                            else
+                                xsltGenericError(xsltGenericErrorContext,
+                                                 "#%d template :\"%s\"",
+                                                 depth, rootCopy->name);
+                            xsltGenericError(xsltGenericErrorContext,
+                                             " in file %s : line %ld\n",
+                                             curUrl, curLine);
+                        } else if (curUrl) {
+                            xsltGenericError(xsltGenericErrorContext,
+                                             "#%d template :\"LIBXSLT_DEFAULT\"",
+                                             depth);
+                            xsltGenericError(xsltGenericErrorContext,
+                                             " in file %s : line %ld\n",
+                                             curUrl, curLine);
+                        }
+
+                        if (curUrl)
+                            xmlFree(curUrl);
+
+                    }
                     xsltGenericError(xsltGenericErrorContext,
                                      "#%d template :\"%s\"", depth - 1,
                                      callPointItem->info->templateName);
                     if (callPointItem->info->url)
                         xsltGenericError(xsltGenericErrorContext,
-                                         " in file %s : line %ld \n",
+                                         " in file %s : line %ld\n",
                                          callPointItem->info->url,
                                          callPointItem->lineNo);
                     else
@@ -662,7 +692,7 @@ xslDbgPrintCallStack(const xmlChar * arg)
             }
             if (callStackGetDepth() == 0)
                 xsltGenericError(xsltGenericErrorContext,
-                                 "Error: No items on call stack\n");
+                                 "No items on call stack\n");
             else
                 xsltGenericError(xsltGenericErrorContext, "\n");
         }
@@ -1021,12 +1051,15 @@ debugXSLBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
                                  "\nReached template :\"%s\"\n",
                                  root->name);
         } else {
-            if (root->match)
-                fprintf(terminalIO,
-                        "\nReached template :\"%s\"\n", root->match);
-            else
-                fprintf(terminalIO,
-                        "\nReached template :\"%s\"\n", root->name);
+            if ((xslDebugStatus == DEBUG_TRACE) ||
+                (xslDebugStatus == DEBUG_WALK)) {
+                if (root->match)
+                    fprintf(terminalIO,
+                            "\nReached template :\"%s\"\n", root->match);
+                else
+                    fprintf(terminalIO,
+                            "\nReached template :\"%s\"\n", root->name);
+            }
         }
     }
 
@@ -1357,20 +1390,11 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 xslDbgPrintCallStack(NULL);
                 if (getThreadStatus() != XSLDBG_MSG_THREAD_RUN) {
                     if (!xmlShellPwd(ctxt, (char *) dir, ctxt->node, NULL))
-                        xsltGenericError(xsltGenericErrorContext, "%s",
+                        xsltGenericError(xsltGenericErrorContext, "%s\n",
                                          dir);
-                    if (ctxt->node && ctxt->node && ctxt->node->doc
-                        && ctxt->node->doc->URL) {
-                        xsltGenericError(xsltGenericErrorContext,
-                                         "Breakpoint at file %s : line %ld \n",
-                                         ctxt->node->doc->URL,
-                                         xmlGetLineNo(ctxt->node));
-                        cmdResult = 1;
-                    } else {
-                        xsltGenericError(xsltGenericErrorContext, "\n");
-                        cmdResult = 0;
-                    }
                 }
+                cmdResult = 1;
+
                 break;
 
             case DEBUG_FRAME_CMD:
@@ -1595,35 +1619,23 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         break;
                 } else {
                     /* load new stylesheet file, actual loading happens later */
-                    xmlChar *buff = dir;        /* use dir command temp buffer */
+                    xmlChar *expandedName = filesExpandName(arg);
 
-#ifndef __riscos                /* RISC OS has no concept of 'home' directory */
-                    /* replace ~ with home path */
-                    if ((arg[0] == '~') && getenv("HOME")) {
-                        xmlStrCpy(buff, getenv("HOME"));
-                        if (xmlStrLen(buff) + xmlStrLen(arg) <
-                            DEBUG_BUFFER_SIZE) {
-                            xmlStrCat(buff, &arg[1]);
-                            optionsSetStringOption
-                                (OPTIONS_SOURCE_FILE_NAME, buff);
-                        } else {
-                            xsltGenericError(xsltGenericErrorContext,
-                                             "File name too large\n");
-                            cmdResult = 0;
-                            break;
-                        }
-                    } else
-#endif
-                    {
+                    if (expandedName) {
+                        xsltGenericError(xsltGenericErrorContext,
+                                         "Load of source deferred use run command\n"
+                                         "Removing all breakpoints\n");
+
                         optionsSetStringOption(OPTIONS_SOURCE_FILE_NAME,
-                                               arg);
+                                               expandedName);
+                        loadedFiles = 1;
+                        /* clear all break points , what else makes sense? */
+                        breakPointEmpty();
+                        xmlFree(expandedName);
+                        cmdResult = 1;
+                    } else {
+                        cmdResult = 0;
                     }
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "Load of source deferred use run command\n"
-                                     "Removing all breakpoints\n");
-                    loadedFiles = 1;
-                    /* clear all break points , what else makes sense? */
-                    breakPointEmpty();
                 }
                 break;
 
@@ -1647,51 +1659,45 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         break;
                 } else {
                     /* load new xml file actual loading hapens later */
-                    xmlChar *buff = dir;        /* use dir command temp buffer */
+                    xmlChar *expandedName = filesExpandName(arg);
 
-#ifndef __riscos                /* RISC OS has no concept of 'home' directory */
-                    /* replace ~ with home path */
-                    if ((arg[0] == '~') && getenv("HOME")) {
-                        xmlStrCpy(buff, getenv("HOME"));
-                        if (xmlStrLen(buff) + xmlStrLen(arg) <
-                            DEBUG_BUFFER_SIZE) {
-                            xmlStrCat(buff, &arg[1]);
-                            optionsSetStringOption(OPTIONS_DATA_FILE_NAME,
-                                                   buff);
-                        } else {
-                            xsltGenericError(xsltGenericErrorContext,
-                                             "File name too large\n");
-                            cmdResult = 0;
-                            break;
-                        }
-                    } else
-#endif
-                    {
+                    if (expandedName) {
+                        xsltGenericError(xsltGenericErrorContext,
+                                         "Load of data file deferred use run command\n"
+                                         "Removing all breakpoints\n");
+
                         optionsSetStringOption(OPTIONS_DATA_FILE_NAME,
-                                               arg);
+                                               expandedName);
+                        loadedFiles = 1;
+                        /* clear all break points , what else makes sense? */
+                        breakPointEmpty();
+                        xmlFree(expandedName);
+                        cmdResult = 1;
+                    } else {
+                        cmdResult = 0;
                     }
-
-                    loadedFiles = 1;
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "Load of xml data deferred use run command\n"
-                                     "Removing all breakpoints\n");
-                    /* clear all break points , what else makes sense? */
-                    breakPointEmpty();
                 }
                 break;
 
             case DEBUG_OUTPUT_CMD:
                 if (xmlStrLen(arg) > 0) {
-                    if (xmlStrCmp(arg, "-") != 0)
-                        optionsSetStringOption(OPTIONS_OUTPUT_FILE_NAME,
-                                               arg);
-                    else
+                    if (xmlStrCmp(arg, "-") != 0) {
+                        xmlChar *expandedName = filesExpandName(arg);
+
+                        if (expandedName) {
+                            optionsSetStringOption
+                                (OPTIONS_OUTPUT_FILE_NAME, expandedName);
+                            xmlFree(expandedName);
+                        } else {
+                            cmdResult = 0;
+                        }
+                    } else
                         optionsSetStringOption(OPTIONS_OUTPUT_FILE_NAME,
                                                NULL);
                     cmdResult = 1;
                 } else {
                     xsltGenericError(xsltGenericErrorContext,
-                                     "Missing file name\n");
+                                     "Error: Missing file name\n");
                     cmdResult = 0;
                 }
                 break;

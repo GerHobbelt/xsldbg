@@ -25,10 +25,13 @@ keys to navigate the history of entered commands.
 On all systems the last entered command can be repeated by just pressing
 the &lt;ENTER&gt; key. 
 </para>
+<para>
+If your operating system supports it file names will be expanded. 
+</para>
 <para title="Legend :">
-<list><li>TEMPLATENAME : a valid template name</li>
-<li>FILENAME : a valid URL for a stylesheet, xml data, or output </li>
-<li>LINENO : a valid line number in associated FILENAME</li>
+<list><li>TEMPLATENAME : A valid template name</li>
+<li>FILENAME : A valid URI for a stylesheet, xml data, or output. On some operating systems a &quot;~&quot; prefix will be replaced by your home directory path</li>
+<li>LINENO : A valid line number in associated &lt;FILENAME&gt;</li>
 <li>NUMBER_OF_FRAMES : a valid line number frames to change position by</li>
 <li>BREAKPOINT_ID : a valid break point number</li>
 <li>SPEED: speed to walk through code at, between 0 to 9</li>
@@ -36,14 +39,14 @@ the &lt;ENTER&gt; key.
 <li>{ opt1 | opt2 | opt2 .. etc} : Choose one of the opt's</li>
 <li>XPATH : a xpath selection of node(s)</li>
 <li>PARAM_ID : a valid parameter number as indicated by showparam command</li>
-<li>PATH : a path to change working directory to</li>
-<li>TEXT : free form text <comment>(no restrictions)</comment></li>
-<li>COMMAND : a valid command for the xsdbg</li>
-<li>QNAME : a valid variable/parameter name</li>
-<li>SOURCE : the stylesheet being/to be executed</li>
-<li>DATA : the xml data(document) being/to be processed by the stylesheet</li>
-<li>DEVICE_PATH : is a valid terminal on the operating system</li>
-<li>TTY_LEVEL : is a valid level of input/output to use</li>
+<li>PATH : A path to change working directory to On some operating systems a &quot;~&quot; prefix will be replaced by your home directory path</li>
+<li>TEXT : Free form text <comment>(no restrictions)</comment></li>
+<li>COMMAND : A valid command for the xsdbg</li>
+<li>QNAME : A valid variable/parameter name</li>
+<li>SOURCE : The stylesheet being/to be executed. See &lt;FILENAME&gt;</li>
+<li>DATA : The xml data(document) being/to be processed by the stylesheet. See &lt;FILENAME&gt;</li>
+<li>DEVICE_PATH : Is a valid terminal on the operating system</li>
+<li>TTY_LEVEL : Is a valid level of input/output to use</li>
 </list>
 </para>
 
@@ -173,6 +176,7 @@ the &lt;ENTER&gt; key.
 <summary>Step up to a older "call frame".  </summary>
 <body>
 <para>Shortcut name: up</para>
+<para>This is not an accurate command, xsldbg will stop as close as it can. </para>
 </body>
 <usage>
 <li>
@@ -331,6 +335,8 @@ the &lt;ENTER&gt; key.
 <li>Print lots more messages. Increase the frequency of printing &quot;Breapoint at ...&quot;</li>
 <li>At most GDB_LINES_TO_PRINT lines will be printed when evalating expressions, followed by a &quot;...&quot;. See options.h to change this value, the default is three lines of text</li>
 <li>Both local and globals will be printed when the &quot;locals&quot; command is issued </li>
+<li>When printing expresssions with cat/print. The evaluated value will be prefixed by &quot;= &quot;  &lt; EXPRESSION &gt;</li>
+<li>The use of readline library is disabled as well as repeating last entered command</li>
 </list>
 </li>
 <li><text>nonet</text>

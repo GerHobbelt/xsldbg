@@ -24,8 +24,8 @@
 #include "debugXSL.h"
 #include "files.h"
 #include "utils.h"
-#include "xsldbgthread.h"       /* for getThreadStatus() */
 
+#include "xsldbgthread.h"       /* for getThreadStatus() */
 #include "xsldbgmsg.h"
 
 /* temp buffer needed occationaly */

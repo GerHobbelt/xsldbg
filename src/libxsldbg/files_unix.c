@@ -19,6 +19,7 @@
 
 #include "xsldbg.h"
 #include "files.h"
+#include "utils.h"
 
 static const char *tempNames[] = {
     "__xsldbg_tmp_file1_txt",
@@ -85,5 +86,46 @@ filesTempFileName(int fileNumber)
     else
         result = tempNames[fileNumber];
 
+    return result;
+}
+
+
+
+  /**
+   * filesExpandName:
+   * @fileName : A valid fileName
+   *
+   * Converts a fileName to an absolute path
+   *          If operating system supports it a leading "~" in the fileName
+   *          will be converted to the user's home path. Otherwise
+   *          the same name will be returned
+   *
+   * Returns A copy of the converted @fileName or a copy of 
+   *           the @fileName as supplied. May return NULL
+   */
+xmlChar *
+filesExpandName(const xmlChar * fileName)
+{
+    xmlChar *result = NULL;
+    const char pathSepString[2] = { PATHCHAR, '\0' };
+
+    if (fileName) {
+        if ((fileName[0] == '~') && getenv("HOME")) {
+            result =
+                (xmlChar *) xmlMalloc(strlen(fileName) +
+                                      strlen(getenv("HOME")));
+            if (result) {
+                xmlStrCpy(result, getenv("HOME"));
+                xmlStrCat(result, pathSepString);
+                xmlStrCat(result, &fileName[1]);
+            } else {
+                xsltGenericError(xsltGenericErrorContext,
+                                 "Error: Out of memory\n");
+            }
+        } else {
+            /* don't make any changes, return a copy only */
+            result = xmlStrdup(fileName);
+        }
+    }
     return result;
 }

@@ -77,26 +77,6 @@ extern "C" {
     void xsldbgFree(void);
 
 
-  /**
-   * xsldbgLineNo:
-   *
-   * What line number are we at 
-   *
-   * Returns The current line number of xsldbg, may be -1
-   **/
-    int xsldbgLineNo(void);
-
-
-  /**
-   * xsldbgUrl:
-   * 
-   * What URL did we stop at
-   *
-   * Returns A NEW copy of URL stopped at. Caller must free memory for URL,   
-   *         may be NULL
-   */
-    xmlChar *xsldbgUrl(void);
-
 #ifdef __cplusplus
 }
 #endif

@@ -37,11 +37,11 @@ A:link, A:visited, A:active { text-decoration: underline }
 
 --></style>
 <title>
-           xsldbg 2.0.8 documentation
+           xsldbg 2.0.9 documentation
          </title>
 </head>
 <body bgcolor="#8b7765" text="#000000" link="#000000" vlink="#000000"><table class="listbody"><tr><td>
-<h1 class="cmdth">xsldbg 2.0.8</h1>
+<h1 class="cmdth">xsldbg 2.0.9</h1>
 <h2 class="cmdth">Overview</h2>
 <h3>xsldbg help</h3>
 
@@ -62,13 +62,16 @@ keys to navigate the history of entered commands.
 On all systems the last entered command can be repeated by just pressing
 the &lt;ENTER&gt; key. 
 
+<p>
+If your operating system supports it file names will be expanded. 
+</p>
 <h3>Legend :</h3>
 <table class="list"><tr>
 <td width="10"></td>
 <td><table class="listbody">
-<tr><td>TEMPLATENAME : a valid template name    </td></tr>
-<tr><td>FILENAME : a valid URL for a stylesheet, xml data, or output     </td></tr>
-<tr><td>LINENO : a valid line number in associated FILENAME    </td></tr>
+<tr><td>TEMPLATENAME : A valid template name    </td></tr>
+<tr><td>FILENAME : A valid URI for a stylesheet, xml data, or output. On some operating systems a &quot;~&quot; prefix will be replaced by your home directory path    </td></tr>
+<tr><td>LINENO : A valid line number in associated &lt;FILENAME&gt;    </td></tr>
 <tr><td>NUMBER_OF_FRAMES : a valid line number frames to change position by    </td></tr>
 <tr><td>BREAKPOINT_ID : a valid break point number    </td></tr>
 <tr><td>SPEED: speed to walk through code at, between 0 to 9    </td></tr>
@@ -76,14 +79,14 @@ the &lt;ENTER&gt; key.
 <tr><td>{ opt1 | opt2 | opt2 .. etc} : Choose one of the opt's    </td></tr>
 <tr><td>XPATH : a xpath selection of node(s)    </td></tr>
 <tr><td>PARAM_ID : a valid parameter number as indicated by showparam command    </td></tr>
-<tr><td>PATH : a path to change working directory to    </td></tr>
-<tr><td>TEXT : free form text &nbsp;&nbsp;&nbsp;&nbsp;<i>(no restrictions)</i>    </td></tr>
-<tr><td>COMMAND : a valid command for the xsdbg    </td></tr>
-<tr><td>QNAME : a valid variable/parameter name    </td></tr>
-<tr><td>SOURCE : the stylesheet being/to be executed    </td></tr>
-<tr><td>DATA : the xml data(document) being/to be processed by the stylesheet    </td></tr>
-<tr><td>DEVICE_PATH : is a valid terminal on the operating system    </td></tr>
-<tr><td>TTY_LEVEL : is a valid level of input/output to use    </td></tr>
+<tr><td>PATH : A path to change working directory to On some operating systems a &quot;~&quot; prefix will be replaced by your home directory path    </td></tr>
+<tr><td>TEXT : Free form text &nbsp;&nbsp;&nbsp;&nbsp;<i>(no restrictions)</i>    </td></tr>
+<tr><td>COMMAND : A valid command for the xsdbg    </td></tr>
+<tr><td>QNAME : A valid variable/parameter name    </td></tr>
+<tr><td>SOURCE : The stylesheet being/to be executed. See &lt;FILENAME&gt;    </td></tr>
+<tr><td>DATA : The xml data(document) being/to be processed by the stylesheet. See &lt;FILENAME&gt;    </td></tr>
+<tr><td>DEVICE_PATH : Is a valid terminal on the operating system    </td></tr>
+<tr><td>TTY_LEVEL : Is a valid level of input/output to use    </td></tr>
 </table></td>
 </tr></table>
 
@@ -663,6 +666,8 @@ use searchresults.html.</p>
 <tr><td>Print lots more messages. Increase the frequency of printing &quot;Breapoint at ...&quot;    </td></tr>
 <tr><td>At most GDB_LINES_TO_PRINT lines will be printed when evalating expressions, followed by a &quot;...&quot;. See options.h to change this value, the default is three lines of text    </td></tr>
 <tr><td>Both local and globals will be printed when the &quot;locals&quot; command is issued     </td></tr>
+<tr><td>When printing expresssions with cat/print. The evaluated value will be prefixed by &quot;= &quot;  &lt; EXPRESSION &gt;    </td></tr>
+<tr><td>The use of readline library is disabled as well as repeating last entered command    </td></tr>
 </table></td>
 </tr></table>    </td></tr>
 <tr><td>nonet&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true refuse to fetch DTDs or entities over network)</i>    </td></tr>
@@ -780,6 +785,7 @@ use searchresults.html.</p>
 <tr class="cmdsummary"><td>Step up to a older &quot;call frame&quot;.  </td></tr>
 <tr class="cmdtr"><td class="cmdtd">
 <p>Shortcut name: up</p>
+<p>This is not an accurate command, xsldbg will stop as close as it can. </p>
 </td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>

@@ -25,6 +25,7 @@
 #include "options.h"
 
 #include "xsldbgmsg.h"
+#include "xsldbgthread.h"       /* for get thread status */
 
 
 /* -----------------------------------------
@@ -153,15 +154,14 @@ xslDbgShellShowParam(xmlChar * arg ATTRIBUTE_UNUSED)
             parameterItemPtr paramItem = NULL;
 
             while (paramIndex < itemCount) {
-                paramItem =
-                    (parameterItemPtr)
+                paramItem = (parameterItemPtr)
                     arrayListGet(optionsGetParamItemList(), paramIndex++);
                 if (paramItem != NULL)
                     notifyListQueue(paramItem);
             }
         }
         notifyListSend();
-	result = 1;
+        result = 1;
     } else {
 
         if (optionsPrintParamList())

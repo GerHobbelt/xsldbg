@@ -19,6 +19,7 @@
 
 #include "xsldbg.h"
 #include "files.h"
+#include "utils.h"
 
 /* Note: These are native filenames; they can be accessed directly by fopen,
          etc. But they cannot be operated on to extract components from */
@@ -87,5 +88,34 @@ filesTempFileName(int fileNumber)
     else
         result = tempNames[fileNumber];
 
+    return result;
+}
+
+
+  /**
+   * filesExpandName:
+   * @fileName : A valid fileName
+   *
+   * Converts a fileName to an absolute path
+   *          If operating system supports it a leading "~" in the fileName
+   *          will be converted to the user's home path. Otherwise
+   *          the same name will be returned
+   *
+   * Returns A copy of the converted @fileName or a copy of 
+   *           the @fileName as supplied. May return NULL
+   */
+xmlChar *
+filesExpandName(const xmlChar * fileName)
+{
+    /* risc os does not support exanded file names */
+    xmlChar *result = NULL;
+
+    if (fileName) {
+        result = xmlStrdup(fileName);
+        if (!result) {
+            xsltGenericError(xsltGenericErrorContext,
+                             "Error: Out of memory\n");
+        }
+    }
     return result;
 }

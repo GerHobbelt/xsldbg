@@ -122,9 +122,14 @@ SOURCES = \
 libxsldbg_la_LDFLAGS= -version-info @XSLDBG_VERSION_INFO@
 
 
+# list win32 specific files here as well as other misc files
 EXTRA_DIST=\
-	readme.txt
-
+	readme.txt		\
+	xsldbgwin32config.h.in	\
+	xsldbgwin32config.h	\
+	options_win32.c		\
+	files_win32.c		\
+	help_win32.c	
 
 
 lib_LTLIBRARIES = libxsldbg.la

@@ -1,3 +1,33 @@
+Keith Isdale 18 Feb 2002 <k_isdale@tpg.com.au
+  Version 2.0.9
+  Changes requested to suit upcomming KDbg release 
+     o Disabled the echoing enter commands in gdb mode
+     o When printing expressions add "= " then <EXPRESSION> followed 
+	by what <EXPRESSION> evaluates to
+     o print current location as well for "where" command
+     o disable printing of "Reached template ..." to terminal until 
+	trace or walk command are being used
+  Tried to make steup command more accurate. This is very tricky to
+	get right :-) 
+  Created Makefile.am's to create win32 distribution
+  Added target dist_win32 to create distribution for WIN32 users of xsldbg
+  Added #include of xsldbgthread.h in param_cmds.c to remove a warning
+  Found and fixed bug in file name expansion ie converting "~" to <USERS_HOME_DIR>
+	o created platform dependant function filesExpandName in files.h
+	o updated xsldbg.c and debugXSL.c to make use of filesExpandName
+	o updated files_unix.c, files_win32.c and files_riscos.c with 
+	   suitable version of filesExpandName
+ File name expansion now works on 
+	command line parameters of 
+  	  o --cd <PATH>,  <STYLESHEET> ,<XML_DATA_FILE> <OUTPUTFILE>
+	xsldbg commands of 
+  	  o source, data and output
+ Updated docs/en/xsldoc.xml to suit these changes
+ On my local system created win32_distcheck.sh to quickly setup links to
+	check/compile a xsldbg zip release under WIN32 (Won't be distributed)
+
+ cvs add win32/Makefile.am win32/dsp/Makefile.am
+	
 Keith Isdale 17 Feb 2002 <k_isdale@tpg.com.au
   Version 2.0.8
   Bug fixes suggested by Hannes

@@ -1,0 +1,593 @@
+
+         xsldbg version 2.0.9
+         ====================
+
+    xsldbg help
+    ___________
+
+xsldbg is similar to gdb. It has three major modes of execution of stylesheets.
+     Run the whole stylesheet
+     Step to next xsl instruction
+     Continue until next break point is found, or stylesheet has restarted
+
+On systems with readline library available you can use the back/forward keys to navigate the history of entered commands. On all systems the last entered command can be repeated by just pressing the <ENTER> key.
+If your operating system supports it file names will be expanded.
+
+     TEMPLATENAME : A valid template name
+     FILENAME : A valid URI for a stylesheet, xml data, or output. On some operating systems a "~" prefix will be replaced by your home directory path
+     LINENO : A valid line number in associated <FILENAME>
+     NUMBER_OF_FRAMES : a valid line number frames to change position by
+     BREAKPOINT_ID : a valid break point number
+     SPEED: speed to walk through code at, between 0 to 9
+        (Comment): a comment about command meaning or usage
+     { opt1 | opt2 | opt2 .. etc} : Choose one of the opt's
+     XPATH : a xpath selection of node(s)
+     PARAM_ID : a valid parameter number as indicated by showparam command
+     PATH : A path to change working directory to On some operating systems a "~" prefix will be replaced by your home directory path
+     TEXT : Free form text   (no restrictions)
+     COMMAND : A valid command for the xsdbg
+     QNAME : A valid variable/parameter name
+     SOURCE : The stylesheet being/to be executed. See <FILENAME>
+     DATA : The xml data(document) being/to be processed by the stylesheet. See <FILENAME>
+     DEVICE_PATH : Is a valid terminal on the operating system
+     TTY_LEVEL : Is a valid level of input/output to use
+
+
+     Help related :help
+     Running related : {bye|exit|quit},step,stepup,stepdown,continue,run,trace,setoption,options
+     Libxslt parameter related :addparam,delparam,showparam,output,setoption,options
+     Template related :templates,where,frame
+     Break point related :break,showbreak,delete,enable
+     Expression viewing(xpath) :cat
+     Node viewing :ls,dir,du,cat,pwd
+     Variable viewing :globals,locals,cat
+     Variable setting:set
+     Node selection :source,data,cd
+     Searching :search
+     Operating system related :chdir,shell,tty
+     File related :output,entities,system,public
+     Disabled file commands:validate,load,save,write,free
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Addparam
+Summary : Add a libxslt parameter
+Usage:
+
+     addparam <QNAME> <XPATH>   (The <XPATH> must not contain any spaces nor double quotation marks.No error checking done on the validity of <QNAME> nor <XPATH>. This is equivalent to providing --param <QNAME> <XPATH> via command line.)
+     add param <QNAME> "<XPATH>"   (Must not contain double quotation marks in <XPATH>)
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Base
+Summary : Print the base for this node
+Usage:
+
+     base
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Break
+Summary : Break at a template, at a location in a stylesheet or xml file loaded by xsldbg, or at the current node. 
+
+Shortcut name: b
+xsldbg will try to guess the complete URL given a
+     file name without a path specified.
+     a file name in the same directory as the "top" stylesheet loaded
+     a file name relative to the current working directory of xsldbg
+Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
+break -l xsldoc.xsl 26
+Usage:
+
+     break -l <FILENAME> <LINENO>
+     break <TEMPLATENAME>   (To break at named template.)
+     break *   (To break at any template found.)
+     break   (To break point at current node. Yes that includes xml data nodes!)
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Bye
+Summary : Exit processing stylesheet as soon as possible.
+Usage:
+
+     bye
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Cat
+Summary : Print the result of a xpath expression on relative current node.
+Usage:
+
+     Usage : cat <XPATH>   (To view a variable or parameter)
+     Usage : cat $<QNAME>
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Cd
+Summary : Change to the path specified by a xpath.
+Usage:
+
+     cd <XPATH>
+     cd -t<TEMPLATENAME>   (To changes current SOURCE node to a be xsl template with name <NAME>, but does execute source command)
+     cd -s<XPATH>   (An absolute xPath to node within stylesheet)
+     cd <SHORTCUT> <XPATH>
+     Where SHORTCUT can be either
+     
+     << = preceding-sibling::node()
+     >> = following-sibling::node()
+     <- = ancestor::node()
+     -> = decendant::node()
+
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Chdir
+Summary : Change the working directory
+Usage:
+
+     chdir <PATH>   (A relative or absolute path for operating system)
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Continue
+Summary : Continue running stylesheet, stopping at any break points found.
+
+Shortcut name: c
+Usage:
+
+     continue
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Data
+Summary : Switch to displaying the current node in xml data. Or change xml data used
+Usage:
+
+     data   (Switch to the current document node.)
+     data <DATA>   (To change to a new xml data file.  A leading '~' is replaced by the $HOME environment variable value. May need to use run command to process it)
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Delete
+Summary : Delete a template breakpoint
+
+Shortcut name: d
+Usage:
+
+     delete   (To delete breakpoint at current node)
+     delete <BREAKPOINT_ID>   (To delete breakpoint at specified break point number)
+     delete -l <FILENAME> <LINENO>   (Delete at specifed file, line number)
+     delete <TEMMPLATENAME>   (To delete break point at named template.)
+     delete *   (To delete all break points.)
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Delparam
+Summary : Delete a libxslt parameter
+Usage:
+
+     delparam   (Delete all parameters present)
+     delparam <PARAM_ID>
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Dir
+Summary : Print list of nodes in a similary way to the dir shell command.
+
+
+Usage:
+
+     dir
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Disable
+Summary : Disable a breakpoint
+Usage:
+
+     disable   (To disable breakpoint at current node)
+     disable <BREAKPOINT_ID>   (To disable breakpoint at specified break point number
+     disable -l <FILENAME> <LINENO>   (Disable breakpoint at specifed file, line number)
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Du
+Summary : Print a summary of child nodes in a tree format.
+Usage:
+
+     du
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Dump
+Summary : Dump the gory details of this node
+Usage:
+
+     dump
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Enable
+Summary : Enable or disable a breakpoint (Toggle enable/disable/)
+
+Shortcut name: e
+Usage:
+
+     enable   (To enable/disable breakpoint at current node)
+     enable <BREAKPOINT_ID>   (To enable/disable breakpoint at specified break point number
+     enable -l <FILENAME> <LINENO>   (Enable/disable breakpoint at specifed file, line number)
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Entities
+Summary : Print list of external General Parsed entities used data file (document)
+
+Shortcut name : ent
+Usage:
+
+     entities
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Exit
+Summary : Exit processing stylesheet as soon as possible.
+Usage:
+
+     exit
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Frame
+Summary : Print the stack frame at a given depth
+
+Shortcut name: f
+Usage:
+
+     frame <FRAME_DEPTH>   (Depth is a number from 0 to the current depth of call stack)
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Free
+Summary : Free stylesheet and data        (Disabled see run)
+Usage:
+
+     free
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Globals
+Summary : Print a list of global stylesheet variables or parameters. Print the value of a global variable
+Usage:
+
+     globals   (Print list of all globaly available variables)
+     globals <QNAME>   (Print the value of variable specified)
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Help
+Summary : Display help on command or overiew
+
+Shortcut name: h
+Usage:
+
+     help   (Show overview of product)
+     help <COMMAND>   (Show help about a command)
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Load
+Summary : Load the xsldbg's options user preferences from disk
+Usage:
+
+     load
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Locals
+Summary : Print a list of local stylesheet variables or parameters. Print the value of a local variable
+Usage:
+
+     locals   (Print list of all locally available variables)
+     locals <QNAME>   (Print the value of variable specified)
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Ls
+Summary : List nodes in a brief format
+Usage:
+
+     ls
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : options
+Summary : Print the values for xsldbg's option
+Usage:
+
+     options
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Output
+Summary : Specify the output file name
+
+Shortcut name : o
+Usage:
+
+     output <FILENAME>
+     output -   ( Send to standard output. Must only be used when using xsldbg's command line prompt )
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Public
+Summary : Print the value that a public ID maps via the xml catalog
+
+Shortcut name : pub
+Usage:
+
+     
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Pwd
+Summary : Print the current working directory.
+Usage:
+
+     pwd
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Quit
+Summary : Exit processing stylesheet as soon as possible.
+
+Shortcut name: q
+Usage:
+
+     quit
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Run
+Summary : Restart the stylesheet.
+
+Shortcut name: r
+Usage:
+
+     run
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Save
+Summary : Save the xsldbg's options user preferences to disk
+Usage:
+
+     save
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Search
+Summary : Search a dataBase of all information gathered from stylesheets loaded
+
+All output files are stored in the same directory as the provided stylesheet. searchresults.xml is either transformed by search.xsl or searchhtml.xsl depending on whether the prefrehtml option is set.
+When the search command is issued a xml file (searchresults.xml) will be created. You can then process this file with your own stylesheet to present data in a other ways. If preferhtml is not used then searchresult.txt is printed to display.
+Depending on the amount of data collected it might take a while to complete this command.
+Normally results are sent to searchresults.txt but if preferhtml option is set then use searchresults.html.
+Usage:
+
+     search <XPATH>   (See what xpath can be used see search.dtd. The deafault <XPATH> is '//search/*' )
+     search -sort <XPATH>   (Tell search.xsl to sort the result before outputing it)
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Set
+Summary : Set the value of a variable
+Usage:
+
+     set <VARIABLE_NAME> <XPATH>
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Setoption
+Summary : Set an option for execution of stylesheet
+
+You will need to use run command to active changes
+Usage:
+
+     setoption <OPTION_NAME> <INTEGER_VALUE>
+     Where <OPTION_NAME> can be either
+     
+     debug   (If <INTEGER_VALUE> is true dump the tree of the result instead)
+     catalogs   (If <INTEGER_VALUE> is true use the catalogs from $SGML_CATALOG_FILES or SGML$CatalogFiles for risc operating system
+     html   (If <INTEGER_VALUE> is true the input document is an HTML file)
+     docbook   (If <INTEGER_VALUE> is true the input document is SGML docbook)
+     xinclude   (If <INTEGER_VALUE> is true do XInclude processing on document intput)
+     preferhtml   (If <INTEGER_VALUE> is true the prefer html output for search results. : See search command)
+     autoencode   (Try to use the encoding from the stylesheet)
+     utf8input   (All input from user is in UTF-8.This is normaly used when xsldbg is running as a thread)
+     gdb   (Run in gdb compatability mode)
+     Where this means
+     Print lots more messages. Increase the frequency of printing "Breapoint at ..."
+     At most GDB_LINES_TO_PRINT lines will be printed when evalating expressions, followed by a "...". See options.h to change this value, the default is three lines of text
+     Both local and globals will be printed when the "locals" command is issued
+     When printing expresssions with cat/print. The evaluated value will be prefixed by "= " < EXPRESSION >
+     The use of readline library is disabled as well as repeating last entered command
+
+     nonet   (If <INTEGER_VALUE> is true refuse to fetch DTDs or entities over network)
+     novalid   (If <INTEGER_VALUE> is true skip the DTD loading phase)
+     repeat   (If <INTEGER_VALUE> is true run the transformation 20 times)
+     profile   (If <INTEGER_VALUE> is true  dump profiling informations)
+     timing   (If <INTEGER_VALUE> is true display the time used)
+     noout   (If <INTEGER_VALUE> is true do not dump the result)
+
+     And where value is true if it is NOT equal to zero
+     And where value is false if it IS equal to zero
+     setoption <OPTION_NAME> "<STRING_VALUE>"   (Must not contain double quotation marks in <STRING_VALUE>)
+     setoption <OPTION_NAME> <STRING_VALUE>   (Must not contain any spaces, nor double quotation marks in <STRING_VALUE>)
+     Where <OPTION_NAME> can be either
+     
+     data   (Data file's URI)
+     source   (Source file's URI)
+     output   (Output file's SystemID )
+     docspath   (Path to use when looking for documentation)
+     catalognames   (The names of the catalogs to use when the catalogs option is set. Value will be lost if set before setting catalogs option)
+     encoding   (What encoding to use for standard output)
+
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Shell
+Summary : Execute shell command
+Usage:
+
+     shell <TEXT>   (<TEXT> is the text to be passed to operating system for execution)
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Showbreak
+Summary : To display list of template break points.
+
+Shortcut name: show
+Usage:
+
+     showbreak
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Showparam
+Summary : Print the libxslt parameters present
+Usage:
+
+     showparam
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Source
+Summary : Switch to displaying the current node in stylesheet. Or change stylesheet used
+Usage:
+
+     source   (Switch to the current node in stylesheet.)
+     source <SOURCE>   (To change to a new source file.  A leading '~' is replaced by the $HOME environment variable value. May need to use run command to execute it)
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Step
+Summary : Step until next stylesheet instruction.
+
+Shortcut name: s
+Usage:
+
+     step
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Stepdown
+Summary : Step down to a newer "call frame".  
+
+Shortcut name: down
+Usage:
+
+     stepdown   (step down one frame)
+     stepdown <NUMBER_OF_FRAMES>   (step down specified number of frames)
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Stepup
+Summary : Step up to a older "call frame".  
+
+Shortcut name: up
+This is not an accurate command, xsldbg will stop as close as it can.
+Usage:
+
+     stepup   (step up one frame)
+     stepup <NUMBER_OF_FRAMES>   (step up specified number of frames)
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Stylesheets
+Summary : Print out a list of stylesheets loaded
+
+Shortcut name: style
+Usage:
+
+     stylesheets
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : system
+Summary : Print the value that a system file maps via the xml catalog
+
+Shortcut name : sys
+Usage:
+
+     system
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Templates
+Summary : Print a list of available templates. Search for a template
+
+Shortcut name: t
+Usage:
+
+     templates
+     templates <TEMPLATE>   (Print details of template named <TEMPLATE> if it can be found)
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Trace
+Summary : Trace one execution of the stylesheet
+Usage:
+
+     trace
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Tty
+Summary : Open a terminal. Set the level of tty redirection.
+Usage:
+
+     tty <DEVICE_PATH>   (Where  <DEVICE_PATH> is a valid terminal on the operating system. Just tries to open the terminal
+     tty <TTY_LEVEL>   (Set the level of tty redirection, where <TTY_LEVEL> is a valid level of input/output to use)
+     Where level is
+     0 = Default input/output
+     1 = Terminal output of results of transformation, tracing and walking   (Default state when tty device has been opened. Not fully implemented yet.)
+     2 = Full redirection to terminal   (Not implemented yet.)
+     All other integer values are assumed to mean level 0
+
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Validate
+Summary : Validate the output file generated by stylesheet    (Disabled)
+Usage:
+
+     validate
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Walk
+Summary : Walk through code using a range of speeds
+Usage:
+
+     walk <SPEED>   (Use Ctrl-c to stop execution, <SPEED> is a value between 0 and 9. Where 0 means stop, 1 is very fast, 9 is very slow)
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Where
+Summary : Print a trace of templates calls (frame stack) and print the working directory.
+
+Shortcut name: w
+Usage:
+
+     where
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Write
+Summary : To be completed
+Usage:
+
+     write
+
+
+  Help document version 0.6

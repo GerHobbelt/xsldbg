@@ -12,10 +12,9 @@ xsldbg_SOURCES = \
 	simpleio.c
 
 EXTRA_DIST = \
-	main.c	   \
-	simpleio.c \
-	readme.txt	
-
+	main.c	   	\
+	simpleio.c 	\
+	readme.txt 		
 
 bin_PROGRAMS = xsldbg
 

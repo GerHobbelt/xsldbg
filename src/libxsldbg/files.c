@@ -494,43 +494,47 @@ int
 changeDir(const xmlChar * path)
 {
     int result = 0;
-    const xmlChar endString[2] = { PATHCHAR, '\0' };
+    const char endString[2] = { PATHCHAR, '\0' };
+    xmlChar *expandedName = NULL;
 
 
     if (path) {
-
-#ifndef __riscos                /* RISC OS has no concept of 'home' directory */
-        /* replace ~ with home path */
-        if ((*path == '~') && getenv("HOME")) {
-            xmlStrCpy(buffer, getenv("HOME"));
-            xmlStrCat(buffer, path + 1);
-            /* must have path char at end of path name */
-            xmlStrCat(buffer, endString);
-        } else
-            xmlStrCpy(buffer, path);
-#else
-        xmlStrCpy(buffer, path);
-#endif
-        /* must have path char at end of path name */
-        xmlStrCat(buffer, endString);
-
-        if (chdir((char *) buffer) == 0) {
-            if (workingDirPath)
-                xmlFree(workingDirPath);
-            workingDirPath = (xmlChar *) xmlMemStrdup((char *) buffer);
-            result = 1;
-        }
-        if (!result)
-            xsltGenericError(xsltGenericErrorContext,
-                             "Error: Unable to change to directory %s\n",
-                             path);
-        else
-            xsltGenericError(xsltGenericErrorContext,
-                             "Change to directory %s\n", path);
-    } else
+        expandedName = filesExpandName(path);
+    } else {
         xsltGenericError(xsltGenericErrorContext,
                          "Error: Null Input to changeDir %s %d\n",
                          __FILE__, __LINE__);
+	return result; 
+    }
+
+    if (!expandedName)
+        return result;          /* out of memory ? */
+
+    if (xmlStrLen(expandedName) + 1 > sizeof(buffer)) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error: Path name too big\n");
+        return result;
+    }
+
+    xmlStrCpy(buffer, expandedName);
+    /* must have path char at end of path name */
+    xmlStrCat(buffer, endString);
+    xmlFree(expandedName);
+
+    if (chdir((char *) buffer) == 0) {
+        if (workingDirPath)
+            xmlFree(workingDirPath);
+        workingDirPath = (xmlChar *) xmlMemStrdup((char *) buffer);
+        result = 1;
+    }
+    if (!result) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error: Unable to change to directory %s\n",
+                         path);
+    } else {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Change to directory %s\n", path);
+    }
     return result;
 }
 
@@ -827,7 +831,7 @@ filesFree(void)
     filesSetEncoding(NULL);
 
     if (currentUrl)
-      xmlFree(currentUrl);
+        xmlFree(currentUrl);
 
     /* free any memory used by platform specific files module */
     filesPlatformInit();
@@ -891,6 +895,7 @@ filesFreeEntityInfo(entityInfoPtr info)
  *  it doesn't already exist in list
  */
 void
+
 filesAddEntityName(const xmlChar * SystemID, const xmlChar * PublicID)
 {
     int entityIndex = 0;
@@ -901,8 +906,8 @@ filesAddEntityName(const xmlChar * SystemID, const xmlChar * PublicID)
 
     for (entityIndex = 0;
          entityIndex < arrayListCount(filesEntityList()); entityIndex++) {
-        tempItem = (entityInfoPtr) arrayListGet(filesEntityList(),
-                                                entityIndex);
+        tempItem =
+            (entityInfoPtr) arrayListGet(filesEntityList(), entityIndex);
         if (tempItem && xmlStrEqual(SystemID, tempItem->SystemID)) {
             /* name aready exits so don't add it */
             return;
@@ -924,6 +929,7 @@ filesAddEntityName(const xmlChar * SystemID, const xmlChar * PublicID)
  * Fixes the nodes from firstNode to lastNode so that debugging can occur
    */
 void
+
 filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode, xmlNodePtr lastNode)
 {
 
@@ -1094,8 +1100,8 @@ filesLoadCatalogs(void)
                     optionsSetStringOption(OPTIONS_CATALOG_NAMES,
                                            (xmlChar *) catalogs);
             } else
-                catalogs =
-                    (char *) optionsGetStringOption(OPTIONS_CATALOG_NAMES);
+                catalogs = (char *)
+                    optionsGetStringOption(OPTIONS_CATALOG_NAMES);
             xmlLoadCatalogs(catalogs);
         }
         result = 1;
@@ -1129,8 +1135,8 @@ filesEncode(const xmlChar * text)
     xmlBufferEmpty(encodeOutBuff);
     xmlBufferCat(encodeInBuff, text);
 
-    if (xmlCharEncOutFunc(stdoutEncoding, encodeOutBuff, encodeInBuff) >=
-        0) {
+    if (xmlCharEncOutFunc(stdoutEncoding, encodeOutBuff, encodeInBuff)
+        >= 0) {
         result = xmlStrdup(xmlBufferContent(encodeOutBuff));
     } else {
         xsltGenericError(xsltGenericErrorContext,
@@ -1165,7 +1171,8 @@ filesDecode(const xmlChar * text)
     xmlBufferEmpty(encodeOutBuff);
     xmlBufferCat(encodeInBuff, text);
 
-    if (xmlCharEncInFunc(stdoutEncoding, encodeOutBuff, encodeInBuff) >= 0) {
+    if (xmlCharEncInFunc(stdoutEncoding, encodeOutBuff, encodeInBuff)
+        >= 0) {
         result = xmlStrdup(xmlBufferContent(encodeOutBuff));
     } else {
         xsltGenericError(xsltGenericErrorContext,
@@ -1176,17 +1183,17 @@ filesDecode(const xmlChar * text)
 }
 
 
-  /*
-   * filesSetEncoding:
-   * @encoding : Is a valid encoding supported by the iconv library or NULL
-   *
-   * Opens encoding for all standard output to @encoding. If  @encoding 
-   *        is NULL then close current encoding and use UTF-8 as output encoding
-   *
-   * Returns 1 if successful in setting the encoding of all standard output
-   *           to @encoding
-   *         0 otherwise
-   */
+    /*
+     * filesSetEncoding:
+     * @encoding : Is a valid encoding supported by the iconv library or NULL
+     *
+     * Opens encoding for all standard output to @encoding. If  @encoding 
+     *        is NULL then close current encoding and use UTF-8 as output encoding
+     *
+     * Returns 1 if successful in setting the encoding of all standard output
+     *           to @encoding
+     *         0 otherwise
+     */
 int
 filesSetEncoding(const char *encoding)
 {
@@ -1200,8 +1207,8 @@ filesSetEncoding(const char *encoding)
             filesSetEncoding(NULL);     /* re-use code to close encoding */
             stdoutEncoding = tempEncoding;
             result =
-                (xmlCharEncOutFunc(stdoutEncoding, encodeOutBuff, NULL) >=
-                 0);
+                (xmlCharEncOutFunc(stdoutEncoding, encodeOutBuff, NULL)
+                 >= 0);
             if (!result) {
                 xmlCharEncCloseFunc(stdoutEncoding);
                 stdoutEncoding = NULL;
@@ -1228,6 +1235,7 @@ filesSetEncoding(const char *encoding)
 
 
 /* TODO in xsldbg 3.x rename these to use files prefix */
+
 /**
  * xsldbgUpdateFileDetails:
  * @node : A valid node
@@ -1237,7 +1245,8 @@ filesSetEncoding(const char *encoding)
 void
 xsldbgUpdateFileDetails(xmlNodePtr node)
 {
-  if ((node != NULL) && (node->doc != NULL) && (node->doc->URL != NULL)){
+    if ((node != NULL) && (node->doc != NULL)
+        && (node->doc->URL != NULL)) {
         if (currentUrl != NULL)
             xmlFree(currentUrl);
         currentUrl = (xmlChar *) xmlMemStrdup((char *) node->doc->URL);
