@@ -347,7 +347,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
     }
     if (!style || !filesGetMainDoc()) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Errror : Debugger has no files loaded, try reloading files\n%s",
+                         "Error: Debugger has no files loaded, try reloading files\n%s",
                          errorPrompt);
         return result;
     }
@@ -614,7 +614,7 @@ xslDbgShellDelete(xmlChar * arg)
 
     if (!filesGetStylesheet() || !filesGetMainDoc()) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Errror : Debugger has no files loaded, try reloading files\n%s",
+                         "Error: Debugger has no files loaded, try reloading files\n%s",
                          errorPrompt);
         return result;
     }
@@ -737,7 +737,7 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
 
     if (!filesGetStylesheet() || !filesGetMainDoc()) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Errror : Debugger has no files loaded, try reloading files\n%s",
+                         "Error: Debugger has no files loaded, try reloading files\n%s",
                          errorPrompt);
         return result;
     }

@@ -10,6 +10,7 @@
 #include "xsldbg.h"
 #include "breakpoint.h"
 #include "arraylist.h"
+#include "options.h"
 
 /*-----------------------------------------------------------
        Private functions
@@ -461,6 +462,10 @@ breakPointAdd(const xmlChar * url, long lineNumber,
 #endif
     }
 
+    if (result && optionsGetIntOption(OPTIONS_GDB)){
+      breakPointPrint(NULL, breakPtr);
+      xsltGenericError(xsltGenericErrorContext,"\n");
+    }
     return result;
 }
 

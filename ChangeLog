@@ -1,3 +1,7 @@
+Keith Isdale 22nd May 2003 <k_isdale@tpg.com.au>
+  Version 3.1.2
+  When gdb mode is enabled print out the details of the breakpoint- required for KDbg 1.9.0 
+
 Keith Isdale 25th March 2003 <k_isdale@tpg.com.au>
    Update configure.in to support newer versions of auto* by getting rid of acconfig.h and friends
  		
