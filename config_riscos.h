@@ -88,6 +88,6 @@
   extern char *xsldbgCommand; /* Our invocation command */
 
  /* Version number of package */
- #define VERSION "1/0/2"
+ #define VERSION "2/0/1"
 
 

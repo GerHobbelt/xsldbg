@@ -3,6 +3,6 @@
 
 #define USE_XSLDBG_AS_THREAD 1
 
-#define XSLDBG_VERSION 2.0.0
+#define XSLDBG_VERSION 2.0.1
 
 #endif

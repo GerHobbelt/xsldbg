@@ -24,7 +24,7 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <libxml/xmlerror.h>
-#include <libxsldbg/xslbreakpoint.h>
+#include <libxsldbg/breakpoint.h>
 
 #include <libxsldbg/xsldbgmsg.h>
 #include <libxsldbg/xsldbgthread.h>

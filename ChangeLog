@@ -1,3 +1,50 @@
+Keith Isdale 1 Feb 2002 <k_isdale@tpg.com.au>
+  Version 2.0.1		
+  Continue source code clean up 	
+	Fixed the name of structure ParameterItem to be parameterItem
+	Fixed the name of structures xslCallPoint* to be callPoint*
+  Split option commands off into option_cmds.c
+	updated them to allow notify messages to application
+	updated debugXSL.h to include functions xslDbgShellOptions 
+		and xslDbgShellSetOption
+	moved optionsNames listed in debugXSL.c to option_cmds.c
+  Rebuilt notification system I now imediately create a instance of
+	XsldbgEvent. Then fill in the list of XsldbgEventData elements 
+	 appropriate attributes for the message. 
+	This means that the application does not know
+ 	about how xsldbg is implemented. All they see is the notification 
+	messages. This is also a far easier method to maintain as previous
+	method was very difficult to understand.
+  Added support to save and load configuration using
+	 "save"  and "load" commands
+  Created docs/en/config.dtd
+  Updated docs/en/catalogs.xml and docs/en/CATALOG to contain config.dtd
+
+ Applied patches suggested by Justin
+ Copied optionsLoad, optionsSave from options_unix.c to 
+		options_win32.c and options_riscos.c
+
+  Need to update cvs 
+	o add 	docs/en/config.dtd
+	o remove src/libxsldbg/dbg*.c
+	
+Keith Isdale 31 Jan 2002 <k_isdale@tpg.com.au>
+  Version 2.0.0
+  Synchronize function declaration documentation in header and implementation files
+  Rename "module level" functions to follow the form of 
+	<MODULE_NAME><FUNCTION_DESCRIPTION> 
+	This caused major binary incompatabilies which has lead to version 2.0.0
+        Removed irelavant functions isOptionEnabled and enableOption; and use
+	      optionsGetIntOption optionsSetIntOption instead
+	renamed files dbg*.c to be <MODULE_NAME>.c
+	created utils.[ch] and put all generally useful things in there
+	Fixed the name of structure "ArrayList" to be arrayList
+	Fixed the name of structure xslBreakPoint to be breakPoint
+	Removed private "lineNo" functions from breakpoint.h 
+  Changed required version of libxslt to 1.0.10 
+	
+	
+	
 Keith Isdale 29 Jan 2002 <k_isdale@tpg.com.au>
    Added platform specific interface optionsConfigFileName to 
 	options.h

@@ -1,6 +1,6 @@
 
 /**************************************************************************
-                          debugXSL.h  -  describe the core function of xsldbg
+                          debugXSL.h  -  describes the core xsldbg shell functions
                              -------------------
     begin                : Sun Sep 16 2001
     copyright            : (C) 2001 by Keith Isdale
@@ -52,98 +52,49 @@
  *								*
  ****************************************************************/
 
-/**
- * IS_BLANK:
- * @c:  an UNICODE value (int)
- *
- * Macro to check the following production in the XML spec
- *
- * [3] S ::= (#x20 | #x9 | #xD | #xA)+
+/*
+   Note that functions that have a prefix of xslDbgShell are NOT implemented
+      in debugXSL.c unless stated
+
+   All functions with the prefix of debygXSL are implemented in debugXSL.c
+
  */
 
 
 
 
-
-
 /**
- * Remove leading and trailing spaces off @p text
- *         stores result back into @p text
+ * A break point has been found so pass control to user
  *
- * @returns 1 on success,
- *          0 otherwise
- *
- * @param text A valid string with leading or trailing spaces
+ * @param templ The source node being executed
+ * @param node The data node being processed
+ * @param root The template being applied to "node"
+ * @param ctxt transform context for stylesheet being processed
  */
 
 
-    int trimString(xmlChar * text);
+    void debugXSLBreak(xmlNodePtr templ, xmlNodePtr node,
+                    xsltTemplatePtr root, xsltTransformContextPtr ctxt);
 
 
 
 
 
-
-/**
- * Spit string by white space and put into @p out
- * 
- * @returns 1 on success,
- *          0 otherwise
+/** 
+ * Get the last template node found, if any
  *
- * @param textIn The string to split
- * @param maxStrings The max number of strings to put into @p out
- * @param out Is valid and at least the size of @p maxStrings
+ * @returns the last template node found, if any
  */
 
 
-    int splitString(xmlChar * textIn, int maxStrings, xmlChar ** out);
-
-
-
-
-
-
-/**
- * Present the xsldbg shell to user and process entered commands
- *
- * @param source Current stylesheet instruction being executed
- * @param doc Current document node being processed
- * @param filename Not used
- * @param input The function to call to when reading commands from stdio
- * @param output Where to put the results
- * @param styleCtxt Is valid 
- */
-
-
-    void xslDbgShell(xmlNodePtr source, xmlNodePtr doc,
-                     xmlChar * filename,
-                     xmlShellReadlineFunc input,
-                     FILE * output, xsltTransformContextPtr styleCtxt);
-
-
-
-
-
-
-/**
- * Print stylesheets that can be found in loaded stylsheet
- *
- * @returns 1 on success,
- *          0 otherwise
- *
- * @param arg The stylesheets of interests and in UTF-8, is NULL for all stylesheets
- *
- */
-
-
-    int xslDbgPrintStyleSheets(xmlChar * arg);
+    xsltTemplatePtr debugXSLGetTemplate(void);
 
 
 
 /* -----------------------------------------
-
    Break Point related commands
 
+   They are implemented in breakpoint_cmds.c
   ------------------------------------------- */
 
 
@@ -217,7 +168,9 @@
 */
 
 
-    void xslDbgEnableBreakPoint(void *payload, void *data, xmlChar * name);
+    void xslDbgShellEnableBreakPoint(void *payload, void *data, xmlChar * name);
+
+
 
 
 
@@ -248,16 +201,33 @@
 */
 
 
-    void xslDbgPrintBreakPoint(void *payload, void *data, xmlChar * name);
+    void xslDbgShellPrintBreakPoint(void *payload, void *data, xmlChar * name);
 
 
 
 
 /* -----------------------------------------
-
    Template related commands
 
-  ------------------------------------------- */
+   They are implemented in template_cmds.c
+  ------------------------------------------- */  
+
+
+
+
+/**
+ * Print stylesheets that can be found in loaded stylsheet
+ *
+ * @returns 1 on success,
+ *          0 otherwise
+ *
+ * @param arg The stylesheets of interests and in UTF-8, is NULL for all stylesheets
+ *
+ */
+
+
+    int xslDbgShellPrintStyleSheets(xmlChar * arg);
+
 
 
 
@@ -274,50 +244,17 @@
  * @param allFiles If 1 then look for all templates in stylsheets found in 
  *                 @p styleCtxt
  *             otherwise look in the stylesheet found by 
- *                 debugBreak function
+ *                 debugXSLBreak function
  * @returns 1 on success,
  *          0 otherwise
  */
 
 
-    int xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
+    int xslDbgShellPrintTemplateNames(xsltTransformContextPtr styleCtxt,
                                  xmlShellCtxtPtr ctxt,
                                  xmlChar * arg, int verbose, int allFiles);
 
 
-
-
-
-/**
- * This displays the templates in the same order as they are in the 
- *   stylesheet. If verbose is 1 then print more information
- *   For each template found @p templateCount is increased
- *   For each printed template @p printCount is increased
- *
- * @param templ Is valid
- * @param verbose Either 1 or 0
- * @param templateCount Is valid
- * @param count Is valid
- * @param templateName The template name to print and in UTF-8, may be NULL
- */
-
-
-    void xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
-                                   int *templateCount, int *count,
-                                   xmlChar * templateName);
-
-
-
-
-
-/** 
- * Get the last template node found, if any
- *
- * @returns the last template node found, if any
- */
-
-
-    xsltTemplatePtr getTemplate(void);
 
 
 /* -----------------------------------------
@@ -394,6 +331,7 @@
 
    Operating system related commands
 
+   Implemented in os_cmds.c
   ------------------------------------------- */
 
 
@@ -435,6 +373,7 @@
 
    libxslt parameter related commands
 
+   Implemented in param_cmds.c
   ------------------------------------------- */
 
 
@@ -489,9 +428,50 @@
     int xslDbgShellShowParam(xmlChar * arg);
 
 
-/* -----------------------------------------
+  /* -----------------------------------------
 
-   Tracing related commands
+   Option related commands
+
+   Implemented in option_cmds.c
+
+  ------------------------------------------- */
+
+
+
+
+/**
+ * Set the value of an option 
+ *
+ * @returns 1 on success,
+ *          0 otherwise
+ *
+ * @param arg is valid, and in format   <NAME> <VALUE>
+ * 
+ */
+
+
+  int xslDbgShellSetOption(xmlChar *arg);
+
+
+
+
+
+/**
+ * Prints out values for user options
+ *
+ * @returns 1 on success,
+ *          0 otherwise
+ */
+
+
+       int xslDbgShellOptions(void);
+
+
+  /* -----------------------------------------
+
+   Tracing, walking related commands
+
+   Implemented in shell.c
 
   ------------------------------------------- */
 
@@ -515,6 +495,7 @@
 
 
 
+
 /**
  * Start walking through the stylesheet.
  *
@@ -529,10 +510,11 @@
 
 
 
-/* -----------------------------------------
+  /* -----------------------------------------
    
    Seach related commands
-   
+
+   Implemented in search_cmds.c
   ------------------------------------------- */
 
 
@@ -551,6 +533,14 @@
 
     int xslDbgShellSearch(xsltTransformContextPtr styleCtxt,
                           xsltStylesheetPtr style, xmlChar * arg);
+
+
+/* -----------------------------------------
+   
+   Seach related commands
+
+   Implemented in variable_cmds.c
+  ------------------------------------------- */
 
 
 

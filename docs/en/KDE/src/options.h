@@ -96,7 +96,7 @@
         WALKSPEED_8,
         WALKSPEED_9,
         WALKSPEED_SLOW = WALKSPEED_9
-    } unusedOpt3;
+    };
 
 
 /* how many microseconds is each speed increase worth*/
@@ -115,11 +115,12 @@
 /* used to keep track of libxslt paramters 
  see Parameter related options near end of file
 */
-    typedef struct _ParameterItem ParameterItem;
-    typedef ParameterItem *ParameterItemPtr;
-    struct _ParameterItem {
+    typedef struct _parameterItem parameterItem;
+    typedef parameterItem *parameterItemPtr;
+    struct _parameterItem {
         xmlChar *name;          /* libxslt parameter name */
         xmlChar *value;         /* libxslt parameter value */
+        int intValue;             /* reserved */
     };
 
 
@@ -143,48 +144,11 @@
 
 
 /**
- * Free memory used by options data structures
+ * Free memory used by the options module
  */
 
 
     void optionsFree(void);
-
-
-
-
-
-
-/**
- * Set the state of a boolean xsldbg option to @p value
- *
- * @returns 1 on success,
- *          0 otherwise
- *
- * @param optionType Is a valid boolean option
- * @param value 1 to enable, 0 otherwise
- */
-
-
-    int enableOption(OptionTypeEnum optionType, int value);
-
-
-
-
-
-
-/**
- * Return the state of a boolean option
- *
- * @returns The state of a boolean xsldbg option. 
- *            ie 1 for enabled, 0 for disabled
- *
- * @param optionType Is a valid boolean option to query
-
- */
-
-
-    int isOptionEnabled(OptionTypeEnum optionType);
-
 
 
 
@@ -201,7 +165,7 @@
  */
 
 
-    int setIntOption(OptionTypeEnum optionType, int value);
+    int optionsSetIntOption(OptionTypeEnum optionType, int value);
 
 
 
@@ -215,7 +179,7 @@
  */
 
 
-    int getIntOption(OptionTypeEnum optionType);
+    int optionsGetIntOption(OptionTypeEnum optionType);
 
 
 
@@ -234,7 +198,7 @@
  */
 
 
-    int setStringOption(OptionTypeEnum optionType, const xmlChar * value);
+    int optionsSetStringOption(OptionTypeEnum optionType, const xmlChar * value);
 
 
 
@@ -250,20 +214,103 @@
  */
 
 
-    const xmlChar *getStringOption(OptionTypeEnum optionType);
+    const xmlChar *optionsGetStringOption(OptionTypeEnum optionType);
 
 
 
 
 
   /**
-   * Copy volitile options to the working area for xsldbg
+   * Copy volitile options to the working area for xsldbg to be used
+   *   just after xsldbg starts its processing loop
    */
 
 
-    void copyVolitleOptions(void);
+    void optionsCopyVolitleOptions(void);
 
 
+
+/*---------------------------------------------
+          Parameter related options 
+-------------------------------------------------*/
+
+
+
+
+
+/**
+ * Return the list of libxlt parameters
+ *
+ * @returns The list of parameters to provide to libxslt when doing 
+ *              stylesheet transformation if successful
+ *          NULL otherwise
+ */
+
+
+    arrayListPtr optionsGetParamItemList(void);
+
+
+
+
+
+
+/**
+ * Create a new libxslt parameter item
+ *
+ * @returns non-null if sucessful
+ *          NULL otherwise
+ *
+ * @param name Is valid 
+ * @param value Is valid 
+ */
+
+
+    parameterItemPtr optionsParamItemNew(const xmlChar * name,
+                                  const xmlChar * value);
+
+
+
+
+
+
+/**
+ * Free memory used by libxslt parameter item @p item
+ *
+ * @param item Is valid
+ */
+
+
+    void optionsParamItemFree(parameterItemPtr item);
+
+
+
+
+
+
+/**
+ * Prints all items in parameter list
+ *
+ * @returns 1 on success,
+ *          0 otherwise
+ */
+
+
+    int optionsPrintParam(int paramId);
+
+
+
+
+
+
+/**
+ * Prints all items in parameter list
+ *
+ * @returns 1 on success,
+ *          0 otherwise
+ */
+
+
+    int optionsPrintParamList(void);
 
 
 
@@ -278,7 +325,7 @@
    */
 
 
-  xmlNodePtr optionNode(OptionTypeEnum optionType);
+  xmlNodePtr optionsNode(OptionTypeEnum optionType);
 
 
 
@@ -297,6 +344,21 @@
 
 
   int optionsReadDoc(xmlDocPtr doc);
+
+
+
+
+  /**
+   * Save configuation to file specified
+   *
+   * @returns 1 if able to save options to @fileName,
+   *          0 otherwise
+   *
+   * @fileName : Must be NON NULL be a local file that can be written to
+   */
+
+
+  int optionsSavetoFile(xmlChar *fileName);
 
 
 /* ---------------------------------------------
@@ -367,87 +429,21 @@
   int optionsLoad(void);
 
 
-/*---------------------------------------------
-          Parameter related options 
--------------------------------------------------*/
 
 
 
+  /**
+   * Save options to configuration file/registry
+   *
+   * This is a platform specific interface
+   * 
+   * Returns 1 if able to load options
+   *         0 otherwise
+   */
 
 
-/**
- * Return the list of libxlt parameters
- *
- * @returns The list of parameters to provide to libxslt when doing 
- *              stylesheet transformation if successful
- *          NULL otherwise
- */
+  int optionsSave(void);
 
-
-    ArrayListPtr getParamItemList(void);
-
-
-
-
-
-
-/**
- * Create a new libxslt parameter item
- *
- * @returns non-null if sucessful
- *          NULL otherwise
- *
- * @param name Is valid 
- * @param value Is valid 
- */
-
-
-    ParameterItemPtr paramItemNew(const xmlChar * name,
-                                  const xmlChar * value);
-
-
-
-
-
-
-/**
- * Free memory used by libxslt parameter item @p item
- *
- * @param item Is valid
- */
-
-
-    void paramItemFree(ParameterItemPtr item);
-
-
-
-
-
-
-/**
- * Prints all items in parameter list
- *
- * @returns 1 on success,
- *          0 otherwise
- */
-
-
-    int printParam(int paramId);
-
-
-
-
-
-
-/**
- * Prints all items in parameter list
- *
- * @returns 1 on success,
- *          0 otherwise
- */
-
-
-    int printParamList(void);
 
 
 

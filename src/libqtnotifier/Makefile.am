@@ -3,8 +3,10 @@ if USE_XSLDBG_AS_THREAD
 INCLUDES= -I $(QTDIR)/include -I .. $(XSLDBG_CFLAGS)
 
 libqtnotifier_la_SOURCES =\
-	qtnotifier.cpp        \
-	xsldbgnotifier.cpp		\
+	qtnotifier.cpp        	\
+	xsldbgnotifier.cpp  	 \
+	xsldbgevent.cpp	    	\
+	xsldbgdebuggerbase.cpp	\
 	xsldbgthread.cpp			
 
 noinst_HEADERS = \

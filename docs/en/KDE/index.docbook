@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd">
-<book><bookinfo><title>Xsldbg 1.0.3</title><subtitle>Command and usage documentation</subtitle><authorgroup><author><firstname>Keith</firstname><surname>Isdale</surname><affiliation><address><email>k_isdale@tpg.com.au</email></address></affiliation></author></authorgroup><copyright><year>2001</year><holder>Keith Isdale</holder></copyright><legalnotice>&FDLNotice;</legalnotice><date>13/12/2001</date><releaseinfo>1.0.3</releaseinfo><abstract><para>
+<book><bookinfo><title>Xsldbg 2.0.1</title><subtitle>Command and usage documentation</subtitle><authorgroup><author><firstname>Keith</firstname><surname>Isdale</surname><affiliation><address><email>k_isdale@tpg.com.au</email></address></affiliation></author></authorgroup><copyright><year>2001</year><holder>Keith Isdale</holder></copyright><legalnotice>&FDLNotice;</legalnotice><date>13/12/2001</date><releaseinfo>2.0.1</releaseinfo><abstract><para>
 xsldbg is a tool intended to help understand stylesheets. 
 What makes it different to other stylesheet debuggers is the ability 
 to search for items of interest and trace stylesheet execution. You can
@@ -103,6 +103,9 @@ Free stylesheet and data        (Disabled see run)
 </section><section id="ls_cmd"><title id="ls_cmd.title">Ls</title>
 List nodes in a brief format
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>ls</entry></row></tbody></tgroup></table>
+</section><section id="load_cmd"><title id="load_cmd.title">Load</title>
+Load the xsldbg's options user preferences from disk
+<table label="of usage"><tgroup cols="1"><tbody><row><entry>load</entry></row></tbody></tgroup></table>
 </section><section id="tty_cmd"><title id="tty_cmd.title">Tty</title>
 Open a terminal. Set the level of tty redirection.
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>tty &lt;DEVICE_PATH&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Where  &lt;DEVICE_PATH&gt; is a valid terminal on the operating system. Just tries to open the terminal</emphasis></markup></entry></row><row><entry>tty &lt;TTY_LEVEL&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Set the level of tty redirection, where &lt;TTY_LEVEL&gt; is a valid level of input/output to use)</emphasis></markup><informaltable><tgroup cols="1"><tbody><row><entry>Where level is </entry></row><row><entry>0 = Default input/output </entry></row><row><entry>1 = Terminal output of results of transformation, tracing and walking <markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Default state when tty device has been opened. Not fully implemented yet.)</emphasis></markup></entry></row><row><entry>2 = Full redirection to terminal<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Not implemented yet.)</emphasis></markup></entry></row><row><entry>All other integer values are assumed to mean level 0
@@ -163,15 +166,12 @@ Print the value that a system file maps via the xml catalog
 </section><section id="options_cmd"><title id="options_cmd.title">options</title>
 Print the values for xsldbg's option
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>options</entry></row></tbody></tgroup></table>
-</section><section id="load_cmd"><title id="load_cmd.title">Load</title>
-Reload stylesheet and data file(s)      (Disabled see run)
-<table label="of usage"><tgroup cols="1"><tbody><row><entry>load</entry></row></tbody></tgroup></table>
 </section><section id="run_cmd"><title id="run_cmd.title">Run</title>
 Restart the stylesheet.
 <para>Shortcut name: r</para>
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>run</entry></row></tbody></tgroup></table>
 </section><section id="save_cmd"><title id="save_cmd.title">Save</title>
-Save the generated data file       (Disabled)
+Save the xsldbg's options user preferences to disk
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>save</entry></row></tbody></tgroup></table>
 </section><section id="search_cmd"><title id="search_cmd.title">Search</title>
 Search a dataBase of all information gathered from stylesheets loaded

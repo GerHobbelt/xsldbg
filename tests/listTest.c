@@ -17,19 +17,17 @@
  ***************************************************************************/
 
 #include <stdio.h>
-#include <libxsldbg/arraylist.h>
-#include <libxsldbg/xslbreakpoint.h>
-#include <libxsldbg/xslsearch.h>
-#include <libxsldbg/options.h>
+#include "../src/libxsldbg/arraylist.h"
+#include "../src/libxsldbg/breakpoint.h"
+#include "../src/libxsldbg/search.h"
+#include "../src/libxsldbg/options.h"
 
-ArrayListPtr createTestList(void);
-ArrayListPtr createParamList(void);
+arrayListPtr createTestList(void);
+arrayListPtr createParamList(void);
 int hashTest(void);
 
-ArrayListPtr createBreakPointList(void);
-ArrayListPtr xslBreakPointLineList(void);
-int breakPointInit(void);
-void breakPointFree(void);
+arrayListPtr createBreakPointList(void);
+arrayListPtr xslBreakPointLineList(void);
 
 /*
  * Print data given by scan of breakPoints 
@@ -40,7 +38,7 @@ void myWalker(void *payload, void *data, xmlChar *name);
 
 int main(void){
   int itemIndex, result = 0;
-  ArrayListPtr list = createTestList();
+  arrayListPtr list = createTestList();
   xmlInitMemory();
   if (list){
   fprintf(stdout, "\nTest free all items. List size now %d\n", arrayListCount(list));    
@@ -81,7 +79,7 @@ int main(void){
   fprintf(stdout, "\n\nTest of parameter item list\n");
   list = createParamList();
   if (list){
-    ParameterItemPtr item;
+    parameterItemPtr item;
     for (itemIndex = 0; itemIndex < arrayListCount(list); itemIndex++){
       item = arrayListGet(list, itemIndex);
       if (item){
@@ -97,60 +95,60 @@ int main(void){
   breakPointInit();
   list = createBreakPointList();
   if (list){
-    xslBreakPointPtr breakPoint = getBreakPoint((xmlChar*)"index.html", 1);
-    if (breakPoint){
+    breakPointPtr breakPtr = breakPointGet((xmlChar*)"index.html", 1);
+    if (breakPtr){
       fprintf(stdout, "Added breakPoint :");
-      printBreakPoint(stdout, breakPoint);
+      breakPointPrint(stdout, breakPtr);
       fprintf(stdout, "\n");
     }else{
       fprintf(stdout,"\nBreakpoint #1 not found!\n");
       result = 1;
     }
 
-    breakPoint = getBreakPoint((xmlChar*)"index2.html", 2);
-    if (breakPoint){
+    breakPtr = breakPointGet((xmlChar*)"index2.html", 2);
+    if (breakPtr){
       fprintf(stdout, "Added breakPoint :");
-      printBreakPoint(stdout, breakPoint);
+      breakPointPrint(stdout, breakPtr);
       fprintf(stdout, "\n");
     }else{
       fprintf(stdout,"\nBreakpoint #2 not found!\n");
       result = 1;
     }
 
-    breakPoint = getBreakPoint((xmlChar*)"index3.html", 3);
-    if (breakPoint){
+    breakPtr = breakPointGet((xmlChar*)"index3.html", 3);
+    if (breakPtr){
       fprintf(stdout, "Added breakPoint :");
-      printBreakPoint(stdout, breakPoint);
+      breakPointPrint(stdout, breakPtr);
       fprintf(stdout, "\n");
     }else{
       fprintf(stdout,"\nBreakpoint #3 not found!\n");
       result = 1;
     }
 
-    breakPoint = getBreakPoint((xmlChar*)"index2.html", 1);
-    if (breakPoint){
+    breakPtr = breakPointGet((xmlChar*)"index2.html", 1);
+    if (breakPtr){
       fprintf(stdout, "Added breakPoint :");
-      printBreakPoint(stdout, breakPoint);
+      breakPointPrint(stdout, breakPtr);
       fprintf(stdout, "\n");
     }else{
       fprintf(stdout,"\nBreakpoint #4 not found!\n");
       result = 1;
     }
 
-    breakPoint = getBreakPoint((xmlChar*)"index2.html", 3);
-    if (breakPoint){
+    breakPtr = breakPointGet((xmlChar*)"index2.html", 3);
+    if (breakPtr){
       fprintf(stdout, "Added breakPoint :");
-      printBreakPoint(stdout, breakPoint);
+      breakPointPrint(stdout, breakPtr);
       fprintf(stdout, "\n");
     }else{
       fprintf(stdout,"\nBreakpoint #5 not found!\n");
       result = 1;
     }
 
-    breakPoint = getBreakPoint((xmlChar*)"index2.html", 4);
-    if (breakPoint){
+    breakPtr = breakPointGet((xmlChar*)"index2.html", 4);
+    if (breakPtr){
       fprintf(stdout, "Added breakPoint :");
-      printBreakPoint(stdout, breakPoint);
+      breakPointPrint(stdout, breakPtr);
       fprintf(stdout, "\n");
     }else{
       fprintf(stdout,"\nBreakpoint #6 not found!\n");
@@ -162,10 +160,10 @@ int main(void){
     walkBreakPoints((xmlHashScanner)myWalker, NULL);
 
     fprintf(stdout,"\nLooking for breakpoint with id of 2\n");
-    breakPoint = findBreakPointById(2);
-    if (breakPoint){
+    breakPtr = findBreakPointById(2);
+    if (breakPtr){
       fprintf(stdout,"Found it! Here it is!\n");
-      printBreakPoint(stdout, breakPoint);   
+      breakPointPrint(stdout, breakPtr);   
       fprintf(stdout,"\n");   
     }else{
       fprintf(stdout,"Not found!\n");
@@ -173,10 +171,10 @@ int main(void){
     }     
 
     fprintf(stdout,"\nLooking for breakpoint with template name of 'three'\n");
-    breakPoint = findBreakPointByName((xmlChar*)"three");
-    if (breakPoint){
+    breakPtr = findBreakPointByName((xmlChar*)"three");
+    if (breakPtr){
       fprintf(stdout,"Found it! Here it is!\n");
-      printBreakPoint(stdout, breakPoint);   
+      breakPointPrint(stdout, breakPtr);   
       fprintf(stdout,"\n");   
     }else{
       fprintf(stdout,"Not found!\n");
@@ -185,13 +183,13 @@ int main(void){
     fprintf(stdout,"Done!\n");
 
     fprintf(stdout, "\nTest for adding two duplicate breakpoints these should fail\n");
-    addBreakPoint((xmlChar*)"index.html", 1, (xmlChar*)"one", DEBUG_BREAK_SOURCE);
-    addBreakPoint((xmlChar*)"index2.html", 4, NULL, DEBUG_BREAK_SOURCE);
+    breakPointAdd((xmlChar*)"index.html", 1, (xmlChar*)"one", DEBUG_BREAK_SOURCE);
+    breakPointAdd((xmlChar*)"index2.html", 4, NULL, DEBUG_BREAK_SOURCE);
     fprintf(stdout,"Done!\n");
 
     
     fprintf(stdout, "\nFreeing memory used by breakpoints\n");    
-    emptyBreakPoint();
+    breakPointEmpty();
   }
   fprintf(stdout,"Done\n");
 
@@ -202,8 +200,8 @@ int main(void){
 
 }
 
-ArrayListPtr createTestList(void){
-  ArrayListPtr list = arrayListNew(3, xmlFree);
+arrayListPtr createTestList(void){
+  arrayListPtr list = arrayListNew(3, xmlFree);
   fprintf(stdout, "Creating test list\n");
   if (list){
     arrayListAdd(list, xmlMemStrdup("item1"));
@@ -223,29 +221,29 @@ ArrayListPtr createTestList(void){
 }
 
 
-ArrayListPtr createParamList(void){
-  ArrayListPtr list = arrayListNew(3, (freeItemFunc)paramItemFree);
+arrayListPtr createParamList(void){
+  arrayListPtr list = arrayListNew(3, (freeItemFunc)optionsParamItemFree);
   if (list){
-    arrayListAdd(list, paramItemNew((xmlChar*)"param1", (xmlChar*)"'value1'"));
-    arrayListAdd(list, paramItemNew((xmlChar*)"param2", (xmlChar*)"'value2'"));
-    arrayListAdd(list, paramItemNew((xmlChar*)"param3", (xmlChar*)"'value3'"));
+    arrayListAdd(list, optionsParamItemNew((xmlChar*)"param1", (xmlChar*)"'value1'"));
+    arrayListAdd(list, optionsParamItemNew((xmlChar*)"param2", (xmlChar*)"'value2'"));
+    arrayListAdd(list, optionsParamItemNew((xmlChar*)"param3", (xmlChar*)"'value3'"));
   }
   return list;
 }
 
-ArrayListPtr createBreakPointList(void){
-  ArrayListPtr list;
+arrayListPtr createBreakPointList(void){
+  arrayListPtr list;
   fprintf(stdout, "Creating breakPoint list\n");
-  list = xslBreakPointLineList();
+  list = breakPointLineList();
   if (list){
-    /*    addBreakPoint(const xmlChar * url, long lineNumber,
+    /*    breakPointAdd(const xmlChar * url, long lineNumber,
 	  const xmlChar * templateName, int type) */
-    addBreakPoint((xmlChar*)"index.html", 1, (xmlChar*)"one", DEBUG_BREAK_SOURCE);
-    addBreakPoint((xmlChar*)"index2.html", 2, (xmlChar*)"two", DEBUG_BREAK_SOURCE);
-    addBreakPoint((xmlChar*)"index3.html", 3, (xmlChar*)"three", DEBUG_BREAK_SOURCE); 
-    addBreakPoint((xmlChar*)"index2.html", 1, (xmlChar*)"four", DEBUG_BREAK_SOURCE); 
-    addBreakPoint((xmlChar*)"index2.html", 3, NULL, DEBUG_BREAK_SOURCE); 
-    addBreakPoint((xmlChar*)"index2.html", 4, NULL, DEBUG_BREAK_SOURCE); 
+    breakPointAdd((xmlChar*)"index.html", 1, (xmlChar*)"one", DEBUG_BREAK_SOURCE);
+    breakPointAdd((xmlChar*)"index2.html", 2, (xmlChar*)"two", DEBUG_BREAK_SOURCE);
+    breakPointAdd((xmlChar*)"index3.html", 3, (xmlChar*)"three", DEBUG_BREAK_SOURCE); 
+    breakPointAdd((xmlChar*)"index2.html", 1, (xmlChar*)"four", DEBUG_BREAK_SOURCE); 
+    breakPointAdd((xmlChar*)"index2.html", 3, NULL, DEBUG_BREAK_SOURCE); 
+    breakPointAdd((xmlChar*)"index2.html", 4, NULL, DEBUG_BREAK_SOURCE); 
   }
   fprintf(stdout, "Done!\n");
   return list;
@@ -257,7 +255,7 @@ ArrayListPtr createBreakPointList(void){
 */
 void myWalker(void *payload, void *data ATTRIBUTE_UNUSED, xmlChar *name ATTRIBUTE_UNUSED){
   if (payload){
-     printBreakPoint(stdout, (xslBreakPointPtr)payload);
+     breakPointPrint(stdout, (breakPointPtr)payload);
     fprintf(stdout, "\n");   
   }
 }

@@ -31,6 +31,7 @@
 #endif
 #endif
 
+#include <string.h>
 #include <libxsldbg/xsldbgmsg.h>
 #include <libxsldbg/xsldbgio.h>
 
@@ -65,8 +66,6 @@ int notifyTextXsldbgApp(XsldbgMessageEnum type, const char *text)
 xmlChar *
 xslDbgShellReadline(xmlChar * prompt)
 {
-
-  const char *inputReadBuff;
 
   static char last_read[DEBUG_BUFFER_SIZE] = { '\0' };
 
