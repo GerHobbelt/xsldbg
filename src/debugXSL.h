@@ -141,12 +141,14 @@ extern "C" {
 /**
  * xslDbgShellBreak:
  * @arg : non-null
+ * @style : non-null
+ * @ctxt : non-null
  * 
  * Add break point specified by arg
  * Return 1 on success,
  *        0 otherwise
  */
-    int xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style);
+    int xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style, xsltTransformContextPtr ctxt);
 
 
 /**

@@ -154,18 +154,38 @@ xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
 }
 
 
-void xslDbgShellPrintStylesheetsHelper(void *payload ATTRIBUTE_UNUSED,
+void xslDbgShellPrintStylesheetsHelper2(void *payload,
                                        void *data ATTRIBUTE_UNUSED,
-                                       xmlChar * name);
+                                       xmlChar * name ATTRIBUTE_UNUSED);
 
+/* our payload is a xmlNodePtr to a included stylesheet */
 void
-xslDbgShellPrintStylesheetsHelper(void *payload ATTRIBUTE_UNUSED,
+xslDbgShellPrintStylesheetsHelper2(void *payload,
                                   void *data ATTRIBUTE_UNUSED,
-                                  xmlChar * name)
+                                  xmlChar * name ATTRIBUTE_UNUSED)
+{
+    xmlNodePtr node = (xmlNodePtr) payload;
+
+    if (node && node->doc && node->doc->URL) {
+        xsltGenericError(xsltGenericErrorContext,
+                         " Stylesheet %s\n", node->doc->URL);
+        printCounter++;
+    }
+}
+
+
+void xslDbgShellPrintStylesheetsHelper(void *payload,
+                                       void *data ATTRIBUTE_UNUSED,
+                                       xmlChar * name ATTRIBUTE_UNUSED);
+/* our payload is a stylesheet */
+void
+xslDbgShellPrintStylesheetsHelper(void *payload,
+                                  void *data ATTRIBUTE_UNUSED,
+                                  xmlChar * name ATTRIBUTE_UNUSED)
 {
     xsltStylesheetPtr style = (xsltStylesheetPtr) payload;
 
-    if (style && style->doc) {
+    if (style && style->doc && style->doc->URL) {
         xsltGenericError(xsltGenericErrorContext,
                          " Stylesheet %s\n", style->doc->URL);
         printCounter++;
@@ -184,6 +204,8 @@ xslDbgPrintStyleSheets(xmlChar * arg)
 {
     printCounter = 0;
     walkStylesheets((xmlHashScanner) xslDbgShellPrintStylesheetsHelper,
+                    NULL, getStylesheet());
+    walkIncludes((xmlHashScanner) xslDbgShellPrintStylesheetsHelper2,
                     NULL, getStylesheet());
     if (printCounter != 0)
         xsltGenericError(xsltGenericErrorContext,

@@ -80,13 +80,15 @@ xslDbgShellFrameBreak(xmlChar * arg, int stepup)
 /**
  * xslDbgShellBreak:
  * @arg : non-null
+ * @style : non-null
+ * @ctxt : non-null
  * 
  * Add break point specified by arg
  * Return 1 on success,
  *        0 otherwise
  */
 int
-xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style)
+xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style, xsltTransformContextPtr ctxt)
 {
     int result = 0;
     long lineNo;
@@ -117,17 +119,49 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style)
                      * break point
                      */
                     if (strstr((char *) opts[0], ".xsl")) {
-                        type = DEBUG_BREAK_SOURCE;
-                        opts[0] = guessStyleSheetName(opts[0]);
+		      searchInfoPtr searchInf = searchNewInfo(SEARCH_NODE);
+		      nodeSearchDataPtr searchData = NULL;
+		      if (searchInf){
+			type = DEBUG_BREAK_SOURCE;
+			searchData = (nodeSearchDataPtr)searchInf->data;
+			searchData->lineNo = lineNo;
+			searchData->nameInput = (xmlChar*)xmlMemStrdup(opts[0]);
+                        guessStylesheetName(searchInf);
+			/* try to verify that the line number is valid*/
+			if (searchData->node){
+			  searchInf->found = 0;
+			  /*searchData->url will be freed by searchFreeInfo */
+			  if (searchData->absoluteNameMatch)
+			    searchData->url = xmlMemStrdup(searchData->absoluteNameMatch);
+			  else
+			    searchData->url = xmlMemStrdup(searchData->guessedNameMatch);			    
+			  opts[0] = searchData->url;
+			  walkChildNodes((xmlHashScanner) scanForNode, searchInf, 
+					 searchData->node);				
+			  if (!searchInf->found){
+			    xsltGenericError(xsltGenericErrorContext,
+					     "Warning breakPoint doesn't seem to be valid\n");
+			  }			    
+   			}
                         if (!xslAddBreakPoint(opts[0], lineNo, NULL, type))
                             xsltGenericError(xsltGenericErrorContext, "%s",
                                              errorPrompt);
                         else {
-                            xmlFree(opts[0]);
-                            result++;
+			  result++;
                         }
+		      }else{
+			    xsltGenericError(xsltGenericErrorContext,
+					     "Unable to create searchInfo\n");
+		      }
                     } else {
                         type = DEBUG_BREAK_DATA;
+			/* try to verify that the line number is valid*/
+			if (ctxt){
+			  if (xslFindNodeByLineNo(ctxt, opts[0], lineNo) == NULL){
+			    xsltGenericError(xsltGenericErrorContext,
+					     "Warning breakPoint doesn't seem to be valid\n");
+			  }
+			}
                         if (!xslAddBreakPoint(opts[0], lineNo, NULL, type))
                             xsltGenericError(xsltGenericErrorContext, "%s",
                                              errorPrompt);

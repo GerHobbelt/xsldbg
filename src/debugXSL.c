@@ -845,6 +845,8 @@ addCallStackItems(void)
     }
 }
 
+
+
 int
 updateSearchData(xsltTransformContextPtr styleCtxt,
                  xsltStylesheetPtr style, void *data, int variableTypes)
@@ -863,8 +865,8 @@ updateSearchData(xsltTransformContextPtr styleCtxt,
     xsltGenericError(xsltGenericErrorContext,
                      "  Looking for imports and top level stylesheets \n");
     walkStylesheets((xmlHashScanner) addSourceNode, data, style);
-    xsltGenericError(xsltGenericErrorContext, "  Looking for includes \n");
-    walkIncludes((xmlHashScanner) addIncludeNode, data, style);
+    xsltGenericError(xsltGenericErrorContext, "  Looking for xsl:includes \n");
+    walkIncludeInst((xmlHashScanner) addIncludeNode, data, style);
     xsltGenericError(xsltGenericErrorContext,
                      "  Looking for templates \n");
     walkTemplates((xmlHashScanner) addTemplateNode, data, style);
@@ -1242,9 +1244,9 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             case DEBUG_BREAK_CMD:
                 if (xmlStrLen(arg)) {
                     if (styleCtxt)
-                        xslDbgShellBreak(arg, styleCtxt->style);
+                        xslDbgShellBreak(arg, styleCtxt->style, styleCtxt);
                     else
-                        xslDbgShellBreak(arg, NULL);
+                        xslDbgShellBreak(arg, NULL, styleCtxt);
                 } else {
                     /* select current node to break at */
                     xmlChar buff[100];
@@ -1254,9 +1256,9 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                                  ctxt->node->doc->URL,
                                  xmlGetLineNo(ctxt->node));
                     if (styleCtxt)
-                        xslDbgShellBreak(buff, styleCtxt->style);
+                        xslDbgShellBreak(buff, styleCtxt->style, styleCtxt);
                     else
-                        xslDbgShellBreak(buff, NULL);
+                        xslDbgShellBreak(buff, NULL, styleCtxt);
                 }
 
                 break;

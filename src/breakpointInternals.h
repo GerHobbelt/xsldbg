@@ -216,18 +216,22 @@ extern "C" {
     typedef breakPointSearchData *breakPointSearchDataPtr;
     struct _breakPointSearchData {
         int id;
-        const xmlChar *templateName;
+        xmlChar *templateName;
         xslBreakPointPtr breakPoint;
     };
 
-/* data to pass via searchInfoPtr when searching for nodes*/
-    typedef struct _nodeSearchData nodeSearchData;
-    typedef nodeSearchData *nodeSearchDataPtr;
-    struct _nodeSearchData {
-        long lineNo;
-        const xmlChar *url;
-        xmlNodePtr node;
-    };
+  /* data to pass via searchInfoPtr when searching for nodes*/
+  typedef struct _nodeSearchData nodeSearchData;
+  typedef nodeSearchData *nodeSearchDataPtr;
+  struct _nodeSearchData {
+    long lineNo;
+     xmlChar *url;
+    int fileSearch; /* if true then we are trying to match a file name */
+    xmlChar *nameInput; /*needed for matching names of files/node names */
+    xmlChar *guessedNameMatch;
+    xmlChar *absoluteNameMatch;
+    xmlNodePtr node;
+  };
 
 /**
  * searchNewInfo:
@@ -408,16 +412,27 @@ extern "C" {
 
 /**
  * walkIncludes:
- * @walkFunc: function to callback for each xsl:include found
+ * @walkFunc: function to callback for each included stylesheet
+ * @data : the extra data to pass onto walker
+ * @style : the stylesheet to start from
+ *
+ * Walks through all included stylesheets calling walkFunc for each. The payload
+ *   of walkFunc is of type xmlNodePtr
+ */
+    void walkIncludes(xmlHashScanner walkFunc, void *data,
+                      xsltStylesheetPtr style);
+
+/**
+ * walkIncludeInst:
+ * @walkFunc: function to callback for each xsl:include instruction found
  * @data : the extra data to pass onto walker
  * @style : the stylesheet to start from
  *
  * Walks through all xsl:include calling walkFunc for each. The payload
  *   of walkFunc is of type xmlNodePtr
  */
-    void walkIncludes(xmlHashScanner walkFunc, void *data,
-                      xsltStylesheetPtr style);
-
+void walkIncludeInst (xmlHashScanner walkFunc, void *data,
+		 xsltStylesheetPtr style);
 
 /**
  * walkGlobals:
@@ -442,6 +457,34 @@ extern "C" {
  */
     void walkChildNodes(xmlHashScanner walkFunc, void *data,
                         xmlNodePtr node);
+
+/**
+ *  scanForBreakPoint : 
+ * Test if breakpoint matches given criteria
+ * @payload : a valid xslBreakPointPtr 
+ * @data : the criteria to look for and a valid searchInfo of
+ *          type SEARCH_BREAKPOINT 
+ * @name
+ *
+*/
+void scanForBreakPoint(void *payload, void *data,
+                  xmlChar * name ATTRIBUTE_UNUSED);
+
+/**
+ *  scanForNode : 
+ * @payload : a valid xmlNodePtr
+ * @data : the criteria to look for and a valid searchInfo of
+ *          type SEARCH_NODE 
+ * @name: not used
+
+ * Test if node matches given criteria if so then set found to 1 stores
+ *       reference to node found in @data
+ *     otherwise @data is unchanged
+ *
+*/
+void scanForNode(void *payload, void *data,
+	    xmlChar * name ATTRIBUTE_UNUSED);
+
 
     /* fix me ! */
 

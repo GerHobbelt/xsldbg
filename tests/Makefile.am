@@ -47,7 +47,7 @@ XSLDBG_OBJECTS = \
 	../src/options.o 	../src/dbgsearch.o \
 	../src/dbgarraylist.o 	../src/dbgbreakpoint.o \
 	../src/dbgmain.o 	../src/dbgcallstack.o \
-	../src/os_cmds.o
+	../src/os_cmds.o	
 
 # use of configure defined libraries
 listTest_LDADD = $(XSLDBG_LIBS) $(XSLDBG_OBJECTS)

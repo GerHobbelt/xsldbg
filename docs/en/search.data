@@ -17,3 +17,4 @@
 <variable url="xsldoc.xsl" line="18" name="help" select="'_#_'"/>
 <variable url="xsldoc.xsl" line="22" name="help_cmd" select="$command_nodes[@name=$help]" templmatch="/"/>
 </search>
+

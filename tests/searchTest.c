@@ -1,54 +1,137 @@
 #include "../src/breakpointInternals.h"
 #include <libxml/debugXML.h>
 
+void testNodeScan(void *payload, void *data,
+                       xmlChar * name ATTRIBUTE_UNUSED);
+int nodeSearchTest(void);
+int breakPointSearchTest(void);
+
 int main(void){
+  int result = 1;
+  if (!searchInit())
+    return result; /* error couldn't setup searching*/
+
+    xsltGenericError(xsltGenericErrorContext,
+		     "Starting search tests\n");
+  result = result &&  breakPointSearchTest();
+  result = result && nodeSearchTest();
+  
+  if (result)
+    xsltGenericError(xsltGenericErrorContext, "\nSuccess all search tests passed!\n");
+  
+  searchFree();
+  if (result >= 1)
+    exit(0);
+  else
+    exit(1);
+}
+
+int breakPointSearchTest(void)
+{
   int result = 0;
   xslBreakPointPtr breakPoint = breakPointItemNew();
   xmlNodePtr node = NULL;
   xmlDocPtr doc = NULL;
-  if (!searchInit())
-      return 1;
 
-  if (breakPoint){
-    breakPoint->url = xmlStrdup("index.xsl");
-    breakPoint->lineNo = 10;
-    breakPoint->templateName = xmlStrdup("/");
-    breakPoint->id = 1;
-    node = searchBreakPointNode(breakPoint);
-    if(node){
-      xmlShellPrintNode(node);
-    }else{
-       xsltGenericError(xsltGenericErrorContext,
-			"Create search breakpoint node failed\n");
-    }
-    doc = searchDoc();
-    if (doc){
-      xslSearchAdd(node);
-      breakPoint->lineNo = 12;
-      node = searchBreakPointNode(breakPoint);      
-      xslSearchAdd(node);
-      breakPoint->lineNo = 13;
-      node = searchBreakPointNode(breakPoint);      
-      xslSearchAdd(node);
-      xmlShellPrintNode(node);
-      xslSearchSave("search.data");
-      /* no need to free doc as it will be done by searchFree function*/
-    }else{
-      if (node)
-	xmlFreeNode(node);
-    }
-      
-    breakPointItemFree(breakPoint, NULL);    
-    result++;
+   xsltGenericError(xsltGenericErrorContext,
+		    "Search for breakpoints in search dataBase\n");
+  if (!breakPoint){
+    xsltGenericError(xsltGenericErrorContext,
+		     "Create of breakPoint item failed\n");
+    return result;
   }
 
-  
-  if (result)
-     xsltGenericError(xsltGenericErrorContext, "Success!\n");
+  breakPoint->url = xmlStrdup("index.xsl");
+  breakPoint->lineNo = 10;
+  breakPoint->templateName = xmlStrdup("/");
+  breakPoint->id = 1;
+  node = searchBreakPointNode(breakPoint);
+  if(node){
+    xmlShellPrintNode(node);
+    result++;
+  }else{
+    xsltGenericError(xsltGenericErrorContext,
+		     "Create search breakpoint node failed\n");
+  }  
 
-  searchFree();
-  return !result;
+  doc = searchDoc();
+  if ((result == 1) && doc){
+    xslSearchAdd(node);
+    breakPoint->lineNo = 12;
+    node = searchBreakPointNode(breakPoint);      
+    xslSearchAdd(node);
+    breakPoint->lineNo = 13;
+    node = searchBreakPointNode(breakPoint);      
+    xslSearchAdd(node);
+    xmlShellPrintNode(node);
+    xslSearchSave("search.data");
+    /* no need to free doc as it will be done by searchFree function*/
+    result++;
+  }else{
+    if (node)
+      xmlFreeNode(node); 
+  }
+
+  breakPointItemFree(breakPoint, NULL); 
+  return result;
 }
+
+
+/* lets try walking/finding xml nodes of test1.xsl */
+int nodeSearchTest(void)
+{
+  int result = 0;
+  xmlDocPtr searchDoc = NULL;
+  searchInfoPtr searchInf = searchNewInfo(SEARCH_NODE);
+  nodeSearchDataPtr searchData = NULL;
+
+  xsltGenericError(xsltGenericErrorContext,
+		   "\n\nSearching for a xml node at file test1.xsl: line 11\n");
+  xmlLineNumbersDefault(1);
+  searchDoc = xmlParseFile("test1.xsl");
+
+  if (searchDoc && searchInf && searchInf->data){
+    searchData = (nodeSearchDataPtr)searchInf->data;
+    searchData->lineNo = 11;
+    searchData->url = (xmlChar*)xmlMemStrdup((xmlChar*)"test1.xsl");
+    walkChildNodes((xmlHashScanner) testNodeScan, searchInf, (xmlNodePtr)searchDoc);
+    if (searchInf->found){
+      /* success !*/
+      xsltGenericError(xsltGenericErrorContext,
+		       "Success found node at file %s: line %d\n",
+		       searchData->node->doc->URL, 
+		       xmlGetLineNo(searchData->node));
+      /* now try finding a line/url that doesn't exist */
+      searchData->lineNo = 10;
+      searchInf->found = 0;
+      xsltGenericError(xsltGenericErrorContext,
+		       "\nSearching for node at non-existant file test1.xsl: line 10\n");	    
+      walkChildNodes((xmlHashScanner) testNodeScan, searchInf, (xmlNodePtr)searchDoc);
+      if (!searchInf->found){
+	/* success*/
+	xsltGenericError(xsltGenericErrorContext,
+			 "Success search for node has passed\n");
+	result++;
+      }
+    }else{
+      xsltGenericError(xsltGenericErrorContext,
+		       "Failed node not found\n");
+    }
+  }else{
+    xsltGenericError(xsltGenericErrorContext,
+		     "Unable to create searchInfo or load test1.xsl for node searching\n");
+  }
+
+  if (searchInf)
+    searchFreeInfo(searchInf);
+
+  if (searchDoc)
+    xmlFreeDoc(searchDoc);
+
+  return result;
+}
+
+
 
 /**
  * changeDir:
@@ -75,4 +158,23 @@ changeDir(const xmlChar * path)
 void
 xslDebugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
               xsltTransformContextPtr ctxt){
+}
+
+void testNodeScan(void *payload, void *data,
+                       xmlChar * name ATTRIBUTE_UNUSED){
+  searchInfoPtr searchInf = (searchInfoPtr)data;
+  nodeSearchDataPtr searchData = NULL;
+  xmlNodePtr node = (xmlNodePtr)payload;
+
+  if (!node || !node->doc || !node->doc->URL || 
+      !searchInf || (searchInf->type != SEARCH_NODE))
+    return;
+
+  searchData = (nodeSearchDataPtr)searchInf->data;
+
+  if (((searchData->lineNo >= 0) && (searchData->lineNo == xmlGetLineNo(node))) ||
+      (searchData->url && strcmp((char*)searchData->url, (char*)node->doc->URL))){
+    searchData->node = node;
+    searchInf->found = 1;
+  }
 }

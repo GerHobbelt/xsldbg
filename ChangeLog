@@ -1,3 +1,8 @@
+* Keith Isdale 3 Dec 2001
+* Added validation of file:line number for stylesheet breakpoints
+*   It now generates a warningif a stylsheeet breakPoint appears to be invalid
+* Changed to version 0.8.5
+	
 * Keith Isdale 1 Dec 2001
 * Added	--with-libxslt-prefix to configure.in
 * Changed to version 0.8.4
