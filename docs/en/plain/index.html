@@ -37,11 +37,11 @@ A:link, A:visited, A:active { text-decoration: underline }
 
 --></style>
 <title>
-           xsldbg 3.0.4 documentation
+           xsldbg 3.0.5 documentation
          </title>
 </head>
 <body bgcolor="#8b7765" text="#000000" link="#000000" vlink="#000000"><table class="listbody"><tr><td>
-<h1 class="cmdth">xsldbg 3.0.4</h1>
+<h1 class="cmdth">xsldbg 3.0.5</h1>
 <h2 class="cmdth">Overview</h2>
 <h3>xsldbg help</h3>
 
@@ -107,6 +107,7 @@ If your operating system supports it file names will be expanded.
 <tr><td>Running related : {<a href="#bye">bye</a>|<a href="#exit">exit</a>|
 <a href="#quit">quit</a>}, <a href="#step">step</a>, 
 <a href="#stepup">stepup</a>, <a href="#stepdown">stepdown</a>,
+<a href="#next">next</a>,
 <a href="#continue">continue</a>, <a href="#run">run</a>,
 <a href="#trace">trace</a>, <a href="#setoption">setoption</a>,
 <a href="#options">options</a>    </td></tr>
@@ -524,6 +525,21 @@ by the names spaces defined in the XSL SOURCE file. eg &quot;xsl:test1&quot;  wi
 <tr>
 <td width="10"></td>
 <td><table class="listbody"><tr><td>ls    </td></tr></table></td>
+</tr>
+</table></tr>
+</table>
+<br><br><a name="next"></a><table width="100%" class="cmd">
+<th class="cmdth">Next</th>
+<tr class="cmdsummary"><td>Skip over an xsl:call-template or xsl:apply-templates.
+This command has the same effect of entering the commands &quot;step&quot; and then &quot;up&quot;</td></tr>
+<tr class="cmdtr"><td class="cmdtd">
+<p>Shortcut name: n</p>
+</td></tr>
+<tr class="cmdtr"><table class="usage" width="100%">
+<th class="cmdth">Usage</th>
+<tr>
+<td width="10"></td>
+<td><table class="listbody"><tr><td>next&nbsp;&nbsp;&nbsp;&nbsp;<i>(proceed to next sibling instruction)</i>    </td></tr></table></td>
 </tr>
 </table></tr>
 </table>

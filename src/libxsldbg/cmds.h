@@ -31,6 +31,7 @@ typedef enum {                  /* id's for commands of xslDbgShell */
     DEBUG_STEP_CMD,
     DEBUG_STEPUP_CMD,
     DEBUG_STEPDOWN_CMD,
+    DEBUG_NEXT_CMD,
     DEBUG_CONT_CMD,
     DEBUG_RUN_CMD,
 
@@ -109,6 +110,7 @@ enum CommandsEnum {             /* id's for commands of xslDbgShell */
     DEBUG_STEP_CMD,
     DEBUG_STEPUP_CMD,
     DEBUG_STEPDOWN_CMD,
+    DEBUG_NEXT_CMD,
     DEBUG_CONT_CMD,
     DEBUG_RUN_CMD,
 

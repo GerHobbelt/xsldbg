@@ -66,6 +66,10 @@ int printCount;
 /* used to sending small amounts data when xsldbg runs as a thread */
 xmlChar messageBuffer[2000];
 
+/* To achieve the same fucntionality of a next command
+   we first do a step, then a step up */
+int nextCommandActive = 0;
+
 extern FILE *terminalIO;
 
 /* valid commands of xslDbgShell */
@@ -79,6 +83,7 @@ const char *commandNames[] = {
     "step",
     "stepup",
     "stepdown",
+    "next",                      /* next ie step over template function call*/
     "continue",
     "run",
 
@@ -158,6 +163,7 @@ const char *shortCommandNames[] = {
     "s",                        /* step */
     "up",                       /*stepup */
     "down",                     /* stepdown */
+    "n",                        /* next ie step over function call*/
     "c",                        /* continue */
     "r",                        /* run */
 
@@ -1076,7 +1082,10 @@ debugXSLBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
         xmlChar *nameTemp = NULL, *modeTemp = NULL;
 	nameTemp = fullQName(root->nameURI, root->name);
 	modeTemp = fullQName(root->modeURI, root->mode);
-        if (terminalIO == NULL) {
+	if (!nextCommandActive){
+	  /* we only want messages if we are not
+	    in the process of completing the next command */
+	  if (terminalIO == NULL) {
             if (root->match)
                 xsltGenericError(xsltGenericErrorContext,
                                  "\nReached template :\"%s\" mode:\"%s\"\n",
@@ -1085,7 +1094,7 @@ debugXSLBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
                 xsltGenericError(xsltGenericErrorContext,
                                  "\nReached template :\"%s\" mode:\"%s\"\n",
                                  nameTemp, modeTemp);
-        } else {
+	  } else {
             if ((xslDebugStatus == DEBUG_TRACE) ||
                 (xslDebugStatus == DEBUG_WALK)) {
                 if (root->match)
@@ -1097,7 +1106,8 @@ debugXSLBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
 			  "\nReached template :\"%s\" mode:\"%s\"\n",
 			  nameTemp, modeTemp);
             }
-        }
+	  }
+	}
     }
 
     shellPrompt(templ, node, (xmlChar *) "index.xsl",
@@ -1216,7 +1226,7 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
      * send this as the application will see the XSLDBG_MSG_LINE_CHANGED message */
     if ((getThreadStatus() == XSLDBG_MSG_THREAD_NOTUSED) ||
         (xslDebugStatus == DEBUG_TRACE)) {
-        if (ctxt->node && ctxt->node && ctxt->node->doc
+        if (!nextCommandActive && ctxt->node && ctxt->node && ctxt->node->doc
             && ctxt->node->doc->URL) {
             xmlStrCpy(messageBuffer, "");
             if (!showSource) {
@@ -1290,7 +1300,12 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             /*
              * Get a new command line
              */
-            cmdline = (xmlChar *) ctxt->input((char *) prompt);
+	    if (nextCommandActive && (xslDebugStatus == DEBUG_STEP))
+	      /* we are processing the "next command" do the next 
+	         part of the command which is the up command */
+	      cmdline = xmlStrdup((xmlChar*)"up");
+	    else
+	      cmdline = (xmlChar *) ctxt->input((char *) prompt);
             if (cmdline && (optionsGetIntOption(OPTIONS_UTF8_INPUT) == 0)) {
                 /* we are getting encoded characters from the command line
                  * so decode them into UTF-8 */
@@ -1304,11 +1319,20 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
         } else {
             /* don't need a prompt for running as when running as a thread */
             xmlStrCpy(messageBuffer, "");
-            cmdline = (xmlChar *) ctxt->input((char *) messageBuffer);
+	    if (nextCommandActive && (xslDebugStatus == DEBUG_STEP))
+	      /* we are processing the "next command" do the next 
+	         part of the command which is the up command */
+	      cmdline = xmlStrdup((xmlChar*)"up");
+	    else
+	      cmdline = (xmlChar *) ctxt->input((char *) messageBuffer);
         }
 
         if (cmdline == NULL)
             break;
+
+	/* don't allow next command to be active more than at one breakpoint */
+	if (nextCommandActive)
+	  nextCommandActive = 0;
 
         notifyXsldbgApp(XSLDBG_MSG_PROCESSING_INPUT, NULL);
 
@@ -1376,6 +1400,15 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 exitShell++;
                 cmdResult = 1;
                 break;
+
+	   case DEBUG_NEXT_CMD:
+                xslDebugStatus = DEBUG_STEP;
+                exitShell++;
+                cmdResult = 1;
+	        /* Do the the next part of this command
+		   which is the up command */
+		nextCommandActive = 1;
+	     break;
 
             case DEBUG_STEP_CMD:
                 xslDebugStatus = DEBUG_STEP;
@@ -1880,6 +1913,9 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 /* misc commands */
             case DEBUG_TTY_CMD:
                 if (openTerminal(arg)) {
+		  /* gdb does to say anything after redirecting its 
+		     output */
+		  if (optionsGetIntOption(OPTIONS_GDB) != 1)
                     xsltGenericError(xsltGenericErrorContext,
                                      "Opening terminal %s\n", arg);
                     cmdResult = 1;
@@ -1927,10 +1963,10 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 cmdResult = 0;
         }
 
-        /* kdbgs like to get the marker after every command so here it is */
-        if (optionsGetIntOption(OPTIONS_GDB)) {
-            if (ctxt->node && ctxt->node && ctxt->node->doc
-                && ctxt->node->doc->URL) {
+        /* kDbg like to get the marker after every command so here it is */
+        if (optionsGetIntOption(OPTIONS_GDB) && !nextCommandActive) {
+            if (ctxt->node && ctxt->node && 
+		ctxt->node->doc && ctxt->node->doc->URL) {
 
                 if (xmlGetLineNo(ctxt->node) != -1)
                     xsltGenericError(xsltGenericErrorContext,

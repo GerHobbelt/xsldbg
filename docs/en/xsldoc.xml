@@ -67,6 +67,7 @@ If your operating system supports it file names will be expanded.
 <li>Running related : {<link href="bye">bye</link>|<link href="exit">exit</link>|
 <link href="quit">quit</link>}, <link href="step">step</link>, 
 <link href="stepup">stepup</link>, <link href="stepdown">stepdown</link>,
+<link href="next">next</link>,
 <link href="continue">continue</link>, <link href="run">run</link>,
 <link href="trace">trace</link>, <link href="setoption">setoption</link>,
 <link href="options">options</link> 
@@ -210,6 +211,20 @@ If your operating system supports it file names will be expanded.
 <li>
 <text>stepdown &lt;NUMBER_OF_FRAMES&gt;</text>
 <comment>(step down specified number of frames)</comment>
+</li>
+</usage>
+</cmd>
+
+<cmd name="next" shortcut="n" title="Next">
+<summary>Skip over an xsl:call-template or xsl:apply-templates.
+This command has the same effect of entering the commands &quot;step&quot; and then &quot;up&quot;</summary>
+<body>
+<para>Shortcut name: n</para>
+</body>
+<usage>
+<li>
+<text>next</text>
+<comment>(proceed to next sibling instruction)</comment>
 </li>
 </usage>
 </cmd>

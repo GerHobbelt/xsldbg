@@ -10,7 +10,7 @@
 
   <xsl:template match="/">
         <xsl:apply-templates/>
-         <xsl:apply-templates mode="testMode"/>
+        <xsl:apply-templates mode="testMode"/>
 	<xsl:apply-templates mode="xsl:testMode"/>
 	<xsl:call-template name="test1"/>
 	<xsl:call-template name="test2"/>
@@ -35,10 +35,6 @@
   </xsl:template>
 
   <xsl:template match="para">
-    <xsl:apply-templates/>
-  </xsl:template>
-
-  <xsl:template match="html">
     <xsl:apply-templates/>
   </xsl:template>
 

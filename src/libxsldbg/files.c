@@ -188,18 +188,18 @@ openTerminal(xmlChar * device)
                     result = 1;
                 } else {
                     xsltGenericError(xsltGenericErrorContext,
-                                     "Unable to open terminal %s\n",
+                                     "Error: Unable to open terminal %s\n",
                                      termName);
                 }
             } else {
                 xsltGenericError(xsltGenericErrorContext,
-                                 "Did not previously open terminal\n");
+                                 "Error: Did not previously open terminal\n");
             }
             break;
 
         case '2':
             xsltGenericError(xsltGenericErrorContext,
-                             "Terminal level 2 not implemented\n");
+                             "Error: Terminal level 2 not implemented\n");
             break;
 
 
@@ -212,7 +212,7 @@ openTerminal(xmlChar * device)
                 result = 1;
             } else {
                 xsltGenericError(xsltGenericErrorContext,
-                                 "Unable to open terminal %s\n", device);
+                                 "Error: Unable to open terminal %s\n", device);
             }
 
     }

@@ -1,4 +1,13 @@
-Keith Isdale 26 July 2002 <k_isdale@tpg.com.au>	
+Keith Isdale 29 July 2002 <k_isdale@tpg.com.au>	
+	Version 3.0.5
+	Added "next" command 
+	   o after email from Hannes I had the idea of how a "next" command
+	       might work; and make xsldbg easier to use
+	Updated xsldoc.xml to suit "next" command
+	Fix the output of tty command when in gdb mode
+	
+	
+Keith Isdale 28 July 2002 <k_isdale@tpg.com.au>	
 	Version 3.0.4
 	Fixed output of cat command so that expressions that
 	  result in an string have surrounding single quotes

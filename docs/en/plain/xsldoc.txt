@@ -38,7 +38,7 @@ Several commands take more that one argument. Some arguments can be sourrounded 
 
 
      Help related :help
-     Running related : {bye|exit|quit},step,stepup,stepdown,continue,run,trace,setoption,options
+     Running related : {bye|exit|quit},step,stepup,stepdown,next,continue,run,trace,setoption,options
      Libxslt parameter related :addparam,delparam,showparam,output,setoption,options
      Template related :templates,where,frame
      Break point related :break,showbreak,delete,enable
@@ -312,6 +312,17 @@ Summary : List nodes in a brief format
 Usage:
 
      ls
+- - - - - - - - - - - - - - - - - - - -
+
+
+Command : Next
+Summary : Skip over an xsl:call-template or xsl:apply-templates.
+This command has the same effect of entering the commands "step" and then "up"
+
+Shortcut name: n
+Usage:
+
+     next   (proceed to next sibling instruction)
 - - - - - - - - - - - - - - - - - - - -
 
 

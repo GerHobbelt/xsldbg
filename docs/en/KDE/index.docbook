@@ -31,6 +31,7 @@ If your operating system supports it file names will be expanded.
 <section><title>Within xsldbg these commands are available:</title><informaltable><tgroup cols="1"><tbody><row><entry>Help related :<link linkend="help_cmd" endterm="help_cmd.title">help</link></entry></row><row><entry>Running related : {<link linkend="bye_cmd" endterm="bye_cmd.title">bye</link>|<link linkend="exit_cmd" endterm="exit_cmd.title">exit</link>|
 <link linkend="quit_cmd" endterm="quit_cmd.title">quit</link>}, <link linkend="step_cmd" endterm="step_cmd.title">step</link>, 
 <link linkend="stepup_cmd" endterm="stepup_cmd.title">stepup</link>, <link linkend="stepdown_cmd" endterm="stepdown_cmd.title">stepdown</link>,
+<link linkend="next_cmd" endterm="next_cmd.title">next</link>,
 <link linkend="continue_cmd" endterm="continue_cmd.title">continue</link>, <link linkend="run_cmd" endterm="run_cmd.title">run</link>,
 <link linkend="trace_cmd" endterm="trace_cmd.title">trace</link>, <link linkend="setoption_cmd" endterm="setoption_cmd.title">setoption</link>,
 <link linkend="options_cmd" endterm="options_cmd.title">options</link></entry></row><row><entry>Libxslt parameter related : <link linkend="addparam_cmd" endterm="addparam_cmd.title">addparam</link>,
@@ -198,6 +199,11 @@ Set an option for execution of stylesheet
 </section><section id="set_cmd"><title id="set_cmd.title">Set</title>
 Set the value of a variable
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>set &lt;VARIABLE_NAME&gt; &lt;XPATH&gt;</entry></row></tbody></tgroup></table>
+</section><section id="next_cmd"><title id="next_cmd.title">Next</title>
+Skip over an xsl:call-template or xsl:apply-templates.
+This command has the same effect of entering the commands &quot;step&quot; and then &quot;up&quot;
+<para>Shortcut name: n</para>
+<table label="of usage"><tgroup cols="1"><tbody><row><entry>next<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(proceed to next sibling instruction)</emphasis></markup></entry></row></tbody></tgroup></table>
 </section><section id="output_cmd"><title id="output_cmd.title">Output</title>
 Specify the output file name
 <para>Shortcut name : o</para>
