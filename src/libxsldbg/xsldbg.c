@@ -206,6 +206,18 @@ void
 void
   xsldbgGenericErrorFunc(void *ctx, const char *msg, ...);
 
+xmlEntityPtr (*oldGetEntity)( void * user_data, const xmlChar * name);
+
+static xmlEntityPtr xsldbgGetEntity( void * user_data, const xmlChar * name)
+{
+    xmlEntityPtr ent = NULL;
+    if (oldGetEntity){
+	ent =  (oldGetEntity)(user_data, name);
+	if (ent)
+	    filesEntityRef(ent, ent->children, ent->last);
+    }
+    return ent;
+}
 
 /* ------------------------------------- 
    End private functions
@@ -1046,6 +1058,7 @@ xsldbgLoadStylesheet(void)
 }
 
 
+
 /**
  * xsldbgLoadXmlData:
  *
@@ -1064,6 +1077,10 @@ xsldbgLoadXmlData(void)
      */
     xmlDefaultSAXHandlerInit();
     xmlDefaultSAXHandler.cdataBlock = NULL;
+    if (xmlDefaultSAXHandler.getEntity != xsldbgGetEntity){
+	oldGetEntity = xmlDefaultSAXHandler.getEntity;
+    	xmlDefaultSAXHandler.getEntity = xsldbgGetEntity;
+    }
 
 
     doc = NULL;

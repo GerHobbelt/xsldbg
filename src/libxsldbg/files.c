@@ -933,9 +933,12 @@ filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode, xmlNodePtr lastNode)
         filesAddEntityName(ent->SystemID, ent->ExternalID);
     else
         filesAddEntityName(ent->URI, BAD_CAST "");
-    while (node && (node != lastNode)) {
+    while (node){
         filesSetBaseUri(node, ent->URI);
-        node = node->next;
+	if (node != lastNode)
+           node = node->next;
+	else
+	   node = NULL;
     }
 }
 
