@@ -1,8 +1,8 @@
 
 /***************************************************************************
-                          help.h  -  describe the help support functions
+                          main.c  - main fiule for xsldbg
                              -------------------
-    begin                : Sun Sep 16 2001
+    begin                : Sat Dec 22 2001
     copyright            : (C) 2001 by Keith Isdale
     email                : k_isdale@tpg.com.au
  ***************************************************************************/
@@ -16,44 +16,16 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef XSLDBG_HELP_H
-#define XSLDBG_HELP_H
+#include <libxsldbg/xsldbgmsg.h>
+#include <libxsldbg/xsldbgio.h>
+#include <libxslt/xsltutils.h>
 
-#ifdef USE_KDE_DOCS
-/**
- * Provide a help system for user 
- *
- * @short help system support
- *
- * @author Keith Isdale <k_isdale@tpg.com.au> 
- */
-#endif
+int xsldbgMain(int argc, char **argv);
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-#ifdef USE_GNOME_DOCS
-/**
- * helpTop:
- * @args : Is valid command or empty string
- *
- * Display help about the command in @arg
- */
-#else
-#ifdef USE_KDE_DOCS
-/**
- * Display help about the command in @p arg
- *
- * @param args Is valid or empty string
- */
-#endif
-#endif
-    void helpTop(const xmlChar * args);
-
-
-#ifdef __cplusplus
+int main(int argc, char **argv)
+{
+  return xsldbgMain(argc, argv);
 }
-#endif
-#endif
+
+
+
