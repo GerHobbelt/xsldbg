@@ -8,7 +8,8 @@ Keith Isdale 29 Jan 2002 <k_isdale@tpg.com.au>
 	platform specific implementation to the help.h interfaces
    Created files_unix.c, files_win32.c, files_riscos.c to provide
 	platform specific implementation to the files.h interfaces	
-	
+   Commited new files to cvs
+   Fixed response to cd command when use xsldbg as a thread	
 	
 Keith Isdale 28 Jan 2002 <k_isdale@tpg.com.au>
    Version 1.0.2

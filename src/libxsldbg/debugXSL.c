@@ -645,6 +645,13 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                     if (list->nodesetval) {
                         if (list->nodesetval->nodeNr == 1) {
                             ctxt->node = list->nodesetval->nodeTab[0];
+			    /* tell the application about the new line
+			     number we are looking at */
+			    if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
+			      int breakpoint = 0;
+			      xsldbgUpdateFileDetails(ctxt->node);
+			      notifyXsldbgApp(XSLDBG_MSG_LINE_CHANGED, &breakpoint);
+			    }
                             result++;
                         } else
                             xmlGenericError(xmlGenericErrorContext,
