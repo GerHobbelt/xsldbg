@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<omf>
+       <resource>
+        <creator>
+        Keith Isdale
+        </creator>
+       <title>
+      The Xsldbg XSLT script debugger Manual
+    </title>
+    <date>
+        January 5, 2003
+    </date>
+     <subject category="GNOME|Development"/>
+     <format mime="text/xml" dtd=""/>
+     <identifier url="file:/@GNOME_DIR@/share/gnome/help/xsldbg/C/index.docbook"/>
+     <language code="C"/>
+     <relation seriesid="d3a4ac54-3ea0-11d8-9b6c-f60a6abc4744" />
+     </resource>
+</omf>
+

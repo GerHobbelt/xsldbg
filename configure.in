@@ -73,9 +73,10 @@ if test "x$KDE_DIR" = "x"; then
 fi
 AC_SUBST(KDE_DIR)
 
-AC_ARG_WITH(gnome-dir, [  --gnome-dir=PATH path to GNOME (/opt/gnome)],
+AC_ARG_WITH(gnome-dir, [  --with-gnome-dir=PATH path to GNOME (/opt/gnome)],
     GNOME_DIR=$with_gnome_dir, GNOME_DIR='/opt/gnome')
 AC_SUBST(GNOME_DIR)
+AC_DEFINE(GNOME_DIR,$with_gnome_dir)
 
 
 dnl
@@ -130,6 +131,7 @@ AH_TEMPLATE(HAVE_HISTORY)
 AH_TEMPLATE(HAVE_QT)
 AH_TEMPLATE(HAVE_PTHREAD)
 AH_TEMPLATE(HAVE_GNOME)
+AH_TEMPLATE(GNOME_DIR)
 
 
 dnl
@@ -428,12 +430,12 @@ dnl test version and init our variables
 dnl
 if test "x$XML_CONFIG" != "x"
 then
-	vers=VERSION_TO_NUMBER($XML_CONFIG --version)
-	if test "$vers" -ge VERSION_TO_NUMBER(echo $LIBXML_REQUIRED_VERSION)
+	XML_VERSION=`$XML_CONFIG --version`
+	if test VERSION_TO_NUMBER(echo $XML_VERSION) -ge VERSION_TO_NUMBER(echo $LIBXML_REQUIRED_VERSION)
 	then
 		LIBXML_LIBS="`$XML_CONFIG --libs`"
 		LIBXML_CFLAGS="`$XML_CONFIG --cflags`"
-		AC_MSG_RESULT(found)
+		AC_MSG_RESULT($XML_VERSION found)
 	        if test "x$LIBXML_PREFIX" != "x"
 	 	then
 		   AC_MSG_RESULT(
@@ -443,7 +445,7 @@ Don't forget to make sure that ${LIBXML_PREFIX}/lib has been added
 		  LIBXML_PREFIX="$XML_CONFIG --prefix"
 	        fi		
 	else
-		AC_MSG_ERROR(You need at least libxml2 $LIBXML_REQUIRED_VERSION for this
+		AC_MSG_ERROR(Found $XML_VERSION you need at least libxml2 $LIBXML_REQUIRED_VERSION for this
  version of xsldbg)
 	fi
 else
@@ -503,12 +505,12 @@ dnl test version and init our variables
 dnl
 if test "x$XSLT_CONFIG" != "x"
 then
-	vers=VERSION_TO_NUMBER($XSLT_CONFIG --version)
-	if test "$vers" -ge VERSION_TO_NUMBER(echo $LIBXSLT_REQUIRED_VERSION)
+	XSLT_VERSION=`$XSLT_CONFIG --version`
+	if test VERSION_TO_NUMBER(echo $XSLT_VERSION) -ge VERSION_TO_NUMBER(echo $LIBXSLT_REQUIRED_VERSION)
 	then		
 		LIBXSLT_LIBS="`$XSLT_CONFIG --libs`"
 		LIBXSLT_CFLAGS="`$XSLT_CONFIG --cflags`"
-		AC_MSG_RESULT(found)
+		AC_MSG_RESULT($XSLT_VERSION found)
 	        if test "x$LIBXSLT_PREFIX" != "x"
 	 	then
 		   AC_MSG_RESULT(
@@ -518,7 +520,7 @@ Don't forget to make sure that ${LIBXSLT_PREFIX}/lib has been added
 		  LIBXSLT_PREFIX="$XSLT_CONFIG --prefix"
 	        fi
 	else
-		AC_MSG_ERROR(You need at least libxslt $LIBXSLT_REQUIRED_VERSION for this
+		AC_MSG_ERROR(Found $XSLT_VERSION you need at least libxslt $LIBXSLT_REQUIRED_VERSION for this
   version of xsldbg)
 	fi
 else
@@ -657,6 +659,9 @@ AC_OUTPUT(
 	docs/en/KDE/Makefile	
 	docs/en/GNOME/Makefile		
 	docs/en/website/Makefile 	
+	help/Makefile
+	help/C/Makefile
+	help/C/xsldbg-C.omf
 	) 
 
 
