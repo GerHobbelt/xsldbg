@@ -24,41 +24,6 @@ called `autoconf'.  You only need `configure.in' if you want to change
 it or regenerate `configure' using a newer version of `autoconf'.
 
 
-Apply patches of libxml and libxslt to libxml and libxslt
-
-	patch and install libxml
-	-----------------------
-patch -p1 -dlibxml2-2.4.3 < xsldbg.X.X.X/libxml2-2.4.3_ki.diff 
-automake
-autoconf
-autoheader
-./configure 
-make 
-make install
-
-
-
-	patch and install libxslt (with kde installed)
-	-----------------------
-patch -p1 -dlibxslt-1.0.3 < xsldbg.X.X.X/libxslt-1.0.3_ki.diff 
-automake
-autoconf
-autoheader
-./configure --with-debugger=yes --enable-kde-html=yes --with-lisp-prefix=/usr/share/xemacs/21.1.14/lisp
-make 
-make install
-	
-
-To make use the xsldbg mode for xemacs add this to your .emacs file
-(setq load-path (cons "/home/keith/lang/c/xsldbg/src/xsldbg-mode" load-path))
-
-;;(setq load-path (cons "/usr/share/xemacs/21.1.14/lisp/xsldbg-mode" load-path))
-;;(autoload 'xsldbg-mode "xsldbg" "A debug mode for XSL stylesheets" t )
-;;(autoload 'xsldbg-highlight "xsldbg-highlight" "Provides extra menus for xsldbg-mode" t )
-;;(add-hook 'xsldbg-mode-hook '(lambda () (require 'xsldbg-highlight)))
-
-
-
 
 The simplest way to compile this package is:
 
@@ -71,7 +36,7 @@ The simplest way to compile this package is:
      Running `configure' takes a while.  While running, it prints some
      messages telling which features it is checking for.
 
-  2. Type `make' to compile the package.
+  2. Type `make -f Makefile.cvs' to compile the package.
 
   3. Type `make install' to install the programs and any data files and
      documentation.

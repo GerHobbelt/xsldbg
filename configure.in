@@ -1,5 +1,5 @@
 
-AC_INIT(acinclude.m4)
+AC_INIT(src/xsldbg.c)
 
 timestamp='2001-11-06'
 
@@ -26,6 +26,7 @@ AC_SUBST(XSLDBG_VERSION_INFO)
 AC_SUBST(XSLDBG_VERSION_NUMBER)
 
 VERSION=${XSLDBG_VERSION}
+AC_SUBST(VERSION)
 
 dnl enable the following if you want to use autoconf/automake
 dnl framework from a certain directory (like kde-common)
