@@ -1,12 +1,12 @@
 
 AC_INIT(src/xsldbg.c)
 
-timestamp='2001-12-19'
+timestamp='2001-12-23'
 
 
 XSLDBG_MAJOR_VERSION=0
 XSLDBG_MINOR_VERSION=9
-XSLDBG_MICRO_VERSION=5
+XSLDBG_MICRO_VERSION=7
 PACKAGE=xsldbg
 
 dnl
@@ -39,6 +39,13 @@ dnl enable the following if you want to use autoconf/automake
 dnl framework from a certain directory (like kde-common)
 dnl AC_CONFIG_AUX_DIR(admin)
 
+AC_PREFIX_DEFAULT(/usr/local)
+if test "x$prefix" = "xNONE"; then
+   prefix=$ac_default_prefix
+  ac_configure_args="$ac_configure_args --prefix $prefix"
+fi
+
+
 AC_ARG_WITH(html-dir, [  --with-html-dir=PATH path to installed docs ])
 
 dnl
@@ -53,13 +60,6 @@ fi
 AC_SUBST(HTML_DIR)
 
 
-
-AC_PREFIX_DEFAULT(/usr/local)
-if test "x$prefix" = "xNONE"; then
-   prefix=$ac_default_prefix
-  ac_configure_args="$ac_configure_args --prefix $prefix"
-fi
-
 AM_CONFIG_HEADER(config.h)
 AM_INIT_AUTOMAKE(xsldbg, ${VERSION})
 AM_MAINTAINER_MODE
@@ -68,6 +68,7 @@ AC_SUBST(TIMESTAMP)
  
 AC_LANG_C
 AC_PROG_CC
+AC_PROG_CXX
 AM_PROG_LIBTOOL
 
 dnl
@@ -216,6 +217,67 @@ fi]
    AC_MSG_RESULT(Enabling the xsldbg help system)
     AC_DEFINE(WITH_DEBUG_HELP)
     WITH_DEBUG_HELP=1])
+
+dnl
+dnl Do you want to experiment with using xsldbg as a thread
+dnl Warning will lead to alpha version of xsldbg
+dnl
+
+USE_XSLDBG_AS_THREAD=0
+haveqt="false"
+havepthread="false"
+HAVE_QT=0
+HAVE_PTHREAD=0
+HAVE_GNOME=0
+THREAD_LIBS=""
+AC_ARG_ENABLE(xsldbgthread, 
+[  --enable-xsldbgthread     Enable xsldbg as a thread (off)],
+[case "${enableval}" in 
+	yes) xsldbgthread="true"
+       AC_MSG_RESULT(Warning! Enabling xsldbg as a thread)
+	     AC_CHECK_HEADERS(pthread.h,
+		     AC_DEFINE(HAVE_PTHREAD)
+		      havepthread="true"
+		      HAVE_PTHREAD=1
+			    THREAD_LIBS=" -lpthread "
+					USE_XSLDBG_AS_THREAD=1
+  	      AC_DEFINE(USE_XSLDBG_AS_THREAD),
+	       AC_MSG_ERROR(PThread library not found))
+
+	    AC_MSG_RESULT(Checking for QT library)
+	    if test -f "${QTDIR}/include/qt.h"
+	    then
+		    AC_DEFINE(HAVE_QT)
+		    haveqt="true"		
+		    HAVE_QT=1
+			  if test "x${HAVE_PTHREAD}" = "x0"
+        then
+				  THREAD_LIBS=" -lqt-mt "
+   	      USE_XSLDBG_AS_THREAD=1
+	        AC_DEFINE(USE_XSLDBG_AS_THREAD)
+        fi
+	      AC_MSG_RESULT(Ok)
+	    else
+	    	AC_MSG_ERROR("QT library not found")
+      fi
+			;;
+
+	*) xsldbgthread="false";;
+	esac],
+	[ 
+ AC_MSG_RESULT(Disabling xsldbg as a thread) 
+  	  xsldbgthread="false"
+	])
+AC_DEFINE
+
+AC_SUBST(USE_XSLDBG_AS_THREAD)
+AC_SUBST(THREAD_LIBS)
+AM_CONDITIONAL(USE_XSLDBG_AS_THREAD, test "x${xsldbgthread}" = "xtrue")
+AM_CONDITIONAL(HAVE_QT, test "x${haveqt}" = "xtrue")
+AM_CONDITIONAL(HAVE_PTHREAD, test ="x${havepthread}" = "xtrue")
+AC_SUBST(HAVE_QT)
+AC_SUBST(HAVE_PTHREAD)
+AC_SUBST(HAVE_GNOME)
 
 
 dnl 
@@ -412,10 +474,10 @@ AC_SUBST(LIBXSLT_LIBS)
 AC_SUBST(LIBXSLT_CFLAGS)
 
 
-XSLDBG_LIBDIR='-L${libdir}'
-XSLDBG_INCLUDEDIR='-I${includedir}'
+XSLDBG_LIBDIR="${prefix}/lib"
+XSLDBG_INCLUDEDIR="-I${prefix}/include"
 # EXTRA_LIBS=""
-XSLDBG_LIBS="$LIBXML_LIBS -lexslt $LIBXSLT_LIBS $M_LIBS"
+XSLDBG_LIBS=" -L${XSLDBG_LIBDIR} -lxsldbg ${LIBXSLT_LIBS} -lexslt"
 
 
 dnl
@@ -432,6 +494,8 @@ AC_SUBST(XSLDBG_LIBDIR)
 AC_SUBST(XSLDBG_INCLUDEDIR)
 AC_SUBST(EXTRA_LIBS)
 AC_SUBST(XSLDBG_LIBS)
+XSLDBG_CFLAGS="${XSLDBG_INCLUDEDIR} ${LIBXSLT_CFLAGS} "
+AC_SUBST(XSLDBG_CFLAGS)
 
 
 
@@ -467,12 +531,12 @@ dnl
 if test "x`ls -l /bin/sh | grep bash`" != "x" -o "x`ls -l /bin/sh | grep pdksh`" != "x"
 then
   AC_MSG_RESULT(Noting values for required variables for the bash/pdksh shell)
-  XSLDBG_EXPORTS="export LD_LIBRARY_PATH=${LIBXSLT_PREFIX_DIR}/lib:${LIBXML_PREFIX_DIR}/lib:$LD_LIBRARY_PATH;"
+  XSLDBG_EXPORTS="export LD_LIBRARY_PATH=`pwd`/src/libxsldbg/.libs:${LIBXSLT_PREFIX_DIR}/lib:${LIBXML_PREFIX_DIR}/lib:$LD_LIBRARY_PATH;"
 else
   if test "x`ls -l /bin/sh | grep tcsh`" != "x"
   then
 	AC_MSG_RESULT(Noting values for required variables for the tcsh shell)
-  	XSLDBG_EXPORTS="setenv LD_LIBRARY_PATH=${LIBXSLT_PREFIX_DIR}/lib:${LIBXML_PREFIX_DIR}/lib:$LD_LIBRARY_PATH;"
+  	XSLDBG_EXPORTS="setenv LD_LIBRARY_PATH=`pwd`/src/libxsldbg/.libs:${LIBXSLT_PREFIX_DIR}/lib:${LIBXML_PREFIX_DIR}/lib:$LD_LIBRARY_PATH;"
   else
 	AC_MSG_RESULT(Warning!! Unable to set up exports needed by xsldbg. 
 Tests may not be run nor documentation be built)
@@ -485,6 +549,10 @@ AC_OUTPUT(
         Makefile     	
         src/Makefile  	
 	src/xsldbgwin32conf.h
+	src/libxsldbg/xsldbgconfig.h
+	xsldbg-config
+	src/libxsldbg/Makefile
+	src/libqtnotifier/Makefile
 	tests/Makefile	
 	results/Makefile 	
 	docs/Makefile  		

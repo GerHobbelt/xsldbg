@@ -70,7 +70,7 @@ void
  * @templ: Is valid
  * @verbose: Either 1 or 0
  * @templateCount: Is valid
- * @printCount: Is valid
+ * @count: Is valid
  * @templateName: template name to print, may be NULL
  *
  * This display the templates in the same order as they are in the 
@@ -80,7 +80,7 @@ void
  */
 void
 xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
-                          int *templateCount, int *printCount,
+                          int *templateCount, int *count,
                           xmlChar * templateName)
 {
     const xmlChar *name, *defaultUrl = (xmlChar *) "<n/a>";
@@ -106,7 +106,7 @@ xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
                 /*  search for template name supplied failed */
                 /* empty */
             } else {
-                *printCount = *printCount + 1;
+                *count = *count + 1;
                 if (verbose)
                     xsltGenericError(xsltGenericErrorContext,
                                      " template :\"%s\" in file %s : line %ld\n",
@@ -244,8 +244,11 @@ xslDbgShellPrintStylesheetsHelper2(void *payload,
  * @arg: The stylesheets of interests, is NULL for all stylsheets
  *
  * Print stylesheets that can be found in loaded stylsheet
+ *
+ * Returns 1 on success,
+ *         0 otherwise
  */
-void
+int
 xslDbgPrintStyleSheets(xmlChar * arg)
 {
     printCounter = 0;
@@ -261,4 +264,5 @@ xslDbgPrintStyleSheets(xmlChar * arg)
         /* strange but possible */
         xsltGenericError(xsltGenericErrorContext,
                          "\n\tNo stylesheets found\n");
+	return 1; /* we always succeed*/	
 }

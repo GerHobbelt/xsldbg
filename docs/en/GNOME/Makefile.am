@@ -69,7 +69,7 @@ $(APISRC_DIR):
 # now use the preprocessor to create the GNOME version of 
 #  header suitable to pass onto gtkdoc-*
 $(APISRC_FILES): $(APISRC_DIR)
-	$(CC) -DBUILD_DOCS -DUSE_GNOME_DOCS $(CPPFLAGS) $(top_builddir)/src/$(@F) > $@
+	$(CC) -DBUILD_DOCS -DUSE_GNOME_DOCS $(CPPFLAGS) $(top_builddir)/src/libxsldbg/$(@F) > $@
 
 gnome.docbook : $(GNOMEXSL_FILES) ../xsldoc.xml
 	$(XSLDBG) --param xsldbg_version "'$(VERSION)'" --param xsldbg_date "'$(TIMESTAMP)'" xsldoc2gnome.xsl ../xsldoc.xml  > gnome.docbook

@@ -1,4 +1,39 @@
-Keith Isdale 18 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 27 Dec 2001 <k_isdale@tpg.com.au>
+	Added cmds.h and moves command id declarations to cmds.h
+     To be added to cvs
+  Updated all top "command functions" to return a 1 if successful, 0 otherwise
+    Added basic notification of command results when using xsldbg as thread.
+    Yet to add text error message which could be displayed on the applications
+       status bar
+    Added notification of change in line/file
+    Created threadUsage.html
+
+
+Keith Isdale 22 Dec 2001 <k_isdale@tpg.com.au>
+  Second attempt at a mechanism for a thread of xsldbg via a KPart
+	created src/libqtnotifier/*
+	moved xsldbgnotifier as /src/libqcnotifier/qtnotifier.cpp
+	depreciated libxsldbg/xsldbgnotifier.* but this may be needed
+	  by other applications
+   Notification events now being received by the KPart. 
+	Now to fix the details of notification messages
+	
+Keith Isdale 21 Dec 2001 <k_isdale@tpg.com.au>
+   Converted most of xsldbg to be a library in src/libxsldbg/*
+      	added src/main.c to allow a command line acess to xsldbg
+   Added xsldbg thread support 
+        src/libxsldbg/xsldbgthread.* 
+	src/libxsldbg/xsldbgmsg.h
+	src/libxsldbg/xsldbgnotifier.*
+   Update all Makefile.am's and configure.in 		
+	
+Keith Isdale 20 Dec 2001 <k_isdale@tpg.com.au>
+   Version 0.9.6
+   Sent email with thr modified libxml/xslt WIN32 project files
+   Removed win32/dsp/libxml2_new_files, win32/dsp/libxslt_new_files
+	from cvs
+	
+Keith Isdale 19 Dec 2001 <k_isdale@tpg.com.au>
    Fixed configure.in to enable/disable xsldbg helpsystem
    Created email about problems with xmlcatalog for WIN32
    Small updates to docs/en/website/win32_install.html	

@@ -16,8 +16,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <stdio.h>
 #include "../src/arraylist.h"
-#include "../src/breakpointInternals.h"
+#include "../src/xslbreakpoint.h"
+#include "../src/xslsearch.h"
 #include "../src/options.h"
 
 ArrayListPtr createTestList(void);

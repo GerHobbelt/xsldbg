@@ -71,7 +71,7 @@ $(APISRC_DIR):
 # now use the preprocessor to create the KDE version of 
 #  header suitable to pass onto kdoc
 $(APISRC_HEADER_FILES): $(APISRC_DIR)
-	$(CC) -DUSE_KDOC -DBUILD_DOCS -DUSE_KDE_DOCS $(CPPFLAGS) $(top_builddir)/src/$(@F) > $@
+	$(CC) -DUSE_KDOC -DBUILD_DOCS -DUSE_KDE_DOCS $(CPPFLAGS) $(top_builddir)/src/libxsldbg/$(@F) > $@
 
 
 

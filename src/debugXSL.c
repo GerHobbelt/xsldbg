@@ -43,11 +43,12 @@
 #include "files.h"
 #include "debugXSL.h"
 #include "options.h"
-#include "breakpointInternals.h"
+#include "xslbreakpoint.h"
 #include "help.h"
 #include <stdlib.h>
 #include <libxslt/transform.h>  /* needed by source command */
 #include <libxslt/xsltInternals.h>
+#include <libxml/debugXML.h>
 #include <stdio.h>
 
 
@@ -787,6 +788,8 @@ lookupName(xmlChar * name, xmlChar ** matchList)
 }
 
 
+
+#ifndef USE_XSLDBG_AS_THREAD
 /**
  * xslShellReadline:
  * @prompt:  the prompt value
@@ -830,10 +833,14 @@ xslDbgShellReadline(xmlChar * prompt)
     } else {
         strcpy(last_read, line_read);
     }
-    return (xmlChar *) xmlMemStrdup(line_read);
+    return (xmlChar *) xmlMemStrdup(line_read);  
 #endif
 }
+#else
 
+/* use the xslDbgShellReadline found in xsldbgthread.c */
+
+#endif
 
 /**
  * trimString:
@@ -1296,6 +1303,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
         if (cmdline == NULL)
             break;
 
+	notifyXsldbgApp(XSLDBG_MSG_PROSESSING_INPUT, NULL);
         /* remove leading/trailing blanks */
         trimString(cmdline);
 
@@ -1318,6 +1326,8 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             continue;
         nbargs++;
 
+	xsltGenericError(xsltGenericErrorContext,
+			 "Got command \"%s\"\n", cmdline); 
         /*
          * Parse the argument
          */
@@ -1367,7 +1377,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 {
                     xmlChar *noOfFrames = arg;
 
-                    // skip until next space character
+                    /* skip until next space character */
                     while (*noOfFrames && (*noOfFrames != ' ')) {
                         noOfFrames++;
                     }
@@ -1380,7 +1390,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 {
                     xmlChar *noOfFrames = arg;
 
-                    // skip until next space character
+                    /* skip until next space character */
                     while (*noOfFrames && (*noOfFrames != ' ')) {
                         noOfFrames++;
                     }
@@ -1628,7 +1638,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 #ifndef __riscos                /* RISC OS has no concept of 'home' directory */
                     /* replace ~ with home path */
                     if ((arg[0] == '~') && getenv("HOME")) {
-                        strcpy(buff, getenv("HOME"));
+                        xmlStrCpy(buff, getenv("HOME"));
                         if (xmlStrLen(buff) + xmlStrLen(arg) <
                             DEBUG_BUFFER_SIZE) {
                             xmlStrCat(buff, &arg[1]);

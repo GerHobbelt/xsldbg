@@ -1,5 +1,9 @@
-#include "../src/breakpointInternals.h"
-#include <libxml/debugXML.h>
+#include <stdio.h>
+#include "../src/arraylist.h"
+#include "../src/xslbreakpoint.h"
+#include "../src/xslsearch.h"
+#include "../src/options.h"
+
 
 void testNodeScan(void *payload, void *data,
                        xmlChar * name ATTRIBUTE_UNUSED);
@@ -11,13 +15,12 @@ int main(void){
   if (!searchInit())
     return result; /* error couldn't setup searching*/
 
-    xsltGenericError(xsltGenericErrorContext,
-		     "Starting search tests\n");
+    printf("Starting search tests\n");
   result = result &&  breakPointSearchTest();
   result = result && nodeSearchTest();
   
   if (result)
-    xsltGenericError(xsltGenericErrorContext, "\nSuccess all search tests passed!\n");
+    printf("\nSuccess all search tests passed!\n");
   
   searchFree();
   if (result >= 1)
@@ -33,11 +36,9 @@ int breakPointSearchTest(void)
   xmlNodePtr node = NULL;
   xmlDocPtr doc = NULL;
 
-   xsltGenericError(xsltGenericErrorContext,
-		    "Search for breakpoints in search dataBase\n");
+   printf( "Search for breakpoints in search dataBase\n");
   if (!breakPoint){
-    xsltGenericError(xsltGenericErrorContext,
-		     "Create of breakPoint item failed\n");
+    printf( "Create of breakPoint item failed\n");
     return result;
   }
 
@@ -50,8 +51,7 @@ int breakPointSearchTest(void)
     xmlShellPrintNode(node);
     result++;
   }else{
-    xsltGenericError(xsltGenericErrorContext,
-		     "Create search breakpoint node failed\n");
+    printf("Create search breakpoint node failed\n");
   }  
 
   doc = searchDoc();
@@ -85,8 +85,7 @@ int nodeSearchTest(void)
   searchInfoPtr searchInf = searchNewInfo(SEARCH_NODE);
   nodeSearchDataPtr searchData = NULL;
 
-  xsltGenericError(xsltGenericErrorContext,
-		   "\n\nSearching for a xml node at file test1.xsl: line 11\n");
+  printf( "\n\nSearching for a xml node at file test1.xsl: line 11\n");
   xmlLineNumbersDefault(1);
   searchDoc = xmlParseFile("test1.xsl");
 
@@ -97,29 +96,24 @@ int nodeSearchTest(void)
     walkChildNodes((xmlHashScanner) testNodeScan, searchInf, (xmlNodePtr)searchDoc);
     if (searchInf->found){
       /* success !*/
-      xsltGenericError(xsltGenericErrorContext,
-		       "Success found node at file %s: line %d\n",
+      printf("Success found node at file %s: line %d\n",
 		       searchData->node->doc->URL, 
 		       xmlGetLineNo(searchData->node));
       /* now try finding a line/url that doesn't exist */
       searchData->lineNo = 10;
       searchInf->found = 0;
-      xsltGenericError(xsltGenericErrorContext,
-		       "\nSearching for node at non-existant file test1.xsl: line 10\n");	    
+      printf("\nSearching for node at non-existant file test1.xsl: line 10\n");	    
       walkChildNodes((xmlHashScanner) testNodeScan, searchInf, (xmlNodePtr)searchDoc);
       if (!searchInf->found){
 	/* success*/
-	xsltGenericError(xsltGenericErrorContext,
-			 "Success search for node has passed\n");
+	printf("Success search for node has passed\n");
 	result++;
       }
     }else{
-      xsltGenericError(xsltGenericErrorContext,
-		       "Failed node not found\n");
+      printf("Failed node not found\n");
     }
   }else{
-    xsltGenericError(xsltGenericErrorContext,
-		     "Unable to create searchInfo or load test1.xsl for node searching\n");
+    printf("Unable to create searchInfo or load test1.xsl for node searching\n");
   }
 
   if (searchInf)

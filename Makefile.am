@@ -4,4 +4,9 @@ AUTOMAKE_OPTIONS = foreign 1.4
 
 SUBDIRS = src tests results docs
 
-EXTRA_DIST=Makefile.cvs config_riscos.h
+CLEANFILES=xsldbg-config
+
+EXTRA_DIST=Makefile.cvs config_riscos.h xsldbg-config.in
+
+bin_SCRIPTS=xsldbg-config
+

@@ -1,7 +1,14 @@
+if USE_XSLDBG_AS_THREAD
 # set the include path found by configure
 # cheet a bit because I need DOCS_PATH defined
 INCLUDES= $(all_includes) -DDOCS_PATH=\"$(HTML_DIR)/xsldbg/\" -DVERSION=\"@VERSION@\" \
-	$(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS)
+	$(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS) -I $(top_builddir)/src/libxsldbg -I $(QIDIR)/include
+else
+# set the include path found by configure
+# cheet a bit because I need DOCS_PATH defined
+INCLUDES= $(all_includes) -DDOCS_PATH=\"$(HTML_DIR)/xsldbg/\" -DVERSION=\"@VERSION@\" \
+	$(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS) -I $(top_builddir)/src/libxsldbg
+endif
 
 XSLDBG=$(top_builddir)/src/xsldbg
 
@@ -38,32 +45,28 @@ TEST_RESULTS = \
 	../results/test8.results
 
 # Define the array list tester
-bin_PROGRAMS = listTest searchTest
+noinst_PROGRAMS = listTest searchTest
 
 # Define some tests on arraylist 
 listTest_SOURCES = listTest.c 
 
-XSLDBG_OBJECTS = \
-	../src/options.o 	../src/dbgsearch.o \
-	../src/dbgarraylist.o 	../src/dbgbreakpoint.o \
-	../src/dbgmain.o 	../src/dbgcallstack.o \
-	../src/os_cmds.o	
-
 # use of configure defined libraries
-listTest_LDADD = $(XSLDBG_LIBS) $(XSLDBG_OBJECTS)
+listTest_LDADD = $(XSLDBG_LIBS) -lxsldbg ../src/simpleio.o
 
-
+if USE_XSLDBG_AS_THREAD
 # the library search path.
-searchTest_LDFLAGS = $(all_libraries)
+listTest_LDFLAGS = $(all_libraries) -L$(top_builddir)/src/libxsldbg/.libs -L$(QTDIR)/lib
+else
+listTest_LDFLAGS = $(all_libraries) -L$(top_builddir)/src/libxsldbg/.libs
+endif
 
 # Define some tests on the search dataDase
 searchTest_SOURCES = searchTest.c
 
-# use of configure defined libraries
-searchTest_LDADD = $(XSLDBG_LIBS) $(XSLDBG_OBJECTS)
+searchTest_LDADD = $(listTest_LDADD)
 
 # the library search path.
-searchTest_LDFLAGS = $(all_libraries)
+searchTest_LDFLAGS = $(listTest_LDFLAGS)
 
 $(XSLDBG):
 	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
@@ -90,13 +93,6 @@ if WITH_PERL
 
 
 all: $(XSLDBG) coretests runtests
-
-# We don't need to install anything
-install-data-local:
-
-install:
-
-install-binPROGRAMS:
 
 
 clean:

@@ -35,7 +35,7 @@
 #include "xsldbg.h"
 #include "options.h"
 #include "files.h"
-#include "breakpointInternals.h"
+#include "xslbreakpoint.h"
 #include "debugXSL.h"
 
 /* need to setup catch of SIGINT */
@@ -463,9 +463,16 @@ usage(const char *name)
                      "      --gdb : run in gdb mode printing out more information\n");
 }
 
+/* if we are using xsldbg as a thread then we redefine "main" and xsldbgMain */
+#ifndef USE_XSLDBG_AS_THREAD
 int
 main(int argc, char **argv)
 {
+#else
+int
+xsldbgMain(int argc, char **argv)
+{
+#endif
     int i, result = 1, noFilesFound = 0;
     xsltStylesheetPtr cur = NULL;
 
@@ -523,7 +530,7 @@ main(int argc, char **argv)
         if ((!strcmp(argv[i], "-debug")) || (!strcmp(argv[i], "--debug"))) {
             if (result) {
                 result = enableOption(OPTIONS_DEBUG, 1);
-                strcpy(argv[i], "");
+                argv[i] = NULL;
             }
         } else
 #endif
@@ -534,10 +541,10 @@ main(int argc, char **argv)
         } else if ((!strcmp(argv[i], "-o")) ||
                    (!strcmp(argv[i], "-output")) ||
                    (!strcmp(argv[i], "--output"))) {
-            strcpy(argv[i], "");
+            argv[i] = NULL;
             i++;
             setStringOption(OPTIONS_OUTPUT_FILE_NAME, (xmlChar *) argv[i]);
-            strcpy(argv[i], "");
+            argv[i] = NULL;
         } else if ((!strcmp(argv[i], "-V")) ||
                    (!strcmp(argv[i], "-version")) ||
                    (!strcmp(argv[i], "--version"))) {
@@ -560,7 +567,7 @@ main(int argc, char **argv)
             xsltGenericError(xsltGenericErrorContext,
                              "libexslt %d was compiled against libxml %d\n",
                              exsltLibexsltVersion, exsltLibxmlVersion);
-            strcpy(argv[i], "");
+            argv[i] = NULL;
         } else if ((!strcmp(argv[i], "-repeat"))
                    || (!strcmp(argv[i], "--repeat"))) {
             if (getIntOption(OPTIONS_REPEAT) == 0)
@@ -571,20 +578,20 @@ main(int argc, char **argv)
                    (!strcmp(argv[i], "--novalid"))) {
             if (result) {
                 result = enableOption(OPTIONS_NOVALID, 1);
-                strcpy(argv[i], "");
+                argv[i] = NULL;
             }
         } else if ((!strcmp(argv[i], "-noout")) ||
                    (!strcmp(argv[i], "--noout"))) {
             if (result) {
                 result = enableOption(OPTIONS_NOOUT, 1);
-                strcpy(argv[i], "");
+                argv[i] = NULL;
             }
 #ifdef LIBXML_DOCB_ENABLED
         } else if ((!strcmp(argv[i], "-docbook")) ||
                    (!strcmp(argv[i], "--docbook"))) {
             if (result) {
                 result = enableOption(OPTIONS_DOCBOOK, 1);
-                strcpy(argv[i], "");
+                argv[i] = NULL;
             }
 #endif
 #ifdef LIBXML_HTML_ENABLED
@@ -592,26 +599,26 @@ main(int argc, char **argv)
                    (!strcmp(argv[i], "--html"))) {
             if (result) {
                 result = enableOption(OPTIONS_HTML, 1);
-                strcpy(argv[i], "");
+                argv[i] = NULL;
             }
 #endif
         } else if ((!strcmp(argv[i], "-timing")) ||
                    (!strcmp(argv[i], "--timing"))) {
             if (result) {
                 result = enableOption(OPTIONS_TIMING, 1);
-                strcpy(argv[i], "");
+                argv[i] = NULL;
             }
         } else if ((!strcmp(argv[i], "-profile")) ||
                    (!strcmp(argv[i], "--profile"))) {
             if (result) {
                 result = enableOption(OPTIONS_PROFILING, 1);
-                strcpy(argv[i], "");
+                argv[i] = NULL;
             }
         } else if ((!strcmp(argv[i], "-norman")) ||
                    (!strcmp(argv[i], "--norman"))) {
             if (result) {
                 result = enableOption(OPTIONS_PROFILING, 1);
-                strcpy(argv[i], "");
+                argv[i] = NULL;
             }
         } else if ((!strcmp(argv[i], "-nonet")) ||
                    (!strcmp(argv[i], "--nonet"))) {
@@ -634,7 +641,7 @@ main(int argc, char **argv)
                 xsltGenericError(xsltGenericErrorContext,
                                  "Variable $SGML_CATALOG_FILES not set\n");
 #endif
-                strcpy(argv[i], "");
+                argv[i] = NULL;
 #endif
             }
 #ifdef LIBXML_XINCLUDE_ENABLED
@@ -642,7 +649,7 @@ main(int argc, char **argv)
                    (!strcmp(argv[i], "--xinclude"))) {
             if (result) {
                 result = enableOption(OPTIONS_XINCLUDE, 1);
-                strcpy(argv[i], "");
+                argv[i] = NULL;
             }
             xsltSetXIncludeDefault(1);
 #endif
@@ -662,13 +669,13 @@ main(int argc, char **argv)
                    (!strcmp(argv[i], "--maxdepth"))) {
             int value;
 
-            strcpy(argv[i], "");
+            argv[i] = NULL;
             i++;
             if (sscanf(argv[i], "%d", &value) == 1) {
                 if (value > 0)
                     xsltMaxDepth = value;
             }
-            strcpy(argv[i], "");
+            argv[i] = NULL;
 
           /*---------------------------------------- */
             /*     Handle xsldbg specific options      */
@@ -679,14 +686,14 @@ main(int argc, char **argv)
                    (!strcmp(argv[i], "--shell"))) {
             if (result) {
                 result = enableOption(OPTIONS_SHELL, 1);
-                strcpy(argv[i], "");
+                argv[i] = NULL;
             }
         } else if ((!strcmp(argv[i], "-cd")) || (!strcmp(argv[i], "--cd"))) {
-            strcpy(argv[i], "");
+            argv[i] = NULL;
             if (i + 1 < argc) {
                 i++;
                 result = changeDir((xmlChar *) argv[i]);
-                strcpy(argv[i], "");
+                argv[i] = NULL;
             } else {
                 xsltGenericError(xsltGenericErrorContext,
                                  "Missing path name after --cd option\n");
@@ -697,7 +704,7 @@ main(int argc, char **argv)
             /* run in gdb mode printing out more information after each command */
             if (result) {
                 result = enableOption(OPTIONS_GDB, 1);
-                strcpy(argv[i], "");
+                argv[i] = NULL;
             }
         } else {
             xsltGenericError(xsltGenericErrorContext,

@@ -11,6 +11,7 @@
 #undef WITH_DEBUG_HELP
 #undef WITH_XSLDBG_DEBUG
 #undef XSLDBG_BIN
+#undef USE_XSLDBG_AS_THREAD
 
 
 /* Define if you need the GNU extensions to compile */
@@ -22,5 +23,8 @@
 #undef HAVE_FABS
 #undef HAVE_READLINE
 #undef HAVE_HISTORY
+#undef HAVE_QT
+#undef HAVE_PTHREAD
+#undef HAVE_GNOME
 
 

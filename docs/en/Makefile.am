@@ -10,7 +10,7 @@ xsldoc.txt: xsldoc.xsl xsldoc.xml xsldoc.dtd
 --param xsldbg_version "'$(VERSION)'" xsldoc.xsl xsldoc.xml > xsldoc.txt
 	cp xsldoc.txt ./plain/xsldoc.txt
 
-EXTRA_DIST= xsldoc.xsl xsldoc.xml xsldoc.dtd search.xsl search.dtd xsldoc.txt CATALOG
+EXTRA_DIST= xsldoc.xsl xsldoc.xml xsldoc.dtd search.xsl search.dtd xsldoc.txt CATALOG catalog.xml
 
 all: xsldoc.txt
 
@@ -21,10 +21,11 @@ install-data-local: all
 	@echo ""
 	@echo "Warning you may need to edit these by hand using xmlcatalog"
 	@echo ""
-	xmlcatalog -v --noout --add public "-//xsldbg//DTD search XML V1.0//EN" \
-		"file://$(HTML_DIR)/xsldbg/search.dtd" /etc/xml/catalog	
-	xmlcatalog -v  --noout --add public "-//xsldbg//DTD xsldoc XML V1.0//EN" \
-		"file://$(HTML_DIR)/xsldbg/xsldoc.dtd" /etc/xml/catalog
+	if test "x`grep xsldbg/catalog.xml /etc/xml/catalog`" = "x" ;then \
+	  xmlcatalog -v --noout --add nextCatalog "file://$(HTML_DIR)/xsldbg/catalog.xml" "" /etc/xml/catalog; \
+	else \
+	  echo "skipping addition of xsldbg catalog as it is already present" ; \
+	fi;
 clean:
 	rm -f xsldoc.txt
 

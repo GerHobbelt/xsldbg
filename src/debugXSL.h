@@ -34,6 +34,7 @@
 #ifndef __DEBUG_XSL__
 #define __DEBUG_XSL__
 
+
 /* We want skip most of these includes when building documentation*/
 #ifndef BUILD_DOCS
 #include <stdio.h>
@@ -41,14 +42,15 @@
 #include <libxml/debugXML.h>
 #include <libxslt/xsltInternals.h>
 #include <libxml/xpath.h>
-#include "breakpointInternals.h"
+#include "xslbreakpoint.h"
 #endif
+
+#include "xsldbgio.h" /* define readline function */
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define DEBUG_BUFFER_SIZE 500   /*used by xslDbgShell */
 
 /* how may items have been printed */
 extern int printCount;
@@ -304,6 +306,31 @@ extern int printCount;
 #endif
     void xslDbgEnableBreakPoint(void *payload, void *data, xmlChar * name);
 
+#ifdef USE_GNOME_DOCS
+/**
+ * xslDbgShellEnable:
+ * @arg : is valid
+ * @enableType : enable break point if 1, disable if 0, toggle if -1
+ *
+ * Enable/disable break point specified by arg using enable 
+ *      type of @enableType
+ * Returns 1 if successful,
+ *         0 otherwise
+ */
+#else
+#ifdef USE_KDE_DOCS
+  /**
+   * Enable/disable break point specified by arg using enable
+   *
+   * @param arg: is valid enable "commmand text"
+   * @param enableType : enable break point if 1, disable if 0, toggle if -1
+   *
+   * @returns 1 if successful,
+   *          0 otherwise
+   */
+#endif 
+#endif
+  int xslDbgShellEnable(xmlChar * arg, int enableType);
 
 
 #ifdef USE_GNOME_DOCS
