@@ -1,10 +1,12 @@
 - redo implemention of src/dbgbreakpoint.c to use hash tables not a fixed 
     array of breakpoints
 - add new search functions
-- add ability to change varaibles
+- add ability to change variables
 - add the ability to validate file and line number (Daniel is working on this)
+- add the ability to list documents created by xsl:document instruction
 - validate the breakpoint API is complete  
-- patch libxslt to use breakpoint API
+- improve the appearance of documentation and ensure it is up to date
+- patch libxslt to use breakpoint API : Done!
 
 
 
@@ -252,5 +254,38 @@ bye,
 Keith
 
 ----------------------------
+
+
+On Mon, Oct 29, 2001 at 04:42:52PM +1000, Keith Isdale wrote:
+> Hi,
+> > I was running xsldbg on site.xsl Daniel made and realised that there
+seems to 
+> be no way to keep track of documents created by the "xsl:document"
+element. 
+> I'd like to be able to build a list of the URI of the created documents. 
+> Which users of a debugger can printout.  (I'm not thinking of
+implementing 
+> this until the breakpoint API set has been finalised and commited to
+cvs). A 
+> possible API set to achieve this  (put in breakpoints/docnames.[ch]?)
+> > typedef struct _xslDocName xslDocName;
+> typedef xslDocName *xslDocNameptr;
+> struct _xslDocName {
+> const xmlChar *url;
+> xslDocNameptr next;
+> } ;
+> > xslDocNamePtr xslDocTop;
+> xslClearDocNames = 0; /* used to flag whether to clear all from doc name 
+> list*/
+> > > xslAddDocName(const xmlChar * url);
+> xslDocNameCount();
+> const xmlChar *xslGetDocName(int docNumber);
+> xslFreeDocNames();
+> xslSetClearDocNamesFlag(int value);
+> xslGetClearDocNamesFlag();
+
+  Hum, sounds simple, would cost nothing at run-time. Potential TODO, yes.
+
+Daniel
 
 
