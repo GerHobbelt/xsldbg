@@ -129,6 +129,7 @@ const char *commandNames[] = {
     "delparam",
     "showparam",
     "setoption",
+    "options",
 
     /* extra options */
     "trace",
@@ -251,7 +252,7 @@ enum ShortcutsEnum {
    Items that start with *_ are options that CANNOT be used by the user
   Once you set an option you need to give a run command to activate
   new settings */
-const char *intOptionNames[] = {
+const char *optionNames[] = {
     "xinclude",                 /* Use xinclude during xml parsing */
     "docbook",                  /* Use of docbook sgml parsing */
     "timing",                   /* Use of timing */
@@ -268,6 +269,11 @@ const char *intOptionNames[] = {
     "catalogs",                 /* do we use catalogs in SGML_CATALOG_FILES */
     "preferhtml",               /* Prefer html output for search results */
     "verbose",                  /* Be verbose with messages */
+    "output",                   /* what is the output file name */
+    "source",                   /* The stylesheet source to use */
+    "docspath",                 /* Path of xsldbg's documentation */
+    "catalognames",             /* The names of the catalogs to use when the catalogs option is active */
+    "data",                     /* The xml data file to use */
     NULL                        /* indicate end of list */
 };
 
@@ -904,32 +910,51 @@ int
 splitString(xmlChar * textIn, int maxStrings, xmlChar ** out)
 {
     int result = 0;
+    int foundQuote = 0;
 
     while ((*textIn != '\0') && (result < maxStrings)) {
         /*skip the first spaces ? */
         while (IS_BLANK(*textIn))
             textIn++;
+
+	if (*textIn == '\"'){
+	  textIn++;
+	  foundQuote++;
+	}
         out[result] = textIn;
 
-        /* no word found only spaces ? */
-        if (xmlStrLen(textIn) == 0)
-            return result;
-
         /* look for end of word */
-        while (!IS_BLANK(*textIn) && (*textIn != '\0'))
+	if (foundQuote == 0){
+	  while (!IS_BLANK(*textIn) && (*textIn != '\0'))
             textIn++;
 
-        if (*textIn != '\0') {
-            *textIn = '\0';
+	  if (*textIn != '\0'){ 
+	    *textIn = '\0';
             textIn++;
-            result++;
-        } else {
-            *textIn = '\0';
+	  }
+	  
+	  if (xmlStrLen(out[result]) > 0){
+	    result++;
+	  }
+	}else{
+	  /* look for ending quotation mark */
+	  while ((*textIn != '\0') && (*textIn != '\"') )
             textIn++;
-            result++;
-            break;
-        }
+	  if (*textIn == '\0'){
+                xsltGenericError(xsltGenericErrorContext,
+				 "Unmatched quotes in input\n");
+		return result;
+	  }
+	  *textIn = '\0';
+	  textIn++; /* skip the '"' which is now a '\0'*/
+	  foundQuote = 0;
+	  result++;	    
+	}
+	  
     }
+
+    if (*textIn != '\0')
+      result = 0; /* We have not processed all the text givent to us */
     return result;
 }
 
@@ -1964,28 +1989,68 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     long optValue;
                     long optID;
 
-                    if (splitString(arg, 2, opts) == 2) {
-                        if (!sscanf((char *) opts[1], "%ld", &optValue)) {
-                            xsltGenericError(xsltGenericErrorContext,
-                                             "Error : Unable to value for option \n");
-                            break;
-                        } else {
-                            trimString(opts[0]);
+                    if (splitString(arg, 2, opts) == 2) {		      
                             optID =
                                 lookupName(opts[0],
-                                           (xmlChar **) intOptionNames);
+                                           (xmlChar **) optionNames);
                             if (optID >= 0) {
-                                setIntOption(optID + OPTIONS_XINCLUDE,
-                                             optValue);
+			      if (optID <= (OPTIONS_VERBOSE - OPTIONS_XINCLUDE)){
+				/* handle setting integer option */
+				if (!sscanf((char *) opts[1], "%ld", &optValue)) {
+				  xsltGenericError(xsltGenericErrorContext,
+						   "Error : Unable to parse integer value for option \n");
+				}else{
+				  cmdResult = setIntOption(optID + OPTIONS_XINCLUDE,
+					       optValue);
+				}
+			      } else{
+				/* handle setting a string option */
+				cmdResult = setStringOption(optID + OPTIONS_XINCLUDE, opts[1]);
+				
+			      }
                             } else {
                                 xsltGenericError(xsltGenericErrorContext,
                                                  "Unknown option name %s\n",
                                                  opts[0]);
                             }
-                        }
-                    }
-                }
+		    }else {
+		      xsltGenericError(xsltGenericErrorContext,
+				       "Expected two arguments to setoption command\n");
+		}
+                }else {
+		  xsltGenericError(xsltGenericErrorContext,
+				   "Expected two arguments to setoption command\n");
+		}
                 break;
+		
+	case DEBUG_OPTIONS_CMD:
+	  {
+	    int optionIndex;
+	    xsltGenericError(xsltGenericErrorContext,"\n");
+	    /* Print out the integer options and thier values */
+	    for (optionIndex = OPTIONS_XINCLUDE; optionIndex <= OPTIONS_VERBOSE; optionIndex++){
+	      /* skip any non-user options */
+	      if (optionNames[optionIndex - OPTIONS_XINCLUDE][0] != '*'){
+	            xsltGenericError(xsltGenericErrorContext,
+				     "Option %s = %d\n",  optionNames[optionIndex - OPTIONS_XINCLUDE],
+				     getIntOption(optionIndex));
+	      }
+	    }
+	    /* Print out the string options and thier values */
+	    for (optionIndex = OPTIONS_OUTPUT_FILE_NAME; optionIndex <= OPTIONS_DATA_FILE_NAME; optionIndex++){
+	      if (getStringOption(optionIndex) != NULL){
+	            xsltGenericError(xsltGenericErrorContext,
+				     "Option %s = \"%s\"\n",  optionNames[optionIndex - OPTIONS_XINCLUDE],
+				     getStringOption(optionIndex));
+	      }else{
+	            xsltGenericError(xsltGenericErrorContext,
+				     "Option %s = \"\"\n",  optionNames[optionIndex - OPTIONS_XINCLUDE]);
+	      }
+
+	    }	     
+	    xsltGenericError(xsltGenericErrorContext,"\n");   	    
+	  }
+	  break;
 
             case DEBUG_TTY_CMD:
                 if (openTerminal(arg)) {

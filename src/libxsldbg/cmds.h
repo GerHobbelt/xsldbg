@@ -77,11 +77,12 @@ typedef enum {                  /* id's for commands of xslDbgShell */
     DEBUG_SHELL_EXEC_CMD,
     DEBUG_TTY_CMD,
 
-    /* libxslt parameter related */
+    /* libxslt parameter and options related */
     DEBUG_ADDPARAM_CMD,
     DEBUG_DELPARAM_CMD,
     DEBUG_SHOWPARAM_CMD,
     DEBUG_SETOPTION_CMD,
+    DEBUG_OPTIONS_CMD, /* print options */
 
     /* extra options/commands */
     DEBUG_TRACE_CMD,

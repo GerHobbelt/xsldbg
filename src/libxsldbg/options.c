@@ -166,7 +166,7 @@ enableOption(OptionTypeEnum optionType, int value)
 
         default:
             xsltGenericError(xsltGenericErrorContext,
-                             "Not a valid boolean xsldbg option %d\n",
+                             "Not a valid boolean/integer xsldbg option %d\n",
                              type);
             result = 0;
     }
@@ -210,7 +210,7 @@ isOptionEnabled(OptionTypeEnum optionType)
 
         default:
             xsltGenericError(xsltGenericErrorContext,
-                             "Not a valid boolean xsldbg option %d\n",
+                             "Not a valid boolean/integer xsldbg option %d\n",
                              type);
     }
     return result;
@@ -320,7 +320,7 @@ copyVolitleOptions(void)
     int optionId;
 
     for (optionId = 0;
-         optionId < OPTIONS_VERBOSE - OPTIONS_XINCLUDE; optionId++) {
+         optionId <= OPTIONS_VERBOSE - OPTIONS_XINCLUDE; optionId++) {
         intOptions[optionId] = intVolitileOptions[optionId];
     }
 }

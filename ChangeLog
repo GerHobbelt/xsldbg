@@ -1,4 +1,10 @@
 Keith Isdale 23 Jan 2002 <k_isdale@tpg.com.au>
+   Version 1.0.1
+   Added suport for quoted values to splitstring function in debugXSL.c
+   Added options command to print out option values
+   Updates xsldoc.xml to suit
+	
+Keith Isdale 23 Jan 2002 <k_isdale@tpg.com.au>
    Version 1.0.0
    Changed default "data" file name for  searchQuery to searchresults.xml
 	Set the "base path" for temporary and output files to current stylesheet path

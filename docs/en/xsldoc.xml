@@ -57,13 +57,14 @@ the &lt;ENTER&gt; key.
 <link href="quit">quit</link>}, <link href="step">step</link>, 
 <link href="stepup">stepup</link>, <link href="stepdown">stepdown</link>,
 <link href="continue">continue</link>, <link href="run">run</link>,
-<link href="trace">trace</link>, <link href="setoption">setoption</link> 
+<link href="trace">trace</link>, <link href="setoption">setoption</link>,
+<link href="options">options</link> 
 </li>
 
-<li>Libxslt parameter related :
-<link href="addparam">addparam</link>,<link href="delparam">delparam</link>,
-<link href="showparam">showparam</link>,
-<link href="output">output</link>, <link href="setoption">setoption</link>   
+<li>Libxslt parameter related : <link href="addparam">addparam</link>,
+<link href="delparam">delparam</link>,<link href="showparam">showparam</link>,
+<link href="output">output</link>, <link href="setoption">setoption</link>, 
+<link href="options">options</link>  
 </li>
 
 <li>Template related : <link href="templates">templates</link>,
@@ -71,8 +72,8 @@ the &lt;ENTER&gt; key.
 </li>
 
 <li>Break point related : <link href="break">break</link>, 
-<link href="showbreak">showbreak</link>,
-<link href="delete">delete</link>, <link href="enable">enable</link>
+<link href="showbreak">showbreak</link>,<link href="delete">delete</link>, 
+<link href="enable">enable</link>
 </li>
 
 <li>Expression viewing(xpath) : <link href="cat">cat</link></li>
@@ -84,29 +85,25 @@ the &lt;ENTER&gt; key.
 </li>
 
 <li>Node selection : <link href="source">source</link>, 
-<link href="data">data</link>, 
-<link href="cd">cd</link>
+<link href="data">data</link>, <link href="cd">cd</link>
 </li>
 
 <li>Searching :<link href="search">search</link>
 </li>
 
-<li>Operating system related :
-<link href="chdir">chdir</link>,
-<link href="shell">shell</link>,
-<link href="tty">tty</link>
+<li>Operating system related :<link href="chdir">chdir</link>,
+<link href="shell">shell</link>,<link href="tty">tty</link>
 
 </li>
 
-<li>File related :
-<link href="output">output</link>, <link href="entities">entities</link>, 
-<link href="system">system</link>, <link href="public">public</link>
+<li>File related : <link href="output">output</link>, 
+<link href="entities">entities</link>, <link href="system">system</link>, 
+<link href="public">public</link>
 </li>
 
-<li>Disabled file commands: 
-<link href="validate">validate</link>, <link href="load">load</link>, 
-<link href="save">save</link>, <link href="write">write</link>, 
-<link href="free">free</link>
+<li>Disabled file commands: <link href="validate">validate</link>, 
+<link href="load">load</link>, <link href="save">save</link>, 
+<link href="write">write</link>, <link href="free">free</link>
 </li>
 </list>
 </para>
@@ -252,8 +249,11 @@ the &lt;ENTER&gt; key.
 <usage>
 <li>
 <text>addparam &lt;QNAME&gt; &lt;XPATH&gt;</text>
-<comment>(No error checking done on the validity of &lt;QNAME&gt; nor &lt;XPATH&gt;. This is equivalent to providing --param &lt;QNAME&gt; &lt;XPATH&gt; via command line)</comment>
+<comment>(The &lt;XPATH&gt; must not contain any spaces nor double quotation marks.No error checking done on the validity of &lt;QNAME&gt; nor &lt;XPATH&gt;. This is equivalent to providing --param &lt;QNAME&gt; &lt;XPATH&gt; via command line.)</comment>
 </li>
+<li>
+<text>add param &lt;QNAME&gt; &quot;&lt;XPATH&gt;&quot;</text>  
+<comment>(Must not contain double quotation marks in &lt;XPATH&gt;)</comment></li>
 </usage>
 </cmd>
 
@@ -285,30 +285,105 @@ the &lt;ENTER&gt; key.
 <para>You will need to use run command to active changes</para>
 </body>
 <usage>
+<!--                   Integer options             -->
 <li><text>setoption &lt;OPTION_NAME&gt;  &lt;INTEGER_VALUE&gt;</text></li>
 <li><text>  Where &lt;OPTION_NAME&gt; can be either</text></li>
 <li><list>
-<li><text>debug</text>    <comment>(If &lt;INTEGER_VALUE&gt; is true dump the tree of the result instead)</comment></li>
-<li><text>catalogs</text> <comment>(If &lt;INTEGER_VALUE&gt; is true use the catalogs from $SGML_CATALOG_FILES 
-                                      or SGML$CatalogFiles for risc operating system</comment></li>
-<li><text>html</text>     <comment>(If &lt;INTEGER_VALUE&gt; is true the input document is an HTML file)</comment></li>
-<li><text>docbook</text>  <comment>(If &lt;INTEGER_VALUE&gt; is true the input document is SGML docbook)</comment></li>
-<li><text>xinclude</text>  <comment>(If &lt;INTEGER_VALUE&gt; is true do XInclude processing on document intput)</comment></li>
-<li><text>preferhtml</text> <comment>(If &lt;INTEGER_VALUE&gt; is true the prefer html output for search results. : See search command)</comment></li>
-<li><text>nonet</text>    <comment>(If &lt;INTEGER_VALUE&gt; is true refuse to fetch DTDs or entities over network)</comment></li>
-<li><text>novalid</text>  <comment>(If &lt;INTEGER_VALUE&gt; is true skip the DTD loading phase)</comment></li>
-<li><text>repeat</text>   <comment>(If &lt;INTEGER_VALUE&gt; is true run the transformation 20 times)</comment></li>
-<li><text>profile</text>   <comment>(If &lt;INTEGER_VALUE&gt; is true  dump profiling informations)</comment></li>
-<li><text>timing</text>    <comment>(If &lt;INTEGER_VALUE&gt; is true display the time used)</comment></li>
-<li><text>noout</text>     <comment>(If &lt;INTEGER_VALUE&gt; is true do not dump the result)</comment> </li>
-</list>
+<li>
+<text>debug</text>    
+<comment>(If &lt;INTEGER_VALUE&gt; is true dump the tree of the result instead)</comment>
 </li>
+<li>
+<text>catalogs</text> 
+<comment>(If &lt;INTEGER_VALUE&gt; is true use the catalogs from $SGML_CATALOG_FILES or SGML$CatalogFiles for risc operating system</comment>
+</li>
+<li>
+<text>html</text>     
+<comment>(If &lt;INTEGER_VALUE&gt; is true the input document is an HTML file)</comment>
+</li>
+<li>
+<text>docbook</text>  
+<comment>(If &lt;INTEGER_VALUE&gt; is true the input document is SGML docbook)</comment>
+</li>
+<li>
+<text>xinclude</text>  
+<comment>(If &lt;INTEGER_VALUE&gt; is true do XInclude processing on document intput)</comment>
+</li>
+<li>
+<text>preferhtml</text>
+<comment>(If &lt;INTEGER_VALUE&gt; is true the prefer html output for search results. : See search command)</comment>
+</li>
+<li><text>nonet</text>
+<comment>(If &lt;INTEGER_VALUE&gt; is true refuse to fetch DTDs or entities over network)</comment>
+</li>
+<li>
+<text>novalid</text>  
+<comment>(If &lt;INTEGER_VALUE&gt; is true skip the DTD loading phase)</comment>
+</li>
+<li>
+<text>repeat</text>   
+<comment>(If &lt;INTEGER_VALUE&gt; is true run the transformation 20 times)</comment>
+</li>
+<li>
+<text>profile</text>   
+<comment>(If &lt;INTEGER_VALUE&gt; is true  dump profiling informations)</comment>
+</li>
+<li>
+<text>timing</text>    
+<comment>(If &lt;INTEGER_VALUE&gt; is true display the time used)</comment>
+</li>
+<li>
+<text>noout</text>     
+<comment>(If &lt;INTEGER_VALUE&gt; is true do not dump the result)</comment> 
+</li>
+</list></li>
 <li><text> And where value is true if it is NOT equal to zero</text></li>
 <li><text> And where value is false if it IS equal to zero</text></li>
 
+<li>
+<text>setoption &lt;OPTION_NAME&gt; &quot;&lt;STRING_VALUE&gt;&quot;</text>  
+<comment>(Must not contain double quotation marks in &lt;STRING_VALUE&gt;)</comment>
+</li>
+<li>
+<!--                      String options             -->
+<text>setoption &lt;OPTION_NAME&gt; &lt;STRING_VALUE&gt;</text> 
+<comment>(Must not contain any spaces, nor double quotation marks in &lt;STRING_VALUE&gt;)</comment>
+</li>
+<li><text>  Where &lt;OPTION_NAME&gt; can be either</text></li>
+<li><list>
+<li>
+<text>data</text>    
+<comment>(Data file's URI)</comment>
+</li>
+<li>
+<text>source</text>  
+<comment>(Source file's URI)</comment>
+</li>
+<li>
+<text>output</text>  
+<comment>(Output file's SystemID )</comment>       
+</li>
+<li>
+<text>docspath</text>
+<comment>(Path to use when looking for documentation)</comment>
+</li>
+<li>
+<text>catalognames</text>
+<comment>(The names of the catalogs to use when the catalogs option is set. Value will be lost if set before setting catalogs option)</comment>
+</li>
+</list></li>
 </usage>
-
 </cmd>
+
+<cmd name="options" title="options">
+<summary>Print the values for xsldbg's option</summary>
+<usage>
+<li><text>options</text></li>
+</usage>
+</cmd>
+
+
+
 <!-- - - - - - - Template related commands - - - - - - - -->
 <cmd name="templates" shortcut="t" title="Templates">
 <summary>Print a list of available templates. Search for a template</summary>

@@ -1,5 +1,5 @@
 
-         xsldbg version 1.0.0
+         xsldbg version 1.0.1
          ====================
    
     xsldbg help
@@ -33,8 +33,8 @@ On systems with readline library available you can use the back/forward keys to 
  
  
      Help related :help
-     Running related : {bye|exit|quit},step,stepup,stepdown,continue,run,trace,setoption
-     Libxslt parameter related :addparam,delparam,showparam,output,setoption
+     Running related : {bye|exit|quit},step,stepup,stepdown,continue,run,trace,setoption,options
+     Libxslt parameter related :addparam,delparam,showparam,output,setoption,options
      Template related :templates,where,frame
      Break point related :break,showbreak,delete,enable
      Expression viewing(xpath) :cat
@@ -52,7 +52,8 @@ Command : Addparam
 Summary : Add a libxslt parameter
 Usage:
  
-     addparam <QNAME> <XPATH>   (No error checking done on the validity of <QNAME> nor <XPATH>. This is equivalent to providing --param <QNAME> <XPATH> via command line)
+     addparam <QNAME> <XPATH>   (The <XPATH> must not contain any spaces nor double quotation marks.No error checking done on the validity of <QNAME> nor <XPATH>. This is equivalent to providing --param <QNAME> <XPATH> via command line.)
+     add param <QNAME> "<XPATH>"   (Must not contain double quotation marks in <XPATH>)
 - - - - - - - - - - - - - - - - - - - - 
 
 
@@ -297,6 +298,14 @@ Usage:
 - - - - - - - - - - - - - - - - - - - - 
 
 
+Command : options  
+Summary : Print the values for xsldbg's option
+Usage:
+ 
+     options
+- - - - - - - - - - - - - - - - - - - - 
+
+
 Command : Output  
 Summary : Specify the output file name
  
@@ -378,8 +387,7 @@ Usage:
      Where <OPTION_NAME> can be either
       
      debug   (If <INTEGER_VALUE> is true dump the tree of the result instead)
-     catalogs   (If <INTEGER_VALUE> is true use the catalogs from $SGML_CATALOG_FILES 
-                                      or SGML$CatalogFiles for risc operating system
+     catalogs   (If <INTEGER_VALUE> is true use the catalogs from $SGML_CATALOG_FILES or SGML$CatalogFiles for risc operating system
      html   (If <INTEGER_VALUE> is true the input document is an HTML file)
      docbook   (If <INTEGER_VALUE> is true the input document is SGML docbook)
      xinclude   (If <INTEGER_VALUE> is true do XInclude processing on document intput)
@@ -393,6 +401,16 @@ Usage:
 
      And where value is true if it is NOT equal to zero
      And where value is false if it IS equal to zero
+     setoption <OPTION_NAME> "<STRING_VALUE>"   (Must not contain double quotation marks in <STRING_VALUE>)
+     setoption <OPTION_NAME> <STRING_VALUE>   (Must not contain any spaces, nor double quotation marks in <STRING_VALUE>)
+     Where <OPTION_NAME> can be either
+      
+     data   (Data file's URI)
+     source   (Source file's URI)
+     output   (Output file's SystemID )
+     docspath   (Path to use when looking for documentation)
+     catalognames   (The names of the catalogs to use when the catalogs option is set. Value will be lost if set before setting catalogs option)
+
 - - - - - - - - - - - - - - - - - - - - 
 
 

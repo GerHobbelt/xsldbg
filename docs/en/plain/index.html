@@ -37,11 +37,11 @@ A:link, A:visited, A:active { text-decoration: underline }
 
 --></style>
 <title>
-           xsldbg 1.0.0 documentation
+           xsldbg 1.0.1 documentation
          </title>
 </head>
 <body bgcolor="#8b7765" text="#000000" link="#000000" vlink="#000000"><table class="listbody"><tr><td>
-<h1 class="cmdth">xsldbg 1.0.0</h1>
+<h1 class="cmdth">xsldbg 1.0.1</h1>
 <h2 class="cmdth">Overview</h2>
 <h3>xsldbg help</h3>
 
@@ -98,16 +98,17 @@ the &lt;ENTER&gt; key.
 <a href="#quit">quit</a>}, <a href="#step">step</a>, 
 <a href="#stepup">stepup</a>, <a href="#stepdown">stepdown</a>,
 <a href="#continue">continue</a>, <a href="#run">run</a>,
-<a href="#trace">trace</a>, <a href="#setoption">setoption</a>    </td></tr>
-<tr><td>Libxslt parameter related :
-<a href="#addparam">addparam</a>,<a href="#delparam">delparam</a>,
-<a href="#showparam">showparam</a>,
-<a href="#output">output</a>, <a href="#setoption">setoption</a>    </td></tr>
+<a href="#trace">trace</a>, <a href="#setoption">setoption</a>,
+<a href="#options">options</a>    </td></tr>
+<tr><td>Libxslt parameter related : <a href="#addparam">addparam</a>,
+<a href="#delparam">delparam</a>,<a href="#showparam">showparam</a>,
+<a href="#output">output</a>, <a href="#setoption">setoption</a>, 
+<a href="#options">options</a>    </td></tr>
 <tr><td>Template related : <a href="#templates">templates</a>,
 <a href="#where">where</a>, <a href="#frame">frame</a>    </td></tr>
 <tr><td>Break point related : <a href="#break">break</a>, 
-<a href="#showbreak">showbreak</a>,
-<a href="#delete">delete</a>, <a href="#enable">enable</a>    </td></tr>
+<a href="#showbreak">showbreak</a>,<a href="#delete">delete</a>, 
+<a href="#enable">enable</a>    </td></tr>
 <tr><td>Expression viewing(xpath) : <a href="#cat">cat</a>    </td></tr>
 <tr><td>Node viewing : <a href="#ls">ls</a>, <a href="#dir">dir</a>, 
 <a href="#du">du</a>, <a href="#cat">cat</a>, <a href="#pwd">pwd</a>    </td></tr>
@@ -115,20 +116,16 @@ the &lt;ENTER&gt; key.
 <a href="#locals">locals</a>, 
 <a href="#cat">cat</a>    </td></tr>
 <tr><td>Node selection : <a href="#source">source</a>, 
-<a href="#data">data</a>, 
-<a href="#cd">cd</a>    </td></tr>
+<a href="#data">data</a>, <a href="#cd">cd</a>    </td></tr>
 <tr><td>Searching :<a href="#search">search</a>    </td></tr>
-<tr><td>Operating system related :
-<a href="#chdir">chdir</a>,
-<a href="#shell">shell</a>,
-<a href="#tty">tty</a>    </td></tr>
-<tr><td>File related :
-<a href="#output">output</a>, <a href="#entities">entities</a>, 
-<a href="#system">system</a>, <a href="#public">public</a>    </td></tr>
-<tr><td>Disabled file commands: 
-<a href="#validate">validate</a>, <a href="#load">load</a>, 
-<a href="#save">save</a>, <a href="#write">write</a>, 
-<a href="#free">free</a>    </td></tr>
+<tr><td>Operating system related :<a href="#chdir">chdir</a>,
+<a href="#shell">shell</a>,<a href="#tty">tty</a>    </td></tr>
+<tr><td>File related : <a href="#output">output</a>, 
+<a href="#entities">entities</a>, <a href="#system">system</a>, 
+<a href="#public">public</a>    </td></tr>
+<tr><td>Disabled file commands: <a href="#validate">validate</a>, 
+<a href="#load">load</a>, <a href="#save">save</a>, 
+<a href="#write">write</a>, <a href="#free">free</a>    </td></tr>
 </table></td>
 </tr></table>
 
@@ -144,7 +141,10 @@ the &lt;ENTER&gt; key.
 <th class="cmdth">Usage</th>
 <tr>
 <td width="10"></td>
-<td><table class="listbody"><tr><td>addparam &lt;QNAME&gt; &lt;XPATH&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(No error checking done on the validity of &lt;QNAME&gt; nor &lt;XPATH&gt;. This is equivalent to providing --param &lt;QNAME&gt; &lt;XPATH&gt; via command line)</i>    </td></tr></table></td>
+<td><table class="listbody">
+<tr><td>addparam &lt;QNAME&gt; &lt;XPATH&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(The &lt;XPATH&gt; must not contain any spaces nor double quotation marks.No error checking done on the validity of &lt;QNAME&gt; nor &lt;XPATH&gt;. This is equivalent to providing --param &lt;QNAME&gt; &lt;XPATH&gt; via command line.)</i>    </td></tr>
+<tr><td>add param &lt;QNAME&gt; &quot;&lt;XPATH&gt;&quot;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Must not contain double quotation marks in &lt;XPATH&gt;)</i>    </td></tr>
+</table></td>
 </tr>
 </table></tr>
 </table>
@@ -502,6 +502,17 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </tr>
 </table></tr>
 </table>
+<br><br><a name="options"></a><table width="100%" class="cmd">
+<th class="cmdth">options</th>
+<tr class="cmdsummary"><td>Print the values for xsldbg's option</td></tr>
+<tr class="cmdtr"><table class="usage" width="100%">
+<th class="cmdth">Usage</th>
+<tr>
+<td width="10"></td>
+<td><table class="listbody"><tr><td>options    </td></tr></table></td>
+</tr>
+</table></tr>
+</table>
 <br><br><a name="output"></a><table width="100%" class="cmd">
 <th class="cmdth">Output</th>
 <tr class="cmdsummary"><td>Specify the output file name</td></tr>
@@ -626,8 +637,7 @@ use searchresults.html.</p>
 <td width="10"></td>
 <td><table class="listbody">
 <tr><td>debug&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true dump the tree of the result instead)</i>    </td></tr>
-<tr><td>catalogs&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true use the catalogs from $SGML_CATALOG_FILES 
-                                      or SGML$CatalogFiles for risc operating system</i>    </td></tr>
+<tr><td>catalogs&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true use the catalogs from $SGML_CATALOG_FILES or SGML$CatalogFiles for risc operating system</i>    </td></tr>
 <tr><td>html&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true the input document is an HTML file)</i>    </td></tr>
 <tr><td>docbook&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true the input document is SGML docbook)</i>    </td></tr>
 <tr><td>xinclude&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true do XInclude processing on document intput)</i>    </td></tr>
@@ -642,6 +652,20 @@ use searchresults.html.</p>
 </tr></table>    </td></tr>
 <tr><td> And where value is true if it is NOT equal to zero    </td></tr>
 <tr><td> And where value is false if it IS equal to zero    </td></tr>
+<tr><td>setoption &lt;OPTION_NAME&gt; &quot;&lt;STRING_VALUE&gt;&quot;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Must not contain double quotation marks in &lt;STRING_VALUE&gt;)</i>    </td></tr>
+<tr><td>setoption &lt;OPTION_NAME&gt; &lt;STRING_VALUE&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Must not contain any spaces, nor double quotation marks in &lt;STRING_VALUE&gt;)</i>    </td></tr>
+<tr><td>  Where &lt;OPTION_NAME&gt; can be either    </td></tr>
+<tr><td>
+<table class="list"><tr>
+<td width="10"></td>
+<td><table class="listbody">
+<tr><td>data&nbsp;&nbsp;&nbsp;&nbsp;<i>(Data file's URI)</i>    </td></tr>
+<tr><td>source&nbsp;&nbsp;&nbsp;&nbsp;<i>(Source file's URI)</i>    </td></tr>
+<tr><td>output&nbsp;&nbsp;&nbsp;&nbsp;<i>(Output file's SystemID )</i>    </td></tr>
+<tr><td>docspath&nbsp;&nbsp;&nbsp;&nbsp;<i>(Path to use when looking for documentation)</i>    </td></tr>
+<tr><td>catalognames&nbsp;&nbsp;&nbsp;&nbsp;<i>(The names of the catalogs to use when the catalogs option is set. Value will be lost if set before setting catalogs option)</i>    </td></tr>
+</table></td>
+</tr></table>    </td></tr>
 </table></td>
 </tr>
 </table></tr>
