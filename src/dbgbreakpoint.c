@@ -9,8 +9,8 @@
 
 #include "config.h"
 
+#include "breakpointInternals.h"
 
-#include <breakpoint/breakpointInternals.h>
 
 /*
 -----------------------------------------------------------
@@ -30,7 +30,7 @@ static int breakPointCounter = 0;
 
 /* What is the current breakpoint is only valid up to the start of 
  xsldbg command prompt. ie don't use it after deletion of breakpoints */
-xslBreakPointPtr activeBreakPoint = NULL;
+xslBreakPointPtr activeBreakPointItem = NULL;
 
 /**
  * lineNoItemNew:
@@ -254,27 +254,27 @@ breakPointItemFree (void *payload, xmlChar * name ATTRIBUTE_UNUSED)
 
 
 /**
- * xslActiveBreakPoint(void);
+ * activeBreakPoint(void);
  *
  * Return the last breakPoint that we stoped at
  */
 xslBreakPointPtr
-xslActiveBreakPoint (void)
+activeBreakPoint (void)
 {
-  return activeBreakPoint;
+  return activeBreakPointItem;
 }
 
 
 /**
- * xslSetActiveBreakPoint:
+ * setActiveBreakPoint:
  * @breakPoint : is valid breakPoint or NULL
  *
  * Set the active breakPoint
  */
 void
-xslSetActiveBreakPoint (xslBreakPointPtr breakPoint)
+setActiveBreakPoint (xslBreakPointPtr breakPoint)
 {
-  activeBreakPoint = breakPoint;
+  activeBreakPointItem = breakPoint;
 }
 
 
@@ -414,7 +414,8 @@ xslAddBreakPoint (const xmlChar * url, long lineNumber,
   else
     {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-      printf ("Unable to create new breakPoint : memory error\n");
+      xsltGenericError(xsltGenericErrorContext,
+		       "Unable to create new breakPoint : memory error\n");
 #endif
     }
 

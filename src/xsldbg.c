@@ -33,8 +33,7 @@
 #include "xsldbg.h"
 #include "options.h"
 #include "files.h"
-#include <breakpoint/breakpoint.h>
-#include <breakpoint/breakpointInternals.h>
+#include "breakpointInternals.h"
 #include "debugXSL.h"
 
 /* need to setup catch of SIGINT */
@@ -343,42 +342,61 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur, const char *filename)
 static void
 usage(const char *name)
 {
-    printf("Usage: %s [options] stylesheet file\n", name);
-    printf("Without any parameters xsldbg starts in command mode, ready"
-           "for the source and data to be select\n");
-    printf("   Options:\n");
-    printf
-        ("      --version or -V: show the version of libxml and libxslt used\n");
-    printf("      --verbose or -v: show logs of what's happening\n");
-    printf("      --output file or -o file: save to a given file\n");
-    printf("      --timing: display the time used\n");
-    printf("      --repeat: run the transformation 20 times\n");
-    printf("      --debug: dump the tree of the result instead\n");
-    printf("      --novalid: skip the Dtd loading phase\n");
-    printf("      --noout: do not dump the result\n");
-    printf("      --maxdepth val : increase the maximum depth\n");
+    xsltGenericError(xsltGenericErrorContext,
+		     "Usage: %s [options] stylesheet file\n", name);
+    xsltGenericError(xsltGenericErrorContext,
+		     "Without any parameters xsldbg starts in command mode, ready"
+		     "for the source and data to be select\n");
+    xsltGenericError(xsltGenericErrorContext,
+		     "   Options:\n");
+   xsltGenericError(xsltGenericErrorContext,
+		    "      --version or -V: show the version of libxml and libxslt used\n");
+    xsltGenericError(xsltGenericErrorContext,
+		     "      --verbose or -v: show logs of what's happening\n");
+    xsltGenericError(xsltGenericErrorContext,
+		     "      --output file or -o file: save to a given file\n");
+    xsltGenericError(xsltGenericErrorContext,
+		     "      --timing: display the time used\n");
+    xsltGenericError(xsltGenericErrorContext,
+		     "      --repeat: run the transformation 20 times\n");
+    xsltGenericError(xsltGenericErrorContext,
+		     "      --debug: dump the tree of the result instead\n");
+    xsltGenericError(xsltGenericErrorContext,
+		     "      --novalid: skip the Dtd loading phase\n");
+    xsltGenericError(xsltGenericErrorContext,
+		     "      --noout: do not dump the result\n");
+    xsltGenericError(xsltGenericErrorContext,
+		     "      --maxdepth val : increase the maximum depth\n");
 #ifdef LIBXML_HTML_ENABLED
-    printf("      --html: the input document is(are) an HTML file(s)\n");
+    xsltGenericError(xsltGenericErrorContext,
+		     "      --html: the input document is(are) an HTML file(s)\n");
 #endif
 #ifdef LIBXML_DOCB_ENABLED
-    printf("      --docbook: the input document is SGML docbook\n");
+    xsltGenericError(xsltGenericErrorContext,
+		     "      --docbook: the input document is SGML docbook\n");
 #endif
-    printf("      --param name value : pass a (parameter,value) pair\n");
-    printf("            string values must be quoted like \"'string'\"\n");
-    printf
-        ("      --nonet refuse to fetch DTDs or entities over network\n");
+    xsltGenericError(xsltGenericErrorContext,
+		     "      --param name value : pass a (parameter,value) pair\n");
+    xsltGenericError(xsltGenericErrorContext,
+		     "            string values must be quoted like \"'string'\"\n");
+    xsltGenericError(xsltGenericErrorContext,
+        "      --nonet refuse to fetch DTDs or entities over network\n");
 #ifdef LIBXML_CATALOG_ENABLED
-    printf
-        ("      --catalogs : use the catalogs from $SGML_CATALOG_FILES\n");
+    xsltGenericError(xsltGenericErrorContext,
+        "      --catalogs : use the catalogs from $SGML_CATALOG_FILES\n");
 #endif
 #ifdef LIBXML_XINCLUDE_ENABLED
-    printf
-        ("      --xinclude : do XInclude processing on document intput\n");
+    xsltGenericError(xsltGenericErrorContext,
+        "      --xinclude : do XInclude processing on document intput\n");
 #endif
-    printf("      --profile or --norman : dump profiling informations \n");
-    printf("      --cd <PATH>: change to specfied working directory\n");
-    printf("      --shell : start xsldebugger \n");
-    printf("      --gdb : run in gdb mode printing out more information");
+    xsltGenericError(xsltGenericErrorContext,
+		     "      --profile or --norman : dump profiling informations \n");
+    xsltGenericError(xsltGenericErrorContext,
+		     "      --cd <PATH>: change to specfied working directory\n");
+    xsltGenericError(xsltGenericErrorContext,
+		     "      --shell : start xsldebugger \n");
+    xsltGenericError(xsltGenericErrorContext,
+		     "      --gdb : run in gdb mode printing out more information");
 }
 
 int
@@ -396,8 +414,6 @@ main(int argc, char **argv)
     LIBXML_TEST_VERSION xmlLineNumbersDefault(1);
 
     xsldbgInit();
-
-    printf("XSLDBG %s\n", VERSION);
 
     if (argc == 1)
         result = enableOption(OPTIONS_SHELL, 1);
@@ -423,7 +439,7 @@ main(int argc, char **argv)
                     break;
 
                 default:
-                    printf("Too many file names supplied\n");
+                    xsltGenericError(xsltGenericErrorContext,"Too many file names supplied\n");
                     result = 0;
             }
             continue;
@@ -450,19 +466,23 @@ main(int argc, char **argv)
         } else if ((!strcmp(argv[i], "-V")) ||
                    (!strcmp(argv[i], "-version")) ||
                    (!strcmp(argv[i], "--version"))) {
-            printf
-                (" xsldbg created by Keith Isdale <k_isdale@tpg.com.au>\n");
-            printf(" Version %s, Date created %s\n", VERSION, TIMESTAMP);
-            printf("Using libxml %s, libxslt %s and libexslt %s\n",
-                   xmlParserVersion, xsltEngineVersion,
-                   exsltLibraryVersion);
-            printf
-                ("xsldbg was compiled against libxml %d, libxslt %d and libexslt %d\n",
-                 LIBXML_VERSION, LIBXSLT_VERSION, LIBEXSLT_VERSION);
-            printf("libxslt %d was compiled against libxml %d\n",
-                   xsltLibxsltVersion, xsltLibxmlVersion);
-            printf("libexslt %d was compiled against libxml %d\n",
-                   exsltLibexsltVersion, exsltLibxmlVersion);
+	  xsltGenericError(xsltGenericErrorContext,
+                " xsldbg created by Keith Isdale <k_isdale@tpg.com.au>\n");
+            xsltGenericError(xsltGenericErrorContext,
+			     " Version %s, Date created %s\n", VERSION, TIMESTAMP);
+            xsltGenericError(xsltGenericErrorContext,
+			     "Using libxml %s, libxslt %s and libexslt %s\n",
+			     xmlParserVersion, xsltEngineVersion,
+			     exsltLibraryVersion);
+            xsltGenericError(xsltGenericErrorContext,
+			     "xsldbg was compiled against libxml %d, libxslt %d and libexslt %d\n",
+			     LIBXML_VERSION, LIBXSLT_VERSION, LIBEXSLT_VERSION);
+            xsltGenericError(xsltGenericErrorContext,
+			     "libxslt %d was compiled against libxml %d\n",
+			     xsltLibxsltVersion, xsltLibxmlVersion);
+            xsltGenericError(xsltGenericErrorContext,
+			     "libexslt %d was compiled against libxml %d\n",
+			     exsltLibexsltVersion, exsltLibxmlVersion);
             strcpy(argv[i], "");
         } else if ((!strcmp(argv[i], "-repeat"))
                    || (!strcmp(argv[i], "--repeat"))) {
@@ -584,7 +604,8 @@ main(int argc, char **argv)
                 result = changeDir((xmlChar *) argv[i]);
                 strcpy(argv[i], "");
             } else {
-                printf("Missing path name after --cd option\n");
+                xsltGenericError(xsltGenericErrorContext,
+				 "Missing path name after --cd option\n");
             }
 
         } else if ((!strcmp(argv[i], "-gdb")) || (!strcmp(argv[i], "--gdb"))){
@@ -623,7 +644,11 @@ main(int argc, char **argv)
      */
     if (!isOptionEnabled(OPTIONS_SHELL)) {      /* excecute stylesheet (ie no debugging) */
         xslDebugStatus = DEBUG_RUN;
+    }else{
+	xsltGenericError(xsltGenericErrorContext,
+			 "XSLDBG %s\n", VERSION);
     }
+
 
     xslDebugGotControl(0);
     while (xslDebugStatus != DEBUG_QUIT) {
@@ -726,7 +751,7 @@ main(int argc, char **argv)
             xmlDocPtr tempDoc = xmlNewDoc((xmlChar *) "1.0");
 
             xsltGenericError(xsltGenericErrorContext,
-                             "Something has gone wrong going straight to "
+                             "Going straight to "
                              "command shell! Not all xsldbg commands will "
                              "work as not all needed have been loaded \n");
             if ((cur == NULL) && (doc == NULL)) {
@@ -863,7 +888,8 @@ loadXmlData(void)
         doc =
             xmlParseFile((char *) getStringOption(OPTIONS_DATA_FILE_NAME));
     if (doc == NULL) {
-        xsltGenericError(xsltGenericErrorContext, "unable to parse %s\n",
+        xsltGenericError(xsltGenericErrorContext, 
+			 "unable to parse %s\n",
                          getStringOption(OPTIONS_DATA_FILE_NAME));
         if (!isOptionEnabled(OPTIONS_SHELL)) {
             xsltGenericError(xsltGenericErrorContext,
@@ -946,7 +972,8 @@ printTemplates(xsltStylesheetPtr style, xmlDocPtr doc)
         /* don't be verbose when printing out template names */
         xslDbgPrintTemplateNames(ctxt, NULL, NULL, 0, 0);
     } else {
-        printf("Unable to create context : print templates\n");
+        xsltGenericError(xsltGenericErrorContext,
+			 "Unable to create context : print templates\n");
     }
 }
 
@@ -981,7 +1008,7 @@ xsldbgInit()
     int result = 0;
 
     if (!initialized) {
-        xslDebugInit();
+        debugInit();
         result = filesInit();
         if (result)
             result = optionsInit();
@@ -1002,7 +1029,7 @@ xsldbgInit()
 void
 xsldbgFree()
 {
-    xslDebugFree();
+    debugFree();
     filesFree();
     optionsFree();
     breakPointFree();

@@ -17,6 +17,9 @@
 
 
   <xsl:template match="/">
+    <xsl:if test="count*($query)=0">
+      <xsl:variable name="query" select="/search/*"/>
+    </xsl:if>
     <xsl:choose>
       <xsl:when test="boolean($dosort)">
         <xsl:apply-templates select="$query">

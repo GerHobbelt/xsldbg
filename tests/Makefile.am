@@ -1,6 +1,6 @@
 # set the include path found by configure
-# cheet a bit because I need HELP_DOC_PATH defined
-INCLUDES= $(all_includes)  -DVERSION=\"@VERSION@\" \
+# cheet a bit because I need DOCS_PATH defined
+INCLUDES= $(all_includes) -DDOCS_PATH=\"$(HTML_DIR)/xsldbg/\" -DVERSION=\"@VERSION@\" \
 	$(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS)
 
 XSLDBG=$(top_builddir)/src/xsldbg
@@ -33,7 +33,7 @@ bin_PROGRAMS = listTest searchTest
 listTest_SOURCES = listTest.c 
 
 # use of configure defined libraries
-listTest_LDADD = $(XSLDBG_LIBS) ../src/options.o
+listTest_LDADD = $(XSLDBG_LIBS) ../src/options.o ../src/dbgsearch.o 
 
 # the library search path.
 searchTest_LDFLAGS = $(all_libraries) 

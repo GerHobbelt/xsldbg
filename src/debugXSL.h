@@ -38,14 +38,13 @@
 
 #include <libxslt/xsltInternals.h>
 #include <libxml/xpath.h>
+#include "breakpointInternals.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #define DEBUG_BUFFER_SIZE 500   /*used by xslDbgShell */
-
-
 
 
 /****************************************************************

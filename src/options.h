@@ -45,6 +45,7 @@ enum Option_type {
     /* string options */
     OPTIONS_OUTPUT_FILE_NAME = 220,
     OPTIONS_SOURCE_FILE_NAME,
+    OPTIONS_DOCS_PATH,
     OPTIONS_DATA_FILE_NAME
 };
 
@@ -75,6 +76,12 @@ enum {
 
 /* how many microseconds is each speed increase worth*/
 #define WALKDELAY 250000
+
+
+/* for non win32 environments see the macro in xsldebugger/Makefile.am
+   Win32 tupe systems see  macro in libxslt/xsltwin32config.h
+*/
+#define USE_DOCS_MACRO 
 
 /* used to keep track of libxslt paramters 
  see Parameter related option near end of file

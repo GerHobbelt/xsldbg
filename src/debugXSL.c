@@ -39,9 +39,7 @@
 #include "files.h"
 #include "debugXSL.h"
 #include "options.h"
-#include <breakpoint/arraylist.h>
-#include <breakpoint/breakpoint.h>
-#include <breakpoint/breakpointInternals.h>
+#include "breakpointInternals.h"
 #include "help.h"
 #include <stdlib.h>
 #include <libxslt/transform.h>  /* needed by source command */
@@ -838,23 +836,23 @@ void
     addCallStackItems();
     xsltGenericError(xsltGenericErrorContext,
 		     "  Looking for breakpoints \n");
-    xslWalkBreakPoints((xmlHashScanner) addBreakPointNode, data);
+    walkBreakPoints((xmlHashScanner) addBreakPointNode, data);
 
     xsltGenericError(xsltGenericErrorContext,
 		     "  Looking for imports and top level stylesheets \n");
-    xslWalkStylesheets((xmlHashScanner) addSourceNode, data, style);
+    walkStylesheets((xmlHashScanner) addSourceNode, data, style);
     xsltGenericError(xsltGenericErrorContext,
 		    "  Looking for includes \n");
-    xslWalkIncludes((xmlHashScanner) addIncludeNode, data, style);
+    walkIncludes((xmlHashScanner) addIncludeNode, data, style);
     xsltGenericError(xsltGenericErrorContext,
 		    "  Looking for templates \n");
-    xslWalkTemplates((xmlHashScanner) addTemplateNode, data, style);
+    walkTemplates((xmlHashScanner) addTemplateNode, data, style);
     xsltGenericError(xsltGenericErrorContext,
 		    "  Looking for global variables \n");
-    xslWalkGlobals((xmlHashScanner) addGlobalNode, data, style);
+    walkGlobals((xmlHashScanner) addGlobalNode, data, style);
     xsltGenericError(xsltGenericErrorContext,
 		     "  Looking for local variables \n");
-    xslWalkLocals((xmlHashScanner) addLocalNode, data, style);
+    walkLocals((xmlHashScanner) addLocalNode, data, style);
     xsltGenericError(xsltGenericErrorContext,
 		     "  Formatting output \n");    
     xslSearchSave("search.data");
@@ -886,9 +884,9 @@ xslDebugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
 
     if (ctxt && ctxt->node && ctxt->node &&
         ctxt->node->doc && ctxt->node->doc->URL) {
-        if (xslActiveBreakPoint()) {
+        if (activeBreakPoint()) {
             xsltGenericError(xsltGenericErrorContext,
-                             "Breakpoint %d ", xslActiveBreakPoint()->id);
+                             "Breakpoint %d ", activeBreakPoint()->id);
         } else {
             xsltGenericError(xsltGenericErrorContext, "Breakpoint ");
         }
@@ -973,8 +971,8 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
     if (ctxt->node && ctxt->node && ctxt->node->doc
         && ctxt->node->doc->URL) {
-        if (xslActiveBreakPoint() != NULL) {
-            xslBreakPointPtr breakPtr = xslActiveBreakPoint();
+        if (activeBreakPoint() != NULL) {
+            xslBreakPointPtr breakPtr = activeBreakPoint();
 
             xsltGenericError(xsltGenericErrorContext,
                              "in file %s : line %ld \n", breakPtr->url,
@@ -1028,10 +1026,12 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                      "(xsldbg) ? > ");
         prompt[sizeof(prompt) - 1] = 0;
 
+	
         /*
          * Get a new command line
          */
-        cmdline = (xmlChar *) ctxt->input((char *) prompt);
+	/*	cmdline =  xslDbgShellReadline(prompt);*/
+	cmdline = (xmlChar *) ctxt->input((char *) prompt);
         if (cmdline == NULL)
             break;
 
@@ -1166,7 +1166,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     xsltGenericError(xsltGenericErrorContext, "%s", dir);
                 if (ctxt->node && ctxt->node && ctxt->node->doc
                     && ctxt->node->doc->URL)
-                    if (xslActiveBreakPoint() != NULL) {
+                    if (activeBreakPoint() != NULL) {
                         xsltGenericError(xsltGenericErrorContext,
                                          " in file %s : line %ld \n",
                                          ctxt->node->doc->URL,
@@ -1213,7 +1213,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 xsltGenericError(xsltGenericErrorContext, "\n");
                 printCount = 0; /* printCount will get updated by
                                  * xslDbgPrintBreakPoint */
-                xslWalkBreakPoints((xmlHashScanner) xslDbgPrintBreakPoint,
+                walkBreakPoints((xmlHashScanner) xslDbgPrintBreakPoint,
                                    NULL);
                 if (printCount == 0)
                     xsltGenericError(xsltGenericErrorContext,
@@ -1556,8 +1556,8 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 	  if (ctxt->node && ctxt->node && ctxt->node->doc
 	      && ctxt->node->doc->URL) {
 	    
-	    if (xslActiveBreakPoint() != NULL) {
-	      xslBreakPointPtr breakPtr = xslActiveBreakPoint();
+	    if (activeBreakPoint() != NULL) {
+	      xslBreakPointPtr breakPtr = activeBreakPoint();
 
 	      xsltGenericError(xsltGenericErrorContext,
 			       "Breakpoint in file %s : line %ld \n", breakPtr->url,
@@ -1587,40 +1587,8 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
     xmlFree(ctxt);
     if (cmdline != NULL)
         xmlFree(cmdline);
-    xslSetActiveBreakPoint(0);
+    setActiveBreakPoint(0);
 
 }
 
 
-/**
- * xslSearchQuery:
- * @query: query to run . If NULL then query is "//search/*"
- * @tempFile : where do we load the search dataBase from to execute
- *             query. If tempFile is NULL "search.data" is used
- * 
- * Send query as parameter for execution of search.xsl using
- *    data stored in @tempFile 
- * Return 1 on success,
- *        0 otherwise   
- */
-int
-xslSearchQuery(const xmlChar * tempFile,
-               const xmlChar * query)
-{
-
-    xmlChar buff[DEBUG_BUFFER_SIZE];
-    const xmlChar *searchXSL =
-        (xmlChar *) "~/lang/c/xsldbg/xsldbg/docs/en/search.xsl";
-    int result = 0;
-
-    if (!tempFile)
-        tempFile = (xmlChar *) "search.data";
-    if (!query)
-        query = (xmlChar *) "//search/*";
-    if (snprintf
-        ((char *) buff, DEBUG_BUFFER_SIZE - 1,
-         "xsldbg  %s %s %s", query, searchXSL, tempFile)) {
-        result = !xslDbgShellExecute(buff, 1);
-    }
-    return result;
-}

@@ -8,9 +8,12 @@
  ***************************************************************************/
 
 
-#include "config.h"
+#include "config.h" 
+#include "xsldbg.h" /* needed for xmlStrCpy*/
+#include "debugXSL.h"
+#include "breakpointInternals.h"
+#include "options.h"
 
-#include <breakpoint/breakpointInternals.h>
 
 /* our private function*/
 void scanForBreakPoint (void *payload, void *data,
@@ -326,7 +329,7 @@ xslFindBreakPointByName (const xmlChar * templateName)
   searchData.breakPoint = NULL;
   if (templateName)
     {
-      xslWalkBreakPoints ((xmlHashScanner) scanForBreakPoint, &searchData);
+      walkBreakPoints ((xmlHashScanner) scanForBreakPoint, &searchData);
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
       if (!searchData.found)
 	xsltGenericError (xsltGenericErrorContext,
@@ -358,7 +361,7 @@ xslFindBreakPointById (int id)
   searchData.breakPoint = NULL;
   if (id)
     {
-      xslWalkBreakPoints ((xmlHashScanner) scanForBreakPoint, &searchData);
+      walkBreakPoints ((xmlHashScanner) scanForBreakPoint, &searchData);
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
       if (!searchData.found)
 	xsltGenericError (xsltGenericErrorContext,
@@ -387,7 +390,7 @@ xslFindNodesByQuery (const xmlChar * query ATTRIBUTE_UNUSED)
 
 /**
  * xslSearchQuery:
- * @query: query to run . If NULL then use "//search *"
+ * @query: query to run . If NULL then query is "//search/*"
  * @tempFile : where do we load the search dataBase from to execute
  *             query. If tempFile is NULL "search.data" is used
  * 
@@ -397,17 +400,38 @@ xslFindNodesByQuery (const xmlChar * query ATTRIBUTE_UNUSED)
  *        0 otherwise   
  */
 int
-xslSearchQuery (const xmlChar * tempFile ATTRIBUTE_UNUSED,
-		const xmlChar * query ATTRIBUTE_UNUSED)
+xslSearchQuery(const xmlChar * tempFile,
+               const xmlChar * query)
 {
+    int result = 0;
+    xmlChar buffer[DEBUG_BUFFER_SIZE];
+    const char *docDirPath = getStringOption(OPTIONS_DOCS_PATH);
+    const xmlChar *searchXSL = NULL;
+    
 
-  /* this must be overloaded in debugger */
-  return 0;
+    if (!docDirPath) 
+      return result;
+
+    xmlStrCpy(buffer, docDirPath);
+    xmlStrCat(buffer, "search.xsl");
+    searchXSL = buffer;  
+
+
+    if (!tempFile)
+        tempFile = (xmlChar *) "search.data";
+    if (!query || (xmlStrlen(query) == 0))
+        query = (xmlChar *) "--param query //search/*";
+    if (snprintf
+        ((char *) buff, DEBUG_BUFFER_SIZE - 1,
+         "xsldbg  %s %s %s", query, searchXSL, tempFile)) {
+        result = !xslDbgShellExecute(buff, 1);
+    }
+    return result;
 }
 
 
 /**
- * xslWalkBreakPoints:
+ * walkBreakPoints:
  * @walkFunc: function to callback for each breakpoint found
  * @data : the extra data to pass onto walker
  *
@@ -415,7 +439,7 @@ xslSearchQuery (const xmlChar * tempFile ATTRIBUTE_UNUSED,
  *  sent to walkFunc is of type xslBreakPointPtr 
  */
 void
-xslWalkBreakPoints (xmlHashScanner walkFunc, void *data)
+walkBreakPoints (xmlHashScanner walkFunc, void *data)
 {
   int lineNo;
   xmlHashTablePtr hashTable;
@@ -436,7 +460,7 @@ xslWalkBreakPoints (xmlHashScanner walkFunc, void *data)
 
 
 /**
- * xslWalkTemplates:
+ * walkTemplates:
  * @walkFunc: function to callback for each template found
  * @data : the extra data to pass onto walker
  * @style : the stylesheet to start from
@@ -445,7 +469,7 @@ xslWalkBreakPoints (xmlHashScanner walkFunc, void *data)
  *   of walkFunc is of type xsltTemplatePtr
  */
 void
-xslWalkTemplates (xmlHashScanner walkFunc, void *data,
+walkTemplates (xmlHashScanner walkFunc, void *data,
 		  xsltStylesheetPtr style)
 {
   xsltTemplatePtr templ;
@@ -470,7 +494,7 @@ xslWalkTemplates (xmlHashScanner walkFunc, void *data,
 
 
 /**
- * xslWalkStylesheets:
+ * walkStylesheets:
  * @walkFunc: function to callback for each stylesheet found
  * @data : the extra data to pass onto walker
  * @style : the stylesheet to start from
@@ -479,7 +503,7 @@ xslWalkTemplates (xmlHashScanner walkFunc, void *data,
  *   sent to walkFuc is of type xsltStylesheetPtr
  */
 void
-xslWalkStylesheets (xmlHashScanner walkFunc, void *data,
+walkStylesheets (xmlHashScanner walkFunc, void *data,
 		    xsltStylesheetPtr style)
 {
   xsltStylesheetPtr next;
@@ -501,7 +525,7 @@ xslWalkStylesheets (xmlHashScanner walkFunc, void *data,
 
 xmlHashScanner globalWalkFunc = NULL;
 
-/* Our payload is a xsltStylesheetPtr given to us via xslWalkStylesheets. 
+/* Our payload is a xsltStylesheetPtr given to us via walkStylesheets. 
    globalWalkFunc will always be set to the walkFunc to call
 */
 void 
@@ -522,7 +546,7 @@ globalVarHelper(void* *payload, void *data ATTRIBUTE_UNUSED,
 
 
 /**
- * xslWalkGlobals:
+ * walkGlobals:
  * @walkFunc: function to callback for each variable of type @type found
  * @data : the extra data to pass onto walker
  * @styleCtxt : the stylesheet to start from
@@ -531,7 +555,7 @@ globalVarHelper(void* *payload, void *data ATTRIBUTE_UNUSED,
  *   sent to walkFunc is of type xmlNodePtr
  */
 void
-xslWalkGlobals (xmlHashScanner walkFunc, void *data ATTRIBUTE_UNUSED,
+walkGlobals (xmlHashScanner walkFunc, void *data ATTRIBUTE_UNUSED,
 		   xsltStylesheetPtr style)
 {
   xsltStackElemPtr global;
@@ -540,14 +564,14 @@ xslWalkGlobals (xmlHashScanner walkFunc, void *data ATTRIBUTE_UNUSED,
 
   globalWalkFunc = walkFunc;
 
-  xslWalkStylesheets((xmlHashScanner)globalVarHelper, data, style);  
+  walkStylesheets((xmlHashScanner)globalVarHelper, data, style);  
 }
 
 
 
 xmlHashScanner  localWalkFunc = NULL;
 
-/* Our payload is a xsltTemplatePtr given to us via xslWalkTemplates. 
+/* Our payload is a xsltTemplatePtr given to us via walkTemplates. 
    localWalkFunc will always be set to the walkFunc to call
 */
 void 
@@ -571,7 +595,7 @@ localVarHelper(void* *payload, void *data ATTRIBUTE_UNUSED,
 
 
 /**
- * xslWalkLocals:
+ * walkLocals:
  * @walkFunc: function to callback for each template found
  * @data : the extra data to pass onto walker
  * @style : the stylesheet to start from
@@ -580,7 +604,7 @@ localVarHelper(void* *payload, void *data ATTRIBUTE_UNUSED,
  *   of walkFunc is of type xmlNodePtr
  */
 void
-xslWalkLocals (xmlHashScanner walkFunc, void *data,
+walkLocals (xmlHashScanner walkFunc, void *data,
 		  xsltStylesheetPtr style)
 {
   xsltTemplatePtr templ;
@@ -590,13 +614,13 @@ xslWalkLocals (xmlHashScanner walkFunc, void *data,
 
   localWalkFunc = walkFunc;
 
-  xslWalkTemplates((xmlHashScanner)localVarHelper, data, style);
+  walkTemplates((xmlHashScanner)localVarHelper, data, style);
 
 }
 
 
 /**
- * xslWalkIncludes:
+ * walkIncludes:
  * @walkFunc: function to callback for each xsl:include found
  * @data : the extra data to pass onto walker
  * @style : the stylesheet to start from
@@ -605,7 +629,7 @@ xslWalkLocals (xmlHashScanner walkFunc, void *data,
  *   of walkFunc is of type xmlNodePtr
  */
 void
-xslWalkIncludes (xmlHashScanner walkFunc, void *data,
+walkIncludes (xmlHashScanner walkFunc, void *data,
 		  xsltStylesheetPtr style)
 {
   xmlNodePtr node = NULL, styleChild = NULL;
@@ -643,7 +667,7 @@ xslWalkIncludes (xmlHashScanner walkFunc, void *data,
 }
 
 /**
- * xslWalkChildNodes:
+ * walkChildNodes:
  * @walkFunc: function to callback for each child/sibling found
  * @data : the extra data to pass onto walker
  * @node : valid xmlNodePtr
@@ -652,10 +676,10 @@ xslWalkIncludes (xmlHashScanner walkFunc, void *data,
  *   a xmlNodePtr
  */
 void
-xslWalkChildNodes (xmlHashScanner walkFunc, void *data, xmlNodePtr node)
+walkChildNodes (xmlHashScanner walkFunc, void *data, xmlNodePtr node)
 {
   xsltGenericError (xsltGenericErrorContext,
-		    "xslWalkChildNodes not overloaded\n");
+		    "walkChildNodes not overloaded\n");
 
 }
 
@@ -976,6 +1000,7 @@ xmlNodePtr searchIncludeNode (xmlNodePtr include){
     }
   return node;
 }
+
 /**
  * searchCallStackNode:
  * @callStackItem : valid callStack item

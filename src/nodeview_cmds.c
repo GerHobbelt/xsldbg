@@ -23,7 +23,9 @@
 #include "config.h"
 #include "xsldbg.h"
 #include "debugXSL.h"
-#include <breakpoint/breakpointInternals.h>
+#include "arraylist.h"
+#include "breakpointInternals.h"
+
 
 
 /* 

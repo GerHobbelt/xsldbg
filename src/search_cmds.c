@@ -23,7 +23,7 @@
 #include "config.h"
 #include "xsldbg.h"
 #include "debugXSL.h"
-#include <breakpoint/breakpointInternals.h>
+#include "breakpointInternals.h"
 
 /* -----------------------------------------
    
@@ -51,6 +51,10 @@ xslDbgShellSearch(xsltTransformContextPtr styleCtxt, xsltStylesheetPtr style,
     const xmlChar * sortOption = (xmlChar*)"-sort ";
     int sortOptionLen = xmlStrLen(sortOption);
 
+    trimString(arg);
+    if (xmlStrLen(arg) == 0){
+      arg = (xmlChar*)"//search/*";
+    }
     strncpy((char*)buff, (char*)arg, sortOptionLen); 
     if (!xmlStrCmp(buff, sortOption)){
       /* yep do sorting as well*/

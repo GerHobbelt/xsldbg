@@ -1,11 +1,14 @@
 # set the include path found by configure
-# cheet a bit because I need HELP_DOC_PATH defined
-INCLUDES= $(all_includes) -DHELP_DOC_PATH=\"$(HTML_DIR)/xsldbg\" \
+# cheet a bit because I need DOCS_PATH defined
+INCLUDES= $(all_includes) -DDOCS_PATH=\"$(HTML_DIR)/xsldbg/\" \
  -DVERSION=\"@VERSION@\" $(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS)
 
 EXTRA_DIST = \
 	help.c help.h 		\
 	debugXSL.c debugXSL.h 	\
+	dbgmain.c		\
+	dbgsearch.c		\
+	dbgbreakpoint.c	\
 	breakpoint_cmds.c	\
 	template_cmds.c		\
 	nodeview_cmds.c		\
@@ -22,7 +25,10 @@ xsldbg_SOURCES = \
 	xsldbg.c 	\
 	files.c		\
 	options.c	\
-	breakpoint_cmds.c \
+	dbgmain.c	\
+	dbgsearch.c		\
+	dbgbreakpoint.c 	\
+	breakpoint_cmds.c 	\
 	template_cmds.c	\
 	nodeview_cmds.c	\
 	os_cmds.c	\

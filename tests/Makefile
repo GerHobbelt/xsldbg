@@ -12,7 +12,7 @@
 # PARTICULAR PURPOSE.
 
 # set the include path found by configure
-# cheet a bit because I need HELP_DOC_PATH defined
+# cheet a bit because I need DOCS_PATH defined
 
 
 SHELL = /bin/sh
@@ -86,7 +86,7 @@ OBJDUMP = @OBJDUMP@
 PACKAGE = xsldbg
 PERL = perl
 RANLIB = ranlib
-VERSION = 0.8.0
+VERSION = 0.8.1
 WITH_MEM_DEBUG = 0
 WITH_XSLT_DEBUG = 1
 XML_CONFIG = xml2-config
@@ -94,14 +94,14 @@ XSLDBG_INCLUDEDIR = -I${includedir}
 XSLDBG_LIBDIR = -L${libdir}
 XSLDBG_LIBS = -L/usr/local/lib -lxml2 -lz -L/lib -lm -lexslt -L/usr/local/lib -L/lib -lxslt -lxsltbreakpoint -lxml2 -lz -lm -lm -lreadline -lncurses -lhistory
 XSLDBG_MAJOR_VERSION = 0
-XSLDBG_MICRO_VERSION = 0
+XSLDBG_MICRO_VERSION = 1
 XSLDBG_MINOR_VERSION = 8
-XSLDBG_VERSION = 0.8.0
-XSLDBG_VERSION_INFO = 8:0:0
-XSLDBG_VERSION_NUMBER = 800
+XSLDBG_VERSION = 0.8.1
+XSLDBG_VERSION_INFO = 8:1:1
+XSLDBG_VERSION_NUMBER = 801
 XSLT_CONFIG = xslt-config
 
-INCLUDES = $(all_includes)  -DVERSION=\"0.8.0\" 	$(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS)
+INCLUDES = $(all_includes) -DDOCS_PATH=\"$(HTML_DIR)/xsldbg/\" -DVERSION=\"0.8.1\" 	$(LIBXML_CFLAGS) $(LIBXSLT_CFLAGS)
 
 
 XSLDBG = $(top_builddir)/src/xsldbg
@@ -120,7 +120,7 @@ bin_PROGRAMS = listTest searchTest
 listTest_SOURCES = listTest.c 
 
 # use of configure defined libraries
-listTest_LDADD = $(XSLDBG_LIBS) ../src/options.o
+listTest_LDADD = $(XSLDBG_LIBS) ../src/options.o ../src/dbgsearch.o 
 
 # the library search path.
 searchTest_LDFLAGS = $(all_libraries) 
@@ -139,7 +139,7 @@ PROGRAMS =  $(bin_PROGRAMS)
 DEFS = -DHAVE_CONFIG_H -I. -I$(srcdir) -I..
 LIBS = 
 listTest_OBJECTS =  listTest.o
-listTest_DEPENDENCIES =  ../src/options.o
+listTest_DEPENDENCIES =  ../src/options.o ../src/dbgsearch.o
 listTest_LDFLAGS = 
 searchTest_OBJECTS =  searchTest.o
 searchTest_DEPENDENCIES = 

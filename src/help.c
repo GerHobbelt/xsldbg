@@ -26,6 +26,7 @@
 
 #include "config.h"
 #include "xsldbg.h"
+#include "options.h"
 #include "help.h"
 #include <stdlib.h>
 
@@ -36,55 +37,47 @@ helpTop(const xmlChar * args)
 {
     char buff[300], helpParam[100];
 
-/* try to make finding help files user friendly by using HELP_DOC_PATH macro*/
+    char *docsDirPath = getStringOption(OPTIONS_DOCS_PATH);
 
-/* for non win32 environments see the macro in xsldebugger/Makefile.am
-   Win32 tupe systems see  macro in libxslt/xsltwin32config.h
-*/
-#define USE_HELP_MACRO
-
-#ifndef USE_HELP_MACRO
-    char *debugDirPath = getenv("XSL_DEBUG_DIR");
-#else
-    char *debugDirPath = HELP_DOC_PATH;
-#endif
 
     if (strlen(args) > 0) {
         snprintf(helpParam, 100, "--param help %c'%s'%c", QUOTECHAR, args,
                  QUOTECHAR);
     } else
         strcpy(helpParam, "");
-    if (debugDirPath && snprintf((char *) buff, 299, "xsldbg %s"
+    if (docsDirPath && snprintf((char *) buff, 299, "xsldbg %s"
                                  " --param xsldbg_version %c'%s'%c "
                                  " %s%cxsldoc.xsl %s%cxsldoc.xml | more",
                                  helpParam,
                                  QUOTECHAR, VERSION, QUOTECHAR,
-                                 debugDirPath, PATHCHAR,
-                                 debugDirPath, PATHCHAR) <= 290) {
+                                 docsDirPath, PATHCHAR,
+                                 docsDirPath, PATHCHAR) <= 290) {
         if (system(buff)) {
-            if (debugDirPath)
-                fprintf(stderr,
+            if (docsDirPath)
+                xsltGenericError(xsltGenericErrorContext,
                         "Help failed : Maybe help files not found in %s or "
-                        "xsldbg not found in path\n", debugDirPath);
+                        "xsldbg not found in path\n", docsDirPath);
             else
-                fprintf(stderr, "Unable to find xsldbg or help files\n");
-            fprintf(stderr, "Used command: %s\n", buff);
+                xsltGenericError(xsltGenericErrorContext, 
+				 "Unable to find xsldbg or help files\n");
+            xsltGenericError(xsltGenericErrorContext, 
+			     "Used command: %s\n", buff);
         }
 
     } else {
-        if (!debugDirPath)
-#ifdef USE_HELP_MACRO
-            fprintf(stderr,
+        if (!docsDirPath)
+#ifdef USE_DOCS_MACRO
+            xsltGenericError(xsltGenericErrorContext,
                     "Error in seting for USE_HELP_MACRO look at Makefile.am\n");
 #else
-            fprintf(stderr,
-                    "Required environment variable XSL_DEBUG_DIR not set "
+            xsltGenericError(xsltGenericErrorContext,
+                    "Required environment variable XSLDBG_DOCS_DIR not set "
                     "to the directory of xsltproc documentation\n");
 #endif
         else
-            fprintf(stderr, "Help error: Argument %s too long\n", args);
+            xsltGenericError(xsltGenericErrorContext, 
+			     "Help error: Argument %s too long\n", args);
     }
-    /*      fprintf(stderr, "Used command: %s\n",buff); */
 }
 
 #else
@@ -94,7 +87,7 @@ helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
 {
     /* Add more help here if normal help system will not work on some systems
      */
-    printf("Available commands are \n (bye|exit|quit) "
+    xsltGenericError(xsltGenericErrorContext,"Available commands are \n (bye|exit|quit) "
            ", step, stepout, cont, run, break, showbreak, clear "
            ", validate, load, save, write, free, cd, pwd, du, ls, dir,"
            " where, globals, locals, "

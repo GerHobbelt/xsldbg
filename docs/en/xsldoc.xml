@@ -317,6 +317,16 @@ they are not completed.</para>
 <summary>Break at a template, at a location in any file loaded, or at the current node. </summary>
 <body>
 <para>Shortcut name: b</para>
+<para>xsldbg will try to guess the complete URL given a 
+<list>
+<li>file name without a path specified.</li>
+<li>a file name in the same directory as the &quot;top&quot; stylesheet loaded</li>
+<li>a file name relative to the current working directory of xsldbg</li>
+</list>
+Ie if you have loaded a stylsheet file of ../en/xsldoc.xsl you can do this
+</para>
+<para> break -l xsldoc.xsl 26
+</para>
 </body>
 <usage>
 <li>

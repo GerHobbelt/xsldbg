@@ -9,7 +9,8 @@
 
 #include "config.h"
 
-#include <breakpoint/breakpointInternals.h>
+#include "breakpointInternals.h"
+
 
 /*
 ------------------------------------------------------

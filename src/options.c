@@ -19,7 +19,7 @@
 
 #include "xsldbg.h"
 #include "options.h"
-#include <breakpoint/arraylist.h>
+#include "arraylist.h"
 
 /* Enable the use of xinclude during file parsing*/
 int xinclude = 0;
@@ -72,7 +72,7 @@ ArrayListPtr parameterList;
 
 /** 
  * optionsInit:
- *
+ * 
  * Allocate memory needed by options data structures
  * Returns 1 on success,
  *         0 otherwise
@@ -81,16 +81,30 @@ int
 optionsInit(void)
 {
     int index;
+    char *docsPath = NULL;
+/* for non win32 environments see the macro in xsldebugger/Makefile.am
+   Win32 tupe systems see  macro in libxslt/xsltwin32config.h
+   For definition of USE_DOCS_MACRO see options.h */
+
+#ifdef USE_DOCS_MACRO
+    docsPath = DOCS_PATH;
+#else
+   docsPath = getenv("XSLDBG_DOCS_DIR");
+#endif
 
     for (index = 0;
          index <= OPTIONS_DATA_FILE_NAME - OPTIONS_OUTPUT_FILE_NAME;
          index++) {
         stringOptions[index] = NULL;
     }
-
+    
     /* init our parameter list */
     parameterList = xslArrayListNew(10, (freeItemFunc) paramItemFree);
-    return parameterList != NULL;
+
+    /* setup the docs path */
+    setStringOption(OPTIONS_DOCS_PATH, docsPath);
+
+    return (parameterList != NULL) && (docsPath != NULL);
 }
 
 
@@ -458,3 +472,4 @@ printParamList(void)
 
     return result;
 }
+

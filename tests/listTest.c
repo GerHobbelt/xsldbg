@@ -16,8 +16,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <breakpoint/arraylist.h>
-#include <breakpoint/breakpoint.h>
+#include "../src/arraylist.h"
+#include "../src/breakpointInternals.h"
 #include "../src/options.h"
 
 ArrayListPtr createTestList(void);
@@ -158,7 +158,7 @@ int main(void){
 
     fprintf(stdout, "\nTrying a breakPoint scanner to print breakPoints\n" \
 	    "BreakPoints will be ordered by line number\n");
-    xslWalkBreakPoints((xmlHashScanner)myWalker, NULL);
+    walkBreakPoints((xmlHashScanner)myWalker, NULL);
 
     fprintf(stdout,"\nLooking for breakpoint with id of 2\n");
     breakPoint = xslFindBreakPointById(2);
@@ -271,5 +271,20 @@ void myWalker(void *payload, void *data ATTRIBUTE_UNUSED, xmlChar *name ATTRIBUT
  */
 void xslDebugBreak(xmlNodePtr templ ATTRIBUTE_UNUSED, xmlNodePtr nod ATTRIBUTE_UNUSED,  
 		   xsltTemplatePtr root ATTRIBUTE_UNUSED,  xsltTransformContextPtr ctxt ATTRIBUTE_UNUSED){
-  fprintf(stdout, "List test's xslDebugBreak reached!\n");
+  fprintf(stdout, "List test's xslDebugBreak has reached!\n");
+}
+
+
+/**
+ * xslDbgShellExecute:
+ * @name: name of command string to be executed by operating system shell
+ * @verbose : if 1 then print extra debugging messages,
+ *            normal messages otherwise
+ *
+ * Return 1 on success,
+ *        0 otherwise
+ */
+int xslDbgShellExecute(xmlChar * name ATTRIBUTE_UNUSED, int verbose ATTRIBUTE_UNUSED){
+  fprintf(stdout, "List test's xslDbgShellExecute has been reached!\n");
+  return 0;
 }

@@ -5,7 +5,7 @@ XSLDBG=$(top_builddir)/src/xsldbg
 $(XSLDBG):
 	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
 
-EXTRA_DIST= xsldoc.xsl xsldoc.xml
+EXTRA_DIST= xsldoc.xsl xsldoc.xml search.xsl
 
 install-data-local: all
 	$(mkinstalldirs) $(HTML_DIR)/xsldbg

@@ -350,7 +350,7 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
     } else if (!strcmp("*", arg)) {
         result = 1;
         /*enable/disable all from breakpoints */
-        xslWalkBreakPoints((xmlHashScanner) xslDbgEnableBreakPoint,
+        walkBreakPoints((xmlHashScanner) xslDbgEnableBreakPoint,
                            &enableType);
 
     } else if (sscanf((char *) arg, "%d", &breakPointId)) {

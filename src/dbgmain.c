@@ -7,10 +7,9 @@
     email                : k_isdale@tpg.com.au
  ***************************************************************************/
 
-
 #include "config.h"
 
-#include <breakpoint/breakpointInternals.h>
+#include "breakpointInternals.h"
 
 /*
 -----------------------------------------------------------
@@ -21,14 +20,14 @@
 extern char *xslShellReadline (char *prompt);
 
 /**
- * xslDebugInit :
+ * debugInit :
  *
  * Initialize debugger
  * Returns 1 on success,
  *         0 otherwise
  */
 int
-xslDebugInit (void)
+debugInit (void)
 {
 
   int result;
@@ -42,36 +41,17 @@ xslDebugInit (void)
 
 
 /**
- * xslDebugFree :
+ * debugFree :
  *
  * Free up any memory taken by debugging
  */
 void
-xslDebugFree (void)
+debugFree (void)
 {
   breakPointFree ();
   callStackFree ();
 }
 
-
-/**
- * xslDebugBreak:
- * @templ : The source node being executed
- * @node : The data node being processed
- * @root : The template being applide to "node"
- * @ctxt : transform context for stylesheet being processed
- *
- * A break point has been found so pass control to user
- */
-void
-xslDebugBreak (xmlNodePtr templ ATTRIBUTE_UNUSED,
-	       xmlNodePtr node ATTRIBUTE_UNUSED,
-	       xsltTemplatePtr root ATTRIBUTE_UNUSED,
-	       xsltTransformContextPtr ctxt ATTRIBUTE_UNUSED)
-{
-  xsltGenericError (xsltGenericErrorContext,
-		    "xslDebugBreak function not overloaded!\n");
-}
 
 /** 
  * xslDebugGotControl :
@@ -90,3 +70,75 @@ xslDebugGotControl (int reached)
   hasReached = reached;
   return result;
 }
+
+
+/**
+ * xslHandleDebugger:
+ * @cur : source node being executed
+ * @node : data node being processed
+ * @templ : temlate that applies to node
+ * @ctxt : the xslt transform context 
+ * 
+ * If either cur or node are a breakpoint, or xslDebugStatus in state 
+ *   where debugging must occcur at this time then transfer control
+ *   to the xslDebugBreak function
+ */
+void
+xslHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
+                  xsltTemplatePtr templ, xsltTransformContextPtr ctxt)
+{
+
+  setActiveBreakPoint(NULL);
+  if (!cur || !node){
+    xsltGenericError(xsltGenericErrorContext,
+		     "Soure or doc NULL can't enter debugger\n");
+  }else{
+    switch (xslDebugStatus) {
+
+      /* A temparary stopping point */
+    case DEBUG_WALK:
+    case DEBUG_TRACE:
+      /* only allow breakpoints at xml elements */
+      if (xmlGetLineNo(cur) != -1)
+	xslDebugBreak(cur, node, templ, ctxt);
+      break;
+
+    case DEBUG_STOP:
+      xslDebugStatus = DEBUG_CONT;
+      /* only allow breakpoints at xml elements */
+      if (xmlGetLineNo(cur) != -1)
+	xslDebugBreak(cur, node, templ, ctxt);
+      break;
+
+    case DEBUG_STEP:
+      /* only allow breakpoints at xml elements */
+      if (xmlGetLineNo(cur) != -1)
+	xslDebugBreak(cur, node, templ, ctxt);
+      break;
+
+    case DEBUG_CONT:
+      {
+	xslBreakPointPtr breakPoint =  
+	  xslGetBreakPoint(cur->doc->URL, xmlGetLineNo(cur));
+
+	if (breakPoint) {
+	  if (breakPoint->enabled) {
+	    setActiveBreakPoint(breakPoint);
+	    xslDebugBreak(cur, node, templ, ctxt);
+	  }
+	} else {
+	  breakPoint =  
+	    xslGetBreakPoint(node->doc->URL, xmlGetLineNo(node));
+	  if (breakPoint){
+	    if (breakPoint->enabled){
+	     setActiveBreakPoint(breakPoint);
+	      xslDebugBreak(cur, node, templ, ctxt);
+	    }
+	  }
+	}
+      }
+      break;
+    }
+  }
+}
+

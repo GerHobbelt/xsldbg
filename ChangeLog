@@ -1,3 +1,13 @@
+* Keith Isdale 27 Nov 2001
+* Converted all functions to work under libxslt-1.0.7	
+* Added OPTIONS_DOCS_PATH to options.[ch] and set help.c and dbgsearch.c 
+*	to use this new option 	
+* Changed all printing to use  xsltGenericError(xsltGenericErrorContext, ..)
+* Fixed logic for printing out preamble and change of source|data|directory  messages	
+* Updated the guess of full stylesheet name to include partial match in file name
+*    see guessStylesheetNameHelper, in files.c	
+
+	 	
 * Keith Isdale 26 Nov 2001
 * Fixed errors, and inconsistancies in xsldoc.xml
 *   Changes needed for the xsldbg mode for kdbg
@@ -5,7 +15,9 @@
 *          Added --gdb option to command line so xsldbg print marker after each command is entered
 *              Added OPTIIONS_GDB to options.h
 *              Added gdbMode to options.c and updated isOptionEnabled and enableOption functions
+*          Added a tty command to send i/o to a terminal device	
 * Added stylesheet command to print out a list of stylesheets loaded
+
 	
 * Keith Isdale 25 Nov 2001
 *   Changes needed for the xsldbg mode for kdbg
