@@ -77,7 +77,7 @@ gnome.docbook : $(GNOMEXSL_FILES) ../xsldoc.xml
 	$(XSLDBG) --param xsldbg_version "'$(VERSION)'" --param xsldbg_date "'$(TIMESTAMP)'" xsldoc2gnome.xsl ../xsldoc.xml  > gnome.docbook
 
 index.html appDocs : gnome.docbook
-	$(XSLDBG) $(DOCBOOK_PREFIX)/xsl/html/docbook.xsl  gnome.docbook > index.html
+	$(XSLDBG) $(DOCBOOK_PREFIX)/html/docbook.xsl  gnome.docbook > index.html
 
 rebuild: xsldbg-sections.txt templates sgml html
 

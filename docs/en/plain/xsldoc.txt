@@ -1,5 +1,5 @@
 
-         xsldbg version 2.2.2
+         xsldbg version 2.2.3
          ====================
 
     xsldbg help
@@ -265,6 +265,7 @@ Summary : Print a list of global stylesheet variables or parameters. Print the v
 Usage:
 
      globals   (Print list of all globaly available variables)
+     globals -f   (Print list of all globaly available variables and thier values)
      globals <QNAME>   (Print the value of variable specified)
 - - - - - - - - - - - - - - - - - - - -
 
@@ -293,6 +294,7 @@ Summary : Print a list of local stylesheet variables or parameters. Print the va
 Usage:
 
      locals   (Print list of all locally available variables)
+     locals -f   (Print list of all locally available variables and thier values)
      locals <QNAME>   (Print the value of variable specified)
 - - - - - - - - - - - - - - - - - - - -
 

@@ -693,6 +693,10 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <comment>(Print list of all globaly available variables)</comment>
 </li>
 <li>
+<text>globals -f</text>
+<comment>(Print list of all globaly available variables and thier values)</comment>
+</li>
+<li>
 <text>globals &lt;QNAME&gt;</text>
 <comment>(Print the value of variable specified)</comment>
 </li>
@@ -706,6 +710,11 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <text>locals</text>
 <comment>(Print list of all locally available variables)</comment>
 </li>
+<li>
+<text>locals -f</text>
+<comment>(Print list of all locally available variables and thier values)</comment>
+</li>
+
 <li>
 <text>locals &lt;QNAME&gt;</text>
 <comment>(Print the value of variable specified)</comment>

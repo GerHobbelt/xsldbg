@@ -1,8 +1,14 @@
+Keith Isdale 13th July 2002 <k_isdale@tpg.com.au>
+      	Version 2.2.3
+	Fixed printing of values for xpath expressions
+	Try to guess the location of docbook xsl when provided a docbook prefix
+	
 Keith Isdale 7th July 2002 <k_isdale@tpg.com.au>
 	Version 2.2.2
 	Fixed addparam command to update parameter value if it
 	   already has been added
 	Fixed typos in error messages
+	Removed WITH_DEBUGGER macro from acconfig.h
 	
 Keith Isdale 26th June 2002 <k_isdale@tpg.com.au>
 	Added "-f" option to globals and locals command that when used ot 

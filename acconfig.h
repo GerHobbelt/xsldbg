@@ -6,7 +6,6 @@
 #undef PACKAGE
 
 #undef USE_DOCS_MACRO
-#undef WITH_DEBUGGER
 #undef TIMESTAMP
 #undef WITH_DEBUG_HELP
 #undef WITH_XSLDBG_DEBUG

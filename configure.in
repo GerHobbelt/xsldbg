@@ -1,12 +1,12 @@
 
 AC_INIT(src/main.c)
 
-timestamp='2002-06-26'
+timestamp='2002-07-18'
 
 
 XSLDBG_MAJOR_VERSION=2
 XSLDBG_MINOR_VERSION=2
-XSLDBG_MICRO_VERSION=2
+XSLDBG_MICRO_VERSION=3
 PACKAGE=xsldbg
 
 dnl
@@ -286,8 +286,16 @@ dnl
 
 DOCBOOK_PREFIX="/usr/share/xml/docbook/"
 AC_ARG_WITH(docbook-prefix, [  --with-docbook-prefix	         Set the prefix for docbook (/usr/share/xml/docbook)],
-	DOCBOOK_PREFIX="$withval"	
+	if test -f "${withval}/xsl/html/docbook.xsl" 
+	then
+   		DOCBOOK_PREFIX="${withval}/xsl"
+	else
+		DOCBOOK_PREFIX="$withval"			
+   		AC_MSG_RESULT(Unable to find a  "${withval}/xsl/html/docbook.xsl". Assuming that docbook xsl prefix provided is the same as provided at docbook.sourcforge.net. A prefix with a leading ~ is not supported)	
+	fi	
 )
+
+
 AC_SUBST(DOCBOOK_PREFIX)
 
 dnl
@@ -525,18 +533,8 @@ dnl
 dnl Check for debugger support in libxslt
 dnl
 LIBXSLT_PREFIX_DIR="`$XSLT_CONFIG --prefix`"
-AC_MSG_RESULT(Looking for WITH_DEBUGGER enabled in ${LIBXSLT_PREFIX_DIR}/include/libxslt/xsltconfig.h)
 if test "x$LIBXSLT_PREFIX_DIR" != "x"
 then   	
-   if test "x`grep \"#define.*WITH_XSLT_DEBUG\" ${LIBXSLT_PREFIX_DIR}/include/libxslt/xsltconfig.h`" != "x"
-   then 
-  	 AC_MSG_RESULT(Found debugger support in libxslt)
-   	WITH_DEBUGGER=1	
-   	AC_DEFINE(WITH_DEBUGGER)
-   else
-	AC_ERROR(Debugger support not built into libxslt use --with-debugger as option 
-	when configuring libxslt)
-   fi
    AC_MSG_RESULT(Don't forget to make sure that ${LIBXSLT_PREFIX_DIR}/lib has been added 
 	to your LD_LIBRARY_PATH environment variable)
 else
