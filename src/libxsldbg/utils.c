@@ -171,16 +171,16 @@ xmlChar * fullQName(const xmlChar* nameURI, const xmlChar * name)
 {
   xmlChar *result = NULL;
   if (!nameURI && !name)
-    result =  xmlStrdup("");
+    result =  xmlStrdup((xmlChar*)"");
   else{
     if (nameURI == NULL){
       result = xmlStrdup(name);
     }else{
       result = (xmlChar*) xmlMalloc(sizeof(char) * (
-			  strlen(name) +
-			  strlen(nameURI) + 3));
+			  xmlStrLen(name) +
+			  xmlStrLen(nameURI) + 3));
       if (result)
-	sprintf(result, "%s:%s",  nameURI, name);
+	sprintf((char*)result, "%s:%s",  (char*)nameURI, (char*)name);
     }
   }
   return result;

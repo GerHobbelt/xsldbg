@@ -1,3 +1,13 @@
+
+Keith Isdale 26 July 2002 <k_isdale@tpg.com.au>
+	Changed break command so that if "" is provided as an
+	      template name then we are matching only a mode name
+			break "" modeName
+  	      would set breakpoint on templates that have a mode of "modeName"
+		
+	
+		
+	
 Keith Isdale 25 July 2002 <k_isdale@tpg.com.au>
 	Version 3.0.1
 	Break compatability with previous versions due to problems with 

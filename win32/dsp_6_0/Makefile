@@ -86,7 +86,7 @@ LIBXSLT_LIBS = -L/usr/lib -L/usr/X11R6/lib -lxslt -lxml2 -lz -lm
 LIBXSLT_PREFIX = xslt-config --prefix
 LIBXSLT_REQUIRED_VERSION = 1.0.10
 LN_S = ln -s
-MAINT = #
+MAINT = 
 MAKEINFO = makeinfo
 OBJDUMP = @OBJDUMP@
 PACKAGE = xsldbg
@@ -95,7 +95,7 @@ RANLIB = ranlib
 THREAD_LIBS =  -lpthread 
 TIMESTAMP = 
 USE_XSLDBG_AS_THREAD = 1
-VERSION = 3.0.1
+VERSION = 3.0.2
 WITH_MEM_DEBUG = 0
 XML_CONFIG = xml2-config
 XSLDBG_CFLAGS = -I/usr/local/include -I/usr/include/libxml2 -I/usr/include/libxml2/libxml 
@@ -103,13 +103,13 @@ XSLDBG_INCLUDEDIR = -I/usr/local/include
 XSLDBG_LIBDIR = /usr/local/lib
 XSLDBG_LIBS =  -L/usr/local/lib -lxsldbg -L/usr/lib -L/usr/X11R6/lib -lxslt -lxml2 -lz -lm -lexslt -lreadline -lncurses -lhistory
 XSLDBG_MAJOR_VERSION = 3
-XSLDBG_MICRO_VERSION = 1
+XSLDBG_MICRO_VERSION = 2
 XSLDBG_MINOR_VERSION = 0
 XSLDBG_STATIC_FLAGS =  -static
 XSLDBG_TEST_LIBS =  -L/usr/lib -L/usr/X11R6/lib -lxslt -lxml2 -lz -lm -lexslt -lreadline -lncurses -lhistory
-XSLDBG_VERSION = 3.0.1
-XSLDBG_VERSION_INFO = 3:1:0
-XSLDBG_VERSION_NUMBER = 30001
+XSLDBG_VERSION = 3.0.2
+XSLDBG_VERSION_INFO = 3:2:0
+XSLDBG_VERSION_NUMBER = 30002
 XSLT_CONFIG = xslt-config
 
 EXTRA_DIST =  xsldbg.dsp 		libqtnotifier_so.dsp 	libxsldbg.dsp 		xsldbg.dsw 		createcatalog.bat
@@ -126,7 +126,7 @@ TAR = tar
 GZIP_ENV = --best
 all: all-redirect
 .SUFFIXES:
-$(srcdir)/Makefile.in: # Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+$(srcdir)/Makefile.in:  Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnu win32/dsp_6_0/Makefile
 
 Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)

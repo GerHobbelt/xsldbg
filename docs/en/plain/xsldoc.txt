@@ -1,5 +1,5 @@
 
-         xsldbg version 3.0.1
+         xsldbg version 3.0.2
          ====================
 
     xsldbg help
@@ -87,6 +87,7 @@ Usage:
      break -l <URI> <LINENO>   (To set breakpoint at specified URI, line number)
      break <TEMPLATE_NAME>   (To break at named or matched template.)
      break <TEMPLATE_NAME> <MODE_NAME>   (To break at named template with given mode.)
+     break "" <MODE_NAME>   (To break at any template that has a given mode name)
      break *   (To break at any template found.)
      break \*   (To break at the "*" template. Other name that include '*' will not be treated specialy.)
      break   (To break point at current node. Yes that includes xml data nodes!)

@@ -391,10 +391,11 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                                  "Error: break command arguments not in format \"-l <FILE_NAME> <LINE_NUMBER>\"\n");
         }
     } else {
-        /* add breakpoint at all template names */
+        /* add breakpoint at specified template names */
         xmlChar *opts[2];
 	xmlChar *qName[3];
         xmlChar *name = NULL, *nameURI = NULL, *mode = NULL, *modeURI = NULL;
+	xmlChar *templateName = NULL;
 	xmlChar *tempUrl = NULL; /* we must use a non-const xmlChar *
 				   and we are not making a copy
 				   of orginal value so this must not be 
@@ -402,6 +403,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
         xmlChar *defaultUrl = (xmlChar *) "<n/a>";
         int newBreakPoints = 0;
 	int allTemplates = 0;
+	int ignoreTemplateNames = 0;
 	int argCount;
 	int found;	
         xsltTemplatePtr templ;
@@ -413,11 +415,11 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
 	  break;
 	  
 	case 1:
-	  if (xmlStrEqual(arg, "*")){
+	  if (xmlStrEqual(arg, (xmlChar*)"*")){
 	    allTemplates = 1;	    
 	  }else{
 
-	    if (xmlStrEqual(arg, "\\*")){
+	    if (xmlStrEqual(arg, (xmlChar*)"\\*")){
 	      arg[0] = '*';
 	      arg[1] = '\0';
 	    }
@@ -439,15 +441,22 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
 	break;
 
 	case 2:
-            name = xmlSplitQName2(opts[0], &nameURI);
-            if (name == NULL)
+	   if (xmlStrLen(opts[0]) == 0){
+	     /* we don't care about the template name ie we are trying to match
+	        templates with a given mode */
+	     ignoreTemplateNames = 1;
+	    }else{
+	      name = xmlSplitQName2(opts[0], &nameURI);
+	      if (name == NULL)
                 name = xmlStrdup(opts[0]);
-	    if (nameURI){
-	      // get the real URI for this namespace
-	      const xmlChar *temp = xmlXPathNsLookup(ctxt->xpathCtxt, nameURI);
-	      if (temp)
-		xmlFree(nameURI);
-	      nameURI = xmlStrdup(temp);
+	      if (nameURI){
+		// get the real URI for this namespace
+		const xmlChar *temp = xmlXPathNsLookup(ctxt->xpathCtxt, 
+						       nameURI);
+		if (temp)
+		  xmlFree(nameURI);
+		nameURI = xmlStrdup(temp);
+	    }
 	    }
             mode = xmlSplitQName2(opts[1], &modeURI);
             if (mode == NULL)
@@ -477,19 +486,26 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                 } else {
                     tempUrl = defaultUrl;
                 }
-		/*
-                if (templ->match)
-                    name = templ->match;
-                else
-                    name = templ->name;
-		*/
+
+		if (templ->match)
+		    templateName = xmlStrdup(templ->match);
+		else
+	            templateName = fullQName(templ->nameURI, templ->name);
+		    
 		if (allTemplates)
 		  found = 1;
-		else{
-		  if (templ->match){
+		else {
+		  if (ignoreTemplateNames){
+		      if (!mode || (xmlStrEqual(templ->mode, mode) && 
+				    (!modeURI || xmlStrEqual(templ->modeURI, 
+							     modeURI))))
+			found = 1;
+		    }
+		  else if (templ->match){
 		    if (xmlStrEqual(templ->match, name)){
 		      if (!mode || (xmlStrEqual(templ->mode, mode) && 
-				    (!modeURI || xmlStrEqual(templ->modeURI, modeURI))))
+				    (!modeURI || xmlStrEqual(templ->modeURI, 
+							     modeURI))))
 			found = 1;
 		    }
 		  }else{
@@ -497,10 +513,10 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
 			   (!nameURI || xmlStrEqual(templ->nameURI, nameURI))) 
 			  found = 1;
 		  }
-		}
+	        }
                 if (found) {
                     if (!breakPointAdd(tempUrl, xmlGetLineNo(templ->elem),
-                                       opts[0], DEBUG_BREAK_SOURCE)) {
+                                       templateName, DEBUG_BREAK_SOURCE)) {
                         xsltGenericError(xsltGenericErrorContext,
                                          "Error: Can't add breakPoint to file %s : line %d\n",
                                          tempUrl, xmlGetLineNo(templ->elem));
@@ -512,6 +528,10 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                     } else
                         newBreakPoints++;
                 }
+		if (templateName){
+		  xmlFree(templateName);
+		  templateName = NULL;
+		}
                 templ = templ->next;
             }
             if (style->next)
@@ -623,7 +643,7 @@ xslDbgShellDelete(xmlChar * arg)
                                  "Error: delete command arguments not in format \"-l <FILE_NAME> <LINE_NUMBER>\" %s\n",
                                  errorPrompt);
         }
-    } else if (xmlStrEqual("*", arg)) {
+    } else if (xmlStrEqual((xmlChar*)"*", arg)) {
         result = 1;
         /*remove all from breakpoints */
         breakPointEmpty();
@@ -746,7 +766,7 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
                                  "Error: enable/disable command arguments not in format \"-l <FILE_NAME> <LINE_NUMBER>\" %s\n",
                                  errorPrompt);
         }
-    } else if (xmlStrEqual("*", arg)) {
+    } else if (xmlStrEqual((xmlChar*)"*", arg)) {
         result = 1;
         /*enable/disable all from breakpoints */
         walkBreakPoints((xmlHashScanner) xslDbgShellEnableBreakPoint,

@@ -23,6 +23,7 @@
 #include <libxml/xpathInternals.h>
 #include <libxml/HTMLparser.h>
 #include <libxml/HTMLtree.h>
+#include <ctype.h>              /* for isspace*/
 #include "xsldbg.h"
 #include "debugXSL.h"
 #include "arraylist.h"
@@ -412,9 +413,9 @@ xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
         xmlChar * fullQualifiedName = buffer;
         xsltStackElemPtr item = (xsltStackElemPtr)payload;
 	if (item->nameURI == NULL){
-	    snprintf(fullQualifiedName, sizeof(buffer), "$%s", item->name);
+	    snprintf((char*)fullQualifiedName, sizeof(buffer), "$%s", item->name);
 	}else{
-	    snprintf(fullQualifiedName, sizeof(buffer), "$%s:%s",
+	    snprintf((char*)fullQualifiedName, sizeof(buffer), "$%s:%s",
 		     item->nameURI, item->name);
 	}
         if (printVariableValue == 0){
@@ -480,7 +481,7 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
     }
 
     /* Do we include the name as well as its value */
-    if (strncasecmp(arg, FULLNAME_STR, strlen(FULLNAME_STR)) == 0){
+    if (strncasecmp((char*)arg, FULLNAME_STR, strlen(FULLNAME_STR))== 0){
       printVariableValue = 1;
       arg = arg + strlen(FULLNAME_STR);
       while (isspace(*arg)){
@@ -539,11 +540,11 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
                     while (item) {		      
                         if (item->name) {			     
 			    if (item->nameURI == NULL){
-				snprintf(fullQualifiedName, sizeof(buffer), "$%s",
+				snprintf((char*)fullQualifiedName, sizeof(buffer), "$%s",
 					 item->name);
 			    }else{
 
-				snprintf(fullQualifiedName, sizeof(buffer), "$%s:%s",
+				snprintf((char*)fullQualifiedName, sizeof(buffer), "$%s:%s",
 					 item->nameURI, item->name);
 			    }
 			    if (printVariableValue == 0){

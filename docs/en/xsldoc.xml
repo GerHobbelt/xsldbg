@@ -518,6 +518,10 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <comment>(To break at named template with given mode.)</comment>
 </li>
 <li>
+<text>break &quot;&quot; &lt;MODE_NAME&gt;</text>
+<comment>(To break at any template that has a given mode name)</comment>
+</li>
+<li>
 <text>break *</text>
 <comment>(To break at any template found.)</comment>
 </li>

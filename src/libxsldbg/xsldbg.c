@@ -658,14 +658,14 @@ xsldbgMain(int argc, char **argv)
 #endif
         if ((!xmlStrCmp(argv[i], "-v")) || (!xmlStrCmp(argv[i], "-verbose"))) {
             xsltSetGenericDebugFunc(stderr, NULL);
-        } else if ((xmlStrEqual(argv[i], "-o")) ||
-                   (xmlStrEqual(argv[i], "-output"))) {
+        } else if ((xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-o")) ||
+                   (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-output"))) {
 	    argv[i] = NULL;
 	    i++;
 	    result = xslDbgShellOutput((xmlChar*)argv[i]);
 	    argv[i] = NULL;
-        } else if ((xmlStrEqual(argv[i], "-V")) ||
-                   (xmlStrEqual(argv[i], "-version"))) {
+        } else if ((xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-V")) ||
+                   (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-version"))) {
             xsltGenericError(xsltGenericErrorContext,
                              " xsldbg created by Keith Isdale <k_isdale@tpg.com.au>\n");
             xsltGenericError(xsltGenericErrorContext,
@@ -686,14 +686,14 @@ xsldbgMain(int argc, char **argv)
                              "libexslt %d was compiled against libxml %d\n",
                              exsltLibexsltVersion, exsltLibxmlVersion);
             argv[i] = NULL;
-        } else if (xmlStrEqual(argv[i], "-norman")) {
+        } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-norman")) {
             if (result) {
                 result = optionsSetIntOption(OPTIONS_PROFILING, 1);
                 argv[i] = NULL;
             }
-        } else if (xmlStrEqual(argv[i], "-nonet")) {
+        } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-nonet")) {
             xmlSetExternalEntityLoader(xmlNoNetExternalEntityLoader);
-        } else if (xmlStrEqual(argv[i], "-param")) {
+        } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-param")) {
             i++;
             arrayListAdd(optionsGetParamItemList(),
                          optionsParamItemNew((xmlChar *) argv[i],
@@ -704,7 +704,7 @@ xsldbgMain(int argc, char **argv)
                                  "Too many params\n");
                 return (1);
             }
-        } else if (xmlStrEqual(argv[i], "-maxdepth")) {
+        } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-maxdepth")) {
             int value;
 
             argv[i] = NULL;
@@ -716,13 +716,13 @@ xsldbgMain(int argc, char **argv)
             argv[i] = NULL;
 
 
-        } else if (xmlStrEqual(argv[i], "-repeat")) {
+        } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-repeat")) {
             if (optionsGetIntOption(OPTIONS_REPEAT) == 0)
                 optionsSetIntOption(OPTIONS_REPEAT, 20);
             else
                 optionsSetIntOption(OPTIONS_REPEAT, 100);
 
-        } else if (xmlStrEqual(argv[i], "-cd")) {
+        } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-cd")) {
             argv[i] = NULL;
             if (i + 1 < argc) {
                 i++;
@@ -824,11 +824,11 @@ xsldbgMain(int argc, char **argv)
             showPrompt = 1;
             if (optionsGetStringOption(OPTIONS_SOURCE_FILE_NAME) == NULL)
                 xsltGenericError(xsltGenericErrorContext,
-                                 "No source file supplied\n");
+                                 "Error : No source file supplied\n");
 
             if (optionsGetStringOption(OPTIONS_DATA_FILE_NAME) == NULL) {
                 xsltGenericError(xsltGenericErrorContext,
-                                 "No data file supplied\n");
+                                 "Error : No data file supplied\n");
                 if (optionsGetStringOption(OPTIONS_SOURCE_FILE_NAME) !=
                     NULL)
                     xsltGenericError(xsltGenericErrorContext,
