@@ -54,7 +54,7 @@ const char *optionNames[] = {
     "noout",                    /* Disables output to stdout */
     "html",                     /* Enable the use of html parsing */
     "debug",                    /* Enable the use of xml tree debugging */
-    "*_shell_*",                /* Enable the use of debugger shell */
+    "shell",                /* Enable the use of debugger shell */
     "gdb",                      /* Run in gdb modem prints more messages */
     "repeat",                   /* The number of times to repeat */
     "*_trace_*",                /* Trace execution */
@@ -152,6 +152,45 @@ optionsFree(void)
     /* Free up memory used by parameters */
     arrayListFree(parameterList);
     parameterList = NULL;
+}
+
+
+  /**
+   * optionsGetOptionID:
+   * @optionName : A valid option name see documentation for "setoption" 
+   *        command and program usage documentation
+   *
+   * Find the option id for a given option name
+   *
+   * Returns The optionID for @optionName if successful, where  
+   *             OPTIONS_XINCLUDE<= optionID <= OPTIONS_DATA_FILE_NAME,
+   *         otherwise returns -1
+   */
+  int optionsGetOptionID(xmlChar* optionName)
+{
+  int result = -1;
+  int optID = lookupName(optionName, (xmlChar**)optionNames);
+  if (optID >= 0){
+    result = optID + OPTIONS_XINCLUDE;    
+  }
+
+  return result;
+}
+
+
+  /**
+   * optionsGetOptionName:
+   * @ID : A valid option ID
+   *
+   * Get the name text for an option
+   *
+   * Returns The name of option if @ID is valid, 
+   *         NULL otherwise 
+   */
+  const xmlChar *optionsGetOptionName(OptionTypeEnum ID)
+{
+  /* An option ID is always valid at the moment */
+  return (const xmlChar*) optionNames[ID - OPTIONS_XINCLUDE];
 }
 
 
@@ -323,7 +362,7 @@ optionsParamItemNew(const xmlChar * name, const xmlChar * value)
 	    if (value)
 	      result->value = (xmlChar *) xmlMemStrdup((char *) value);
 	    else
-	      result->value = (xmlChar *) xmlMemStrdup(BAD_CAST "");
+	      result->value = (xmlChar *) xmlMemStrdup("");
 	    result->intValue = -1;
         }
     }
@@ -449,10 +488,10 @@ optionsPrintParamList(void)
 	       optionsGetIntOption(optionType));
       result  = result && (xmlNewProp
 			 (node, (xmlChar *) "name",
-			    optionNames[optionType - OPTIONS_XINCLUDE]) != NULL);
+			    (xmlChar*)optionNames[optionType - OPTIONS_XINCLUDE]) != NULL);
       if (result)
 	result = result && (xmlNewProp(node, (xmlChar *) "value", 
-				      numberBuffer) != NULL);
+				      (xmlChar*)numberBuffer) != NULL);
       if (!result){
 	xmlFreeNode(node);
 	node = NULL;
@@ -465,7 +504,7 @@ optionsPrintParamList(void)
     if (node){
       result  = result && (xmlNewProp
 			   (node, (xmlChar *) "name",
-			    optionNames[optionType - OPTIONS_XINCLUDE]) != NULL);
+			    (xmlChar*) optionNames[optionType - OPTIONS_XINCLUDE]) != NULL);
       if (result){
 	if (optionsGetStringOption(optionType))
 	  result  = result && (xmlNewProp
@@ -560,7 +599,7 @@ optionsPrintParamList(void)
   int optionsSavetoFile(xmlChar *fileName)
 {
   int result = 1;
-  int index = 0;
+  int optionIndex = 0;
   xmlDocPtr configDoc = xmlNewDoc((xmlChar *) "1.0");
   xmlNodePtr rootNode = xmlNewNode(NULL, (xmlChar *) "config");
   xmlNodePtr node = NULL;
@@ -572,12 +611,12 @@ optionsPrintParamList(void)
     xmlAddChild((xmlNodePtr) configDoc, rootNode);
     
     /*now to do the work of adding configuration items */
-    for (index = OPTIONS_XINCLUDE; index <= OPTIONS_DATA_FILE_NAME; index++){
+    for (optionIndex = OPTIONS_XINCLUDE; optionIndex <= OPTIONS_DATA_FILE_NAME; optionIndex++){
 
-      if (optionNames[index - OPTIONS_XINCLUDE][0] == '*')
+      if (optionNames[optionIndex - OPTIONS_XINCLUDE][0] == '*')
 	continue; /* don't save non user options */
 
-      node = optionsNode(index);
+      node = optionsNode(optionIndex);
       if (node)
 	xmlAddChild(rootNode, node);
       else{

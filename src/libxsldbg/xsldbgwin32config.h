@@ -22,9 +22,9 @@
 
 #define XSLDBG_BIN "xsldbg"
 
-#define VERSION "2.0.3"
+#define VERSION "2.0.5"
 
-#define TIMESTAMP "6th Feb 2002"
+#define TIMESTAMP __DATE__
 
 #ifndef WITH_DEBUGGER
 #define WITH_DEBUGGER

@@ -1,12 +1,12 @@
 
 AC_INIT(src/main.c)
 
-timestamp='2002-02-07'
+timestamp='2002-02-10'
 
 
 XSLDBG_MAJOR_VERSION=2
 XSLDBG_MINOR_VERSION=0
-XSLDBG_MICRO_VERSION=3
+XSLDBG_MICRO_VERSION=5
 PACKAGE=xsldbg
 
 dnl
@@ -583,6 +583,7 @@ AC_OUTPUT(
         src/Makefile  	
 	src/libxsldbg/xsldbgwin32config.h
 	xsldbg-config
+	config_riscos.h
 	src/libxsldbg/Makefile
 	src/libqtnotifier/Makefile
 	tests/Makefile	

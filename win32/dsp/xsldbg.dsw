@@ -1,9 +1,9 @@
-Microsoft Developer Studio Workspace File, Format Version 5.00
+Microsoft Developer Studio Workspace File, Format Version 6.00
 # WARNING: DO NOT EDIT OR DELETE THIS WORKSPACE FILE!
 
 ###############################################################################
 
-Project: "libxsldbg_a"=.\libxsldbg_a\libxsldbg_a.dsp - Package Owner=<4>
+Project: "libxsldbg"=.\libxsldbg.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -23,6 +23,9 @@ Package=<5>
 
 Package=<4>
 {{{
+    Begin Project Dependency
+    Project_Dep_Name libxsldbg
+    End Project Dependency
 }}}
 
 ###############################################################################

@@ -191,7 +191,6 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                xmlChar * arg)
 {
     xmlXPathObjectPtr list;
-    int i = 0;
     int result = 0;
 
     if (!ctxt) {
@@ -295,7 +294,7 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
 			      /* when gdb mode is enable then only print the first
 			       GDB_LINES_TO_PRINT lines */
 			      while (!feof(file)){
-				if (fgets(buffer, sizeof(buffer),file))
+				if (fgets((char*)buffer, sizeof(buffer),file))
 				  xsltGenericError
 				    (xsltGenericErrorContext,"%s", buffer);
 				if (gdbModeEnabled){

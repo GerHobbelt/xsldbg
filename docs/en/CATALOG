@@ -9,6 +9,9 @@
 PUBLIC "-//xsldbg//DTD search XML V1.0//EN" 
 	"search.dtd"
 
+PUBLIC "-//xsldbg//DTD search XML V1.1//EN" 
+	"search_v1_1.dtd"
+
 -- documentation dataBase definition --
 
 PUBLIC "-//xsldbg//DTD xsldoc XML V1.0//EN" 

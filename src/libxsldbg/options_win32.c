@@ -86,7 +86,7 @@
 int optionsLoad(void)
 {
   int result = 0;
-  xmlDocPtr doc = xmlParseFile(optionsConfigFileName());
+  xmlDocPtr doc = xmlParseFile((char*)optionsConfigFileName());
   if (doc)
     result = optionsReadDoc(doc);
   return 0;

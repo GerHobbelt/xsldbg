@@ -950,9 +950,9 @@ addCallStackItems(void)
     for (depth = callStackGetDepth(); depth > 0; depth--) {
         item = callStackGet(depth);
         if (item) {
-            node = searchCallStackNode(item);
+            node = searchCallStackNode(item);	    
             if (node)
-                searchAdd(node);
+	      searchAdd(node);
         }
     }
 }
@@ -977,6 +977,11 @@ updateSearchData(xsltTransformContextPtr styleCtxt ATTRIBUTE_UNUSED,
 {
     int result = 0;
 
+    if (!style){
+      xsltGenericError(xsltGenericErrorContext,
+		       "Error: Stylesheet not loaded yet\n");
+      return result; 
+    }
     searchEmpty();
     xsltGenericError(xsltGenericErrorContext,
                      "Information: Updating search database, this may take a while ..\n");

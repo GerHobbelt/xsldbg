@@ -308,8 +308,8 @@ searchEmpty(void)
     if (searchDataBase) {
         xmlCreateIntSubset(searchDataBase,
                            (xmlChar *) "search", (xmlChar *)
-                           "-//xsldbg//DTD search XML V1.0//EN",
-                           (xmlChar *) "search.dtd");
+                           "-//xsldbg//DTD search XML V1.1//EN",
+                           (xmlChar *) "search_v1_1.dtd");
         searchDataBaseRoot = xmlNewNode(NULL, (xmlChar *) "search");
         if (searchDataBaseRoot)
             xmlAddChild((xmlNodePtr) searchDataBase, searchDataBaseRoot);
@@ -373,11 +373,10 @@ int
 searchAdd(xmlNodePtr node)
 {
     int result = 0;
-
-    if (node && searchDataBaseRoot) {
-        xmlAddChild(searchDataBaseRoot, node);
-        result = 1;
+    if (node && searchDataBaseRoot && xmlAddChild(searchDataBaseRoot, node)) {
+	result = 1;	
     }
+
     return result;
 }
 
@@ -1209,7 +1208,7 @@ xmlNodePtr
 searchBreakPointNode(breakPointPtr breakPtr)
 {
 
-    xmlNodePtr node = NULL;
+  xmlNodePtr node = NULL;
     int result = 1;
 
     if (breakPtr) {
@@ -1302,6 +1301,11 @@ searchTemplateNode(xmlNodePtr templNode)
             result = result
                 && (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) buffer)
                     != NULL);
+	    if (result){
+	      xmlNodePtr textNode = searchCommentNode(templNode);
+	      if (textNode && !xmlAddChild(node, textNode))
+		result = 0;
+	    }
         } else
             result = 0;
         if (!result) {
@@ -1359,6 +1363,11 @@ searchGlobalNode(xmlNodePtr variable)
                         NULL);
                 xmlFree(value);
             }
+	    if (result){
+	      xmlNodePtr textNode = searchCommentNode(variable);
+	      if (textNode && !xmlAddChild(node, textNode))
+		result = 0;
+	    }
         } else
             result = 0;
     }
@@ -1458,6 +1467,11 @@ searchSourceNode(xsltStylesheetPtr style)
                         (xmlNewProp(node, (xmlChar *) "parent",
                                     style->parent->doc->URL) != NULL);
                 }
+		if (result){
+		  xmlNodePtr textNode = searchCommentNode((xmlNodePtr)style->doc);
+		  if (textNode && !xmlAddChild(node, textNode))
+		    result = 0;
+		}
             }
         } else
             result = 0;
@@ -1509,6 +1523,11 @@ searchIncludeNode(xmlNodePtr include)
                         && (xmlNewProp(node, (xmlChar *) "line",
                                        (xmlChar *) buffer) != NULL);
                 }
+		if (result){
+		  xmlNodePtr textNode = searchCommentNode(include);
+		  if (textNode && !xmlAddChild(node, textNode))
+		    result = 0;
+		}
             }
         } else
             result = 0;
@@ -1570,3 +1589,65 @@ searchCallStackNode(callPointPtr callStackItem)
     }
     return node;
 }
+
+
+static xmlChar* commentText(xmlNodePtr node);
+
+/*
+ * Returns A copy of comment text that applies to node,
+ *         NULL otherwise
+ */
+xmlChar* commentText(xmlNodePtr node){
+  xmlChar *result = NULL;
+
+  if (node){
+    if (node->type == XML_COMMENT_NODE)
+      result = xmlNodeGetContent(node);
+  }
+
+  return result;
+}
+
+/**
+ * searchCommentNode:
+ * @sourceNode: Is valid
+ * 
+ * Find documentation comment that applies to @node. If found convert comment 
+ *         into search dataBase format required
+ *
+ * Returns Documentation comment for @node as a new xmlNode in search dataBase format 
+ *            if successful,
+ *         NULL otherwise
+ */
+  xmlNodePtr searchCommentNode(xmlNodePtr sourceNode)
+{
+  xmlNodePtr node = NULL, textChild = NULL;
+  xmlChar *text = NULL;
+  int result = 0;
+ if (sourceNode){
+    text = commentText(sourceNode->prev);
+    if (!text){
+      text = commentText(sourceNode->children);
+    }
+       
+    if (text){
+       node = xmlNewNode(NULL, (xmlChar *) "comment");
+       textChild = xmlNewText(text);
+       if (node && textChild && xmlAddChild(node, textChild)){
+	   result = 1;
+       }
+       if (!result){
+	 if (node){
+	   xmlFreeNode(node);
+	   node = NULL;
+	 }
+	 if (textChild)
+	 xmlFreeNode(textChild);
+       }
+       
+       xmlFree(text);
+    }
+  }
+  return node;
+}
+

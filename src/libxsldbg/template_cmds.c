@@ -169,7 +169,7 @@ xslDbgShellPrintTemplateNames(xsltTransformContextPtr styleCtxt,
                          xmlShellCtxtPtr ctxt ATTRIBUTE_UNUSED,
                          xmlChar * arg, int verbose, int allFiles)
 {
-    int templateCount = 0, printCount = 0;
+    int templateCount = 0, printedTemplateCount = 0;
     int result = 0;
     xsltStylesheetPtr curStyle;
     xsltTemplatePtr templ;
@@ -203,7 +203,7 @@ xslDbgShellPrintTemplateNames(xsltTransformContextPtr styleCtxt,
             templ = curStyle->templates;
             /* print them out in the order their in the file */
             printTemplateHelper(templ, verbose, &templateCount,
-                                      &printCount, arg);
+                                      &printedTemplateCount, arg);
             if (curStyle->next)
                 curStyle = curStyle->next;
             else
@@ -216,7 +216,7 @@ xslDbgShellPrintTemplateNames(xsltTransformContextPtr styleCtxt,
             templ = curStyle->templates;
             /* print them out in the order their in the file */
             printTemplateHelper(templ, verbose, &templateCount,
-                                      &printCount, arg);
+                                      &printedTemplateCount, arg);
             xsltGenericError(xsltGenericErrorContext, "\n");
             if (curStyle->next)
                 curStyle = curStyle->next;
@@ -232,7 +232,7 @@ xslDbgShellPrintTemplateNames(xsltTransformContextPtr styleCtxt,
                              templateCount);
             xsltGenericError(xsltGenericErrorContext,
                              "\t Total of %d templates printed\n",
-                             printCount);
+                             printedTemplateCount);
         }
     }
 

@@ -246,6 +246,67 @@ extern "C" {
 
 #ifdef USE_GNOME_DOCS
 
+  /**
+   * optionsGetOptionID:
+   * @optionName : A valid option name see documentation for "setoption" 
+   *        command and program usage documentation
+   *
+   * Find the option id for a given option name
+   *
+   * Returns The optionID for @optionName if successful, where  
+   *             OPTIONS_XINCLUDE<= optionID <= OPTIONS_DATA_FILE_NAME,
+   *         otherwise returns -1
+   */
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * Find the option id for a given option name
+   *
+   * @returns The optionID for @optionName if successful, where  
+   *             OPTIONS_XINCLUDE<= optionID <= OPTIONS_DATA_FILE_NAME,
+   *         otherwise returns -1
+   *
+   * @param optionName A valid option name see documentation for "setoption" 
+   *        command and program usage documentation
+   *
+   */
+#endif
+#endif
+  int optionsGetOptionID(xmlChar* optionName);
+
+
+
+#ifdef USE_GNOME_DOCS
+
+  /**
+   * optionsGetOptionName:
+   * @ID : A valid option ID
+   *
+   * Get the name text for an option
+   *
+   * Returns The name of option if @ID is valid, 
+   *         NULL otherwise 
+   */
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * Get the name text for an option
+   *
+   * Returns The name of option if @ID is valid, 
+   *         NULL otherwise 
+   *
+   * @param ID A valid option ID
+   *
+   */
+#endif
+#endif
+  const xmlChar *optionsGetOptionName(OptionTypeEnum ID);
+
+
+#ifdef USE_GNOME_DOCS
+
 /**
  * optionsSetIntOption:
  * @optionType: Is a valid integer option

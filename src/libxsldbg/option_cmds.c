@@ -21,9 +21,8 @@
 #include "options.h"
 #include "xsldbgmsg.h"
 #include "xsldbgthread.h"
+#include "debugXSL.h"
 
-
-extern const char *optionNames[];
 
 /**
  * xslDbgShellSetOption:
@@ -42,11 +41,9 @@ int xslDbgShellSetOption(xmlChar *arg){
     long optID;
 
     if (splitString(arg, 2, opts) == 2) {
-      optID =
-	lookupName(opts[0], (xmlChar**) optionNames);
-      if (optID >= 0) {
-	if (optID <=
-	    (OPTIONS_VERBOSE - OPTIONS_XINCLUDE)) {
+      optID = optionsGetOptionID(opts[0]);
+      if (optID >= OPTIONS_XINCLUDE) {
+	if (optID <= OPTIONS_VERBOSE) {
 	  /* handle setting integer option */
 	  if (!sscanf
 	      ((char *) opts[1], "%ld", &optValue)) {
@@ -54,17 +51,11 @@ int xslDbgShellSetOption(xmlChar *arg){
 	      (xsltGenericErrorContext,
 	       "Error : Unable to parse integer value for option \n");
 	  } else {
-	    result =
-	      optionsSetIntOption(optID +
-				  OPTIONS_XINCLUDE,
-				  optValue);
+	    result = optionsSetIntOption(optID, optValue);
 	  }
 	} else {
 	  /* handle setting a string option */
-	  result =
-	    optionsSetStringOption(optID +
-				   OPTIONS_XINCLUDE,
-				   opts[1]);
+	  result = optionsSetStringOption(optID, opts[1]);
 
 	}
       } else {
@@ -98,18 +89,17 @@ int xslDbgShellOptions(void)
 {
   int result = 1;
   int optionIndex;
+  const xmlChar* optionName, *optionValue;
   /* Print out the integer options and thier values */
   if (getThreadStatus() != XSLDBG_MSG_THREAD_RUN){
     for (optionIndex = OPTIONS_XINCLUDE;
 	 optionIndex <= OPTIONS_VERBOSE; optionIndex++) {
       /* skip any non-user options */
-      if (optionNames[optionIndex - OPTIONS_XINCLUDE][0]
-	  != '*') {
+      optionName = optionsGetOptionName(optionIndex);
+      if (optionName && (optionName[0] != '*')) {
 	xsltGenericError(xsltGenericErrorContext,
 			 "Option %s = %d\n",
-			 optionNames[optionIndex -
-				     OPTIONS_XINCLUDE],
-			 optionsGetIntOption(optionIndex));
+			 optionName, optionsGetIntOption(optionIndex));
 			    
       }
     }
@@ -117,17 +107,18 @@ int xslDbgShellOptions(void)
     for (optionIndex = OPTIONS_OUTPUT_FILE_NAME;
 	 optionIndex <= OPTIONS_DATA_FILE_NAME;
 	 optionIndex++) {
-      if (optionsGetStringOption(optionIndex) != NULL) {
-	xsltGenericError(xsltGenericErrorContext,
+      optionName = optionsGetOptionName(optionIndex);
+      if (optionName && (optionName[0] != '*') ){
+	optionValue =  optionsGetStringOption(optionIndex);
+	if (optionValue) {
+	  xsltGenericError(xsltGenericErrorContext,
 			 "Option %s = \"%s\"\n",
-			 optionNames[optionIndex -
-				     OPTIONS_XINCLUDE],
-			 optionsGetStringOption(optionIndex));
-      } else {
-	xsltGenericError(xsltGenericErrorContext,
-			 "Option %s = \"\"\n",
-			 optionNames[optionIndex -
-				     OPTIONS_XINCLUDE]);
+			   optionName, optionValue);
+	} else {
+	  xsltGenericError(xsltGenericErrorContext,
+			   "Option %s = \"\"\n", optionName);
+
+	}
       }
 
     }
@@ -140,10 +131,9 @@ int xslDbgShellOptions(void)
     for (optionIndex = OPTIONS_XINCLUDE;
 	 optionIndex <= OPTIONS_VERBOSE; optionIndex++) {
       /* skip any non-user options */
-      if (optionNames[optionIndex - OPTIONS_XINCLUDE][0]
-	  != '*') {
-	paramItem = optionsParamItemNew( optionNames[optionIndex -
-						     OPTIONS_XINCLUDE], 0L);
+      optionName = optionsGetOptionName(optionIndex);
+      if (optionName && (optionName[0] != '*')) {
+	paramItem = optionsParamItemNew(optionName, 0L);
 	if (!paramItem){
 	  notifyListSend(); /* send what ever we've got so far*/
 	  return 0; /* out of memory */
@@ -159,14 +149,17 @@ int xslDbgShellOptions(void)
     for (optionIndex = OPTIONS_OUTPUT_FILE_NAME;
 	 optionIndex <= OPTIONS_DATA_FILE_NAME;
 	 optionIndex++) {
+      optionName = optionsGetOptionName(optionIndex);
+      if (optionName && (optionName[0] != '*') ){
 	paramItem = 
-	  optionsParamItemNew( optionNames[optionIndex - OPTIONS_XINCLUDE],
+	  optionsParamItemNew( optionName, 
 			       optionsGetStringOption(optionIndex));
 	if (!paramItem){
 	  notifyListSend(); /* send what ever we've got so far*/
 	  return 0; /* out of memory*/
 	}else
-	  notifyListQueue(paramItem); /* this will be free later*/  
+	  notifyListQueue(paramItem); /* this will be freed later*/  
+      }
     }
     notifyListSend();
   }  

@@ -40,6 +40,16 @@
    </xsl:if> 
   </xsl:template>
 
+  <!-- Display the details of where the item where included in XSL source -->
+  <xsl:template name="fileDetails">
+    <xsl:text> file </xsl:text>
+    <xsl:value-of select="@url"/>
+     <xsl:text> : line </xsl:text>   
+    <xsl:value-of select="@line"/>
+     <xsl:text>
+</xsl:text>  
+  </xsl:template>
+
   <xsl:template match="breakpoint">
     <xsl:text> Breakpoint </xsl:text>
     <xsl:value-of select="@id"/>
@@ -57,12 +67,7 @@
          <xsl:value-of select="@template"/>
          <xsl:text>&quot;</xsl:text>
     </xsl:if>
-    <xsl:text> in file </xsl:text>
-    <xsl:value-of select="@url"/>
-     <xsl:text> : line </xsl:text>   
-    <xsl:value-of select="@line"/>
-     <xsl:text>
-</xsl:text>  
+    <xsl:call-template name="fileDetails" />
   </xsl:template>
 
   <xsl:template match="template">
@@ -79,12 +84,7 @@
        <xsl:text>&quot;</xsl:text>
     </xsl:otherwise>
     </xsl:choose>
-    <xsl:text> in file </xsl:text>
-      <xsl:value-of select="@url"/>
-      <xsl:text> : line </xsl:text>   
-      <xsl:value-of select="@line"/>
-    <xsl:text>
-</xsl:text>
+    <xsl:call-template name="fileDetails" />
   </xsl:template>
 
   <xsl:template match="source|import|include">
@@ -102,8 +102,7 @@
           <xsl:text> included from </xsl:text>
           </xsl:otherwise>
         </xsl:choose>
-        <xsl:value-of select="@url"/>
-        <xsl:text> line : </xsl:text><xsl:value-of select="@line"/>
+        <xsl:call-template name="fileDetails" />
       </xsl:if>
       <xsl:text>
 </xsl:text>
@@ -112,15 +111,47 @@
   <xsl:template match="callstack">
       <xsl:text> Callstack entry</xsl:text>
       <xsl:value-of select="@href"/>
-      <xsl:text> at file </xsl:text>
-         <xsl:value-of select="@url"/>
-         <xsl:text> line : </xsl:text><xsl:value-of select="@line"/>
+      <xsl:call-template name="fileDetails" />
       <xsl:text> from template </xsl:text>
-           <xsl:text>&quot;</xsl:text>
-           <xsl:value-of select="@template"/>
-           <xsl:text>&quot;</xsl:text>
+      <xsl:text>&quot;</xsl:text>
+      <xsl:value-of select="@template"/>
+      <xsl:text>&quot;</xsl:text>
       <xsl:text>
 </xsl:text>
+  </xsl:template>
+
+  <!-- This is a global variable -->
+ <xsl:template match="variable[@templname = '' and @templmatch = '']">
+      <xsl:text> Global variable </xsl:text>
+      <xsl:text>name =&quot;</xsl:text>
+      <xsl:value-of select="@name"/>
+      <xsl:text>&quot;</xsl:text>
+      <xsl:text>select=&quot;</xsl:text>
+      <xsl:value-of select="@name"/>
+      <xsl:text>&quot;</xsl:text>
+      <xsl:call-template name="fileDetails" />
+  </xsl:template>
+
+  <!-- This is a global variable -->
+ <xsl:template match="variable[@templname or @templmatch]">
+      <xsl:text> Local variable </xsl:text>
+      <xsl:text>name =&quot;</xsl:text>
+      <xsl:value-of select="@name"/>
+      <xsl:text>&quot;</xsl:text>
+      <xsl:text> select=&quot;</xsl:text>
+      <xsl:value-of select="@name"/>
+      <xsl:text>&quot;</xsl:text>
+      <xsl:if test="@templname">
+      <xsl:text> templateName =&quot;</xsl:text>
+      <xsl:value-of select="@templname"/>
+      <xsl:text>&quot;</xsl:text>
+      </xsl:if>
+     <xsl:if test="@templmatch">
+      <xsl:text> templateMatch =&quot;</xsl:text>
+      <xsl:value-of select="@templmatch"/>
+      <xsl:text>&quot;</xsl:text>
+      </xsl:if>
+      <xsl:call-template name="fileDetails" />
   </xsl:template>
 
 

@@ -491,7 +491,7 @@ usage(const char *name)
     xsltGenericError(xsltGenericErrorContext,
                      "Usage: %s [options] stylesheet file\n", name);
     xsltGenericError(xsltGenericErrorContext,
-                     "Without any parameters xsldbg starts in command mode, ready"
+                     "Without any parameters xsldbg starts in command mode, ready "
                      "for the source and data to be select\n");
     xsltGenericError(xsltGenericErrorContext, "   Options:\n");
     /* Options help format is --<option>: <description>
@@ -549,6 +549,14 @@ usage(const char *name)
                      "      --shell : start xsldebugger \n");
     xsltGenericError(xsltGenericErrorContext,
                      "      --gdb : run in gdb mode printing out more information\n");
+    xsltGenericError(xsltGenericErrorContext,
+		      "      --autoencode : Detect and use encodings in the stylesheet"); 
+    xsltGenericError(xsltGenericErrorContext,
+		     "      --utf8input : Treat command line input as encoded in UTF-8");
+    xsltGenericError(xsltGenericErrorContext,
+		     "      --preferhtml : Use html output when generating search reports. " \
+		     "See search command\n");    
+    
 }
 
 int
@@ -614,8 +622,12 @@ xsldbgMain(int argc, char **argv)
             }
             continue;
         }
+
+	if ((argv[i][0] == '-') && (argv[i][1] == '-'))
+	  argv[i]++; /* treat --<OPTION_NAME> as -<OPTION_NAME> */
+
 #ifdef LIBXML_DEBUG_ENABLED
-        if ((!strcmp(argv[i], "-debug")) || (!strcmp(argv[i], "--debug"))) {
+        if (!strcmp(argv[i], "-debug")) {
             if (result) {
                 result = optionsSetIntOption(OPTIONS_DEBUG, 1);
                 argv[i] = NULL;
@@ -623,20 +635,17 @@ xsldbgMain(int argc, char **argv)
         } else
 #endif
         if ((!strcmp(argv[i], "-v")) ||
-                (!strcmp(argv[i], "-verbose")) ||
-                (!strcmp(argv[i], "--verbose"))) {
+	    (!strcmp(argv[i], "-verbose"))){ 	    
             xsltSetGenericDebugFunc(stderr, NULL);
         } else if ((!strcmp(argv[i], "-o")) ||
-                   (!strcmp(argv[i], "-output")) ||
-                   (!strcmp(argv[i], "--output"))) {
+                   (!strcmp(argv[i], "-output"))){
             argv[i] = NULL;
             i++;
             optionsSetStringOption(OPTIONS_OUTPUT_FILE_NAME, (xmlChar *) argv[i]);
             argv[i] = NULL;
         } else if ((!strcmp(argv[i], "-V")) ||
-                   (!strcmp(argv[i], "-version")) ||
-                   (!strcmp(argv[i], "--version"))) {
-            xsltGenericError(xsltGenericErrorContext,
+                   (!strcmp(argv[i], "-version"))){
+  	    xsltGenericError(xsltGenericErrorContext,
                              " xsldbg created by Keith Isdale <k_isdale@tpg.com.au>\n");
             xsltGenericError(xsltGenericErrorContext,
                              " Version %s, Date created %s\n", VERSION,
@@ -656,88 +665,25 @@ xsldbgMain(int argc, char **argv)
                              "libexslt %d was compiled against libxml %d\n",
                              exsltLibexsltVersion, exsltLibxmlVersion);
             argv[i] = NULL;
-        } else if ((!strcmp(argv[i], "-repeat"))
-                   || (!strcmp(argv[i], "--repeat"))) {
-            if (optionsGetIntOption(OPTIONS_REPEAT) == 0)
-                optionsSetIntOption(OPTIONS_REPEAT, 20);
-            else
-                optionsSetIntOption(OPTIONS_REPEAT, 100);
-        } else if ((!strcmp(argv[i], "-novalid")) ||
-                   (!strcmp(argv[i], "--novalid"))) {
-            if (result) {
-                result = optionsSetIntOption(OPTIONS_NOVALID, 1);
-                argv[i] = NULL;
-            }
-        } else if ((!strcmp(argv[i], "-noout")) ||
-                   (!strcmp(argv[i], "--noout"))) {
-            if (result) {
-                result = optionsSetIntOption(OPTIONS_NOOUT, 1);
-                argv[i] = NULL;
-            }
-#ifdef LIBXML_DOCB_ENABLED
-        } else if ((!strcmp(argv[i], "-docbook")) ||
-                   (!strcmp(argv[i], "--docbook"))) {
-            if (result) {
-                result = optionsSetIntOption(OPTIONS_DOCBOOK, 1);
-                argv[i] = NULL;
-            }
-#endif
-#ifdef LIBXML_HTML_ENABLED
-        } else if ((!strcmp(argv[i], "-html")) ||
-                   (!strcmp(argv[i], "--html"))) {
-            if (result) {
-                result = optionsSetIntOption(OPTIONS_HTML, 1);
-                argv[i] = NULL;
-            }
-#endif
-        } else if ((!strcmp(argv[i], "-timing")) ||
-                   (!strcmp(argv[i], "--timing"))) {
-            if (result) {
-                result = optionsSetIntOption(OPTIONS_TIMING, 1);
-                argv[i] = NULL;
-            }
-        } else if ((!strcmp(argv[i], "-profile")) ||
-                   (!strcmp(argv[i], "--profile"))) {
+        } else if (!strcmp(argv[i], "-norman")){
             if (result) {
                 result = optionsSetIntOption(OPTIONS_PROFILING, 1);
                 argv[i] = NULL;
             }
-        } else if ((!strcmp(argv[i], "-norman")) ||
-                   (!strcmp(argv[i], "--norman"))) {
-            if (result) {
-                result = optionsSetIntOption(OPTIONS_PROFILING, 1);
-                argv[i] = NULL;
-            }
-        } else if ((!strcmp(argv[i], "-nonet")) ||
-                   (!strcmp(argv[i], "--nonet"))) {
+	} else if (!strcmp(argv[i], "-nonet")){
             xmlSetExternalEntityLoader(xmlNoNetExternalEntityLoader);
-        } else if ((!strcmp(argv[i], "-catalogs")) ||
-                   (!strcmp(argv[i], "--catalogs"))) {
-
-            optionsSetIntOption(OPTIONS_CATALOGS, 1);
-            argv[i] = NULL;
-#ifdef LIBXML_XINCLUDE_ENABLED
-        } else if ((!strcmp(argv[i], "-xinclude")) ||
-                   (!strcmp(argv[i], "--xinclude"))) {
-            if (result) {
-                result = optionsSetIntOption(OPTIONS_XINCLUDE, 1);
-                argv[i] = NULL;
-            }
-#endif
-        } else if ((!strcmp(argv[i], "-param")) ||
-                   (!strcmp(argv[i], "--param"))) {
+        }  else if (!strcmp(argv[i], "-param")){
             i++;
             arrayListAdd(optionsGetParamItemList(),
                          optionsParamItemNew((xmlChar *) argv[i],
                                       (xmlChar *) argv[i + 1]));
             i++;
-            if (arrayListCount(optionsGetParamItemList()) >= 8) {
+            if (arrayListCount(optionsGetParamItemList()) >= 32) {
                 xsltGenericError(xsltGenericErrorContext,
-                                 "too many params\n");
+                                 "Too many params\n");
                 return (1);
             }
-        } else if ((!strcmp(argv[i], "-maxdepth")) ||
-                   (!strcmp(argv[i], "--maxdepth"))) {
+        } else if (!strcmp(argv[i], "-maxdepth")){
             int value;
 
             argv[i] = NULL;
@@ -748,18 +694,14 @@ xsldbgMain(int argc, char **argv)
             }
             argv[i] = NULL;
 
-          /*---------------------------------------- */
-            /*     Handle xsldbg specific options      */
 
-          /*---------------------------------------- */
+	} else if (!strcmp(argv[i], "-repeat")){
+            if (optionsGetIntOption(OPTIONS_REPEAT) == 0)
+                optionsSetIntOption(OPTIONS_REPEAT, 20);
+            else
+                optionsSetIntOption(OPTIONS_REPEAT, 100);
 
-        } else if ((!strcmp(argv[i], "-shell")) ||
-                   (!strcmp(argv[i], "--shell"))) {
-            if (result) {
-                result = optionsSetIntOption(OPTIONS_SHELL, 1);
-                argv[i] = NULL;
-            }
-        } else if ((!strcmp(argv[i], "-cd")) || (!strcmp(argv[i], "--cd"))) {
+        } else if (!strcmp(argv[i], "-cd")){
             argv[i] = NULL;
             if (i + 1 < argc) {
                 i++;
@@ -767,21 +709,28 @@ xsldbgMain(int argc, char **argv)
                 argv[i] = NULL;
             } else {
                 xsltGenericError(xsltGenericErrorContext,
-                                 "Missing path name after --cd option\n");
+                                 "Missing path name after -cd option\n");
             }
 
-        } else if ((!strcmp(argv[i], "-gdb"))
-                   || (!strcmp(argv[i], "--gdb"))) {
-            /* run in gdb mode printing out more information after each command */
-            if (result) {
-                result = optionsSetIntOption(OPTIONS_GDB, 1);
-                argv[i] = NULL;
-            }
         } else {
-            xsltGenericError(xsltGenericErrorContext,
-                             "Error: Unknown option %s\n", argv[i]);
-            result = 0;
-        }
+	  /* From here we're only dealing with integer options*/
+	  /* ignore any non-user option */
+	  if (result && (argv[i][2] != '*')){
+	    int optID = optionsGetOptionID((xmlChar*)argv[i]+ 1);
+	    /* the user might have entered a string option so reject it if so */
+	    if ((optID >= OPTIONS_XINCLUDE ) && (optID  <= OPTIONS_VERBOSE)){
+	      result = optionsSetIntOption(optID, 1);
+	      argv[i] = NULL;
+	    }else{
+	      xsltGenericError(xsltGenericErrorContext,
+			       "Error: Unknown option %s, or unknown " \
+			       " integer option. See setoption commmand in " \
+			       "xsldbg documentation for full description of " \
+			       "integer and string options\n", argv[i]);
+	      result = 0;
+	    }
+	  }
+	}	
     }
 
     if (!result) {

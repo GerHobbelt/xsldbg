@@ -1,0 +1,7 @@
+*.lib
+*.zip
+*.ncb
+*.plg
+*.opt
+xsldbg
+libxsldbg

@@ -1,10 +1,11 @@
 <!DOCTYPE HTML PUBliC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <!-- Author Keith Isdale <k_isdale@tpg.com.au>
-     Date : Sometime after 8 Dec 2001
+     Date : Sometime after 8th Dec 2001
+     Last updated : See bottom of page
 -->
 <html>
 <head>
-<title>Xsl Debugger</title>
+<title>xdldbg a XSL debugger/inspector</title>
 </head>
 <body link="#0000ff" vlink="#800080">
 
@@ -26,7 +27,7 @@
 <li><a href="#Installation">Installation</a> </li>
 <li><a href="#Testing">Testing / running example</a> </li>
 <li><a href="#Help%20system">Help system</a> </li>
-<li><a href="#Version%20%20notes">Version notes</a> </li>
+<li><a href="#Version%20notes">Version notes</a> </li>
 <li><a href="#FAQ">FAQ</a></li>
 <li><a href="#Feedback">Feedback</a> </li>
 <li><a href="#Download">Download</a> </li>
@@ -49,18 +50,22 @@
 <li>complete support all XSL commands : Done? Needs more testing</li>
 <li>perform testing, add more test case descriptions&nbsp; </li>
 <li>improve the appearance of documentation and ensure it is up to date </li>
-<li>create project files to build as MSVC project. Being looked at by&nbsp; <a href="http://www.fh-frankfurt.de/%7Eigor/projects/libxml/"><i>Igor Zlatkovic</i></a></li>
+<li>Create script to autogenerate def file (needed to create a win32 dll) using
+    sgml files created by GNOME documentation tool</li>
+<li>Look at replacing execution of shell command "more" with a function call</li>
+<li>Look at allowing xsldbg to extract comments from XSL files to provided similar functionality
+    as XSLTDoc tool by Fabrice Desré. At the moment the libxslt preprocessor strips most comments</li>
 </ul>
 
 <p><a href="#Completed%20TODO%27s"><b>See also completed TODO'S</b></a><b> </p>
 </b><p>&nbsp;</p>
 
-<!--  - - - - - - - - - -  Author - - - - - - - - - -->
+<!--  - - - - - - - - - -  Requirements - - - - - - - - - -->
 <h2><a name="Requirements">Requirements</a> </h2>
 &nbsp;&nbsp; <a href="http://www.xmlsoft.org/#Downloads">libxml2-2.4.13 <font color="red">from GNOME cvs</font> </a> &nbsp; or greater <br />
 &nbsp;&nbsp; <a href="http://xmlsoft.org/XSLT/#Downloads">libxslt-1.0.10 <font color="red">from GNOME cvs</font> </a> &nbsp; or greater <br />
 
-<p><font size=5 color="red">Warning!</font>&nbsp; libxslt may not compile with shared library enabled as it is has been configured
+<p><font color="red">Warning!</font>&nbsp; libxslt may not compile with shared library enabled as it is has been configured
 for compilation tools that support prelinking. Configure libxslt with the at least following option<br />
 <b>&nbsp;&nbsp;&nbsp;&nbsp;--with-debugger=yes</b>
 <p>      I recommend you get the latest available for your distribution. Try <br />
@@ -69,8 +74,11 @@ for compilation tools that support prelinking. Configure libxslt with the at lea
 
 
 <p>  A system with&nbsp;&nbsp;GNU&nbsp;compatible make and build tools</p>
-<p>&nbsp; The "more" system command is available (need by internal help system) </p>
-
+<p>&nbsp; The &quot;more&quot; system command is available (need by internal help system) </p>
+<p><b>OR</b></p>
+<p> A WIN32 system with MSVC 5.0 or later, using project files by
+<a href="http://www.fh-frankfurt.de/%7Eigor/projects/libxml/"><i>Igor Zlatkovic</i></a>
+</p>
 <br />
 <!--  - - - - - - - - - -  Limitations - - - - - - - - - -->
 <h2><a name="Limitations">Limitations</a> </h2>
@@ -78,8 +86,23 @@ for compilation tools that support prelinking. Configure libxslt with the at lea
 <ul>
         <li>The format of search results needs to be fixed</li>
         <li>Searching can take a while with large documents ie when debugging docbook.xsl</li>
-        <li>Both the stylesheet and xml data file will be reloaded each time xsldbg starts a "run".
+        <li>Both the stylesheet and xml data file will be reloaded each time xsldbg starts a &quot;run&quot;.
         It is too complex to complex considering keeping track of which files are out of date</li>
+        <li>Libxslt and consequently xsldbg can't handle NON_ASCII template matches</li>
+        <li>If an environment variable is used to indicate where you've installed
+            xsldbg's documentation the vaiable value MUST end in a path separator<br />
+                ie for win32 this is a '\'<br />
+                &nbsp;&nbsp;&nbsp;for *nix  this is a '/'<br />
+        </li>
+        <li>The SGML/XML catalogs provided are to be included as a &quot;nextCatalog&quot; in your
+                catalog file. Otherwise you'll get warnings about unable to find
+                xsldbg's DTDs</li>
+        <li>The new search DTD allows for each element to have a comment to be extracted from
+             the XSL source libxslt currently does not support this function</li>
+        <li>Under win32 the more command does not process a &quot;.\&lt;FILE_NAME&gt;&quot; properly</li>
+        <li>When a non ASCII character are used stylesheets the printing of search results does not print
+            in the orginal encoding (instead uses UTF-8 ). This will be resolved if/when a replacement for
+            the more command is made</li>
 </ul>
 
 <p>&nbsp; </p>
@@ -89,6 +112,7 @@ for compilation tools that support prelinking. Configure libxslt with the at lea
 <h2><a name="Author">Author</a> </h2>
 <p>The primary author is <a href="mailto:k_isdale@tpg.com.au">Keith Isdale</a> </p>
 <p>The author for the riscos specific code is <a href="mailto:justin.fletcher@ntlworld.com">Justin Fletcher</a> </p>
+<p>The author for the MSVC project files and some of the WIN32 code is <a href="http://www.fh-frankfurt.de/%7Eigor/projects/libxml/"><i>Igor Zlatkovic</i></a> </p>
 <p>&nbsp;</p>
 
 
@@ -105,7 +129,7 @@ for compilation tools that support prelinking. Configure libxslt with the at lea
 
 
 <!--  - - - - - - - - - -  Website - - - - - - - - - -->
-<h2><a name="Web_site">Related web sites</a></h2>
+<h2><a name="Web%20site">Related web sites</a></h2>
 <p>&nbsp;&nbsp;&nbsp; <a href="http://sourceforge.net/projects/xsldbg">http://xsldbg.sourceforge.net/</a> </p>
 <p>&nbsp;&nbsp;&nbsp; <a href="http://sourceforge.net/projects/xsldbg">http://sourceforge.net/projects/xsldbg</a> </p>
 
@@ -114,12 +138,15 @@ for compilation tools that support prelinking. Configure libxslt with the at lea
                      </a>
  </p>
 
+ <p> &nbsp;&nbsp;&nbsp; <a href="http://grillade.griotte.com/xml/">XSL documentation tool by Fabrice Desré</a>
+ </p>
+
 
 <!--  - - - - - - - - - -  Email lists  - - - - - - - - - -->
-<h2><a name="Email_lists">Email lists</a> </h2>
+<h2><a name="Email%20lists">Email lists</a> </h2>
 <p>&nbsp;&nbsp;  <a href="http://lists.sourceforge.net/lists/listinfo/xsldbg-announce">http://lists.sourceforge.net/lists/listinfo/xsldbg-announce</a> </p>
-<p>&nbsp;   <a href="http://lists.sourceforge.net/lists/listinfo/xsldbg-users">http://lists.sourceforge.net/lists/listinfo/xsldbg-users</a> </p>
-<p>&nbsp;   <a href="http://lists.sourceforge.net/lists/listinfo/xsldbg-devel">http://lists.sourceforge.net/lists/listinfo/xsldbg-devel</a> </p>
+<p>&nbsp;&nbsp;  <a href="http://lists.sourceforge.net/lists/listinfo/xsldbg-users">http://lists.sourceforge.net/lists/listinfo/xsldbg-users</a> </p>
+<p>&nbsp;&nbsp;  <a href="http://lists.sourceforge.net/lists/listinfo/xsldbg-devel">http://lists.sourceforge.net/lists/listinfo/xsldbg-devel</a> </p>
 
 <br />
 <br />
@@ -149,7 +176,7 @@ for details of other options to configuring xsldbg
 <br />
 <br />
 <br />
-<font size=5 color="red">Warning!</font>
+<font color="red">Warning!</font>
 <p> It is expected that
 <ol>
 <li>xsldbg has been added to your PATH of system commands. </li>
@@ -238,7 +265,7 @@ To print help just type &quot;help&quot; <br />
 To exit xsldbg just type &quot;exit&quot; <br />
 
 <!--  - - - - - - - - - -  Help system  - - - - - - - - - -->
-<h1><a name="Help_system">Help system</a> </h1>
+<h1><a name="Help%20system">Help system</a> </h1>
 <pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; xsldbg is has built using xml/xslt. To help an overview of commands type
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b><i>help
 </b></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; You can use "help" to get a more detailed information about a command eg
@@ -251,14 +278,13 @@ To exit xsldbg just type &quot;exit&quot; <br />
 
 
 <!--  - - - - - - - - - -  Version Notes - - - - - - - - - -->
-<h1><a name="Version__notes">Version&nbsp; notes</a> </h1>
+<h1><a name="Version%20notes">Version&nbsp; notes</a> </h1>
 <p>&nbsp;See release notes associated with package.&nbsp; </p>
 <h4>These issues are still current</h4>
 <blockquote>1) Several of the File related commands are disabled for the moment.</blockquote>
 <blockquote>2) When you do a cat on the style source the output is white space stripped so it will look different to
 your original source files. This is NOT a "bug"! This is the default behaviour of the stylesheet processor of libxslt. This
 tool is intended to be used by other programs which can handle formatting the output. </blockquote>
-<blockquote>3) xsldbg can be built on windows given correct project files. <i><font color="#008000">See TODO's</i></font></blockquote>
 <br />
 <br />
 <br />
@@ -356,8 +382,9 @@ to generate API documenation in the style of KDE and GNOME respectively.
 <br />
 
 <!--  - - - - - - - - - -  Completed Todo's  - - - - - - - - - -->
-<h1><a name="Completed_TODO">Completed Todo's</a> </h1>
+<h1><a name="Completed%20TODO%27s">Completed Todo's</a> </h1>
 <ul>
+<li>create project files to build as MSVC project. Being looked at by&nbsp; <a href="http://www.fh-frankfurt.de/%7Eigor/projects/libxml/"><i>Igor Zlatkovic</i></a> Done !</li>
 <li>Create a patch for kDbg to support xsldbg. Done! Prototype available on web site</li>
 <li>validate the breakpoint API is complete :Done!</li>
 <li>Update xsldbg when debugger support is built into libxslt. Done! libxslt only contains the code needed to call xsldbg. No further review by libxslt@gnome.org needed but may be done :-)</li>
@@ -372,12 +399,12 @@ to generate API documenation in the style of KDE and GNOME respectively.
 <li>The debugger suffers from crashes "segmentation faults" which is being looked into : Fixed </li>
 <li>The configure/build scripts need to be redone because they expect KDE to be installed : Done! </li>
 <li>Confirmed that only the basic XSL/XSLT commands work. Which means that it may not stop where expected. Done!</li>
-<li>Can only handle a fixed number of breakpoints. Done!</li>
-<li>Does not handle a large number of variables/templates well. Done! </li>
+<li>Can only handle a fixed number of breakpoints. Fixed!</li>
+<li>Does not handle a large number of variables/templates well. Fixed! </li>
 <li>Does not allow libxslt parameters to be passed at xsldbg command prompt. Done! </li>
-<li>redo implemention of src/dbgbreakpoint.c to use hash tables not a fixed array of breakpoints&nbsp; Done!</li>
-<li>add new search functions&nbsp; Done!</li>
-<li>add ability to change variables&nbsp; Done!</li>
+<li>Redo implemention of src/dbgbreakpoint.c to use hash tables not a fixed array of breakpoints&nbsp; Done!</li>
+<li>Add new search functions&nbsp; Done!</li>
+<li>Add ability to change variables&nbsp; Done!</li>
 <li>Only simple simple XSL commands are supported as yet.: Fixed!. But yet to verify that all commands work as expected </li>
 <li>Allow xsldbg's configuration to be loaded/saved . Done!</li>
 </ul>
@@ -390,7 +417,9 @@ to generate API documenation in the style of KDE and GNOME respectively.
 <br />
 <br />
 
-<p><a href="http://sourceforge.net/projects/xsldbg">http://xsldbg.sourceforge.net/</a> &nbsp; :&nbsp; Helping understand stylesheets</p>
 
+<p><a href="http://sourceforge.net/projects/xsldbg">http://xsldbg.sourceforge.net/</a> &nbsp; :&nbsp; Helping understand stylesheets</p>
+<br />
+<p>Last updated 10th Feb 2002</p>
 </body>
 </html>

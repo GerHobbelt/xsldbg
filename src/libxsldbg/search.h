@@ -293,7 +293,7 @@ extern "C" {
  *
  * Add a node to the search dataBase
  *
- * Returns 1 if able to add @node to top node in search dataBase,
+ * Returns 1 if able to add @node to top node in search dataBase ,
  *         0 otherwise
  */
 #else
@@ -1048,6 +1048,37 @@ extern "C" {
 #endif
     xmlNodePtr searchCallStackNode(callPointPtr callStackItem);
 
+
+
+#ifdef USE_GNOME_DOCS
+
+/**
+ * searchCommentNode:
+ * @sourceNode: Is valid
+ * 
+ * Find documentation comment that applies to @sourceNode. If found convert comment 
+ *         into search dataBase format required
+ *
+ * Returns Documentation comment for @node as a new xmlNode in search dataBase format 
+ *            if successful,
+ *         NULL otherwise
+ */
+#else
+#ifdef USE_KDE_DOCS
+
+  /**
+   * Find documentation comment that applies to @p sourceNode. If found convert comment 
+   *         into search dataBase format required
+   *
+   * Returns Documentation comment for @node as a new xmlNode in search dataBase format 
+   *            if successful,
+   *         NULL otherwise
+   *
+   * @param node Is valid
+   */
+#endif
+#endif
+  xmlNodePtr searchCommentNode(xmlNodePtr node);
 
 
 #ifdef __cplusplus

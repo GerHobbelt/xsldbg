@@ -1,3 +1,60 @@
+Keith Isdale 10 Feb 2002 <k_isdale@tpg.com.au
+  Version 2.0.5	
+  Copied Igor's MSVC project files to win32\dsp\
+	As normal user may need to change paths for location of 
+	  includes, libraries and dll's to suit your installation.
+	xsldbg is now mainly a library but at this time can only be 
+	built as a static library. Requires the def files for
+	export definitions to be able to be built as a dll.
+	TODO! Create script to autogenerate def file using sgml files 
+	   created by GNOME documentation tool
+  Test build under MSVC 5.0 - OK. Executable file size will be smaller than previous 
+	releases ( about 100Kb )
+  Found bug in "search" command. Abort if no stylesheet has been loaded
+	before doing search
+	Found "more" command in WIN32 refuses to accept file name of .\searchresult.txt
+	  Added this problem to limitations. WIN32 users may need to use "type" command 
+	    instead
+	TODO! Look at replacing more command.      
+  Update docs/en/website/index.html and docs/en/website/win32_install.html
+  Created config_riscos.h.in to automate riscos configuration creation
+  Created win32/dsp/.cvsignore 
+  Updated docs/en/search.xsl and docs/en/searchhtml.xsl.  
+  Removed dead files : xsldbg.kdevprj  and xsldbg.kdevses
+  Updated win32/dsp/createcatalog.bat
+
+ cvs add config_riscos.h.in, win32/dsp/.cvsignore win32/dsp/xsldbg.dsp 
+	 win32/dsp/xsldbg.dsw win32/dsp/libxsldbg.dsp
+ cvs remove xsldbg.kdevprj  and xsldbg.kdevses
+	
+Keith Isdale 9 Feb 2002 <k_isdale@tpg.com.au
+  Version 2.0.4
+  Tidy the files docs/en/*.dtd
+  Put better comments in docs/en///*.xsl to suit xsltdoc.xsl by Fabrice Desré 
+  Simplified processing of optional aurguments to xsldbg
+	added new API optionsGetOptionID and optionsGetOptionName to options.[ch]
+	updated xsldbg.c and option_cmds.c to make use of these functions
+  Updated usage function in xsldbg.c to describe newly addded options
+  Fixed typo in docs/en/catalog.xml (changed comfig to config)
+  Added reference to XML/XSL documentation tool by Fabrice Desré 
+  Sent email to Waldo about xsldbg's notification system
+  Fixed definition of TIMESTAMP in xsldbgwin32config.h.in to use __DATE__
+  Updated version number of risc os port
+  Compile with pedantic options
+	Fixed several instances of warnings about signedness
+	Remove warning by replacing index with optionsIndex in optionsSavetoFile (options.c) 
+	Replace printCount with printTemplateCount in xslDbgShellPrintTemplateNames (template_cmds.c)
+	Added #include "debugXSL.h" to option_cmds.c
+	cast optionsConfigFileName as a (char*) in optionsLoad (options_*.c)
+  Created search_v1_1.dtd, based on search.dtd. 
+	Added variable element definition to search_v1_1.dtd
+	Added optional comment to all elements in search_v1_1.dtd
+	Updated Makefile.am, docs/en/catalog.xml, docs/en/CATALOG
+	Updated DTD declaration for search dataBase to use new DTD in searchEmpty (search.c)
+	Updated searchAdd to add comment node (search.c)
+
+ cvs add search_v1_1.dtd
+	
 Keith Isdale 7 Feb 2002 <k_isdale@tpg.com.au
  Version 2.0.3
  Added OPTONS_UTF8_INPUT, Made decoding input optional which allows a program
@@ -10,6 +67,8 @@ Keith Isdale 7 Feb 2002 <k_isdale@tpg.com.au
  Added to meaning of gdb mode, limit the number of lines to print when
 	evaluating expressions. Prints a most GDB_LINES_TO_PRINT lines
 	then prints "..." This is to suit KDbg
+ cvs remove dead config files xsldbwing* 
+ cvs add xsldbgwin32config.h and xsldbgwin32config.h.in
 	
 Keith Isdale 6 Feb 2002 <k_isdale@tpg.com.au
   Version 2.0.2

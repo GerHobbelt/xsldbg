@@ -67,6 +67,12 @@ xslDbgShellSearch(xsltTransformContextPtr styleCtxt,
         return result;          /* failed */
     }
 
+    if (!style){
+      xsltGenericError(xsltGenericErrorContext,
+		       "Error: Stylesheet not loaded yet\n");
+      return result;
+    }
+
     result = updateSearchData(styleCtxt, style, NULL, DEBUG_ANY_VAR);
     trimString(arg);
     if (xmlStrLen(arg) == 0) {
