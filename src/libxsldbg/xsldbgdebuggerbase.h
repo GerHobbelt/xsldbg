@@ -46,7 +46,7 @@ class XsldbgDebuggerBase : public QObject {
 
   Q_OBJECT
 
-    friend XsldbgEvent;
+    friend class XsldbgEvent;
 
  public:
   XsldbgDebuggerBase();
