@@ -190,7 +190,7 @@ const char *shortCommandNames[] = {
 };
 
 
-enum {                          /* id's for commands of xslDbgShell */
+enum CommandsEnum {             /* id's for commands of xslDbgShell */
     DEBUG_HELP_CMD = 100,
     DEBUG_BYE_CMD,
     DEBUG_EXIT_CMD,
@@ -274,7 +274,7 @@ const char *cdAlternative[] = {
 };
 
 /* what enum to use for shortcuts */
-enum {
+enum ShortcutsEnum {
     DEBUG_PREV_SIBLING = 200,
     DEBUG_NEXT_SIBLING,
     DEBUG_ANCESTOR_NODE,
@@ -292,7 +292,7 @@ enum {
 #include <string.h>
 #endif
 
-/* Added readline and history support KPI */
+/* Added readline and history support*/
 #ifdef HAVE_READLINE
 #include <readline/readline.h>
 #ifdef HAVE_HISTORY
@@ -310,10 +310,165 @@ enum {
 #include <libxml/xmlerror.h>
 
 
+/* -----------------------------------------
+   Private function declarations for debugXSL.c
+ -------------------------------------------*/
 
-
-/* our private functions */
+/**
+ * xslShellReadline:
+ * @prompt:  the prompt value
+ *
+ * Read a string
+ *
+ * Returns a copy of the text inputed or NULL if EOF in stdin found. 
+ *    The caller is expected to free the returned string.
+ */
 xmlChar *xslDbgShellReadline(xmlChar * prompt);
+
+
+/* xslDbgCd :
+ * Change directories
+ * @styleCtxt : current stylesheet context
+ * @ctxt : current shell context
+ * @name : path to change to 
+ */
+void xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
+              xmlChar * arg, xmlNodePtr source);
+
+
+/**
+ * xslDbgPrintCallStack:
+ * @arg : the number of frame to print, NULL if all items 
+ * 
+ * Print all items found on the callStack
+ */
+void xslDbgPrintCallStack(const xmlChar * arg);
+
+
+/**
+ * xslDbgSleep:
+ * @delay : the number of microseconds to delay exection by
+ *
+ * Delay execution by a specified number of microseconds. On some system 
+ *      this will not be at all accurate.
+ */
+void xslDbgSleep(long delay);
+
+
+/**
+ * xslDbgWalkContinue:
+ *
+ * Delay execution for time as indicated by OPTION_WALK_SPEED
+ * Can only be called from within xslDbgShell!
+ * OPTION_WALK_SPEED != WALKSPEED_STOP
+ *
+ * Returns 1 if walk is to continue,
+ *         0 otherwise
+ */
+int xslDbgWalkContinue(void);
+
+
+/**
+ * lookupName:
+ * @name : is valid
+ * @matchList : a NULL terminated list of names to use as lookup table
+ *
+ * Returns the id of name found in @matchList
+ *        0 otherwise
+*/
+int lookupName(xmlChar * name, xmlChar ** matchList);
+
+
+/**
+ * addBreakPointNode:
+ * @payload : valid xslBreakPointPtr
+ * @data : not used
+ * @name : not used
+ * 
+ * Convert payload into format needed, and add to search dataBase 
+ */
+void
+  addBreakPointNode(void *payload, void *data ATTRIBUTE_UNUSED,
+                    xmlChar * name ATTRIBUTE_UNUSED);
+
+
+/**
+ * addSourceNode:
+ * @payload : valid xsltStylesheetPtr
+ * @data : not used
+ * @name : not used
+ * 
+ * Convert payload into format needed, and add to search dataBase 
+ */
+void
+  addSourceNode(void *payload, void *data ATTRIBUTE_UNUSED,
+                xmlChar * name ATTRIBUTE_UNUSED);
+
+
+/**
+ * addTemplateNode:
+ * @payload : valid xsltTemplatePtr
+ * @data : not used
+ * @name : not used
+ * 
+ * Convert payload into format needed, and add to search dataBase 
+ */
+void
+  addTemplateNode(void *payload, void *data ATTRIBUTE_UNUSED,
+                  xmlChar * name ATTRIBUTE_UNUSED);
+
+/**
+ * addGlobalNode:
+ * @payload : valid xmlNodePtr of global variable
+ * @data : not used
+ * @name : not used
+ * 
+ * Convert payload into format needed, and add to search dataBase 
+ */
+void
+  addGlobalNode(void *payload, void *data ATTRIBUTE_UNUSED,
+                xmlChar * name ATTRIBUTE_UNUSED);
+
+/**
+ * addLocalNode:
+ * @payload : valid xmlNodePtr of local variable
+ * @data : not used
+ * @name : not used
+ * 
+ * Convert payload into format needed, and add to search dataBase 
+ */
+void
+  addLocalNode(void *payload, void *data ATTRIBUTE_UNUSED,
+               xmlChar * name ATTRIBUTE_UNUSED);
+
+
+/**
+ * addIncludeNode:
+ * @payload : valid xmlNodePtr of include instuction
+ * @data : not used
+ * @name : not used
+ * 
+ * Convert payload into format needed, and add to search dataBase 
+ */
+void
+  addIncludeNode(void *payload, void *data ATTRIBUTE_UNUSED,
+                 xmlChar * name ATTRIBUTE_UNUSED);
+
+
+
+/**
+ * addCallStackItems:
+ * 
+ * Convert call stack items into format needed, and add to search dataBase 
+ */
+void
+  addCallStackItems(void);
+
+/* ------------------------------------- 
+    End private functions
+---------------------------------------*/
+
+
 
 /**
  * getTemplate:
@@ -325,40 +480,6 @@ getTemplate(void)
 {
     return rootCopy;
 }
-
-/**
- * trimString:
- * @text : valid string with leading or trailing spaces
- *
- * Remove leading and trailing spaces off @text
- *         stores result back into @text
- */
-int trimString(xmlChar * text);
-
-/*
- * splitString:
- * @textIn : the string to split
- * @maxStrings : max number of strings to put into @out
- * @out: 
- * Spit string by white space and put into @out
- * 
- * Return 1 on success,
- *        0 otherwise
- */
-int splitString(xmlChar * textIn, int maxStrings, xmlChar ** out);
-
-void xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
-              xmlChar * arg, xmlNodePtr source);
-int xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
-                              int templateCount);
-void xslDbgPrintCallStack(const xmlChar * arg);
-void xsldbgSleep(long delay);
-int xslDbgWalkContinue(void);
-int lookupName(xmlChar * name, xmlChar ** matchList);
-
-
-
-
 
 
 /****************************************************************
@@ -491,11 +612,6 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
 }
 
 
-
-
-
-
-
 /**
  * xslDbgPrintCallStack:
  * @arg : the number of frame to print, NULL if all items 
@@ -567,15 +683,16 @@ xslDbgPrintCallStack(const xmlChar * arg)
     }
 }
 
+
 /**
- * xsldbgSleep:
+ * xslDbgSleep:
  * @delay : the number of microseconds to delay exection by
  *
  * Delay execution by a specified number of microseconds. On some system 
  *      this will not be at all accurate.
  */
 void
-xsldbgSleep(long delay)
+xslDbgSleep(long delay)
 {
 #ifdef HAVE_USLEEP
     usleep(delay);
@@ -624,7 +741,7 @@ xslDbgWalkContinue(void)
         case WALKSPEED_8:
         case WALKSPEED_9:
             /* see options.h for defintion of WALKDAY */
-            xsldbgSleep(speed * WALKDELAY);
+            xslDbgSleep(speed * WALKDELAY);
             result++;
             break;
 
@@ -638,9 +755,13 @@ xslDbgWalkContinue(void)
 }
 
 
-
-/* Look up a name in a list  
-   Stop looking when you reach a null entry in matchList
+/**
+ * lookupName:
+ * @name : is valid
+ * @matchList : a NULL terminated list of names to use as lookup table
+ *
+ * Returns the id of name found in @matchList
+ *        0 otherwise
 */
 int
 lookupName(xmlChar * name, xmlChar ** matchList)
@@ -664,8 +785,8 @@ lookupName(xmlChar * name, xmlChar ** matchList)
  *
  * Read a string
  *
- * Returns a pointer to it or NULL on EOF the caller is expected to
- *     free the returned string.
+ * Returns a copy of the text inputed or NULL if EOF in stdin found. 
+ *    The caller is expected to free the returned string.
  */
 xmlChar *
 xslDbgShellReadline(xmlChar * prompt)
@@ -705,12 +826,15 @@ xslDbgShellReadline(xmlChar * prompt)
 #endif
 }
 
+
 /**
  * trimString:
  * @text : valid string with leading or trailing spaces
  *
  * Remove leading and trailing spaces off @text
  *         stores result back into @text
+ * Returns 1 if successful,
+ *         0 otherwise
  */
 int
 trimString(xmlChar * text)
@@ -740,15 +864,16 @@ trimString(xmlChar * text)
     return result;
 }
 
+
 /*
  * splitString:
  * @textIn : the string to split
  * @maxStrings : max number of strings to put into @out
- * @out: 
+ * @out: is valid and at least the size of @maxStrings
  * Spit string by white space and put into @out
  * 
- * Return 1 on success,
- *        0 otherwise
+ * Returns 1 on success,
+ *         0 otherwise
  */
 int
 splitString(xmlChar * textIn, int maxStrings, xmlChar ** out)
@@ -776,9 +901,14 @@ splitString(xmlChar * textIn, int maxStrings, xmlChar ** out)
 }
 
 
-void addBreakPointNode(void *payload, void *data ATTRIBUTE_UNUSED,
-                  xmlChar * name ATTRIBUTE_UNUSED);
-
+/**
+ * addBreakPointNode:
+ * @payload : valid xslBreakPointPtr
+ * @data : not used
+ * @name : not used
+ * 
+ * Convert payload into format needed, and add to search dataBase 
+ */
 void
 addBreakPointNode(void *payload, void *data ATTRIBUTE_UNUSED,
                   xmlChar * name ATTRIBUTE_UNUSED)
@@ -789,9 +919,14 @@ addBreakPointNode(void *payload, void *data ATTRIBUTE_UNUSED,
 }
 
 
-void addSourceNode(void *payload, void *data ATTRIBUTE_UNUSED,
-		   xmlChar * name ATTRIBUTE_UNUSED);
-
+/**
+ * addSourceNode:
+ * @payload : valid xsltStylesheetPtr
+ * @data : not used
+ * @name : not used
+ * 
+ * Convert payload into format needed, and add to search dataBase 
+ */
 void
 addSourceNode(void *payload, void *data ATTRIBUTE_UNUSED,
               xmlChar * name ATTRIBUTE_UNUSED)
@@ -802,10 +937,14 @@ addSourceNode(void *payload, void *data ATTRIBUTE_UNUSED,
 }
 
 
-void
-addTemplateNode(void *payload, void *data ATTRIBUTE_UNUSED,
-                xmlChar * name ATTRIBUTE_UNUSED);
-
+/**
+ * addTemplateNode:
+ * @payload : valid xsltTemplatePtr
+ * @data : not used
+ * @name : not used
+ * 
+ * Convert payload into format needed, and add to search dataBase 
+ */
 void
 addTemplateNode(void *payload, void *data ATTRIBUTE_UNUSED,
                 xmlChar * name ATTRIBUTE_UNUSED)
@@ -816,10 +955,14 @@ addTemplateNode(void *payload, void *data ATTRIBUTE_UNUSED,
 }
 
 
-void
-addGlobalNode(void *payload, void *data ATTRIBUTE_UNUSED,
-              xmlChar * name ATTRIBUTE_UNUSED);
-
+/**
+ * addGlobalNode:
+ * @payload : valid xmlNodePtr of global variable
+ * @data : not used
+ * @name : not used
+ * 
+ * Convert payload into format needed, and add to search dataBase 
+ */
 void
 addGlobalNode(void *payload, void *data ATTRIBUTE_UNUSED,
               xmlChar * name ATTRIBUTE_UNUSED)
@@ -829,10 +972,15 @@ addGlobalNode(void *payload, void *data ATTRIBUTE_UNUSED,
     xslSearchAdd(node);
 }
 
-void
-addLocalNode(void *payload, void *data ATTRIBUTE_UNUSED,
-             xmlChar * name ATTRIBUTE_UNUSED);
 
+/**
+ * addLocalNode:
+ * @payload : valid xmlNodePtr of local variable
+ * @data : not used
+ * @name : not used
+ * 
+ * Convert payload into format needed, and add to search dataBase 
+ */
 void
 addLocalNode(void *payload, void *data ATTRIBUTE_UNUSED,
              xmlChar * name ATTRIBUTE_UNUSED)
@@ -843,9 +991,14 @@ addLocalNode(void *payload, void *data ATTRIBUTE_UNUSED,
 }
 
 
-void addIncludeNode(void *payload, void *data ATTRIBUTE_UNUSED,
-               xmlChar * name ATTRIBUTE_UNUSED);
-
+/**
+ * addIncludeNode:
+ * @payload : valid xmlNodePtr of include instuction
+ * @data : not used
+ * @name : not used
+ * 
+ * Convert payload into format needed, and add to search dataBase 
+ */
 void
 addIncludeNode(void *payload, void *data ATTRIBUTE_UNUSED,
                xmlChar * name ATTRIBUTE_UNUSED)
@@ -856,8 +1009,11 @@ addIncludeNode(void *payload, void *data ATTRIBUTE_UNUSED,
 }
 
 
-void addCallStackItems(void);
-
+/**
+ * addCallStackItems:
+ * 
+ * Convert call stack items into format needed, and add to search dataBase 
+ */
 void
 addCallStackItems(void)
 {
@@ -876,10 +1032,20 @@ addCallStackItems(void)
 }
 
 
-
+/**
+ * updateSearchData:
+ * @styleCtxt : not used
+ * @style : is valid
+ * @data : not used but MUST be NULL for the moment
+ * @variableTypes : what types of variable to look for @see VariableTypeEnum
+ *
+ * Returns 1 on success,
+ *         0 otherwise
+ */
 int
-updateSearchData(xsltTransformContextPtr styleCtxt,
-                 xsltStylesheetPtr style, void *data, int variableTypes)
+updateSearchData(xsltTransformContextPtr styleCtxt ATTRIBUTE_UNUSED,
+                 xsltStylesheetPtr style,
+                 void *data, enum VariableTypeEnum variableTypes)
 {
     int result = 0;
 
@@ -912,6 +1078,7 @@ updateSearchData(xsltTransformContextPtr styleCtxt,
     result++;
     return result;
 }
+
 
 /*
  * A break point has been found so pass control to user

@@ -36,8 +36,8 @@
  *          one or more spaces.
  *
  * Add a parameter to be sent to libxslt later on
- * Return 1 on success,
- *        0 otherwise
+ * Returns 1 on success,
+ *         0 otherwise
 */
 int
 xslDbgShellAddParam(xmlChar * arg)
@@ -65,10 +65,10 @@ xslDbgShellAddParam(xmlChar * arg)
 
 /**
  * xslDbgShellDelParam:
- * @arg : single white space trimmed parameter name to look for
+ * @arg : single white space trimmed parameter number to look for
  * 
- * Return 1 if able to delete parameter @name,
- *        0 otherwise
+ * Returns 1 if able to delete parameter
+ *         0 otherwise
  */
 int
 xslDbgShellDelParam(xmlChar * arg)
@@ -109,8 +109,8 @@ xslDbgShellDelParam(xmlChar * arg)
  * @arg : not used
  *
  * Print list of current paramters
- * Return 1 on success,
- *        0 otherwise
+ * Returns 1 on success,
+ *         0 otherwise
  */
 int
 xslDbgShellShowParam(xmlChar * arg ATTRIBUTE_UNUSED)

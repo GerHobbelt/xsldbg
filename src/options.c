@@ -88,7 +88,7 @@ optionsInit(void)
    For definition of USE_DOCS_MACRO see options.h */
 
 #ifdef USE_DOCS_MACRO
-    docsPath = (xmlChar*)DOCS_PATH;
+    docsPath = (xmlChar *) DOCS_PATH;
 #else
 #ifndef __riscos
     docsPath = getenv("XSLDBG_DOCS_DIR");
@@ -134,20 +134,20 @@ optionsFree(void)
     xslArrayListFree(parameterList);
 }
 
+
 /**
  * enableOption :
- * @type : option type to change
+ * @type : valid integer option
  * @value : 1 to enable, 0 otherwise
  *
  * Set the state of a xsldbg option to @value
  * Returns 1 on success,
  *         0 otherwise
  */
-
 int
-enableOption(enum Option_type option_type, int value)
+enableOption(enum OptionTypeEnum optionType, int value)
 {
-    int type = option_type, result = 1;
+    int type = optionType, result = 1;
 
     switch (type) {
         case OPTIONS_XINCLUDE:
@@ -215,16 +215,17 @@ enableOption(enum Option_type option_type, int value)
     return result;
 }
 
+
 /**
- * isEnabled :
- * @type : option type to query
+ * isOptionEnabled :
+ * @type : valid integer option to query
  *
- * retrieve the state of a xsldbg option
+ * Returns the state of a xsldbg option. ie 1 for enabled , 0 for disabled
  */
 int
-isOptionEnabled(enum Option_type option_type)
+isOptionEnabled(enum OptionTypeEnum optionType)
 {
-    int type = option_type, result = 0;
+    int type = optionType, result = 0;
 
     switch (type) {
         case OPTIONS_XINCLUDE:
@@ -294,7 +295,7 @@ isOptionEnabled(enum Option_type option_type)
 
 /**
  * setIntOption :
- * @type : option type to change
+ * @type : valid integer option
  * @value : valid to adopt
  *
  * Set the value of a xsldbg option to @value
@@ -302,42 +303,43 @@ isOptionEnabled(enum Option_type option_type)
  *         0 otherwise
  */
 int
-setIntOption(enum Option_type option_type, int value)
+setIntOption(enum OptionTypeEnum optionType, int value)
 {
-    return enableOption(option_type, value);
+    return enableOption(optionType, value);
 }
 
 
 /**
  * getIntOption :
- * @type : option type to query
+ * @type : valid integer option
  *
- * retrieve the state of a xsldbg option
+ * Returns the state of a xsldbg option
  */
 int
-getIntOption(enum Option_type option_type)
+getIntOption(enum OptionTypeEnum optionType)
 {
-    return isOptionEnabled(option_type);
+    return isOptionEnabled(optionType);
 }
+
 
 /**
  * setStringOption:
- * @type : option type to change
+ * @type : valid string option
  * @ value : value to copy
  *
  * Set value for a string xsldbg option to @value. If value is NULL
- * then the memory for option @type is freed
+ * Then the memory for option @type is freed
  * Returns 1 on success,
  *         0 otherwise
  */
 int
-setStringOption(enum Option_type option_type, const xmlChar * value)
+setStringOption(enum OptionTypeEnum optionType, const xmlChar * value)
 {
     int result = 0;
 
-    if ((option_type >= OPTIONS_OUTPUT_FILE_NAME) &&
-        (option_type <= OPTIONS_DATA_FILE_NAME)) {
-        int optionId = option_type - OPTIONS_OUTPUT_FILE_NAME;
+    if ((optionType >= OPTIONS_OUTPUT_FILE_NAME) &&
+        (optionType <= OPTIONS_DATA_FILE_NAME)) {
+        int optionId = optionType - OPTIONS_OUTPUT_FILE_NAME;
 
         if (stringOptions[optionId])
             xmlFree(stringOptions[optionId]);
@@ -350,41 +352,42 @@ setStringOption(enum Option_type option_type, const xmlChar * value)
     } else
         xsltGenericError(xsltGenericErrorContext,
                          "Not a valid string xsldbg option %d\n",
-                         option_type);
+                         optionType);
     return result;
 }
 
+
 /**
  * getStringOption:
- * @type : option type to change
+ * @type : valid string option 
  *
  * Get value for a string xsldbg option of @type
  * Returns current option value which may be NULL
  */
 const xmlChar *
-getStringOption(enum Option_type option_type)
+getStringOption(enum OptionTypeEnum optionType)
 {
     xmlChar *result = NULL;
 
-    if ((option_type >= OPTIONS_OUTPUT_FILE_NAME) &&
-        (option_type <= OPTIONS_DATA_FILE_NAME)) {
-        result = stringOptions[option_type - OPTIONS_OUTPUT_FILE_NAME];
+    if ((optionType >= OPTIONS_OUTPUT_FILE_NAME) &&
+        (optionType <= OPTIONS_DATA_FILE_NAME)) {
+        result = stringOptions[optionType - OPTIONS_OUTPUT_FILE_NAME];
     } else
         xsltGenericError(xsltGenericErrorContext,
                          "Not a valid string xsldbg option %d\n",
-                         option_type);
+                         optionType);
     return result;
 }
 
 
 /**
- * newParamItem:
- * @name : valid 
- * @value : value
+ * paramItemNew:
+ * @name : is valid 
+ * @value : is valid 
  *
- * Create a new Parameter Item
+ * Create a new libxslt parameter item
  * Returns non-null if sucessful
- *         0 otherwise
+ *         NULL otherwise
  */
 ParameterItemPtr
 paramItemNew(const xmlChar * name, const xmlChar * value)
@@ -402,12 +405,11 @@ paramItemNew(const xmlChar * name, const xmlChar * value)
 }
 
 
-
 /**
- * freeParamItem:
- * @item : valid
+ * paramItemFree:
+ * @item : is valid
  *
- * free memory used by parameter item
+ * Free memory used by libxslt parameter item @item
  */
 void
 paramItemFree(ParameterItemPtr item)
@@ -420,6 +422,7 @@ paramItemFree(ParameterItemPtr item)
     }
 }
 
+
 /**
  * getParamItemList:
  *
@@ -431,6 +434,7 @@ getParamItemList(void)
 {
     return parameterList;
 }
+
 
 /**
  * printParam:
@@ -454,6 +458,7 @@ printParam(int paramId)
     }
     return result;
 }
+
 
 /**
  * printParamList:

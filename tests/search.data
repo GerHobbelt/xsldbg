@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <search>
-<breakpoint url="index.xsl" line="10" template="/" enabled="1" type="1" id="1"/>
-<breakpoint url="index.xsl" line="12" template="/" enabled="1" type="1" id="1"/>
-<breakpoint url="index.xsl" line="13" template="/" enabled="1" type="1" id="1"/>
+<breakpoint url="index.xsl" line="10" template="/" enabled="1" type="300" id="1"/>
+<breakpoint url="index.xsl" line="12" template="/" enabled="1" type="300" id="1"/>
+<breakpoint url="index.xsl" line="13" template="/" enabled="1" type="300" id="1"/>
 </search>

@@ -30,21 +30,69 @@ static xmlChar *lastQuery;
 #define BUFFER_SIZE 500
 static char buff[BUFFER_SIZE];
 
+/* -----------------------------------------
+   Private function declarations for dbgsearch.c
+ -------------------------------------------*/
 
+/**
+ * findNodeByLineNoHelper:
+ * @payload : valid xsltStylesheetPtr
+ * @data : valid searchInfoPtr
+ * @name : not used
+ *
+ * We are walking through stylesheets looking for a match 
+ */
+void
+  findNodeByLineNoHelper(void *payload, void *data,
+                         xmlChar * name ATTRIBUTE_UNUSED);
+
+/**
+ * globalVarHelper:
+ * @payload : valid xsltStylesheetPtr
+ * @data : is valid
+ * @name : not used
+ *
+ * Helper to find the global variables. We are given control via
+ *   walkStylesheets globalWalkFunc will always be set to the
+ *    walkFunc to call
+ */
+void
+  globalVarHelper(void **payload, void *data ATTRIBUTE_UNUSED,
+                  xmlChar * name ATTRIBUTE_UNUSED);
+
+/**
+ * localVarHelper:
+ * @payload : valid xsltTemplatePtr
+ * @data : is valid
+ * @name : not used
+ *
+ * Helper to find the local variables. We are given control via walkTemplates
+ *    globalWalkFunc will always be set to the walkFunc to call
+ *   localWalkFunc will always be set to the walkFunc to call
+ */
+void
+  localVarHelper(void **payload, void *data ATTRIBUTE_UNUSED,
+                 xmlChar * name ATTRIBUTE_UNUSED);
+
+
+/* ------------------------------------- 
+    End private functions
+---------------------------------------*
 
 /**
  * searchNewInfo:
  * @type: what type of search is required
  * 
- * Returns valid search info ptr is succssfull
- *        NULL otherwise
+ * Returns valid search info pointer if succssfull
+ *         NULL otherwise
  */
 searchInfoPtr
 searchNewInfo(enum SearchEnum type)
 {
     searchInfoPtr result = NULL;
+    int searchType = type;
 
-    switch (type) {
+    switch (searchType) {
         case SEARCH_BREAKPOINT:
             result = (searchInfoPtr) xmlMalloc(sizeof(searchInfo));
             if (result) {
@@ -224,6 +272,7 @@ xslSearchEmpty(void)
     return (searchDataBase != NULL) && (searchRootNode != NULL);
 }
 
+
 /**
  * searchDoc:
  *
@@ -257,7 +306,7 @@ searchRootNode(void)
  * @fileName : valid fileName to save search dataBase to 
  *
  * Returns 1 on success,
- *        0 otherwise
+ *         0 otherwise
  */
 int
 xslSearchSave(const xmlChar * fileName)
@@ -265,12 +314,13 @@ xslSearchSave(const xmlChar * fileName)
     return xmlSaveFormatFile((char *) fileName, searchDataBase, 1);
 }
 
+
 /**
  * xslSearchAdd:
  * @node : a valid node to be added to the topmost node in search dataBase
  *
  * Returns 1 on success,
- *        0 otherwise
+ *         0 otherwise
  */
 int
 xslSearchAdd(xmlNodePtr node)
@@ -284,6 +334,7 @@ xslSearchAdd(xmlNodePtr node)
     return result;
 }
 
+
 /**
  *  scanForBreakPoint : 
  * Test if breakpoint matches given criteria
@@ -292,6 +343,9 @@ xslSearchAdd(xmlNodePtr node)
  *          type SEARCH_BREAKPOINT 
  * @name: not used
  *
+ * sets data->found to 1 if criteria is met, and data->data changes
+ *      to values of item found,
+ * Otherwise no changes are made
 */
 void
 scanForBreakPoint(void *payload, void *data,
@@ -364,12 +418,15 @@ scanForNode(void *payload, void *data, xmlChar * name ATTRIBUTE_UNUSED)
 
 }
 
-void findNodeByLineNoHelper(void *payload, void *data,
-                            xmlChar * name ATTRIBUTE_UNUSED);
 
-/* we are walking through stylesheets looking for a match 
- our payload is a xmlStylesheetPtr
-*/
+/**
+ * findNodeByLineNoHelper:
+ * @payload : valid xsltStylesheetPtr
+ * @data : valid searchInfoPtr
+ * @name : not used
+ *
+ * We are walking through stylesheets looking for a match 
+ */
 void
 findNodeByLineNoHelper(void *payload, void *data,
                        xmlChar * name ATTRIBUTE_UNUSED)
@@ -388,6 +445,7 @@ findNodeByLineNoHelper(void *payload, void *data,
         walkIncludes((xmlHashScanner) scanForNode, searchInf, style);
 }
 
+
 /**
  * xslFindBreakPointByLineNo:
  * @ctxt : valid ctxt to look into
@@ -396,8 +454,8 @@ findNodeByLineNoHelper(void *payload, void *data,
  * @lineNumber : number >= 0 and is available in url specified
  *
  * Find the closest line number in file specified that can be a point 
- * Returns  line number number if successfull,
- *	    0 otherwise
+ * Returns  node at line number number specified if successfull,
+ *	    NULL otherwise
 */
 xmlNodePtr
 xslFindNodeByLineNo(xsltTransformContextPtr ctxt,
@@ -423,7 +481,7 @@ xslFindNodeByLineNo(xsltTransformContextPtr ctxt,
     }
 
     searchData = (nodeSearchDataPtr) searchInf->data;
-    searchData->url = (xmlChar *) xmlMemStrdup((char*)url);
+    searchData->url = (xmlChar *) xmlMemStrdup((char *) url);
     searchData->lineNo = lineNumber;
     walkStylesheets((xmlHashScanner) findNodeByLineNoHelper, searchInf,
                     ctxt->style);
@@ -449,8 +507,8 @@ xslFindNodeByLineNo(xsltTransformContextPtr ctxt,
  * @style : valid stylesheet collection context to look into
  * @name : template name to look for
  *
- * Returns : template node found if successfull
- *           NULL otherwise 
+ * Returns template node found if successfull
+ *         NULL otherwise 
  */
 xmlNodePtr
 xslFindTemplateNode(xsltStylesheetPtr style, const xmlChar * name)
@@ -505,8 +563,9 @@ xslFindTemplateNode(xsltStylesheetPtr style, const xmlChar * name)
  *
  * Find the breakpoint at template with "match" or "name" equal 
  *    to templateName
- * Returns the break point number given the template name is found
- *          0 otherwise
+ * Returns the break point that has a template name
+ *           matching @templateName is found
+ *          NULL otherwise
 */
 xslBreakPointPtr
 findBreakPointByName(const xmlChar * templateName)
@@ -543,9 +602,8 @@ findBreakPointByName(const xmlChar * templateName)
  * xslFindBreakPointById:
  * @id : The break point id to look for
  *
- * Find the break point number for given break point id
- * Returns break point number found for given the break point id
- *          0 otherwise 
+ * Returns the break point with given the break point id if found,
+ *         NULL otherwise 
  */
 xslBreakPointPtr
 findBreakPointById(int id)
@@ -581,7 +639,7 @@ findBreakPointById(int id)
  * @query: xpath query to run, see dbgsearch.c for more details
  * 
  * Returns the nodes that match the given query on success,
- *        NULL otherwise 
+ *         NULL otherwise 
  */
 xmlXPathObjectPtr
 xslFindNodesByQuery(const xmlChar * query ATTRIBUTE_UNUSED)
@@ -590,6 +648,7 @@ xslFindNodesByQuery(const xmlChar * query ATTRIBUTE_UNUSED)
 
     return list;
 }
+
 
 /**
  * xslSearchQuery:
@@ -658,7 +717,6 @@ walkBreakPoints(xmlHashScanner walkFunc, void *data)
 }
 
 
-
 /**
  * walkTemplates:
  * @walkFunc: function to callback for each template found
@@ -722,12 +780,16 @@ walkStylesheets(xmlHashScanner walkFunc, void *data,
 
 xmlHashScanner globalWalkFunc = NULL;
 
-void globalVarHelper(void **payload, void *data ATTRIBUTE_UNUSED,
-                     xmlChar * name ATTRIBUTE_UNUSED);
-
-/* Our payload is a xsltStylesheetPtr given to us via walkStylesheets. 
-   globalWalkFunc will always be set to the walkFunc to call
-*/
+/**
+ * globalVarHelper:
+ * @payload : valid xsltStylesheetPtr
+ * @data : is valid
+ * @name : not used
+ *
+ * Helper to find the global variables. We are given control via
+ *   walkStylesheets globalWalkFunc will always be set to the
+ *    walkFunc to call
+ */
 void
 globalVarHelper(void **payload, void *data ATTRIBUTE_UNUSED,
                 xmlChar * name ATTRIBUTE_UNUSED)
@@ -770,12 +832,17 @@ walkGlobals(xmlHashScanner walkFunc, void *data ATTRIBUTE_UNUSED,
 
 
 xmlHashScanner localWalkFunc = NULL;
-void localVarHelper(void **payload, void *data ATTRIBUTE_UNUSED,
-                    xmlChar * name ATTRIBUTE_UNUSED);
 
-/* Our payload is a xsltTemplatePtr given to us via walkTemplates. 
-   localWalkFunc will always be set to the walkFunc to call
-*/
+/**
+ * localVarHelper:
+ * @payload : valid xsltTemplatePtr
+ * @data : is valid
+ * @name : not used
+ *
+ * Helper to find the local variables. We are given control via walkTemplates
+ *    globalWalkFunc will always be set to the walkFunc to call
+ *   localWalkFunc will always be set to the walkFunc to call
+ */
 void
 localVarHelper(void **payload, void *data ATTRIBUTE_UNUSED,
                xmlChar * name ATTRIBUTE_UNUSED)
@@ -819,6 +886,7 @@ walkLocals(xmlHashScanner walkFunc, void *data, xsltStylesheetPtr style)
 
 }
 
+
 /**
  * walkIncludes:
  * @walkFunc: function to callback for each included stylesheet
@@ -831,7 +899,7 @@ walkLocals(xmlHashScanner walkFunc, void *data, xsltStylesheetPtr style)
 void
 walkIncludes(xmlHashScanner walkFunc, void *data, xsltStylesheetPtr style)
 {
-  xmlNodePtr node = NULL;
+    xmlNodePtr node = NULL;
     xsltDocumentPtr document;   /* included xslt documents */
 
     if (!walkFunc || !style)
@@ -936,7 +1004,7 @@ walkChildNodes(xmlHashScanner walkFunc, void *data, xmlNodePtr node)
  * @breakPoint : valid breakPoint 
  *
  * Returns breakpoint as a new xmlNode in search dataBase format if successful,
- *        NULL otherwise
+ *         NULL otherwise
  */
 xmlNodePtr
 searchBreakPointNode(xslBreakPointPtr breakPoint)
@@ -994,7 +1062,7 @@ searchBreakPointNode(xslBreakPointPtr breakPoint)
  * @templNode : valid template node
  * 
  * Returns @templNode as a new xmlNode in search dataBase format if successful,
- *        NULL otherwise
+ *         NULL otherwise
  */
 xmlNodePtr
 searchTemplateNode(xmlNodePtr templNode)
@@ -1047,10 +1115,10 @@ searchTemplateNode(xmlNodePtr templNode)
 
 /** 
  * searchGlobalNode:
- * @variable: valid  xmlNodePtr node
+ * @variable: valid xmlNodePtr node
  * 
  * Returns @style as a new xmlNode in search dataBase format if successful,
- *        NULL otherwise
+ *         NULL otherwise
  */
 xmlNodePtr
 searchGlobalNode(xmlNodePtr variable)
@@ -1104,7 +1172,7 @@ searchGlobalNode(xmlNodePtr variable)
  * @variable: valid  xmlNodePtr node
  * 
  * Returns @style as a new xmlNode in search dataBase format if successful,
- *        NULL otherwise
+ *         NULL otherwise
  */
 xmlNodePtr
 searchLocalNode(xmlNodePtr variable)
@@ -1156,7 +1224,7 @@ searchLocalNode(xmlNodePtr variable)
  * @style : valid stylesheet item
  * 
  * Returns @style as a new xmlNode in search dataBase format if successful,
- *        NULL otherwise
+ *         NULL otherwise
  */
 xmlNodePtr
 searchSourceNode(xsltStylesheetPtr style)
@@ -1196,7 +1264,7 @@ searchSourceNode(xsltStylesheetPtr style)
  * @include : valid include element
  * 
  * Returns @include as a new xmlNode in search dataBase format if successful,
- *        NULL otherwise
+ *         NULL otherwise
  */
 xmlNodePtr
 searchIncludeNode(xmlNodePtr include)
@@ -1239,12 +1307,13 @@ searchIncludeNode(xmlNodePtr include)
     return node;
 }
 
+
 /**
  * searchCallStackNode:
  * @callStackItem : valid callStack item
  * 
  * Returns @callStackItem as a new xmlNode in search dataBase format if successful,
- *        NULL otherwise
+ *         NULL otherwise
  */
 xmlNodePtr
 searchCallStackNode(xslCallPointPtr callStackItem)

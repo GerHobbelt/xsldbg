@@ -119,13 +119,60 @@ xmlParserInputPtr xmlNoNetExternalEntityLoader(const char *URL,
                                                const char *ID,
                                                xmlParserCtxtPtr ctxt);
 
+/* -----------------------------------------
+   Private function declarations for xsldbg.c
+ -------------------------------------------*/
+
+/**
+ * xsldbgInit:
+ * 
+ * Returns 1 if able to allocate memory needed by xsldbg
+ *         0 otherwise
+ */
 int xsldbgInit(void);
+
+
+/**
+ * xsldbgFree:
+ *
+ * Free memory used by xsldbg
+ */
 void xsldbgFree(void);
 
-/* our private functions*/
+
+/**
+ * printTemplates:
+ * @style : valid as parsed my xsldbg
+ * @doc :    "    "   "     "    "
+ *  
+ * print out list of template names
+ */
 void printTemplates(xsltStylesheetPtr style, xmlDocPtr doc);
-void printTemplates(xsltStylesheetPtr style, xmlDocPtr doc);
-void catchSigInt(int value);
+
+
+/**
+ * catchSigInt:
+ * @value : not used
+ *
+ * Recover from a signal(SIGINT), exit if needed
+ */
+void catchSigInt(int value ATTRIBUTE_UNUSED);
+
+
+/**
+ * catchSigTerm:
+ * @value : not used
+ *
+ * Clean up and exit
+ */
+void
+  catchSigTerm(int value ATTRIBUTE_UNUSED);
+
+
+/* ------------------------------------- 
+    End private functions
+---------------------------------------*/
+
 
 /*
  * Internal timing routines to remove the necessity to have unix-specific
@@ -647,7 +694,7 @@ main(int argc, char **argv)
     if (!isOptionEnabled(OPTIONS_SHELL)) {      /* excecute stylesheet (ie no debugging) */
         xslDebugStatus = DEBUG_NONE;
     } else {
-        xslDebugStatus = DEBUG_CONT;
+        xslDebugStatus = DEBUG_STOP;
         xsltGenericError(xsltGenericErrorContext, "XSLDBG %s\n", VERSION);
     }
 
@@ -710,6 +757,7 @@ main(int argc, char **argv)
                                      "\nDebugger never received control\n");
                     /*goto a xsldbg command prompt */
                     showPrompt = 1;
+                    xslDebugStatus = DEBUG_STOP;
                 } else {
                     xsltGenericError(xsltGenericErrorContext,
                                      "\nFinished stylesheet\n\n");
@@ -979,8 +1027,13 @@ printTemplates(xsltStylesheetPtr style, xmlDocPtr doc)
 }
 
 
-void catchSigInt(int value ATTRIBUTE_UNUSED);
 
+/**
+ * catchSigInt:
+ * @value : not used
+ *
+ * Recover from a signal(SIGINT), exit if needed
+ */
 void
 catchSigInt(int value ATTRIBUTE_UNUSED)
 {
@@ -996,17 +1049,31 @@ catchSigInt(int value ATTRIBUTE_UNUSED)
     }
 }
 
-void catchSigTerm(int value ATTRIBUTE_UNUSED);
 
+/**
+ * catchSigTerm:
+ * @value : not used
+ *
+ * Clean up and exit
+ */
 void
 catchSigTerm(int value ATTRIBUTE_UNUSED)
 {
     xsldbgFree();
+    exit(1);
 }
+
+
 
 typedef void (*sighandler_t) (int);
 sighandler_t oldHandler;
 
+/**
+ * xsldbgInit:
+ * 
+ * Returns 1 if able to allocate memory needed by xsldbg
+ *         0 otherwise
+ */
 int
 xsldbgInit()
 {
@@ -1032,6 +1099,11 @@ xsldbgInit()
     return result;
 }
 
+/**
+ * xsldbgFree:
+ *
+ * Free memory used by xsldbg
+ */
 void
 xsldbgFree()
 {

@@ -1,7 +1,44 @@
+Keith Isdale 6 Dec 2001 <k_isdale@tpg.com.au>
+Fixed inconsitancies in src/*.h	
+    o ensure that enums are declared that same way, made use of 
+	enums rather that using int's and have a unique range of values
+	(where possible). 
+    o ensure that enums values are accesed via a temporary int variable. This
+ 	is to ensure there are no compiler problems. I've previous experienced
+	problems where you can't do a switch on a enum value.
+    o	Added enum types of
+	  BreakPointTypeEnum, FileTypeEnum, WalkSpeedEnum, 
+	  OptionTypeEnum, TraceModeEnum, CommandsEnum
+    o ensure that all references to "break point[s]" use the same spelling
+    o ensure that each include file has the preamble needed for when
+	a c++ compiler is used
+    o fix spelling errors of the word sucessful 	
+    o fix spelling of "Return :" to "Returns :"
+    o ensure that the return values are aligned vertically
+    o added #define for	URISEPARATORCHAR to xsldbg.h which is to be 
+	used by files.h when guessing what the stylesheet name is 
+    o fixed guessStylesheetHelper* to use the URISEPARATORCHAR if 
+	needed 
+    o fixed the spelling of guessStyleSheetHelper* to 
+	 guessStylesheetHelper*
+   o fixed spelling of top_doc, temp_doc and top_style in files to 
+	be consistant with rest of project. They now are 
+		topDocument, tempDocument,topStylesheet
+   o fixed spelling of getTemporarDoc to getTemporaryDoc
+   o fixed logic of xsldbg.c so that when debugging stylesheets
+	we start up in a xslDebugStatus of DEBUG_STOP
+   o fixed spelling of xsldbgSleep to xslDbgSleep
+   o ensure all functions have a fully described declaration
+	near the start of most *.c files is the declations of
+	its private functions
+		
+	
+	
 Keith Isdale 5 Dec 2001 <k_isdale@tpg.com.au>
 Updated docs/en/website/index.html
 Fixed configure.in to generated GNOME docs if asked
-Updated docs/en/GNOME/Makefile.am to generate gtkdoc style docs 	
+Updated docs/en/GNOME/Makefile.am to try generate gtkdoc style docs but it is 
+	still broken
 	
 	
 Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>

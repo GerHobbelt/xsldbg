@@ -20,40 +20,47 @@
 #ifndef ARRAYLIST_H
 #define ARRAYLIST_H
 
-typedef void (*freeItemFunc) (void *item);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-typedef struct _ArrayList ArrayList;
-typedef ArrayList *ArrayListPtr;
-struct _ArrayList {
-    int size, count;
-    void **data;
-    freeItemFunc deleteFunction;
-};
+    typedef void (*freeItemFunc) (void *item);
 
+    typedef struct _ArrayList ArrayList;
+    typedef ArrayList *ArrayListPtr;
+    struct _ArrayList {
+        int size, count;
+        void **data;
+        freeItemFunc deleteFunction;
+    };
+
+/* what size of the list do we stop automatic doubling of capacity
+    if array list size growth is needed */
 #define DOUBLE_SIZE_MAX_ITEM 10
 
 
 /**
  * xslArrayListNew:
  * @intialSize : initial size of list
- * @autoDelete : free the memory of content upon deletion
+ * @deleteFunction : function to call to free items in the list
  *
  * Create a new list with a size of @initialSize
  * Returns non-null on success,
- *         0 otherwise
+ *         NULL otherwise
  */
-ArrayListPtr xslArrayListNew(int initialSize, freeItemFunc deleteFunction);
+    ArrayListPtr xslArrayListNew(int initialSize,
+                                 freeItemFunc deleteFunction);
 
 
 /**
- * arrListFree:
+ * xslArrayListFree:
  * @list : a valid list
  *
  * Free memory assocated with array list, if the array list 
- *   has is autoDelete enabled then content with be freed with 
- *   xmlFree
+ *   has a valid deleteFunction then content with be freed with 
+ *    useing that deleteFunction
  */
-void xslArrayListFree(ArrayListPtr list);
+    void xslArrayListFree(ArrayListPtr list);
 
 
 /**
@@ -64,7 +71,7 @@ void xslArrayListFree(ArrayListPtr list);
  * Returns 1 on success,
  *         0 otherwise
  */
-int xslArrayListEmpty(ArrayListPtr list);
+    int xslArrayListEmpty(ArrayListPtr list);
 
 
 /**
@@ -73,7 +80,7 @@ int xslArrayListEmpty(ArrayListPtr list);
  *
  * Returns the maximum number elements this list can contain
  */
-int xslArrayListSize(ArrayListPtr list);
+    int xslArrayListSize(ArrayListPtr list);
 
 
 /**
@@ -82,7 +89,7 @@ int xslArrayListSize(ArrayListPtr list);
  *
  * Returns the count of number items in list
  */
-int xslArrayListCount(ArrayListPtr list);
+    int xslArrayListCount(ArrayListPtr list);
 
 
 /**
@@ -90,9 +97,10 @@ int xslArrayListCount(ArrayListPtr list);
  * @list : valid list
  * @item : valid item
  *
- * Add item to end of list
+ * Returns 1 if able to add @item to end of @list
+ *         0 otherwise
  */
-int xslArrayListAdd(ArrayListPtr list, void *item);
+    int xslArrayListAdd(ArrayListPtr list, void *item);
 
 
 /**
@@ -100,9 +108,10 @@ int xslArrayListAdd(ArrayListPtr list, void *item);
  * @list : valid list
  * @position : 0 =< position < xslArrayListCount(list)
  *
- * Add item to end of list
+ * Returns 1 if able to delete element in @list at position @position
+ *         0 otherwise 
  */
-int xslArrayListDelete(ArrayListPtr list, int position);
+    int xslArrayListDelete(ArrayListPtr list, int position);
 
 
 /**
@@ -110,9 +119,13 @@ int xslArrayListDelete(ArrayListPtr list, int position);
  * @list : valid list
  * @position : 0 =< position < xslArrayListCount(list)
  *
- * Add non-null if item is valid
- *     NULL otherwise
+ * Returns non-null if able to retrieve element in @list at position
+ *          @position
+ *         NULL otherwise
  */
-void *xslArrayListGet(ArrayListPtr list, int position);
+    void *xslArrayListGet(ArrayListPtr list, int position);
 
+#ifdef __cplusplus
+}
+#endif
 #endif

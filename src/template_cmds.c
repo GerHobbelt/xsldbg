@@ -26,23 +26,58 @@
 
 static int printCounter;        /* Dangerous name think of a better one */
 
-/* This is a semi private function defined in debugXSL.c */
+/* -----------------------------------------
+   Private function declarations for files.c
+ -------------------------------------------*/
 
 /**
- * getTemplate:
- * 
- * Returns the last template node found, if any
+ * xslDbgShellPrintStylesheetsHelper:
+ * @payload :valid xxsltStylesheetPtr
+ * @data :  not used
+ * name : not used
+ *
+ * Print out the stylesheet name from the stylesheet given to
+ *   us via walkStylesheets
  */
-xsltTemplatePtr getTemplate(void);
+void
+  xslDbgShellPrintStylesheetsHelper(void *payload,
+                                    void *data ATTRIBUTE_UNUSED,
+                                    xmlChar * name ATTRIBUTE_UNUSED);
+
+
+/**
+ * xslDbgShellPrintStylesheetsHelper2:
+ * @payload :valid xmlNodePtr of included stylesheet
+ * @data :  not used
+ * name : not used
+ *
+ * Print out the stylesheet name from the stylesheet given to
+ *   us via walkIncludes
+ */
+void
+  xslDbgShellPrintStylesheetsHelper2(void *payload,
+                                     void *data ATTRIBUTE_UNUSED,
+                                     xmlChar * name ATTRIBUTE_UNUSED);
+
+/* ------------------------------------- 
+    End private functions
+---------------------------------------*/
 
 
 
-void xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
-                               int *templateCount, int *printCount,
-                               xmlChar * templateName);
-
-/* invert the order of printin template names so that it prints in the 
-same order that they are in file*/
+/**
+ * xslDbgPrintTemplateHelper:
+ * @templ : is valid
+ * @verbose : either 1 or 0
+ * @templateCount : is valid
+ * @printCount : is valid
+ * @templateName : template name to print, may be NULL
+ *
+ * This display the templates in the same order as they are in the 
+ *   stylesheet. If verbose is 1 then print more information
+ *   For each template found @templateCount is increased
+ *   For each printed template @printCount is increased
+ */
 void
 xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
                           int *templateCount, int *printCount,
@@ -154,31 +189,15 @@ xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
 }
 
 
-void xslDbgShellPrintStylesheetsHelper2(void *payload,
-                                        void *data ATTRIBUTE_UNUSED,
-                                        xmlChar * name ATTRIBUTE_UNUSED);
-
-/* our payload is a xmlNodePtr to a included stylesheet */
-void
-xslDbgShellPrintStylesheetsHelper2(void *payload,
-                                   void *data ATTRIBUTE_UNUSED,
-                                   xmlChar * name ATTRIBUTE_UNUSED)
-{
-    xmlNodePtr node = (xmlNodePtr) payload;
-
-    if (node && node->doc && node->doc->URL) {
-        xsltGenericError(xsltGenericErrorContext,
-                         " Stylesheet %s\n", node->doc->URL);
-        printCounter++;
-    }
-}
-
-
-void xslDbgShellPrintStylesheetsHelper(void *payload,
-                                       void *data ATTRIBUTE_UNUSED,
-                                       xmlChar * name ATTRIBUTE_UNUSED);
-
-/* our payload is a stylesheet */
+/**
+ * xslDbgShellPrintStylesheetsHelper:
+ * @payload :valid xxsltStylesheetPtr
+ * @data :  not used
+ * name : not used
+ *
+ * Print out the stylesheet name from the stylesheet given to
+ *   us via walkStylesheets
+ */
 void
 xslDbgShellPrintStylesheetsHelper(void *payload,
                                   void *data ATTRIBUTE_UNUSED,
@@ -194,12 +213,35 @@ xslDbgShellPrintStylesheetsHelper(void *payload,
 }
 
 
-  /**
-   * xslDbgPrintStyleSheets:
-   * @arg : stylesheets of interests, is NULL for all stylsheets
-   *
-   * Print stylesheets that can be found in loaded stylsheet
-   */
+/**
+ * xslDbgShellPrintStylesheetsHelper2:
+ * @payload :valid xmlNodePtr of included stylesheet
+ * @data :  not used
+ * name : not used
+ *
+ * Print out the stylesheet name from the stylesheet given to
+ *   us via walkIncludes
+ */
+void
+xslDbgShellPrintStylesheetsHelper2(void *payload,
+                                   void *data ATTRIBUTE_UNUSED,
+                                   xmlChar * name ATTRIBUTE_UNUSED)
+{
+    xmlNodePtr node = (xmlNodePtr) payload;
+
+    if (node && node->doc && node->doc->URL) {
+        xsltGenericError(xsltGenericErrorContext,
+                         " Stylesheet %s\n", node->doc->URL);
+        printCounter++;
+    }
+}
+
+/**
+ * xslDbgPrintStyleSheets:
+ * @arg : stylesheets of interests, is NULL for all stylsheets
+ *
+ * Print stylesheets that can be found in loaded stylsheet
+ */
 void
 xslDbgPrintStyleSheets(xmlChar * arg)
 {

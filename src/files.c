@@ -28,22 +28,59 @@
 
 
 /* top xml document */
-static xmlDocPtr top_doc;
+static xmlDocPtr topDocument;
 
 /* temporary xml document */
-static xmlDocPtr temp_doc;
+static xmlDocPtr tempDocument;
 
 /* used as a scratch pad for temporary results*/
 static xmlChar buffer[DEBUG_BUFFER_SIZE];
 
 /* top stylsheet */
-static xsltStylesheetPtr top_style;
+static xsltStylesheetPtr topStylesheet;
 
 /* what is the base path for top stylesheet */
 static xmlChar *stylePathName = NULL;
 
 /* what is the path for current working directory*/
 static xmlChar *workingDirPath = NULL;
+
+
+/* -----------------------------------------
+   Private function declarations for files.c
+ -------------------------------------------*/
+
+/**
+ * guessStylesheetHelper:
+ * @payload : valid xsltStylesheetPtr
+ * @data : valid searchInfoPtr of type SEARCH_NODE
+ * @name : not used
+ *
+ * Try to guess what the complete file/URI is. If successful the search
+ *   info will be set to found and the search data will contain the
+ *   file name found. We are given our payload via walkStylesheets
+ */
+void guessStylesheetHelper(void *payload, void *data,
+                           xmlChar * name ATTRIBUTE_UNUSED);
+
+
+/**
+ * guessStylesheetHelper2:
+ * @payload : valid xmlNodePtr of the included stylesheet 
+ * @data : valid searchInfoPtr of type SEARCH_NODE
+ * @name : not used
+ *
+ * Try to guess what the complete file/URI is. If successful the search
+ *   info will be set to found and the search data will contain the
+ *   file name found. We are given our payload via walkIncludes
+ */
+void guessStylesheetHelper2(void *payload, void *data,
+                            xmlChar * name ATTRIBUTE_UNUSED);
+
+/* ------------------------------------- 
+    End private functions
+---------------------------------------*/
+
 
 
 
@@ -54,8 +91,10 @@ char *ttyName, *termName;
 /**
  * redirectToTerminal:
  * @device: terminal to redirect i/o to , will not work under win32
- * Returns 1 if successful,
- *         0 if failed
+ *
+ * Open communications to the terminal device @device
+ * Returns 1 if sucessful
+ *         0 otherwise
  */
 int
 openTerminal(xmlChar * device)
@@ -131,10 +170,10 @@ openTerminal(xmlChar * device)
 
 
 /**
- * selectTerminal:
+ * selectTerminalIO:
  *
  * Returns 1 if able to use prevously opened terminal 
- *        0 otherwise
+ *         0 otherwise
 */
 int
 selectTerminalIO(void)
@@ -176,12 +215,20 @@ selectNormalIO(void)
     return result;
 }
 
-void guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
-                           void *data ATTRIBUTE_UNUSED, xmlChar * name);
 
+/**
+ * guessStylesheetHelper:
+ * @payload : valid xsltStylesheetPtr
+ * @data : valid searchInfoPtr of type SEARCH_NODE
+ * @name : not used
+ *
+ * Try to guess what the complete file/URI is. If successful the search
+ *   info will be set to found and the search data will contain the
+ *   file name found. We are given our payload via walkStylesheets
+ */
 void
-guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
-                      void *data ATTRIBUTE_UNUSED, xmlChar * name)
+guessStylesheetHelper(void *payload, void *data,
+                      xmlChar * name ATTRIBUTE_UNUSED)
 {
     xsltStylesheetPtr style = (xsltStylesheetPtr) payload;
     searchInfoPtr searchInf = (searchInfoPtr) data;
@@ -200,7 +247,7 @@ guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
             searchData->absoluteNameMatch =
                 (xmlChar *) xmlMemStrdup((char *) style->doc->URL);
             searchData->node = (xmlNodePtr) style->doc;
-	    searchInf->found = 1;
+            searchInf->found = 1;
             return;
         }
 
@@ -217,7 +264,7 @@ guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
             searchData->guessedNameMatch =
                 (xmlChar *) xmlMemStrdup((char *) buffer);
             searchData->node = (xmlNodePtr) style->doc;
-	    searchInf->found = 1;
+            searchInf->found = 1;
             return;
         }
 
@@ -231,14 +278,29 @@ guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
             searchData->guessedNameMatch =
                 (xmlChar *) xmlMemStrdup((char *) buffer);
             searchData->node = (xmlNodePtr) style->doc;
-	    searchInf->found = 1;
+            searchInf->found = 1;
             return;
         }
 
         if (xmlStrChr(searchData->nameInput, PATHCHAR) == NULL) {
             /* Last try, nameInput contains only a file name, and no path specifiers
              * Strip of the file name at end of the stylesheet doc URL */
-            char *lastSlash = xmlStrrChr(style->doc->URL, PATHCHAR);
+
+            /* what is used to separate directories or the URL */
+            char separatorChar;
+
+            /* where did the directory separator occur */
+            char *lastSlash;
+
+            /* if the stylesheets URL seems to be a URI then use the 
+             * URI separator character. Otherwise use the default directory
+             * separator character for the operating system */
+            if (xmlStrChr(style->doc->URL, URISEPARATORCHAR))
+                separatorChar = URISEPARATORCHAR;
+            else
+                separatorChar = PATHCHAR;
+
+            lastSlash = xmlStrrChr(style->doc->URL, separatorChar);
 
             if (lastSlash) {
                 lastSlash++;    /* skip the slash */
@@ -247,7 +309,7 @@ guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
                     searchData->guessedNameMatch =
                         (xmlChar *) xmlMemStrdup((char *) style->doc->URL);
                     searchData->node = (xmlNodePtr) style->doc;
-		    searchInf->found = 1;
+                    searchInf->found = 1;
                 }
             }
         }
@@ -255,14 +317,19 @@ guessStyleSheetHelper(void *payload ATTRIBUTE_UNUSED,
 }
 
 
-void guessStyleSheetHelper2(void *payload ATTRIBUTE_UNUSED,
-                       void *data ATTRIBUTE_UNUSED, xmlChar * name);
-
-/* our payload is a xmlNodePtr of the included stylesheet 
-  found by walkIncludes */
+/**
+ * guessStylesheetHelper2:
+ * @payload : valid xmlNodePtr of the included stylesheet 
+ * @data : valid searchInfoPtr of type SEARCH_NODE
+ * @name : not used
+ *
+ * Try to guess what the complete file/URI is. If successful the search
+ *   info will be set to found and the search data will contain the
+ *   file name found. We are given our payload via walkIncludes
+ */
 void
-guessStyleSheetHelper2(void *payload ATTRIBUTE_UNUSED,
-                       void *data ATTRIBUTE_UNUSED, xmlChar * name)
+guessStylesheetHelper2(void *payload, void *data,
+                       xmlChar * name ATTRIBUTE_UNUSED)
 {
     xmlNodePtr node = (xmlNodePtr) payload;
     searchInfoPtr searchInf = (searchInfoPtr) data;
@@ -281,7 +348,7 @@ guessStyleSheetHelper2(void *payload ATTRIBUTE_UNUSED,
             searchData->absoluteNameMatch =
                 (xmlChar *) xmlMemStrdup((char *) node->doc->URL);
             searchData->node = node;
-	    searchInf->found = 1;
+            searchInf->found = 1;
             return;
         }
 
@@ -298,7 +365,7 @@ guessStyleSheetHelper2(void *payload ATTRIBUTE_UNUSED,
             searchData->guessedNameMatch =
                 (xmlChar *) xmlMemStrdup((char *) buffer);
             searchData->node = node;
-	    searchInf->found = 1;
+            searchInf->found = 1;
             return;
         }
 
@@ -312,14 +379,29 @@ guessStyleSheetHelper2(void *payload ATTRIBUTE_UNUSED,
             searchData->guessedNameMatch =
                 (xmlChar *) xmlMemStrdup((char *) buffer);
             searchData->node = node;
-	    searchInf->found = 1;
+            searchInf->found = 1;
             return;
         }
 
         if (xmlStrChr(searchData->nameInput, PATHCHAR) == NULL) {
             /* Last try, nameInput contains only a file name, and no path specifiers
              * Strip of the file name at end of the stylesheet doc URL */
-            char *lastSlash = xmlStrrChr(node->doc->URL, PATHCHAR);
+
+            /* what is used to separate directories or the URL */
+            char separatorChar;
+
+            /* where did the directory separator occur */
+            char *lastSlash;
+
+            /* if the stylesheets URL seems to be a URI then use the 
+             * URI separator character. Otherwise use the default directory
+             * separator character for the operating system */
+            if (xmlStrChr(node->doc->URL, URISEPARATORCHAR))
+                separatorChar = URISEPARATORCHAR;
+            else
+                separatorChar = PATHCHAR;
+
+            lastSlash = xmlStrrChr(node->doc->URL, separatorChar);
 
             if (lastSlash) {
                 lastSlash++;    /* skip the slash */
@@ -328,7 +410,7 @@ guessStyleSheetHelper2(void *payload ATTRIBUTE_UNUSED,
                     searchData->guessedNameMatch =
                         (xmlChar *) xmlMemStrdup((char *) node->doc->URL);
                     searchData->node = node;
-		    searchInf->found = 1;
+                    searchInf->found = 1;
                 }
             }
         }
@@ -354,11 +436,11 @@ guessStylesheetName(searchInfoPtr searchInf)
     if (searchData->nameInput == NULL)
         return;                 /* must supply name of file to look for */
 
-    walkStylesheets((xmlHashScanner) guessStyleSheetHelper,
+    walkStylesheets((xmlHashScanner) guessStylesheetHelper,
                     searchInf, getStylesheet());
     if (!searchInf->found) {
         /* try looking in the included stylesheets */
-        walkIncludes((xmlHashScanner) guessStyleSheetHelper2,
+        walkIncludes((xmlHashScanner) guessStylesheetHelper2,
                      searchInf, getStylesheet());
     }
 }
@@ -376,6 +458,7 @@ stylePath(void)
     return stylePathName;
 }
 
+
 /**
  * workingPath:
  *
@@ -386,6 +469,7 @@ workingPath(void)
 {
     return workingDirPath;
 }
+
 
 /**
  * changeDir:
@@ -417,23 +501,24 @@ changeDir(const xmlChar * path)
     return result;
 }
 
+
 /**
  * loadXmlFile:
  * @path : xml file to load
- * @type : a valid File_Type
+ * @type : a valid FileTypeEnum 
  *
  * Returns 1 on success,
  *         0 otherwise 
  */
 int
-loadXmlFile(const xmlChar * path, enum File_type file_type)
+loadXmlFile(const xmlChar * path, enum FileTypeEnum fileType)
 {
     int result = 0;
 
-    if (!freeXmlFile(file_type))
+    if (!freeXmlFile(fileType))
         return result;
 
-    switch (file_type) {
+    switch (fileType) {
         case FILES_XMLFILE_TYPE:
             if (path && xmlStrLen(path)) {
                 if (isOptionEnabled(OPTIONS_SHELL)) {
@@ -443,8 +528,8 @@ loadXmlFile(const xmlChar * path, enum File_type file_type)
                 }
                 setStringOption(OPTIONS_DATA_FILE_NAME, path);
             }
-            top_doc = loadXmlData();
-            if (top_doc)
+            topDocument = loadXmlData();
+            if (topDocument)
                 result++;
             break;
 
@@ -457,12 +542,13 @@ loadXmlFile(const xmlChar * path, enum File_type file_type)
                 }
                 setStringOption(OPTIONS_SOURCE_FILE_NAME, path);
             }
-            top_style = loadStylesheet();
-            if (top_style && top_style->doc) {
+            topStylesheet = loadStylesheet();
+            if (topStylesheet && topStylesheet->doc) {
                 /* look for last slash (or baskslash) of URL */
-                char *lastSlash = xmlStrrChr(top_style->doc->URL,
+                char *lastSlash = xmlStrrChr(topStylesheet->doc->URL,
                                              PATHCHAR);
-                const char *docUrl = (const char*)top_style->doc->URL;
+                const char *docUrl =
+                    (const char *) topStylesheet->doc->URL;
 
                 result++;
                 if (docUrl && lastSlash) {
@@ -483,8 +569,8 @@ loadXmlFile(const xmlChar * path, enum File_type file_type)
                                  "Missing file name\n");
                 break;
             }
-            top_doc = loadXmlTemporay(path);
-            if (temp_doc)
+            topDocument = loadXmlTemporay(path);
+            if (tempDocument)
                 result++;
             break;
     }
@@ -494,46 +580,44 @@ loadXmlFile(const xmlChar * path, enum File_type file_type)
 
 /**
  * freeXmlFile:
- * @type : a valid File_Type
+ * @type : a valid FileTypeEnum 
  * 
  * Free memory associated with the xml file 
  * Returns 1 on success,
  *         0 otherwise
  */
 int
-freeXmlFile(enum File_type file_type)
+freeXmlFile(enum FileTypeEnum fileType)
 {
-    int result = 0, type = file_type;
+    int result = 0, type = fileType;
 
     switch (type) {
         case FILES_XMLFILE_TYPE:
-            if (top_doc)
-                xmlFreeDoc(top_doc);
-            top_doc = NULL;
+            if (topDocument)
+                xmlFreeDoc(topDocument);
+            topDocument = NULL;
             result++;
             break;
 
         case FILES_SOURCEFILE_TYPE:
-            if (top_style)
-                xsltFreeStylesheet(top_style);
+            if (topStylesheet)
+                xsltFreeStylesheet(topStylesheet);
             if (stylePathName)
                 xmlFree(stylePathName);
             stylePathName = NULL;
-            top_style = NULL;
+            topStylesheet = NULL;
             result++;
             break;
 
         case FILES_TEMPORARYFILE_TYPE:
-            if (temp_doc)
-                xmlFreeDoc(temp_doc);
-            temp_doc = NULL;
+            if (tempDocument)
+                xmlFreeDoc(tempDocument);
+            tempDocument = NULL;
             result++;
             break;
     }
     return result;
 }
-
-
 
 
 /**
@@ -545,8 +629,9 @@ freeXmlFile(enum File_type file_type)
 xsltStylesheetPtr
 getStylesheet(void)
 {
-    return top_style;
+    return topStylesheet;
 }
+
 
 /**
  * getTemporaryDoc:
@@ -554,10 +639,11 @@ getStylesheet(void)
  * Returns the current "temporary" document
  */
 xmlDocPtr
-getTemporayDoc(void)
+getTemporaryDoc(void)
 {
-    return temp_doc;
+    return tempDocument;
 }
+
 
 /**
  * getMainDoc:
@@ -567,7 +653,7 @@ getTemporayDoc(void)
 xmlDocPtr
 getMainDoc(void)
 {
-    return top_doc;
+    return topDocument;
 }
 
 
@@ -616,9 +702,9 @@ filesInit(void)
     oldStdout = stdout;
     oldStderr = stderr;
 #endif
-    top_doc = NULL;
-    temp_doc = NULL;
-    top_style = NULL;
+    topDocument = NULL;
+    tempDocument = NULL;
+    topStylesheet = NULL;
     result = 1;                 /* nothing else  to do for the moment */
 
     return result;

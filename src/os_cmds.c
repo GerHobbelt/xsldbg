@@ -52,6 +52,7 @@ xslDbgShellChangeWd(const xmlChar * path)
     return result;
 }
 
+
 /**
  * xslDbgShellExecute:
  * @name: name of command string to be executed by operating system shell
@@ -59,7 +60,7 @@ xslDbgShellChangeWd(const xmlChar * path)
  *            normal messages otherwise
  *
  * Returns 1 on success,
- *        0 otherwise
+ *         0 otherwise
  */
 int
 xslDbgShellExecute(xmlChar * name, int verbose)

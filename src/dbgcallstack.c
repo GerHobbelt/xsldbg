@@ -101,7 +101,7 @@ callStackFree(void)
  * @templateName : template name to add
  * @url : url for templateName
  *
- * Returns a reference to the added call info if successfull, 
+ * Returns a reference to the added call info if successful, 
  *         NULL otherwise
  */
 xslCallPointInfoPtr
@@ -160,8 +160,8 @@ xslAddCallInfo(const xmlChar * templateName, const xmlChar * url)
  * @source : the source node being processed
  *
  * Add template "call" to call stack
- * Returns : 1 on success, 
- *           0 otherwise
+ * Returns 1 on success, 
+ *         0 otherwise
  */
 int
 xslAddCall(xsltTemplatePtr templ, xmlNodePtr source)
@@ -312,6 +312,7 @@ xslStepupToDepth(int depth)
     return result;
 }
 
+
 /** 
  * xslStepdownToDepth :
  * @depth : the frame depth to step down to 
@@ -339,13 +340,14 @@ xslStepdownToDepth(int depth)
     return result;
 }
 
+
 /**
  * xslGetCall :
  * @depth : 0 < depth <= xslCallDepth()  
  *
  * Retrieve the call point at specified call depth 
 
- * Returns  non-null if depth is valid,
+ * Returns non-null if depth is valid,
  *         NULL otherwise 
  */
 xslCallPointPtr

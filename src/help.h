@@ -1,6 +1,6 @@
 
 /***************************************************************************
-                          help.h  -  description
+                          help.h  -  describe the help support functions
                              -------------------
     begin                : Sun Sep 16 2001
     copyright            : (C) 2001 by Keith Isdale
@@ -19,9 +19,21 @@
 #ifndef XSLDBG_HELP_H
 #define XSLDBG_HELP_H
 
-/*
-  Separate help functions to make it easier later to extend
- */
-void helpTop(const xmlChar * args);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
+
+/**
+ * helpTop:
+ * @args : is valid 
+ *
+ * Display help about the command in @arg
+ */
+    void helpTop(const xmlChar * args);
+
+
+#ifdef __cplusplus
+}
+#endif
 #endif

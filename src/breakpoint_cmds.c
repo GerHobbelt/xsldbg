@@ -30,6 +30,36 @@ static int printCount;
 /* temp buffer needed occationaly */
 static xmlChar buff[DEBUG_BUFFER_SIZE];
 
+/* ---------------------------------------------------
+   Private function declarations for breakpoint_cmds.c
+ ----------------------------------------------------*/
+
+/**
+ * addSourceBreakPoint:
+ * @url : is valid name of stylesheet source
+ * @lineNo : lineNo >= 0
+ *
+ * Returns 1 if able to add specified source break point
+ *         0 otherwise
+ */
+int addSourceBreakPoint(xmlChar * url, long lineNo);
+
+/**
+ * addDataBreakPoint:
+ * @url : is valid name of a xml data file
+ * @lineNo : lineNo >= 0
+ *
+ * Returns 1 if able to add specified xml data break point
+ *         0 otherwise
+ */
+int addDataBreakPoint(xmlChar * url, long lineNo);
+
+
+/* ------------------------------------- 
+    End private functions
+---------------------------------------*/
+
+
 
 /* -----------------------------------------
 
@@ -40,12 +70,12 @@ static xmlChar buff[DEBUG_BUFFER_SIZE];
 
 /**
  * xslFrameBreak:
- *@arg : non-null 
- *@stepup : if != 1 then we step up, otherwise step down
+ * @arg : is valid 
+ * @stepup : if != 1 then we step up, otherwise step down
  *
- * Set a "frame" breakpoint either up or down from here
+ * Set a "frame" break point either up or down from here
  * Returns 1 on success,
- *        0 otherwise
+ *         0 otherwise
  */
 int
 xslDbgShellFrameBreak(xmlChar * arg, int stepup)
@@ -54,6 +84,7 @@ xslDbgShellFrameBreak(xmlChar * arg, int stepup)
 
     // how many frames to go up/down
     int noOfFrames;
+
     if (!arg) {
         return result;
     }
@@ -75,13 +106,20 @@ xslDbgShellFrameBreak(xmlChar * arg, int stepup)
     }
 
     if (!result)
-        xsltGenericError(xsltGenericErrorContext, "Error : Failed to set frame break point\n");
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error : Failed to set frame break point\n");
     return result;
 }
 
 
-int addSourceBreakPoint(xmlChar * url, long lineNo);
-
+/**
+ * addSourceBreakPoint:
+ * @url : is valid name of stylesheet source
+ * @lineNo : lineNo >= 0
+ *
+ * Returns 1 if able to add specified source break point
+ *         0 otherwise
+ */
 int
 addSourceBreakPoint(xmlChar * url, long lineNo)
 {
@@ -95,7 +133,7 @@ addSourceBreakPoint(xmlChar * url, long lineNo)
         type = DEBUG_BREAK_SOURCE;
         searchData = (nodeSearchDataPtr) searchInf->data;
         searchData->lineNo = lineNo;
-        searchData->nameInput = (xmlChar *) xmlMemStrdup((char*)url);
+        searchData->nameInput = (xmlChar *) xmlMemStrdup((char *) url);
         guessStylesheetName(searchInf);
         /* try to verify that the line number is valid */
         if (searchInf->found) {
@@ -104,11 +142,13 @@ addSourceBreakPoint(xmlChar * url, long lineNo)
                 searchInf->found = 0;
                 /* searchData->url will be freed by searchFreeInfo */
                 if (searchData->absoluteNameMatch)
-		  searchData->url = (xmlChar*)
-                        xmlMemStrdup((char*)searchData->absoluteNameMatch);
+                    searchData->url = (xmlChar *)
+                        xmlMemStrdup((char *) searchData->
+                                     absoluteNameMatch);
                 else
-                    searchData->url = (xmlChar*)
-                        xmlMemStrdup((char*)searchData->guessedNameMatch);
+                    searchData->url = (xmlChar *)
+                        xmlMemStrdup((char *) searchData->
+                                     guessedNameMatch);
                 url = searchData->url;  /* we don't need another copy of url */
                 /* searchData->node is set to the topmost node in stylesheet */
                 walkChildNodes((xmlHashScanner) scanForNode, searchInf,
@@ -123,10 +163,11 @@ addSourceBreakPoint(xmlChar * url, long lineNo)
             if (xslAddBreakPoint(url, lineNo, NULL, type))
                 result++;
 
-        }else{
-	  xsltGenericError(xsltGenericErrorContext,
-			   "Error : Unable to find a stylesheet file whose name contains %s\n", url);
-	}
+        } else {
+            xsltGenericError(xsltGenericErrorContext,
+                             "Error : Unable to find a stylesheet file whose name contains %s\n",
+                             url);
+        }
     } else {
         xsltGenericError(xsltGenericErrorContext,
                          "Error : Unable to create searchInfo, out of memory?\n");
@@ -139,8 +180,15 @@ addSourceBreakPoint(xmlChar * url, long lineNo)
 }
 
 
-int addDataBreakPoint(xmlChar * url, long lineNo);
 
+/**
+ * addDataBreakPoint:
+ * @url : is valid name of a xml data file
+ * @lineNo : lineNo >= 0
+ *
+ * Returns 1 if able to add specified xml data break point
+ *         0 otherwise
+ */
 int
 addDataBreakPoint(xmlChar * url, long lineNo)
 {
@@ -156,27 +204,29 @@ addDataBreakPoint(xmlChar * url, long lineNo)
         /* try to verify that the line number is valid */
         searchData = (nodeSearchDataPtr) searchInf->data;
         searchData->lineNo = lineNo;
-        searchData->url = (xmlChar *) xmlMemStrdup((char*)url);
+        searchData->url = (xmlChar *) xmlMemStrdup((char *) url);
         walkChildNodes((xmlHashScanner) scanForNode, searchInf,
                        (xmlNodePtr) getMainDoc());
 
-	 /* try to guess file name by adding the prefix of main document */
-        if (!searchInf->found){
-	  char * lastSlash = xmlStrrChr(getMainDoc()->URL, PATHCHAR);
-	  if (lastSlash){
-	    lastSlash++; 
-	    xmlStrnCpy(buff, getMainDoc()->URL, lastSlash - (char*)getMainDoc()->URL);
-	    buff[lastSlash - (char*)getMainDoc()->URL] = '\0';
-	    xmlStrCat(buff, url);
-	    if (searchData->url)
-	      xmlFree(searchData->url);	    
-	    searchData->url = (xmlChar*)xmlMemStrdup((char*)buff);
-	    walkChildNodes((xmlHashScanner) scanForNode, searchInf,
-			   (xmlNodePtr) getMainDoc());
-	    if (searchInf->found)
-	      url = searchData->url;
-	  }
-	}
+        /* try to guess file name by adding the prefix of main document */
+        if (!searchInf->found) {
+            char *lastSlash = xmlStrrChr(getMainDoc()->URL, PATHCHAR);
+
+            if (lastSlash) {
+                lastSlash++;
+                xmlStrnCpy(buff, getMainDoc()->URL,
+                           lastSlash - (char *) getMainDoc()->URL);
+                buff[lastSlash - (char *) getMainDoc()->URL] = '\0';
+                xmlStrCat(buff, url);
+                if (searchData->url)
+                    xmlFree(searchData->url);
+                searchData->url = (xmlChar *) xmlMemStrdup((char *) buff);
+                walkChildNodes((xmlHashScanner) scanForNode, searchInf,
+                               (xmlNodePtr) getMainDoc());
+                if (searchInf->found)
+                    url = searchData->url;
+            }
+        }
 
         if (!searchInf->found)
             xsltGenericError(xsltGenericErrorContext,
@@ -200,13 +250,13 @@ addDataBreakPoint(xmlChar * url, long lineNo)
 
 /**
  * xslDbgShellBreak:
- * @arg : non-null
- * @style : non-null
- * @ctxt : non-null
+ * @arg : is valid
+ * @style : is valid
+ * @ctxt : is valid
  * 
  * Add break point specified by arg
  * Returns 1 on success,
- *        0 otherwise
+ *         0 otherwise
  */
 int
 xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
@@ -215,6 +265,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
     int result = 0;
     long lineNo = -1;
     xmlChar *url = NULL;
+
     if (style == NULL) {
         style = getStylesheet();
     }
@@ -236,11 +287,11 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                     /* try to guess whether we are looking for source or data 
                      * break point
                      */
-		  trimString(opts[0]);
-		  if (strstr((char *) opts[0], ".xsl"))
-		    result = addSourceBreakPoint(opts[0], lineNo);
+                    trimString(opts[0]);
+                    if (strstr((char *) opts[0], ".xsl"))
+                        result = addSourceBreakPoint(opts[0], lineNo);
                     else
-		      result = addDataBreakPoint(opts[0], lineNo);
+                        result = addDataBreakPoint(opts[0], lineNo);
                 }
             } else
                 xsltGenericError(xsltGenericErrorContext,
@@ -267,8 +318,8 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
     } else {
         /* add all template names */
         const xmlChar *name;
-	xmlChar *defaultUrl = (xmlChar *) "<n/a>";
-	int newBreakPoints = 0;
+        xmlChar *defaultUrl = (xmlChar *) "<n/a>";
+        int newBreakPoints = 0;
         xsltTemplatePtr templ;
 
         while (style) {
@@ -297,7 +348,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                                          templ->elem->doc->URL,
                                          xmlGetLineNo(templ->elem));
                     } else
-			newBreakPoints++;
+                        newBreakPoints++;
                 }
                 templ = templ->next;
             }
@@ -308,36 +359,38 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
         }
         if (newBreakPoints == 0) {
             xsltGenericError(xsltGenericErrorContext,
-                             "Error : No templates found or unable to add any breakPoints\n ");	    
-	    url = NULL; /* flag that we've printed partial error message about the problem url */
-        }else{
-	  result++;
-	  xsltGenericError(xsltGenericErrorContext,
-			     "Added %d new breakPoints\n", newBreakPoints);
-	}
+                             "Error : No templates found or unable to add any breakPoints\n ");
+            url = NULL;         /* flag that we've printed partial error message about the problem url */
+        } else {
+            result++;
+            xsltGenericError(xsltGenericErrorContext,
+                             "Added %d new breakPoints\n", newBreakPoints);
+        }
 
-	if(defaultUrl) 
-	  xmlFree(defaultUrl);
+        if (defaultUrl)
+            xmlFree(defaultUrl);
     }
 
-    if (!result){
-      if (url)
-	xsltGenericError(xsltGenericErrorContext, "Failed to add breakPoint " \
-			 "at file %s: line %ld\n", url, lineNo);
-      else
-	xsltGenericError(xsltGenericErrorContext, "Failed to some breakPoints\n");      
+    if (!result) {
+        if (url)
+            xsltGenericError(xsltGenericErrorContext,
+                             "Failed to add breakPoint "
+                             "at file %s: line %ld\n", url, lineNo);
+        else
+            xsltGenericError(xsltGenericErrorContext,
+                             "Failed to some breakPoints\n");
     }
     return result;
 }
 
 
-  /**
+/**
  * xslDbgShellDelete:
- * @arg : non-null
+ * @arg : is valid
  * 
  * Delete break point specified by arg
  * Returns 1 on success,
- *        0 otherwise
+ *         0 otherwise
  */
 int
 xslDbgShellDelete(xmlChar * arg)
@@ -415,11 +468,12 @@ xslDbgShellDelete(xmlChar * arg)
  * @payload : valid xslBreakPointPtr
  * @data : enable type, a pointer to an integer 
  *         for a value of 
- *                 1 enable breakpoint
- *                 0 disable breakpoint
- *                 -1 toggle enabling of breakpoint 
+ *                 1 enable break point
+ *                 0 disable break point
+ *                 -1 toggle enabling of break point 
+ * @name : not used
  *
- * Enable/disable break points via use of scan of breakPoints
+ * Enable/disable break points via use of scan of break points
 */
 void
 xslDbgEnableBreakPoint(void *payload, void *data,
@@ -433,9 +487,13 @@ xslDbgEnableBreakPoint(void *payload, void *data,
 
 /**
  * xslDbgShellEnable:
- * @arg : non-null
- * 
- * Enable/disable break point specified by arg
+ * @arg : is valid
+ * @enable : enable break point if 1, disable if 0, toggle if -1
+ *
+ * Enable/disable break point specified by arg using enable 
+ *      type of @enableType
+ * Returns 1 if successful,
+ *         0 otherwise
  */
 int
 xslDbgShellEnable(xmlChar * arg, int enableType)
@@ -505,11 +563,11 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
 
 /**
  * xslDbgPrintBreakPoint:
- * @payload : the breakpoint to print
+ * @payload : valid xslBreakPointPtr
  * @data : not used
  * @name : not used
  *
- * Print data given by scan of breakPoints 
+ * Print data given by scan of break points 
 */
 void
 xslDbgPrintBreakPoint(void *payload, void *data ATTRIBUTE_UNUSED,

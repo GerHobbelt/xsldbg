@@ -1,6 +1,6 @@
 
 /***************************************************************************
-                          xsldbg.h  -  description
+                          xsldbg.h  - descibe the application level functions
                              -------------------
     begin                : Sun Sep 16 2001
     copyright            : (C) 2001 by Keith Isdale
@@ -78,6 +78,10 @@
 #include "config_riscos.h"
 #endif
 
+/* 
+  Make things simpler when working between char* and xmlChar*  .
+   By definition a char is the same size as an xmlChar(unsigned char). 
+*/
 #define xmlStrLen(text) strlen((char*)(text))
 #define xmlStrCat(a, b) strcat((char*)(a), (char*)(b))
 #define xmlStrCmp(a, b) strcmp((char*)(a), (char*)(b))
@@ -89,8 +93,12 @@
 /* JRF: Note - I need to think about where these are used - mostly
         I would prefer to use URIs unless a native filename is explicitly
         required */
+
+/* what char is use to separate directories in an URI*/
+#define URISEPARATORCHAR '/'
+
     /* Handle the differnces in path and quote character between
-     * win32 and Unix/Linux systems */
+     * win32 and *nix systems */
 #ifdef WIN32
 #define  QUOTECHAR ' '
 #define  PATHCHAR '\\'
@@ -99,29 +107,39 @@
 #define  PATHCHAR  '/'
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
 /**
  * loadStylesheet:
  *
- * Return the stylesheet after reloading it if successful
+ * Returns the stylesheet after reloading it if successful
  *         NULL otherwise
  */
-xsltStylesheetPtr loadStylesheet(void);
+    xsltStylesheetPtr loadStylesheet(void);
+
 
 /**
  * loadXmlData:
  *
- * Return the data file after reloading it if successful
+ * Returns the data file after reloading it if successful
  *         NULL otherwise
  */
-xmlDocPtr loadXmlData(void);
+    xmlDocPtr loadXmlData(void);
 
 
 /**
  * loadXmlTemporary:
  *
- * Return the temporary file after reloading it if successful,
+ * Returns the temporary file after reloading it if successful,
  *         NULL otherwise
  */
-xmlDocPtr loadXmlTemporay(const xmlChar * path);
+    xmlDocPtr loadXmlTemporay(const xmlChar * path);
 
+
+#ifdef __cplusplus
+}
+#endif
 #endif

@@ -38,8 +38,8 @@
  *        may be preceeded by "-sort " to enable sorting of
  *        data
  * 
- * Return 1 if able to run query with @arg, 
- *        0 otherwise
+ * Returns 1 if able to run query with @arg, 
+ *         0 otherwise
  */
 int
 xslDbgShellSearch(xsltTransformContextPtr styleCtxt,
@@ -58,14 +58,14 @@ xslDbgShellSearch(xsltTransformContextPtr styleCtxt,
     if (!xmlStrCmp(buff, sortOption)) {
         /* yep do sorting as well */
         if (snprintf
-            ((char*)buff, DEBUG_BUFFER_SIZE,
+            ((char *) buff, DEBUG_BUFFER_SIZE,
              "--param dosort 1 --param query \"%s\"",
              &arg[sortOptionLen])) {
             result = result && xslSearchQuery(NULL, buff);
         }
     } else {
         if (snprintf
-            ((char*)buff, DEBUG_BUFFER_SIZE,
+            ((char *) buff, DEBUG_BUFFER_SIZE,
              "--param dosort 0 --param query \"%s\"", arg)) {
             result = result && xslSearchQuery(NULL, buff);
         }

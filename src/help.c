@@ -1,6 +1,6 @@
 
 /***************************************************************************
-                          help.c  -  description
+                          help.c  -  help system 
                              -------------------
     begin                : Sun Sep 16 2001
     copyright            : (C) 2001 by Keith Isdale
@@ -31,6 +31,13 @@
 #include <stdlib.h>
 
 #if WITH_DEBUG_HELP
+
+/**
+ * helpTop:
+ * @args : is valid 
+ *
+ * Display help about the command in @arg
+ */
 void
 helpTop(const xmlChar * args)
 {
@@ -77,6 +84,12 @@ helpTop(const xmlChar * args)
 
 #else
 
+/**
+ * helpTop:
+ * @args : not used
+ *
+ * Display help 
+ */
 void
 helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
 {

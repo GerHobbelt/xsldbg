@@ -19,9 +19,28 @@ struct DebuggerCallbacks {
     xsltDropCallCallback dropcallback;
 } debuggerDriver;
 
+/* -----------------------------------------
+   Private function declarations for dbgmain.c
+ -------------------------------------------*/
+
+/**
+ * xslHandleDebugger:
+ * @cur : source node being executed
+ * @node : data node being processed
+ * @templ : temlate that applies to node
+ * @ctxt : the xslt transform context 
+ * 
+ * If either cur or node are a breakpoint, or xslDebugStatus in state 
+ *   where debugging must occcur at this time, then transfer control
+ *   to the xslDebugBreak function
+ */
 void xslHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
                        xsltTemplatePtr templ,
                        xsltTransformContextPtr ctxt);
+
+/* ------------------------------------- 
+    End private functions
+---------------------------------------*/
 
 /*
 -----------------------------------------------------------
@@ -30,6 +49,7 @@ void xslHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
 */
 
 extern char *xslShellReadline(char *prompt);
+
 
 /**
  * debugInit :
@@ -41,7 +61,6 @@ extern char *xslShellReadline(char *prompt);
 int
 debugInit(void)
 {
-
     int result;
 
     xslDebugStatus = DEBUG_NONE;

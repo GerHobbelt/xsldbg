@@ -31,18 +31,6 @@
 
   ------------------------------------------- */
 
-/* sleep for set period of time, needed by walk function */
-#ifdef HAVE_USLEEP
-#include <unistd.h>
-#else
-#ifdef WIN32
-#include <stdlib.h>
-#else
-     /* handle  all other cases with a series of loops */
-#endif
-#endif
-#include <stdio.h>
-
 
 /**
  * xslDbgShellTrace:
@@ -50,7 +38,7 @@
  *
  * Start the tracing of the stylesheet. First need to restart it.
  * Returns 1 on success,
- *        0 otherwise
+ *         0 otherwise
  */
 int
 xslDbgShellTrace(xmlChar * arg ATTRIBUTE_UNUSED)
@@ -67,7 +55,7 @@ xslDbgShellTrace(xmlChar * arg ATTRIBUTE_UNUSED)
  *
  * Start walking through the stylesheet.
  * Returns 1 on success,
- *        0 otherwise
+ *         0 otherwise
  */
 int
 xslDbgShellWalk(xmlChar * arg)

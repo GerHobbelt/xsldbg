@@ -27,6 +27,25 @@
 #include "breakpointInternals.h"
 
 
+/* -----------------------------------------
+   Private function declarations for nodeview_cmds.c
+ -------------------------------------------*/
+
+/*
+ * xslDbgShellPrintNames:
+ * Print a name of variable found by scanning variable table
+ * It is used by print_variable function.
+ * @payload : not used
+ * @data : not used
+ * @name : the variable name 
+ */
+void *xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
+                            void *data ATTRIBUTE_UNUSED, xmlChar * name);
+
+/* ------------------------------------- 
+    End private functions
+---------------------------------------*/
+
 
 /* 
  * xslDbgShellPrintList: 
@@ -185,17 +204,14 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
 }
 
 /* only used by xslDbgPrintNames and xslDbgPrintVariable cound number of variables */
-int varCount;
+static int varCount;
 
-/* seems like a dead functon don't remove it yet!*/
-void *xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
-                      void *data ATTRIBUTE_UNUSED, xmlChar * name);
 /*
  * xslDbgShellPrintNames:
  * Print a name of variable found by scanning variable table
  * It is used by print_variable function.
- * @payload : 
- * @data : 
+ * @payload : not used
+ * @data : not used
  * @name : the variable name 
  */
 void *
@@ -223,7 +239,7 @@ xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
  */
 void
 xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
-                         int type)
+                         enum VariableTypeEnum type)
 {
     varCount = 0;
     if (!styleCtxt) {
