@@ -47,6 +47,11 @@ extern "C" {
         Misc options
 -------------------------------------------*/
 
+/** The largest number lines of text can be print print printing documents
+    This is equivant to gdb shorting of evaluation values
+ */
+#define GDB_LINES_TO_PRINT 3
+
 #ifndef USE_KDOC
     typedef enum {
         OPTIONS_XINCLUDE = 500, /* Use xinclude during xml parsing */

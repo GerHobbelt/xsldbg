@@ -7,6 +7,9 @@ Keith Isdale 7 Feb 2002 <k_isdale@tpg.com.au
  Fixed notification of globals and locals (missed sending an empty list when there
 		are no variables present)
  Changed notification of stylesheets to make use of notify list (a bit faster)
+ Added to meaning of gdb mode, limit the number of lines to print when
+	evaluating expressions. Prints a most GDB_LINES_TO_PRINT lines
+	then prints "..." This is to suit KDbg
 	
 Keith Isdale 6 Feb 2002 <k_isdale@tpg.com.au
   Version 2.0.2
@@ -38,6 +41,7 @@ Keith Isdale 5 Feb 2002 <k_isdale@tpg.com.au
  Fixed the usage of version info to create properly versioned libraries
  Changed added to meaning of gdb mode, when locals command is issued
 	both local and global variables will be printed (for KDbg)
+ Updated xsldbgwin32config.h via xsldbgwin32config.h.in and running ./config.status
 	
 	
 Keith Isdale 2 Feb 2002 <k_isdale@tpg.com.au>

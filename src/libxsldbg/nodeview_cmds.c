@@ -257,47 +257,59 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                         int indx;
 
                         if (list->nodesetval) {
-                            if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
-                                const char *fileName =
-                                    filesTempFileName(0);
-                                FILE *file;
+			  const char *fileName =
+			    filesTempFileName(0);
+			  FILE *file;
 
-                                if (!fileName)
-                                    break;
-                                file = fopen(fileName, "w");
-                                if (!file) {
-                                    xsltGenericError
-                                        (xsltGenericErrorContext,
-                                         "Error: Unable to save temporary" \
-					 "results to %s\n",
-                                         fileName);
-                                    break;
-                                } else {
-                                    for (indx = 0;
-                                         indx < list->nodesetval->nodeNr;
-                                         indx++) {
-                                        xslShellCat(list->nodesetval->
-                                                    nodeTab[indx], file);
-                                    }
-                                    fclose(file);
-                                    /* send the data to application */
-                                    notifyXsldbgApp(XSLDBG_MSG_FILEOUT,
-                                                    fileName);
-                                }
+			  if (!fileName)
+			    break;
+			  file = fopen(fileName, "w+");
+			  if (!file) {
+			    xsltGenericError
+			      (xsltGenericErrorContext,
+			       "Error: Unable to save temporary" \
+			       "results to %s\n",
+			       fileName);
+			    break;
+			  } else {
+			    for (indx = 0;
+				 indx < list->nodesetval->nodeNr;
+				 indx++) {
+			      xslShellCat(list->nodesetval->
+					  nodeTab[indx], file);
+			    }
+
+			  }
+			  if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
+			    fclose(file);
+			    /* send the data to application */
+			    notifyXsldbgApp(XSLDBG_MSG_FILEOUT,
+					    fileName);
                             } else {
-                                for (indx = 0;
-                                     indx < list->nodesetval->nodeNr;
-                                     indx++) {
-                                    if (i > 0)
-                                        xsltGenericError
-                                            (xsltGenericErrorContext,
-                                             "-------\n", arg);
-                                    xmlShellCat(ctxt, NULL,
-                                                list->nodesetval->
-                                                nodeTab[indx], NULL);
-                                }
-
-                            }
+			      int lineCount = 0, gdbModeEnabled = 0;
+			      /* save the value of option to speed things up
+                                  a bit*/
+			      gdbModeEnabled = optionsGetIntOption(OPTIONS_GDB);
+			      rewind(file);
+			     
+			      /* when gdb mode is enable then only print the first
+			       GDB_LINES_TO_PRINT lines */
+			      while (!feof(file)){
+				if (fgets(buffer, sizeof(buffer),file))
+				  xsltGenericError
+				    (xsltGenericErrorContext,"%s", buffer);
+				if (gdbModeEnabled){
+				  lineCount++;
+				  if (lineCount == GDB_LINES_TO_PRINT){
+				    xsltGenericError
+				      (xsltGenericErrorContext,"...");
+				    break;
+				  }
+				}
+			      }
+			      xsltGenericError
+				(xsltGenericErrorContext,"\n");
+			    }
                         } else {
                             xsltGenericError(xmlGenericErrorContext,
                                              "Error: xpath %s results an " \

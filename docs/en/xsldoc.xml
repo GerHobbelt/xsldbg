@@ -323,6 +323,16 @@ the &lt;ENTER&gt; key.
 <text>utf8input</text>
 <comment>(All input from user is in UTF-8.This is normaly used when xsldbg is running as a thread)</comment>
 </li>
+<li>
+<text>gdb</text>
+<comment>(Run in gdb compatability mode)</comment>
+<list>
+<li>Where this means</li>
+<li>Print lots more messages. Increase the frequency of printing &quot;Breapoint at ...&quot;</li>
+<li>At most GDB_LINES_TO_PRINT lines will be printed when evalating expressions, followed by a &quot;...&quot;. See options.h to change this value, the default is three lines of text</li>
+<li>Both local and globals will be printed when the &quot;locals&quot; command is issued </li>
+</list>
+</li>
 <li><text>nonet</text>
 <comment>(If &lt;INTEGER_VALUE&gt; is true refuse to fetch DTDs or entities over network)</comment>
 </li>
