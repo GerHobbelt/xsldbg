@@ -10,6 +10,18 @@
 #include "xsldbg.h"
 #include "breakpointInternals.h"
 
+#include <libxslt/xsltutils.h> /* need for breakpoint callback support */
+
+/* setup debugger callbacks */
+struct DebuggerCallbacks {
+    xsltHandleDebuggerCallback debuggercallback;
+    xsltAddCallCallback addcallback;
+    xsltDropCallCallback dropcallback;
+}debuggerDriver;
+
+void xslHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
+                  xsltTemplatePtr templ, xsltTransformContextPtr ctxt);
+
 /*
 -----------------------------------------------------------
        Main debugger functions
@@ -35,6 +47,11 @@ debugInit (void)
   result = breakPointInit ();
   result = result && callStackInit ();
 
+  /* setup debugger callbacks */
+  debuggerDriver.debuggercallback = xslHandleDebugger;
+  debuggerDriver.addcallback = xslAddCall;
+  debuggerDriver.dropcallback = xslDropCall;
+  xsltSetDebuggerCallbacks(3, &debuggerDriver);
   return result;
 }
 

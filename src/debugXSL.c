@@ -45,9 +45,6 @@
 #include <libxslt/xsltInternals.h>
 #include <stdio.h>
 
-
-
-
 /* current template being processed */
 xsltTemplatePtr rootCopy;
 
