@@ -5,7 +5,7 @@
 </head>
 <body>
 
-<h1>xsldbg Installation for win32</h1>
+<h1>xsldbg Installation for win32 from cvs</h1>
 
 <pre>
 
@@ -13,28 +13,50 @@ xsldbg will ONLY compile when using static libraries there are some exports that
 . And you probably will need to change the include and library paths to suit your configuration.
 Use batch build to select the static libraries.
 
-First copy the files from win32/dsp/libxml2_new_files and replace those in
-  &lt; GNOME-XML &gt;/win32/dsp
+First copy the files from win32\dsp\libxml2_new_files and replace those in
+  &lt; GNOME-XML &gt;\win32\dsp
 
 Build gnome-xml.
 
-Then copy the files from win32/dsp/libxslt_new_files and replace those in
-  &lt; LIBXSLT &gt;/win32/dsp
+Then copy the files from win32\dsp\libxslt_new_files and replace those in
+  &lt; LIBXSLT &gt;\win32\dsp
 
 Build libxslt.
 
-Warning! Make sure that there is a /D "WITH_DEBUGGER" in your compile options otherwise xsldbg will
+Warning! Make sure that there is a /D "WITH_DEBUGGER" in your compile options for libxslt otherwise xsldbg will
 NOT work.
 
-Build xsldbg and run xsldbg without any arguments. See index.html
+Build xsldbg from &lt; XSLDBG &gt;win32\dsp\xsldbg.dsw.
+See <a href="index.html">index.html</a> for a quick tutorial on xsldbg
 
-It is required that xsldbg, be in your system PATH. Also you need to setup your xml catalogs using xmlcatalog otherwise
-you will get warnings when running searches.
-
-You should setup the XML_CATALOG_FILES environment variable to point to your xml catalog. And add search.dtd and xmldoc.dtd to you xml catalog.
-Also you should also set the XSLDBG_DOCS_DIR environment variable to point to &lt; XSLDBG &gt;/docs/en/
+It is required that xsldbg, be in your system PATH.An example would be
+  set PATH=&lt; XSLDBG &gt;\win32\dsp\xsldbg\%; &lt; GNOME-XML &gt;\win32\dsp\xmlcatalog; %PATH%;
 
 
+
+Assuming you checkout xsldbg to C:\Program Files\xsldbg
+
+Set the XSLDBG_DOCS_DIR environment variable to point to xsldbg's documentation. An example
+  set XSLDBG_DOCS_DIR="&lt; XSLDBG &gt;\docs\en\"
+
+
+
+Setup the XML_CATALOG_FILES environment variable to point to your xml catalog.
+An example would be
+        set XML_CATALOG_FILES="file:///c:\etc\xml\catalog"
+
+
+Setup your xml catalogs using xmlcatalog otherwise you will get warnings when running searches
+See <a href="addcatalog.bat">example xml catalog creation script </a>
+
+Warning ! This is known NOT to work at this time because the URI's are not being parsed correctly.
+This "bug" has been logged on xml@gnome.org
+
+An example usage of xmlcatalog would be
+
+        xmlcatalog -v --noout --create "c:\etc\xml\catalog"
+        xmlcatalog -v --noout --add public "-//xsldbg//DTD search XML V1.0//EN" "file:///c:\Program Files\xsldbg\docs\en\search.dtd"  "c:\etc\xml\catalog"
+        xmlcatalog -v --noout --add public "-//xsldbg//DTD xsldoc XML V1.0//EN" "file:///c:\Program Files\xsldbg\docs\en\xsldoc.dtd"  "c:\etc\xml\catalog"
 </pre>
 
 </body>
