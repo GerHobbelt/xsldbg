@@ -1,0 +1,11 @@
+chdir /usr/share/xml/docbook/xsl/html
+source docbook.xsl
+yes
+data ~/lang/c/xsldbg/xsldbg/docs/en/KDE/index.docbook
+yes
+d *
+run
+show
+break *
+show
+quit

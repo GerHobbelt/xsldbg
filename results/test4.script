@@ -1,0 +1,15 @@
+addparam 
+addparam help step step
+delparam a23
+delparam 10
+addparam help 'step'
+addparam quotedparam "step or where"
+addparam results result/data
+addparam version '1.0'
+showparam
+delparam 0
+delparam 2
+showparam
+delparam
+showparam
+quit

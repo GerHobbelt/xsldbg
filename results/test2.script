@@ -1,0 +1,46 @@
+trace
+run
+break /
+break -l
+break -l test2.xsl
+break -l test2.xsl a23
+break BAD_TEMPLATENAME
+break /
+break /
+break -l test2.xsl 18
+showbreak
+enable -l
+enable -l test2.xsl
+enable -l test2.xsl a23
+enable BAD_TEMPLATENAME
+ delete *
+break /
+enable /
+showbreak
+enable /
+showbreak
+disable /
+showbreak
+break -l test2.xsl 18
+break
+delete *
+break
+showbreak
+delete -l
+delete -l test2.xsl
+delete -l test2.xsl a23
+delete BAD_TEMPLATENAME
+delete *
+break /
+delete /
+showbreak
+break /
+delete -l test2.xsl 18
+showbreak
+break /
+delete *
+showbreak
+break
+delete
+showbreak
+quit
