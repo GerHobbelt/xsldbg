@@ -91,6 +91,8 @@ extern "C" {
         OPTIONS_AUTOENCODE,     /* Try to use the encoding from the stylesheet */
         OPTIONS_UTF8_INPUT,     /* All input from user is in UTF-8.This is normaly 
                                  * used when xsldbg is running as a thread */
+	OPTIONS_STDOUT,        /* Print all error messages to  stdout, 
+				 * normally error messages go to stderr */
         OPTIONS_VERBOSE,        /* Be verbose with messages */
         OPTIONS_OUTPUT_FILE_NAME,       /* what is the output file name */
         OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */
@@ -152,6 +154,8 @@ extern "C" {
         OPTIONS_AUTOENCODE,     /* try to use the encoding from the stylesheet */
         OPTIONS_UTF8_INPUT,     /* All input from user is in UTF-8.This normaly 
                                  * used when xsldbg is running as a thread */
+	OPTIONS_STDOUT,        /* Print all error messages to  stdout, 
+				 * normally error messages go to stderr */
         OPTIONS_VERBOSE,        /* Be verbose with messages */
         OPTIONS_OUTPUT_FILE_NAME,       /* what is the output file name */
         OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */

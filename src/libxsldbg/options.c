@@ -63,6 +63,8 @@ const char *optionNames[] = {
     "preferhtml",               /* Prefer html output for search results */
     "autoencode",               /* Try to use the encoding from the stylesheet */
     "utf8input",                /* All input from "user" will be in UTF-8 */
+     "stdout",                  /* Print all error messages to  stdout, 
+				 * normally error messages go to stderr */
     "verbose",                  /* Be verbose with messages */
     "output",                   /* what is the output file name */
     "source",                   /* The stylesheet source to use */

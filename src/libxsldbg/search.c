@@ -404,8 +404,16 @@ searchSave(const xmlChar * fileName)
     else
         searchInput = xmlStrdup(fileName);
 
-    if (xmlSaveFormatFile((char *) searchInput, searchDataBase, 1))
+    if (xmlSaveFormatFile((char *) searchInput, searchDataBase, 1) != -1){
         result = 1;
+    }else{
+        xsltGenericError(xsltGenericErrorContext,
+		         "Error: Unable to write search Database " \
+			 "to file %s. Try setting the " \
+			 "\"searchresultspath\" option to a writable path\n", 
+			 searchInput);
+      
+    }
 
     if (searchInput)
         xmlFree(searchInput);

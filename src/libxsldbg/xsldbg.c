@@ -133,6 +133,8 @@
 char *xsldbgCommand = NULL;
 #endif
 
+FILE *errorFile = NULL; /* we'll set this just before starting debugger */
+
 xmlParserInputPtr xmlNoNetExternalEntityLoader(const char *URL,
                                                const char *ID,
                                                xmlParserCtxtPtr ctxt);
@@ -561,6 +563,9 @@ usage(const char *name)
     xsltGenericError(xsltGenericErrorContext,
                      "      --preferhtml : Use html output when generating search reports.\n"
                      "                     See search command\n");
+  xsltGenericError(xsltGenericErrorContext,
+		   "        --stdout : Print all error messages to stdout " \
+		   "normally error messages go to stderr\n");
     xsltGenericError(xsltGenericErrorContext,
                      "      --cd <PATH> : Change to specfied working directory\n");
 
@@ -579,6 +584,8 @@ xsldbgMain(int argc, char **argv)
 
     /* the xml document we're processing */
     xmlDocPtr doc;
+
+    errorFile = stderr;
 
 #ifdef __riscos
     /* Remember our invocation command such that we may call ourselves */
@@ -793,6 +800,12 @@ xsldbgMain(int argc, char **argv)
 
         /* copy the volitile options over to xsldbg */
         optionsCopyVolitleOptions();
+
+	/* choose where error messages/xsldbg output get sent to */
+	if (optionsGetIntOption(OPTIONS_STDOUT))
+	  errorFile = stdout;
+	else
+	  errorFile = stderr;
 
 	filesLoadCatalogs();
 
@@ -1334,10 +1347,10 @@ xsldbgGenericErrorFunc(void *ctx, const char *msg, ...)
         vsnprintf(msgBuffer, sizeof(msgBuffer), msg, args);
         encodeResult = filesEncode((xmlChar *) msgBuffer);
         if (encodeResult) {
-            fprintf(stderr, "%s", encodeResult);
+            fprintf(errorFile, "%s", encodeResult);
             xmlFree(encodeResult);
         } else
-            fprintf(stderr, "%s", msgBuffer);
+            fprintf(errorFile, "%s", msgBuffer);
     }
     va_end(args);
 }

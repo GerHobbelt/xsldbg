@@ -992,8 +992,7 @@ updateSearchData(xsltTransformContextPtr styleCtxt ATTRIBUTE_UNUSED,
     xsltGenericError(xsltGenericErrorContext,
                      "Information: Formatting output \n");
 
-    searchSave(NULL);
-    result = 1;
+    result = searchSave(NULL);
     return result;
 }
 

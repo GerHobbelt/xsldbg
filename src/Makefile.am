@@ -42,7 +42,7 @@ xsldbgtest_LDADD = $(top_builddir)/src/libxsldbg/libxsldbg.la $(XSLDBG_TEST_LIBS
 #xsldbgtest_LDADD = $(top_builddir)/src/libxsldbg/libxsldbg.la $(LIBXML_PREFIX)/lib/libxml2.a $(LIBXSLT_PREFIX)/lib/libxslt.a $(XSLDBG_TEST_LIBS)
 
 # the library search path.
-xsldbgtest_LDFLAGS = -static $(all_libraries) -Wl,-rpath -Wl,$(LIBXML_PREFIX)/lib -Wl,-rpath -Wl,$(LIBXSLT_PREFIX)/lib
+xsldbgtest_LDFLAGS = $(XSLDBG_STATIC_FLAGS) $(all_libraries) -Wl,-rpath -Wl,$(LIBXML_PREFIX)/lib -Wl,-rpath -Wl,$(LIBXSLT_PREFIX)/lib
 
 
 clean:
