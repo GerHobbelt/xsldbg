@@ -21,14 +21,74 @@
 #ifndef XSLDBGEVENT_H
 #define XSLDBGEVENT_H
 
+#if defined WIN32
+#include <libxsldbg/xsldbgwin32config.h>
+#endif
+
 #include <qevent.h>
 #include <libxsldbg/xsldbgmsg.h>
 #include <qlist.h>
 
-class XsldbgDebuggerBase;
-
 /* how many columns do we have */
 #define XSLDBGEVENT_COLUMNS 3
+
+class XSLDBG_SO_API XsldbgDebuggerBase;
+class XSLDBG_SO_API XsldbgEventData;
+
+class XSLDBG_SO_API XsldbgEventDataList : public QGList
+{
+public:
+    XsldbgEventDataList()                             {}
+    XsldbgEventDataList( const XsldbgEventDataList &l ) : QGList(l) {}
+   ~XsldbgEventDataList()                             { clear(); }
+    XsldbgEventDataList &operator=(const XsldbgEventDataList &l)
+                        { return (XsldbgEventDataList&)QGList::operator=(l); }
+    bool operator==( const XsldbgEventDataList &list ) const
+    { return QGList::operator==( list ); }
+    uint  count()   const               { return QGList::count(); }
+    bool  isEmpty() const               { return QGList::count() == 0; }
+    bool  insert( uint i, const XsldbgEventData *d){ return QGList::insertAt(i,(QCollection::Item)d); }
+    void  inSort( const XsldbgEventData *d )       { QGList::inSort((QCollection::Item)d); }
+    void  prepend( const XsldbgEventData *d )      { QGList::insertAt(0,(QCollection::Item)d); }
+    void  append( const XsldbgEventData *d )       { QGList::append((QCollection::Item)d); }
+    bool  remove( uint i )              { return QGList::removeAt(i); }
+    bool  remove()                      { return QGList::remove((QCollection::Item)0); }
+    bool  remove( const XsldbgEventData *d )       { return QGList::remove((QCollection::Item)d); }
+    bool  removeRef( const XsldbgEventData *d )    { return QGList::removeRef((QCollection::Item)d); }
+    void  removeNode( QLNode *n )       { QGList::removeNode(n); }
+    bool  removeFirst()                 { return QGList::removeFirst(); }
+    bool  removeLast()                  { return QGList::removeLast(); }
+    XsldbgEventData *take( uint i )                { return (XsldbgEventData *)QGList::takeAt(i); }
+    XsldbgEventData *take()                        { return (XsldbgEventData *)QGList::take(); }
+    XsldbgEventData *takeNode( QLNode *n )         { return (XsldbgEventData *)QGList::takeNode(n); }
+    void  clear()                       { QGList::clear(); }
+    void  sort()                        { QGList::sort(); }
+    int   find( const XsldbgEventData *d )         { return QGList::find((QCollection::Item)d); }
+    int   findNext( const XsldbgEventData *d )     { return QGList::find((QCollection::Item)d,FALSE); }
+    int   findRef( const XsldbgEventData *d )      { return QGList::findRef((QCollection::Item)d); }
+    int   findNextRef( const XsldbgEventData *d ){ return QGList::findRef((QCollection::Item)d,FALSE);}
+    uint  contains( const XsldbgEventData *d ) const { return QGList::contains((QCollection::Item)d); }
+    uint  containsRef( const XsldbgEventData *d ) const
+                                        { return QGList::containsRef((QCollection::Item)d); }
+    XsldbgEventData *at( uint i )                  { return (XsldbgEventData *)QGList::at(i); }
+    int   at() const                    { return QGList::at(); }
+    XsldbgEventData *current()  const              { return (XsldbgEventData *)QGList::get(); }
+    QLNode *currentNode()  const        { return QGList::currentNode(); }
+    XsldbgEventData *getFirst() const              { return (XsldbgEventData *)QGList::cfirst(); }
+    XsldbgEventData *getLast()  const              { return (XsldbgEventData *)QGList::clast(); }
+    XsldbgEventData *first()                       { return (XsldbgEventData *)QGList::first(); }
+    XsldbgEventData *last()                        { return (XsldbgEventData *)QGList::last(); }
+    XsldbgEventData *next()                        { return (XsldbgEventData *)QGList::next(); }
+    XsldbgEventData *prev()                        { return (XsldbgEventData *)QGList::prev(); }
+    void  toVector( QGVector *vec )const{ QGList::toVector(vec); }
+private:
+    void  deleteItem( QCollection::Item d );
+};
+
+
+
+
+
 
 /**
  * This class is used to convert a message from xsldbg into a simple data type
@@ -37,7 +97,7 @@ class XsldbgDebuggerBase;
  *
  * @author Keith Isdale <k_isdale@tpg.com.au> 
  */
-class XsldbgEventData {
+class XSLDBG_SO_API XsldbgEventData {
 
  public:
   XsldbgEventData();
@@ -58,7 +118,7 @@ class XsldbgEventData {
    * 
    * @returns QString::null if invalid column number
    *
-   * @param column 0 =< @p column < XSLDBGEVENT_COLUMNS   
+   * @param column 0 =< @p column < XSLDBGEVENT_COLUMNS
    *  
    */
   QString getText(int column);
@@ -169,7 +229,7 @@ class XsldbgEventData {
  *
  * @author Keith Isdale <k_isdale@tpg.com.au> 
  */
-class XsldbgEvent : public QEvent {
+class XSLDBG_SO_API XsldbgEvent : public QEvent {
 
  public:  
   XsldbgEvent(XsldbgMessageEnum type, const void *data);
@@ -232,7 +292,10 @@ class XsldbgEvent : public QEvent {
       each data item in the list will be of the type required
       by the "type" this event
    */
-  QList<XsldbgEventData> list;
+   class XSLDBG_SO_API XsldbgEventDataList list;
     };
+
+
+
 
 #endif

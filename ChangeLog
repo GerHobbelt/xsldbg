@@ -1,3 +1,12 @@
+Keith Isdale 07th April 2002 <k_isdale@tpg.com.a
+  Version 2.1.8
+  Merge changes due to qxsldbg for WIN32 
+  Added win32/dsp_6_0 for building xsldbg under VC6.0 with 
+	support for qxsldbg
+  Moved tempory results output to %TEMP% directory under WIN32
+  Fixed display of profiling output under qxsldg
+  
+	
 Keith Isdale 05th April 2002 <k_isdale@tpg.com.a
  Version 2.1.7
  Changes needed by qtxsldbg under WIN32

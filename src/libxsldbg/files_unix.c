@@ -66,7 +66,7 @@ filesPlatformInit(void)
         }
     } else {
         xsltGenericError(xsltGenericErrorContext,
-                         "Error: USER environment varaible is not set\n");
+                         "Error: USER environment variable is not set\n");
     }
     return result;
 }

@@ -22,10 +22,8 @@
 #include "options.h"
 #include "utils.h"
 
-static const char *tempNames[] = {
-    "__xsldbg_tmp_file1_txt",
-    "__xsldbg_tmp_file2_txt"
-};
+static char *tempNames[2];
+
 
   /**
    * filesPlatformInit:
@@ -40,8 +38,36 @@ static const char *tempNames[] = {
    */
 int
 filesPlatformInit(void)
-{
-    return 1;
+{ 
+    int nameIndex;
+    int result = 1;
+
+    /* The "base" names for files files to use */
+    const char *names[] = {
+        "\\_xsldbg_tmp1.txt",
+        "\\_xsldbg_tmp2.txt"
+    };
+
+    if (getenv("TEMP")) {
+        for (nameIndex = 0; nameIndex < 2; nameIndex++) {
+            tempNames[nameIndex] =
+                xmlMalloc(strlen(getenv("TEMP")) +
+                          strlen(names[nameIndex]) + 1);
+            if (tempNames[nameIndex]) {
+                xmlStrCat(tempNames[nameIndex], getenv("TEMP"));
+                xmlStrCat(tempNames[nameIndex], names[nameIndex]);
+            } else {
+                xsltGenericError(xsltGenericErrorContext,
+                                 "Error: Out of memory in filesPlatformInit\n");
+                break;
+                result = 0;
+            }
+        }
+    } else {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error: TEMP environment variable is not set\n");
+    }
+    return result;
 }
 
 
@@ -56,7 +82,12 @@ filesPlatformInit(void)
 void
 filesPlatformFree(void)
 {
-    /* empty */
+    int nameIndex;
+
+    for (nameIndex = 0; nameIndex < 2; nameIndex++) {
+        if (tempNames[nameIndex])
+            xmlFree(tempNames[nameIndex]);
+    }
 }
 
   /**

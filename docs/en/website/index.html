@@ -142,11 +142,16 @@ for compilation tools that support prelinking. Configure libxslt with the at lea
 <h2><a name="Screen%20shots">Screen shots</a></h2>
 
 <p>
-<a href="snapshot1.png">Running xsldbg-mode under XEmacs in Linux and WIN32</a>
+<a href="screenshot1.png">Running xsldbg-mode under XEmacs in Linux and WIN32</a>
 </p>
 <p>
-<a href="snapshot2.png">Running the xsldbg plugin in Qunata+.</a>
+<a href="screenshot3.png">Running the qxsldbg under KDE, it will look similar under 
+under windows or cygwin .</a>
 </p>
+<p>
+<a href="screenshot2.png">Running the xsldbg plugin in Quanta+.</a>
+</p>
+
 
 
 
@@ -374,10 +379,12 @@ directory. You can generate either KDE or GNOME style during a compile of xsldbg
         <b>&nbsp;&nbsp;&nbsp;&nbsp;./configure --help </b><br />
  To find out how to do that.
 
-<h2>xsldbg compiles ok but doesn't run when used from command line</h2>
+<h2>xsldbg compiles ok but doesn't run when used from command line/ does not start debugging</h2>
 <ul>
 <li>Make sure that you set and exported the correct LD_LIBRARY_PATH</li>
 <li>Make sure that you've configure the correct libxml and libxslt prefix in libxslt, and xsldbg. Check the values supplied to <br />
+<li>Make sure that you have a version of libxslt that has debugging support enabled
+    this is done by default un *nix but it handled manualy under other platforms </li>
 <b>
 &nbsp;&nbsp; --with-libxslt-prefix <br />
 &nbsp;&nbsp; --with-libxml-prefix <br />

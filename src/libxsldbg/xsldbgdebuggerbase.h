@@ -22,6 +22,14 @@
 #ifndef XSLDBGDEBUGGERBASE_H
 #define XSLDBGDEBUGGERBASE_H
 
+#if defined WIN32
+#  include <libxsldbg/xsldbgwin32config.h>
+#else
+#  ifndef  XSLDBG_SO_API
+#     define XSLDBG_SO_API
+#  endif
+#endif
+
 #include <qobject.h>
 #include <qstringlist.h>
 #include <libxml/tree.h>
@@ -34,7 +42,7 @@ class QStringList;
     We delegate the task of emitting our signals to XsldbgEvent , so 
     Xsldbg must become our friend
 */
-class XsldbgDebuggerBase : public QObject {
+class XSLDBG_SO_API XsldbgDebuggerBase : public QObject {
 
   Q_OBJECT
 
@@ -65,17 +73,17 @@ class XsldbgDebuggerBase : public QObject {
   int updateTimerID;
   QStringList _commandQueue;	
 
- signals: // Signals
-  /** line number and/or file name changed */
-  void lineNoChanged(QString /* fileName */, int /* lineNumber */, bool /* breakpoint */);
+  signals: // Signals
+   /** line number and/or file name changed */
+   void lineNoChanged(QString /* fileName */, int /* lineNumber */, bool /* breakpoint */);
 
-  /** Show a message in debugger window */
-  void showMessage(QString /* msg*/);
+   /** Show a message in debugger window */
+   void showMessage(QString /* msg*/);
 
-  /** Add breakpoint to view, First parameter is QString::null
-      to indicate start of breakpoint list notfication */
-  void breakpointItem(QString /* fileName*/, int /* lineNumber */, QString /*templateName*/,
-		      bool /* enabled */, int /* id */);
+   /** Add breakpoint to view, First parameter is QString::null
+       to indicate start of breakpoint list notfication */
+   void breakpointItem(QString /* fileName*/, int /* lineNumber */, QString /*templateName*/,
+ 		      bool /* enabled */, int /* id */);
 
   /** Add global variable to view, First parameter is QString::null
       to indicate start of global variable list notfication */

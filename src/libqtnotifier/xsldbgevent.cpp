@@ -22,24 +22,26 @@
 #include <qfile.h>
 #include <qtextstream.h>
 #include <libxslt/xsltInternals.h>
-#include "xsldbgevent.h"
-#include "xsldbgdebuggerbase.h"
-#include "../libxsldbg/arraylist.h"
-#include "../libxsldbg/breakpoint.h"
-#include "../libxsldbg/xsldbgmsg.h"
-#include "../libxsldbg/xsldbgthread.h"
-#include "../libxsldbg/options.h"
-#include "../libxsldbg/files.h"
+#include <libxsldbg/xsldbgevent.h>
+#include <libxsldbg/xsldbgdebuggerbase.h>
+#include <libxsldbg/arraylist.h>
+#include <libxsldbg/breakpoint.h>
+#include <libxsldbg/xsldbgmsg.h>
+#include <libxsldbg/xsldbgthread.h>
+#include <libxsldbg/options.h>
+#include <libxsldbg/files.h>
 
 QString updateText;
 
 XsldbgEventData::XsldbgEventData()
 {
-  for (int column = 0; column < XSLDBGEVENT_COLUMNS; column++){
+  int column;
+
+  for (column = 0; column < XSLDBGEVENT_COLUMNS; column++){
     textValues[column] = QString::null;
   }
 
- for (int column = 0; column < XSLDBGEVENT_COLUMNS; column++){
+ for (column = 0; column < XSLDBGEVENT_COLUMNS; column++){
    intValues[column] = -1;
   }
 
@@ -193,7 +195,27 @@ XsldbgEventData *XsldbgEvent::createEventData(XsldbgMessageEnum type, const void
     case XSLDBG_MSG_FILEOUT:         /* 14 : Response to cat commmand, ie
                                  * Free form text in file */
       /* this is actualy the  file to load */
-      result->setText(0, XsldbgDebuggerBase::fromUTF8((xmlChar*)msgData));
+      {
+	QString fileName = XsldbgDebuggerBase::fromUTF8((xmlChar*)msgData);
+	QString outputText;
+	if (fileName != QString::null){
+	  QFile file (fileName);
+	  if (file.open(IO_ReadOnly)){
+	    QTextStream textFile(&file);
+	    QString textIn = "";
+	    textFile.setEncoding(QTextStream::UnicodeUTF8);				
+	    while (1){
+	      textIn = textFile.readLine();
+	      if (textIn == QString::null)
+		break;						
+	      outputText.append(textIn).append("\n");
+	    }
+	    file.close();
+	  }
+	  outputText.append("\n");
+	  result->setText(0, outputText);
+	}
+      }
       break;
 
     case XSLDBG_MSG_LOCALVAR_CHANGED:        /* 15 : Response to locals command ie a 
@@ -346,28 +368,9 @@ void XsldbgEvent::emitMessage(XsldbgEventData *eventData)
 	updateText.append(eventData->getText(0));
       break;
 
-    case XSLDBG_MSG_FILEOUT:         /* 14 : Response to cat commmand, ie
-                                 * Free form text in file */
-	/*The file name is provided by notifyData */
-      if (eventData->getText(0) != QString::null){
-	QFile file (eventData->getText(0));
-	if (file.open(IO_ReadOnly)){
-	  QTextStream textFile(&file);
-	  QString textIn = "";
-	  textFile.setEncoding(QTextStream::UnicodeUTF8);				
-	  while (1){
-	    textIn = textFile.readLine();
-	    if (textIn == QString::null)
-	      break;						
-	    updateText.append(textIn).append("\n");
-	  }
-	  file.close();
-	}
-	updateText.append("\n");
-	/*
-	emit debugger->showMsg(updateText);
-	*/
-       }
+ case XSLDBG_MSG_FILEOUT:         /* 14 : Response to cat commmand */
+      if (eventData->getText(0) != QString::null)
+	updateText.append(eventData->getText(0));
 	break;
 
     case XSLDBG_MSG_LOCALVAR_CHANGED:        /* 15 : Response to locals command ie a 
@@ -812,3 +815,8 @@ void XsldbgEvent::handleStringOptionItem(XsldbgEventData *eventData, const  void
 }
 
 
+
+void XsldbgEventDataList::deleteItem( QCollection::Item d )
+{
+    if ( del_item ) delete (XsldbgEventData *)d;
+}

@@ -15,17 +15,21 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef QTNOTIFIER
-#define QTNOTIFIER
+#ifndef QTNOTIFIER_H
+#define QTNOTIFIER_H
+
+#if defined WIN32
+#include <libxsldbg/xsldbgwin32config.h>
+#endif
 
 #include <libxsldbg/xsldbgnotifier.h>
 
 
-class XsldbgDebuggerBase;
+class XSLDBG_SO_API XsldbgDebuggerBase;
 
 extern "C" {
 
-void connectNotifier(XsldbgDebuggerBase *debugger);
+XSLDBG_SO_API void connectNotifier(XsldbgDebuggerBase *debugger);
 
 }
 

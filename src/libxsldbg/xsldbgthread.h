@@ -20,7 +20,7 @@
 #define  XSLDBGTHREAD_H
 
 #if defined WIN32
-#include "libqtnotifier_so.h"
+#include <libxsldbg/xsldbgwin32config.h>
 #endif
 
 

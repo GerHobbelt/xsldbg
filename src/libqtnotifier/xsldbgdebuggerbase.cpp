@@ -18,7 +18,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include "xsldbgdebuggerbase.h"
+#include <libxsldbg/xsldbgdebuggerbase.h>
 #include <qapplication.h>
 #include <qglobal.h>
 #include <qstringlist.h>
@@ -56,4 +56,3 @@ QString XsldbgDebuggerBase::fromUTF8(const xmlChar *text)
 }
 
 
-#include "xsldbgdebuggerbase.moc"
