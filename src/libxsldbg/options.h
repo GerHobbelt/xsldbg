@@ -423,7 +423,7 @@ extern "C" {
 
 
   /**
-   * optionsRead:
+   * optionsReadDoc:
    * @doc : Is valid xsldbg config document, in the format as indicated 
    *        by config.dtd
    *
@@ -434,7 +434,7 @@ extern "C" {
    * Returns 1 if able to read @doc and load options found,
    *         0 otherwise
    */
-  int optionsRead(xmlDocPtr doc);
+  int optionsReadDoc(xmlDocPtr doc);
 
 
   /**
@@ -448,6 +448,20 @@ extern "C" {
    *
    */
   xmlChar* optionsConfigFileName(void);
+
+
+  /**
+   * optionsLoad:
+   *
+   * Load options from configuation file/registry
+   *
+   * This is a platform specific interface
+   * 
+   * Returns 1 if able to load options
+   *         0 otherwise
+   */
+  int optionsLoad(void);
+
 
 /* ---------------------------------------------
           Parameter related options 
