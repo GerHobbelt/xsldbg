@@ -24,7 +24,7 @@
 
 #define VERSION "2.0.3"
 
-#define TIMESTAMP "6nd Feb 2002"
+#define TIMESTAMP "6th Feb 2002"
 
 #ifndef WITH_DEBUGGER
 #define WITH_DEBUGGER
