@@ -8,9 +8,12 @@ EXTRA_DIST = \
 	debugXSL.c debugXSL.h 	\
 	dbgmain.c		\
 	dbgarraylist.c		\
+	arraylist.h		\
 	dbgcallstack.c		\
 	dbgsearch.c		\
 	dbgbreakpoint.c	\
+	breakpoint.h 		\
+	breakpointInternals.h	\
 	breakpoint_cmds.c	\
 	template_cmds.c		\
 	nodeview_cmds.c		\
@@ -18,20 +21,26 @@ EXTRA_DIST = \
 	param_cmds.c		\
 	trace_cmds.c		\
 	search_cmds.c		\
-	files.c files.h		\
-	options.c options.h	\
+	files.c 		\
+	files.h			\
+	options.c 		\
+	options.h		\
 	xsldbg.h
 
 bin_PROGRAMS = xsldbg
 xsldbg_SOURCES = \
 	xsldbg.c 	\
-	files.c		\
-	options.c	\
+	files.c	files.h	\
+	options.c 	\
+	options.h	\
 	dbgmain.c	\
 	dbgarraylist.c	\
+	arraylist.h	\
 	dbgcallstack.c	\
 	dbgsearch.c		\
 	dbgbreakpoint.c 	\
+	breakpoint.h 		\
+	breakpointInternals.h	\
 	breakpoint_cmds.c 	\
 	template_cmds.c	\
 	nodeview_cmds.c	\
