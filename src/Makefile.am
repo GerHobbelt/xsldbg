@@ -30,7 +30,8 @@ EXTRA_DIST = \
 	xsldbg.h		\
 	xslcallpoint.h		\
 	xslsearch.h		\
-	xslbreakpoint_2.h
+	xslbreakpoint_2.h	\
+	readme.txt
 
 bin_PROGRAMS = xsldbg
 xsldbg_SOURCES = \
