@@ -56,7 +56,7 @@ $(top_builddir)/src/libxsldbg/libxsldbg.la:
 	cd $(top_builddir)/src/libxsldbg; $(MAKE
 
 # use of configure defined libraries
-listTest_LDADD = $(XSLDBG_TEST_LIBS) ../src/simpleio.o $(top_builddir)/src/libxsldbg/libxsldbg.la
+listTest_LDADD = ../src/simpleio.o $(top_builddir)/src/libxsldbg/libxsldbg.la $(XSLDBG_TEST_LIBS)
 
 listTest_LDFLAGS = -static $(all_libraries) \
 -Wl,-rpath -Wl,$(LIBXML_PREFIX)/lib -Wl,-rpath -Wl,$(LIBXSLT_PREFIX)/lib 
@@ -101,9 +101,10 @@ all: $(XSLDBG) coretests runtests
 
 
 clean:
-	rm -f ../results/*.script
-	rm -f ../results/*.pl
 	rm -f ../results/*.log
+	rm -f $(TESTS) 
+	rm -f $(TEST_SCRIPT)
+	rm -f $(TEST_RESULTS)
 
 very-clean: clean
 	rm -f *.*~

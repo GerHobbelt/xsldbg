@@ -1,3 +1,31 @@
+Keith Isdale 17 Feb 2002 <k_isdale@tpg.com.au
+  Version 2.0.8
+  Bug fixes suggested by Hannes
+	o  Applied patches to fix the order of values in 
+	   xsldbg_LDADD and xsldbgtest_LDADD for src/Makefile.am
+	   listTest_LDADD searchTest_LDADD for tests/Makefile.am	
+        o  Reversed the order of printing "frame stack" now prints the 
+	   newest item at top of list
+	
+  Bug fixes 
+	o added missing checks on several function's preconditions. Mainly missed checking
+	   if pointer arguments were NULL
+	o made several error messages consistant with rest of project
+	o function xslDbgShellDelete -l option not deleting breakpoint
+	
+  Extended automatic command line tests to cover
+	o add, delete, enable and  disable commands
+	o adddparam, deleteparam and showparam commands
+	
+  xsldbg commands covered by command line tests now listed
+	   in tests/testcoverage.txt
+
+  Moved functions xsldbgLineNo, xsldbgUrl, and xsldbgUpdateFileDetails to 
+	files module to allow memory used by these functions to be 
+	freed properly
+	
+	
+	
 Keith Isdale 15 Feb 2002 <k_isdale@tpg.com.au
   Version 2.0.7
   Advised by Hannes that the Makefile.am's were broken :-(

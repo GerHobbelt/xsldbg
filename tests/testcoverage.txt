@@ -47,3 +47,17 @@ vendor-url		ND	 ND
 version			ND	 ND
 when			N/A	 3
 with-param		N/A	 2
+
+
+
+
+xsldbg command	     Test number
+-------------------- ----------
+addparam		4
+break			2
+delete			2
+delparam		4
+disable			2
+enable			2
+showbreak		2
+showparam		4

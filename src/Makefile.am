@@ -26,7 +26,7 @@ $(top_builddir)/src/libxsldbg/libxsldbg.la:
 	cd $(top_builddir)/src/libxsldbg; $(MAKE) 
 
 # use of configure defined libraries
-xsldbg_LDADD = $(XSLDBG_TEST_LIBS) $(top_builddir)/src/libxsldbg/libxsldbg.la
+xsldbg_LDADD = $(top_builddir)/src/libxsldbg/libxsldbg.la $(XSLDBG_TEST_LIBS)
 
 # the library search path.
 xsldbg_LDFLAGS = $(all_libraries) 
@@ -39,7 +39,7 @@ xsldbgtest_SOURCES = \
 noinst_PROGRAMS = xsldbgtest
 
 # use of configure defined libraries
-xsldbgtest_LDADD = $(XSLDBG_TEST_LIBS) $(top_builddir)/src/libxsldbg/libxsldbg.la
+xsldbgtest_LDADD = $(top_builddir)/src/libxsldbg/libxsldbg.la $(XSLDBG_TEST_LIBS)
 
 # the library search path.
 xsldbgtest_LDFLAGS = -static $(all_libraries) -Wl,-rpath -Wl,$(LIBXML_PREFIX)/lib -Wl,-rpath -Wl,$(LIBXSLT_PREFIX)/lib

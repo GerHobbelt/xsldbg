@@ -10,9 +10,55 @@
   <!-- Test parameter and option commands -->
 
 <testcmd>
+
+<!-- Check robustness of command format 
+     The following will print an error message telling user what
+     format to use -->
+<cmd>
+<test>addparam </test>
+<result>
+<row>
+<matchtext>Error: addparam command expected</matchtext>
+</row>
+</result>
+</cmd>
+
+<cmd>
+<test>addparam help step step</test>
+<result>
+<row>
+<matchtext>Error: addparam command expected</matchtext>
+</row>
+</result>
+</cmd>
+
+<cmd>
+<test>delparam a23</test>
+<result>
+<row>
+<matchtext>Error: Unable to read line number. Failed to delete parameter</matchtext>
+</row>
+</result>
+</cmd>
+
+<cmd>
+<test>delparam 10</test>
+<result>
+<row>
+<matchtext>Error: Unable to find parameter 10. Failed to delete parameter</matchtext>
+</row>
+</result>
+</cmd>
+
+
+
 <!-- Add some parameters -->
 <cmd>
 <test>addparam help 'step'</test>
+</cmd>
+<!-- Where double quotes are use treat as a single argument -->
+<cmd>
+<test>addparam quotedparam "step or where"</test>
 </cmd>
 <cmd>
 <test>addparam results result/data</test>
@@ -29,10 +75,48 @@
 <parameter id="0" name="help" value="'step'"/>
 </row>
 <row>
-<parameter id="1" name="results" value="result/data"/>
+<parameter id="1" name="quotedparam" value="step or where"/>
 </row>
 <row>
-<parameter id="2" name="version" value="'1.0'"/>
+<parameter id="2" name="results" value="result/data"/>
+</row>
+<row>
+<parameter id="3" name="version" value="'1.0'"/>
+</row>
+</result>
+</cmd>
+
+
+<!-- remove the top and bottom arguments-->
+<cmd>
+<test>delparam 0</test>
+</cmd>
+<cmd>
+<test>delparam 2</test>
+</cmd>
+
+<!-- check what we got -->
+<cmd>
+<test>showparam</test>
+<result>
+<row>
+<parameter id="0" name="quotedparam" value="step or where"/>
+</row>
+<row>
+<parameter id="1" name="results" value="result/data"/>
+</row>
+</result>
+</cmd>
+
+<!-- Delete all parameters and check what we have -->
+<cmd>
+<test>delparam</test>
+</cmd>
+<cmd>
+<test>showparam</test>
+<result>
+<row>
+<matchtext>No parameters present</matchtext>
 </row>
 </result>
 </cmd>
@@ -40,6 +124,7 @@
 <cmd>
 <test>quit</test>
 </cmd>
+
 </testcmd>
 
 

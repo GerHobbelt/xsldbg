@@ -124,14 +124,15 @@ notifyListStart(XsldbgMessageEnum type)
 {
     int result = 0;
 
-    switch(type){
-    case XSLDBG_MSG_INTOPTION_CHANGE:
-    case XSLDBG_MSG_STRINGOPTION_CHANGE:
-      msgList = arrayListNew(10,  (freeItemFunc) optionsParamItemFree);
-      break;
+    switch (type) {
+        case XSLDBG_MSG_INTOPTION_CHANGE:
+        case XSLDBG_MSG_STRINGOPTION_CHANGE:
+            msgList =
+                arrayListNew(10, (freeItemFunc) optionsParamItemFree);
+            break;
 
-    default:
-	msgList = arrayListNew(10, NULL);
+        default:
+            msgList = arrayListNew(10, NULL);
     }
 
     notifyList =

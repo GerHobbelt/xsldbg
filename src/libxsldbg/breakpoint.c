@@ -14,12 +14,13 @@
 /*-----------------------------------------------------------
        Private functions
 -----------------------------------------------------------*/
+
 /**
  * lineNoItemNew:
  * 
  * Returns a new hash table for break points
  */
-    xmlHashTablePtr lineNoItemNew(void);
+xmlHashTablePtr lineNoItemNew(void);
 
 
 /**
@@ -28,7 +29,7 @@
  * 
  * Free @item and all its contents
  */
-    void lineNoItemFree(void *item);
+void lineNoItemFree(void *item);
 
 
 /**
@@ -39,8 +40,8 @@
  * Returns 1 if able to delete @breakPtr from @breakPointHash,
  *         0 otherwise
  */
-    int lineNoItemDelete(xmlHashTablePtr breakPointHash,
-                         breakPointPtr breakPtr);
+int lineNoItemDelete(xmlHashTablePtr breakPointHash,
+                     breakPointPtr breakPtr);
 
 /**
  * lineNoItemAdd:
@@ -52,8 +53,7 @@
  * Returns 1 if able to add @breakPtr to @breakPointHash,
  *         0 otherwise
  */
-    int lineNoItemAdd(xmlHashTablePtr breakPointHash,
-                      breakPointPtr breakPtr);
+int lineNoItemAdd(xmlHashTablePtr breakPointHash, breakPointPtr breakPtr);
 
 /*-----------------------------------------------------------
        Breakpoint debugger functions
@@ -123,8 +123,7 @@ lineNoItemFree(void *item)
  *         0 otherwise
  */
 int
-lineNoItemDelete(xmlHashTablePtr breakPointHash,
-                 breakPointPtr breakPtr)
+lineNoItemDelete(xmlHashTablePtr breakPointHash, breakPointPtr breakPtr)
 {
     int result = 0;
 
@@ -151,8 +150,7 @@ lineNoItemAdd(xmlHashTablePtr breakPointHash, breakPointPtr breakPtr)
     int result = 0;
 
     if (breakPointHash && breakPtr) {
-        if (xmlHashAddEntry(breakPointHash, breakPtr->url, breakPtr) ==
-            0)
+        if (xmlHashAddEntry(breakPointHash, breakPtr->url, breakPtr) == 0)
             result = 1;
     }
     return result;
@@ -249,8 +247,8 @@ breakPointEmpty(void)
 breakPointPtr
 breakPointItemNew(void)
 {
-    breakPointPtr breakPtr =
-        (breakPointPtr) xmlMalloc(sizeof(breakPoint));
+    breakPointPtr breakPtr = (breakPointPtr) xmlMalloc(sizeof(breakPoint));
+
     if (breakPtr) {
         breakPtr->url = NULL;
         breakPtr->lineNo = -1;
@@ -304,8 +302,8 @@ breakPointItemFree(void *payload, xmlChar * name ATTRIBUTE_UNUSED)
 breakPointPtr
 breakPointActiveBreakPoint(void)
 {
-  /* This function is depreciated */
-  return NULL;/* activeBreakPointItem; */
+    /* This function is depreciated */
+    return NULL;                /* activeBreakPointItem; */
 }
 
 
@@ -321,10 +319,10 @@ breakPointActiveBreakPoint(void)
 void
 breakPointSetActiveBreakPoint(breakPointPtr breakPtr)
 {
-  /*
-    activeBreakPointItem = breakPtr;
-  */
-  
+    /*
+     * activeBreakPointItem = breakPtr;
+     */
+
 }
 
 
@@ -353,7 +351,7 @@ breakPointAdd(const xmlChar * url, long lineNumber,
     if (!breakList) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Error breakPoints not initialized\n");
+                         "Error: breakPoints not initialized\n");
 #endif
         return result;
     }
@@ -361,7 +359,7 @@ breakPointAdd(const xmlChar * url, long lineNumber,
     if (!url || (lineNumber == -1)) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Invalid url or line number to breakPointAdd\n");
+                         "Error: Invalid url or line number to breakPointAdd\n");
 #endif
         return result;
     }
@@ -370,7 +368,7 @@ breakPointAdd(const xmlChar * url, long lineNumber,
     if (breakPointIsPresent(url, lineNumber)) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Breakpoint at file %s: line %d exists\n",
+                         "Error: Breakpoint at file %s: line %d exists\n",
                          url, lineNumber);
 #endif
         return result;
@@ -401,7 +399,7 @@ breakPointAdd(const xmlChar * url, long lineNumber,
             if ((lineNumber < breakList->count) && breakList->count) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
                 xsltGenericError(xsltGenericErrorContext,
-                                 "Unable to find breakpoint line hash at %d\n",
+                                 "Error: Unable to find breakpoint line hash at %d\n",
                                  lineNumber);
 #endif
             } else {
@@ -425,7 +423,7 @@ breakPointAdd(const xmlChar * url, long lineNumber,
                         result = 0;
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
                         xsltGenericError(xsltGenericErrorContext,
-                                         "Unable to create hash table breakPoint list: memory error\n");
+                                         "Error: Unable to create hash table breakPoint list: memory error\n");
 #endif
                         return result;
                     }
@@ -438,7 +436,7 @@ breakPointAdd(const xmlChar * url, long lineNumber,
                 } else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
                     xsltGenericError(xsltGenericErrorContext,
-                                     "Unable to create new breakPoint:interal error\n");
+                                     "Error: Unable to create new breakPoint:interal error\n");
 #endif
                     return result;
                 }
@@ -448,7 +446,7 @@ breakPointAdd(const xmlChar * url, long lineNumber,
     } else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Unable to create new breakPoint: memory error\n");
+                         "Error: Unable to create new breakPoint: memory error\n");
 #endif
     }
 
@@ -481,7 +479,7 @@ breakPointDelete(breakPointPtr breakPtr)
     } else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Break point not found: xslDeleteBreakPoint\n");
+                         "Error: Break point not found: xslDeleteBreakPoint\n");
 #endif
     }
     return result;
@@ -531,7 +529,7 @@ breakPointLinesCount(void)
     if (!breakList) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "BreakPoints not initialized\n");
+                         "Error: BreakPoints not initialized\n");
 #endif
         return 0;
     } else
@@ -595,45 +593,46 @@ breakPointPrint(FILE * file, breakPointPtr breakPtr)
     if (!breakPtr)
         return result;
 
-    if (file){
-      /* support old meaning of file parameter */
-      fprintf(file, "Breakpoint %d ", breakPtr->id);
-      if (breakPtr->enabled)
-        fprintf(file, "enabled ");
-      else
-        fprintf(file, "disabled ");
+    if (file) {
+        /* support old meaning of file parameter */
+        fprintf(file, "Breakpoint %d ", breakPtr->id);
+        if (breakPtr->enabled)
+            fprintf(file, "enabled ");
+        else
+            fprintf(file, "disabled ");
 
-      if (breakPtr->templateName) {
-        fprintf(file, "for template :\"%s\" ", breakPtr->templateName);
-      }
+        if (breakPtr->templateName) {
+            fprintf(file, "for template :\"%s\" ", breakPtr->templateName);
+        }
 
-      if (breakPtr->url) {
-        fprintf(file, "in file %s : line %ld",
-                breakPtr->url, breakPtr->lineNo);
-      } else {
-        fprintf(file, "in file <n/a>, line %ld", breakPtr->lineNo);
-      }
-    }else{
-      xsltGenericError(xsltGenericErrorContext,
-		        "Breakpoint %d ", breakPtr->id);
-      if (breakPtr->enabled)
-	xsltGenericError(xsltGenericErrorContext, "enabled ");
-      else
-	xsltGenericError(xsltGenericErrorContext,"disabled ");
+        if (breakPtr->url) {
+            fprintf(file, "in file %s : line %ld",
+                    breakPtr->url, breakPtr->lineNo);
+        } else {
+            fprintf(file, "in file <n/a>, line %ld", breakPtr->lineNo);
+        }
+    } else {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Breakpoint %d ", breakPtr->id);
+        if (breakPtr->enabled)
+            xsltGenericError(xsltGenericErrorContext, "enabled ");
+        else
+            xsltGenericError(xsltGenericErrorContext, "disabled ");
 
-      if (breakPtr->templateName) {
-	xsltGenericError(xsltGenericErrorContext,
-			 "for template :\"%s\" ", breakPtr->templateName);
-      }
+        if (breakPtr->templateName) {
+            xsltGenericError(xsltGenericErrorContext,
+                             "for template :\"%s\" ",
+                             breakPtr->templateName);
+        }
 
-      if (breakPtr->url) {
-	xsltGenericError(xsltGenericErrorContext,
-			 "in file %s : line %ld",
-			 breakPtr->url, breakPtr->lineNo);
-      } else {
-	xsltGenericError(xsltGenericErrorContext,
-			 "in file <n/a>, line %ld", breakPtr->lineNo);
-      }
+        if (breakPtr->url) {
+            xsltGenericError(xsltGenericErrorContext,
+                             "in file %s : line %ld",
+                             breakPtr->url, breakPtr->lineNo);
+        } else {
+            xsltGenericError(xsltGenericErrorContext,
+                             "in file <n/a>, line %ld", breakPtr->lineNo);
+        }
     }
     return ++result;
 }

@@ -9,7 +9,7 @@
 
 #include "xsldbg.h"
 #include "debug.h"
-#include "debugXSL.h" /* needed for debugXSLBreak function */
+#include "debugXSL.h"           /* needed for debugXSLBreak function */
 #include "breakpoint.h"
 #include "callstack.h"
 #include "files.h"
@@ -40,7 +40,8 @@ struct DebuggerCallbacks {
  *   to the debugXSLBreak function
  */
 void debugHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
-                    xsltTemplatePtr templ, xsltTransformContextPtr ctxt);
+                         xsltTemplatePtr templ,
+                         xsltTransformContextPtr ctxt);
 
 /* ------------------------------------- 
     End private functions
@@ -126,9 +127,9 @@ debugGotControl(int reached)
  */
 void
 debugHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
-               xsltTemplatePtr templ, xsltTransformContextPtr ctxt)
+                    xsltTemplatePtr templ, xsltTransformContextPtr ctxt)
 {
-	
+
     if (!cur && !node) {
         xsltGenericError(xsltGenericErrorContext,
                          "Soure and doc are NULL can't enter debugger\n");

@@ -75,6 +75,10 @@ splitString(xmlChar * textIn, int maxStrings, xmlChar ** out)
     int wordCount = 0;
     int foundQuote = 0;
 
+    if (!textIn || !out)
+        return wordCount;
+
+
     while ((*textIn != '\0') && (wordCount < maxStrings)) {
         /*skip the first spaces ? */
         while (IS_BLANK(*textIn))
@@ -106,8 +110,8 @@ splitString(xmlChar * textIn, int maxStrings, xmlChar ** out)
             if (*textIn == '\0') {
                 xsltGenericError(xsltGenericErrorContext,
                                  "Error: Unmatched quotes in input\n");
-		wordCount = 0;
-		break;
+                wordCount = 0;
+                break;
             }
             *textIn = '\0';
             textIn++;           /* skip the '"' which is now a '\0' */
@@ -118,7 +122,7 @@ splitString(xmlChar * textIn, int maxStrings, xmlChar ** out)
     }
 
     if (*textIn != '\0')
-        wordCount = 0;             /* We have not processed all the text givent to us */
+        wordCount = 0;          /* We have not processed all the text givent to us */
     return wordCount;
 }
 
@@ -138,6 +142,9 @@ int
 lookupName(xmlChar * name, xmlChar ** matchList)
 {
     int result = -1, nameIndex;
+
+    if (!name || !matchList)
+        return result;
 
     for (nameIndex = 0; matchList[nameIndex]; nameIndex++) {
         if (!xmlStrCmp(name, matchList[nameIndex])) {

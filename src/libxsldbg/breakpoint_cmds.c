@@ -24,7 +24,7 @@
 #include "debugXSL.h"
 #include "files.h"
 #include "utils.h"
-#include "xsldbgthread.h" /* for getThreadStatus() */
+#include "xsldbgthread.h"       /* for getThreadStatus() */
 
 #include "xsldbgmsg.h"
 
@@ -89,17 +89,23 @@ xslDbgShellFrameBreak(xmlChar * arg, int stepup)
     static const xmlChar *errorPrompt =
         (xmlChar *) "Failed to add break point\n";
 
-    if (!arg || !filesGetStylesheet() || !filesGetMainDoc()) {
+    if (!filesGetStylesheet() || !filesGetMainDoc()) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Errror : Debugger has no files loaded, try reloading files\n%s",
+                         "Error : Debugger has no files loaded, try reloading files\n%s",
                          errorPrompt);
+        return result;
+    }
+
+    if (!arg) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error: NULL argument provided\n");
         return result;
     }
 
     if (xmlStrLen(arg) > 0) {
         if (!sscanf((char *) arg, "%d", &noOfFrames)) {
             xsltGenericError(xsltGenericErrorContext,
-                             "Error : Unable to read number of frames\n");
+                             "Error: Unable to read number of frames\n");
             return result;
         }
     } else {
@@ -114,7 +120,7 @@ xslDbgShellFrameBreak(xmlChar * arg, int stepup)
 
     if (!result)
         xsltGenericError(xsltGenericErrorContext,
-                         "Error : Failed to set frame break point\n");
+                         "Error: Failed to set frame break point\n");
     return result;
 }
 
@@ -137,7 +143,13 @@ validateSource(xmlChar ** url, long *lineNo)
 
     if (!filesGetStylesheet()) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Stylesheet not valid files not loaded yet?\n");
+                         "Error: Stylesheet not valid files not loaded yet?\n");
+        return result;
+    }
+
+    if (!url || !lineNo) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error: NULL argument provided\n");
         return result;
     }
 
@@ -170,7 +182,7 @@ validateSource(xmlChar ** url, long *lineNo)
                                    searchData->node);
                     if (!searchInf->found) {
                         xsltGenericError(xsltGenericErrorContext,
-                                         "Warning : Breakpoint at file %s : line %ld doesn't "
+                                         "Warning: Breakpoint at file %s : line %ld doesn't "
                                          "seem to be valid.\n",
                                          *url, *lineNo);
                     }
@@ -190,7 +202,7 @@ validateSource(xmlChar ** url, long *lineNo)
             }
         } else
             xsltGenericError(xsltGenericErrorContext,
-                             "Error : Unable to find a stylesheet file whose name contains %s\n",
+                             "Error: Unable to find a stylesheet file whose name contains %s\n",
                              *url);
     }
 
@@ -198,7 +210,7 @@ validateSource(xmlChar ** url, long *lineNo)
         searchFreeInfo(searchInf);
     else
         xsltGenericError(xsltGenericErrorContext,
-                         "Error : Unable to create searchInfo out of memory?\n");
+                         "Error: Unable to create searchInfo out of memory?\n");
 
     return result;
 }
@@ -224,7 +236,13 @@ validateData(xmlChar ** url, long *lineNo)
 
     if (!filesGetMainDoc()) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Document not valid files not loaded yet?\n");
+                         "Error: Document not valid files not loaded yet?\n");
+        return result;
+    }
+
+    if (!url || !lineNo) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error: NULL argument provided\n");
         return result;
     }
 
@@ -265,7 +283,7 @@ validateData(xmlChar ** url, long *lineNo)
 
         if (!searchInf->found) {
             xsltGenericError(xsltGenericErrorContext,
-                             "Warning ; Breakpoint at file %s : line %ld doesn't "
+                             "Warning: Breakpoint at file %s : line %ld doesn't "
                              "seem to be valid.\n", *url, *lineNo);
             result = 1;
         } else {
@@ -280,7 +298,7 @@ validateData(xmlChar ** url, long *lineNo)
         searchFreeInfo(searchInf);
     else
         xsltGenericError(xsltGenericErrorContext,
-                         "Error : Unable to create searchInfo out of memory?\n");
+                         "Error: Unable to create searchInfo out of memory?\n");
 
     return result;
 }
@@ -310,12 +328,19 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
     if (style == NULL) {
         style = filesGetStylesheet();
     }
-    if (!arg || !style || !filesGetMainDoc()) {
+    if (!style || !filesGetMainDoc()) {
         xsltGenericError(xsltGenericErrorContext,
                          "Errror : Debugger has no files loaded, try reloading files\n%s",
                          errorPrompt);
         return result;
     }
+
+    if (!arg) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error: NULL argument provided\n");
+        return result;
+    }
+
     if (arg[0] == '-') {
         xmlChar *opts[2];
 
@@ -323,7 +348,8 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
             if (splitString(&arg[2], 2, opts) == 2) {
                 if (!sscanf((char *) opts[1], "%ld", &lineNo)) {
                     xsltGenericError(xsltGenericErrorContext,
-                                     "Error : Unable to read line number \n");
+                                     "Error: Unable to read line number %s\n",
+                                     errorPrompt);
                     return result;
                 } else {
                     /* try to guess whether we are looking for source or data 
@@ -347,9 +373,10 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                 }
             } else
                 xsltGenericError(xsltGenericErrorContext,
-                                 "Error : Missing arguments to break command\n");
+                                 "Error: break command arguments not in format \"-l <FILE_NAME> <LINE_NUMBER>\"\n");
         }
     } else if (xmlStrCmp(arg, "*") != 0) {
+        /* Add breakpoint at supplied template name */
         xmlNodePtr templNode = findTemplateNode(style, arg);
 
         if (templNode && templNode->doc) {
@@ -357,7 +384,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                 (templNode->doc->URL, xmlGetLineNo(templNode), arg,
                  DEBUG_BREAK_SOURCE))
                 xsltGenericError(xsltGenericErrorContext,
-                                 "Error : Break point to template '%s' in file %s :"
+                                 "Error: Breakpoint to template '%s' in file %s :"
                                  "line %d exists \n", arg,
                                  templNode->doc->URL,
                                  xmlGetLineNo(templNode));
@@ -365,10 +392,9 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                 result = 1;
         } else
             xsltGenericError(xsltGenericErrorContext,
-                             "Error : Unable to find template '%s' \n",
-                             arg);
+                             "Error: Unable to find template '%s'\n", arg);
     } else {
-        /* add all template names */
+        /* add breakpoint at all template names */
         const xmlChar *name;
         xmlChar *defaultUrl = (xmlChar *) "<n/a>";
         int newBreakPoints = 0;
@@ -392,10 +418,10 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
                     if (!breakPointAdd(url, xmlGetLineNo(templ->elem),
                                        name, DEBUG_BREAK_SOURCE)) {
                         xsltGenericError(xsltGenericErrorContext,
-                                         "Error : Can't add breakPoint to file %s : line %d\n",
+                                         "Error: Can't add breakPoint to file %s : line %d\n",
                                          url, xmlGetLineNo(templ->elem));
                         xsltGenericError(xsltGenericErrorContext,
-                                         "Error : BreakPoint to template '%s' in file %s :"
+                                         "Error: Breakpoint to template '%s' in file %s :"
                                          " line %d exists \n", name,
                                          templ->elem->doc->URL,
                                          xmlGetLineNo(templ->elem));
@@ -411,12 +437,13 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
         }
         if (newBreakPoints == 0) {
             xsltGenericError(xsltGenericErrorContext,
-                             "Error : No templates found or unable to add any breakPoints\n ");
+                             "Error: No templates found or unable to add any breakPoints\n ");
             url = NULL;         /* flag that we've printed partial error message about the problem url */
         } else {
             result = 1;
             xsltGenericError(xsltGenericErrorContext,
-                             "Added %d new breakPoints\n", newBreakPoints);
+                             "Information: Added %d new breakPoints\n",
+                             newBreakPoints);
         }
 
         if (defaultUrl)
@@ -424,17 +451,17 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
     }
 
     if (!result) {
-      if (url)
+        if (url)
             xsltGenericError(xsltGenericErrorContext,
-                             "Failed to add breakpoint "
+                             "Error: Failed to add breakpoint "
                              "at file %s: line %ld\n", url, lineNo);
         else
             xsltGenericError(xsltGenericErrorContext,
-                             "Failed to add breakpoint(s)\n");
+                             "Error: Failed to add breakpoint(s)\n");
     }
 
     if (url)
-      xmlFree(url);
+        xmlFree(url);
     return result;
 }
 
@@ -457,10 +484,16 @@ xslDbgShellDelete(xmlChar * arg)
     static const xmlChar *errorPrompt =
         (xmlChar *) "Failed to delete break point\n";
 
-    if (!arg || !filesGetStylesheet() || !filesGetMainDoc()) {
+    if (!filesGetStylesheet() || !filesGetMainDoc()) {
         xsltGenericError(xsltGenericErrorContext,
                          "Errror : Debugger has no files loaded, try reloading files\n%s",
                          errorPrompt);
+        return result;
+    }
+
+    if (!arg) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error: NULL argument provided\n");
         return result;
     }
 
@@ -471,19 +504,19 @@ xslDbgShellDelete(xmlChar * arg)
             if (splitString(&arg[2], 2, opts) == 2) {
                 if (!sscanf((char *) opts[1], "%ld", &lineNo)) {
                     xsltGenericError(xsltGenericErrorContext,
-                                     "\n%s\tUnable to read line number \n",
+                                     "Error: Unable to read line number. %s\n",
                                      errorPrompt);
                 } else {
                     url = xmlStrdup(opts[0]);
                     if (url) {
                         if (filesIsSourceFile(url)) {
-                            if (validateSource(&url, NULL))
+                            if (validateSource(&url, &lineNo))
                                 breakPtr = breakPointGet(url, lineNo);
-                        } else if (validateData(&url, NULL))
+                        } else if (validateData(&url, &lineNo))
                             breakPtr = breakPointGet(url, lineNo);
                         if (!breakPtr || !breakPointDelete(breakPtr))
                             xsltGenericError(xsltGenericErrorContext,
-                                             "\n%s\tBreak point to '%s' doesn't exist\n",
+                                             "Error: Breakpoint to '%s' doesn't exist. %s\n",
                                              errorPrompt, arg);
                         else
                             result = 1;
@@ -492,7 +525,7 @@ xslDbgShellDelete(xmlChar * arg)
                 }
             } else
                 xsltGenericError(xsltGenericErrorContext,
-                                 "\n%s\tMissing arguments to delete command\n",
+                                 "Error: delete command arguments not in format \"-l <FILE_NAME> <LINE_NUMBER>\" %s\n",
                                  errorPrompt);
         }
     } else if (!xmlStrCmp("*", arg)) {
@@ -506,13 +539,13 @@ xslDbgShellDelete(xmlChar * arg)
             result = breakPointDelete(breakPtr);
             if (!result) {
                 xsltGenericError(xsltGenericErrorContext,
-                                 "\nUnable to delete breakpoint %d\n",
-                                 breakPointId);
+                                 "Error: Unable to delete breakpoint %d . %s\n",
+                                 breakPointId, errorPrompt);
             }
         } else {
             xsltGenericError(xsltGenericErrorContext,
-                             "\nBreakpoint %d doesn't exist\n",
-                             breakPointId);
+                             "Error: Breakpoint %d doesn't exist. %s\n",
+                             breakPointId, errorPrompt);
         }
     } else {
         breakPtr = findBreakPointByName(arg);
@@ -520,13 +553,13 @@ xslDbgShellDelete(xmlChar * arg)
             result = breakPointDelete(breakPtr);
             if (!result) {
                 xsltGenericError(xsltGenericErrorContext,
-                                 "\nDelete breakpoint to template %s failed\n",
-                                 arg);
+                                 "Error: Delete breakpoint to template %s failed. %s\n",
+                                 arg, errorPrompt);
             }
         } else
             xsltGenericError(xsltGenericErrorContext,
-                             "%s\tBreakpoint to template '%s' doesn't exist\n",
-                             errorPrompt, arg);
+                             "Error: Breakpoint at template '%s' doesn't exist. %s\n",
+                             arg, errorPrompt);
     }
     return result;
 }
@@ -546,7 +579,7 @@ xslDbgShellDelete(xmlChar * arg)
 */
 void
 xslDbgShellEnableBreakPoint(void *payload, void *data,
-                       xmlChar * name ATTRIBUTE_UNUSED)
+                            xmlChar * name ATTRIBUTE_UNUSED)
 {
     if (payload && data) {
         breakPointEnable((breakPointPtr) payload, *(int *) data);
@@ -573,10 +606,16 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
     static const xmlChar *errorPrompt =
         (xmlChar *) "Failed to enable/disable break point\n";
 
-    if (!arg || !filesGetStylesheet() || !filesGetMainDoc()) {
+    if (!filesGetStylesheet() || !filesGetMainDoc()) {
         xsltGenericError(xsltGenericErrorContext,
                          "Errror : Debugger has no files loaded, try reloading files\n%s",
                          errorPrompt);
+        return result;
+    }
+
+    if (!arg) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error: NULL argument provided\n");
         return result;
     }
 
@@ -587,7 +626,7 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
             if (splitString(&arg[2], 2, opts) == 2) {
                 if (!sscanf((char *) opts[1], "%ld", &lineNo)) {
                     xsltGenericError(xsltGenericErrorContext,
-                                     "\n%s\tUnable to read line number \n",
+                                     "Error: Unable to read line number. %s\n",
                                      errorPrompt);
                 } else {
                     url = xmlStrdup(opts[0]);
@@ -602,13 +641,13 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
                                 breakPointEnable(breakPtr, enableType);
                         else
                             xsltGenericError(xsltGenericErrorContext,
-                                             "\n%s", errorPrompt);
+                                             "Error: %s", errorPrompt);
                         xmlFree(url);
                     }
                 }
             } else
                 xsltGenericError(xsltGenericErrorContext,
-                                 "\n%s\tMissing arguments to enable command\n",
+                                 "Error: enable/disable command arguments not in format \"-l <FILE_NAME> <LINE_NUMBER>\" %s\n",
                                  errorPrompt);
         }
     } else if (!xmlStrCmp("*", arg)) {
@@ -623,12 +662,12 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
             result = breakPointEnable(breakPtr, enableType);
             if (!result) {
                 xsltGenericError(xsltGenericErrorContext,
-                                 "\nUnable to enable breakpoint %d\n",
+                                 "Error: Unable to enable/disable breakpoint %d\n",
                                  breakPointId);
             }
         } else {
             xsltGenericError(xsltGenericErrorContext,
-                             "\nBreakpoint %d doesn't exist\n",
+                             "Error: Breakpoint %d doesn't exist\n",
                              breakPointId);
         }
     } else {
@@ -637,8 +676,8 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
             result = breakPointEnable(breakPtr, enableType);
         } else
             xsltGenericError(xsltGenericErrorContext,
-                             "\n%s\tBreakpoint to template '%s' doesn't exist\n",
-                             errorPrompt, arg);
+                             "Error: Breakpoint at template '%s' does not exist. %s\n",
+                             arg, errorPrompt);
     }
     return result;
 }
@@ -654,7 +693,7 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
 */
 void
 xslDbgShellPrintBreakPoint(void *payload, void *data ATTRIBUTE_UNUSED,
-                      xmlChar * name ATTRIBUTE_UNUSED)
+                           xmlChar * name ATTRIBUTE_UNUSED)
 {
 
     if (payload) {

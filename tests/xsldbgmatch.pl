@@ -137,15 +137,19 @@ sub parameterMatch{
 sub textMatch{
   my ($textValue, $testName) = @_;
   my $result = 0;
+  my $firstLine = $_;
   while (<STDIN>) {
     if ($_ =~ $textValue){
       $result = 1;
       print "Text match \n  text \"$textValue\"\n";
       return $result;
+    }else{
+      printf "looking at : $_";
     }
   }
   if ($result == 0){
     printf "In $testName, no match for\n text \"$textValue\"\n";
+    printf "Near text: $firstLine";
   }
   return $result;
 }

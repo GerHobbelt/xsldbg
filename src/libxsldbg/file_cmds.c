@@ -107,8 +107,11 @@ xslDbgSystem(const xmlChar * arg)
     int result = 0;
     xmlChar *name;
 
-    if (!arg)
+    if (!arg) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error: NULL argument provided\n");
         return result;
+    }
 
     name = xmlCatalogResolveSystem(arg);
     if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
@@ -156,8 +159,11 @@ xslDbgPublic(const xmlChar * arg)
     int result = 0;
     xmlChar *name;
 
-    if (!arg)
+    if (!arg) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error: NULL argument provided\n");
         return result;
+    }
 
     name = xmlCatalogResolvePublic(arg);
     if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
@@ -204,8 +210,14 @@ xslDbgEncoding(xmlChar * arg)
     int result = 0;
     xmlChar *opts[2];
 
+    if (!arg) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error: NULL argument provided\n");
+        return result;
+    }
+
     if (splitString(arg, 1, opts) == 1) {
-        if (filesSetEncoding((char*)opts[0])) {
+        if (filesSetEncoding((char *) opts[0])) {
             optionsSetStringOption(OPTIONS_ENCODING, opts[0]);
             result = 1;
         }

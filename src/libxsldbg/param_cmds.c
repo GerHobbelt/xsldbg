@@ -24,9 +24,7 @@
 #include "debugXSL.h"
 #include "options.h"
 
-#ifdef USE_XSLDBG_AS_THREAD
 #include "xsldbgmsg.h"
-#endif
 
 
 /* -----------------------------------------
@@ -56,13 +54,16 @@ xslDbgShellAddParam(xmlChar * arg)
 
     if (!arg) {
         xsltGenericError(xsltGenericErrorContext,
-                         "%sNull argument provided to xslDbgShellAddParam\n",
+                         "Error: Null argument provided to xslDbgShellAddParam. %s\n",
                          errorPrompt);
         return result;
     }
     if ((xmlStrLen(arg) > 1) && splitString(arg, 2, opts) == 2) {
         paramItem = optionsParamItemNew(opts[0], opts[1]);
         result = arrayListAdd(optionsGetParamItemList(), paramItem);
+    } else {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error: addparam command expected <PARAM_NAME> <PARAM_VALUE> .  ");
     }
     if (!result)
         xsltGenericError(xsltGenericErrorContext, "%s", errorPrompt);
@@ -86,25 +87,34 @@ int
 xslDbgShellDelParam(xmlChar * arg)
 {
     int result = 0;
-    static xmlChar *errorPrompt = (xmlChar *) "Failed to add parameter\n";
+    static xmlChar *errorPrompt =
+        (xmlChar *) "Failed to delete parameter\n";
     long paramId;
     xmlChar *opts[2];
 
     if (!arg) {
         xsltGenericError(xsltGenericErrorContext,
-                         "%sNull argument provided to xslDbgShellAddParam\n",
+                         "Error: Null argument provided to xslDbgShellAddParam. %s\n",
                          errorPrompt);
         return result;
     }
     if (xmlStrLen(arg) > 0) {
-        if ((splitString(arg, 1, opts) == 1) &&
-            (!sscanf((char *) opts[0], "%ld", &paramId))) {
+        if (splitString(arg, 1, opts) == 1) {
+            if (!sscanf((char *) opts[0], "%ld", &paramId)) {
+                xsltGenericError(xsltGenericErrorContext,
+                                 "Error: Unable to read line number. ");
+            } else {
+                result =
+                    arrayListDelete(optionsGetParamItemList(), paramId);
+                if (!result)
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "Error: Unable to find parameter %d. ",
+                                     paramId);
+            }
+        } else {
             xsltGenericError(xsltGenericErrorContext,
-                             "%s\tUnable to read line number \n",
-                             errorPrompt);
-            return result;
-        } else
-            result = arrayListDelete(optionsGetParamItemList(), paramId);
+                             "Error: delparam command expected <PARAM_ID>.");
+        }
     } else {
         /* Delete all parameters */
         arrayListEmpty(optionsGetParamItemList());
@@ -133,31 +143,33 @@ xslDbgShellShowParam(xmlChar * arg ATTRIBUTE_UNUSED)
 {
     int result = 0;
 
-#ifdef USE_XSLDBG_AS_THREAD
-    int paramIndex = 0;
-    int itemCount = arrayListCount(optionsGetParamItemList());
+    if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
+        int paramIndex = 0;
+        int itemCount = arrayListCount(optionsGetParamItemList());
 
-    notifyXsldbgApp(XSLDBG_MSG_PARAMETER_CHANGED, NULL);
+        notifyListStart(XSLDBG_MSG_PARAMETER_CHANGED);
 
-    if (itemCount > 0) {
-        parameterItemPtr paramItem = NULL;
+        if (itemCount > 0) {
+            parameterItemPtr paramItem = NULL;
 
-        while (paramIndex < itemCount) {
-            paramItem =
-                (parameterItemPtr) arrayListGet(optionsGetParamItemList(),
-                                                paramIndex++);
-            if (paramItem != NULL)
-                notifyXsldbgApp(XSLDBG_MSG_PARAMETER_CHANGED, paramItem);
+            while (paramIndex < itemCount) {
+                paramItem =
+                    (parameterItemPtr)
+                    arrayListGet(optionsGetParamItemList(), paramIndex++);
+                if (paramItem != NULL)
+                    notifyListQueue(paramItem);
+            }
         }
+        notifyListSend();
+	result = 1;
+    } else {
+
+        if (optionsPrintParamList())
+            result = 1;
+        else
+            xsltGenericError(xsltGenericErrorContext,
+                             "Error: Unable to print parameters");
+        xsltGenericError(xsltGenericErrorContext, "\n");
     }
-#endif
-
-    if (optionsPrintParamList())
-        result = 1;
-    else
-        xsltGenericError(xsltGenericErrorContext,
-                         "Error in printing parameters\n");
-    xsltGenericError(xsltGenericErrorContext, "\n");
-
     return result;
 }

@@ -1,3 +1,4 @@
+
 /***************************************************************************
                           options_unix.c  -  *nix specific option functions
                              -------------------
@@ -31,9 +32,10 @@
    * Returns 1 if sucessful
    *         0 otherwise  
    */
-  int optionsPlatformInit(void)
+int
+optionsPlatformInit(void)
 {
-  return 1;
+    return 1;
 }
 
 
@@ -45,9 +47,10 @@
    *  This is a platform specific interface
    *
    */
-  void optionsPlatformFree(void)
+void
+optionsPlatformFree(void)
 {
-  /* empty */
+    /* empty */
 }
 
   /**
@@ -57,19 +60,22 @@
    *           configuration from,
    *         NULL otherwise
    */
-  xmlChar* optionsConfigFileName(void)
+xmlChar *
+optionsConfigFileName(void)
 {
-  xmlChar *result = NULL;
-  const char *homeDir = getenv("HOME");
-  const char *configName = "xsldbg.rc";
-  int bufferSize = 0;
-  if (homeDir){
-    /* give ourselves a bit of room to move */
-    bufferSize = strlen(homeDir) + strlen(configName) + 10;
-    result = (xmlChar*)xmlMalloc(bufferSize);
-    snprintf((char*)result, bufferSize, "%s/%s", homeDir, configName);
-  }
-  return result;
+    xmlChar *result = NULL;
+    const char *homeDir = getenv("HOME");
+    const char *configName = "xsldbg.rc";
+    int bufferSize = 0;
+
+    if (homeDir) {
+        /* give ourselves a bit of room to move */
+        bufferSize = strlen(homeDir) + strlen(configName) + 10;
+        result = (xmlChar *) xmlMalloc(bufferSize);
+        snprintf((char *) result, bufferSize, "%s/%s", homeDir,
+                 configName);
+    }
+    return result;
 }
 
 
@@ -83,13 +89,15 @@
    * Returns 1 if able to load options
    *         0 otherwise
    */
-int optionsLoad(void)
+int
+optionsLoad(void)
 {
-  int result = 0;
-  xmlDocPtr doc = xmlParseFile((char*)optionsConfigFileName());
-  if (doc)
-    result = optionsReadDoc(doc);
-  return 0;
+    int result = 0;
+    xmlDocPtr doc = xmlParseFile((char *) optionsConfigFileName());
+
+    if (doc)
+        result = optionsReadDoc(doc);
+    return 0;
 }
 
 
@@ -103,7 +111,8 @@ int optionsLoad(void)
    * Returns 1 if able to save options
    *         0 otherwise
    */
-int optionsSave(void)
+int
+optionsSave(void)
 {
-  return optionsSavetoFile(optionsConfigFileName());
+    return optionsSavetoFile(optionsConfigFileName());
 }

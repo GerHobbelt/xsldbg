@@ -750,18 +750,45 @@ extern "C" {
 
   /**
    * filesIsSourceFile:
-   * @fileName : is valid
+   * @fileName : Is valid
    * 
-   * Returns true if @name has the ".xsl" externsion
+   * Test if filename could be  a stylesheet 
+   *
+   * Returns true if @name has the ".xsl" extension
    */
 #else
 #ifdef USE_KDE_DOCS
 
+  /**
+   * Test if filename could be  a stylesheet 
+   *
+   * @returns True if @name has the ".xsl" extension
+   *
+   *  @param fileName Is valid
+   */
 #endif
 #endif
     int filesIsSourceFile(xmlChar * fileName);
 
 
+
+#ifdef USE_GNOME_DOCS
+/**
+ * xsldbgUpdateFileDetails:
+ * @node : A valid node
+ * 
+ * Update the URL and  line number that we stoped at 
+ */
+#else
+#ifdef USE_KDE_DOCS
+  /** 
+   * Update the URL and  line number that we stoped at 
+   *
+   * @param node A valid node
+   */
+#endif
+#endif
+  void xsldbgUpdateFileDetails(xmlNodePtr node);
 
 
   /*-----------------------------------------------------------

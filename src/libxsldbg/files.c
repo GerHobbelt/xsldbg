@@ -67,6 +67,10 @@ static xmlCharEncodingHandlerPtr stdoutEncoding = NULL;
 static xmlBufferPtr encodeInBuff = NULL;
 static xmlBufferPtr encodeOutBuff = NULL;
 
+/* Current line number and URI for xsldbg*/
+static int currentLineNo = -1;
+static xmlChar *currentUrl = NULL;
+
 /* -----------------------------------------
    Private function declarations for files.c
  -------------------------------------------*/
@@ -136,8 +140,11 @@ openTerminal(xmlChar * device)
 {
     int result = 0;
 
-    if (!device)                /* Failed; there's no device */
+    if (!device) {              /* Failed; there's no device */
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error: NULL argument provided\n");
         return result;
+    }
 
     /*
      * On RISC OS, you get one terminal - the screen.
@@ -151,62 +158,63 @@ openTerminal(xmlChar * device)
      * One assumes that you might use a socket or a pipe here.
      */
 
-    if (terminalIO){
+    if (terminalIO) {
         fclose(terminalIO);
-	terminalIO = NULL;
+        terminalIO = NULL;
     }
 
 
-    switch (device[0]){
-    case '\0':
-    case '0':
-    case '3':
-    case '4':
-    case '5':
-    case '6':
-    case '7':
-    case '8':
-    case '9':      
-        /* look like we are supposed to close the terminal 
-	   but we've already done that	   
-	 */
-      break;
+    switch (device[0]) {
+        case '\0':
+        case '0':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+            /* look like we are supposed to close the terminal 
+             * but we've already done that     
+             */
+            break;
 
-    case '1':
-      if (termName){
-        terminalIO = fopen((char *) termName, "w");
-        if (terminalIO != NULL) {
-	    xmlFree(termName);
-	  termName = xmlMemStrdup((char *) device);
-	  result = 1;
-        } else {
-            xsltGenericError(xsltGenericErrorContext,
-                             "Unable to open terminal %s\n", termName);
-        }	
-      }else{
-            xsltGenericError(xsltGenericErrorContext,
-                             "Did not previously open terminal\n");
-      }
-      break;
+        case '1':
+            if (termName) {
+                terminalIO = fopen((char *) termName, "w");
+                if (terminalIO != NULL) {
+                    xmlFree(termName);
+                    termName = xmlMemStrdup((char *) device);
+                    result = 1;
+                } else {
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "Unable to open terminal %s\n",
+                                     termName);
+                }
+            } else {
+                xsltGenericError(xsltGenericErrorContext,
+                                 "Did not previously open terminal\n");
+            }
+            break;
 
-    case '2':
+        case '2':
             xsltGenericError(xsltGenericErrorContext,
-			     "Terminal level 2 not implemented\n");
-      break;
+                             "Terminal level 2 not implemented\n");
+            break;
 
 
-    default:
-        terminalIO = fopen((char *) device, "w");
-        if (terminalIO != NULL) {
-	  if (termName)
-	    xmlFree(termName);
-            termName = xmlMemStrdup((char *) device);
-            result = 1;
-        } else {
-            xsltGenericError(xsltGenericErrorContext,
-                             "Unable to open terminal %s\n", device);
-        }
-	
+        default:
+            terminalIO = fopen((char *) device, "w");
+            if (terminalIO != NULL) {
+                if (termName)
+                    xmlFree(termName);
+                termName = xmlMemStrdup((char *) device);
+                result = 1;
+            } else {
+                xsltGenericError(xsltGenericErrorContext,
+                                 "Unable to open terminal %s\n", device);
+            }
+
     }
 
     return result;
@@ -514,14 +522,15 @@ changeDir(const xmlChar * path)
         }
         if (!result)
             xsltGenericError(xsltGenericErrorContext,
-                             "Unable to change to directory %s\n", path);
+                             "Error: Unable to change to directory %s\n",
+                             path);
         else
             xsltGenericError(xsltGenericErrorContext,
                              "Change to directory %s\n", path);
     } else
         xsltGenericError(xsltGenericErrorContext,
-                         "Null Input to changeDir %s %d\n", __FILE__,
-                         __LINE__);
+                         "Error: Null Input to changeDir %s %d\n",
+                         __FILE__, __LINE__);
     return result;
 }
 
@@ -594,7 +603,7 @@ filesLoadXmlFile(const xmlChar * path, FileTypeEnum fileType)
 
                 /* try to find encoding for this stylesheet */
                 if (optionsGetIntOption(OPTIONS_AUTOENCODE))
-                    filesSetEncoding((char*)topStylesheet->encoding);
+                    filesSetEncoding((char *) topStylesheet->encoding);
             }
             break;
 
@@ -758,9 +767,9 @@ filesInit(void)
     encodeOutBuff = xmlBufferCreate();
 
     /* check the result so far and lastly perform platform specific
-       initialization*/
+     * initialization */
     if (entityNameList && encodeInBuff && encodeOutBuff &&
-	filesPlatformInit())
+        filesPlatformInit())
         result = 1;
     return result;
 }
@@ -817,7 +826,10 @@ filesFree(void)
     /* close current encoding */
     filesSetEncoding(NULL);
 
-    /* free any memory used by platform specific files module*/
+    if (currentUrl)
+      xmlFree(currentUrl);
+
+    /* free any memory used by platform specific files module */
     filesPlatformInit();
 }
 
@@ -902,6 +914,7 @@ filesAddEntityName(const xmlChar * SystemID, const xmlChar * PublicID)
     arrayListAdd(filesEntityList(), tempItem);
 }
 
+
 /**
  * filesEntityRef :
  * @ent : Is valid as provided by libxslt
@@ -914,7 +927,7 @@ void
 filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode, xmlNodePtr lastNode)
 {
 
-    if (firstNode && firstNode->next &&
+    if (firstNode && firstNode->next && ent &&
         (ent->etype == XML_EXTERNAL_GENERAL_PARSED_ENTITY)) {
 
         if (!firstNode)
@@ -1079,9 +1092,10 @@ filesLoadCatalogs(void)
                     return result;
                 } else
                     optionsSetStringOption(OPTIONS_CATALOG_NAMES,
-                                    (xmlChar *) catalogs);
+                                           (xmlChar *) catalogs);
             } else
-                catalogs = (char *) optionsGetStringOption(OPTIONS_CATALOG_NAMES);
+                catalogs =
+                    (char *) optionsGetStringOption(OPTIONS_CATALOG_NAMES);
             xmlLoadCatalogs(catalogs);
         }
         result = 1;
@@ -1104,6 +1118,9 @@ xmlChar *
 filesEncode(const xmlChar * text)
 {
     xmlChar *result = NULL;
+
+    if (!text)
+        return result;
 
     if (!stdoutEncoding || !encodeInBuff || !encodeOutBuff)
         return xmlStrdup(text); /* no encoding active return as UTF-8 */
@@ -1137,6 +1154,9 @@ xmlChar *
 filesDecode(const xmlChar * text)
 {
     xmlChar *result = NULL;
+
+    if (!text)
+        return result;
 
     if (!stdoutEncoding || !encodeInBuff || !encodeOutBuff)
         return xmlStrdup(text); /* no encoding active return as UTF-8 */
@@ -1189,7 +1209,8 @@ filesSetEncoding(const char *encoding)
                                  "Unable to initialize encoding %s",
                                  encoding);
             } else
-                optionsSetStringOption(OPTIONS_ENCODING, (xmlChar*) encoding);
+                optionsSetStringOption(OPTIONS_ENCODING,
+                                       (xmlChar *) encoding);
         } else {
             xsltGenericError(xsltGenericErrorContext,
                              "Invalid encoding %s\n", encoding);
@@ -1203,4 +1224,55 @@ filesSetEncoding(const char *encoding)
         stdoutEncoding = NULL;
     }
     return result;
+}
+
+
+/* TODO in xsldbg 3.x rename these to use files prefix */
+/**
+ * xsldbgUpdateFileDetails:
+ * @node : A valid node
+ * 
+ * Update the URL and  line number that we stoped at 
+ */
+void
+xsldbgUpdateFileDetails(xmlNodePtr node)
+{
+  if ((node != NULL) && (node->doc != NULL) && (node->doc->URL != NULL)){
+        if (currentUrl != NULL)
+            xmlFree(currentUrl);
+        currentUrl = (xmlChar *) xmlMemStrdup((char *) node->doc->URL);
+        currentLineNo = xmlGetLineNo(node);
+    }
+}
+
+
+/**
+ * xsldbgLineNo:
+ *
+ * What line number are we at 
+ *
+ * Returns The current line number of xsldbg, may be -1
+ **/
+int
+xsldbgLineNo(void)
+{
+    return currentLineNo;
+}
+
+
+/**
+ * xsldbgUrl:
+ * 
+ * What URL did we stop at
+ *
+ * Returns A NEW copy of URL stopped at. Caller must free memory for URL.
+ *  May be NULL  
+ */
+xmlChar *
+xsldbgUrl(void)
+{
+    if (currentUrl != NULL)
+        return (xmlChar *) xmlMemStrdup((char *) currentUrl);
+    else
+        return NULL;
 }

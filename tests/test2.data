@@ -6,7 +6,8 @@
      Description: xml data that decribes what to do for "test2"
      Copyright Reserved Under GPL     
 -->
- <!-- Test apply templates and call template -->
+ <!-- Test apply templates and  call template instructions
+      Test break and showbreak commands  -->
 <testcmd>
 <cmd>
 <test>trace</test>
@@ -187,6 +188,253 @@ Test the ability to step into a xsl:with-param child -->
 <!-- End of tests -->
 </result>
 </cmd>
+
+<!-- test the ability to add/delete show breakpoints -->
+<cmd>
+<test>run
+break /</test>
+</cmd>
+<cmd>
+<test>break -l</test>
+<result>
+<row>
+<matchtext>Error: break command arguments not in format</matchtext>
+</row>
+</result>
+</cmd>
+<cmd>
+<test>break -l test2.xsl</test>
+<result>
+<row>
+<matchtext>Error: break command arguments not in format</matchtext>
+</row>
+</result>
+</cmd>
+<cmd>
+<test>break -l test2.xsl a23</test>
+<result>
+<row>
+<matchtext>Error: Unable to read line number</matchtext>
+</row>
+</result>
+</cmd>
+<cmd>
+<test>break BAD_TEMPLATENAME</test>
+<result>
+<row>
+<matchtext>Error: Unable to find template</matchtext>
+</row>
+</result>
+</cmd>
+<cmd>
+<test>break /
+break /</test>
+<result>
+<row> <!-- breakkpoint exist so we should get an error message -->
+<matchtext>Error: Breakpoint to template</matchtext>
+</row>
+</result>
+</cmd>
+<cmd>
+<test>break -l test2.xsl 18</test>
+<result>
+<row> <!-- breakkpoint exist so we should get an error message -->
+<matchtext>Error: Breakpoint at file</matchtext>
+</row>
+</result>
+</cmd>
+
+
+<cmd>
+<test>showbreak</test>
+<result>
+<row>
+<breakpointlist file="test2.xsl" line="18" />
+</row>
+</result>
+</cmd>
+
+
+
+<!-- test enable/disable comamds -->
+<cmd>
+<test>enable -l</test>
+<result>
+<row>
+<matchtext>Error: enable/disable command arguments not in format</matchtext>
+</row>
+</result>
+</cmd>
+<cmd>
+<test>enable -l test2.xsl</test>
+<result>
+<row>
+<matchtext>Error: enable/disable command arguments not in format</matchtext>
+</row>
+</result>
+</cmd>
+<cmd>
+<test>enable -l test2.xsl a23</test>
+<result>
+<row>
+<matchtext>Error: Unable to read line number</matchtext>
+</row>
+</result>
+</cmd>
+<cmd>
+<test>enable BAD_TEMPLATENAME</test>
+<result>
+<row>
+<matchtext>Error: Breakpoint at template</matchtext>
+</row>
+</result>
+</cmd>
+
+<!-- Clear all breakpoints and create a disabled breakpoint at template "/" -->
+<cmd>
+<test> delete *
+break /
+enable /
+showbreak</test>
+<result>
+<row>
+<breakpointlist state="disabled" file="test2.xsl" line="18"/>
+</row>
+</result>
+</cmd>
+
+<!-- Toggle breakpoint at template "/" to enable it again-->
+<cmd>
+<test>enable /
+showbreak</test>
+<result>
+<row>
+<breakpointlist state="enabled" file="test2.xsl" line="18"/>
+</row>
+</result>
+</cmd>
+
+<!-- since enable reused the same code as enable just test
+    disable of template "/" -->
+<cmd>
+<test>disable /
+showbreak</test>
+<result>
+<row>
+<breakpointlist state="disabled" file="test2.xsl" line="18"/>
+</row>
+</result>
+</cmd>
+
+<cmd>
+<test>break -l test2.xsl 18</test>
+<result>
+<row> <!-- breakkpoint exist so we should get an error message -->
+<matchtext>Error: Breakpoint at file</matchtext>
+</row>>
+</result>
+</cmd>
+
+<!-- xsldbg will be stpped at test2.xsl 18 so try setting breakpoint
+     using current node -->
+<cmd>
+<test>break</test>
+<result>
+<row> <!-- breakkpoint exist so we should get an error message -->
+<matchtext>Error: Breakpoint at file</matchtext>
+</row>
+</result>
+</cmd>
+
+<cmd><!-- Delete all breakpoints and set current node as a breakpoint -->
+<test>delete *
+break</test>
+</cmd>
+
+<cmd>
+<test>showbreak</test>
+<result>
+<row>
+<breakpointlist file="test2.xsl" line="18" />
+</row>
+</result>
+</cmd>
+
+<!-- Test delete command -->
+<cmd>
+<test>delete -l</test>
+<result>
+<row>
+<matchtext>Error: delete command arguments not in format</matchtext>
+</row>
+</result>
+</cmd>
+<cmd>
+<test>delete -l test2.xsl</test>
+<result>
+<row>
+<matchtext>Error: delete command arguments not in format</matchtext>
+</row>
+</result>
+</cmd>
+<cmd>
+<test>delete -l test2.xsl a23</test>
+<result>
+<row>
+<matchtext>Error: Unable to read line number</matchtext>
+</row>
+</result>
+</cmd>
+<cmd>
+<test>delete BAD_TEMPLATENAME</test>
+<result>
+<row>
+<matchtext>Error: Breakpoint at template</matchtext>
+</row>
+</result>
+</cmd>
+<cmd>
+<test>delete *
+break /
+delete /
+showbreak</test>
+<result>
+<row>
+<matchtext>No file breakpoints set</matchtext>
+</row>
+</result>
+</cmd>
+<cmd>
+<test>break /
+delete -l test2.xsl 18
+showbreak</test>
+<result>
+<row>
+<matchtext>No file breakpoints set</matchtext>
+</row>
+</result>
+</cmd>
+<cmd>
+<test>break /
+delete *
+showbreak</test>
+<result>
+<row>
+<matchtext>No file breakpoints set</matchtext>
+</row>
+</result>
+</cmd>
+<cmd>
+<test>break
+delete
+showbreak</test>
+<result>
+<row>
+<matchtext>No file breakpoints set</matchtext>
+</row>
+</result>
+</cmd>
+
 
 <cmd>
 <test>quit</test>

@@ -54,7 +54,7 @@ const char *optionNames[] = {
     "noout",                    /* Disables output to stdout */
     "html",                     /* Enable the use of html parsing */
     "debug",                    /* Enable the use of xml tree debugging */
-    "shell",                /* Enable the use of debugger shell */
+    "shell",                    /* Enable the use of debugger shell */
     "gdb",                      /* Run in gdb modem prints more messages */
     "repeat",                   /* The number of times to repeat */
     "*_trace_*",                /* Trace execution */
@@ -97,7 +97,7 @@ optionsInit(void)
     docsPath = (xmlChar *) getenv(XSLDBG_DOCS_DIR_VARIABLE);
     if (!docsPath) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Warning no value for documentation specified in environment variable %s. "
+                         "Warning: No value for documentation specified in environment variable %s. "
                          "No help nor search results will display\n",
                          XSLDBG_DOCS_DIR_VARIABLE);
     }
@@ -166,15 +166,17 @@ optionsFree(void)
    *             OPTIONS_XINCLUDE<= optionID <= OPTIONS_DATA_FILE_NAME,
    *         otherwise returns -1
    */
-  int optionsGetOptionID(xmlChar* optionName)
+int
+optionsGetOptionID(xmlChar * optionName)
 {
-  int result = -1;
-  int optID = lookupName(optionName, (xmlChar**)optionNames);
-  if (optID >= 0){
-    result = optID + OPTIONS_XINCLUDE;    
-  }
+    int result = -1;
+    int optID = lookupName(optionName, (xmlChar **) optionNames);
 
-  return result;
+    if (optID >= 0) {
+        result = optID + OPTIONS_XINCLUDE;
+    }
+
+    return result;
 }
 
 
@@ -187,10 +189,11 @@ optionsFree(void)
    * Returns The name of option if @ID is valid, 
    *         NULL otherwise 
    */
-  const xmlChar *optionsGetOptionName(OptionTypeEnum ID)
+const xmlChar *
+optionsGetOptionName(OptionTypeEnum ID)
 {
-  /* An option ID is always valid at the moment */
-  return (const xmlChar*) optionNames[ID - OPTIONS_XINCLUDE];
+    /* An option ID is always valid at the moment */
+    return (const xmlChar *) optionNames[ID - OPTIONS_XINCLUDE];
 }
 
 
@@ -209,29 +212,29 @@ optionsSetIntOption(OptionTypeEnum optionType, int value)
 {
     int type = optionType, result = 1;
 
-    if ((type >= OPTIONS_XINCLUDE) && (type <= OPTIONS_VERBOSE)){
-            /* make sure that use of options are safe by only copying
-             * critical values from intVolitleOptions just before 
-             * stylesheet is started
-             */
-            intVolitileOptions[type - OPTIONS_XINCLUDE] = value;
+    if ((type >= OPTIONS_XINCLUDE) && (type <= OPTIONS_VERBOSE)) {
+        /* make sure that use of options are safe by only copying
+         * critical values from intVolitleOptions just before 
+         * stylesheet is started
+         */
+        intVolitileOptions[type - OPTIONS_XINCLUDE] = value;
 
-	    /* the following types must be activated imediately*/
-	 switch (type){
+        /* the following types must be activated imediately */
+        switch (type) {
 
-        case OPTIONS_TRACE:
-        case OPTIONS_WALK_SPEED:
-            intOptions[type - OPTIONS_XINCLUDE] = value;
-	    break;
+            case OPTIONS_TRACE:
+            case OPTIONS_WALK_SPEED:
+                intOptions[type - OPTIONS_XINCLUDE] = value;
+                break;
 
-	 default:
-            break;
-	 }
-    }else{
-            xsltGenericError(xsltGenericErrorContext,
-                             "Not a valid boolean/integer xsldbg option %d\n",
-                             type);
-            result = 0;
+            default:
+                break;
+        }
+    } else {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Not a valid boolean/integer xsldbg option %d\n",
+                         type);
+        result = 0;
     }
     return result;
 }
@@ -251,12 +254,12 @@ optionsGetIntOption(OptionTypeEnum optionType)
 {
     int type = optionType, result = 0;
 
-    if ((type >= OPTIONS_XINCLUDE) && (type <= OPTIONS_VERBOSE)){   
-            result = intOptions[type - OPTIONS_XINCLUDE];
-    }else{
-            xsltGenericError(xsltGenericErrorContext,
-                             "Not a valid boolean/integer xsldbg option %d\n",
-                             type);
+    if ((type >= OPTIONS_XINCLUDE) && (type <= OPTIONS_VERBOSE)) {
+        result = intOptions[type - OPTIONS_XINCLUDE];
+    } else {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Not a valid boolean/integer xsldbg option %d\n",
+                         type);
     }
     return result;
 }
@@ -288,12 +291,12 @@ optionsSetStringOption(OptionTypeEnum optionType, const xmlChar * value)
         if (value)
             stringOptions[optionId] =
                 (xmlChar *) xmlMemStrdup((char *) value);
-        else
+        else                    /* we want to be able to provide a NULL value */
             stringOptions[optionId] = NULL;
         result = 1;
     } else
         xsltGenericError(xsltGenericErrorContext,
-                         "Not a valid string xsldbg option %d\n",
+                         "Error: Not a valid string xsldbg option %d\n",
                          optionType);
     return result;
 }
@@ -359,11 +362,11 @@ optionsParamItemNew(const xmlChar * name, const xmlChar * value)
         result = (parameterItem *) xmlMalloc(sizeof(parameterItem));
         if (result) {
             result->name = (xmlChar *) xmlMemStrdup((char *) name);
-	    if (value)
-	      result->value = (xmlChar *) xmlMemStrdup((char *) value);
-	    else
-	      result->value = (xmlChar *) xmlMemStrdup("");
-	    result->intValue = -1;
+            if (value)
+                result->value = (xmlChar *) xmlMemStrdup((char *) value);
+            else
+                result->value = (xmlChar *) xmlMemStrdup("");
+            result->intValue = -1;
         }
     }
     return result;
@@ -418,7 +421,8 @@ optionsPrintParam(int paramId)
 {
     int result = 0;
     parameterItemPtr paramItem =
-        (parameterItemPtr) arrayListGet(optionsGetParamItemList(), paramId);
+        (parameterItemPtr) arrayListGet(optionsGetParamItemList(),
+                                        paramId);
     if (paramItem && paramItem->name && paramItem->value) {
         xsltGenericError(xsltGenericErrorContext,
                          " Parameter %d %s=\"%s\"\n", paramId,
@@ -473,57 +477,64 @@ optionsPrintParamList(void)
    * Returns the option @optionType as a xmlNodePtr if successful,
    *          NULL otherwise
    */
-  xmlNodePtr optionsNode(OptionTypeEnum optionType)
+xmlNodePtr
+optionsNode(OptionTypeEnum optionType)
 {
-  xmlNodePtr node = NULL;
-  char numberBuffer[10];
-  int result = 1;
+    xmlNodePtr node = NULL;
+    char numberBuffer[10];
+    int result = 1;
 
-  numberBuffer[0] = '\0';
-  if (optionType <= OPTIONS_VERBOSE){
-    /* integer option*/
-    node =  xmlNewNode(NULL, (xmlChar *)"intoption");
-    if (node){
-      snprintf(numberBuffer, sizeof(numberBuffer), "%d",
-	       optionsGetIntOption(optionType));
-      result  = result && (xmlNewProp
-			 (node, (xmlChar *) "name",
-			    (xmlChar*)optionNames[optionType - OPTIONS_XINCLUDE]) != NULL);
-      if (result)
-	result = result && (xmlNewProp(node, (xmlChar *) "value", 
-				      (xmlChar*)numberBuffer) != NULL);
-      if (!result){
-	xmlFreeNode(node);
-	node = NULL;
-      }
-	
-    }
-  }else{
-    /* string option */
-    node =  xmlNewNode(NULL, (xmlChar *)"stringoption");
-    if (node){
-      result  = result && (xmlNewProp
-			   (node, (xmlChar *) "name",
-			    (xmlChar*) optionNames[optionType - OPTIONS_XINCLUDE]) != NULL);
-      if (result){
-	if (optionsGetStringOption(optionType))
-	  result  = result && (xmlNewProp
-			   (node, (xmlChar *) "value",
-			    optionsGetStringOption(optionType)) != NULL);
-	else
-	  result  = result && (xmlNewProp
-			       (node, (xmlChar *) "value",
-				(xmlChar *) "") != NULL);
-      }
+    numberBuffer[0] = '\0';
+    if (optionType <= OPTIONS_VERBOSE) {
+        /* integer option */
+        node = xmlNewNode(NULL, (xmlChar *) "intoption");
+        if (node) {
+            snprintf(numberBuffer, sizeof(numberBuffer), "%d",
+                     optionsGetIntOption(optionType));
+            result = result && (xmlNewProp
+                                (node, (xmlChar *) "name",
+                                 (xmlChar *) optionNames[optionType -
+                                                         OPTIONS_XINCLUDE])
+                                != NULL);
+            if (result)
+                result = result && (xmlNewProp(node, (xmlChar *) "value",
+                                               (xmlChar *) numberBuffer) !=
+                                    NULL);
+            if (!result) {
+                xmlFreeNode(node);
+                node = NULL;
+            }
 
-      if (!result){
-	xmlFreeNode(node);
-	node = NULL;
-      }
-	
+        }
+    } else {
+        /* string option */
+        node = xmlNewNode(NULL, (xmlChar *) "stringoption");
+        if (node) {
+            result = result && (xmlNewProp
+                                (node, (xmlChar *) "name",
+                                 (xmlChar *) optionNames[optionType -
+                                                         OPTIONS_XINCLUDE])
+                                != NULL);
+            if (result) {
+                if (optionsGetStringOption(optionType))
+                    result = result && (xmlNewProp
+                                        (node, (xmlChar *) "value",
+                                         optionsGetStringOption
+                                         (optionType)) != NULL);
+                else
+                    result = result && (xmlNewProp
+                                        (node, (xmlChar *) "value",
+                                         (xmlChar *) "") != NULL);
+            }
+
+            if (!result) {
+                xmlFreeNode(node);
+                node = NULL;
+            }
+
+        }
     }
-  }
-  return node;
+    return node;
 }
 
 
@@ -537,52 +548,58 @@ optionsPrintParamList(void)
    * Returns 1 if able to read @doc and load options found,
    *         0 otherwise
    */
-  int optionsReadDoc(xmlDocPtr doc)
+int
+optionsReadDoc(xmlDocPtr doc)
 {
-  int result = 1;
-  xmlChar *name, *value;
-  int optID;
-  xmlNodePtr node;
-  /* very primative search for config node
-   we skip the DTD and then go straight to the first child of 
-   config node*/
-  if (doc && doc->children->next && doc->children->next->children){
-    /* find the first configuration option */
-    node = doc->children->next->children;
-    while (node && result){
-      if (node->type == XML_ELEMENT_NODE){
-	if (xmlStrCmp(node->name, "intoption") == 0){
-            name = xmlGetProp(node, (xmlChar *) "name");
-	    value = xmlGetProp(node, (xmlChar *) "value");
-            if (name && value && (atoi((char*)value) >= 0) ) {
-	      optID = lookupName(name, (xmlChar**) optionNames);
-	      if (optID >= 0)
-		result = optionsSetIntOption(optID + OPTIONS_XINCLUDE, 
-				    atoi((char*)value));
+    int result = 1;
+    xmlChar *name, *value;
+    int optID;
+    xmlNodePtr node;
+
+    /* very primative search for config node
+     * we skip the DTD and then go straight to the first child of 
+     * config node */
+    if (doc && doc->children->next && doc->children->next->children) {
+        /* find the first configuration option */
+        node = doc->children->next->children;
+        while (node && result) {
+            if (node->type == XML_ELEMENT_NODE) {
+                if (xmlStrCmp(node->name, "intoption") == 0) {
+                    name = xmlGetProp(node, (xmlChar *) "name");
+                    value = xmlGetProp(node, (xmlChar *) "value");
+                    if (name && value && (atoi((char *) value) >= 0)) {
+                        optID = lookupName(name, (xmlChar **) optionNames);
+                        if (optID >= 0)
+                            result =
+                                optionsSetIntOption(optID +
+                                                    OPTIONS_XINCLUDE,
+                                                    atoi((char *) value));
+                    }
+                    if (name)
+                        xmlFree(name);
+                    if (value)
+                        xmlFree(value);
+                } else if (xmlStrCmp(node->name, "stringoption") == 0) {
+                    name = xmlGetProp(node, (xmlChar *) "name");
+                    value = xmlGetProp(node, (xmlChar *) "value");
+                    if (name && value) {
+                        optID = lookupName(name, (xmlChar **) optionNames);
+                        if (optID >= 0)
+                            result =
+                                optionsSetStringOption(optID +
+                                                       OPTIONS_XINCLUDE,
+                                                       value);
+                    }
+                    if (name)
+                        xmlFree(name);
+                    if (value)
+                        xmlFree(value);
+                }
             }
-	    if (name)
-	      xmlFree(name);
-	    if (value)
-	      xmlFree(value);
-	}else if (xmlStrCmp(node->name, "stringoption") == 0){
-            name = xmlGetProp(node, (xmlChar *) "name");
-	    value = xmlGetProp(node, (xmlChar *) "value");
-            if (name && value ) {
-	      optID = lookupName(name, (xmlChar**) optionNames);
-	      if (optID >= 0)
-		result = optionsSetStringOption(optID + OPTIONS_XINCLUDE, 
-						value);
-            }
-	    if (name)
-	      xmlFree(name);
-	    if (value)
-	      xmlFree(value);	  
-	}
-      }
-      node = node->next;
+            node = node->next;
+        }
     }
-  }
-  return result;
+    return result;
 }
 
 
@@ -596,43 +613,62 @@ optionsPrintParamList(void)
  * Returns 1 if able to save options to @fileName,
  *         0 otherwise
  */
-  int optionsSavetoFile(xmlChar *fileName)
+int
+optionsSavetoFile(xmlChar * fileName)
 {
-  int result = 1;
-  int optionIndex = 0;
-  xmlDocPtr configDoc = xmlNewDoc((xmlChar *) "1.0");
-  xmlNodePtr rootNode = xmlNewNode(NULL, (xmlChar *) "config");
-  xmlNodePtr node = NULL;
-  if (configDoc && rootNode){
-    xmlCreateIntSubset(configDoc,
-		       (xmlChar *) "config", (xmlChar *)
-		       "-//xsldbg//DTD config XML V1.0//EN",
-		       (xmlChar *) "config.dtd");
-    xmlAddChild((xmlNodePtr) configDoc, rootNode);
-    
-    /*now to do the work of adding configuration items */
-    for (optionIndex = OPTIONS_XINCLUDE; optionIndex <= OPTIONS_DATA_FILE_NAME; optionIndex++){
+    int result = 0;
+    int optionIndex = 0;
+    xmlDocPtr configDoc;
+    xmlNodePtr rootNode;
+    xmlNodePtr node = NULL;
 
-      if (optionNames[optionIndex - OPTIONS_XINCLUDE][0] == '*')
-	continue; /* don't save non user options */
-
-      node = optionsNode(optionIndex);
-      if (node)
-	xmlAddChild(rootNode, node);
-      else{
-	result = 0;
-	break;
-      }
+    if (!fileName) {
+        xsltGenericError(xsltGenericErrorContext,
+                         "Error: NULL file name provided\n");
+        return result;
     }
 
-    if (result){
-      /* so far so good, now to serialize it to disk*/
-      if (!xmlSaveFormatFile((char*)fileName, configDoc, 1))
-	result = 0;
+    configDoc = xmlNewDoc((xmlChar *) "1.0");
+    rootNode = xmlNewNode(NULL, (xmlChar *) "config");
+
+    if (configDoc && rootNode) {
+        xmlCreateIntSubset(configDoc, (xmlChar *) "config", (xmlChar *)
+                           "-//xsldbg//DTD config XML V1.0//EN",
+                           (xmlChar *) "config.dtd");
+        xmlAddChild((xmlNodePtr) configDoc, rootNode);
+
+        /*now to do the work of adding configuration items */
+        for (optionIndex = OPTIONS_XINCLUDE;
+             optionIndex <= OPTIONS_DATA_FILE_NAME; optionIndex++) {
+
+            if (optionNames[optionIndex - OPTIONS_XINCLUDE][0] == '*')
+                continue;       /* don't save non user options */
+
+            node = optionsNode(optionIndex);
+            if (node)
+                xmlAddChild(rootNode, node);
+            else {
+                result = 0;
+                break;
+            }
+        }
+
+        if (result) {
+            /* so far so good, now to serialize it to disk */
+            if (!xmlSaveFormatFile((char *) fileName, configDoc, 1))
+                result = 0;
+        }
+
+        xmlFreeDoc(configDoc);
+    } else {
+
+        if (configDoc)
+            xmlFreeDoc(configDoc);
+
+        if (rootNode)
+            xmlFreeNode(rootNode);
+
     }
 
-    xmlFreeDoc(configDoc);
-  }
-
-  return result;
+    return result;
 }

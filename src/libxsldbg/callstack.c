@@ -29,8 +29,8 @@
  * Returns A reference to the added info if successful, 
  *         NULL otherwise
  */
-    callPointInfoPtr addCallInfo(const xmlChar * templateName,
-                                    const xmlChar * url);
+callPointInfoPtr addCallInfo(const xmlChar * templateName,
+                             const xmlChar * url);
 
 
 /*------------------------------------------------------

@@ -1,3 +1,4 @@
+
 /***************************************************************************
                           files_unix.c  -  file functions *nix platform
                                                 specific
@@ -37,9 +38,10 @@ static const char *tempNames[] = {
    * Returns 1 if sucessful
    *         0 otherwise  
    */
-  int filesPlatformInit(void)
+int
+filesPlatformInit(void)
 {
-  return 1;
+    return 1;
 }
 
 
@@ -51,9 +53,10 @@ static const char *tempNames[] = {
    *  This is a platform specific interface
    *
    */
-  void filesPlatformFree(void)
+void
+filesPlatformFree(void)
 {
-  /* empty*/
+    /* empty */
 }
 
   /**

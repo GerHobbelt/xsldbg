@@ -105,7 +105,7 @@ searchInit(void)
     if (!searchEmpty()) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xmlGenericError(xmlGenericErrorContext,
-                        "Search init failed : memory error\n");
+                        "Error: Search init failed memory error\n");
 #endif
     }
     return (searchRootNode() != NULL);
@@ -320,7 +320,7 @@ searchEmpty(void)
     if (searchRootNode() == NULL) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xmlGenericError(xmlGenericErrorContext,
-                        "Seach Empty failed : memory error\n");
+                        "Error: Seach Empty failed memory error\n");
 #endif
     }
 
@@ -373,8 +373,10 @@ int
 searchAdd(xmlNodePtr node)
 {
     int result = 0;
-    if (node && searchDataBaseRoot && xmlAddChild(searchDataBaseRoot, node)) {
-	result = 1;	
+
+    if (node && searchDataBaseRoot
+        && xmlAddChild(searchDataBaseRoot, node)) {
+        result = 1;
     }
 
     return result;
@@ -396,6 +398,7 @@ searchSave(const xmlChar * fileName)
 
     int result = 0;
     xmlChar *searchInput = NULL;
+
     if (fileName == NULL) {
         xmlStrCpy(buffer, stylePath());
 #ifdef __riscos
@@ -413,11 +416,11 @@ searchSave(const xmlChar * fileName)
     } else
         searchInput = xmlStrdup(fileName);
 
-    if (xmlSaveFormatFile((char*)searchInput, searchDataBase, 1))
-      result = 1;
+    if (xmlSaveFormatFile((char *) searchInput, searchDataBase, 1))
+        result = 1;
 
     if (searchInput)
-      xmlFree(searchInput);
+        xmlFree(searchInput);
 
     return result;
 }
@@ -540,11 +543,11 @@ searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
         }
 #endif
         xsltGenericError(xsltGenericErrorContext,
-                         "Transformed %s using %s and saved to %s\n",
+                         "Information: Transformed %s using %s and saved to %s\n",
                          searchInput, searchXSL, searchOutput);
     } else {
         xsltGenericError(xsltGenericErrorContext,
-                         "Invalid filenames supplied to searchQuery\n");
+                         "Error: Invalid filenames supplied to searchQuery\n");
     }
 
     if (searchInput)
@@ -696,14 +699,14 @@ findNodeByLineNo(xsltTransformContextPtr ctxt,
 
     if (!searchInf) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Unable to create searchInfo in findNodeByLineNo\n");
+                         "Error: Unable to create searchInfo in findNodeByLineNo\n");
         return result;
     }
 
     if (!ctxt || !url || (lineNumber == -1)) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Invalid ctxt, url or line number to "
+                         "Error: Invalid ctxt, url or line number to "
                          "findNodeByLineNo\n");
 #endif
         return result;
@@ -751,7 +754,7 @@ findTemplateNode(xsltStylesheetPtr style, const xmlChar * name)
     if (!style || !name) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Invalid stylesheet or template name : "
+                         "Error: Invalid stylesheet or template name : "
                          "findTemplateNode\n");
 #endif
         return result;
@@ -782,7 +785,7 @@ findTemplateNode(xsltStylesheetPtr style, const xmlChar * name)
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
     if (!result)
         xsltGenericError(xsltGenericErrorContext,
-                         "Template named '%s' not found :"
+                         "Error: Template named '%s' not found :"
                          " findTemplateNode\n", name);
 #endif
     return result;
@@ -816,7 +819,7 @@ findBreakPointByName(const xmlChar * templateName)
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         if (!searchInf->found) {
             xsltGenericError(xsltGenericErrorContext,
-                             "Break point with template name of \"%s\" "
+                             "Error: Breakpoint with template name of \"%s\" "
                              "not found :findBreakPointByName\n",
                              templateName);
 #endif
@@ -856,7 +859,7 @@ findBreakPointById(int id)
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         if (!searchInf->found) {
             xsltGenericError(xsltGenericErrorContext,
-                             "Break point id %d not found :findBreakPointById\n",
+                             "Error: Breakpoint id %d not found :findBreakPointById\n",
                              id);
 #endif
         } else
@@ -1208,7 +1211,7 @@ xmlNodePtr
 searchBreakPointNode(breakPointPtr breakPtr)
 {
 
-  xmlNodePtr node = NULL;
+    xmlNodePtr node = NULL;
     int result = 1;
 
     if (breakPtr) {
@@ -1218,10 +1221,11 @@ searchBreakPointNode(breakPointPtr breakPtr)
             result = result
                 && (xmlNewProp(node, (xmlChar *) "url", breakPtr->url) !=
                     NULL);
-            sprintf((char*)buffer, "%ld", breakPtr->lineNo);
+            sprintf((char *) buffer, "%ld", breakPtr->lineNo);
             result = result
-                && (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) buffer)
-                    != NULL);
+                &&
+                (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) buffer)
+                 != NULL);
             if (breakPtr->templateName) {
                 result = result
                     &&
@@ -1229,25 +1233,27 @@ searchBreakPointNode(breakPointPtr breakPtr)
                      (node, (xmlChar *) "template",
                       breakPtr->templateName) != NULL);
             }
-            sprintf((char*)buffer, "%d", breakPtr->enabled);
+            sprintf((char *) buffer, "%d", breakPtr->enabled);
             result = result
                 &&
-                (xmlNewProp(node, (xmlChar *) "enabled", (xmlChar *) buffer)
+                (xmlNewProp
+                 (node, (xmlChar *) "enabled", (xmlChar *) buffer)
                  != NULL);
-            sprintf((char*)buffer, "%d", breakPtr->type);
+            sprintf((char *) buffer, "%d", breakPtr->type);
             result = result
-                && (xmlNewProp(node, (xmlChar *) "type", (xmlChar *) buffer)
+                &&
+                (xmlNewProp(node, (xmlChar *) "type", (xmlChar *) buffer)
+                 != NULL);
+            sprintf((char *) buffer, "%d", breakPtr->id);
+            result = result
+                && (xmlNewProp(node, (xmlChar *) "id", (xmlChar *) buffer)
                     != NULL);
-            sprintf((char*)buffer, "%d", breakPtr->id);
-            result = result
-                && (xmlNewProp(node, (xmlChar *) "id", (xmlChar *) buffer) !=
-                    NULL);
         } else
             result = 0;
         if (!result) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
             xsltGenericError(xsltGenericErrorContext,
-                             "Error out of Memory for function searchBreakPointNode\n");
+                             "Error: Out of Memory for function searchBreakPointNode\n");
 #endif
         }
     }
@@ -1297,21 +1303,23 @@ searchTemplateNode(xmlNodePtr templNode)
                      (node, (xmlChar *) "url",
                       templNode->doc->URL) != NULL);
             }
-            sprintf((char*)buffer, "%ld", xmlGetLineNo(templNode));
+            sprintf((char *) buffer, "%ld", xmlGetLineNo(templNode));
             result = result
-                && (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) buffer)
-                    != NULL);
-	    if (result){
-	      xmlNodePtr textNode = searchCommentNode(templNode);
-	      if (textNode && !xmlAddChild(node, textNode))
-		result = 0;
-	    }
+                &&
+                (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) buffer)
+                 != NULL);
+            if (result) {
+                xmlNodePtr textNode = searchCommentNode(templNode);
+
+                if (textNode && !xmlAddChild(node, textNode))
+                    result = 0;
+            }
         } else
             result = 0;
         if (!result) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
             xsltGenericError(xsltGenericErrorContext,
-                             "Error out of Memory for function searchTemplateNode\n");
+                             "Error: Out of Memory for function searchTemplateNode\n");
 #endif
         }
     }
@@ -1344,7 +1352,7 @@ searchGlobalNode(xmlNodePtr variable)
                 result = result &&
                     (xmlNewProp(node, (xmlChar *) "url",
                                 variable->doc->URL) != NULL);
-                sprintf((char*)buffer, "%ld", xmlGetLineNo(variable));
+                sprintf((char *) buffer, "%ld", xmlGetLineNo(variable));
                 result = result
                     && (xmlNewProp(node, (xmlChar *) "line",
                                    (xmlChar *) buffer) != NULL);
@@ -1363,18 +1371,19 @@ searchGlobalNode(xmlNodePtr variable)
                         NULL);
                 xmlFree(value);
             }
-	    if (result){
-	      xmlNodePtr textNode = searchCommentNode(variable);
-	      if (textNode && !xmlAddChild(node, textNode))
-		result = 0;
-	    }
+            if (result) {
+                xmlNodePtr textNode = searchCommentNode(variable);
+
+                if (textNode && !xmlAddChild(node, textNode))
+                    result = 0;
+            }
         } else
             result = 0;
     }
     if (!result) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Error out of Memory for function searchGlobalNode\n");
+                         "Error: Out of Memory for function searchGlobalNode\n");
 #endif
     }
     return node;
@@ -1429,7 +1438,7 @@ searchLocalNode(xmlNodePtr variable)
     if (!result) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Error out of Memory for function searchLocalNode\n");
+                         "Error: Out of Memory for function searchLocalNode\n");
 #endif
     }
     return node;
@@ -1467,11 +1476,12 @@ searchSourceNode(xsltStylesheetPtr style)
                         (xmlNewProp(node, (xmlChar *) "parent",
                                     style->parent->doc->URL) != NULL);
                 }
-		if (result){
-		  xmlNodePtr textNode = searchCommentNode((xmlNodePtr)style->doc);
-		  if (textNode && !xmlAddChild(node, textNode))
-		    result = 0;
-		}
+                if (result) {
+                    xmlNodePtr textNode =
+                        searchCommentNode((xmlNodePtr) style->doc);
+                    if (textNode && !xmlAddChild(node, textNode))
+                        result = 0;
+                }
             }
         } else
             result = 0;
@@ -1479,7 +1489,7 @@ searchSourceNode(xsltStylesheetPtr style)
     if (!result) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Error out of Memory for function searchSourceNode\n");
+                         "Error: Out of Memory for function searchSourceNode\n");
 #endif
     }
     return node;
@@ -1518,16 +1528,17 @@ searchIncludeNode(xmlNodePtr include)
                     result = result &&
                         (xmlNewProp(node, (xmlChar *) "url",
                                     include->parent->doc->URL) != NULL);
-                    sprintf((char*)buffer, "%ld", xmlGetLineNo(include));
+                    sprintf((char *) buffer, "%ld", xmlGetLineNo(include));
                     result = result
                         && (xmlNewProp(node, (xmlChar *) "line",
                                        (xmlChar *) buffer) != NULL);
                 }
-		if (result){
-		  xmlNodePtr textNode = searchCommentNode(include);
-		  if (textNode && !xmlAddChild(node, textNode))
-		    result = 0;
-		}
+                if (result) {
+                    xmlNodePtr textNode = searchCommentNode(include);
+
+                    if (textNode && !xmlAddChild(node, textNode))
+                        result = 0;
+                }
             }
         } else
             result = 0;
@@ -1535,7 +1546,7 @@ searchIncludeNode(xmlNodePtr include)
     if (!result) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Error out of Memory for function searchIncludeNode\n");
+                         "Error: Out of Memory for function searchIncludeNode\n");
 #endif
     }
     return node;
@@ -1568,10 +1579,11 @@ searchCallStackNode(callPointPtr callStackItem)
                     (xmlNewProp
                      (node, (xmlChar *) "url", callStackItem->info->url)
                      != NULL);
-            sprintf((char*)buffer, "%ld", callStackItem->lineNo);
+            sprintf((char *) buffer, "%ld", callStackItem->lineNo);
             result = result
-                && (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) buffer)
-                    != NULL);
+                &&
+                (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) buffer)
+                 != NULL);
             if (callStackItem->info && callStackItem->info->templateName) {
                 result = result &&
                     (xmlNewProp
@@ -1583,7 +1595,7 @@ searchCallStackNode(callPointPtr callStackItem)
         if (!result) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
             xsltGenericError(xsltGenericErrorContext,
-                             "Error out of Memory for function searchBreakPointNode\n");
+                             "Error: Out of Memory for function searchBreakPointNode\n");
 #endif
         }
     }
@@ -1591,21 +1603,23 @@ searchCallStackNode(callPointPtr callStackItem)
 }
 
 
-static xmlChar* commentText(xmlNodePtr node);
+static xmlChar *commentText(xmlNodePtr node);
 
 /*
  * Returns A copy of comment text that applies to node,
  *         NULL otherwise
  */
-xmlChar* commentText(xmlNodePtr node){
-  xmlChar *result = NULL;
+xmlChar *
+commentText(xmlNodePtr node)
+{
+    xmlChar *result = NULL;
 
-  if (node){
-    if (node->type == XML_COMMENT_NODE)
-      result = xmlNodeGetContent(node);
-  }
+    if (node) {
+        if (node->type == XML_COMMENT_NODE)
+            result = xmlNodeGetContent(node);
+    }
 
-  return result;
+    return result;
 }
 
 /**
@@ -1619,35 +1633,36 @@ xmlChar* commentText(xmlNodePtr node){
  *            if successful,
  *         NULL otherwise
  */
-  xmlNodePtr searchCommentNode(xmlNodePtr sourceNode)
+xmlNodePtr
+searchCommentNode(xmlNodePtr sourceNode)
 {
-  xmlNodePtr node = NULL, textChild = NULL;
-  xmlChar *text = NULL;
-  int result = 0;
- if (sourceNode){
-    text = commentText(sourceNode->prev);
-    if (!text){
-      text = commentText(sourceNode->children);
-    }
-       
-    if (text){
-       node = xmlNewNode(NULL, (xmlChar *) "comment");
-       textChild = xmlNewText(text);
-       if (node && textChild && xmlAddChild(node, textChild)){
-	   result = 1;
-       }
-       if (!result){
-	 if (node){
-	   xmlFreeNode(node);
-	   node = NULL;
-	 }
-	 if (textChild)
-	 xmlFreeNode(textChild);
-       }
-       
-       xmlFree(text);
-    }
-  }
-  return node;
-}
+    xmlNodePtr node = NULL, textChild = NULL;
+    xmlChar *text = NULL;
+    int result = 0;
 
+    if (sourceNode) {
+        text = commentText(sourceNode->prev);
+        if (!text) {
+            text = commentText(sourceNode->children);
+        }
+
+        if (text) {
+            node = xmlNewNode(NULL, (xmlChar *) "comment");
+            textChild = xmlNewText(text);
+            if (node && textChild && xmlAddChild(node, textChild)) {
+                result = 1;
+            }
+            if (!result) {
+                if (node) {
+                    xmlFreeNode(node);
+                    node = NULL;
+                }
+                if (textChild)
+                    xmlFreeNode(textChild);
+            }
+
+            xmlFree(text);
+        }
+    }
+    return node;
+}

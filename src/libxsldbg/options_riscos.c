@@ -1,3 +1,4 @@
+
 /***************************************************************************
                           options_unix.c  -  riscos specific option functions
                              -------------------
@@ -30,9 +31,10 @@
    * Returns 1 if sucessful
    *         0 otherwise  
    */
-  int optionsPlatformInit(void)
+int
+optionsPlatformInit(void)
 {
-  return 1;
+    return 1;
 }
 
 
@@ -44,9 +46,10 @@
    *  This is a platform specific interface
    *
    */
-  void optionsPlatformFree(void)
+void
+optionsPlatformFree(void)
 {
-  /* empty */
+    /* empty */
 }
 
   /**
@@ -56,9 +59,10 @@
    *           configuration from,
    *         NULL otherwise
    */
-  xmlChar* optionsConfigFileName(void)
+xmlChar *
+optionsConfigFileName(void)
 {
-  return xmlStrdup((xmlChar*)"Choices:XSLDebug.Options");
+    return xmlStrdup((xmlChar *) "Choices:XSLDebug.Options");
 }
 
 
@@ -72,13 +76,15 @@
    * Returns 1 if able to load options
    *         0 otherwise
    */
-int optionsLoad(void)
+int
+optionsLoad(void)
 {
-  int result = 0;
-  xmlDocPtr doc = xmlParseFile((char*)optionsConfigFileName());
-  if (doc)
-    result = optionsReadDoc(doc);
-  return 0;
+    int result = 0;
+    xmlDocPtr doc = xmlParseFile((char *) optionsConfigFileName());
+
+    if (doc)
+        result = optionsReadDoc(doc);
+    return 0;
 }
 
 
@@ -92,8 +98,8 @@ int optionsLoad(void)
    * Returns 1 if able to save options
    *         0 otherwise
    */
-int optionsSave(void)
+int
+optionsSave(void)
 {
-  return optionsSavetoFile(optionsConfigFileName());
+    return optionsSavetoFile(optionsConfigFileName());
 }
-
