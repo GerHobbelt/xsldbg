@@ -43,20 +43,12 @@ Set the XSLDBG_DOCS_DIR environment variable to point to xsldbg's documentation.
 
 Setup the XML_CATALOG_FILES environment variable to point to your xml catalog.
 An example would be
-        set XML_CATALOG_FILES="file:///c:\etc\xml\catalog"
+        set XML_CATALOG_FILES="file:///c:/etc/xml/catalog"
 
 
 Setup your xml catalogs using xmlcatalog otherwise you will get warnings when running searches
 See <a href="addcatalog.bat">example xml catalog creation script </a>
 
-Warning ! This is known NOT to work at this time because the URI's are not being parsed correctly.
-This "bug" has been logged on xml@gnome.org
-
-An example usage of xmlcatalog would be
-
-        xmlcatalog -v --noout --create "c:\etc\xml\catalog"
-        xmlcatalog -v --noout --add public "-//xsldbg//DTD search XML V1.0//EN" "file:///c:\Program Files\xsldbg\docs\en\search.dtd"  "c:\etc\xml\catalog"
-        xmlcatalog -v --noout --add public "-//xsldbg//DTD xsldoc XML V1.0//EN" "file:///c:\Program Files\xsldbg\docs\en\xsldoc.dtd"  "c:\etc\xml\catalog"
 </pre>
 
 </body>
