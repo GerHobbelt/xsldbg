@@ -47,11 +47,11 @@ void *xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
 ---------------------------------------*/
 
 
-/* 
+/**
  * xslDbgShellPrintList: 
- * @ctxt : the current shell context
- * @arg : what xpath to display
- * @dir : if 1 print in dir mode?, 
+ * @ctxt: The current shell context
+ * @arg: What xpath to display
+ * @dir: If 1 print in dir mode?, 
  *        otherwise ls mode
  *
  * Print list of nodes in either ls or dir format
@@ -110,12 +110,11 @@ xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir)
 }
 
 
-
 /** 
- * xslDbgShellCat :
- * @styleCtxt : current stylesheet context
- * @ctxt : current shell context
- * @arg : xpath to print
+ * xslDbgShellCat:
+ * @styleCtxt: the current stylesheet context
+ * @ctxt: The current shell context
+ * @arg: The xpath to print
  *
  * Print the result of an xpath expression. This can include variables
  *        if styleCtxt is not NULL
@@ -230,10 +229,9 @@ xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
 
 /**
  * xslDbgShellPrintVariable:
- * @styleCtxt : the current stylesheet context 
- * @arg : the name of variable to look for '$' prefix is optional
- * @type : either DEBUG_PRINT_GLOBAL_VAR, 
- *         or DEBUG_PRINT_LOCAL_VAR
+ * @styleCtxt: The current stylesheet context 
+ * @arg: The name of variable to look for '$' prefix is optional
+ * @type: A valid VariableTypeEnum
  *
  *  Print the value variable specified by args.
  */

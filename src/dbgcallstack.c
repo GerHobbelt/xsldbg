@@ -98,11 +98,13 @@ callStackFree(void)
 
 /**
  * addCallInfo:
- * @templateName: template name to add
- * @url: url for templateName
+ * @templatename: Template name to add
+ * @url: The url for the template
  *
- * Returns a reference to the added call info if successful, 
- *         NULL otherwise
+ * Add template "call" to call stack
+ *
+ * Returns A reference to the added info if successful, 
+ *          NULL otherwise
  */
 xslCallPointInfoPtr
 addCallInfo(const xmlChar * templateName, const xmlChar * url)
@@ -156,10 +158,11 @@ addCallInfo(const xmlChar * templateName, const xmlChar * url)
 
 /**
  * addCall:
- * @templ: current template being applied
- * @source: the source node being processed
+ * @templ: The current template being applied
+ * @source: The source node being processed
  *
  * Add template "call" to call stack
+ *
  * Returns 1 on success, 
  *         0 otherwise
  */
@@ -287,9 +290,10 @@ dropCall(void)
 
 /** 
  * stepupToDepth:
- * @depth:the frame depth to step up to  
+ * @depth:The frame depth to step up to  
  *
  * Set the frame depth to step up to
+ *
  * Returns 1 on success, 
  *         0 otherwise
  */
@@ -315,9 +319,10 @@ stepupToDepth(int depth)
 
 /** 
  * stepdownToDepth:
- * @depth: the frame depth to step down to 
+ * @depth: The frame depth to step down to 
  *
  * Set the frame depth to step down to
+ *
  * Returns 1 on success, 
  *         0 otherwise
  */
@@ -343,7 +348,7 @@ stepdownToDepth(int depth)
 
 /**
  * getCall:
- * @depth: 0 < depth <= callDepth()  
+ * @depth: 0 < @depth <= callDepth()  
  *
  * Retrieve the call point at specified call depth 
 
@@ -393,7 +398,9 @@ getCall(int depth)
 /** 
  * getCallStackTop:
  *
- * Returns the top of the call stack
+ * Get the top item in the call stack
+ *
+ * Returns The top of the call stack
  */
 xslCallPointPtr
 getCallStackTop(void)
@@ -404,8 +411,10 @@ getCallStackTop(void)
 
 /** 
  * callDepth:
+ * 
+ * Return the depth of call stack
  *
- * Returns the depth of call stack
+ * Returns The depth of call stack
  */
 int
 callDepth(void)

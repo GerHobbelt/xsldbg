@@ -78,17 +78,6 @@ extern FILE *terminalIO;
 
 
 /**
- * @returns the last template node found, if any
- */
-
-
-    xsltTemplatePtr getTemplate(void);
-
-
-
-
-
-/**
  * Open communications to the terminal device @p device
  *
  * @returns 1 if sucessful
@@ -132,6 +121,9 @@ extern FILE *terminalIO;
  *
  * @param path The operating system path(directory) to adopt as 
  *         new working directory
+ *
+ * @returns 1 on success,
+ *          0 otherwise
  */
 
 
@@ -141,11 +133,13 @@ extern FILE *terminalIO;
 
 
 /**
+ * Load specified file type, freeing any memory previously used 
+ *
  * @returns 1 on success,
  *         0 otherwise 
  *
  * @param path The xml file to load
- * @param type A valid FileTypeEnum
+ * @param fileType A valid FileTypeEnum
  */
 
 
@@ -160,7 +154,7 @@ extern FILE *terminalIO;
  * @returns 1 on success,
  *         0 otherwise
  *
- * @param type : a valid FileTypeEnum
+ * @param fileType : A valid FileTypeEnum
  */
 
 

@@ -33,9 +33,7 @@
 
 /* We want skip most of these includes when building documentation*/
 
-/*
-#include "xslbreakpoint_2.h"
-*/
+
 
 
 
@@ -152,7 +150,7 @@
 
 
 /**
- * Empty the seach data base of its contents
+ * Empty the seach dataBase of its contents
  *
  * @returns 1 on success,
  *          0 otherwise
@@ -320,7 +318,7 @@
 
 
     xmlNodePtr findNodeByLineNo(xsltTransformContextPtr ctxt,
-                                const xmlChar * url, long int lineNumber);
+                                const xmlChar * url, long lineNumber);
 
 
 

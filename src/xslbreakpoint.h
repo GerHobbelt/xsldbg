@@ -1,12 +1,12 @@
- 
-/* *************************************************************************
+  
+/**************************************************************************
                           xslbreakpoint.h  -  public functions for the
                                                breakpoint API
                              -------------------
     begin                : Fri Dec 7 2001
     copyright            : (C) 2001 by Keith Isdale
     email                : k_isdale@tpg.com.au
- ************************************************************************* */
+ **************************************************************************/
 
 /***************************************************************************
  *                                                                         *
@@ -15,12 +15,13 @@
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
  *                                                                         *
- ************************************************************************* */
+ **************************************************************************/
 
 
-#ifndef XSLBREAKPOINT_H
-#define XSLBREAKPOINT_H
+#ifndef XSLBREAKPOINT_2_H
+#define XSLBREAKPOINT_2_H
 
+#ifdef USE_KDE_DOCS
 /**
  * Provide a basic break point support
  *
@@ -28,7 +29,7 @@
  *
  * @author Keith Isdale <k_isdale@tpg.com.au> 
  */
-
+#endif
 
 #ifdef WITH_XSLT_DEBUG
 #ifndef WITH_XSLT_DEBUG_BREAKPOINTS
@@ -39,8 +40,55 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+  /* Define the types of status whilst debugging*/
+  #ifndef USE_KDOC
+     typedef enum {
+        DEBUG_NONE = 0,             /* must start at zero!! */
+        DEBUG_INIT,
+        DEBUG_STEP,
+        DEBUG_STEPUP,
+        DEBUG_STEPDOWN,
+        DEBUG_NEXT,
+        DEBUG_STOP,
+        DEBUG_CONT,
+        DEBUG_RUN,
+        DEBUG_RUN_RESTART,
+        DEBUG_QUIT,
+        DEBUG_TRACE,
+        DEBUG_WALK
+    } DebugStatusEnum;
+  
 
-    /** The main structure for holding breakpoints*/
+    typedef enum {
+        DEBUG_BREAK_SOURCE = 300,
+        DEBUG_BREAK_DATA
+    } BreakPointTypeEnum;
+  #else
+  /* keep kdoc happy */
+     enum DebugStatusEnum{
+        DEBUG_NONE = 0,             /* must start at zero!! */
+        DEBUG_INIT,
+        DEBUG_STEP,
+        DEBUG_STEPUP,
+        DEBUG_STEPDOWN,
+        DEBUG_NEXT,
+        DEBUG_STOP,
+        DEBUG_CONT,
+        DEBUG_RUN,
+        DEBUG_RUN_RESTART,
+        DEBUG_QUIT,
+        DEBUG_TRACE,
+        DEBUG_WALK
+    };
+  
+
+    enum BreakPointTypeEnum{
+        DEBUG_BREAK_SOURCE = 300,
+        DEBUG_BREAK_DATA
+    };
+  #endif
+
+    /* The main structure for holding breakpoints*/
     typedef struct _xslBreakPoint xslBreakPoint;
     typedef xslBreakPoint *xslBreakPointPtr;
     struct _xslBreakPoint {
@@ -48,7 +96,7 @@ extern "C" {
         long lineNo;
         xmlChar *templateName;
         int enabled;
-        int type;
+        BreakPointTypeEnum type;
         int id;
     };
 
@@ -71,12 +119,13 @@ extern "C" {
  * @param templ The source node being executed
  * @param node The data node being processed
  * @param root The template being applied to "node"
- * @param ctxt The transform context for stylesheet being processed
+ * @param ctxt transform context for stylesheet being processed
  */
 #endif
 #endif
     void debugBreak(xmlNodePtr templ, xmlNodePtr node,
                        xsltTemplatePtr root, xsltTransformContextPtr ctxt);
+
 
 
 #ifdef USE_GNOME_DOCS
@@ -101,6 +150,7 @@ extern "C" {
     int debugInit(void);
 
 
+
 #ifdef USE_GNOME_DOCS
 /**
  * debugFree:
@@ -119,12 +169,13 @@ extern "C" {
 
 #ifdef USE_GNOME_DOCS
 /** 
- * @reached : 1 if debugger has received control, -1 to read its value,
+ * debugGotControl:
+ * @reached: 1 if debugger has received control, -1 to read its value,
                0 to clear the flag
  *
  * Set flag that debuger has received control to value of @reached
  *
- * Returns 1 if any breakpoint was reached previously,
+ * Returns 1 if any break point was reached previously,
  *         0 otherwise
  */
 #else
@@ -144,24 +195,26 @@ extern "C" {
 
 
 
+
 #ifdef USE_GNOME_DOCS
 /**
  * activeBreakPoint:
- *
- * Retrieve the active break point
+ * 
+ * Get the active break point
  *
  * Returns the last break point that we stoped at
  */
 #else
 #ifdef USE_KDE_DOCS
 /**
- * Retrieve the active break point
+ * Get the active break point
  *
  * @returns The last break point that we stoped at
  */
 #endif
 #endif
     xslBreakPointPtr activeBreakPoint(void);
+
 
 
 #ifdef USE_GNOME_DOCS
@@ -183,14 +236,15 @@ extern "C" {
     void setActiveBreakPoint(xslBreakPointPtr breakPoint);
 
 
+
 #ifdef USE_GNOME_DOCS
 /**
  * addBreakPoint:
  * @url: Non-null, non-empty file name that has been loaded by
  *                    debugger
- * @lineNumber: lineNumber >= 0 and is available in url specified and
+ * @lineNumber: @lineNumber >= 0 and is available in url specified and
  *                points to an xml element
- * @temlateName: the template name of breakPoint or NULL
+ * @templateName: The template name of breakPoint or NULL
  * @type: Valid BreakPointTypeEnum
  *
  * Add break point at file and line number specified
@@ -218,6 +272,7 @@ extern "C" {
     int addBreakPoint(const xmlChar * url, long lineNumber,
                          const xmlChar * templateName,
                          BreakPointTypeEnum type);
+
 
 #ifdef USE_GNOME_DOCS
 /**
@@ -247,6 +302,7 @@ extern "C" {
     int deleteBreakPoint(xslBreakPointPtr breakPoint);
 
 
+
 #ifdef USE_GNOME_DOCS
 /**
  * emptyBreakPoint:
@@ -269,10 +325,11 @@ extern "C" {
     int emptyBreakPoint(void);
 
 
+
 #ifdef USE_GNOME_DOCS
 /**
  * enableBreakPoint:
- * @breakpoint: A valid breakpoint
+ * @breakPoint: A valid breakpoint
  * @enable: Enable break point if 1, disable if 0, toggle if -1
  *
  * Enable or disable a break point
@@ -288,7 +345,7 @@ extern "C" {
  * @returns 1 if successful,
  *	    0 otherwise
  *
- * @param breakpoint A valid breakpoint
+ * @param breakPoint A valid breakpoint
  * @param enable Enable break point if 1, disable if 0, toggle if -1
 */
 #endif
@@ -296,16 +353,18 @@ extern "C" {
     int enableBreakPoint(xslBreakPointPtr breakPoint, int enable);
 
 
+
 #ifdef USE_GNOME_DOCS
 /**
- * xslBreakPointCount:
+ * breakPointLinesCount:
+ *
  * Return the number of hash tables of break points with the same line number
  *
  * Returns the number of hash tables of break points with the same line number
  */
 #else
 #ifdef USE_KDE_DOCS
-/**
+/** 
  * Return the number of hash tables of break points with the same line number
  *
  * @returns the number of hash tables of break points with the same line number
@@ -320,9 +379,9 @@ extern "C" {
  * getBreakPoint:
  * @url: Non-null, non-empty file name that has been loaded by
  *                    debugger
- * @lineNumber: lineNumber >= 0 and is available in url specified
+ * @lineNumber: lineNumber >= 0 and is available in @url
  *
- * Get a break point from the break point collection
+ * Get a break point for the breakpoint collection
  *
  * Returns break point if break point exists at location specified,
  *	   NULL otherwise
@@ -330,7 +389,7 @@ extern "C" {
 #else
 #ifdef USE_KDE_DOCS
 /**
- * Get a break point from the break point collection
+ * Get a break point for the breakpoint collection
  *
  * @returns break point if break point exists at location specified,
  *	    NULL otherwise
@@ -346,9 +405,9 @@ extern "C" {
 
 #ifdef USE_GNOME_DOCS
 /**
- * xslPrintBreakPoint:
+ * printBreakPoint:
  * @file: Is valid
- * @breakpoint: A valid break point
+ * @breakPoint: A valid break point
  *
  * Print the details of @breakPoint to @file
  *
@@ -364,7 +423,7 @@ extern "C" {
  *	    0 otherwise
  *
  * @param file Is valid
- * @param breakpoint A valid break point
+ * @param breakPoint A valid break point
  */
 #endif
 #endif
@@ -376,7 +435,7 @@ extern "C" {
  * isBreakPoint:
  * @url: Non-null, non-empty file name that has been loaded by
  *                    debugger
- * @lineNumber: lineNumber >= 0 and is available in url specified
+ * @lineNumber: @lineNumber >= 0 and is available in @url
  *
  * Determine if there is a break point at file and line number specified
  *
@@ -403,7 +462,7 @@ extern "C" {
 #ifdef USE_GNOME_DOCS
 /**
  * isBreakPointNode:
- * @node: Is valid
+ * @node: node != NULL
  *
  * Determine if a node is a break point
  *
@@ -428,3 +487,5 @@ extern "C" {
 }
 #endif
 #endif
+
+ 

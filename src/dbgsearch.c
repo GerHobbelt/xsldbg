@@ -81,9 +81,11 @@ void
 
 /**
  * searchNewInfo:
- * @type: what type of search is required
+ * @type: What type of search is required
  * 
- * Returns valid search info pointer if succssfull
+ * Create a new search
+ *
+ * Returns A valid search info pointer if successful
  *         NULL otherwise
  */
 searchInfoPtr
@@ -201,9 +203,11 @@ searchFreeInfo(searchInfoPtr info)
 
 
 /**
- * seachInit:
+ * searchInit:
  *
- * Returns 1 if seach structures have been initialized properly and all
+ * Initialize the search module
+ *
+ * Returns 1 if search structures have been initialized properly and all
  *               memory required has been obtained,
  *         0 otherwise
 */
@@ -225,7 +229,7 @@ searchInit(void)
 /**
  * searchFree:
  *
- * Free all memory used by searching 
+ * Free all memory used by the search module
  */
 void
 searchFree(void)
@@ -236,10 +240,12 @@ searchFree(void)
     }
 }
 
+
 /**
  * searchEmpty:
  *
- * Empty the seach data base of its contents
+ * Empty the seach dataBase of its contents
+ *
  * Returns 1 on success,
  *         0 otherwise
  */
@@ -277,9 +283,11 @@ return (searchDataBase != NULL) && (searchRootNode != NULL);
 /**
  * searchDoc:
  *
- * Returns the document used for searching
+ * Return the document used for seaching ie the search dataBase
+ *
+ * Returns The document used for searching
  *         Dangerous function to use! Does NOT return a copy of 
- *             searchData  so don't free it.
+ *             search data  so don't free it
  */
 xmlDocPtr
 searchDoc(void)
@@ -291,9 +299,11 @@ searchDoc(void)
 /**
  * searchRootNode:
  *
- * Returns the topmost xml node in search dataBase.
+ * Get the topmost node in the search dataBase
+ *
+ * Returns The topmost xml node in search dataBase.
  *         Dangerous function to use! Does NOT return a copy of 
- *             searchRootNode  so don't free it
+ *             search root node  so don't free it
  */
 xmlNodePtr
 searchRootNode(void)
@@ -304,7 +314,9 @@ searchRootNode(void)
 
 /**
  * searchSave:
- * @fileName: valid fileName to save search dataBase to 
+ * @fileName: A valid file name
+ *
+ * Save the search dataBase to @fileName
  *
  * Returns 1 on success,
  *         0 otherwise
@@ -318,9 +330,11 @@ searchSave(const xmlChar * fileName)
 
 /**
  * searchAdd:
- * @node: a valid node to be added to the topmost node in search dataBase
+ * @node: Is valid
  *
- * Returns 1 on success,
+ * Add a node to the search dataBase
+ *
+ * Returns 1 if able to add @node to top node in search dataBase,
  *         0 otherwise
  */
 int
@@ -337,16 +351,16 @@ searchAdd(xmlNodePtr node)
 
 
 /**
- *  scanForBreakPoint: 
- * @payload: a valid xslBreakPointPtr 
- * @data: the criteria to look for and a valid searchInfo of
+ * scanForBreakPoint: 
+ * @payload: A valid xslBreakPointPtr 
+ * @data: The criteria to look for and a valid searchInfoPtr of
  *          type SEARCH_BREAKPOINT 
- * @name: not used
+ * @name: Not used 
  *
- * Test if breakpoint matches given criteria
- * sets data->found to 1 if criteria is met, and data->data changes
- *      to values of item found,
- * Otherwise no changes are made
+ * Test if break point matches criteria given by @data. If so then 
+ *      set @data->found to 1 and stores  reference to break point found in 
+ *         @data->data->node
+ *     otherwise @data is unchanged
 */
 void
 scanForBreakPoint(void *payload, void *data,
@@ -379,17 +393,16 @@ scanForBreakPoint(void *payload, void *data,
 
 
 /**
- *  scanForNode: 
- * @payload: a valid xmlNodePtr
- * @data: the criteria to look for and a valid searchInfo of
+ * scanForNode: 
+ * @payload: A valid xmlNodePtr
+ * @data: The criteria to look for and a valid searchInfo of
  *          type SEARCH_NODE 
- * @name: not used
+ * @name: Not used
 
- * Test if node matches given criteria if so then set found to 1 stores
- *       reference to node found in @data
+ * Test if node matches criteria given by @data if so then set @data->found 
+ *   to 1 and  stores reference to node found in @data->data->node
  *     otherwise @data is unchanged
- *
-*/
+ */
 void
 scanForNode(void *payload, void *data, xmlChar * name ATTRIBUTE_UNUSED)
 {
@@ -422,9 +435,9 @@ scanForNode(void *payload, void *data, xmlChar * name ATTRIBUTE_UNUSED)
 
 /**
  * findNodeByLineNoHelper:
- * @payload: valid xsltStylesheetPtr
- * @data: valid searchInfoPtr
- * @name: not used
+ * @payload: A valid xsltStylesheetPtr
+ * @data: A valid searchInfoPtr
+ * @name: Not used
  *
  * We are walking through stylesheets looking for a match 
  */
@@ -448,16 +461,16 @@ findNodeByLineNoHelper(void *payload, void *data,
 
 
 /**
- * xslFindBreakPointByLineNo:
- * @ctxt: valid ctxt to look into
- * @url: url non-null, non-empty file name that has been loaded by
- *                    debugger
- * @lineNumber: number >= 0 and is available in url specified
+ * findNodeByLineNo:
+ * @ctxt: Valid ctxt to look into
+ * @url: Non-null, non-empty file name that has been loaded by debugger
+ * @lineNumber: @lineNumber >= 0 and is available in @url
  *
- * Find the closest line number in file specified that can be a point 
- * Returns  node at line number number specified if successfull,
- *	    NULL otherwise
-*/
+ * Finds the closest line number in file specified that can be a point 
+ *
+ * Returns The node at line number number specified if successfull,
+ *          NULL otherwise
+ */
 xmlNodePtr
 findNodeByLineNo(xsltTransformContextPtr ctxt,
                     const xmlChar * url, long lineNumber)
@@ -505,10 +518,12 @@ findNodeByLineNo(xsltTransformContextPtr ctxt,
 
 /**
  * findTemplateNode: 
- * @style: valid stylesheet collection context to look into
- * @name: template name to look for
+ * @style: A valid stylesheet collection to look into 
+ * @name: A valid template name to look for
  *
- * Returns template node found if successfull
+ * Find a template node
+ *
+ * Returns The template node found if successful,
  *         NULL otherwise 
  */
 xmlNodePtr
@@ -558,15 +573,16 @@ findTemplateNode(xsltStylesheetPtr style, const xmlChar * name)
     return result;
 }
 
+
 /**
  * findBreakPointByName:
- * @templateName: template name to look for
+ * @templateName: The template name to look for
  *
  * Find the breakpoint at template with "match" or "name" equal 
  *    to templateName
- * Returns the break point that has a template name
- *           matching @templateName is found
- *          NULL otherwise
+ *
+ * Returns The break point that matches @templateName
+ *         NULL otherwise
 */
 xslBreakPointPtr
 findBreakPointByName(const xmlChar * templateName)
@@ -603,8 +619,10 @@ findBreakPointByName(const xmlChar * templateName)
  * findBreakPointById:
  * @id: The break point id to look for
  *
- * Returns the break point with given the break point id if found,
- *         NULL otherwise 
+ * Find a break point by its id
+ *
+ * Returns The break point with given the break point id if found,
+ *          NULL otherwise 
  */
 xslBreakPointPtr
 findBreakPointById(int id)
@@ -637,9 +655,11 @@ findBreakPointById(int id)
 
 /**
  * findNodesByQuery:
- * @query: xpath query to run, see dbgsearch.c for more details
- * 
- * Returns the nodes that match the given query on success,
+ * @query: The xpath query to run, see dbgsearch.c for more details
+ *  
+ * Find nodes in search dataBase using an xpath query
+ *
+ * Returns The nodes that match the given query on success,
  *         NULL otherwise 
  */
 xmlXPathObjectPtr
@@ -653,14 +673,15 @@ findNodesByQuery(const xmlChar * query ATTRIBUTE_UNUSED)
 
 /**
  * searchQuery:
- * @query: query to run . If NULL then query is "//search/*"
- * @tempFile: where do we load the search dataBase from to execute
+ * @query: The query to run . If NULL then query is "//search/ *"
+ * @tempFile: Where do we load the search dataBase from to execute
  *             query. If tempFile is NULL "search.data" is used
  * 
  * Send query as parameter for execution of search.xsl using
  *    data stored in @tempFile 
+ *
  * Returns 1 on success,
- *        0 otherwise   
+ *         0 otherwise   
  */
 int
 searchQuery(const xmlChar * tempFile, const xmlChar * query)
@@ -694,10 +715,10 @@ searchQuery(const xmlChar * tempFile, const xmlChar * query)
 
 /**
  * walkBreakPoints:
- * @walkFunc: function to callback for each breakpoint found
- * @data: the extra data to pass onto walker
+ * @walkFunc: The function to callback for each break point found
+ * @data: The extra data to pass onto walkFunc
  *
- * Walks through all breakpoints calling walkFunc for each. The payload
+ * Walks through all break points calling walkFunc for each. The payload
  *  sent to walkFunc is of type xslBreakPointPtr 
  */
 void
@@ -720,9 +741,9 @@ walkBreakPoints(xmlHashScanner walkFunc, void *data)
 
 /**
  * walkTemplates:
- * @walkFunc: function to callback for each template found
- * @data: the extra data to pass onto walker
- * @style: the stylesheet to start from
+ * @walkFunc: The function to callback for each template found
+ * @data: The extra data to pass onto walkFunc
+ * @style: The stylesheet to start from
  *
  * Walks through all templates calling walkFunc for each. The payload
  *   of walkFunc is of type xsltTemplatePtr
@@ -751,9 +772,9 @@ walkTemplates(xmlHashScanner walkFunc, void *data, xsltStylesheetPtr style)
 
 /**
  * walkStylesheets:
- * @walkFunc: function to callback for each stylesheet found
- * @data: the extra data to pass onto walker
- * @style: the stylesheet to start from
+ * @walkFunc: The function to callback for each stylesheet found
+ * @data: The extra data to pass onto walkFunc
+ * @style: The stylesheet to start from
  *
  * Walks through all templates calling walkFunc for each. The payload
  *   sent to walkFuc is of type xsltStylesheetPtr
@@ -811,12 +832,12 @@ globalVarHelper(void **payload, void *data ATTRIBUTE_UNUSED,
 
 /**
  * walkGlobals:
- * @walkFunc: function to callback for each variable of type @type found
- * @data: the extra data to pass onto walker
- * @style: the stylesheet to start from
+ * @walkFunc: The function to callback for each gobal variable found
+ * @data: The extra data to pass onto walkFunc
+ * @style: The stylesheet to start from
  *
  * Call walkFunc for each global variable. The payload
- *   sent to walkFunc is of type xmlNodePtr
+ *   sent to walkFunc is of type  xmlNodePtr
  */
 void
 walkGlobals(xmlHashScanner walkFunc, void *data ATTRIBUTE_UNUSED,
@@ -868,11 +889,11 @@ localVarHelper(void **payload, void *data ATTRIBUTE_UNUSED,
 
 /**
  * walkLocals:
- * @walkFunc: function to callback for each template found
- * @data: the extra data to pass onto walker
- * @style: the stylesheet to start from
+ * @walkFunc: The function to callback for each local variable found
+ * @data: The extra data to pass onto walkFunc
+ * @style: The stylesheet to start from
  *
- * Walks through all templates calling walkFunc for each. The payload
+ * Walks through all local variables calling walkFunc for each. The payload
  *   of walkFunc is of type xmlNodePtr
  */
 void
@@ -887,16 +908,16 @@ walkLocals(xmlHashScanner walkFunc, void *data, xsltStylesheetPtr style)
 
 }
 
-
 /**
  * walkIncludes:
- * @walkFunc: function to callback for each included stylesheet
- * @data: the extra data to pass onto walker
- * @style: the stylesheet to start from
+ * @walkFunc: The function to callback for each included stylesheet
+ * @data: The extra data to pass onto walkFunc
+ * @style: The stylesheet to start from
  *
- * Walks through all included stylesheets calling walkFunc for each. The payload
- *   of walkFunc is of type xmlNodePtr
+ * Walks through all included stylesheets calling walkFunc for each. 
+ * The payload of walkFunc is of type xmlNodePtr
  */
+
 void
 walkIncludes(xmlHashScanner walkFunc, void *data, xsltStylesheetPtr style)
 {
@@ -924,9 +945,9 @@ walkIncludes(xmlHashScanner walkFunc, void *data, xsltStylesheetPtr style)
 
 /**
  * walkIncludeInst:
- * @walkFunc: function to callback for each xsl:include instruction found
- * @data: the extra data to pass onto walker
- * @style: the stylesheet to start from
+ * @walkFunc: The function to callback for each xsl:include instruction found
+ * @data: The extra data to pass onto walkFunc
+ * @style: The stylesheet to start from
  *
  * Walks through all xsl:include calling walkFunc for each. The payload
  *   of walkFunc is of type xmlNodePtr
@@ -972,9 +993,9 @@ walkIncludeInst(xmlHashScanner walkFunc, void *data,
 
 /**
  * walkChildNodes:
- * @walkFunc: function to callback for each child/sibling found
- * @data: the searchInfoPtr to pass onto walker
- * @node: valid xmlNodePtr
+ * @walkFunc: The function to callback for each child/sibling found
+ * @data: The extra data to pass onto walker
+ * @node: Is valid
  *
  * Call walkFunc for each child of @node the payload sent to walkFunc is
  *   a xmlNodePtr
@@ -1002,9 +1023,12 @@ walkChildNodes(xmlHashScanner walkFunc, void *data, xmlNodePtr node)
 
 /**
  * searchBreakPointNode:
- * @breakPoint: valid breakPoint 
+ * @breakPoint: Is valid
  *
- * Returns breakpoint as a new xmlNode in search dataBase format if successful,
+ * Convert @p breakPoint into search dataBase format
+ *
+ * Returns @breakPoint as a new xmlNode in search dataBase format 
+ *               if successful,
  *         NULL otherwise
  */
 xmlNodePtr
@@ -1060,9 +1084,12 @@ searchBreakPointNode(xslBreakPointPtr breakPoint)
 
 /**
  * searchTemplateNode:
- * @templNode: valid template node
+ * @templNode: Is valid
  * 
- * Returns @templNode as a new xmlNode in search dataBase format if successful,
+ * Convert @templateNode into search dataBase format
+ *
+ * Returns @templNode as a new xmlNode in search dataBase format 
+ *               if successful,
  *         NULL otherwise
  */
 xmlNodePtr
@@ -1116,9 +1143,12 @@ searchTemplateNode(xmlNodePtr templNode)
 
 /** 
  * searchGlobalNode:
- * @variable: valid xmlNodePtr node
- * 
- * Returns @style as a new xmlNode in search dataBase format if successful,
+ * @globalVariable: Is valid
+ *
+  * Convert @globalVariable into search dataBase format
+  *
+ * Returns @globalVariable as a new xmlNode in search dataBase format 
+ *             if successful,
  *         NULL otherwise
  */
 xmlNodePtr
@@ -1170,9 +1200,12 @@ searchGlobalNode(xmlNodePtr variable)
 
 /** 
  * searchLocalNode:
- * @variable: valid  xmlNodePtr node
- * 
- * Returns @style as a new xmlNode in search dataBase format if successful,
+ * @localvariable: Is valid
+ *
+ * Convert @localVariable into search dataBase format
+ *
+ * Returns @localVariable as a new xmlNode in search dataBase format 
+ *             if successful,
  *         NULL otherwise
  */
 xmlNodePtr
@@ -1222,8 +1255,10 @@ searchLocalNode(xmlNodePtr variable)
 
 /**
  * searchSourceNode:
- * @style: valid stylesheet item
+ * @style: Is valid
  * 
+  * Convert @style into search dataBase format
+  *
  * Returns @style as a new xmlNode in search dataBase format if successful,
  *         NULL otherwise
  */
@@ -1265,8 +1300,10 @@ searchSourceNode(xsltStylesheetPtr style)
 
 /**
  * searchIncludeNode:
- * @include: valid include element
- * 
+ * @include: Is a valid xsl:include instruction
+ *   
+ * Convert @include into search dataBase format
+ *
  * Returns @include as a new xmlNode in search dataBase format if successful,
  *         NULL otherwise
  */
@@ -1314,9 +1351,12 @@ searchIncludeNode(xmlNodePtr include)
 
 /**
  * searchCallStackNode:
- * @callStackItem: valid callStack item
+ * @callStackItem: Is valid
  * 
- * Returns @callStackItem as a new xmlNode in search dataBase format if successful,
+ * Convert @callStackItem into search dataBase format
+ *
+ * Returns @callStackItem as a new xmlNode in search dataBase format 
+ *            if successful,
  *         NULL otherwise
  */
 xmlNodePtr

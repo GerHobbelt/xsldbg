@@ -72,6 +72,23 @@
 
 
 
+
+  /**
+   * Add template "call" to call stack
+   *
+   * @param templ The current template being applied 
+   * @param source The source node being processed
+   *
+   * @returns 1 on success, 
+   *          0 otherwise
+   */
+
+
+int addCall(xsltTemplatePtr templ, xmlNodePtr source);
+
+
+
+
 /**
  * Drop the topmost item off the call stack
  */
@@ -129,7 +146,9 @@
 
 
 
-/** 
+/**  
+ * Get the top item in the call stack
+ *
  * @returns The top of the call stack
  */
 

@@ -66,11 +66,12 @@ int addDataBreakPoint(xmlChar * url, long lineNo);
 
 
 /**
- * xslFrameBreak:
- * @arg : is valid 
- * @stepup : if != 1 then we step up, otherwise step down
+ * xslDbgShellFrameBreak:
+ * @arg: Is valid 
+ * @stepup: If != 1 then we step up, otherwise step down
  *
  * Set a "frame" break point either up or down from here
+ *
  * Returns 1 on success,
  *         0 otherwise
  */
@@ -247,11 +248,12 @@ addDataBreakPoint(xmlChar * url, long lineNo)
 
 /**
  * xslDbgShellBreak:
- * @arg : is valid
- * @style : is valid
- * @ctxt : is valid
+ * @arg: Is valid
+ * @style: Is valid
+ * @ctxt: Is valid
  * 
  * Add break point specified by arg
+ *
  * Returns 1 on success,
  *         0 otherwise
  */
@@ -383,9 +385,10 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
 
 /**
  * xslDbgShellDelete:
- * @arg : is valid
+ * @arg: Is valid
  * 
  * Delete break point specified by arg
+ *
  * Returns 1 on success,
  *         0 otherwise
  */
@@ -462,13 +465,13 @@ xslDbgShellDelete(xmlChar * arg)
 
 /**
  * xslDbgEnableBreakPoint:
- * @payload : valid xslBreakPointPtr
- * @data : enable type, a pointer to an integer 
+ * @payload: A valid xslBreakPointPtr
+ * @data: Enable type, a pointer to an integer 
  *         for a value of 
  *                 1 enable break point
  *                 0 disable break point
  *                 -1 toggle enabling of break point 
- * @name : not used
+ * @name: Not used
  *
  * Enable/disable break points via use of scan of break points
 */
@@ -560,9 +563,9 @@ xslDbgShellEnable(xmlChar * arg, int enableType)
 
 /**
  * xslDbgPrintBreakPoint:
- * @payload : valid xslBreakPointPtr
- * @data : not used
- * @name : not used
+ * @payload: A valid xslBreakPointPtr
+ * @data: Not used
+ * @name: Not used
  *
  * Print data given by scan of break points 
 */

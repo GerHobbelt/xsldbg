@@ -1,8 +1,16 @@
 Keith Isdale 12 Dec 2001 <k_isdale@tpg.com.au>
+  Fixed GNOME docs again!
+  Synchronized function comments in header and source (maily GNOME doc comments)
+	Gnome API docs now look good, horay!!
+  Copied xslbreakpoint_2.h to xslbreakpoint.h
+	remove xslbreakpoint_2.h in cvs later
+	
+	
+Keith Isdale 12 Dec 2001 <k_isdale@tpg.com.au>
    added DOCBOOK_PREFIX and DOCBOOK_VERSION to configure.in to be used by docs/en/GNOME/Makefile.am
    fix bug in catchSigInt, control-c tryies to start debugger shell when debugging is disabled
 	 change DEBUG_RUN to DEBUG_NONE	
-   updated GNOME docs now usable but problems with "&GPL;" not being found ??
+   updated GNOME docs now usable but problems with "&underGPL;" not being found ??
    added TIMESTAMP to AC_SUBST's  and used in docs/en/GNOME/Makefile.am 
    added docs/en/GNOME/authors.xsl
 	

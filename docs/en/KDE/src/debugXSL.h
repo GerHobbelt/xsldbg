@@ -1,20 +1,20 @@
 
-/* *************************************************************************
+/**************************************************************************
                           debugXSL.h  -  describe the core function of xsldbg
                              -------------------
     begin                : Sun Sep 16 2001
     copyright            : (C) 2001 by Keith Isdale
     email                : k_isdale@tpg.com.au
- ************************************************************************* */
+ **************************************************************************/
 
-/* *************************************************************************
+/**************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
  *                                                                         *
- ************************************************************************* */
+ **************************************************************************/
 
 /*
  * Orinal file : debugXML.h : This is a set of routines used for
@@ -278,9 +278,9 @@ extern int printCount;
 
 
 
-/**
- * getTemplate:
- * 
+/** 
+ * Get the last template node found, if any
+ *
  * @returns the last template node found, if any
  */
 

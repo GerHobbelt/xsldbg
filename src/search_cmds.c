@@ -30,14 +30,15 @@
    
   ------------------------------------------- */
 
+
 /**
  * xslDbgShellSearch:
- * @styleCtxt :
- * @style :
- * @arg : xpath query to use for searching dataBase,
- *        may be preceeded by "-sort " to enable sorting of
- *        data
+ * @styleCtxt: Is valid
+ * @style: Is valid
+ * @arg: The xpath query to use for searching dataBase
  * 
+ * Displays the result of performing a query on the search dataBase
+ *
  * Returns 1 if able to run query with @arg, 
  *         0 otherwise
  */

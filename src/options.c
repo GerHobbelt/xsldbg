@@ -77,8 +77,9 @@ static ArrayListPtr parameterList;
 
 /** 
  * optionsInit:
- * 
- * Allocate memory needed by options data structures
+ *
+ * Intialize the options module
+ *
  * Returns 1 on success,
  *         0 otherwise
  */
@@ -141,11 +142,12 @@ optionsFree(void)
 
 
 /**
- * enableOption :
- * @type : valid integer option
- * @value : 1 to enable, 0 otherwise
+ * enableOption:
+ * @optionType: A valid boolean option
+ * @value: 1 to enable, 0 otherwise
  *
- * Set the state of a xsldbg option to @value
+ * Set the state of a boolean xsldbg option to @value
+ *
  * Returns 1 on success,
  *         0 otherwise
  */
@@ -222,10 +224,13 @@ enableOption(OptionTypeEnum optionType, int value)
 
 
 /**
- * isOptionEnabled :
- * @type : valid integer option to query
+ * isOptionEnabled:
+ * @optionType: A valid boolean option to query
  *
- * Returns the state of a xsldbg option. ie 1 for enabled , 0 for disabled
+ * Return the state of a boolean option
+ *
+ * Returns The state of a boolean xsldbg option. 
+ *         ie 1 for enabled , 0 for disabled
  */
 int
 isOptionEnabled(OptionTypeEnum optionType)
@@ -299,11 +304,12 @@ isOptionEnabled(OptionTypeEnum optionType)
 
 
 /**
- * setIntOption :
- * @type : valid integer option
- * @value : valid to adopt
+ * setIntOption:
+ * @optionType: Is a valid integer option
+ * @value: Value to adopt
  *
- * Set the value of a xsldbg option to @value
+ * Set the value of an integer xsldbg option to @value
+ *
  * Returns 1 on success,
  *         0 otherwise
  */
@@ -315,10 +321,12 @@ setIntOption(OptionTypeEnum optionType, int value)
 
 
 /**
- * getIntOption :
- * @type : valid integer option
+ * getIntOption:
+ * @optionType: A valid integer option
  *
- * Returns the state of a xsldbg option
+ * Return the state of an integer option
+ *
+ * Returns The state of a integer xsldbg option
  */
 int
 getIntOption(OptionTypeEnum optionType)
@@ -329,11 +337,12 @@ getIntOption(OptionTypeEnum optionType)
 
 /**
  * setStringOption:
- * @type : valid string option
- * @ value : value to copy
+ * @optionType: A valid string option
+ * @value: The Value to copy
  *
- * Set value for a string xsldbg option to @value. If value is NULL
- * Then the memory for option @type is freed
+ * Set value for a string xsldbg option to @value. 
+ * Any memory used currently by option @optionType will be freed
+ *
  * Returns 1 on success,
  *         0 otherwise
  */
@@ -364,9 +373,10 @@ setStringOption(OptionTypeEnum optionType, const xmlChar * value)
 
 /**
  * getStringOption:
- * @type : valid string option 
+ * @optionType: A valid string option 
  *
- * Get value for a string xsldbg option of @type
+ * Get value for a string xsldbg option of @optionType
+
  * Returns current option value which may be NULL
  */
 const xmlChar *
@@ -387,8 +397,8 @@ getStringOption(OptionTypeEnum optionType)
 
 /**
  * paramItemNew:
- * @name : is valid 
- * @value : is valid 
+ * @name: Is valid 
+ * @value: Is valid 
  *
  * Create a new libxslt parameter item
  * Returns non-null if sucessful
@@ -412,7 +422,7 @@ paramItemNew(const xmlChar * name, const xmlChar * value)
 
 /**
  * paramItemFree:
- * @item : is valid
+ * @item: Is valid
  *
  * Free memory used by libxslt parameter item @item
  */
@@ -431,8 +441,11 @@ paramItemFree(ParameterItemPtr item)
 /**
  * getParamItemList:
  *
- * Returns the list of parameters to provide to libxslt when doing 
- *   stylesheet transformation
+ * Return the list of libxlt parameters
+ *
+ * Returns The list of parameters to provide to libxslt when doing 
+ *           stylesheet transformation if successful
+ *        NULL otherwise
  */
 ArrayListPtr
 getParamItemList(void)
@@ -446,6 +459,7 @@ getParamItemList(void)
  * @paramId: 0 =< paramID < arrayListCount(getParamList())
  * 
  * Print parameter information
+ *
  * Returns 1 on success,
  *         0 otherwise
  */
@@ -469,6 +483,7 @@ printParam(int paramId)
  * printParamList:
  *
  * Prints all items in parameter list
+ *
  * Returns 1 on success,
  *         0 otherwise
  */

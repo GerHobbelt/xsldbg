@@ -34,9 +34,9 @@
 
 /**
  * helpTop:
- * @args : is valid 
+ * @args : Is valid command or empty string
  *
- * Display help about the command in @arg
+ * Display help about the command in @args
  */
 void
 helpTop(const xmlChar * args)
@@ -86,9 +86,9 @@ helpTop(const xmlChar * args)
 
 /**
  * helpTop:
- * @args : not used
+ * @args : Is valid command or empty string
  *
- * Display help 
+ * Display help about the command in @args
  */
 void
 helpTop(const xmlChar * args ATTRIBUTE_UNUSED)

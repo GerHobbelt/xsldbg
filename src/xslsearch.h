@@ -35,9 +35,7 @@
 #ifndef BUILD_DOCS
 #include "xslbreakpoint.h"
 #endif
-/*
-#include "xslbreakpoint_2.h"
-*/
+
 
 #ifdef WITH_XSLT_DEBUG
 #ifndef WITH_XSLT_DEBUG_BREAKPOINTS
@@ -213,7 +211,7 @@ extern "C" {
 #ifdef USE_KDE_DOCS
 
 /**
- * Empty the seach data base of its contents
+ * Empty the seach dataBase of its contents
  *
  * @returns 1 on success,
  *          0 otherwise
@@ -494,7 +492,7 @@ extern "C" {
 #endif
 #endif
     xmlNodePtr findNodeByLineNo(xsltTransformContextPtr ctxt,
-                                const xmlChar * url, long int lineNumber);
+                                const xmlChar * url, long lineNumber);
 
 
 #ifdef USE_GNOME_DOCS
@@ -587,7 +585,7 @@ extern "C" {
 
 /**
  * findNodesByQuery:
- * @query: xpath query to run, see dbgsearch.c for more details
+ * @query: The xpath query to run, see dbgsearch.c for more details
  *  
  * Find nodes in search dataBase using an xpath query
  *
@@ -928,8 +926,8 @@ extern "C" {
  * searchLocalNode:
  * @localvariable: Is valid
  *
-  * Convert @localVariable into search dataBase format
-  *
+ * Convert @localVariable into search dataBase format
+ *
  * Returns @localVariable as a new xmlNode in search dataBase format 
  *             if successful,
  *         NULL otherwise
@@ -985,8 +983,8 @@ extern "C" {
  * searchIncludeNode:
  * @include: Is a valid xsl:include instruction
  *   
-* Convert @include into search dataBase format
-*
+ * Convert @include into search dataBase format
+ *
  * Returns @include as a new xmlNode in search dataBase format if successful,
  *         NULL otherwise
  */

@@ -25,11 +25,12 @@
 
 /**
  * arrayListNew:
- * @intialSize: initial size of list
- * @deleteFunction: function to call to free items in the list
+ * @initialSize: The initial size of list
+ * @deleteFunction: The function to call to free items in the list
  *
  * Create a new list with a size of @initialSize
- * Returns non-null on success,
+ *
+ * Returns Non-null on success,
  *         NULL otherwise
  */
 ArrayListPtr
@@ -61,7 +62,7 @@ arrayListNew(int initialSize, freeItemFunc deleteFunction)
  *
  * Free memory assocated with array list, if the array list 
  *   has a valid deleteFunction then content with be freed with 
- *    useing that deleteFunction
+ *    using that deleteFunction
  */
 void
 arrayListFree(ArrayListPtr list)
@@ -77,9 +78,10 @@ arrayListFree(ArrayListPtr list)
 
 /**
  * arrayListEmpty:
- * @list: a valid list
+ * @list: A valid list
  *
  * Empties the list of its content
+ *
  * Returns 1 on success,
  *         0 otherwise
  */
@@ -104,9 +106,11 @@ arrayListEmpty(ArrayListPtr list)
 
 /**
  * arrayListSize:
- * @list: a valid list
+ * @list: A valid list
  *
- * Returns the maximum number elements this list can contain
+ * Return The maximum number elements this list can contain
+ *
+ * Returns The maximum number elements this list can contain
  */
 int
 arrayListSize(ArrayListPtr list)
@@ -122,9 +126,11 @@ arrayListSize(ArrayListPtr list)
 
 /**
  * arrayListCount:
- * @list: a valid list
+ * @list: A valid list
  *
- * Returns the count of number items in list
+ * Return the count of number items in list
+ *
+ * Returns The count of number items in list
  */
 int
 arrayListCount(ArrayListPtr list)
@@ -138,12 +144,14 @@ arrayListCount(ArrayListPtr list)
 }
 
 
-/**
+/** 
  * arrayListAdd:
- * @list: valid list
- * @item: valid item
+ * @list: A valid list
+ * @item: A valid list
  *
- * Returns 1 if able to add @item to end of @list
+ * Add @item to @list
+ *
+ * Returns 1 if able to add @item to end of @list,
  *         0 otherwise
  */
 int
@@ -178,10 +186,12 @@ arrayListAdd(ArrayListPtr list, void *item)
 
 /**
  * arrayListDelete:
- * @list: valid list
- * @position: 0 =< position < arrayListCount(list)
+ * @list: A valid list
+ * @position: 0 =< @position < arrayListCount(@list)
  *
- * Returns 1 if able to delete element in @list at position @position
+ * Delete item at position @position from @list
+ *
+ * Returns 1 if able to delete element in @list at position @position,
  *         0 otherwise 
  */
 int
@@ -205,13 +215,15 @@ arrayListDelete(ArrayListPtr list, int position)
 }
 
 
+
 /**
  * arrayListGet:
- * @list: valid list
- * @position: 0 =< position < arrayListCount(list)
+ * @list: A valid list
+ * @position: 0 =< @position < arrayListCount(@list)
  *
- * Returns non-null if able to retrieve element in @list at position
- *          @position
+ * Get item at position @position from @list
+ *
+ * Returns Non-null if able to retrieve element in @list at position @position,
  *         NULL otherwise
  */
 void *

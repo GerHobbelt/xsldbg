@@ -32,10 +32,12 @@
 
 
 /**
- * xslDbgShellChangeWd
- * @path : path to change to
+ * xslDbgShellChangeWd:
+ * @path: The path to change to
  *
- * Returns 1 if able to change xsldbg working direcorty to @path
+ * Change the current working directory of the operating system
+ *
+ * Returns 1 if able to change xsldbg's working directory to @path
  *         0 otherwise
  */
 int
@@ -55,9 +57,11 @@ xslDbgShellChangeWd(const xmlChar * path)
 
 /**
  * xslDbgShellExecute:
- * @name: name of command string to be executed by operating system shell
- * @verbose : if 1 then print extra debugging messages,
+ * @name: The name of command string to be executed by operating system shell
+ * @verbose: If 1 then print extra debugging messages,
  *            normal messages otherwise
+ * 
+ * Execute an operating system command
  *
  * Returns 1 on success,
  *         0 otherwise

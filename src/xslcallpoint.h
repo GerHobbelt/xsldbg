@@ -89,6 +89,34 @@ extern "C" {
                                        const xmlChar * url);
 
 
+
+#ifdef USE_GNOME_DOCS
+/**
+ * addCall:
+ * @templ: The current template being applied
+ * @source: The source node being processed
+ *
+ * Add template "call" to call stack
+ *
+ * Returns 1 on success, 
+ *         0 otherwise
+ */
+#else
+#ifdef USE_KDE_DOCS
+  /**
+   * Add template "call" to call stack
+   *
+   * @param templ The current template being applied 
+   * @param source The source node being processed
+   *
+   * @returns 1 on success, 
+   *          0 otherwise
+   */
+#endif
+#endif
+int addCall(xsltTemplatePtr templ, xmlNodePtr source);
+
+
 #ifdef USE_GNOME_DOCS
 /**
  * dropCall:
@@ -108,10 +136,11 @@ extern "C" {
 #ifdef USE_GNOME_DOCS
 /** 
  * stepupToDepth:
- * @depth:the frame depth to step up to  
+ * @depth:The frame depth to step up to  
  *             0 < @depth <= callDepth()
  *
  * Set the frame depth to step up to
+ *
  * Returns 1 on success,
  *         0 otherwise
  */
@@ -134,10 +163,11 @@ extern "C" {
 #ifdef USE_GNOME_DOCS
 /** 
  * stepdownToDepth:
- * @depth: the frame depth to step down to, 
+ * @depth: The frame depth to step down to, 
  *             0 < @depth <= callDepth()
  *
  * Set the frame depth to step down to
+ *
  * Returns 1 on success, 
  *         0 otherwise
  */
@@ -192,7 +222,9 @@ extern "C" {
  */
 #else
 #ifdef USE_KDE_DOCS
-/** 
+/**  
+ * Get the top item in the call stack
+ *
  * @returns The top of the call stack
  */
 #endif

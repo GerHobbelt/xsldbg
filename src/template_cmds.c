@@ -67,11 +67,11 @@ void
 
 /**
  * xslDbgPrintTemplateHelper:
- * @templ : is valid
- * @verbose : either 1 or 0
- * @templateCount : is valid
- * @printCount : is valid
- * @templateName : template name to print, may be NULL
+ * @templ: Is valid
+ * @verbose: Either 1 or 0
+ * @templateCount: Is valid
+ * @printCount: Is valid
+ * @templateName: template name to print, may be NULL
  *
  * This display the templates in the same order as they are in the 
  *   stylesheet. If verbose is 1 then print more information
@@ -123,15 +123,17 @@ xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose,
 
 /** 
  * xslDbgPrintTemplateNames:
- * @styleCtxt : is valid 
- * @ctxt : not used
- * @arg : if non-null then is the template name to look for
- * @verbose : if 1 then print extra messages about templates found,
+ * @styleCtxt: Is valid 
+ * @ctxt: Not used
+ * @arg: Not used
+ * @verbose: If 1 then print extra messages about templates found,
  *            otherwise print normal messages only 
- * @allFiles : if 1 then look for all templates in stylsheets found in of @styleCtxt
- *             otherwise look in the stylesheet found by debugBreak function
+ * @allFiles: If 1 then look for all templates in stylsheets found in 
+ *                 @styleCtxt
+ *             otherwise look in the stylesheet found by 
+ *                 debugBreak function
  *
- * print out the list of template names found that match critieria   
+ * Print out the list of template names found that match critieria   
  */
 void
 xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
@@ -236,9 +238,10 @@ xslDbgShellPrintStylesheetsHelper2(void *payload,
     }
 }
 
+
 /**
  * xslDbgPrintStyleSheets:
- * @arg : stylesheets of interests, is NULL for all stylsheets
+ * @arg: The stylesheets of interests, is NULL for all stylsheets
  *
  * Print stylesheets that can be found in loaded stylsheet
  */

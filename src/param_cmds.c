@@ -30,12 +30,13 @@
 
   ------------------------------------------- */
 
-/* 
+/** 
  * xslDbgShellAddParam:
- * @arg : a string comprised of two words separated by
- *          one or more spaces.
+ * @arg: A string comprised of two words separated by
+ *          one or more spaces. 
  *
- * Add a parameter to be sent to libxslt later on
+ * Add a libxslt parameter to be sent to libxslt later on
+ *
  * Returns 1 on success,
  *         0 otherwise
 */
@@ -65,9 +66,11 @@ xslDbgShellAddParam(xmlChar * arg)
 
 /**
  * xslDbgShellDelParam:
- * @arg : single white space trimmed parameter number to look for
+ * @arg: A single white space trimmed parameter number to look for
  * 
- * Returns 1 if able to delete parameter
+ * Delet a libxslt parameter to be sent to libxslt later on
+ *
+ * Returns 1 if able to delete parameter @name,
  *         0 otherwise
  */
 int
@@ -104,11 +107,13 @@ xslDbgShellDelParam(xmlChar * arg)
     return result;
 }
 
+
 /**
  * xslDbgShellShowParam:
- * @arg : not used
+ * @arg: Not used
  *
  * Print list of current paramters
+ *
  * Returns 1 on success,
  *         0 otherwise
  */

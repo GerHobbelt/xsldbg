@@ -379,7 +379,7 @@ extern "C" {
 /**
  * searchEmpty:
  *
- * Empty the seach data base of its contents
+ * Empty the seach dataBase of its contents
  * Returns 1 on success,
  *         0 otherwise
  */

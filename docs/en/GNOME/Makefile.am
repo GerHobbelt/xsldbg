@@ -9,7 +9,7 @@ $(APISRC_DIR)/xsldbg.h		\
 $(APISRC_DIR)/help.h		\
 $(APISRC_DIR)/options.h 	\
 $(APISRC_DIR)/arraylist.h	\
-$(APISRC_DIR)/xslbreakpoint_2.h \
+$(APISRC_DIR)/xslbreakpoint.h 	\
 $(APISRC_DIR)/xslcallpoint.h	\
 $(APISRC_DIR)/xslsearch.h	\
 $(APISRC_DIR)/debugXSL.h	\
@@ -27,7 +27,7 @@ overview.xsl  	\
 authors.xsl	\
 xsldoc2gnome.xsl 
 
-APIDOCS_DIR=apidocs
+APIDOCS_DIR=html
 
 EXTRA_DIST=$(GNOMEXSL_FILES)
 
@@ -40,8 +40,12 @@ API_MAIN_SGML_FILE=xsldbg.sgml
 $(XSLDBG):
 	@(cd $(top_builddir)/src ; $(MAKE) xsldbg)
 
+
 if USE_GNOMEDOCS
+# we need both headers and source to make GNOME docs
+# so just copy the source across
 scan: $(APISRC_FILES)
+	cp $(top_builddir)/src/*.c $(APISRC_DIR)
 	gtkdoc-scan --module=xsldbg --source-dir=$(APISRC_DIR) 
 
 templates: scan
@@ -50,9 +54,9 @@ templates: scan
 sgml:
 	gtkdoc-mkdb --module=xsldbg --source-dir=$(APISRC_DIR)
 
-html:
-	if ! test -d html ; then mkdir html ; fi
-	-cd html && gtkdoc-mkhtml xsldbg ../$(API_MAIN_SGML_FILE)
+$(APIDOCS_DIR): $(API_MAIN_SGML_FILE)
+	if ! test -d $(APIDOCS_DIR) ; then mkdir $(APIDOCS_DIR) ; fi
+	-cd $(APIDOCS_DIR) && gtkdoc-mkhtml xsldbg ../$(API_MAIN_SGML_FILE)
 
 xsldbg-decl-list.txt : templates
 
@@ -73,20 +77,19 @@ gnome.docbook : $(GNOMEXSL_FILES) ../xsldoc.xml
 index.html appDocs : gnome.docbook
 	$(XSLDBG) $(DOCBOOK_PREFIX)/xsl/html/docbook.xsl  gnome.docbook > index.html
 
-rebuild: xsldbg-sections.txt templates sgml html appDocs
+rebuild: xsldbg-sections.txt templates sgml html
 
 all: appDocs rebuild 
 
 clean:
-	rm -f ./plain/xsldoc.txt
 	rm -rf html sgml tmpl src
 	rm -f xsldbg-*
 
-very-clean:clean
+very-clean: clean
 	rm -f *.*~
 	rm -f *~
 	rm -f Makefile.in
-	rm -f Makefile
+
 else
 
 all:

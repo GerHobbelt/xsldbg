@@ -111,23 +111,6 @@ extern FILE *terminalIO;
 
 #ifdef USE_GNOME_DOCS
 /**
- * getTemplate:
- * 
- * Returns the last template node found, if any
- */
-#else
-#ifdef USE_KDE_DOCS
-/**
- * @returns the last template node found, if any
- */
-#endif
-#endif
-    xsltTemplatePtr getTemplate(void);
-
-
-
-#ifdef USE_GNOME_DOCS
-/**
  * guessStyleSheetName:
  * @searchInf : is valid
  *
@@ -193,6 +176,9 @@ extern FILE *terminalIO;
  * @path : path to adopt as new working directory
  *
  * Change working directory to path 
+ *
+ * Returns 1 on success,
+ *         0 otherwise
  */
 #else
 #ifdef USE_KDE_DOCS
@@ -201,6 +187,9 @@ extern FILE *terminalIO;
  *
  * @param path The operating system path(directory) to adopt as 
  *         new working directory
+ *
+ * @returns 1 on success,
+ *          0 otherwise
  */
 #endif
 #endif
@@ -211,7 +200,9 @@ extern FILE *terminalIO;
 /**
  * loadXmlFile:
  * @path : xml file to load
- * @type : a valid FileTypeEnum
+ * @fileType : A valid FileTypeEnum
+ *
+ * Load specified file type, freeing any memory previously used 
  *
  * Returns 1 on success,
  *         0 otherwise 
@@ -219,11 +210,13 @@ extern FILE *terminalIO;
 #else
 #ifdef USE_KDE_DOCS
 /**
+ * Load specified file type, freeing any memory previously used 
+ *
  * @returns 1 on success,
  *         0 otherwise 
  *
  * @param path The xml file to load
- * @param type A valid FileTypeEnum
+ * @param fileType A valid FileTypeEnum
  */
 #endif
 #endif
@@ -233,7 +226,7 @@ extern FILE *terminalIO;
 #ifdef USE_GNOME_DOCS
 /**
  * freeXmlFile:
- * @type : a valid FileTypeEnum
+ * @fileType : A valid FileTypeEnum
  * 
  * Free memory associated with the xml file 
  * Returns 1 on success,
@@ -247,7 +240,7 @@ extern FILE *terminalIO;
  * @returns 1 on success,
  *         0 otherwise
  *
- * @param type : a valid FileTypeEnum
+ * @param fileType : A valid FileTypeEnum
  */
 #endif
 #endif

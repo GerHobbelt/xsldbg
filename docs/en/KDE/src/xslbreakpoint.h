@@ -1,12 +1,12 @@
-
-/* *************************************************************************
+  
+/**************************************************************************
                           xslbreakpoint.h  -  public functions for the
                                                breakpoint API
                              -------------------
     begin                : Fri Dec 7 2001
     copyright            : (C) 2001 by Keith Isdale
     email                : k_isdale@tpg.com.au
- ************************************************************************* */
+ **************************************************************************/
 
 /***************************************************************************
  *                                                                         *
@@ -15,11 +15,12 @@
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
  *                                                                         *
- ************************************************************************* */
+ **************************************************************************/
 
 
-#ifndef XSLBREAKPOINT_H
-#define XSLBREAKPOINT_H
+
+
+
 
 /**
  * Provide a basic break point support
@@ -30,17 +31,36 @@
  */
 
 
-#ifdef WITH_XSLT_DEBUG
-#ifndef WITH_XSLT_DEBUG_BREAKPOINTS
-#define WITH_XSLT_DEBUG_BREAKPOINTS
-#endif
-#endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-    /** The main structure for holding breakpoints*/
+
+  /* Define the types of status whilst debugging*/
+  
+  /* keep kdoc happy */
+     enum DebugStatusEnum{
+        DEBUG_NONE = 0,             /* must start at zero!! */
+        DEBUG_INIT,
+        DEBUG_STEP,
+        DEBUG_STEPUP,
+        DEBUG_STEPDOWN,
+        DEBUG_NEXT,
+        DEBUG_STOP,
+        DEBUG_CONT,
+        DEBUG_RUN,
+        DEBUG_RUN_RESTART,
+        DEBUG_QUIT,
+        DEBUG_TRACE,
+        DEBUG_WALK
+    };
+  
+
+    enum BreakPointTypeEnum{
+        DEBUG_BREAK_SOURCE = 300,
+        DEBUG_BREAK_DATA
+    };
+  
+
+    /* The main structure for holding breakpoints*/
     typedef struct _xslBreakPoint xslBreakPoint;
     typedef xslBreakPoint *xslBreakPointPtr;
     struct _xslBreakPoint {
@@ -48,9 +68,12 @@ extern "C" {
         long lineNo;
         xmlChar *templateName;
         int enabled;
-        int type;
+        BreakPointTypeEnum type;
         int id;
     };
+
+
+
 
 /**
  * A break point has been found so pass control to user
@@ -60,8 +83,13 @@ extern "C" {
  * @param root The template being applied to "node"
  * @param ctxt transform context for stylesheet being processed
  */
-    void xslDebugBreak(xmlNodePtr templ, xmlNodePtr node,
+
+
+    void debugBreak(xmlNodePtr templ, xmlNodePtr node,
                        xsltTemplatePtr root, xsltTransformContextPtr ctxt);
+
+
+
 
 
 /**
@@ -70,13 +98,22 @@ extern "C" {
  * @returns 1 on success,
  *          0 otherwise
  */
+
+
     int debugInit(void);
+
+
+
 
 
 /**
  * Free up any memory taken by debugger
  */
+
+
     void debugFree(void);
+
+
 
 
 /** 
@@ -88,14 +125,26 @@ extern "C" {
  * @param reached 1 if debugger has received control, -1 to read its value,
  *              0 to clear the flag
  */
-    int xslDebugGotControl(int reached);
+
+
+    int debugGotControl(int reached);
+
+
+
 
 
 
 /**
+ * Get the active break point
+ *
  * @returns The last break point that we stoped at
  */
+
+
     xslBreakPointPtr activeBreakPoint(void);
+
+
+
 
 
 /**
@@ -103,7 +152,12 @@ extern "C" {
  *
  * @param breakPoint Is valid break point or NULL
  */
+
+
     void setActiveBreakPoint(xslBreakPointPtr breakPoint);
+
+
+
 
 
 /**
@@ -119,9 +173,14 @@ extern "C" {
  * @param temlateName The template name of break point or NULL
  * @param type Valid BreakPointTypeEnum
 */
-    int xslAddBreakPoint(const xmlChar * url, long lineNumber,
+
+
+    int addBreakPoint(const xmlChar * url, long lineNumber,
                          const xmlChar * templateName,
                          BreakPointTypeEnum type);
+
+
+
 
 /**
  * Delete the break point specified if it can be found using 
@@ -133,14 +192,26 @@ extern "C" {
  * @param breakPoint Is valid
  *
 */
+
+
     int deleteBreakPoint(xslBreakPointPtr breakPoint);
 
 
+
+
+
 /**
+ * Empty the break point collection
+ *
  * @returns 1 if able to empty the break point list of its contents,
  *          0  otherwise
  */
-    int xslEmptyBreakPoint(void);
+
+
+    int emptyBreakPoint(void);
+
+
+
 
 
 /**
@@ -149,19 +220,32 @@ extern "C" {
  * @returns 1 if successful,
  *	    0 otherwise
  *
- * @param breakpoint A valid breakpoint
+ * @param breakPoint A valid breakpoint
  * @param enable Enable break point if 1, disable if 0, toggle if -1
 */
+
+
     int enableBreakPoint(xslBreakPointPtr breakPoint, int enable);
 
 
-/**
+
+
+
+/** 
+ * Return the number of hash tables of break points with the same line number
+ *
  * @returns the number of hash tables of break points with the same line number
  */
-    int xslBreakPointLinesCount(void);
+
+
+    int breakPointLinesCount(void);
+
+
 
 
 /**
+ * Get a break point for the breakpoint collection
+ *
  * @returns break point if break point exists at location specified,
  *	    NULL otherwise
  *
@@ -169,7 +253,11 @@ extern "C" {
  *                    debugger
  * @param lineNumber @p lineNumber >= 0 and is available in url specified
 */
+
+
     xslBreakPointPtr getBreakPoint(const xmlChar * url, long lineNumber);
+
+
 
 
 /**
@@ -179,9 +267,13 @@ extern "C" {
  *	    0 otherwise
  *
  * @param file Is valid
- * @param breakpoint A valid break point
+ * @param breakPoint A valid break point
  */
+
+
     int printBreakPoint(FILE * file, xslBreakPointPtr breakPoint);
+
+
 
 
 /**
@@ -194,7 +286,11 @@ extern "C" {
  *                    debugger
  * @lineNumber @p lineNumber >= 0 and is available in url specified
 */
-    int xslIsBreakPoint(const xmlChar * url, long lineNumber);
+
+
+    int isBreakPoint(const xmlChar * url, long lineNumber);
+
+
 
 
 /**
@@ -205,9 +301,11 @@ extern "C" {
  *
  * @param node Is valid
  */
-    int xslIsBreakPointNode(xmlNodePtr node);
 
-#ifdef __cplusplus
-}
-#endif
-#endif
+
+    int isBreakPointNode(xmlNodePtr node);
+
+
+
+
+ 

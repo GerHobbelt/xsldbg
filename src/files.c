@@ -52,9 +52,9 @@ static xmlChar *workingDirPath = NULL;
 
 /**
  * guessStylesheetHelper:
- * @payload : valid xsltStylesheetPtr
- * @data : valid searchInfoPtr of type SEARCH_NODE
- * @name : not used
+ * @payload: valid xsltStylesheetPtr
+ * @data: valid searchInfoPtr of type SEARCH_NODE
+ * @name: not used
  *
  * Try to guess what the complete file/URI is. If successful the search
  *   info will be set to found and the search data will contain the
@@ -66,9 +66,9 @@ void guessStylesheetHelper(void *payload, void *data,
 
 /**
  * guessStylesheetHelper2:
- * @payload : valid xmlNodePtr of the included stylesheet 
- * @data : valid searchInfoPtr of type SEARCH_NODE
- * @name : not used
+ * @payload: valid xmlNodePtr of the included stylesheet 
+ * @data: valid searchInfoPtr of type SEARCH_NODE
+ * @name: not used
  *
  * Try to guess what the complete file/URI is. If successful the search
  *   info will be set to found and the search data will contain the
@@ -86,16 +86,18 @@ void guessStylesheetHelper2(void *payload, void *data,
 
 FILE *terminalIO;
 /* No longer needed
-static FILE *oldStdin, *oldStdout, *oldStderr;
-char *ttyName, *termName;
+   static FILE *oldStdin, *oldStdout, *oldStderr;*/
 
-*/
+static char *ttyName; /* what is the name of the default terminal */
+static char *termName = NULL; /* what is the name of terminal we are redirected to */
+
 
 /**
  * redirectToTerminal:
  * @device: terminal to redirect i/o to , will not work under win32
  *
  * Open communications to the terminal device @device
+ *
  * Returns 1 if sucessful
  *         0 otherwise
  */
@@ -119,8 +121,14 @@ openTerminal(xmlChar * device)
      * One assumes that you might use a socket or a pipe here.
      */
 
-    if (terminalIO != NULL)
+    if (terminalIO)
         fclose(terminalIO);
+
+    if (termName){
+	xmlFree(termName);
+	termName = NULL;
+    }
+    
 
     if (device[0] == '\0') {
         /* look like we are supposed to close the terminal */
@@ -128,41 +136,92 @@ openTerminal(xmlChar * device)
     } else {
         terminalIO = fopen((char *) device, "w");
         if (terminalIO != NULL) {
-            termName = (char *) device; /* JRF: Not sure how safe this is */
-            /* This can't be done reliably; really need more thought */
+            termName = xmlMemStrdup(device);
             result++;
         } else {
             xsltGenericError(xsltGenericErrorContext,
-                             "Unable to open terminal %s", device);
-            termName = NULL;
+                             "Unable to open terminal %s\n", device);
         }
     }
 #else
 
 #ifdef HAVE_UNISTD_H              /* fix me for WinNT */
-    if (terminalIO != NULL)
-        fclose(terminalIO);
 
     if ((device[0] >= '0') && (device[0] <= '9')) {
-        /* look like we are supposed to close the terminal */
-        selectNormalIO();       /* shouldn't be needed but just in case */
+      /*set the tty level  */
+      switch(device[0])
+	{
+
+	case '1': 
+	  /* redirect only some output to terminal */
+	  if (!terminalIO && termName){
+	    terminalIO = fopen(device, "w");
+	    if (terminalIO) {
+	      result++;
+	    } else {
+	      xsltGenericError(xsltGenericErrorContext,
+			       "Unable to open terminal %s", device);
+	      termName = NULL;
+	    }
+	  }
+	  break;
+
+  
+	case '2':
+	  /* redirect everything to the terminal*/
+	  if (termName && terminalIO)
+	    {
+	      /* we have previously sucessfully opened the terminal so just
+		 go ahead a redirect I/O */
+	      result = freopen(termName, "r", stdin) != NULL;
+	      result = result && (freopen(termName, "w", stdout) != NULL);
+	      result = result && (freopen(termName, "w", stderr) != NULL);
+	      if (!result){
+		xsltGenericError(xsltGenericErrorContext,
+				 "Unable to redirect to terminal %s\n",
+			     termName);
+	      }
+	    }
+	  break;
+
+	default :
+	  /* look like we are supposed to close the terminal */
+	  if ((terminalIO != NULL) && (ttyName != NULL))  {
+	    fclose(terminalIO);
+	    freopen(ttyName, "r", stdin);
+	    freopen(ttyName, "w", stdout);
+	    freopen(ttyName, "w", stderr);
+	    terminalIO = NULL;
+	    result++;
+	    }
+	  break;
+	}
+
     } else {
 
+      if (terminalIO != NULL)
+        fclose(terminalIO);
+      
+      if (termName){
+	xmlFree(termName);
+	termName = NULL;
+      }
+
+      /* just open the terminal the user will need to provide a
+          tty level by invoking tty command again with a value of 0 - 9
+      */
         terminalIO = fopen(device, "w");
         if (terminalIO != NULL) {
-	  /*
-            termName = device;
-            dup2(fileno(terminalIO), fileno(stdin));
-            dup2(fileno(terminalIO), fileno(stderr));
-            dup2(fileno(terminalIO), fileno(stdout));
-	  */
+            termName = xmlMemStrdup(device);
+	    /*
+	      dup2(fileno(terminalIO), fileno(stdin));
+	      dup2(fileno(terminalIO), fileno(stderr));
+	      dup2(fileno(terminalIO), fileno(stdout));
+	    */
             result++;
         } else {
             xsltGenericError(xsltGenericErrorContext,
                              "Unable to open terminal %s", device);
-	    /*
-            termName = NULL;
-	    */
         }
     }
 
@@ -228,9 +287,9 @@ selectNormalIO(void)
 
 /**
  * guessStylesheetHelper:
- * @payload : valid xsltStylesheetPtr
- * @data : valid searchInfoPtr of type SEARCH_NODE
- * @name : not used
+ * @payload: valid xsltStylesheetPtr
+ * @data: valid searchInfoPtr of type SEARCH_NODE
+ * @name: not used
  *
  * Try to guess what the complete file/URI is. If successful the search
  *   info will be set to found and the search data will contain the
@@ -329,9 +388,9 @@ guessStylesheetHelper(void *payload, void *data,
 
 /**
  * guessStylesheetHelper2:
- * @payload : valid xmlNodePtr of the included stylesheet 
- * @data : valid searchInfoPtr of type SEARCH_NODE
- * @name : not used
+ * @payload: valid xmlNodePtr of the included stylesheet 
+ * @data: valid searchInfoPtr of type SEARCH_NODE
+ * @name: not used
  *
  * Try to guess what the complete file/URI is. If successful the search
  *   info will be set to found and the search data will contain the
@@ -428,11 +487,11 @@ guessStylesheetHelper2(void *payload, void *data,
 }
 
 /**
- * guessStyleSheetName:
+ * guessStylesheetName:
+ * @searchInf: Is valid
  *
  * Try to find a matching stylesheet name
  * Sets the values in @searchinf depending on outcome of search
- * 
  */
 void
 guessStylesheetName(searchInfoPtr searchInf)
@@ -459,7 +518,10 @@ guessStylesheetName(searchInfoPtr searchInf)
 /**
  * stylePath:
  *
- * Returns the base path for the top stylesheet ie
+ * Return The base path for the top stylesheet ie
+ *        ie URL minus the actual file name
+ *
+ * Returns The base path for the top stylesheet ie
  *        ie URL minus the actual file name
  */
 xmlChar *
@@ -471,8 +533,10 @@ stylePath(void)
 
 /**
  * workingPath:
+ * 
+ * Return the working directory as set by changeDir function
  *
- * Returns the working directory as set by changeDir function
+ * Returns The working directory as set by changeDir function
  */
 xmlChar *
 workingPath(void)
@@ -483,9 +547,12 @@ workingPath(void)
 
 /**
  * changeDir:
- * @path : path to adopt as new working directory
+ * @path: The path to adopt as new working directory
  *
  * Change working directory to path 
+ *
+ * Returns 1 on success,
+ *         0 otherwise
  */
 int
 changeDir(const xmlChar * path)
@@ -514,8 +581,10 @@ changeDir(const xmlChar * path)
 
 /**
  * loadXmlFile:
- * @path : xml file to load
- * @type : a valid FileTypeEnum 
+ * @path: xml file to load
+ * @fileType: A valid FileTypeEnum 
+ * 
+ * Load specified file type, freeing any memory previously used 
  *
  * Returns 1 on success,
  *         0 otherwise 
@@ -590,9 +659,10 @@ loadXmlFile(const xmlChar * path, FileTypeEnum fileType)
 
 /**
  * freeXmlFile:
- * @type : a valid FileTypeEnum 
+ * @fileType: A valid FileTypeEnum 
  * 
  * Free memory associated with the xml file 
+ *
  * Returns 1 on success,
  *         0 otherwise
  */
@@ -633,7 +703,10 @@ freeXmlFile(FileTypeEnum fileType)
 /**
  * getStylesheet:
  *
- * Returns the topmost stylesheet non-null on success,
+ * Return The topmost stylesheet non-null on success,
+ *         NULL otherwise
+ *
+ * Returns The topmost stylesheet non-null on success,
  *         NULL otherwise
  */
 xsltStylesheetPtr
@@ -646,7 +719,9 @@ getStylesheet(void)
 /**
  * getTemporaryDoc:
  *
- * Returns the current "temporary" document
+ * Return The current "temporary" document
+ *
+ * Returns The current "temporary" document
  */
 xmlDocPtr
 getTemporaryDoc(void)
@@ -658,7 +733,9 @@ getTemporaryDoc(void)
 /**
  * getMainDoc:
  *
- * Returns the main docment
+ * Return The main docment
+ *
+ * Returns The main docment
  */
 xmlDocPtr
 getMainDoc(void)
@@ -669,7 +746,7 @@ getMainDoc(void)
 
 /**
  * filesReloaded:
- * @reloaded : if = -1 then ignore @reloaded
+ * @reloaded: if = -1 then ignore @reloaded
  *             otherwise change the status of files to value of @reloaded   
  *
  * Returns 1 if stylesheet or its xml data file has been "flaged" as reloaded,
@@ -730,8 +807,10 @@ filesFree(void)
 {
     int result;
 
-    if (terminalIO != NULL)
+    if (terminalIO)
         fclose(terminalIO);
+    if (termName)
+      xmlFree(termName);
 
     result = freeXmlFile(FILES_SOURCEFILE_TYPE);
     if (result)

@@ -4,16 +4,19 @@ DATADIR = ..
 XSLDIR = KDE
 XSLDBG=$(top_builddir)/src/xsldbg
 APISRC_DIR=src
-APISRC_FILES= \
+APISRC_HEADER_FILES= \
 $(APISRC_DIR)/xsldbg.h		\
 $(APISRC_DIR)/help.h		\
 $(APISRC_DIR)/options.h 	\
 $(APISRC_DIR)/arraylist.h	\
-$(APISRC_DIR)/xslbreakpoint_2.h \
+$(APISRC_DIR)/xslbreakpoint.h 	\
 $(APISRC_DIR)/xslcallpoint.h	\
 $(APISRC_DIR)/xslsearch.h	\
 $(APISRC_DIR)/debugXSL.h	\
 $(APISRC_DIR)/files.h		
+
+APISRC_SOURCE_FILES=\
+$(top_builddir)/src/*.c
 
 
 KDEXSL_FILES= \
@@ -25,7 +28,7 @@ xsldoc2kde.xsl
 
 APIDOCS_DIR=apidocs
 
-EXTRA_DIST=$(KDEXSL_FILES) $(APISRC_FILES)
+EXTRA_DIST=$(KDEXSL_FILES) $(APISRC_HEADER_FILES)
 
 # must use -P or else kdoc will be confused!!
 CPPFLAGS=-E -C -P
@@ -49,30 +52,27 @@ index.cache.bz2 : index.docbook $(DATADIR)/xsldoc.xml
 	bzip2 index.cache
 	ln -fs $(KDEDIR)/share/doc/HTML/en/common ./
 
-apidocs $(APIDOCS_DIR)/index.html: $(APISRC_DIR) $(APISRC_FILES)
+apidocs : $(APIDOCS_DIR)/index.html
+
+$(APIDOCS_DIR)/index.html: $(APISRC_DIR) $(APISRC_HEADER_FILES)
 	@echo ""
 	@echo ""
 	@echo "Making KDE style API documentation see `pwd`/$(APIDOCS_DIR)/index.html"
 	@echo ""
 	@echo ""
 	if ! test -d  $(APIDOCS_DIR); then mkdir $(APIDOCS_DIR); fi
-	kdoc -d $(APIDOCS_DIR)  $(APISRC_FILES)
+	kdoc -d $(APIDOCS_DIR)  $(APISRC_HEADER_FILES)
 
 
 $(APISRC_DIR): 
 	if ! test -d $(APISRC_DIR) ; then mkdir $(APISRC_DIR) ; fi
 
 
-# I proved the mechanism works just need to wait until after beta to 
-#    make use of it :-)
-#if 0
-
 # now use the preprocessor to create the KDE version of 
 #  header suitable to pass onto kdoc
-$(APISRC_FILES): $(APISRC_DIR)
+$(APISRC_HEADER_FILES): $(APISRC_DIR)
 	$(CC) -DUSE_KDOC -DBUILD_DOCS -DUSE_KDE_DOCS $(CPPFLAGS) $(top_builddir)/src/$(@F) > $@
 
-#endif
 
 
 if USE_KDEDOCS
@@ -88,11 +88,9 @@ clean:
 very-clean:clean
 	rm -f *.*~
 	rm -f *~
-	rm -f Makefile.in
-	rm -f Makefile
 
 
-install-data-local: all
+install-data-local: 
 	$(mkinstalldirs) $(KDEDIR)/share/doc/HTML/en/khelpcenter/xsldbg/
 	@INSTALL@ -m 0644 index.docbook index.cache.bz2 $(KDEDIR)/share/doc/HTML/en/khelpcenter/xsldbg
 	ln -fs $(KDEDIR)/share/doc/HTML/en/common $(KDEDIR)/share/doc/HTML/en/khelpcenter/xsldbg/

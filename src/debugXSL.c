@@ -373,7 +373,7 @@ int xslDbgWalkContinue(void);
  * @name : is valid
  * @matchList : a NULL terminated list of names to use as lookup table
  *
- * Returns the id of name found in @matchList
+ * Returns The id of name found in @matchList
  *        0 otherwise
 */
 int lookupName(xmlChar * name, xmlChar ** matchList);
@@ -473,7 +473,9 @@ void
 /**
  * getTemplate:
  * 
- * Returns the last template node found, if any
+ * Return the last template node found, if an
+ *
+ * Returns The last template node found, if any
  */
 xsltTemplatePtr
 getTemplate(void)
@@ -761,7 +763,7 @@ xslDbgWalkContinue(void)
  * @name : is valid
  * @matchList : a NULL terminated list of names to use as lookup table
  *
- * Returns the id of name found in @matchList
+ * Returns The id of name found in @matchList
  *        0 otherwise
 */
 int
@@ -830,11 +832,11 @@ xslDbgShellReadline(xmlChar * prompt)
 
 /**
  * trimString:
- * @text : valid string with leading or trailing spaces
+ * @text : A valid string with leading or trailing spaces
  *
  * Remove leading and trailing spaces off @text
  *         stores result back into @text
- * Returns 1 if successful,
+ * Returns 1 on success,
  *         0 otherwise
  */
 int
@@ -866,13 +868,14 @@ trimString(xmlChar * text)
 }
 
 
-/*
+/**
  * splitString:
- * @textIn : the string to split
- * @maxStrings : max number of strings to put into @out
- * @out: is valid and at least the size of @maxStrings
- * Spit string by white space and put into @out
- * 
+ * @textIn: The string to split
+ * @maxStrings: The max number of strings to put into @out
+ * @out: Is valid and at least the size of @maxStrings
+ *
+ * Split string by white space and put into @out
+ *
  * Returns 1 on success,
  *         0 otherwise
  */
@@ -1035,10 +1038,12 @@ addCallStackItems(void)
 
 /**
  * updateSearchData:
- * @styleCtxt : not used
- * @style : is valid
- * @data : not used but MUST be NULL for the moment
- * @variableTypes : what types of variable to look for @see VariableTypeEnum
+ * @styleCtxt: Not used
+ * @style: Is valid
+ * @data: Not used but MUST be NULL for the moment
+ * @variableTypes: What types of variables to look
+ *
+ * Update the searchDatabase
  *
  * Returns 1 on success,
  *         0 otherwise
@@ -1081,14 +1086,14 @@ updateSearchData(xsltTransformContextPtr styleCtxt ATTRIBUTE_UNUSED,
 }
 
 
-/*
+/**
+ * debugBreak:
+ * @templ: The source node being executed
+ * @node: The data node being processed
+ * @root: The template being applied to "node"
+ * @ctxt: The transform context for stylesheet being processed
+ *
  * A break point has been found so pass control to user
- * @templ : The source node being executed
- * @node : The data node being processed
- * @root : The template being applied to "node"
- * @ctxt :
- * 
- * Start the xsldbg command prompt
  */
 void
 debugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
@@ -1154,14 +1159,15 @@ debugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
 /* Highly modified function based on xmlShell */
 
 /**
- * xslDbgShell
- * @doc:  the initial document
- * @filename:  the output buffer
- * @input:  the line reading function
- * @output:  the output FILE*
+ *  xslDbgShell:
+ * @source: The current stylesheet instruction being executed
+ * @doc: The current document node being processed
+ * @filename: Not used
+ * @input: The function to call to when reading commands from stdio
+ * @output: Where to put the results
+ * @styleCtxt: Is valid 
  *
- * Implements the XSL shell 
- * Work with stylesheet and data in a similar way to Unix command shell 
+ * Present to the user the xsldbg shell
  */
 void
 xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,

@@ -34,9 +34,10 @@
 
 /**
  * xslDbgShellTrace:
- * @arg : not used
+ * @arg: Not used
  *
  * Start the tracing of the stylesheet. First need to restart it.
+ *
  * Returns 1 on success,
  *         0 otherwise
  */
@@ -51,9 +52,10 @@ xslDbgShellTrace(xmlChar * arg ATTRIBUTE_UNUSED)
 
 /**
  * xslDbgShellWalk:
- * @arg : an interger between 0 and 9 indicate the speed of walk
+ * @arg: An interger between 0 and 9 indicate the speed of walk
  *
  * Start walking through the stylesheet.
+ *
  * Returns 1 on success,
  *         0 otherwise
  */

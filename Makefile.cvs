@@ -5,4 +5,10 @@ all:
 	autoheader
 	automake --add-missing
 	autoconf
+	@echo "printing README"
+	@echo "" 
+	cat README
+	@echo "printing src/readme.txt"
+	@echo "" 
+	cat src/readme.txt
 

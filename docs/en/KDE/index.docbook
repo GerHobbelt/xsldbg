@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.1-Based Variant V1.0//EN" "dtd/kdex.dtd">
-<book><bookinfo><title>Xsldbg 0.9.1</title><subtitle>Command and usage documentation</subtitle><authorgroup><author><firstname>Keith</firstname><surname>Isdale</surname><affiliation><address><email>k_isdale@tpg.com.au</email></address></affiliation></author></authorgroup><copyright><year>2001</year><holder>Keith Isdale</holder></copyright><legalnotice>&FDLNotice;</legalnotice><date>07/12/2001</date><releaseinfo>0.8.5</releaseinfo><abstract><para>
+<book><bookinfo><title>Xsldbg 0.9.1</title><subtitle>Command and usage documentation</subtitle><authorgroup><author><firstname>Keith</firstname><surname>Isdale</surname><affiliation><address><email>k_isdale@tpg.com.au</email></address></affiliation></author></authorgroup><copyright><year>2001</year><holder>Keith Isdale</holder></copyright><legalnotice>&FDLNotice;</legalnotice><date>13/12/2001</date><releaseinfo>0.9.1</releaseinfo><abstract><para>
 xsldbg is a tool intended to help understand stylesheets. 
 What makes it different to other stylesheet debuggers is the ability 
 to search for items of interest and trace stylesheet execution. You can
@@ -105,6 +105,10 @@ Free stylesheet and data        (Disabled see run)
 </section><section id="ls_cmd"><title id="ls_cmd.title">Ls</title>
 List nodes in a brief format
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>ls</entry></row></tbody></tgroup></table>
+</section><section id="tty_cmd"><title id="tty_cmd.title">Tty</title>
+Open a terminal. Set the level of tty redirection.
+<table label="of usage"><tgroup cols="1"><tbody><row><entry>tty &lt;DEVICE_PATH&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Where  &lt;DEVICE_PATH&gt; is a valid terminal on the operating system. Just tries to open the terminal</emphasis></markup></entry></row><row><entry>tty &lt;TTY_LEVEL&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Set the level of tty redirection, where &lt;TTY_LEVEL&gt; is a valid level of input/output to use)</emphasis></markup><informaltable><tgroup cols="1"><tbody><row><entry>Where level is </entry></row><row><entry>0 = Default input/output </entry></row><row><entry>1 = Terminal output of results of transformation, tracing and walking <markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Default state when tty device has been opened. Not fully implemented yet.)</emphasis></markup></entry></row><row><entry>2 = Full redirection to terminal<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Not implemented yet.)</emphasis></markup></entry></row><row><entry>All other integer values are assumed to mean level 0
+</entry></row></tbody></tgroup></informaltable></entry></row></tbody></tgroup></table>
 </section><section id="templates_cmd"><title id="templates_cmd.title">Templates</title>
 Print a list of available templates. Search for a template
 <para>Shortcut name: t</para>
@@ -162,10 +166,6 @@ Search a dataBase of all information gathered from stylesheets loaded
 </para><para>Depending on the amount of data collected it might take a while to compled this command.
 </para>
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>search &lt;XPATH&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(See what xpath can be used see search.dtd. The deafault &lt;XPATH&gt; is '//search/*' )</emphasis></markup></entry></row><row><entry>search -sort &lt;XPATH&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Tell search.xsl to sort the result before outputing it)</emphasis></markup></entry></row></tbody></tgroup></table>
-</section><section id="tty_cmd"><title id="tty_cmd.title">Tty</title>
-Send input/output to a terminal or  reset to default input/output.
-<table label="of usage"><tgroup cols="1"><tbody><row><entry>tty &lt;DEVICE_PATH&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Where  &lt;DEVICE_PATH&gt; is a valid terminal on the operating system. And &lt;TTY_LEVEL&gt; defaults to level 1)</emphasis></markup></entry></row><row><entry>tty &lt;TTY_LEVEL&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Where &lt;TTY_LEVEL&gt; is a valid level of input/output to use)</emphasis></markup><informaltable><tgroup cols="1"><tbody><row><entry>Where level is </entry></row><row><entry>0 = Default input/output </entry></row><row><entry>1 = Terminal output of results of transformation, tracing and walking <markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Default state when tty device has been opened. Not fully implemented yet.)</emphasis></markup></entry></row><row><entry>2 = Full redirection to terminal<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Not implemented yet.)</emphasis></markup></entry></row><row><entry>All other integer values are assumed to mean level 0
-</entry></row></tbody></tgroup></informaltable></entry></row></tbody></tgroup></table>
 </section><section id="stepdown_cmd"><title id="stepdown_cmd.title">Stepdown</title>
 Step down to a newer &quot;call frame&quot;.  
 <para>Shortcut name: down</para>

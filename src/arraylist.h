@@ -1,21 +1,21 @@
 
-/* *************************************************************************
+/**************************************************************************
                           arraylist.h  -  declare the functions for 
                                         implementation of the array list
                              -------------------
     begin                : Sat Nov 10 2001
     copyright            : (C) 2001 by Keith Isdale
     email                : k_isdale@tpg.com.au
- ************************************************************************* */
+ **************************************************************************/
 
-/* *************************************************************************
+/**************************************************************************
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 2 of the License, or     *
  *   (at your option) any later version.                                   *
  *                                                                         *
- ************************************************************************* */
+ **************************************************************************/
 
 #ifndef ARRAYLIST_H
 #define ARRAYLIST_H
@@ -98,7 +98,7 @@ extern "C" {
  *
  * Free memory assocated with array list, if the array list 
  *   has a valid deleteFunction then content with be freed with 
- *    useing that deleteFunction
+ *    using that deleteFunction
  */
 #else
 #ifdef USE_KDE_DOCS
@@ -197,8 +197,8 @@ extern "C" {
 
 /**
  * arrayListAdd:
- * @list: valid list
- * @item: valid item
+ * @list: A valid list
+ * @item:A valid item
  *
  * Add @item to @list
  *

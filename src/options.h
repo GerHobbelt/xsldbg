@@ -213,9 +213,9 @@ extern "C" {
 
 #ifdef USE_GNOME_DOCS
 /**
- * enableOption :
- * @optionType : A valid boolean option
- * @value : 1 to enable, 0 otherwise
+ * enableOption:
+ * @optionType: A valid boolean option
+ * @value: 1 to enable, 0 otherwise
  *
  * Set the state of a boolean xsldbg option to @value
  *
@@ -241,8 +241,8 @@ extern "C" {
 
 #ifdef USE_GNOME_DOCS
 /**
- * isOptionEnabled :
- * @optionType : A valid boolean option to query
+ * isOptionEnabled:
+ * @optionType: A valid boolean option to query
  *
  * Return the state of a boolean option
  *
@@ -266,9 +266,9 @@ extern "C" {
 
 #ifdef USE_GNOME_DOCS
 /**
- * setIntOption :
- * @optionType : Is a valid integer option
- * @value : Value to adopt
+ * setIntOption:
+ * @optionType: Is a valid integer option
+ * @value: Value to adopt
  *
  * Set the value of an integer xsldbg option to @value
  *
@@ -294,8 +294,8 @@ extern "C" {
 
 #ifdef USE_GNOME_DOCS
 /**
- * getIntOption :
- * @optionType : A valid integer option
+ * getIntOption:
+ * @optionType: A valid integer option
  *
  * Return the state of an integer option
  *
@@ -317,8 +317,8 @@ extern "C" {
 #ifdef USE_GNOME_DOCS
 /**
  * setStringOption:
- * @optionType : A valid string option
- * @value : The Value to copy
+ * @optionType: A valid string option
+ * @value: The Value to copy
  *
  * Set value for a string xsldbg option to @value. 
  * Any memory used currently by option @optionType will be freed
@@ -347,9 +347,10 @@ extern "C" {
 #ifdef USE_GNOME_DOCS
 /**
  * getStringOption:
- * @optionType : A valid string option 
+ * @optionType: A valid string option 
  *
  * Get value for a string xsldbg option of @optionType
+
  * Returns current option value which may be NULL
  */
 #else
@@ -400,8 +401,8 @@ extern "C" {
 #ifdef USE_GNOME_DOCS
 /**
  * paramItemNew:
- * @name : Is valid 
- * @value : Is valid 
+ * @name: Is valid 
+ * @value: Is valid 
  *
  * Create a new libxslt parameter item
  * Returns non-null if sucessful
@@ -428,7 +429,7 @@ extern "C" {
 #ifdef USE_GNOME_DOCS
 /**
  * paramItemFree:
- * @item : Is valid
+ * @item: Is valid
  *
  * Free memory used by libxslt parameter item @item
  */
@@ -451,6 +452,7 @@ extern "C" {
  * @paramId: 0 =< paramID < arrayListCount(getParamList())
  * 
  * Print parameter information
+ *
  * Returns 1 on success,
  *         0 otherwise
  */
@@ -473,6 +475,7 @@ extern "C" {
  * printParamList:
  *
  * Prints all items in parameter list
+ *
  * Returns 1 on success,
  *         0 otherwise
  */

@@ -90,12 +90,13 @@ debugFree(void)
 
 
 /** 
- * debugGotControl :
- * @reached : 1 if debugger has received control, -1 to read is value,
+ * debugGotControl:
+ * @reached: 1 if debugger has received control, -1 to read its value,
                0 to clear the flag
  *
  * Set flag that debuger has received control to value of @reached
- * Returns 1 if any breakpoint was reached previously,
+ *
+ * Returns 1 if any break point was reached previously,
  *         0 otherwise
  */
 int
