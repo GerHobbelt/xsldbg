@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE testcmd SYSTEM "testcmd.dtd">
+<!-- 
+     File : test3.data     
+     Author: Keith Isdale <k_isdale@tpg.com.au>
+     Description: xml data that decribes what to do for "test3"
+     Copyright Reserved Under GPL     
+-->
+
+  <!-- Test xsl:choose and xsl:if -->
+
+<testcmd>
+<cmd>
+<test>trace</test>
+<result>
+<row>
+<breakpoint line="15"/>
+</row>
+
+<!-- Result for test -->
+<!-- Test xsl:if -->
+<row>
+<breakpoint line="18"/>
+</row>
+<row>
+<breakpoint line="19"/>
+</row>
+<row>
+<breakpoint line="19"/> <!-- libxslt handling "item" -->
+</row>
+
+<!-- Result for test -->
+<!-- Test basic usage of xsl:choose -->   
+<row>
+<breakpoint line="23"/>
+</row>
+<row>
+<breakpoint line="24"/>
+</row>
+<row>
+<breakpoint line="25"/>
+</row>
+<row>
+<breakpoint line="25"/> <!-- libxslt handling "item" -->
+</row>
+
+<!-- Result for test -->
+<!-- Test xsl:otherwise child in xsl:choose --> 
+<row>
+<breakpoint line="30"/>
+</row>
+<row>
+<breakpoint line="31"/>
+</row>
+<row>
+<breakpoint line="35"/>
+</row>
+<row>
+<breakpoint line="36"/>
+</row>
+<row>
+<breakpoint line="36"/> <!-- libxslt handling "item" -->
+</row>
+</result>
+</cmd>
+<cmd>
+<test>quit</test>
+</cmd>
+</testcmd>
+
+
+<!-- initialization code for xemacs -->
+<!--
+Local Variables:
+mode: sgml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+-->

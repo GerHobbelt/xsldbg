@@ -7,8 +7,14 @@ XSLDBG=$(top_builddir)/src/xsldbg
 
 EXTRA_DIST= *.xsl *.xml *.data *.pl
 
-TESTS = ../results/test1.pl ../results/test2.pl
-TEST_RESULTS =../results/test1.results  ../results/test2.results
+TESTS = \
+	../results/test1.pl \
+	../results/test2.pl \
+	../results/test3.pl 
+TEST_RESULTS = \
+	../results/test1.results	\
+	../results/test2.results  	\
+	../results/test3.results
 
 # Define the array list tester
 bin_PROGRAMS = listTest
