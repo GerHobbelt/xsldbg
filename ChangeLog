@@ -1,3 +1,7 @@
+Keith Isdale 22 June 2003 <k_isdale@tpg.com.au>
+   Rename xsldbg.suse.8.1.spec to xsldbg.suse.8.0.spec
+   Convert xsldbg.spec to be a GCC 3.2, i386, spec file 
+
 Keith Isdale 15 June 2003 <k_isdale@tpg.com.au>
    Fixed the specification for test2. All xsldbg automatic tests now pass  
    Update spec files to new vesion

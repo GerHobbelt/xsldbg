@@ -10,7 +10,7 @@ EXTRA_DIST=\
 	config_riscos.h.in  	\
 	xsldbg-config.in  	\
 	xsldbgConf.sh.in	\
-	xsldbg.spec xsldbg.suse8.1.spec 
+	xsldbg.spec xsldbg.suse8.0.spec 
 
 dist_win32: distdir
 	zip -r -l xsldbg-$(XSLDBG_MAJOR_VERSION)_$(XSLDBG_MINOR_VERSION)_$(XSLDBG_MICRO_VERSION) xsldbg-$(VERSION)

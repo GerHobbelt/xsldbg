@@ -1,6 +1,6 @@
 %define name xsldbg
 %define version 3.1.4
-%define release 1_Suse8.0
+%define release 1_i386
 %define prefix /usr
 %define kdeprefix /opt/kde3
 %define qtprefix /usr/lib/qt3
@@ -14,7 +14,7 @@ Release: %{release}
 Prefix: %{prefix}
 Group: Development/Debuggers
 Copyright: GPL
-Distribution: Suse 8.0
+Distribution: Any GCC 3.2 based 
 Vendor: Keith Isdale <k_isdale@tpg.com.au>
 Packager: Keith Isdale <k_isdale@tpg.com.au>
 Source: %{name}-%{version}.tar.gz
