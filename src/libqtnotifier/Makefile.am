@@ -18,8 +18,8 @@ libqtnotifier_la_LIBADD =
 libqtnotifier_la_DEPENDENCIES=
 
 xsldbgdebuggerbase.cpp: moc_xsldbgdebuggerbase.cpp
-moc_xsldbgdebuggerbase.cpp: xsldbgdebuggerbase.h
-	$(QTDIR)/bin/moc xsldbgdebuggerbase.h -o moc_xsldbgdebuggerbase.cpp
+moc_xsldbgdebuggerbase.cpp: ..\libxsldbg\xsldbgdebuggerbase.h
+	$(QTDIR)/bin/moc ..\libxsldbg\xsldbgdebuggerbase.h -o moc_xsldbgdebuggerbase.cpp
 
 
 install-exec-hook:
