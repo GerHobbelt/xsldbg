@@ -1,3 +1,5 @@
+if USE_XSLDBG_AS_THREAD
+
 INCLUDES= -I $(QTDIR)/include -I ..
 
 libqtnotifier_la_SOURCES =\
@@ -27,4 +29,6 @@ qtnotifier.moc : qtnotifier.h
 install-exec-hook:
 	if test ! -d $(prefix)/include/libxsldbg ; then  $(mkinstalldirs) $(prefix)/include/libxsldbg ; fi
 	$(INSTALL_DATA) $(noinst_HEADERS) $(prefix)/include/libxsldbg
+
+endif
 
