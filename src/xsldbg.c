@@ -527,8 +527,8 @@ main(int argc, char **argv)
   xslDebugGotControl(0);
   while (xslDebugStatus != DEBUG_QUIT){
     if (isOptionEnabled(OPTIONS_SHELL))
-      fprintf(stderr, "Starting stylesheet\n\n");
-    if (xslDebugStatus != DEBUG_RUN)
+      fprintf(stderr, "\nStarting stylesheet\n\n");
+    if (xslDebugStatus != DEBUG_RUN && (getIntOption(OPTIONS_TRACE) == 0))
       xslDebugStatus = DEBUG_CONT;
 
     if (getStringOption(OPTIONS_SOURCE_FILE_NAME) == NULL){
@@ -588,11 +588,31 @@ main(int argc, char **argv)
 
     if (isOptionEnabled(OPTIONS_SHELL)){
       if( (xslDebugStatus != DEBUG_QUIT) && !xslDebugGotControl(0) ){
-	fprintf(stderr, "Debugger never received control setting breakpoint on all" \
+	fprintf(stderr, "\nDebugger never received control setting breakpoint on all" \
 		" template names\n");
 	setStringOption(OPTIONS_ROOT_TEMPLATE_NAME, "*");
       }
-      fprintf(stderr, "Finished stylesheet\n\n");
+      fprintf(stderr, "\nFinished stylesheet\n\n");
+      {
+	/* handle trace execution */
+	int trace = getIntOption(OPTIONS_TRACE);
+	switch(trace){
+	case 0:
+	  /* no trace of execution*/
+	  break;
+
+	case 1:
+	  /* tell xsldbg to stop tracing next time we get here*/
+	  setIntOption(OPTIONS_TRACE, 2);
+	  xslDebugStatus = DEBUG_STOP;
+	  break;
+
+	case 2:
+	  /* turn off tracing */
+	  setIntOption(OPTIONS_TRACE, 0);
+	  break;
+	}
+      }
     }else{
       xslDebugStatus = DEBUG_QUIT;/* request to execute stylesheet only */
     }    

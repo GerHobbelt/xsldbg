@@ -34,6 +34,8 @@ enum Option_type {
   OPTIONS_DEBUG ,
   OPTIONS_SHELL ,
   OPTIONS_REPEAT,
+  OPTIONS_TRACE, /* trace the execution */
+  OPTIONS_VERBOSE, /* do we print out messages/debuging info */
 
   /* string options */
   OPTIONS_OUTPUT_FILE_NAME = 220,
@@ -170,6 +172,23 @@ ParameterItemPtr paramItemNew(const xmlChar *name, const xmlChar *value);
  */
 void paramItemFree(ParameterItemPtr item);
 
+/**
+ * printParam:
+ * @paramId: 0 =< paramID < arrayListCount(getParamList())
+ * 
+ * Print parameter information
+ * Returns 1 on success,
+ *         0 otherwise
+ */
+int printParam(int paramId);
 
+/**
+ * printParamList:
+ *
+ * Prints all items in parameter list
+ * Returns 1 on success,
+ *         0 otherwise
+ */
+int printParamList();
 
 #endif

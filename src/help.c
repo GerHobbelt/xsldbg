@@ -27,7 +27,7 @@
 
 #ifdef WITH_XSL_DEBUG_HELP
 void helpTop(const char* args){
-  char buff[300];
+  char buff[300], helpParam[100];
   /* Handle the differnces in path and quote character between
      win32 and Unix/Linux systems*/
 #ifdef WIN32
@@ -50,11 +50,14 @@ void helpTop(const char* args){
    char *debugDirPath = HELP_DOC_PATH;
 #endif
 
-
-  if (debugDirPath && snprintf(buff, 299, "xsldbg --param help %c'%s'%c"\
+   if (strlen(args) > 0){
+     snprintf(helpParam, 100, "--param help %c'%s'%c", quoteChar,args, quoteChar);
+   }else
+     strcpy(helpParam, "");
+  if (debugDirPath && snprintf(buff, 299, "xsldbg %s" \
 			       " --param xsldbg_version %c'%s'%c " \
 			       " %s%cxsldoc.xsl %s%cxsldoc.xml | more",
-			       quoteChar,args, quoteChar, 
+			       helpParam,
 			       quoteChar,VERSION, quoteChar, 
 			       debugDirPath,pathChar, \
 			       debugDirPath, pathChar) <= 290){
@@ -63,7 +66,7 @@ void helpTop(const char* args){
 	fprintf(stderr, "Help failed : Maybe help files not found in %s or " \
 	     "xsldbg not found in path\n", debugDirPath);
       else
-	fprintf(stderr, "Unable to find xsltproc or help files\n");
+	fprintf(stderr, "Unable to find xsldbg or help files\n");
       fprintf(stderr, "Used command: %s\n",buff);
     }
 	

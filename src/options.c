@@ -50,6 +50,12 @@ int repeat = 0;
 /* Enable the use of debugger shell */
 int shell = 0 ;
 
+/* trace one execution */
+int trace = 0;
+
+ /* do we print out messages/debuging info */
+int verbose = 0;
+
 
 /* keep track of our string options */
 xmlChar *stringOptions[ OPTIONS_DATA_FILE_NAME - OPTIONS_OUTPUT_FILE_NAME + 1];
@@ -148,6 +154,14 @@ int enableOption(enum Option_type option_type, int value){
     repeat = value;
     break;
 
+  case OPTIONS_TRACE:
+    trace = value; /* trace execution */
+    break;
+
+  case OPTIONS_VERBOSE:
+    verbose = value; /* do we print out extra messages/debuging info */
+    break;
+
   default:
       xsltGenericError(xsltGenericErrorContext,
 		       "Not a valid boolean xsldbg option %d\n", type);
@@ -204,7 +218,15 @@ int isOptionEnabled(enum Option_type option_type){
   case OPTIONS_REPEAT:
     result = repeat;
     break;
-    
+
+  case OPTIONS_TRACE:
+    result = trace; /* trace execution */
+    break;    
+
+  case OPTIONS_VERBOSE:
+    result = verbose; /* do we print out extra messages/debuging info */
+    break;
+
   default:
       xsltGenericError(xsltGenericErrorContext,
 		       "Not a valid boolean xsldbg option %d\n", type);
@@ -330,4 +352,45 @@ void paramItemFree(ParameterItemPtr item){
  */
 ArrayListPtr getParamItemList(){
   return parameterList;
+}
+
+/**
+ * printParam:
+ * @paramId: 0 =< paramID < arrayListCount(getParamList())
+ * 
+ * Print parameter information
+ * Returns 1 on success,
+ *         0 otherwise
+ */
+int printParam(int paramId){
+  int result = 0;
+  ParameterItemPtr paramItem = 
+    (ParameterItemPtr)xslArrayListGet(getParamItemList(), paramId);
+  if (paramItem && paramItem->name && paramItem->value){
+    printf(" Parameter %d %s=\"%s\"\n", paramId, 
+	   paramItem->name, paramItem->value);
+    result++;
+  }
+  return result;
+}
+
+/**
+ * printParamList:
+ *
+ * Prints all items in parameter list
+ * Returns 1 on success,
+ *         0 otherwise
+ */
+int printParamList(){
+  int result = 1;
+  int paramIndex = 0;
+  int itemCount = xslArrayListCount(getParamItemList());
+  if (itemCount > 0){
+    while (result && (paramIndex < itemCount)){
+      result = printParam(paramIndex++);
+    }
+  }else
+    printf("No parameters present\n");
+
+  return result;
 }

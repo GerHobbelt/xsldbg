@@ -32,9 +32,11 @@
 #include "xsldbg.h"
 #include "files.h"
 #include "debugXSL.h"
+#include "options.h"
 #include <breakpoint/breakpoint.h>
 #include "help.h"
 #include <ctype.h>
+#include <stdlib.h>
 
 #define DEBUG_BUFFER_SIZE 500 /*used by xslDbgShell */
 
@@ -79,12 +81,24 @@ xmlChar *commandNames[] = \
    "data", 
    "cd",
 
+   /* file related */
    "validate", 
    "load", 
    "save", 
    "write", 
    "free",
+
+   /* Operating system related*/
    "chdir",
+   "shell",
+
+   /* libxslt parameter related*/
+   "addparam",
+   "delparam",
+   "showparam",
+
+   /* extra options */
+   "trace",
 
    NULL /* Indicate the end of list*/ 
 } ; 
@@ -127,12 +141,25 @@ xmlChar *shortCommandNames[] = \
    "data", 
    "cd",
 
+   /* file related */
    "validate", 
    "load", 
    "save", 
    "write", 
    "free",
+
+   /* Operating system related*/
    "chdir",
+   "shell",
+
+   /* libxslt parameter related*/
+   "addparam",
+   "delparam",
+   "showparam",
+
+   /* extra options */
+   "trace",
+
 
    NULL /* Indicate the end of list*/ 
 } ; 
@@ -174,12 +201,25 @@ enum { DEBUG_HELP_CMD = 100, /* id's for commands of xslDbgShell*/
        DEBUG_DATA_CMD, 
        DEBUG_CD_CMD,
 
+       /* file related */
        DEBUG_VALIDATE_CMD, 
        DEBUG_LOAD_CMD, 
        DEBUG_SAVE_CMD, 
        DEBUG_WRITE_CMD, 
        DEBUG_FREE_CMD,
+
+       /* Operating system related*/
        DEBUG_CHDIR_CMD,
+       DEBUG_SHELL_EXEC_CMD,
+
+       /* libxslt parameter related*/
+       DEBUG_ADDPARAM_CMD,
+       DEBUG_DELPARAM_CMD,
+       DEBUG_SHOWPARAM_CMD,
+
+       /* extra options */
+       DEBUG_TRACE_CMD,
+
 
        /*NULL */} ;
 
@@ -856,7 +896,8 @@ void xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,\
   }
 }
 
-/* invert the order of printin template names */
+/* invert the order of printin template names so that it prints in the 
+same order that they are in file*/
 int xslDbgPrintTemplateHelper(xsltTemplatePtr templ, int verbose, int templateCount){
   const xmlChar *name, *defaultUrl = "<n/a>";
   const xmlChar *url;
@@ -924,6 +965,53 @@ void xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr
   }
 }
 
+
+int
+xslDbgShellAddParam(xmlChar *arg){
+  int result = 0;
+  static char *errorPrompt =  "Failed to add parameter\n";
+  xmlChar *opts[2];
+  if (!arg){
+    fprintf(stderr, "%sNull argument provided to xslDbgShellAddParam\n", 
+	    errorPrompt);
+    return result;
+  }
+  if ((strlen(arg) > 1) && 
+      splitString(arg, 2, opts) == 2){
+    result = xslArrayListAdd(getParamItemList(), 
+			     paramItemNew(opts[0], opts[1]));
+  }
+  if (!result)
+    printf("%s", errorPrompt);
+}
+
+int
+xslDbgShellDelParam(xmlChar *arg){
+  int result = 0;
+  static char *errorPrompt =  "Failed to add parameter\n";
+  long paramId;
+  xmlChar *opts[2];
+  if (!arg){
+    fprintf(stderr, "%sNull argument provided to xslDbgShellAddParam\n", 
+	    errorPrompt);
+    return result;
+  }
+  if (strlen(arg) > 0) {
+    if ((splitString(arg, 1, opts) == 1) &&
+	(!sscanf(opts[0], "%ld", &paramId))){
+	  fprintf(stderr, "%s\tUnable to read line number \n", errorPrompt);
+	  return result;
+	}else
+	  result = xslArrayListDelete(getParamItemList(), paramId);
+  }else{
+    /* Delete all parameters */
+    xslArrayListEmpty(getParamItemList());
+    result++;
+  }
+  if (!result)
+    printf("%s", errorPrompt);
+}
+
 void 
 xslDbgPrintCallStack(){
   int index;
@@ -957,6 +1045,21 @@ xslDbgPrintCallStack(){
     fprintf(stderr, "\n");
 }
 
+int
+xslDbgShellExecute(xmlChar *name, int verbose){
+  int result = 0;
+  if (verbose)
+    fprintf(stderr, "Starting shell command\n");
+  if (!system(name)){
+    if (verbose)
+      fprintf(stderr, "\nFinished shell command\n");
+    result++;
+  }else{
+    if (verbose)
+      fprintf(stderr, "\nUnable to run command\n");
+  }
+  return result;
+}
 
 /* Look up a name in a list  
    Stop looking when you reach a null entry in matchList
@@ -1020,6 +1123,7 @@ xslShellReadline(char *prompt) {
 #endif
 }
 
+
 int splitString(xmlChar *textIn, int maxStrings, xmlChar**out){
   int result = 0;
   while((*textIn != '\0') && (result < maxStrings)){
@@ -1053,9 +1157,9 @@ void xslDebugBreak(xmlNodePtr templ, xmlNodePtr node,  xsltTemplatePtr root, \
   rootCopy = root;
      if (root){
       if (root->match)
-	fprintf(stderr, "\nReached template :\"%s\"\n\n", root->match);
+	fprintf(stderr, "\nReached template :\"%s\"\n", root->match);
       else if (root->name)
-	fprintf(stderr, "\nReached template :\"%s\"\n\n", root->name);      
+	fprintf(stderr, "\nReached template :\"%s\"\n", root->name);      
      }else{
        fprintf(stderr, "\n");
      } 
@@ -1148,9 +1252,15 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, char *filename, \
 	else
 	  fprintf(stderr, "@ text node in file %s\n", ctxt->node->doc->URL); 
       }
+    /*
     else
-      fprintf(stderr, "\n");
+    fprintf(stderr, "\n");*/
 
+    if (isOptionEnabled(OPTIONS_TRACE)){
+      xmlFree(ctxt);
+      xslDebugStatus = DEBUG_STOP;
+      return;
+    }
 
     ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
     if (ctxt->pctxt == NULL) {
@@ -1446,13 +1556,16 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, char *filename, \
 	    /* load new stylesheet file*/
             char * response = ctxt->input("Load stylesheet file (yes/no)");
 	    if (!strcmp(response, "yes")){
-	      loadXmlFile(arg, FILES_SOURCEFILE_TYPE);
-	      source = (xmlNodePtr)getStylesheet()->doc;
+	      loadXmlFile(arg, FILES_SOURCEFILE_TYPE);	      
+	      if (!getStylesheet() || !getStylesheet()->doc)
+		source = NULL;
+	      else
+		source = (xmlNodePtr)getStylesheet()->doc;
 	      if (source){
 		if (ctxt->doc == source->doc)
 		  lastDocNode = ctxt->node;	  
-		ctxt->doc = doc->doc;
-		ctxt->node = doc;
+		ctxt->doc = source->doc;
+		ctxt->node = source;
 		ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
 		showSource = 1;
 		if (ctxt->pctxt == NULL) {
@@ -1569,12 +1682,39 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, char *filename, \
 	  */
 	  break;
 
+
+	  /* operating system related */
 	case   DEBUG_CHDIR_CMD:
 	  if (strlen(arg))
 	    changeDir(arg);
 	  else
 	    printf("Missing path name after chdir command\n");
+	  break;
 
+	case DEBUG_SHELL_EXEC_CMD:
+	  xslDbgShellExecute(arg, 1);
+	  break;
+
+
+       /* libxslt parameter related*/
+	case DEBUG_ADDPARAM_CMD:	  
+	  xslDbgShellAddParam(arg);
+	  break;
+
+	case DEBUG_DELPARAM_CMD:
+	  xslDbgShellDelParam(arg);
+	  break;
+
+	case DEBUG_SHOWPARAM_CMD:
+	  if (!printParamList()){
+	    printf("Error in printing parameters\n");
+	  }
+	  break;
+
+	case DEBUG_TRACE_CMD:
+	  xslDebugStatus = DEBUG_RUN_RESTART;
+	  exitShell++;
+	  setIntOption(OPTIONS_TRACE, 1);
 	  break;
 
 	default:

@@ -58,6 +58,17 @@ void xslArrayListFree(ArrayListPtr list);
 
 
 /**
+ * xslArrayListEmpty:
+ * @list : a valid list
+ *
+ * Empties the list of its content
+ * Returns 1 on success,
+ *         0 otherwise
+ */
+int xslArrayListEmpty(ArrayListPtr list);
+
+
+/**
  * xslArrayListSize:
  * @list : a valid list
  *

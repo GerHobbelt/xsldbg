@@ -62,6 +62,23 @@ void xslArrayListFree(ArrayListPtr list){
   xmlFree(list);
 }
 
+/**
+ * xslArrayListEmpty:
+ * @list : a valid list
+ *
+ * Empties the list of its content
+ * Returns 1 on success,
+ *         0 otherwise
+ */
+int xslArrayListEmpty(ArrayListPtr list){
+  int result = 0;
+    if (list){
+      while(xslArrayListCount(list))
+	xslArrayListDelete(list, xslArrayListCount(list) - 1);
+      result++;
+    }
+  return result;
+}
 
 /**
  * xslArrayListSize:

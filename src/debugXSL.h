@@ -81,5 +81,8 @@ void xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr
 #endif
 
 
+int
+xslDbgShellExecute(xmlChar *name, int verbose);
+
 #endif /* LIBXML_DEBUG_ENABLED */
 #endif /* __DEBUG_XSL__ */
