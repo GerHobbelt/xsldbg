@@ -65,7 +65,7 @@ xslDbgShellAddParam(xmlChar * arg)
 	  paramItem = arrayListGet(optionsGetParamItemList(), count);
 	  if (paramItem != NULL){
 	    if (strcmp(opts[0], paramItem->name) == 0){
-	      // parameter exist just update its value
+	      /* parameter exist just update its value */
 	      if (paramItem->value)
 		  xmlFree(paramItem->value);
 	      paramItem->value = xmlStrdup(opts[1]); 

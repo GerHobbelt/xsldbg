@@ -1295,7 +1295,7 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
         }
     }
-    if (showWatchesActive && (xslDebugStatus == DEBUG_TRACE) || 
+    if ((showWatchesActive && (xslDebugStatus == DEBUG_TRACE)) || 
 	(xslDebugStatus == DEBUG_WALK)){
       ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
       if (ctxt->pctxt) {

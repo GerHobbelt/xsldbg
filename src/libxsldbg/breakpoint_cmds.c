@@ -435,7 +435,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
 	      name = xmlStrdup(opts[0]);
 	    }else{
 	      if (nameURI){
-		// get the real URI for this namespace
+		/* get the real URI for this namespace */
 		const xmlChar *temp = xmlXPathNsLookup(ctxt->xpathCtxt, nameURI);
 		if (temp)
 		  xmlFree(nameURI);
@@ -456,7 +456,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
 	      if (name == NULL)
                 name = xmlStrdup(opts[0]);
 	      if (nameURI){
-		// get the real URI for this namespace
+		/* get the real URI for this namespace */
 		const xmlChar *temp = xmlXPathNsLookup(ctxt->xpathCtxt, 
 						       nameURI);
 		if (temp)
@@ -468,7 +468,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
             if (mode == NULL)
                 mode = xmlStrdup(opts[1]);
 	    if (modeURI){
-	      // get the real URI for this namespace
+	      /* get the real URI for this namespace */
 	      const xmlChar *temp = xmlXPathNsLookup(ctxt->xpathCtxt, modeURI);
 	      if (temp)
 		xmlFree(modeURI);
@@ -576,7 +576,7 @@ xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
             xmlFree(defaultUrl);
 	if (tempUrl)
 	  url = xmlStrdup(tempUrl);
-    }  // end add template breakpoints
+    }  /* end add template breakpoints */
 
     if (!result) {
         if (url)

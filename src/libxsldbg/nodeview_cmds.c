@@ -160,7 +160,7 @@ void
 xslDbgCatToFile(xmlNodePtr node, FILE * file)
 {
     if (!node || !file)
-        return;
+      return;
 
     /* assume that HTML usage is enabled */
     if (node->doc->type == XML_HTML_DOCUMENT_NODE) {
@@ -279,7 +279,7 @@ printXPathObject(xmlXPathObjectPtr item, xmlChar* xPath){
 	    break;
 	    fprintf(file,"\n");	    
 
-	  } // inner switch statement 
+	  } /* inner switch statement  */
 	  if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
 	    fclose(file);
 	    file = NULL;
@@ -426,7 +426,7 @@ xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
 	         xsltGenericError(xsltGenericErrorContext, " Global = %s\n%s", 
 				  fullQualifiedName, item->select);
 	      }else{
-		// can't find a value give only a variable name an error message
+		/* can't find a value give only a variable name an error message */
 	         xsltGenericError(xsltGenericErrorContext, 
 				  " Global = %s\n No value assigned to variable!!", 
 			     fullQualifiedName);
@@ -555,7 +555,7 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
 				  xsltGenericError(xsltGenericErrorContext, " Local = %s\n%s", 
 						   fullQualifiedName, item->select);
 				}else{
-				  // can't find a value give only a variable name and an error
+				  /* can't find a value give only a variable name and an error */
 				  xsltGenericError(xsltGenericErrorContext, 
 						   " Local = %s\n No value assigned to variable!!", 
 						   fullQualifiedName);

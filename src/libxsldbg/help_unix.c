@@ -126,7 +126,7 @@ helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
     const char *docsDirPath =
         (char *) optionsGetStringOption(OPTIONS_DOCS_PATH);
     xmlChar *fileName =
-        (xmlChar *) xmlMalloc(strlen(docDirPath) + strlen(docTextFile) +
+        (xmlChar *) xmlMalloc(strlen(docsDirPath) + strlen(docTextFile) +
                               1);
 
     if (docsDirPath) {
@@ -136,8 +136,8 @@ helpTop(const xmlChar * args ATTRIBUTE_UNUSED)
             return result;
         }
 
-        xmlStrCpy(fileName, docDirPath);
-        XmlStrCat(fileName, docTextFile);
+        xmlStrCpy(fileName, docsDirPath);
+        xmlStrCat(fileName, docTextFile);
         result = filesMoreFile(fileName, NULL);
     } else {
         xsltGenericError(xsltGenericErrorContext,
