@@ -132,6 +132,15 @@ lineNoItemDelete(xmlHashTablePtr breakPointHash, breakPointPtr breakPtr)
         if (xmlHashRemoveEntry(breakPointHash, breakPtr->url,
                                breakPointItemFree) == 0)
             result = 1;
+	else
+#ifdef WITH_XSLT_DEBUG_BREAKPOINTS
+    xsltGenericError(xsltGenericErrorContext,"lineNoItemDelete failed");
+#endif
+
+    }else {
+#ifdef WITH_XSLT_DEBUG_BREAKPOINTS
+    xsltGenericError(xsltGenericErrorContext, "lineNoItemDelete failed args %d %d", breakPointHash, breakPtr);
+#endif
     }
     return result;
 }
@@ -255,7 +264,7 @@ breakPointItemNew(void)
         breakPtr->lineNo = -1;
         breakPtr->templateName = NULL;
 	breakPtr->modeName = NULL;
-        breakPtr->enabled = 1;
+        breakPtr->flags = BREAKPOINT_ENABLED;
         breakPtr->id = ++breakPointCounter;
         breakPtr->type = DEBUG_BREAK_SOURCE;
     }
@@ -375,7 +384,7 @@ breakPointAdd(const xmlChar * url, long lineNumber,
     if (breakPointIsPresent(url, lineNumber)) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Error: Breakpoint at file %s: line %d exists\n",
+                         "Warning: Breakpoint at file %s: line %d exists\n",
                          url, lineNumber);
 #endif
         return result;
@@ -518,14 +527,17 @@ breakPointEnable(breakPointPtr breakPtr, int enable)
     int result = 0;
 
     if (breakPtr) {
-        if (enable != XSL_TOGGLE_BREAKPOINT)
-            breakPtr->enabled = enable;
-        else {
-            if (breakPtr->enabled)
-                breakPtr->enabled = 0;
-            else
-                breakPtr->enabled = 1;
+	int enableFlag = 1;
+        if (enable != XSL_TOGGLE_BREAKPOINT){
+	    enableFlag = enable;
+        }else {
+	    if (breakPtr->flags & BREAKPOINT_ENABLED)
+		enableFlag = 0;
         }
+	if (enableFlag)
+	    breakPtr->flags |= BREAKPOINT_ENABLED;
+	else
+	    breakPtr->flags = breakPtr->flags & (BREAKPOINT_ALLFLAGS ^ BREAKPOINT_ENABLED);
         result = 1;
     }
     return result;
@@ -612,7 +624,7 @@ breakPointPrint(FILE * file, breakPointPtr breakPtr)
     if (file) {
         /* support old meaning of file parameter */
         fprintf(file, "Breakpoint %d ", breakPtr->id);
-        if (breakPtr->enabled)
+	if (breakPtr->flags & BREAKPOINT_ENABLED) 
             fprintf(file, "enabled ");
         else
             fprintf(file, "disabled ");
@@ -634,8 +646,8 @@ breakPointPrint(FILE * file, breakPointPtr breakPtr)
         }
     } else {
         xsltGenericError(xsltGenericErrorContext,
-                         "Breakpoint %d ", breakPtr->id);
-        if (breakPtr->enabled)
+                        "Breakpoint %d ", breakPtr->id);
+	if (breakPtr->flags & BREAKPOINT_ENABLED) 
             xsltGenericError(xsltGenericErrorContext, "enabled ");
         else
             xsltGenericError(xsltGenericErrorContext, "disabled ");

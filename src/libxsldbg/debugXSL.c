@@ -76,6 +76,7 @@ int showWatchesActive = 1;
 extern FILE *terminalIO;
 
 int xsldbgStop = 0;
+int xsldbgValidateBreakpoints = BREAKPOINTS_NEED_VALIDATION;
 
 /* valid commands of xslDbgShell */
 const char *commandNames[] = {
@@ -1071,7 +1072,6 @@ debugXSLBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
 {
     xmlDocPtr tempDoc = NULL;
     xmlNodePtr tempNode = NULL;
-
     rootCopy = root;
 
     if (templ == NULL) {
@@ -1641,7 +1641,7 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 		      xmlFree(tempBaseName);
 		    }
                     if (!breakPtr ||
-                        (!breakPointEnable(breakPtr, !breakPtr->enabled))) {
+                        (!breakPointEnable(breakPtr, !(breakPtr->flags & BREAKPOINT_ENABLED)))) {
                         xsltGenericError(xsltGenericErrorContext,
                                    "Error: Unable to enable/disable point\n");
                         cmdResult = 0;
@@ -1763,6 +1763,7 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 /* --- Node selection related commands --- */
             case DEBUG_SOURCE_CMD:
                 cmdResult = 1;  /* only one case where this will command fail */
+		xsldbgValidateBreakpoints = BREAKPOINTS_NEED_VALIDATION;
                 if (xmlStrLen(arg) == 0) {
                     if (ctxt->doc == doc->doc)
                         lastDocNode = ctxt->node;
@@ -1802,6 +1803,7 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
             case DEBUG_DATA_CMD:
                 cmdResult = 1;  /* only one case where this will command fail */
+		xsldbgValidateBreakpoints = BREAKPOINTS_NEED_VALIDATION;
                 if (xmlStrLen(arg) == 0) {
                     if (ctxt->doc == source->doc)
                         lastSourceNode = ctxt->node;

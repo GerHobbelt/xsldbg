@@ -1,3 +1,8 @@
+Keith Isdale 1st-9th June 2003 <k_isdale@tpg.com.au>
+ Nearly completed implementation to support orphaned breakpoints
+    - need to re-add breakpoint to breakpoint hash array using new URL resolved from initial file name of breakpoint  ie
+	    xsldocl.xsl becomes <path to xsldbg>/docs/en/xsldoc.xsl  
+
 Keith Isdale 31st May 2003 <k_isdale@tpg.com.au>
   Version 3.1.3
   Implement suggestion made by Hannes

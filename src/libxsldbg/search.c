@@ -1178,7 +1178,7 @@ searchBreakPointNode(breakPointPtr breakPtr)
                      (node, (xmlChar *) "template",
                       breakPtr->templateName) != NULL);
             }
-            sprintf((char *) buffer, "%d", breakPtr->enabled);
+            sprintf((char *) buffer, "%d", breakPtr->flags & BREAKPOINT_ENABLED);
             result = result
                 &&
                 (xmlNewProp

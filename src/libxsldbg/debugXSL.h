@@ -58,7 +58,9 @@ extern "C" {
      value : 1 stop tracing at start of next cycle
      value : 0 normal operation 
   */
+
   extern int xsldbgStop;
+  extern int xsldbgValidateBreakpoints;
 
 /****************************************************************
  *								*

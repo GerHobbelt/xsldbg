@@ -13,6 +13,7 @@
 #include "breakpoint.h"
 #include "callstack.h"
 #include "files.h"
+#include "options.h"
 
 #include <libxslt/xsltutils.h>  /* need for breakpoint callback support */
 
@@ -134,6 +135,42 @@ debugHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
         xsltGenericError(xsltGenericErrorContext,
                          "Soure and doc are NULL can't enter debugger\n");
     } else {
+	if (optionsGetIntOption(OPTIONS_GDB)){
+	    int doValidation = 0;
+	    switch(xsldbgValidateBreakpoints){
+		case BREAKPOINTS_ARE_VALID:
+		    if (!filesGetStylesheet() || !filesGetMainDoc()) {
+			xsldbgValidateBreakpoints = BREAKPOINTS_NEED_VALIDATION;
+			doValidation = 1;
+		    }
+			
+		break;
+	    
+		case BREAKPOINTS_NEED_VALIDATION:
+		    if (filesGetStylesheet() && filesGetMainDoc() && templ){ 
+			xsldbgValidateBreakpoints = BREAKPOINTS_BEING_VALIDATED;
+			doValidation = 1;
+		    }
+		break;
+    
+		case BREAKPOINTS_BEING_VALIDATED:
+		    /*should never be in the state for any length of time */
+		     xsltGenericError(xsltGenericErrorContext, 
+			"Error: Unexpected BreakPoint validation state ");	    
+		break;
+	    }
+	    if (doValidation){
+		    /* breakpoints will either be marked as orphaned or not as needed */
+		     xsltGenericError(xsltGenericErrorContext,"Warning: !!Do validation\n");
+		    xsldbgValidateBreakpoints = BREAKPOINTS_BEING_VALIDATED;
+		    walkBreakPoints((xmlHashScanner)
+			    xslDbgShellValidateBreakPoint, NULL);
+		    xsldbgValidateBreakpoints = 0;
+		    if (filesGetStylesheet() && filesGetMainDoc() && templ){
+			xsldbgValidateBreakpoints = BREAKPOINTS_ARE_VALID;
+		    }
+	    }
+	}
         switch (xslDebugStatus) {
 
                 /* A temparary stopping point */
@@ -168,14 +205,19 @@ debugHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
                                           xmlGetLineNo(cur));
 
                         if (breakPtr) {
-                            if (breakPtr->enabled) {
+                            if (breakPtr->flags & BREAKPOINT_ENABLED) {
                                 debugXSLBreak(cur, node, templ, ctxt);
                                 return;
-                            }
-                        }
+                            }else{
+				xsltGenericError(xsltGenericErrorContext,"breakpoint not enabled for %s %d\n", cur->doc->URL, xmlGetLineNo(node));
+			    }
+
+                        }else{
+			    xsltGenericError(xsltGenericErrorContext,"No breakpoint for %s %d\n", cur->doc->URL, xmlGetLineNo(node));
+			}
                     }
-                    if (node) {
-                        baseUri = filesGetBaseUri(node);
+		    if (node) {
+			baseUri = filesGetBaseUri(node);
                         if (baseUri != NULL) {
                             breakPtr =
                                 breakPointGet(baseUri, xmlGetLineNo(node));
@@ -185,11 +227,10 @@ debugHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
                                               xmlGetLineNo(node));
                         }
                         if (breakPtr) {
-                            if (breakPtr->enabled) {
+                            if (breakPtr->flags & BREAKPOINT_ENABLED) {
                                 debugXSLBreak(cur, node, templ, ctxt);
-                            }
-                        }
-
+			    }
+			}
                         if (baseUri)
                             xmlFree(baseUri);
                     }

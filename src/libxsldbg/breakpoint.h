@@ -87,6 +87,19 @@ extern "C" {
         DEBUG_ANY_VAR
     } VariableTypeEnum;
 
+/*What type of flags can breakpoints have  */
+    typedef enum {
+	BREAKPOINT_ENABLED = 1,
+	BREAKPOINT_ORPHANED = 2,
+	BREAKPOINT_ALLFLAGS = 255
+    } BreakPointFlags;
+
+/*What state of breakpoint validation can we be in */
+   typedef enum {
+	BREAKPOINTS_ARE_VALID,
+	BREAKPOINTS_NEED_VALIDATION,
+	BREAKPOINTS_BEING_VALIDATED
+   } BreakPointValidationStates;
 #else
     /* keep kdoc happy */
     enum DebugStatusEnum {
@@ -120,6 +133,19 @@ extern "C" {
         DEBUG_ANY_VAR
     } VariableTypeEnum;
 
+/*What type of flags can breakpoints have  */
+    enum BreakPointFlags {
+	BREAKPOINT_ENABLED = 1,
+	BREAKPOINT_ORPHANED = 2,
+	BREAKPOINT_ALLFLAGS = 255
+    } BreakPointFlags;
+
+/*What state of breakpoint validation can we be in */
+   enum BreakPointValidationStates {
+	BREAKPOINTS_ARE_VALID,
+	BREAKPOINTS_NEED_VALIDATION,
+	BREAKPOINTS_BEING_VALIDATED
+   } BreakPointValidationStates;
 #endif
 
     /* The main structure for holding breakpoints */
@@ -129,7 +155,7 @@ extern "C" {
         xmlChar *url;
         long lineNo;
         xmlChar *templateName, *modeName;
-        int enabled;
+        int flags;
         BreakPointTypeEnum type;
         int id;
     };

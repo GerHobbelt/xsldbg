@@ -353,8 +353,8 @@ xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
 
     if (!styleCtxt || !ctxt || !ctxt->node) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Error: Unable to cat/print expression, No stylesheet properly loaded\n");
-        return result;
+                         "Warning: Unable to cat/print expression, No stylesheet properly loaded\n");
+        return 0;
     }
 
     if ((arg == NULL) || (xmlStrLen(arg) == 0))
