@@ -51,7 +51,7 @@ void helpTop(const char* args){
 #endif
 
 
-  if (debugDirPath && snprintf(buff, 299, "xsldbg --param help %c'%s'\%c"\
+  if (debugDirPath && snprintf(buff, 299, "xsldbg --param help %c'%s'%c"\
 			       " --param xsldbg_version %c'%s'%c " \
 			       " %s%cxsldoc.xsl %s%cxsldoc.xml | more",
 			       quoteChar,args, quoteChar, 
