@@ -9,8 +9,7 @@ libqtnotifier_la_SOURCES =\
 	xsldbgnotifier.cpp  	\
 	xsldbgevent.cpp	    	\
 	xsldbgdebuggerbase.cpp	\
-	xsldbgthread.cpp	\
-	moc_xsldbgdebuggerbase.cpp 
+	xsldbgthread.cpp	
 
 lib_LTLIBRARIES = libqtnotifier.la
 
