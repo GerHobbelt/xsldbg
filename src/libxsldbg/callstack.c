@@ -156,7 +156,7 @@ addCallInfo(const xmlChar * templateName, const xmlChar *templateURI,
     if (!templateName || !url) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Error : Null template name or url:"
+                         "Error: Null template name or url:"
                          " addCallInfo\n");
         if (templateName)
             xsltGenericError(xsltGenericErrorContext, "template :'%s'\n",
@@ -213,7 +213,7 @@ addCallInfo(const xmlChar * templateName, const xmlChar *templateURI,
 	}else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
             xsltGenericError(xsltGenericErrorContext,
-                             "Error : Unable to create callPointInfo from :"
+                             "Error: Unable to create callPointInfo from :"
                              " addCallInfo\n");
 #endif
 	}
@@ -221,7 +221,7 @@ addCallInfo(const xmlChar * templateName, const xmlChar *templateURI,
     if (!cur)
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
             xsltGenericError(xsltGenericErrorContext,
-                             "Error : Unable to create callPointInfo from :"
+                             "Error: Unable to create callPointInfo from :"
                              " addCallInfo\n");
 #endif
     return result;
@@ -251,7 +251,7 @@ callStackAdd(xsltTemplatePtr templ, xmlNodePtr source)
     if (!source->doc || !source->doc->URL) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Error : Invalid document url in call from : callStackAdd\n");
+                         "Error: Invalid document url in call from : callStackAdd\n");
 #endif
         return result;
     }
@@ -280,7 +280,7 @@ callStackAdd(xsltTemplatePtr templ, xmlNodePtr source)
     if (!name) {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Error : Invalid template name : callStackAdd\n");
+                         "Error: Invalid template name : callStackAdd\n");
 #endif
         return result;
     }
@@ -303,13 +303,13 @@ callStackAdd(xsltTemplatePtr templ, xmlNodePtr source)
         } else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
             xsltGenericError(xsltGenericErrorContext,
-                             "Error : Unable to create call point : callStackAdd\n");
+                             "Error: Unable to create call point : callStackAdd\n");
 #endif
         }
     } else {
 #ifdef WITH_XSLT_DEBUG_BREAKPOINTS
         xsltGenericError(xsltGenericErrorContext,
-                         "Error : Unable to create call info : callStackAdd\n");
+                         "Error: Unable to create call info : callStackAdd\n");
 #endif
     }
 

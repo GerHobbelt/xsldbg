@@ -824,11 +824,11 @@ xsldbgMain(int argc, char **argv)
             showPrompt = 1;
             if (optionsGetStringOption(OPTIONS_SOURCE_FILE_NAME) == NULL)
                 xsltGenericError(xsltGenericErrorContext,
-                                 "Error : No source file supplied\n");
+                                 "Error: No source file supplied\n");
 
             if (optionsGetStringOption(OPTIONS_DATA_FILE_NAME) == NULL) {
                 xsltGenericError(xsltGenericErrorContext,
-                                 "Error : No data file supplied\n");
+                                 "Error: No data file supplied\n");
                 if (optionsGetStringOption(OPTIONS_SOURCE_FILE_NAME) !=
                     NULL)
                     xsltGenericError(xsltGenericErrorContext,

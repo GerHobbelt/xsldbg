@@ -134,17 +134,17 @@ printTemplateHelper(xsltTemplatePtr templ, int verbose,
 			notifyListQueue(templ);
 		      } else {
 			modeTemp = fullQName(templ->modeURI, templ->mode);
-		      }
-		      if (verbose)
-			 xsltGenericError(xsltGenericErrorContext,
-					  " template :\"%s\" mode :\"%s\" in file %s : line %ld\n",
-					  name, modeTemp, url,
-					  xmlGetLineNo(templ->elem));
-		      else
-			xsltGenericError(xsltGenericErrorContext,
-					 "\"%s\" ", name);
+			if (verbose)
+			  xsltGenericError(xsltGenericErrorContext,
+					   " template :\"%s\" mode :\"%s\" in file %s : line %ld\n",
+					   name, modeTemp, url,
+					   xmlGetLineNo(templ->elem));
+			else
+			  xsltGenericError(xsltGenericErrorContext,
+					   "\"%s\" ", name);
 		      if (modeTemp)
 			xmlFree(modeTemp);
+		      }
 		   }
 	       
 		    xmlFree(name);

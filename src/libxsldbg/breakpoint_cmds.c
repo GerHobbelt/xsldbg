@@ -92,7 +92,7 @@ xslDbgShellFrameBreak(xmlChar * arg, int stepup)
 
     if (!filesGetStylesheet() || !filesGetMainDoc()) {
         xsltGenericError(xsltGenericErrorContext,
-                         "Error : Debugger has no files loaded, try reloading files\n%s",
+                         "Error: Debugger has no files loaded, try reloading files\n%s",
                          errorPrompt);
         return result;
     }

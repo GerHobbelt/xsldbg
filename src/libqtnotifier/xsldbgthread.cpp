@@ -137,7 +137,7 @@ fakeInput(const char *text)
     if (!text || (getInputReady() == 1) || (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)) 
         return result;
 
-    fprintf(stderr, "\nFaking input of \"%s\"\n", text);
+    //    fprintf(stderr, "\nFaking input of \"%s\"\n", text);
     strncpy(inputBuffer, text, sizeof(inputBuffer));
     setInputReady(1);
     result++;
