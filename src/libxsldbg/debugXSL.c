@@ -1994,7 +1994,7 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 if (openTerminal(arg)) {
 		  /* gdb does to say anything after redirecting its 
 		     output */
-		  if (optionsGetIntOption(OPTIONS_GDB) != 1)
+		  if (optionsGetIntOption(OPTIONS_GDB) < 2)
                     xsltGenericError(xsltGenericErrorContext,
                                      "Opening terminal %s\n", arg);
                     cmdResult = 1;
