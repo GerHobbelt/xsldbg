@@ -204,102 +204,134 @@ printXPathObject(xmlXPathObjectPtr item, xmlChar* xPath){
   int result = 0;
   if (item){ 
     switch (item->type) {
-       case XPATH_NODESET:{
-                    int indx;
+    case XPATH_BOOLEAN:
+      xsltGenericError(xsltGenericErrorContext,
+		       "= %s\n%s\n", xPath,
+		       xmlBoolToText(item->boolval));
+      result = 1;
+      break;
 
-                    if (item->nodesetval) {
-                        const char *fileName = filesTempFileName(0);
-                        FILE *file;
+    case XPATH_NUMBER:
+      xsltGenericError(xsltGenericErrorContext,
+		       "= %s\n%0g\n", xPath, item->floatval);
+      result = 1;
+      break;
 
-                        if (!fileName)
-                            break;
-                        file = fopen(fileName, "w+");
-                        if (!file) {
-                            xsltGenericError
-                                (xsltGenericErrorContext,
-                                 "Error: Unable to save temporary"
-                                 "results to %s\n", fileName);
-                            break;
-                        } else {
-                            fprintf(file, "= %s\n", xPath);
-                            for (indx = 0;
-                                 indx < item->nodesetval->nodeNr; indx++) {
-                                xslShellCat(item->nodesetval->
-                                            nodeTab[indx], file);
-                            }
+      /*
+	case XPATH_STRING:
+	if (item->stringval) {
+	xsltGenericError(xsltGenericErrorContext,
+	"= %s\n%s\n", xPath, item->stringval);
+	result = 1;
+	}
+	break;
+      */	
 
-                        }
-                        if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
-                            fclose(file);
-                            /* send the data to application */
-                            notifyXsldbgApp(XSLDBG_MSG_FILEOUT, fileName);
-                        } else {
-                            int lineCount = 0, gdbModeEnabled = 0;
+      /*  case XPATH_NODESET:*/
+    default:{
+	/* We may need to convert this XPath to a string,
+	   plus ensure that we print required the number of
+	   lines of text */
+	int indx;
 
-                            /* save the value of option to speed things up
-                             * a bit */
-                            gdbModeEnabled =
-                                optionsGetIntOption(OPTIONS_GDB);
-                            rewind(file);
+	const char *fileName = filesTempFileName(0);
+	FILE *file;
 
-                            /* when gdb mode is enable then only print the first
-                             * GDB_LINES_TO_PRINT lines */
-                            while (!feof(file)) {
-                                if (fgets
-                                    ((char *) buffer, sizeof(buffer),
-                                     file))
-                                    xsltGenericError
-                                        (xsltGenericErrorContext, "%s",
-                                         buffer);
-                                if (gdbModeEnabled) {
-                                    lineCount++;
-                                    /* there is an overhead of two lines
-                                     * when print expression values */
-                                    if (lineCount ==
-                                        GDB_LINES_TO_PRINT + 2) {
-                                        xsltGenericError
-                                            (xsltGenericErrorContext,
-                                             "...");
-                                        break;
-                                    }
-                                }
-                            }
-                            xsltGenericError
-                                (xsltGenericErrorContext, "\n");
-                        }
-                    } else {
-                        xsltGenericError(xmlGenericErrorContext,
-                                         "Error: xpath %s results an "
-                                         "in empty set\n", xPath);
-                    }
-                    result = 1;
-                    break;
-               }
+	if (!fileName)
+	  break;
+	file = fopen(fileName, "w+");
+	if (!file) {
+	  xsltGenericError
+	    (xsltGenericErrorContext,
+	     "Error: Unable to save temporary"
+	     "results to %s\n", fileName);
+	  break;
+	} else {
+	  fprintf(file, "= %s\n", xPath);
+	  switch(item->type){
 
-            case XPATH_BOOLEAN:
-                xsltGenericError(xsltGenericErrorContext,
-                                 "= %s\n%s\n", xPath,
-                                 xmlBoolToText(item->boolval));
-                result = 1;
-                break;
+	  case XPATH_NODESET:
+	    if (item->nodesetval){
+	      for (indx = 0;
+		   indx < item->nodesetval->nodeNr; indx++){ 
+		xslShellCat(item->nodesetval->
+			    nodeTab[indx], file);
+	      }
+	    } else {
+	      xsltGenericError(xmlGenericErrorContext,
+			       "Error: xpath %s results an "
+			       "in empty set\n", xPath);
+	    }
+	    break;
+			     
+	  case XPATH_STRING:
+	    if (item->stringval)
+	      fprintf(file, "%s", item->stringval);
+	    else
+	      fprintf(file, "NULL string value supplied");
+	    break;
+			     
+	  default:{
+	      xmlXPathObjectPtr tempObj = 
+		xmlXPathObjectCopy(item);
+	      if (tempObj)
+		tempObj = xmlXPathConvertString(tempObj);
+	      if (tempObj && tempObj->stringval){
+		fprintf(file, "%s", tempObj->stringval);
+	      }else{
+		fprintf(file, 
+			"NULL, Unable to convert XPath to string");	
+	      }
+	      if (tempObj)
+		xmlXPathFreeObject(tempObj);
+	    }
+	    break;
+	    fprintf(file,"\n");	    
 
-            case XPATH_NUMBER:
-                xsltGenericError(xsltGenericErrorContext,
-                                 "= %s\n%0g\n", xPath, item->floatval);
-                result = 1;
-                break;
+	  } // inner switch statement 
+	  if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
+	    fclose(file);
+	    /* send the data to application */
+	    notifyXsldbgApp(XSLDBG_MSG_FILEOUT, fileName);
+	  } else {
+	    int lineCount = 0, gdbModeEnabled = 0;
 
-            case XPATH_STRING:
-                if (item->stringval) {
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "= %s\n%s\n", xPath, item->stringval);
-                    result = 1;
-                }
-                break;
+	    /* save the value of option to speed things up
+	     * a bit */
+	    gdbModeEnabled =
+	      optionsGetIntOption(OPTIONS_GDB);
+	    rewind(file);
 
-            default:
-                xmlShellPrintXPathError(item->type, (char *) xPath);
-            }
+	    /* when gdb mode is enable then only print the first
+	     * GDB_LINES_TO_PRINT lines */
+	    while (!feof(file)) {
+	      if (fgets
+		  ((char *) buffer, sizeof(buffer),
+		   file))
+		xsltGenericError
+		  (xsltGenericErrorContext, "%s",
+		   buffer);
+	      if (gdbModeEnabled) {
+		lineCount++;
+		/* there is an overhead of two lines
+		 * when print expression values */
+		if (lineCount ==
+		    GDB_LINES_TO_PRINT + 2) {
+		  xsltGenericError
+		    (xsltGenericErrorContext,
+		     "...");
+		  break;
+		}
+	      }
+	    }
+	    xsltGenericError
+	      (xsltGenericErrorContext, "\n");
+	  }
+	  result = 1;
+	  break;
+	}
+      }
+    }
   }
   return result;
 }
@@ -392,14 +424,20 @@ xslDbgShellPrintNames(void *payload ATTRIBUTE_UNUSED,
 	      if (item->computed == 1){
 	         xsltGenericError(xsltGenericErrorContext, " Global ");
 		 printXPathObject(item->value, fullQualifiedName);
-	         xsltGenericError(xsltGenericErrorContext, "\032\032");
 	      }else if (item->tree){
 	         xsltGenericError(xsltGenericErrorContext, " Global = %s\n", 
 				  fullQualifiedName);
 		 xslShellCat(item->tree, stderr);
-	         xsltGenericError(xsltGenericErrorContext, "\032\032");
+	      }else if (item->select){
+	         xsltGenericError(xsltGenericErrorContext, " Global = %s\n%s", 
+				  fullQualifiedName, item->select);
+	      }else{
+		// can't find a value give only a variable name an error message
+	         xsltGenericError(xsltGenericErrorContext, 
+				  " Global = %s\n No value assigned to variable!!", 
+			     fullQualifiedName);
 	      }
-	    xsltGenericError(xsltGenericErrorContext, "\n");
+	    xsltGenericError(xsltGenericErrorContext, "\n\032\032\n");
         }
         varCount++;
     }
@@ -515,18 +553,24 @@ xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
 			        if (item->computed == 1){
 			           xsltGenericError(xsltGenericErrorContext, " Local ");
 			           printXPathObject(item->value, fullQualifiedName);
-			           xsltGenericError(xsltGenericErrorContext, "\032\032");
 			        }else if (item->tree){
 			           xsltGenericError(xsltGenericErrorContext, " Local = %s\n", 
 					       fullQualifiedName);
 			           xslShellCat(item->tree, stderr);
-			           xsltGenericError(xsltGenericErrorContext, "\032\032");
-			        }
+			        }else if (item->select){
+				  xsltGenericError(xsltGenericErrorContext, " Local = %s\n%s", 
+						   fullQualifiedName, item->select);
+				}else{
+				  // can't find a value give only a variable name and an error
+				  xsltGenericError(xsltGenericErrorContext, 
+						   " Local = %s\n No value assigned to variable!!", 
+						   fullQualifiedName);
+				}
 			    }
+			    xsltGenericError(xsltGenericErrorContext, "\n\032\032\n");
 			}
-			xsltGenericError(xsltGenericErrorContext, "\n");
                         item = item->next;
-                    }
+		    }
                 }
                 result = 1;
                 xsltGenericError(xsltGenericErrorContext, "\n");

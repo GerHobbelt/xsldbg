@@ -30,6 +30,12 @@
  * @author Keith Isdale <k_isdale@tpg.com.au> 
  */
 #endif
+ 
+#include <libxslt/xsltconfig.h>
+
+#ifndef WITH_DEBUGGER
+ #error "WITH_DEBUGGER MACRO not defined in libxslt maybe you've disable debugger in libxslt"
+#endif
 
 #ifdef  WITH_XSLT_DEBUG
 

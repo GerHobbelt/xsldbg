@@ -14,12 +14,19 @@
       <xsl:attribute name="href">index.html</xsl:attribute>
     </xsl:attribute-set>
 
+    <xsl:attribute-set name="empty"/>
+
+
   <xsl:template match="/">
     <xsl:element name="item" use-attribute-sets="base">
       <xsl:attribute name="id">
         <xsl:value-of select="1"/>
       </xsl:attribute>      
-
+    </xsl:element>
+    <xsl:element name="item" use-attribute-sets="empty">
+      <xsl:attribute name="id">
+        <xsl:value-of select="1"/>
+      </xsl:attribute>      
     </xsl:element>
   </xsl:template>
 
