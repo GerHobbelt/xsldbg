@@ -36,12 +36,12 @@
 
 #ifdef WIN32
 #include <wtypes.h>
-#include <winbase.h> /* needed fort the sleep function*/
+#include <winbase.h>            /* needed fort the sleep function */
 #endif
 
 #include "xsldbg.h"
 #include "files.h"
-#include "cmds.h"  /* list of command Id's*/
+#include "cmds.h"               /* list of command Id's */
 #include "debugXSL.h"
 #include "options.h"
 #include "xslbreakpoint.h"
@@ -60,6 +60,9 @@ xsltTemplatePtr rootCopy;
 
 /* how may items have been printed */
 int printCount;
+
+/* used to sending small amounts data when xsldbg runs as a thread */
+xmlChar messageBuffer[2000];
 
 extern FILE *terminalIO;
 
@@ -102,6 +105,7 @@ const char *commandNames[] = {
     /* "cat", already listed */
     "source",
     "data",
+    "output", /* output file name */
     "cd",
 
     /* file related */
@@ -127,6 +131,9 @@ const char *commandNames[] = {
 
     /* searching */
     "search",
+    
+    /*variable value change */
+    "set",
 
     NULL                        /* Indicate the end of list */
 };
@@ -170,6 +177,7 @@ const char *shortCommandNames[] = {
     /* "cat", already listed */
     "source",
     "data",
+    "o", /* output file name */
     "cd",
 
     /* file related */
@@ -195,6 +203,9 @@ const char *shortCommandNames[] = {
 
     /* searching */
     "search",
+    
+    /*variable value change */
+    "set",
 
     NULL                        /* Indicate the end of list */
 };
@@ -224,6 +235,7 @@ enum ShortcutsEnum {
     DEBUG_ANCESTOR_NODE,
     DEBUG_DESCENDANT_NODE
 };
+
 
 #include <libxml/xpathInternals.h>
 
@@ -262,7 +274,7 @@ enum ShortcutsEnum {
  *         0 otherwise
  */
 int xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
-              xmlChar * arg, xmlNodePtr source);
+             xmlChar * arg, xmlNodePtr source);
 
 
 /**
@@ -433,15 +445,15 @@ static xmlChar *currentUrl = NULL;
  * 
  * Update the URL and  line number that we stoped at 
  */
-static void xsldbgUpdateFileDetails(xmlNodePtr node)
+static void
+xsldbgUpdateFileDetails(xmlNodePtr node)
 {
-  if ((node != NULL) && (node->doc !=  NULL) &&
-      (node->doc->URL != NULL)){
-    if (currentUrl != NULL)
-      xmlFree(currentUrl);
-    currentUrl = (xmlChar*)xmlMemStrdup((char*)node->doc->URL);
-    currentLineNo = xmlGetLineNo(node);
-  }
+    if ((node != NULL) && (node->doc != NULL) && (node->doc->URL != NULL)) {
+        if (currentUrl != NULL)
+            xmlFree(currentUrl);
+        currentUrl = (xmlChar *) xmlMemStrdup((char *) node->doc->URL);
+        currentLineNo = xmlGetLineNo(node);
+    }
 }
 
 /**
@@ -451,9 +463,10 @@ static void xsldbgUpdateFileDetails(xmlNodePtr node)
  *
  * Returns The current line number of xsldbg, may be -1
  **/
-int xsldbgLineNo(void)
+int
+xsldbgLineNo(void)
 {
-  return currentLineNo;
+    return currentLineNo;
 }
 
 
@@ -465,12 +478,13 @@ int xsldbgLineNo(void)
  * Returns A NEW copy of URL stopped at. Caller must free memory for URL.
  *  May be NULL  
  */
-xmlChar *xsldbgUrl(void)
+xmlChar *
+xsldbgUrl(void)
 {
-  if (currentUrl != NULL)
-    return (xmlChar*)xmlMemStrdup((char*)currentUrl);
-	else
-	  return NULL;
+    if (currentUrl != NULL)
+        return (xmlChar *) xmlMemStrdup((char *) currentUrl);
+    else
+        return NULL;
 }
 
 /****************************************************************
@@ -494,7 +508,7 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
          xmlChar * arg, xmlNodePtr source)
 {
     xmlXPathObjectPtr list = NULL;
-		int result = 0;
+    int result = 0;
     int offset = 2;             /* in some cases I'm only interested after first two chars  */
 
     if (!ctxt) {
@@ -530,7 +544,7 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                                          " template :\"%s\"\n",
                                          &arg[offset]);
                         ctxt->node = templateNode;
-												result++;
+                        result++;
                         return result;
                     }
                 } else if (arg[1] == 's') {
@@ -585,7 +599,7 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
                     if (list->nodesetval) {
                         if (list->nodesetval->nodeNr == 1) {
                             ctxt->node = list->nodesetval->nodeTab[0];
-														result++;
+                            result++;
                         } else
                             xmlGenericError(xmlGenericErrorContext,
                                             "%s is a %d Node Set\n",
@@ -606,7 +620,7 @@ xslDbgCd(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
         }
         ctxt->pctxt->node = NULL;
     }
-	return result;
+    return result;
 }
 
 
@@ -623,9 +637,9 @@ int
 xslDbgPrintCallStack(const xmlChar * arg)
 {
     int depth;
-		int result = 0;
+    int result = 0;
     xslCallPointPtr callPoint;
-   	
+
     if (arg == NULL) {
         for (depth = 1; depth <= callDepth(); depth++) {
             callPoint = getCall(depth);
@@ -683,8 +697,8 @@ xslDbgPrintCallStack(const xmlChar * arg)
             }
         }
     }
-	result++;
-	return result;
+    result++;
+    return result;
 }
 
 
@@ -850,9 +864,19 @@ splitString(xmlChar * textIn, int maxStrings, xmlChar ** out)
         /* look for end of word */
         while (!IS_BLANK(*textIn) && (*textIn != '\0'))
             textIn++;
-        *textIn = '\0';
-        textIn++;
-        result++;
+
+	if (*textIn != '\0')
+	  {
+	    *textIn = '\0';
+	    textIn++;
+	    result++;
+	  }
+	else{
+	  *textIn = '\0';
+	  textIn++;
+	  result++;
+	  break;
+	}
     }
     return result;
 }
@@ -1138,7 +1162,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                                          * command entered */
     xmlChar dir[DEBUG_BUFFER_SIZE];     /* temporary buffer used by where
                                          * and pwd commands */
-		int cmdResult; /* result of last command */
+    int cmdResult;              /* result of last command */
     int shortCutId = -1;        /* used by cd command */
     int i;
     static int showSource = 1;  /* Do we first show source or data ? */
@@ -1175,19 +1199,19 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
         ctxt->doc = source->doc;
         ctxt->node = source;
 #ifdef USE_XSLDBG_AS_THREAD
-	xsldbgUpdateFileDetails(source);
+        xsldbgUpdateFileDetails(source);
 #endif
     } else {
         ctxt->doc = doc->doc;
         ctxt->node = (xmlNodePtr) doc;
 #ifdef USE_XSLDBG_AS_THREAD
-	xsldbgUpdateFileDetails((xmlNodePtr)doc);
+        xsldbgUpdateFileDetails((xmlNodePtr) doc);
 #endif
     }
 
     /* let any listener know that we got to a new line */
 #ifdef USE_XSLDBG_AS_THREAD
-	notifyXsldbgApp(XSLDBG_MSG_LINE_CHANGED, NULL);
+    notifyXsldbgApp(XSLDBG_MSG_LINE_CHANGED, NULL);
 #endif
 
     ctxt->input = input;
@@ -1258,7 +1282,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             break;
 
 #ifdef USE_XSLDBG_AS_THREAD
-	notifyXsldbgApp(XSLDBG_MSG_PROCESSING_INPUT, NULL);
+        notifyXsldbgApp(XSLDBG_MSG_PROCESSING_INPUT, NULL);
 #endif
         /* remove leading/trailing blanks */
         trimString(cmdline);
@@ -1297,14 +1321,14 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
         if (i != 0)
             nbargs++;
 
-			
+
         commandId = lookupName(command, (xmlChar **) commandNames);
         /* try command shorts if command is not found */
         if (commandId < 0)
             commandId =
                 lookupName(command, (xmlChar **) shortCommandNames);
 
-				cmdResult = -1; /* flag that it contains no result */
+        cmdResult = -1;         /* flag that it contains no result */
         /*
          * start interpreting the command
          */
@@ -1322,13 +1346,13 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 /* allow the stylesheet to exit */
                 xslDebugStatus = DEBUG_QUIT;
                 exitShell++;
-								cmdResult = 1;
+                cmdResult = 1;
                 break;
 
             case DEBUG_STEP_CMD:
                 xslDebugStatus = DEBUG_STEP;
                 exitShell++;
-								cmdResult = 1;
+                cmdResult = 1;
                 break;
 
             case DEBUG_STEPUP_CMD:
@@ -1361,14 +1385,14 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             case DEBUG_CONT_CMD:
                 xslDebugStatus = DEBUG_CONT;
                 exitShell++;
-								cmdResult = 1;
+                cmdResult = 1;
                 break;
 
                 /* restart */
             case DEBUG_RUN_CMD:
                 xslDebugStatus = DEBUG_RUN_RESTART;
                 exitShell++;
-								cmdResult = 1;
+                cmdResult = 1;
                 break;
 
 
@@ -1383,8 +1407,9 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
                     /* be verbose when printing template names */
                     /* if args is not empty then print names this stylesheet */
-                    cmdResult = xslDbgPrintTemplateNames(styleCtxt, ctxt, arg,
-																			verbose, allFiles);
+                    cmdResult =
+                        xslDbgPrintTemplateNames(styleCtxt, ctxt, arg,
+                                                 verbose, allFiles);
                     break;
                 }
 
@@ -1401,17 +1426,17 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                                          " in file %s : line %ld \n",
                                          ctxt->node->doc->URL,
                                          xmlGetLineNo(ctxt->node));
-											  cmdResult = 1;
+                        cmdResult = 1;
                     } else {
                         xsltGenericError(xsltGenericErrorContext,
                                          " at file %s : line %ld \n",
                                          ctxt->node->doc->URL,
                                          xmlGetLineNo(ctxt->node));
-											cmdResult = 1;		
-                } else{
+                        cmdResult = 1;
+                } else {
                     xsltGenericError(xsltGenericErrorContext, "\n");
-										cmdResult = 0;
-								}
+                    cmdResult = 0;
+                }
                 break;
 
             case DEBUG_FRAME_CMD:
@@ -1426,7 +1451,9 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             case DEBUG_BREAK_CMD:
                 if (xmlStrLen(arg)) {
                     if (styleCtxt)
-                        cmdResult = xslDbgShellBreak(arg, styleCtxt->style, styleCtxt);
+                        cmdResult =
+                            xslDbgShellBreak(arg, styleCtxt->style,
+                                             styleCtxt);
                     else
                         cmdResult = xslDbgShellBreak(arg, NULL, styleCtxt);
                 } else {
@@ -1438,10 +1465,12 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                                  ctxt->node->doc->URL,
                                  xmlGetLineNo(ctxt->node));
                     if (styleCtxt)
-                        cmdResult = xslDbgShellBreak(buff, styleCtxt->style,
-                                         styleCtxt);
+                        cmdResult =
+                            xslDbgShellBreak(buff, styleCtxt->style,
+                                             styleCtxt);
                     else
-                        cmdResult = xslDbgShellBreak(buff, NULL, styleCtxt);
+                        cmdResult =
+                            xslDbgShellBreak(buff, NULL, styleCtxt);
                 }
 
                 break;
@@ -1459,7 +1488,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     xsltGenericError(xsltGenericErrorContext,
                                      "\n\t Total of %d break points present\n",
                                      printCount);
-								cmdResult = 1;	
+                cmdResult = 1;
                 break;
 
             case DEBUG_DELETE_CMD:
@@ -1472,17 +1501,18 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         breakPoint = getBreakPoint(ctxt->node->doc->URL,
                                                    xmlGetLineNo(ctxt->
                                                                 node));
-                    if (!breakPoint || !deleteBreakPoint(breakPoint)){
+                    if (!breakPoint || !deleteBreakPoint(breakPoint)) {
                         xsltGenericError(xsltGenericErrorContext,
                                          "Unable to add delete point");
-												cmdResult = 0;	
-										}
+                        cmdResult = 0;
+                    }
                 }
                 break;
 
             case DEBUG_ENABLE_CMD:
                 if (xmlStrLen(arg))
-                    cmdResult = xslDbgShellEnable(arg, XSL_TOGGLE_BREAKPOINT);
+                    cmdResult =
+                        xslDbgShellEnable(arg, XSL_TOGGLE_BREAKPOINT);
                 else {
                     xslBreakPointPtr breakPoint = NULL;
 
@@ -1493,11 +1523,11 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     if (!breakPoint
                         ||
                         (!enableBreakPoint
-                         (breakPoint, !breakPoint->enabled))){
+                         (breakPoint, !breakPoint->enabled))) {
                         xsltGenericError(xsltGenericErrorContext,
                                          "Unable to add enable/disable point\n");
-											cmdResult = 0;
-											}	
+                        cmdResult = 0;
+                    }
                 }
                 break;
 
@@ -1514,11 +1544,11 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     if (!breakPoint
                         ||
                         (!enableBreakPoint
-                         (breakPoint, !!breakPoint->enabled))){
+                         (breakPoint, !!breakPoint->enabled))) {
                         xsltGenericError(xsltGenericErrorContext,
                                          "Unable to add enable/disable point\n");
-												cmdResult = 0;
-											}
+                        cmdResult = 0;
+                    }
                 }
                 break;
 
@@ -1535,7 +1565,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
             case DEBUG_DU_CMD:
                 xmlShellDu(ctxt, NULL, ctxt->node, NULL);
-								cmdResult = 1;								
+                cmdResult = 1;
                 break;
 
             case DEBUG_CAT_CMD:
@@ -1554,18 +1584,18 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                                          xmlGetLineNo(ctxt->node));
                 }
                 xsltGenericError(xsltGenericErrorContext, "\n");
-								cmdResult = 1;
+                cmdResult = 1;
 
                 break;
 
             case DEBUG_DUMP_CMD:
                 xmlDebugDumpDocument(stdout, ctxt->doc);
-								cmdResult = 1;	
+                cmdResult = 1;
                 break;
 
             case DEBUG_BASE_CMD:
                 xmlShellBase(ctxt, NULL, ctxt->node, NULL);
-								cmdResult = 1;
+                cmdResult = 1;
                 break;
 
 
@@ -1573,23 +1603,23 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             case DEBUG_GLOBALS_CMD:
                 if (loadedFiles == 0)
                     cmdResult = xslDbgShellPrintVariable(styleCtxt, arg,
-                                             DEBUG_GLOBAL_VAR);
-                else{
+                                                         DEBUG_GLOBAL_VAR);
+                else {
                     xsltGenericError(xsltGenericErrorContext,
                                      "Need to use run command first\n");
-									cmdResult = 0;	
-								}
+                    cmdResult = 0;
+                }
                 break;
 
             case DEBUG_LOCALS_CMD:
                 if (loadedFiles == 0)
                     cmdResult = xslDbgShellPrintVariable(styleCtxt, arg,
-                                             DEBUG_LOCAL_VAR);
-                else{
+                                                         DEBUG_LOCAL_VAR);
+                else {
                     xsltGenericError(xsltGenericErrorContext,
                                      "Need to use run command first\n");
-									cmdResult = 0;
-								}
+                    cmdResult = 0;
+                }
                 break;
 
 
@@ -1597,7 +1627,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                  * a separe file so they stay here! */
                 /* --- Node selection related commands --- */
             case DEBUG_SOURCE_CMD:
-								cmdResult = 1; /* only one case where this will command fail*/
+                cmdResult = 1;  /* only one case where this will command fail */
                 if (xmlStrLen(arg) == 0) {
                     if (ctxt->doc == doc->doc)
                         lastDocNode = ctxt->node;
@@ -1605,6 +1635,11 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     ctxt->node = lastSourceNode;
                     ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
                     showSource = 1;
+#ifdef USE_XSLDBG_AS_THREAD
+		    xsldbgUpdateFileDetails((xmlNodePtr) ctxt->node);
+		    /* let any listener know that we got to a new line */
+		    notifyXsldbgApp(XSLDBG_MSG_LINE_CHANGED, NULL);
+#endif
                     if (ctxt->pctxt == NULL) {
                         xmlFree(ctxt);
                         xslDebugStatus = DEBUG_QUIT;
@@ -1627,7 +1662,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         } else {
                             xsltGenericError(xsltGenericErrorContext,
                                              "File name too large\n");
-														cmdResult = 0;
+                            cmdResult = 0;
                             break;
                         }
                     } else
@@ -1645,7 +1680,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 break;
 
             case DEBUG_DATA_CMD:
-								cmdResult = 1;	/* only one case where this will command fail*/
+                cmdResult = 1;  /* only one case where this will command fail */
                 if (xmlStrLen(arg) == 0) {
                     if (ctxt->doc == source->doc)
                         lastSourceNode = ctxt->node;
@@ -1653,6 +1688,11 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     ctxt->node = lastDocNode;
                     ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
                     showSource = 0;
+#ifdef USE_XSLDBG_AS_THREAD
+		    xsldbgUpdateFileDetails((xmlNodePtr) ctxt->node);
+		    /* let any listener know that we got to a new line */
+		    notifyXsldbgApp(XSLDBG_MSG_LINE_CHANGED, NULL);
+#endif
                     if (ctxt->pctxt == NULL) {
                         xmlFree(ctxt);
                         xslDebugStatus = DEBUG_QUIT;
@@ -1674,7 +1714,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         } else {
                             xsltGenericError(xsltGenericErrorContext,
                                              "File name too large\n");
-														cmdResult = 0;	
+                            cmdResult = 0;
                             break;
                         }
                     } else
@@ -1692,6 +1732,20 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 }
                 break;
 
+	case DEBUG_OUTPUT_CMD:
+	  if (xmlStrLen(arg) > 0){
+	    if (xmlStrCmp(arg, "-") != 0)
+	      setStringOption(OPTIONS_OUTPUT_FILE_NAME, arg);
+	    else
+	      setStringOption(OPTIONS_OUTPUT_FILE_NAME, NULL);
+	    cmdResult = 1;
+	  }else{
+            xsltGenericError(xsltGenericErrorContext,
+			     "Missing file name\n");
+	    cmdResult = 0;
+	  }
+	  break;
+
             case DEBUG_CD_CMD:
                 /* use dir as a working buffer */
                 xmlStrnCpy(dir, arg, 2);
@@ -1700,8 +1754,9 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 if (shortCutId >= 0) {
                     if (xmlStrLen(arg) == 2) {
                         cmdResult = xslDbgCd(styleCtxt, ctxt,
-                                 (xmlChar *) cdAlternative[shortCutId],
-                                 source);
+                                             (xmlChar *)
+                                             cdAlternative[shortCutId],
+                                             source);
                     } else {
 
                         xmlStrCpy(dir, cdAlternative[shortCutId]);
@@ -1718,7 +1773,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             case DEBUG_VALIDATE_CMD:
                 xsltGenericError(xsltGenericErrorContext,
                                  "validate disabled\n");
-								cmdResult = 0;
+                cmdResult = 0;
                 /*
                  * xmlShellValidate(ctxt, arg, NULL, NULL);
                  */
@@ -1727,7 +1782,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             case DEBUG_LOAD_CMD:
                 xsltGenericError(xsltGenericErrorContext,
                                  "loading disabled\n");
-								cmdResult = 0;
+                cmdResult = 0;
                 /*
                  * xmlShellLoad(ctxt, arg, NULL, NULL);
                  */
@@ -1736,7 +1791,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             case DEBUG_SAVE_CMD:
                 xsltGenericError(xsltGenericErrorContext,
                                  "saving disabled\n");
-								cmdResult = 0;
+                cmdResult = 0;
                 /*
                  * xmlShellSave(ctxt, arg, NULL, NULL);
                  */
@@ -1745,7 +1800,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             case DEBUG_WRITE_CMD:
                 xsltGenericError(xsltGenericErrorContext,
                                  "write disabled\n");
-								cmdResult = 0;
+                cmdResult = 0;
                 /*
                  * xmlShellWrite(ctxt, arg, NULL, NULL);
                  */
@@ -1754,7 +1809,7 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             case DEBUG_FREE_CMD:
                 xsltGenericError(xsltGenericErrorContext,
                                  "free disabled\n");
-								cmdResult = 0;
+                cmdResult = 0;
                 /*
                  * if (arg[0] == 0) {
                  * xmlMemShow(stdout, 0);
@@ -1791,44 +1846,51 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 break;
 
             case DEBUG_TTY_CMD:
-                if (openTerminal(arg)){
+                if (openTerminal(arg)) {
                     xsltGenericError(xsltGenericErrorContext,
                                      "Opening terminal %s\n", arg);
-										cmdResult = 1;
-		                selectTerminalIO();
-								}else
-									cmdResult = 0;	
+                    cmdResult = 1;
+                    selectTerminalIO();
+                } else
+                    cmdResult = 0;
                 break;
 
 
 
                 /* tracing related commands */
             case DEBUG_TRACE_CMD:
-                if (xslDbgShellTrace(arg)){
+                if (xslDbgShellTrace(arg)) {
                     exitShell++;
-									cmdResult = 1;	
-								}else
-									cmdResult = 0;	
+                    cmdResult = 1;
+                } else
+                    cmdResult = 0;
 
                 break;
 
             case DEBUG_WALK_CMD:
-                if (xslDbgShellWalk(arg)){
+                if (xslDbgShellWalk(arg)) {
                     exitShell++;
-									cmdResult = 1;	
-								}else
-									cmdResult = 0;	
+                    cmdResult = 1;
+                } else
+                    cmdResult = 0;
                 break;
 
                 /* search related commands */
             case DEBUG_SEARCH_CMD:
-								cmdResult = xslDbgShellSearch(styleCtxt, getStylesheet(), arg);
+                cmdResult =
+                    xslDbgShellSearch(styleCtxt, getStylesheet(), arg);
+		break;
+
+
+
+            case DEBUG_SET_CMD:
+                cmdResult =  xslDbgShellSetVariable(styleCtxt, arg);
                 break;
 
             default:
                 xmlGenericError(xmlGenericErrorContext,
                                 "Unknown command %s, try help\n", command);
-								cmdResult = 0;	
+                cmdResult = 0;
         }
 
         /* kdbgs like to get the marker after every command so here it is */
@@ -1856,12 +1918,13 @@ xslDbgShell(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             }
         }
 
-				/* notify any listeners of that the command failed */
-				if (cmdResult == 0){
-				 notifyStateXsldbgApp(XSLDBG_MSG_PROCESSING_RESULT, commandId + DEBUG_HELP_CMD,
-				  			0, NULL);
+        /* notify any listeners of that the command failed */
+        if (cmdResult == 0) {
+	  xmlStrnCpy(messageBuffer, cmdline, sizeof(messageBuffer));
+	  notifyStateXsldbgApp(XSLDBG_MSG_PROCESSING_RESULT,
+                   commandId + DEBUG_HELP_CMD, XSLDBG_COMMAND_FAILED, messageBuffer);
 
-				}					
+        }
 
         xmlFree(cmdline);
         cmdline = NULL;

@@ -10,43 +10,44 @@ endif
 
 
 noinst_HEADERS=\
-	help.h 				\
-	cmds.h				\
+	help.h 			\
+	cmds.h			\
 	debugXSL.h 		\
 	arraylist.h		\
 	xslcallpoint.h		\
 	xslbreakpoint.h		\
-	xslsearch.h				\
-	files.h						\
-	options.h					\
-	xsldbg.h					\
+	xslsearch.h		\
+	files.h			\
+	options.h		\
+	xsldbg.h		\
 	xsldbgconfig.h		\
 	xsldbgnotifier.h	\
-	xsldbgmsg.h				\
+	xsldbgmsg.h		\
 	xsldbgthread.h		\
 	xsldbgio.h	
 
 
 if USE_XSLDBG_AS_THREAD
 libxsldbg_la_SOURCES = \
-	help.c			\
-	xsldbg.c 		\
-	cmds.h			\
+	help.c		\
+	xsldbg.c 	\
+	cmds.h		\
 	debugXSL.c 	\
 	dbgarraylist.c	\
 	dbgcallstack.c	\
 	dbgbreakpoint.c \
-	dbgsearch.c			\
-	files.c					\
-	options.c 			\
-	dbgmain.c				\
+	dbgsearch.c	\
+	files.c			\
+	options.c 		\
+	dbgmain.c		\
 	breakpoint_cmds.c 	\
-	template_cmds.c			\
-	nodeview_cmds.c			\
-	os_cmds.c						\
-	param_cmds.c				\
-	trace_cmds.c				\
-	search_cmds.c				\
+	template_cmds.c		\
+	nodeview_cmds.c		\
+	os_cmds.c		\
+	param_cmds.c		\
+	trace_cmds.c		\
+	search_cmds.c		\
+	variable_cmds.c		\
 	xsldbgthread.c
 
 
@@ -69,7 +70,8 @@ libxsldbg_la_SOURCES = \
 	os_cmds.c		\
 	param_cmds.c		\
 	trace_cmds.c		\
-	search_cmds.c		
+	search_cmds.c		\
+	variable_cmds.c		
 endif
 
 
@@ -92,6 +94,7 @@ SOURCES = \
 	param_cmds.c		\
 	trace_cmds.c		\
 	search_cmds.c		\
+	variable_cmds.c		\
 	xsldbgthread.h	\
 	xsldbgthread.c		
 

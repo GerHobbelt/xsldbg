@@ -66,15 +66,6 @@
 #define ATTRIBUTE_UNUSED
 #endif
 
-/**
- * LIBXSLT_PUBLIC:
- *
- * This macro is used to declare PUBLIC variables for MSC on Windows
- */
-#if !defined(WIN32) || defined(__CYGWIN__)
-#define LIBXSLT_PUBLIC
-#endif
-
 /* We want skip most of these includes when building documentation */
 #ifndef BUILD_DOCS
 #include <libxslt/xslt.h>

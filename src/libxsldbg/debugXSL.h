@@ -45,6 +45,7 @@
 #include <libxml/tree.h>
 #include <libxml/debugXML.h>
 #include <libxslt/xsltInternals.h>
+#include <libxslt/xsltutils.h>
 #include <libxml/xpath.h>
 #include "xslbreakpoint.h"
 #endif
@@ -816,6 +817,19 @@ extern int printCount;
     int xslDbgShellSearch(xsltTransformContextPtr styleCtxt,
                           xsltStylesheetPtr style, xmlChar * arg);
 
+
+/**
+ * xslDbgShellSetVariable:
+ * @styleCtxt : Is valid
+ * @arg : Is valid must be in the format of 
+ *         <NAME> = <VALUE>
+ * 
+ * Change the value of a global or local variable
+ *
+ * Returns 1 on success,
+ *         0 otherwise
+ */
+  int xslDbgShellSetVariable( xsltTransformContextPtr styleCtxt, xmlChar *arg);
 
 #ifdef __cplusplus
 }

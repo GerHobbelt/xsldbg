@@ -27,7 +27,7 @@ the &lt;ENTER&gt; key.
 </para>
 <para title="Legend :">
 <list><li>TEMPLATENAME : a valid template name</li>
-<li>FILENAME : a valid URL for a stylesheet</li>
+<li>FILENAME : a valid URL for a stylesheet, xml data, or output </li>
 <li>LINENO : a valid line number in associated FILENAME</li>
 <li>NUMBER_OF_FRAMES : a valid line number frames to change position by</li>
 <li>BREAKPOINT_ID : a valid break point number</li>
@@ -63,6 +63,7 @@ the &lt;ENTER&gt; key.
 <li>Libxslt parameter related :
 <link href="addparam">addparam</link>,<link href="delparam">delparam</link>,
 <link href="showparam">showparam</link>
+<link href="output">output</link>  
 </li>
 
 <li>Template related : <link href="templates">templates</link>,
@@ -97,15 +98,15 @@ the &lt;ENTER&gt; key.
 
 </li>
 
-<li>File related :  
+<li>File related :
+<link href="output">output</link>  
 <link href="validate">validate</link>, <link href="load">load</link>, 
 <link href="save">save</link>, <link href="write">write</link>, 
 <link href="free">free</link>
 </li>
 </list>
 </para>
-<para>nb: At the moment the file related commands as disabled because
-they are not completed.</para>
+<para>nb: At the moment only the output command is enabled.</para>
 </body>
 
 <footer></footer>
@@ -657,6 +658,18 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </li>
 </usage>
 </cmd>
+
+<cmd name="output" shortcut="o" title="Output">
+<summary>Specify the output file name</summary>
+<body>
+<para>Shortcut name : o</para>
+</body>
+<usage>
+<li><text>output &lt;FILENAME&gt;</text></li>
+<li><text>output -</text><comment>( Send to standard output. Must only be used when using xsldbg's command line prompt )</comment></li>
+</usage>
+</cmd>
+
 
 <!-- - - - - - - Searching related - - - - - -->
 <cmd name="search" title="Search">

@@ -122,6 +122,10 @@ optionsInit(void)
 
     /* setup the docs path */
     setStringOption(OPTIONS_DOCS_PATH, docsPath);
+
+    /* set output default as standard output. Must be changed if not using
+       xsldbg's command line. Or the tty command is used */
+    setStringOption(OPTIONS_OUTPUT_FILE_NAME, NULL);
     return (parameterList != NULL);
 }
 

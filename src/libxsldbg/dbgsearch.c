@@ -146,9 +146,31 @@ searchNewInfo(SearchEnum type)
         case SEARCH_XSL:
             break;
 
+    case SEARCH_VARIABLE:
+            result = (searchInfoPtr) xmlMalloc(sizeof(searchInfo));
+            if (result) {
+                variableSearchDataPtr searchData;
+
+                result->type = SEARCH_VARIABLE;
+                searchData = (variableSearchDataPtr)
+                    xmlMalloc(sizeof(variableSearchData));
+                if (searchData) {
+                    searchData->name = NULL;		    
+                    searchData->nameURI = NULL;
+                    searchData->select = NULL;
+                    result->data = searchData;
+                } else {
+                    xmlFree(result);
+                    result = NULL;
+                }
+            }
+      break;
+
     }
-    if (result)
+    if (result){
         result->found = 0;
+	result->error = 0;
+    }
     return result;
 }
 
@@ -197,6 +219,22 @@ searchFreeInfo(searchInfoPtr info)
                     break;
 
                 case SEARCH_XSL:
+                    break;
+
+                case SEARCH_VARIABLE:
+                    {
+                        variableSearchDataPtr searchData =
+                            (variableSearchDataPtr) info->data;
+
+                        if (searchData->name)
+                            xmlFree(searchData->name);
+
+                        if (searchData->nameURI)
+                            xmlFree(searchData->nameURI);
+
+                        if (searchData->select)
+                            xmlFree(searchData->select);
+                    }
                     break;
 
             }

@@ -8,6 +8,7 @@
 -->
 <testcmd>
   <cmd>
+    <test>break -l test1.xsl 11</test>	
     <test>show</test>
     <result>
       <row>

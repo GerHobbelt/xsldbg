@@ -22,24 +22,34 @@
 
  typedef enum {
 	 /* thread status */
-   XSLDBG_MSG_THREAD_NOTUSED,               /* Thread are not to be used*/
-   XSLDBG_MSG_THREAD_INIT,		   /* The xsldbg thread is initializing */
-   XSLDBG_MSG_THREAD_RUN,		     /* The xsldbg thread is running */
-   XSLDBG_MSG_THREAD_STOP,		   /* The xsldbg thread is abou to die */
-   XSLDBG_MSG_THREAD_DEAD,       /* The xsldbg thread died */
+   XSLDBG_MSG_THREAD_NOTUSED,    /* 0:  Thread are not to be used*/
+   XSLDBG_MSG_THREAD_INIT,		   /* 1: The xsldbg thread is initializing */
+   XSLDBG_MSG_THREAD_RUN,		     /* 2: The xsldbg thread is running */
+   XSLDBG_MSG_THREAD_STOP,		   /* 3: The xsldbg thread is abou to die */
+   XSLDBG_MSG_THREAD_DEAD,       /* 4: The xsldbg thread died */
 
 	 /* input status ( once thread is running) */		
-   XSLDBG_MSG_AWAITING_INPUT,		 /* Waiting for user input */
-   XSLDBG_MSG_READ_INPUT,			   /* Read user input */
-   XSLDBG_MSG_PROCESSING_INPUT,  /* Processing user's request*/
+   XSLDBG_MSG_AWAITING_INPUT,		 /* 5: Waiting for user input */
+   XSLDBG_MSG_READ_INPUT,			   /* 6: Read user input */
+   XSLDBG_MSG_PROCESSING_INPUT,  /* 7: Processing user's request*/
 
 	 /* provide more informatiom about state of xsldbg (optional)*/	
-   XSLDBG_MSG_PROCESSING_RESULT,  /* An error occured performing 
+   XSLDBG_MSG_PROCESSING_RESULT,  /* 8: An error occured performing
 				    												requested command */
-   XSLDBG_MSG_LINE_CHANGED,	     /* Changed to new line number ie a step */
-   XSLDBG_MSG_FILE_CHANGED,      /* Loaded source/data file */
-   XSLDBG_MSG_BREAKPOINT_CHANGED /* Added, deleted or modified a break point*/	
+   XSLDBG_MSG_LINE_CHANGED,	     /* 9: Changed to new line number ie a step */
+   XSLDBG_MSG_FILE_CHANGED,      /* 10: Loaded source/data file */
+   XSLDBG_MSG_BREAKPOINT_CHANGED, /* 11: Added, deleted or modified a break point*/	
+   XSLDBG_MSG_PARAMETER_CHANGED   /* 12: Added, modified a a libxslt parameter */
 } XsldbgMessageEnum;
+
+
+typedef enum {
+	 XSLDBG_COMMAND_FAILED,		/* generic error */
+	 XSLDBG_COMMAND_WARNING,        
+	 XSLDBG_COMMAND_INFO,
+	 XSLDBG_COMMAND_NOTUSED
+} XsldbgCommandStateEnum;
+
 
 
 /**
@@ -64,6 +74,8 @@
  * XSLDBG_MSG_BREAKPOINT_CHANGED      A volitle xsldbgBreakPointPtr of the break point
  *	                                    changed. If NULL then one or more break points have
  *	                                    changed
+ *  XSLDBG_MSG_PARAMETER_CHANGED     A volitile ParameterItemPtr of libxslt pameter that changed.
+ *                                    If NULL then one or more break points have changed
  *
  * Legend :
  *	        not used  :- value may be NULL but must not be used
@@ -81,8 +93,9 @@ typedef xsldbgErrorMsg *xsldbgErrorMsgPtr;
 struct _xsldbgErrorMsg {
   XsldbgMessageEnum type;
   int commandId;
-  int commandState;
+  XsldbgCommandStateEnum commandState;
   xmlChar *text;
+  xmlChar *messagefileName; /* used when send large chunks of data  */
 }; 
 
 #ifdef __cplusplus
@@ -92,7 +105,7 @@ extern "C" {
  int notifyXsldbgApp(XsldbgMessageEnum type, const void *data);
 
  int notifyStateXsldbgApp(XsldbgMessageEnum type, int commandId, 
-			  int commandState, const char *text);
+			  XsldbgCommandStateEnum commandState, const char *text);
 
  int notifyTextXsldbgApp(XsldbgMessageEnum type, const char *text);
 

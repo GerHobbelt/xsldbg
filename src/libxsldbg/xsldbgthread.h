@@ -27,6 +27,10 @@ extern "C" {
 #endif
 
 
+  int getAppReady(void);
+
+  void setAppReady(int ready);
+
   int getInputStatus(void);
 
   void setInputStatus(XsldbgMessageEnum type);

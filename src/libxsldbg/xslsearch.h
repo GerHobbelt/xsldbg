@@ -53,14 +53,16 @@ extern "C" {
     typedef enum {
         SEARCH_BREAKPOINT = 400,
         SEARCH_NODE,
-        SEARCH_XSL
+        SEARCH_XSL,
+	SEARCH_VARIABLE
     } SearchEnum;
  #else
     /* keep kdoc happy */
     enum SearchEnum{
         SEARCH_BREAKPOINT = 400,
         SEARCH_NODE,
-        SEARCH_XSL
+        SEARCH_XSL,
+	SEARCH_VARIABLE
     };
  #endif
 
@@ -70,6 +72,7 @@ extern "C" {
     struct _searchInfo {
         int found;              /* found is 1 if search is finished */
         int type;               /* what type of search see SearchEnum */
+        int error;              /* did an error occur */  
         void *data;             /* extra data to pass to walkFunc */
     };
 
@@ -104,6 +107,14 @@ extern "C" {
                                  * occured in */
     };
 
+    /* data to pass to via searchInfoPtr when searching for variables points */
+    typedef struct _variableSearchData variableSearchData;
+    typedef variableSearchData *variableSearchDataPtr;
+    struct _variableSearchData {
+      xmlChar *name;
+      xmlChar *nameURI;
+      xmlChar *select; /* new value to adopt if any */
+    };
 
 #ifdef USE_GNOME_DOCS
 

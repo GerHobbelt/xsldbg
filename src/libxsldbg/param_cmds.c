@@ -24,6 +24,11 @@
 #include "debugXSL.h"
 #include "options.h"
 
+#ifdef USE_XSLDBG_AS_THREAD
+#include "xsldbgmsg.h"
+#endif
+
+
 /* -----------------------------------------
 
    libxslt parameter related commands
@@ -44,6 +49,7 @@ int
 xslDbgShellAddParam(xmlChar * arg)
 {
     int result = 0;
+    ParameterItemPtr paramItem = NULL;
     static const xmlChar *errorPrompt =
         (xmlChar *) "Failed to add parameter\n";
     xmlChar *opts[2];
@@ -55,13 +61,17 @@ xslDbgShellAddParam(xmlChar * arg)
         return result;
     }
     if ((xmlStrLen(arg) > 1) && splitString(arg, 2, opts) == 2) {
-        result = arrayListAdd(getParamItemList(),
-                              paramItemNew(opts[0], opts[1]));
+      paramItem =  paramItemNew(opts[0], opts[1]);
+      result = arrayListAdd(getParamItemList(), paramItem);
     }
     if (!result)
         xsltGenericError(xsltGenericErrorContext, "%s", errorPrompt);
-    else
+    else{
+#ifdef USE_XSLDBG_AS_THREAD
+       notifyXsldbgApp(XSLDBG_MSG_PARAMETER_CHANGED, paramItem);
+#endif
       xsltGenericError(xsltGenericErrorContext,"\n");
+    }
     return result;
 }
 
@@ -126,8 +136,25 @@ xslDbgShellShowParam(xmlChar * arg ATTRIBUTE_UNUSED)
 {
     int result = 0;
 
+#ifdef USE_XSLDBG_AS_THREAD
+    int paramIndex = 0;
+    int itemCount = arrayListCount(getParamItemList());
+
+   notifyXsldbgApp(XSLDBG_MSG_PARAMETER_CHANGED, NULL);
+
+    if (itemCount > 0) {
+      ParameterItemPtr paramItem = NULL;
+        while (paramIndex < itemCount) {
+	  paramItem = 
+	    (ParameterItemPtr) arrayListGet(getParamItemList(), paramIndex++);
+	  if (paramItem != NULL) 
+	    notifyXsldbgApp(XSLDBG_MSG_PARAMETER_CHANGED, paramItem);
+        }
+    }
+#endif
+
     if (printParamList())
-        result++;
+      result = 1;
     else
         xsltGenericError(xsltGenericErrorContext,
                          "Error in printing parameters\n");

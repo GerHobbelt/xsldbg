@@ -85,13 +85,13 @@ const char *getFakeInput()
 }
 
 
-/* put text into cin just like we had typed it */
+/* put text into standard input just like we had typed it */
 int
 fakeInput(const char *text)
 {
     int result = 0;
 
-    if (!text || (getInputReady() == 1))
+    if (!text || (getInputReady() == 1) || (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)) 
         return result;
 
     printf("\nFaking input of \"%s\"\n", text);
@@ -193,7 +193,7 @@ xsldbgErrorMsgPtr  msgPtr = &msg;
 xmlChar *msgText = NULL;
 
 int notifyStateXsldbgApp(XsldbgMessageEnum type, int commandId, 
-			  int commandState, const char *text)
+			  XsldbgCommandStateEnum commandState, const char *text)
 {
   int result = 0;
   msg.type = type;
@@ -222,7 +222,7 @@ int notifyStateXsldbgApp(XsldbgMessageEnum type, int commandId,
 
 int notifyTextXsldbgApp(XsldbgMessageEnum type, const char *text)
 {
-  return notifyStateXsldbgApp(type, -1, -1, text);
+  return notifyStateXsldbgApp(type, -1, XSLDBG_COMMAND_NOTUSED, text);
 }
 
 
@@ -232,8 +232,8 @@ char mainBuffer[DEBUG_BUFFER_SIZE];
 void *
 xsldbgThreadMain(void *data)
 {
-  int defaultArgc = 4;
-  char *defaultArgv[4];
+  int defaultArgc = 2;
+  char *defaultArgv[2];
   int i;
 
   if (getThreadStatus() != XSLDBG_MSG_THREAD_INIT){
@@ -244,8 +244,10 @@ xsldbgThreadMain(void *data)
 
   defaultArgv[0] = xmlMemStrdup("xsldbg");
   defaultArgv[1] = xmlMemStrdup("--shell");
+  /*
   defaultArgv[2] = xmlMemStrdup("xsldoc.xsl");
   defaultArgv[3] = xmlMemStrdup("xsldoc.xml");
+  */
   for (i = 0; i < defaultArgc; i++){
     if (defaultArgv[i] == NULL){
       printf("Start thread failed. Unable to create xsldbg arguments\n");

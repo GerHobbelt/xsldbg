@@ -25,8 +25,22 @@
 static int threadStatus = XSLDBG_MSG_THREAD_NOTUSED;
 static int inputStatus = XSLDBG_MSG_AWAITING_INPUT;
 
+/* is xsldbg ready for input from the application */
 static int inputReady = 0;
 
+/* Is the application ready for a notification message */
+static int appReady = 0;
+
+
+int getAppReady(void)
+{
+  return appReady;
+}
+
+void setAppReady(int ready)
+{
+  appReady = ready;
+}
 
 
 /* the compiler will optimize this function to inline and to keep variable private*/

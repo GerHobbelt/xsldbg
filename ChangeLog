@@ -1,3 +1,34 @@
+Keith Isdale 5 Jan 2002 <k_isdale@tpg.com.au>
+  Added XSLDBG_MSG_PARAMETER_CHANGED message to notifier, modified
+	param_cmds to make use of it. A notify message is sent when all parameters
+	are deleted and when a parameter is added, or when "showparam"  command is 
+	used
+ 		
+Keith Isdale 3 Jan 2002 <k_isdale@tpg.com.au>
+  Added XsldbgCommandStateEnum to xsldbgmsg.h, changed xsldbgErrorMsg to use these values
+  Added messageFileName to xsldbgErrorMsg to be used for larger messages
+  Added messageBuffer to debugXSL.c use for small nofify messages
+
+	
+	
+Keith Isdale 2 Jan 2002 <k_isdale@tpg.com.au>
+  Added output command, updated xsldoc.xml, cmds.h, debugXSL.c to suit 
+  Fix bug in templates command 
+	- added a print of new line before printing templates
+  Fixed implementation of set command to use transform context not 
+	stylesheet context
+  Fixed splitString to properly count the number of strings found
+  Fixed test/seachTest.c to use varaibles named "info" instead of 
+	"searchInf" which was causing errors
+	
+Keith Isdale 30 Dec 2001 <k_isdale@tpg.com.au>
+  Added src/libxsldbg/variable_cmds.c	to handle setting variable values
+  Added "set" to list of commands, added DEBUG_SET_CMD to list of command ID's 
+  Added variableSearchData to xslsearch.h and updated searchNewInfo, searchFreeInfo
+	 to suit
+  Modified libxslt to enable this to work
+	
+	
 Keith Isdale 27 Dec 2001 <k_isdale@tpg.com.au>
 	Added cmds.h and moves command id declarations to cmds.h
      To be added to cvs

@@ -35,7 +35,7 @@ int notifyXsldbgApp(XsldbgMessageEnum type, const void *data)
 }
 
 int notifyStateXsldbgApp(XsldbgMessageEnum type, int commandId, 
-			  int commandState, const char *text)
+			   XsldbgCommandStateEnum commandState, const char *text)
 {
   return 1;
 }

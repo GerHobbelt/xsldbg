@@ -172,6 +172,7 @@ xslDbgPrintTemplateNames(xsltTransformContextPtr styleCtxt,
             curStyle = NULL;
     }
 
+    xsltGenericError(xsltGenericErrorContext,"\n");
     while (curStyle) {
         templ = curStyle->templates;
         /* print them out in the order their in the file */

@@ -57,6 +57,7 @@ typedef enum {             /* id's for commands of xslDbgShell */
     /*     DEBUG_CAT_CMD, already listed */
     DEBUG_SOURCE_CMD,
     DEBUG_DATA_CMD,
+    DEBUG_OUTPUT_CMD,
     DEBUG_CD_CMD,
 
     /* file related */
@@ -81,7 +82,11 @@ typedef enum {             /* id's for commands of xslDbgShell */
     DEBUG_WALK_CMD,
 
     /* searching */
-    DEBUG_SEARCH_CMD
+    DEBUG_SEARCH_CMD,
+
+    /* variable change */
+    DEBUG_SET_CMD
+
         /* NULL */
 } CommandsEnum;
 

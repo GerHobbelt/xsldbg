@@ -92,7 +92,7 @@ xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir)
                         for (indx = 0; indx < list->nodesetval->nodeNr;
                              indx++) {
                             if (dir)
-                                xmlShellDir(ctxt, NULL,
+                                (ctxt, NULL,
                                             list->nodesetval->
                                             nodeTab[indx], NULL);
                             else

@@ -67,7 +67,7 @@ the &lt;ENTER&gt; key.
 <td width="10"></td>
 <td><table class="listbody">
 <tr><td>TEMPLATENAME : a valid template name    </td></tr>
-<tr><td>FILENAME : a valid URL for a stylesheet    </td></tr>
+<tr><td>FILENAME : a valid URL for a stylesheet, xml data, or output     </td></tr>
 <tr><td>LINENO : a valid line number in associated FILENAME    </td></tr>
 <tr><td>NUMBER_OF_FRAMES : a valid line number frames to change position by    </td></tr>
 <tr><td>BREAKPOINT_ID : a valid break point number    </td></tr>
@@ -101,7 +101,7 @@ the &lt;ENTER&gt; key.
 <a href="#trace">trace</a>    </td></tr>
 <tr><td>Libxslt parameter related :
 <a href="#addparam">addparam</a>,<a href="#delparam">delparam</a>,
-<a href="#showparam">showparam</a>    </td></tr>
+<a href="#showparam">showparam</a><a href="#output">output</a>    </td></tr>
 <tr><td>Template related : <a href="#templates">templates</a>,
 <a href="#where">where</a>, <a href="#frame">frame</a>    </td></tr>
 <tr><td>Break point related : <a href="#break">break</a>, 
@@ -121,15 +121,14 @@ the &lt;ENTER&gt; key.
 <a href="#chdir">chdir</a>,
 <a href="#shell">shell</a>,
 <a href="#tty">tty</a>    </td></tr>
-<tr><td>File related :  
-<a href="#validate">validate</a>, <a href="#load">load</a>, 
+<tr><td>File related :
+<a href="#output">output</a><a href="#validate">validate</a>, <a href="#load">load</a>, 
 <a href="#save">save</a>, <a href="#write">write</a>, 
 <a href="#free">free</a>    </td></tr>
 </table></td>
 </tr></table>
 
-<p>nb: At the moment the file related commands as disabled because
-they are not completed.</p>
+<p>nb: At the moment only the output command is enabled.</p>
 
 
 
@@ -483,6 +482,23 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 <tr>
 <td width="10"></td>
 <td><table class="listbody"><tr><td>ls    </td></tr></table></td>
+</tr>
+</table></tr>
+</table>
+<br><br><a name="output"></a><table width="100%" class="cmd">
+<th class="cmdth">Output</th>
+<tr class="cmdsummary"><td>Specify the output file name</td></tr>
+<tr class="cmdtr"><td class="cmdtd">
+<p>Shortcut name : o</p>
+</td></tr>
+<tr class="cmdtr"><table class="usage" width="100%">
+<th class="cmdth">Usage</th>
+<tr>
+<td width="10"></td>
+<td><table class="listbody">
+<tr><td>output &lt;FILENAME&gt;    </td></tr>
+<tr><td>output -&nbsp;&nbsp;&nbsp;&nbsp;<i>( Send to standard output. Must only be used when using xsldbg's command line prompt )</i>    </td></tr>
+</table></td>
 </tr>
 </table></tr>
 </table>

@@ -283,7 +283,7 @@ endTimer(char *format, ...)
 #endif
 
 static void
-xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur, const char *filename)
+xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
 {
     xmlDocPtr res;
     const char *params[8 * 2 + 2];
@@ -310,7 +310,7 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur, const char *filename)
             startTimer();
         xmlXIncludeProcess(doc);
         if (isOptionEnabled(OPTIONS_TIMING)) {
-            endTimer("XInclude processing %s", filename);
+            endTimer("XInclude processing %s", getStringOption(OPTIONS_OUTPUT_FILE_NAME));
         }
     }
 #endif
@@ -340,7 +340,7 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur, const char *filename)
         }
         if (res == NULL) {
             xsltGenericError(xsltGenericErrorContext, "no result for %s\n",
-                             filename);
+                             getStringOption(OPTIONS_OUTPUT_FILE_NAME));
             return;
         }
         if (isOptionEnabled(OPTIONS_NOOUT)) {
@@ -357,8 +357,13 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur, const char *filename)
                     startTimer();
 		if (xslDebugStatus != DEBUG_QUIT)
 		  {
-		  if (terminalIO == NULL)
-                    xsltSaveResultToFile(stdout, res, cur);
+		    if (terminalIO == NULL){
+		      if( getStringOption(OPTIONS_OUTPUT_FILE_NAME) == NULL)
+			xsltSaveResultToFile(stdout, res, cur);
+		      else
+			xsltSaveResultToFilename(getStringOption(OPTIONS_OUTPUT_FILE_NAME),
+						 res, cur, 0); 
+		    }
 		  else
                     xsltSaveResultToFile(terminalIO, res, cur);
 		}
@@ -371,7 +376,11 @@ xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur, const char *filename)
                     if (isOptionEnabled(OPTIONS_TIMING))
                         startTimer();
                     if (terminalIO == NULL)
-                        xsltSaveResultToFile(stdout, res, cur);
+		      if( getStringOption(OPTIONS_OUTPUT_FILE_NAME) == NULL)
+			xsltSaveResultToFile(stdout, res, cur);
+		      else
+			xsltSaveResultToFilename(getStringOption(OPTIONS_OUTPUT_FILE_NAME),
+						 res, cur, 0);
                     else
                         xsltSaveResultToFile(terminalIO, res, cur);
                     if (isOptionEnabled(OPTIONS_TIMING))
@@ -792,8 +801,7 @@ int xsldbgMain(int argc, char **argv)
                 }
             } else {
                 if (xslDebugStatus != DEBUG_QUIT) {
-                    xsltProcess(doc, cur, (char *)
-                                getStringOption(OPTIONS_DATA_FILE_NAME));
+                    xsltProcess(doc, cur);
                     result++;
                 }
             }
@@ -937,8 +945,7 @@ loadStylesheet(void)
         cur = xsltLoadStylesheetPI(style);
         if (cur != NULL) {
             /* it is an embedded stylesheet */
-            xsltProcess(style, cur, (char *)
-                        getStringOption(OPTIONS_SOURCE_FILE_NAME));
+            xsltProcess(style, cur);
             xsltFreeStylesheet(cur);
         } else {
             cur = xsltParseStylesheetDoc(style);

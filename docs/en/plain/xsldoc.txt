@@ -13,7 +13,7 @@ xsldbg is similar to gdb. It has three major modes of execution of stylesheets.
 On systems with readline library available you can use the back/forward keys to navigate the history of entered commands. On all systems the last entered command can be repeated by just pressing the <ENTER> key. 
  
      TEMPLATENAME : a valid template name
-     FILENAME : a valid URL for a stylesheet
+     FILENAME : a valid URL for a stylesheet, xml data, or output
      LINENO : a valid line number in associated FILENAME
      NUMBER_OF_FRAMES : a valid line number frames to change position by
      BREAKPOINT_ID : a valid break point number
@@ -34,7 +34,7 @@ On systems with readline library available you can use the back/forward keys to 
  
      Help related :help
      Running related : {bye|exit|quit},step,stepup,stepdown,continue,run,trace
-     Libxslt parameter related :addparam,delparam,showparam
+     Libxslt parameter related :addparam,delparam,showparamoutput
      Template related :templates,where,frame
      Break point related :break,showbreak,delete,enable
      Expression viewing(xpath) :cat
@@ -43,9 +43,9 @@ On systems with readline library available you can use the back/forward keys to 
      Node selection :source,data,cd
      Searching :search
      Operating system related :chdir,shell,tty
-     File related :validate,load,save,write,free
+     File related :outputvalidate,load,save,write,free
  
-nb: At the moment the file related commands as disabled because they are not completed.- - - - - - - - - - - - - - - - - - - - 
+nb: At the moment only the output command is enabled.- - - - - - - - - - - - - - - - - - - - 
 
 
 Command : Addparam  
@@ -284,6 +284,17 @@ Summary : List nodes in a brief format
 Usage:
  
      ls
+- - - - - - - - - - - - - - - - - - - - 
+
+
+Command : Output  
+Summary : Specify the output file name
+ 
+Shortcut name : o      
+Usage:
+ 
+     output <FILENAME>
+     output -   ( Send to standard output. Must only be used when using xsldbg's command line prompt )
 - - - - - - - - - - - - - - - - - - - - 
 
 

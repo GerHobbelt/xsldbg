@@ -34,5 +34,8 @@
 #define WITH_DEBUG_HELP
 #endif
 
+#if defined _MSC_VER
+#define snprintf _snprintf
+#endif
 
 #endif

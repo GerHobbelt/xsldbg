@@ -82,29 +82,29 @@ int nodeSearchTest(void)
 {
   int result = 0;
   xmlDocPtr searchDoc = NULL;
-  searchInfoPtr searchInf = searchNewInfo(SEARCH_NODE);
+  searchInfoPtr info = searchNewInfo(SEARCH_NODE);
   nodeSearchDataPtr searchData = NULL;
 
   printf( "\n\nSearching for a xml node at file test1.xsl: line 11\n");
   xmlLineNumbersDefault(1);
   searchDoc = xmlParseFile("test1.xsl");
 
-  if (searchDoc && searchInf && searchInf->data){
-    searchData = (nodeSearchDataPtr)searchInf->data;
+  if (searchDoc && info && info->data){
+    searchData = (nodeSearchDataPtr)info->data;
     searchData->lineNo = 11;
     searchData->url = (xmlChar*)xmlMemStrdup("test1.xsl");
-    walkChildNodes((xmlHashScanner) testNodeScan, searchInf, (xmlNodePtr)searchDoc);
-    if (searchInf->found){
+    walkChildNodes((xmlHashScanner) testNodeScan, info, (xmlNodePtr)searchDoc);
+    if (info->found){
       /* success !*/
       printf("Success found node at file %s: line %d\n",
 		       searchData->node->doc->URL, 
 		       xmlGetLineNo(searchData->node));
       /* now try finding a line/url that doesn't exist */
       searchData->lineNo = 10;
-      searchInf->found = 0;
+      info->found = 0;
       printf("\nSearching for node at non-existant file test1.xsl: line 10\n");	    
-      walkChildNodes((xmlHashScanner) testNodeScan, searchInf, (xmlNodePtr)searchDoc);
-      if (!searchInf->found){
+      walkChildNodes((xmlHashScanner) testNodeScan, info, (xmlNodePtr)searchDoc);
+      if (!info->found){
 	/* success*/
 	printf("Success search for node has passed\n");
 	result++;
@@ -116,8 +116,8 @@ int nodeSearchTest(void)
     printf("Unable to create searchInfo or load test1.xsl for node searching\n");
   }
 
-  if (searchInf)
-    searchFreeInfo(searchInf);
+  if (info)
+    searchFreeInfo(info);
 
   if (searchDoc)
     xmlFreeDoc(searchDoc);
@@ -157,19 +157,19 @@ debugBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
 
 void testNodeScan(void *payload, void *data,
                        xmlChar * name ATTRIBUTE_UNUSED){
-  searchInfoPtr searchInf = (searchInfoPtr)data;
+  searchInfoPtr info = (searchInfoPtr)data;
   nodeSearchDataPtr searchData = NULL;
   xmlNodePtr node = (xmlNodePtr)payload;
 
   if (!node || !node->doc || !node->doc->URL || 
-      !searchInf || (searchInf->type != SEARCH_NODE))
+      !info || (info->type != SEARCH_NODE))
     return;
 
-  searchData = (nodeSearchDataPtr)searchInf->data;
+  searchData = (nodeSearchDataPtr)info->data;
 
   if (((searchData->lineNo >= 0) && (searchData->lineNo == xmlGetLineNo(node))) ||
       (searchData->url && strcmp((char*)searchData->url, (char*)node->doc->URL))){
     searchData->node = node;
-    searchInf->found = 1;
+    info->found = 1;
   }
 }
