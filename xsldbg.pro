@@ -1,2 +1,2 @@
 TEMPLATE = subdirs
-SUBDIRS =  src\libxsldbg ..\src
+SUBDIRS = src doc

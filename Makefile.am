@@ -10,10 +10,12 @@ EXTRA_DIST=\
 	config_riscos.h.in  	\
 	xsldbg-config.in  	\
 	xsldbgConf.sh.in	\
-	xsldbg.spec xsldbg.suse8.0.spec 
+	xsldbg.spec xsldbg.suse8.0.spec \
+	xsldbg.pro src/src.pro src/xsldbg.pro src/libxsldbg/libxsldbg.pro src/libqtnotifier/libqtnotifier.pro  \
+	src/Makefile.msvc
 
 dist_win32: distdir
-	zip -r -l xsldbg-$(XSLDBG_MAJOR_VERSION)_$(XSLDBG_MINOR_VERSION)_$(XSLDBG_MICRO_VERSION) xsldbg-$(VERSION)
+	zip -r -l xsldbg-$(VERSION).zip xsldbg-$(VERSION)
 	rm -rf xsldbg-$(VERSION)
 
 dist-all: dist dist_win32

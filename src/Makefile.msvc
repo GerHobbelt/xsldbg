@@ -9,8 +9,8 @@
 
 CC	=	cl
 CXX	=	cl
-CFLAGS	=	-nologo -W3 -MD -O1 -DWIN32 
-CXXFLAGS=	-nologo -W3 -MD -O1 -DWIN32 
+CFLAGS	=	-nologo -W3 -MD -O1 -DWIN32 -D_MBCS -D_WINDOWS -D_RENTRANT  
+CXXFLAGS=	-nologo -W3 -MD -O1 -DWIN32 -D_MBCS -D_WINDOWS -D_RENTRANT
 INCPATH	=	-I"$(LIBXSLT_PREFIX)\include" -I"$(LIBXML_PREFIX)\include" -I"$(ICONV_PREFIX)\include" -I".." -I"." -I"..\.." 
 LINK	=	link
 LFLAGS	=	/NOLOGO /SUBSYSTEM:console
@@ -22,23 +22,23 @@ ZIP	=	zip -r -9
 
 ####### Files
 
-HEADERS =	arraylist.h \
-		breakpoint.h \
-		callstack.h \
-		cmds.h \
-		debug.h \
-		debugXSL.h \
-		files.h \
-		help.h \
-		options.h \
-		search.h \
-		utils.h \
-		xsldbg.h \
-		xsldbgconfig.h \
-		xsldbgevent.h \
-		xsldbgio.h \
-		xsldbgmsg.h \
-		xsldbgthread.h
+HEADERS =	libxsldbg\arraylist.h \
+		libxsldbg\breakpoint.h \
+		libxsldbg\callstack.h \
+		libxsldbg\cmds.h \
+		libxsldbg\debug.h \
+		libxsldbg\debugXSL.h \
+		libxsldbg\files.h \
+		libxsldbg\help.h \
+		libxsldbg\options.h \
+		libxsldbg\search.h \
+		libxsldbg\utils.h \
+		libxsldbg\xsldbg.h \
+		libxsldbg\xsldbgconfig.h \
+		libxsldbg\xsldbgevent.h \
+		libxsldbg\xsldbgio.h \
+		libxsldbg\xsldbgmsg.h \
+		libxsldbg\xsldbgthread.h
 SOURCES =	main.c \
 		simpleio.c \
 		libxsldbg\arraylist.c \

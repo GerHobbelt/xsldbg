@@ -10,6 +10,8 @@ Keith Isdale 19 July 2003 <k_isdale@tpg.com.au>
     o don't output result of processing XSLT script (user should use continue,then run if they want that)
   Remove extra "newlines" in test specifications which could give misleading test results
   Use of libxslt version >= 1.0.31, or < 1.0.29 is recomended, as version  1.0.29 - 1.0.30 have a bug that cause xsldbg to fail
+  Win32 specific compiler fixes to suit changes made to libxml2.dll
+     updated src/Makefile.msvc to make it more useful	
  
 Keith Isdale 05-17 July 2003 <k_isdale@tpg.com.au>
   Version 3.1.6

@@ -11,7 +11,8 @@ For WIN32 users using tmake you will need to set
   LIBXSLT_PREFIX must be set to the location of libxslt
   ICONV_PREFIX must be set to the location of iconv
 
-  Use src/xsldbg.pro create xsldbg.exe/xsldbg  without needing to build xsldbg.lib and qtnotifier.lib
+  Use src/xsldbg.pro create xsldbg.exe/xsldbg  without needing to build xsldbg.lib and qtnotifier.lib. 
+  You may wish to try using/customizing src/Makefile.msvc
 
   If you want to create qxsldbg you will need to use  
 	src/libxsldbg/libxsldbg.pro to create xsldbg.lib
