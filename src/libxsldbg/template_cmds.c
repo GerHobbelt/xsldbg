@@ -109,47 +109,48 @@ printTemplateHelper(xsltTemplatePtr templ, int verbose,
       if (!templ) 
         return;
 
-	  *templateCount = *templateCount + 1;
-	    printTemplateHelper(templ->next, verbose,
-				templateCount, count, templateName);
-	      if (templ->elem && templ->elem->doc && templ->elem->doc->URL) {
-		url = templ->elem->doc->URL;
-	      } else {
-		url = defaultUrl;
-		  }
-	      if (templ->match)
-		name = xmlStrdup(templ->match);
-	      else
-		name = fullQName(templ->nameURI, templ->name);
+      *templateCount = *templateCount + 1;
+      printTemplateHelper(templ->next, verbose,
+			  templateCount, count, templateName);
+      if (templ->elem && templ->elem->doc && templ->elem->doc->URL) {
+	url = templ->elem->doc->URL;
+      } else {
+	url = defaultUrl;
+      }
 
-	      if (name) {
-		if ((templateName != NULL) &&
-		    (xmlStrcmp(templateName, name) != 0)) {
-		  /*  search for template name supplied failed */
-		  /* empty */
-	        } else {
-		  xmlChar *modeTemp = NULL;
-		    *count = *count + 1;
-		      if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
-			notifyListQueue(templ);
-		      } else {
-			modeTemp = fullQName(templ->modeURI, templ->mode);
-			if (verbose)
-			  xsltGenericError(xsltGenericErrorContext,
-					   " template :\"%s\" mode :\"%s\" in file %s : line %ld\n",
-					   name, modeTemp, url,
-					   xmlGetLineNo(templ->elem));
-			else
-			  xsltGenericError(xsltGenericErrorContext,
-					   "\"%s\" ", name);
-		      if (modeTemp)
-			xmlFree(modeTemp);
-		      }
-		   }
+      if (templ->match)
+	name = xmlStrdup(templ->match);
+      else
+	name = fullQName(templ->nameURI, templ->name);
+
+      if (name) {
+	if (templateName &&
+	    (xmlStrcmp(templateName, name) != 0)) {
+	  /*  search for template name supplied failed */
+	  /* empty */
+	} else {
+	  xmlChar *modeTemp = NULL;
+	  *count = *count + 1;
+	  if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
+	    notifyListQueue(templ);
+	  } else {
+	    modeTemp = fullQName(templ->modeURI, templ->mode);
+	    if (verbose)
+	      xsltGenericError(xsltGenericErrorContext,
+			       " template :\"%s\" mode :\"%s\" in file %s : line %ld\n",
+			       name, modeTemp, url,
+			       xmlGetLineNo(templ->elem));
+	    else
+	      xsltGenericError(xsltGenericErrorContext,
+			       "\"%s\" ", name);
+	    if (modeTemp)
+	      xmlFree(modeTemp);
+	  }
+	}
 	       
-		    xmlFree(name);
+	xmlFree(name);
 	  
-	        }
+      }
 }
 
 

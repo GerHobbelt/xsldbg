@@ -116,6 +116,7 @@ callStackFree(void)
             xmlFree(curInfo->modeURI);
         if (curInfo->url)
             xmlFree(curInfo->url);
+	xmlFree(curInfo);
         curInfo = nextInfo;
     }
     curInfo = NULL;

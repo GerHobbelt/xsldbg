@@ -873,6 +873,7 @@ filesFreeEntityInfo(entityInfoPtr info)
 
     if (info->PublicID)
         xmlFree(info->PublicID);
+    xmlFree(info);
 }
 
 /**

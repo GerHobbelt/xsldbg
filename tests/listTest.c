@@ -39,9 +39,10 @@ void myWalker(void *payload, void *data, xmlChar *name);
 int main(void){
   int itemIndex, result = 0;
   arrayListPtr list = createTestList();
-  xmlInitMemory();
+  xmlInitMemory();  
   if (list){
-  fprintf(stdout, "\nTest free all items. List size now %d\n", arrayListCount(list));    
+  fprintf(stdout, "\nTest free all items. List size now %d\n", 
+	  arrayListCount(list));    
     for (itemIndex = 0; itemIndex < arrayListCount(list); itemIndex++)
       printf("%s\n", (char*)arrayListGet(list, itemIndex));
     fprintf(stdout, "Freeing list now\n");
@@ -50,7 +51,7 @@ int main(void){
   }else 
     result = 1;
 
-  list = createTestList();
+  list = createTestList(); 
   if (list){
     fprintf(stdout, "\nTest removing item2\n");
     arrayListDelete(list, 1);
@@ -76,20 +77,14 @@ int main(void){
   }else
     result = 1;
 
+  optionsInit();
   fprintf(stdout, "\n\nTest of parameter item list\n");
   list = createParamList();
-  if (list){
-    parameterItemPtr item;
-    for (itemIndex = 0; itemIndex < arrayListCount(list); itemIndex++){
-      item = arrayListGet(list, itemIndex);
-      if (item){
-	fprintf(stdout, "Parameter name :%s  value %s\n", item->name, item->value);
-      }
-    }    
-    arrayListFree(list);
-  }
+  optionsPrintParamList();
+  fprintf(stdout, "Freeing memory used by options\n");
+  optionsFree();
   fprintf(stdout, "Done\n");
-
+  
 
   printf("\n\nTest of breakPoint list\n");
   breakPointInit();
@@ -186,12 +181,12 @@ int main(void){
     breakPointAdd((xmlChar*)"index.html", 1, (xmlChar*)"one", NULL,
 		  DEBUG_BREAK_SOURCE);
     breakPointAdd((xmlChar*)"index2.html", 4, NULL, NULL, DEBUG_BREAK_SOURCE);
-    fprintf(stdout,"Done!\n");
-
-    
-    fprintf(stdout, "\nFreeing memory used by breakpoints\n");    
-    breakPointEmpty();
+    fprintf(stdout,"Done!\n");  
   }
+
+  fprintf(stdout, "\nFreeing memory used by breakpoints\n");    
+  breakPointFree();
+
   fprintf(stdout,"Done\n");
 
   xmlMemoryDump();
@@ -223,7 +218,8 @@ arrayListPtr createTestList(void){
 
 
 arrayListPtr createParamList(void){
-  arrayListPtr list = arrayListNew(3, (freeItemFunc)optionsParamItemFree);
+  arrayListPtr list =   optionsGetParamItemList();
+  fprintf(stdout, "Creating parameters list\n");
   if (list){
     arrayListAdd(list, optionsParamItemNew((xmlChar*)"param1", (xmlChar*)"'value1'"));
     arrayListAdd(list, optionsParamItemNew((xmlChar*)"param2", (xmlChar*)"'value2'"));
@@ -232,10 +228,9 @@ arrayListPtr createParamList(void){
   return list;
 }
 
-arrayListPtr createBreakPointList(void){
-  arrayListPtr list;
+  arrayListPtr createBreakPointList(void){
+  arrayListPtr list = breakPointLineList();
   fprintf(stdout, "Creating breakPoint list\n");
-  list = breakPointLineList();
   if (list){
     /*    breakPointAdd(const xmlChar * url, long lineNumber,
 	  const xmlChar * templateName, int type) */

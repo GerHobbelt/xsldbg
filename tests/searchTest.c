@@ -12,6 +12,8 @@ int breakPointSearchTest(void);
 
 int main(void){
   int result = 1;
+  xmlInitMemory();
+  xmlInitParser();
   if (!searchInit())
     return result; /* error couldn't setup searching*/
 
@@ -23,6 +25,7 @@ int main(void){
     printf("\nSuccess all search tests passed!\n");
   
   searchFree();
+  xmlCleanupParser();
   if (result >= 1)
     exit(0);
   else

@@ -390,7 +390,9 @@ optionsParamItemFree(parameterItemPtr item)
             xmlFree(item->name);
         if (item->value)
             xmlFree(item->value);
+	xmlFree(item);
     }
+    
 }
 
 

@@ -76,25 +76,34 @@ xslDbgShellReadline(xmlChar * prompt)
 	
 	/* If the line has any text in it, save it on the history. */
 	if (line_read && *line_read) {
+	  char *temp = (char*)line_read;
 	  add_history((char *) line_read);
 	  strncpy((char*)last_read, (char*)line_read, DEBUG_BUFFER_SIZE - 1);
+	  /* we must ensure that the data is free properly */
+	  line_read = xmlStrdup((xmlChar*)line_read);
+	  free(temp);
 	} else {
+	  free(line_read);
 	  /* if only <Enter>is pressed then try last saved command line */
-	  line_read = (xmlChar *) xmlMemStrdup(last_read);
+	  line_read = xmlStrdup((xmlChar*)last_read);
 	}
       }else{
 	/* readline library will/may  echo its output which is not wanted 
-	   when running in gdb mode. This also disables 
-	   the repeating of last entered command */
+	   when running in gdb mode.*/
 	char line_buffer[DEBUG_BUFFER_SIZE];
 
 	if (prompt != NULL)
 	  xsltGenericError(xsltGenericErrorContext, "%s", prompt);
-	if (!fgets(line_buffer, DEBUG_BUFFER_SIZE - 1, stdin)){
+	if (!fgets(line_buffer, sizeof(line_buffer) - 1, stdin)){
 	  line_read = NULL;
 	}else{
 	  line_buffer[DEBUG_BUFFER_SIZE - 1] = 0;
-	  line_read = (xmlChar *) xmlMemStrdup(line_buffer);  
+	  if ((strlen(line_buffer) == 0) || (line_buffer[0] == '\n')){
+	    line_read = xmlStrdup((xmlChar*)last_read); 
+	  }else{
+	    add_history((char *) line_buffer);
+	    line_read = xmlStrdup((xmlChar*)line_buffer); 
+	    strncpy((char*)last_read, (char*)line_read, sizeof(last_read) - 1);	  	  }    
 	}
 
       }
@@ -113,12 +122,12 @@ xslDbgShellReadline(xmlChar * prompt)
       if (optionsGetIntOption(OPTIONS_GDB) == 0){
 	/* if only <Enter>is pressed then try last saved command line */
 	if ((strlen(line_read) == 0) || (line_read[0] == '\n')) {
-        strcpy(line_read, last_read);
+	  strncpy(line_read, last_read, sizeof(line_read) - 1);
 	} else {
 	  strcpy(last_read, line_read);
 	}
       }
-      return (xmlChar *) xmlMemStrdup(line_read);  
+      return xmlStrdup((xmlChar*)line_read);  
 #endif
 
     }

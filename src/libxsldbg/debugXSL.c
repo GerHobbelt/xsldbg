@@ -675,10 +675,14 @@ xslDbgPrintCallStack(const xmlChar * arg)
 #endif
 			      result = 0;
 			    }
-			    if (rootNameTemp)
+			    if (rootNameTemp){
 			      xmlFree(rootNameTemp);
-			    if (rootModeTemp)
+			      rootNameTemp = NULL;
+			    }
+			    if (rootModeTemp){
 			      xmlFree(rootModeTemp);
+			      rootModeTemp = NULL;
+			    }
                         } else if (curUrl) {
                             xsltGenericError(xsltGenericErrorContext,
                                              "#%d template :\"LIBXSLT_DEFAULT\" mode :\"\"",
@@ -712,6 +716,14 @@ xslDbgPrintCallStack(const xmlChar * arg)
 		      
 #endif
 		      result = 0;
+		    }
+		    if (nameTemp){ 
+		      xmlFree(nameTemp);
+		      nameTemp = NULL;
+		    }
+		    if(modeTemp){
+		      xmlFree(modeTemp);
+		      modeTemp = NULL;
 		    }
 		    
                 } else {
@@ -1108,6 +1120,10 @@ debugXSLBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
             }
 	  }
 	}
+	if (nameTemp)
+	  xmlFree(nameTemp);
+	if (modeTemp)
+	  xmlFree(modeTemp);
     }
 
     shellPrompt(templ, node, (xmlChar *) "index.xsl",
@@ -1260,12 +1276,16 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
         }
     }
     if (xslDebugStatus == DEBUG_TRACE) {
+	if (ctxt->filename)
+	  xmlFree(ctxt->filename);
         xmlFree(ctxt);
         return; /* All done. Trace next instruction/node */
     } 
     if (xslDebugStatus == DEBUG_WALK) {
         if (xslDbgWalkContinue()) {
-            xmlFree(ctxt);
+	  if (ctxt->filename)
+	    xmlFree(ctxt->filename);
+	  xmlFree(ctxt);
             return; /* All done. Walk to next instruction/node */
         }
     }
@@ -1506,12 +1526,14 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         cmdResult = xslDbgShellBreak(arg, NULL, styleCtxt);
                 } else {
                     /* select current node to break at */
-                    xmlChar buff[100];
-
-                    if (ctxt->node->doc && ctxt->node->doc->URL)
-                        snprintf((char *) buff, 99, "-l %s %ld",
-                                 filesGetBaseUri(ctxt->node),
-                                 xmlGetLineNo(ctxt->node));
+		    xmlChar buff[100];
+		    xmlChar *tempBaseName = filesGetBaseUri(ctxt->node);		    
+		    if (tempBaseName){
+		      snprintf((char *) buff, sizeof(buff), "-l %s %ld",
+			       tempBaseName,
+			       xmlGetLineNo(ctxt->node));
+		      xmlFree(tempBaseName);
+		    }
                     if (styleCtxt)
                         cmdResult =
                             xslDbgShellBreak(buff, styleCtxt->style,
@@ -1552,11 +1574,14 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     cmdResult = xslDbgShellDelete((xmlChar *) arg);
                 else {
                     breakPointPtr breakPtr = NULL;
+		    xmlChar* tempBaseName = filesGetBaseUri(ctxt->node);
 
-                    if (ctxt->node->doc && ctxt->node->doc->URL)
+                    if (tempBaseName){
                         breakPtr =
-                            breakPointGet(filesGetBaseUri(ctxt->node),
-                                          xmlGetLineNo(ctxt->node));
+                            breakPointGet(tempBaseName,
+					  xmlGetLineNo(ctxt->node));
+			xmlFree(tempBaseName);
+		    }
                     if (!breakPtr || !breakPointDelete(breakPtr)) {
                         xsltGenericError(xsltGenericErrorContext,
                                          "Error: Unable to delete point\n");
@@ -1571,16 +1596,18 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         xslDbgShellEnable(arg, XSL_TOGGLE_BREAKPOINT);
                 else {
                     breakPointPtr breakPtr = NULL;
+		    xmlChar * tempBaseName = filesGetBaseUri(ctxt->node);
 
-                    if (ctxt->node->doc && ctxt->node->doc->URL)
+		    if (tempBaseName){
                         breakPtr =
-                            breakPointGet(filesGetBaseUri(ctxt->node),
-                                          xmlGetLineNo(ctxt->node));
+                            breakPointGet(tempBaseName,
+					  xmlGetLineNo(ctxt->node));
+		      xmlFree(tempBaseName);
+		    }
                     if (!breakPtr ||
-                        (!breakPointEnable(breakPtr, !breakPtr->enabled)))
-                    {
+                        (!breakPointEnable(breakPtr, !breakPtr->enabled))) {
                         xsltGenericError(xsltGenericErrorContext,
-                                         "Error: Unable to enable/disable point\n");
+                                   "Error: Unable to enable/disable point\n");
                         cmdResult = 0;
                     }
                 }
@@ -1591,11 +1618,14 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     cmdResult = xslDbgShellEnable(arg, 0);
                 else {
                     breakPointPtr breakPtr = NULL;
-
-                    if (ctxt->node->doc && ctxt->node->doc->URL)
+		    xmlChar *tempBaseName = filesGetBaseUri(ctxt->node);
+		      
+		    if (tempBaseName){
                         breakPtr =
-                            breakPointGet(filesGetBaseUri(ctxt->node),
+			  breakPointGet(tempBaseName,
                                           xmlGetLineNo(ctxt->node));
+		      xmlFree(tempBaseName);
+		    }
                     if (!breakPtr || !breakPointEnable(breakPtr, 0)) {
                         xsltGenericError(xsltGenericErrorContext,
                                          "Error: Unable to disable point\n");
@@ -1627,16 +1657,22 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
             case DEBUG_PWD_CMD:
                 if (!xmlShellPwd(ctxt, (char *) dir, ctxt->node, NULL)) {
-                    xsltGenericError(xsltGenericErrorContext, "\n%s", dir);
-                    if (ctxt->node && filesGetBaseUri(ctxt->node))
-                        xsltGenericError(xsltGenericErrorContext,
-                                         " in file %s : line %ld",
-                                         filesGetBaseUri(ctxt->node),
-                                         xmlGetLineNo(ctxt->node));
+		  xmlChar* tempBaseName = filesGetBaseUri(ctxt->node);
+		  if(tempBaseName){
+		    xsltGenericError(xsltGenericErrorContext, "\n%s", dir);
+		    xsltGenericError(xsltGenericErrorContext,
+				     " in file %s : line %ld",
+				     tempBaseName,
+				     xmlGetLineNo(ctxt->node));
+		    xmlFree(tempBaseName);
+		    cmdResult = 1;
+		  }
                 }
-                xsltGenericError(xsltGenericErrorContext, "\n");
-                cmdResult = 1;
-
+		if (cmdResult)
+		  xsltGenericError(xsltGenericErrorContext, "\n");
+		else
+		  xsltGenericError(xsltGenericErrorContext, 
+				   "Error: Unable to print working directory\n");		  
                 break;
 
             case DEBUG_DUMP_CMD:
@@ -1696,6 +1732,8 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         lastDocNode = ctxt->node;
                     ctxt->doc = source->doc;
                     ctxt->node = lastSourceNode;
+		    if (ctxt->pctxt)
+		      xmlXPathFreeContext(ctxt->pctxt);
                     ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
                     showSource = 1;
                     xsldbgUpdateFileDetails((xmlNodePtr) ctxt->node);
@@ -1733,6 +1771,8 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         lastSourceNode = ctxt->node;
                     ctxt->doc = doc->doc;
                     ctxt->node = lastDocNode;
+		    if (ctxt->pctxt)
+		      xmlXPathFreeContext(ctxt->pctxt);
                     ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
                     showSource = 0;
                     xsldbgUpdateFileDetails((xmlNodePtr) ctxt->node);
@@ -1964,7 +2004,8 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
         }
 
         /* kDbg like to get the marker after every command so here it is */
-        if (optionsGetIntOption(OPTIONS_GDB) && !nextCommandActive) {
+        if (optionsGetIntOption(OPTIONS_GDB) && !nextCommandActive
+	     && (commandId != DEBUG_STEPUP_CMD - DEBUG_HELP_CMD)) {
             if (ctxt->node && ctxt->node && 
 		ctxt->node->doc && ctxt->node->doc->URL) {
 

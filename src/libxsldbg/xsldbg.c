@@ -41,6 +41,12 @@
 #include "debugXSL.h"
 #include "xsldbgmsg.h"
 #include "xsldbgthread.h"       /* for getThreadStatus */
+#ifdef HAVE_READLINE
+#  include <readline/readline.h>
+#  ifdef HAVE_HISTORY
+#     include <readline/history.h>
+#   endif
+#endif
 
 
 /* need to setup catch of SIGINT */
@@ -1321,6 +1327,14 @@ xsldbgFree()
     SetConsoleCtrlHandler(handler_routine, FALSE);
 #endif
     initialized = 0;
+
+#ifdef HAVE_READLINE
+    //  rl_free_line_state ();
+    //  rl_cleanup_after_signal();
+#   ifdef HAVE_HISTORY
+       clear_history();
+#   endif    
+#endif
 
 }
 

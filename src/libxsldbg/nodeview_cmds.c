@@ -218,16 +218,6 @@ printXPathObject(xmlXPathObjectPtr item, xmlChar* xPath){
       result = 1;
       break;
 
-      /*
-	case XPATH_STRING:
-	if (item->stringval) {
-	xsltGenericError(xsltGenericErrorContext,
-	"= %s\n%s\n", xPath, item->stringval);
-	result = 1;
-	}
-	break;
-      */	
-
       /*  case XPATH_NODESET:*/
     default:{
 	/* We may need to convert this XPath to a string,
@@ -328,6 +318,8 @@ printXPathObject(xmlXPathObjectPtr item, xmlChar* xPath){
 	    xsltGenericError
 	      (xsltGenericErrorContext, "\n");
 	  }
+	  if (file)
+	    fclose(file);
 	  result = 1;
 	  break;
 	}

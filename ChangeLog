@@ -1,3 +1,10 @@
+Keith Isdale 30 July 2002 <k_isdale@tpg.com.au>	
+	Version 3.0.6
+	Fix memory leaks as detected by valgrind
+	Fixed printing of intermidate location when executing a "next"
+	  command
+	Enabled repeating of last command with <ENTER> when in gdb mode
+	
 Keith Isdale 29 July 2002 <k_isdale@tpg.com.au>	
 	Version 3.0.5
 	Added "next" command 
