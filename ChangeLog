@@ -1,3 +1,14 @@
+Keith Isdale 31st May 2003 <k_isdale@tpg.com.au>
+  Version 3.1.3
+  Implement suggestion made by Hannes
+	- add "autorestart" option to xsldbg. When this boolean option is 
+		set don't automaticly restart the stylesheet when debugging it 
+		and the end is reached : disabled by default
+  KDbg related bug fix: Add \032\032 to the Finished styesheet message so that KDbg knows when 
+	    xsldbg has finished runing stylsheet
+
+		
+
 Keith Isdale 22nd May 2003 <k_isdale@tpg.com.au>
   Minor documentation updates.
   First try a creating a xsldbg.spec (GCC 2.9.5 based systems ie Suse8.0) , comments welcome

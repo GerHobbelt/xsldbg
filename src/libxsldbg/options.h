@@ -93,6 +93,8 @@ extern "C" {
                                  * used when xsldbg is running as a thread */
 	OPTIONS_STDOUT,        /* Print all error messages to  stdout, 
 				 * normally error messages go to stderr */
+    	OPTIONS_AUTORESTART, 	/* When finishing the debug of a XSLT script 
+				   automaticly restart at the beginning */
         OPTIONS_VERBOSE,        /* Be verbose with messages */
         OPTIONS_OUTPUT_FILE_NAME,       /* what is the output file name */
         OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */

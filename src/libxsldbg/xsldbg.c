@@ -888,7 +888,7 @@ xsldbgMain(int argc, char **argv)
                     xslDebugStatus = DEBUG_STOP;
                 } else {
                     xsltGenericError(xsltGenericErrorContext,
-                                     "\nFinished stylesheet\n\n");
+                                     "\nFinished stylesheet\n\032\032\n");
                     {
                         /* handle trace execution */
                         int trace = optionsGetIntOption(OPTIONS_TRACE);
@@ -913,6 +913,12 @@ xsldbgMain(int argc, char **argv)
                                 break;
                         }
                     }
+		    if (!optionsGetIntOption(OPTIONS_AUTORESTART)){ 
+		    // pass control to user they won't be able to do much
+		    //  other than add breakpoints, quit, run, continue
+		    debugXSLBreak((xmlNodePtr) cur->doc, (xmlNodePtr) doc,
+                              NULL, NULL);
+		    }
                 }
             } else {
                 /* request to execute stylesheet only  so we're done */

@@ -68,6 +68,8 @@ const char *optionNames[] = {
     "utf8input",                /* All input from "user" will be in UTF-8 */
      "stdout",                  /* Print all error messages to  stdout, 
 				 * normally error messages go to stderr */
+    "autorestart",		/* When finishing the debug of a XSLT script 
+				   automaticly restart at the beginning */
     "verbose",                  /* Be verbose with messages */
     "output",                   /* what is the output file name */
     "source",                   /* The stylesheet source to use */
@@ -132,6 +134,8 @@ optionsInit(void)
     optionsSetIntOption(OPTIONS_WALK_SPEED, WALKSPEED_STOP);
     /* always try to use encoding if found */
     optionsSetIntOption(OPTIONS_AUTOENCODE, 1);
+    /* start up with auto restart turned off */
+    optionsSetIntOption(OPTIONS_AUTORESTART, 0); 	
 
     /* set output default as standard output. Must be changed if not using
      * xsldbg's command line. Or the tty command is used */
