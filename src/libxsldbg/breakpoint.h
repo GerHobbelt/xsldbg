@@ -189,6 +189,8 @@ extern "C" {
  * Get the active break point
  *
  * Returns the last break point that we stoped at
+ *
+ * Depreciated
  */
 #else
 #ifdef USE_KDE_DOCS
@@ -197,6 +199,8 @@ extern "C" {
  * Get the active break point
  *
  * @returns The last break point that we stoped at
+ *
+ * Depreciated
  */
 #endif
 #endif
@@ -211,6 +215,8 @@ extern "C" {
  * @breakPtr: Is valid break point or NULL
  *
  * Set the active break point
+ *
+ * Depreciated
  */
 #else
 #ifdef USE_KDE_DOCS
@@ -219,6 +225,8 @@ extern "C" {
  * Set the active break point
  *
  * @param breakPoint Is valid break point or NULL
+ *
+ * Depreciated
  */
 #endif
 #endif

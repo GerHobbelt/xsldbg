@@ -1073,14 +1073,6 @@ debugXSLBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
     } else
         xsltGenericError(xsltGenericErrorContext, "\n");
 
-    if (ctxt && ctxt->node && ctxt->node &&
-        ctxt->node->doc && ctxt->node->doc->URL) {
-        if (breakPointActiveBreakPoint()) {
-            xsltGenericError(xsltGenericErrorContext,
-                             "Breakpoint %d ", breakPointActiveBreakPoint()->id);
-        }
-    }
-
     shellPrompt(templ, node, (xmlChar *) "index.xsl",
                 (xmlShellReadlineFunc) xslDbgShellReadline, stdout, ctxt);
     if (tempDoc)
@@ -1188,35 +1180,28 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
         if (ctxt->node && ctxt->node && ctxt->node->doc
             && ctxt->node->doc->URL) {
             xmlStrCpy(messageBuffer, "");
-            if (breakPointActiveBreakPoint() != NULL) {
-                breakPointPtr breakPtr = breakPointActiveBreakPoint();
+	    if (!showSource) {
+	      baseUri = filesGetBaseUri(ctxt->node);
+	      if (baseUri != NULL)
+		breakUri = baseUri;
+	      else
+		breakUri = ctxt->node->doc->URL;
+	    } else
+	      breakUri = ctxt->node->doc->URL;
 
-                snprintf((char *) messageBuffer, sizeof(messageBuffer),
-                         "Breakpoint in file %s : line %ld \n",
-                         breakPtr->url, breakPtr->lineNo);
-            } else {
-                if (!showSource) {
-                    baseUri = filesGetBaseUri(ctxt->node);
-                    if (baseUri != NULL)
-                        breakUri = baseUri;
-                    else
-                        breakUri = ctxt->node->doc->URL;
-                } else
-                    breakUri = ctxt->node->doc->URL;
+	    if (xmlGetLineNo(ctxt->node) != -1)
+	      snprintf((char *) messageBuffer, sizeof(messageBuffer),
+		       "Breakpoint at file %s : line %ld \n",
+		       breakUri, xmlGetLineNo(ctxt->node));
+	    else
+	      snprintf((char *) messageBuffer, sizeof(messageBuffer),
+		       "Breakpoint @ text node in file %s\n",
+		       breakUri);
+	    if (baseUri != NULL) {
+	      xmlFree(baseUri);
+	      baseUri = NULL;
+	    }
 
-                if (xmlGetLineNo(ctxt->node) != -1)
-                    snprintf((char *) messageBuffer, sizeof(messageBuffer),
-                             "Breakpoint at file %s : line %ld \n",
-                             breakUri, xmlGetLineNo(ctxt->node));
-                else
-                    snprintf((char *) messageBuffer, sizeof(messageBuffer),
-                             "Breakpoint @ text node in file %s\n",
-                             breakUri);
-                if (baseUri != NULL) {
-                    xmlFree(baseUri);
-                    baseUri = NULL;
-                }
-            }
             if (terminalIO != NULL)
                 fprintf(terminalIO, "%s", messageBuffer);
             else
@@ -1424,20 +1409,13 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         xsltGenericError(xsltGenericErrorContext, "%s",
                                          dir);
                     if (ctxt->node && ctxt->node && ctxt->node->doc
-                        && ctxt->node->doc->URL)
-                        if (breakPointActiveBreakPoint() != NULL) {
-                            xsltGenericError(xsltGenericErrorContext,
-                                             " in file %s : line %ld \n",
-                                             ctxt->node->doc->URL,
-                                             xmlGetLineNo(ctxt->node));
-                            cmdResult = 1;
-                        } else {
-                            xsltGenericError(xsltGenericErrorContext,
-                                             " at file %s : line %ld \n",
-                                             ctxt->node->doc->URL,
-                                             xmlGetLineNo(ctxt->node));
-                            cmdResult = 1;
-                    } else {
+                        && ctxt->node->doc->URL){
+		           xsltGenericError(xsltGenericErrorContext,
+					    "Breakpoint at file %s : line %ld \n",
+					    ctxt->node->doc->URL,
+					    xmlGetLineNo(ctxt->node));
+			   cmdResult = 1;
+		    } else {
                         xsltGenericError(xsltGenericErrorContext, "\n");
                         cmdResult = 0;
                     }
@@ -1937,23 +1915,15 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             if (ctxt->node && ctxt->node && ctxt->node->doc
                 && ctxt->node->doc->URL) {
 
-                if (breakPointActiveBreakPoint() != NULL) {
-                    breakPointPtr breakPtr = breakPointActiveBreakPoint();
-
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "Breakpoint in file %s : line %ld \n",
-                                     breakPtr->url, breakPtr->lineNo);
-                } else {
-                    if (xmlGetLineNo(ctxt->node) != -1)
-                        xsltGenericError(xsltGenericErrorContext,
-                                         "Breakpoint at file %s : line %ld \n",
-                                         ctxt->node->doc->URL,
-                                         xmlGetLineNo(ctxt->node));
-                    else
-                        xsltGenericError(xsltGenericErrorContext,
-                                         "BreakPoint @ text node in file %s\n",
-                                         ctxt->node->doc->URL);
-                }
+	        if (xmlGetLineNo(ctxt->node) != -1)
+		     xsltGenericError(xsltGenericErrorContext,
+				      "Breakpoint at file %s : line %ld \n",
+				      ctxt->node->doc->URL,
+				      xmlGetLineNo(ctxt->node));
+		else
+		     xsltGenericError(xsltGenericErrorContext,
+				      "BreakPoint @ text node in file %s\n",
+				      ctxt->node->doc->URL);
             }
         }
 
@@ -1976,6 +1946,4 @@ shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
     xmlFree(ctxt);
     if (cmdline != NULL)
         xmlFree(cmdline);
-    breakPointSetActiveBreakPoint(0);
-
 }

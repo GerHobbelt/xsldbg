@@ -298,11 +298,14 @@ breakPointItemFree(void *payload, xmlChar * name ATTRIBUTE_UNUSED)
  * Get the active break point
  *
  * Returns The last break point that we stoped at
+ *
+ * Depreciated
  */
 breakPointPtr
 breakPointActiveBreakPoint(void)
 {
-    return activeBreakPointItem;
+  /* This function is depreciated */
+  return NULL;/* activeBreakPointItem; */
 }
 
 
@@ -312,11 +315,16 @@ breakPointActiveBreakPoint(void)
  * @breakPtr: Is valid break point or NULL
  *
  * Set the active break point
+ *
+ * Depreciated
  */
 void
 breakPointSetActiveBreakPoint(breakPointPtr breakPtr)
 {
+  /*
     activeBreakPointItem = breakPtr;
+  */
+  
 }
 
 

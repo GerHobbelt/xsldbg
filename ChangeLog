@@ -1,3 +1,9 @@
+Keith Isdale 12 Feb 2002 <k_isdale@tpg.com.au
+  Version 2.0.6
+  Depreciated breakPointSetActiveBreakPoint and breakPointGetActiveBreakPoint
+	They now do nothing, removes bug in printing current location and when gdb
+	mode is enabled
+	
 Keith Isdale 10 Feb 2002 <k_isdale@tpg.com.au
   Version 2.0.5	
   Copied Igor's MSVC project files to win32\dsp\

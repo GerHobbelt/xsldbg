@@ -128,7 +128,7 @@ void
 debugHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
                xsltTemplatePtr templ, xsltTransformContextPtr ctxt)
 {
-    breakPointSetActiveBreakPoint(NULL);
+	
     if (!cur && !node) {
         xsltGenericError(xsltGenericErrorContext,
                          "Soure and doc are NULL can't enter debugger\n");
@@ -168,7 +168,6 @@ debugHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
 
                         if (breakPtr) {
                             if (breakPtr->enabled) {
-                                breakPointSetActiveBreakPoint(breakPtr);
                                 debugXSLBreak(cur, node, templ, ctxt);
                                 return;
                             }
@@ -186,7 +185,6 @@ debugHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
                         }
                         if (breakPtr) {
                             if (breakPtr->enabled) {
-                                breakPointSetActiveBreakPoint(breakPtr);
                                 debugXSLBreak(cur, node, templ, ctxt);
                             }
                         }
