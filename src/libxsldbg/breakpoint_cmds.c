@@ -33,6 +33,9 @@
 /* temp buffer needed occationaly */
 static xmlChar buff[DEBUG_BUFFER_SIZE];
 
+// needed by breakpoint validation
+extern int breakPointCounter;
+
 /* ---------------------------------------------------
    Private function declarations for breakpoint_cmds.c
  ----------------------------------------------------*/
@@ -890,11 +893,20 @@ void xslDbgShellValidateBreakPoint(void *payload, void *data ATTRIBUTE_UNUSED,
 {
   int result = 0, flags; 
   if (payload){
-    breakPointPtr breakPtr =  (breakPointPtr) payload;
+    breakPointPtr breakPtr = (breakPointPtr) payload;
+    breakPoint item;
+    item.lineNo = breakPtr->lineNo;
+    item.url = xmlStrdup(breakPtr->url);
+    if (!item.url){
+	xsltGenericError(xsltGenericErrorContext,
+	    "Warning: Out of memory can't validate Breakpoints\n");
+	return;
+    }
+    
     if (filesIsSourceFile(breakPtr->url)) {
-      result = validateSource(&breakPtr->url, &breakPtr->lineNo);
+      result = validateSource(&item.url, &item.lineNo);
     } else {
-      result = validateData(&breakPtr->url, &breakPtr->lineNo);
+      result = validateData(&item.url, &item.lineNo);
     }    
     flags = breakPtr->flags;
     if (result)
@@ -903,7 +915,49 @@ void xslDbgShellValidateBreakPoint(void *payload, void *data ATTRIBUTE_UNUSED,
        breakPtr->flags |= BREAKPOINT_ORPHANED;
 
    if ( breakPtr->flags & BREAKPOINT_ORPHANED){
-	xsltGenericError(xsltGenericErrorContext,"Warning: Breakpoint #%d is orphaned result %d, old flags %d new flags %d\n", breakPtr->id, result, flags, breakPtr->flags);
+	    xsltGenericError(xsltGenericErrorContext,
+		"Warning: Breakpoint #%d is orphaned result %d, old flags %d new flags %d\n", 
+		breakPtr->id, result, flags, breakPtr->flags);
     }
+
+    if (!(breakPtr->flags & BREAKPOINT_ORPHANED) && ((item.lineNo != breakPtr->lineNo ) || 
+	    (xmlStrlen(item.url) != xmlStrlen(breakPtr->url)) || xmlStrCmp(item.url, breakPtr->url))){
+	// we have a new location for breakpoint
+	int lastCounter = breakPointCounter;
+	item.flags = breakPtr->flags;
+	item.type = breakPtr->type;
+	item.id = breakPtr->id;
+	item.templateName = xmlStrdup(breakPtr->templateName);
+	item.modeName = xmlStrdup(breakPtr->modeName);
+	if (!item.templateName || !item.modeName){
+	    if (breakPointDelete(breakPtr) && !breakPointGet(item.url, item.lineNo)){
+		if (breakPointAdd(item.url, item.lineNo, item.templateName, item.modeName, item.type)){	    
+		    breakPtr = breakPointGet(item.url, item.lineNo);
+		    if (breakPtr){
+			breakPtr->id = item.id;
+			breakPtr->flags = item.flags;
+		    	breakPointCounter = lastCounter; /* compensate for breakPointAdd which always 
+							    increments the breakPoint counter */
+			result = 1;
+			xsltGenericError(xsltGenericErrorContext,
+					"Information: Breakpoint validation has caused Breakpoint %d to be re-created\n", 
+					breakPtr->id);
+
+		    }
+		}
+	    }
+	    if (!result){
+		xsltGenericError(xsltGenericErrorContext,
+		    "Warning: Validation of Breakpoint %d failed \n", item.id);
+	    }
+	}else{
+	    xsltGenericError(xsltGenericErrorContext,
+		"Warning: Out of memory can't validate Breakpoints\n");
+	}
+	xmlFree(item.templateName);
+	xmlFree(item.modeName);
+    }
+    
+    xmlFree(item.url);
   }
 }

@@ -97,7 +97,7 @@ coretests: listTest searchTest
 	./searchTest
 
 ../results/%.script ../results/%.pl : %.data testgenerator.xsl
-	$(XSLDBG) --param baseFileName \'../results/$(*F)\' testgenerator.xsl $(*F).data 
+	$(XSLDBG) -o dump.txt --param baseFileName \'../results/$(*F)\' testgenerator.xsl $(*F).data 
 
 # if the user has Perl then they will have sed
 

@@ -15,7 +15,8 @@
 break -l test2.xml 9
 break -l test3.xml 9
 break -l test4.xml 9
-showbreak</test>
+showbreak
+</test>
 <result>
 <row>
 <breakpointlist file="test1.xml" line="8" />	
@@ -33,7 +34,8 @@ Try to stop at text2.xml line 9-->
 break -l test2.xml 9
 data
 run
-continue</test>
+continue
+</test>
 <result>
 <row>
 <breakpoint file="test2.xml" line="9"/>
@@ -45,15 +47,24 @@ continue</test>
 <cmd>
 <test>delete *
 run
+source
 break -l test10.xsl 24
-continue</test>
+continue
+</test>
+<result>
+<row>
+<breakpoint file="test10.xsl" line="13"/>
+<breakpoint file="test10.xsl" line="24"/>
+</row>
+</result>
 </cmd>
 
 <!-- First set $item to a string value -->
 <cmd>
 <test>cat $item
 set item 5678
-cat $item</test>
+cat $item
+</test>
 <result>
 <row>
 <matchtext>1234</matchtext>

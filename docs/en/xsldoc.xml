@@ -504,7 +504,8 @@ This command has the same effect of entering the commands &quot;step&quot; and t
 
 <!-- - - - -  Break point related commands - - - - - - - -->
 <cmd name="break" shortcut="b" title="Break">
-<summary>Break at a template, at a location in a stylesheet or xml file loaded by xsldbg, or at the current node. </summary>
+<summary>Break at a template, at a location in a stylesheet or xml file loaded by xsldbg, or at the current node. 
+New for xsldbg 3.1.4: When in gdb compatabilty mode orpaned breakpoints can be set at a specific file and line number and be resolved to an active later on.</summary>
 <body>
 <para>Shortcut name: b</para>
 <para>xsldbg will try to guess the complete URL given a 

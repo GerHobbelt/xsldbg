@@ -156,18 +156,18 @@ debugHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
 		case BREAKPOINTS_BEING_VALIDATED:
 		    /*should never be in the state for any length of time */
 		     xsltGenericError(xsltGenericErrorContext, 
-			"Error: Unexpected BreakPoint validation state ");	    
+			"Error: Unexpected BreakPoint validation state %d", xsldbgValidateBreakpoints);	    
 		break;
 	    }
 	    if (doValidation){
 		    /* breakpoints will either be marked as orphaned or not as needed */
-		     xsltGenericError(xsltGenericErrorContext,"Warning: !!Do validation\n");
 		    xsldbgValidateBreakpoints = BREAKPOINTS_BEING_VALIDATED;
 		    walkBreakPoints((xmlHashScanner)
 			    xslDbgShellValidateBreakPoint, NULL);
-		    xsldbgValidateBreakpoints = 0;
 		    if (filesGetStylesheet() && filesGetMainDoc() && templ){
 			xsldbgValidateBreakpoints = BREAKPOINTS_ARE_VALID;
+		    }else{
+			xsldbgValidateBreakpoints = BREAKPOINTS_NEED_VALIDATION;
 		    }
 	    }
 	}
@@ -204,16 +204,9 @@ debugHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
                             breakPointGet(cur->doc->URL,
                                           xmlGetLineNo(cur));
 
-                        if (breakPtr) {
-                            if (breakPtr->flags & BREAKPOINT_ENABLED) {
-                                debugXSLBreak(cur, node, templ, ctxt);
-                                return;
-                            }else{
-				xsltGenericError(xsltGenericErrorContext,"breakpoint not enabled for %s %d\n", cur->doc->URL, xmlGetLineNo(node));
-			    }
-
-                        }else{
-			    xsltGenericError(xsltGenericErrorContext,"No breakpoint for %s %d\n", cur->doc->URL, xmlGetLineNo(node));
+                        if (breakPtr && (breakPtr->flags & BREAKPOINT_ENABLED) ){
+			    debugXSLBreak(cur, node, templ, ctxt);
+			    return;
 			}
                     }
 		    if (node) {

@@ -12,6 +12,8 @@
 #include "arraylist.h"
 #include "options.h"
 
+extern int xsldbgValidateBreakpoints; //located in debugXSL.c
+
 /*-----------------------------------------------------------
        Private functions
 -----------------------------------------------------------*/
@@ -68,7 +70,7 @@ int lineNoItemAdd(xmlHashTablePtr breakPointHash, breakPointPtr breakPtr);
 arrayListPtr breakList;
 
 /* keep track of what break point id we're up to*/
-static int breakPointCounter = 0;
+int breakPointCounter = 0;
 
 /* What is the current breakpoint is only valid up to the start of 
  xsldbg command prompt. ie don't use it after deletion of breakpoints */
@@ -285,13 +287,6 @@ breakPointItemFree(void *payload, xmlChar * name ATTRIBUTE_UNUSED)
     if (payload) {
         breakPointPtr breakPtr = (breakPointPtr) payload;
 
-#if 0
-#ifdef WITH_XSLT_DEBUG_BREAKPOINTS
-        xsltGenericError(xsltGenericErrorContext, "Freeing breakpoint: ");
-        breakPointPrint(stderr, breakPtr);
-        xsltGenericError(xsltGenericErrorContext, "\n");
-#endif
-#endif
         if (breakPtr->url)
             xmlFree(breakPtr->url);
         if (breakPtr->templateName)
@@ -471,7 +466,7 @@ breakPointAdd(const xmlChar * url, long lineNumber,
 #endif
     }
 
-    if (result && optionsGetIntOption(OPTIONS_GDB)){
+    if (result && optionsGetIntOption(OPTIONS_GDB) && (xsldbgValidateBreakpoints != BREAKPOINTS_BEING_VALIDATED)){
       breakPointPrint(NULL, breakPtr);
       xsltGenericError(xsltGenericErrorContext,"\n");
     }

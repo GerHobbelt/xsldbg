@@ -1,7 +1,19 @@
-Keith Isdale 1st-9th June 2003 <k_isdale@tpg.com.au>
- Nearly completed implementation to support orphaned breakpoints
-    - need to re-add breakpoint to breakpoint hash array using new URL resolved from initial file name of breakpoint  ie
-	    xsldocl.xsl becomes <path to xsldbg>/docs/en/xsldoc.xsl  
+Keith Isdale 1st,9th,14 June 2003 <k_isdale@tpg.com.au>
+  Version 3.1.4
+  Completed implementation to support orphaned breakpoints for KDbg 1.9.0, and when in xsldbg is running in gdb compatbility mode
+  This means that you can set a breakpoint at a line number for a file that has not been loaded yet 
+    and xsldbg will activate the breakpoint when it can. An example xsldbg session is:
+	$ xsldbg --shell --gdb
+	<xsldbgprompt> b -l xsldoc.xsl 31
+	<xsldbgprompt> source ../docs/en/xsldoc.xsl
+	<xsldbgprompt> data ../docs/en/xsldoc.xml
+	<xsldbgprompt> run
+	...
+	<xsldbgprompt> continue
+	Breakpoint at file ../docs/en/xsldoc.xsl : line 31
+    	<xsldbgprompt>
+   Fixed the specification for test10. All xsldbg automatic tests now pass  
+
 
 Keith Isdale 31st May 2003 <k_isdale@tpg.com.au>
   Version 3.1.3
