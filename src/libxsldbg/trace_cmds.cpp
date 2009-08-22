@@ -21,33 +21,42 @@
  **/
 
 
-#ifndef XSLDBGNOTIFIER_H
-#define XSLDBGNOTIFIER_H
-
-#include "xsldbgmsg.h"
-
-#ifndef __cplusplus
-#error "Must only be used with a c++ compiler"
-#endif
+#include "xsldbg.h"
+#include "debugXSL.h"
+#include "options.h"
 
 
+/* -----------------------------------------
 
-/**
-  *@author keith
-  */
+   Tracing related commands
 
-class XsldbgNotifier {
-  public:
-    XsldbgNotifier(void);
-      virtual ~ XsldbgNotifier(void);
-
-    virtual void doNotify(XsldbgMessageEnum type, const void *data);
-};
+  ------------------------------------------- */
 
 
+int xslDbgShellTrace(xmlChar * arg)
+{
+    Q_UNUSED(arg);
+    xslDebugStatus = DEBUG_RUN_RESTART;
+    optionsSetIntOption(OPTIONS_TRACE, TRACE_ON);
+    return 1;
+}
 
-/* get the notifer  */
-void setNotifier(XsldbgNotifier * notifier);
 
+int xslDbgShellWalk(xmlChar * arg)
+{
+    int result = 0;
 
-#endif
+    long speed = WALKSPEED_NORMAL;
+
+    if (xmlStrLen(arg)
+        && (!sscanf((char *) arg, "%ld", &speed) || ((speed < 0) || (speed > 9)))) {
+        xsldbgGenericErrorFunc(QObject::tr("Error: Invalid arguments to command %1.\n").arg(QString("walk")));
+        xsldbgGenericErrorFunc(QObject::tr("Warning: Assuming normal speed.\n"));
+        speed = WALKSPEED_NORMAL;
+    }
+    result = 1;
+    optionsSetIntOption(OPTIONS_WALK_SPEED, speed);
+    xslDebugStatus = DEBUG_WALK;
+
+    return result;
+}

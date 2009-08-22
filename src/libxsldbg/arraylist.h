@@ -1,80 +1,47 @@
 
-/**************************************************************************
-                          arraylist.h  -  declare the functions for 
-                                        implementation of the array list
-                             -------------------
-    begin                : Sat Nov 10 2001
-    copyright            : (C) 2001 by Keith Isdale
-    email                : k_isdale@tpg.com.au
- **************************************************************************/
+/**
+ *
+ *  This file is part of the kdewebdev package
+ *  Copyright (c) 2001 Keith Isdale <keith@kdewebdev.org>
+ *
+ *  This library is free software; you can redistribute it and/or 
+ *  modify it under the terms of the GNU General Public License as 
+ *  published by the Free Software Foundation; either version 2 of 
+ *  the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Library General Public License
+ *  along with this library; see the file COPYING.LIB.  If not, write to
+ *  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *  Boston, MA 02110-1301, USA.
+ **/
 
-/**************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- **************************************************************************/
 
 #ifndef ARRAYLIST_H
 #define ARRAYLIST_H
 
-#ifdef USE_KDE_DOCS
 
-/**
- * Provide a fast easy to use array list. Support the basic functions of add
- *  delete, empty, count, free
- *
- * @short Array list support
- *
- * @author Keith Isdale <k_isdale@tpg.com.au> 
- */
-#endif
+typedef void (*freeItemFunc) (void *item);
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/* A dynamic structure that behave like a list */
+typedef struct _arrayList arrayList;
+typedef arrayList *arrayListPtr;
 
-#ifdef USE_GNOME_DOCS
-
-#else
-#ifdef USE_KDE_DOCS
-
-#endif
-#endif
-
-
-    typedef void (*freeItemFunc) (void *item);
-    /* A dynamic structure behave like a list */
-    typedef struct _arrayList arrayList;
-    typedef arrayList *arrayListPtr;
-    struct _arrayList {
-        int size, count;
-        void **data;
-        freeItemFunc deleteFunction;
-    };
+struct _arrayList {
+    int size, count;
+    void **data;
+    freeItemFunc deleteFunction;
+};
 
 /* what size of the list do we stop automatic doubling of capacity
-    if array list size growth is needed */
+   if array list size growth is needed */
 #define DOUBLE_SIZE_MAX_ITEM 10
 
 
-
-#ifdef USE_GNOME_DOCS
-
-/**
- * arrayListNew:
- * @initialSize: The initial size of list
- * @deleteFunction: The function to call to free items in the list
- *
- * Create a new list with a size of @initialSize
- *
- * Returns Non-null on success,
- *         NULL otherwise
- */
-#else
-#ifdef USE_KDE_DOCS
 
 /**
  * Create a new list with a size of @p initialSize
@@ -85,25 +52,8 @@ extern "C" {
  * @param initial The initial size of list
  * @param deleteFunction the Function to call to free items in the list
  */
-#endif
-#endif
-    arrayListPtr arrayListNew(int initialSize,
-                              freeItemFunc deleteFunction);
+arrayListPtr arrayListNew(int initialSize, freeItemFunc deleteFunction);
 
-
-
-#ifdef USE_GNOME_DOCS
-
-/**
- * arrayListFree:
- * @list: A valid list
- *
- * Free memory assocated with array list, if the array list 
- *   has a valid deleteFunction then content with be freed with 
- *    using that deleteFunction
- */
-#else
-#ifdef USE_KDE_DOCS
 
 /**
  * Free memory assocated with array list, if the array list 
@@ -112,25 +62,8 @@ extern "C" {
  *
  * @param list A valid list
  */
-#endif
-#endif
-    void arrayListFree(arrayListPtr list);
+void arrayListFree(arrayListPtr list);
 
-
-
-#ifdef USE_GNOME_DOCS
-
-/**
- * arrayListEmpty:
- * @list: A valid list
- *
- * Empties the list of its content
- *
- * Returns 1 on success,
- *         0 otherwise
- */
-#else
-#ifdef USE_KDE_DOCS
 
 /**
  * Empties the list of its content
@@ -140,24 +73,8 @@ extern "C" {
  *
  * @param list A valid list
  */
-#endif
-#endif
-    int arrayListEmpty(arrayListPtr list);
+int arrayListEmpty(arrayListPtr list);
 
-
-
-#ifdef USE_GNOME_DOCS
-
-/**
- * arrayListSize:
- * @list: A valid list
- *
- * Return The maximum number elements this list can contain
- *
- * Returns The maximum number elements this list can contain
- */
-#else
-#ifdef USE_KDE_DOCS
 
 /**
  * Return the maximum number elements this list can contain
@@ -166,52 +83,18 @@ extern "C" {
  *
  * @param list A valid list
  */
-#endif
-#endif
-    int arrayListSize(arrayListPtr list);
+int arrayListSize(arrayListPtr list);
 
-
-
-#ifdef USE_GNOME_DOCS
-
-/**
- * arrayListCount:
- * @list: A valid list
- *
- * Return the count of number items in list
- *
- * Returns The count of number items in list
- */
-#else
-#ifdef USE_KDE_DOCS
 
 /**
  * Return the count of number items in list
+ *
  * @returns The count of number items in list
  *
  * @param list A valid list
  */
-#endif
-#endif
+extern int arrayListCount(arrayListPtr list);
 
-    int arrayListCount(arrayListPtr list);
-
-
-
-#ifdef USE_GNOME_DOCS
-
-/**
- * arrayListAdd:
- * @list: A valid list
- * @item:A valid item
- *
- * Add @item to @list
- *
- * Returns 1 if able to add @item to end of @list,
- *         0 otherwise
- */
-#else
-#ifdef USE_KDE_DOCS
 
 /**
  * Add @p item to @p list
@@ -222,26 +105,8 @@ extern "C" {
  * @param list A valid list
  * @param item A valid item
  */
-#endif
-#endif
-    int arrayListAdd(arrayListPtr list, void *item);
+int arrayListAdd(arrayListPtr list, void *item);
 
-
-
-#ifdef USE_GNOME_DOCS
-
-/**
- * arrayListDelete:
- * @list: A valid list
- * @position: 0 =< @position < arrayListCount(@list)
- *
- * Delete item at position @position from @list
- *
- * Returns 1 if able to delete element in @list at position @position,
- *         0 otherwise 
- */
-#else
-#ifdef USE_KDE_DOCS
 
 /**
  * @returns 1 if able to delete element in @p list at position @p position,
@@ -250,27 +115,8 @@ extern "C" {
  * @param list A valid list
  * @param position  0 =< @p position < arrayListCount(@p list)
  */
-#endif
-#endif
-    int arrayListDelete(arrayListPtr list, int position);
+int arrayListDelete(arrayListPtr list, int position);
 
-
-
-#ifdef USE_GNOME_DOCS
-
-/**
- * arrayListGet:
- * @list: A valid list
- * @position: 0 =< @position < arrayListCount(@list)
- *
- * Get item at position @position from @list
- *
- * Returns Non-null if able to retrieve element in @list at position
- *            @position,
- *         NULL otherwise
- */
-#else
-#ifdef USE_KDE_DOCS
 
 /**
  * @returns Non-null if able to retrieve element in @p list at position
@@ -280,41 +126,7 @@ extern "C" {
  * @param list A valid list
  * @param position  0 =< @p position < arrayListCount(@p list)
  */
-#endif
-#endif
-    void *arrayListGet(arrayListPtr list, int position);
+void *arrayListGet(arrayListPtr list, int position);
 
 
-
-#ifdef USE_GNOME_DOCS
-
-/**
- * arrayListSet:
- * @list: A valid list
- * @position: 0 =< @position < arrayListCount(@list)
- *
- * Set item at position @position from @list. This does not delete the item first.
- *
- * Returns 1 if able to set element in @list at position @position to @item,
- *         0 otherwise 
- */
-#else
-#ifdef USE_KDE_DOCS
-
-/**
- * Set item at position @position from @list. This does not delete the item first.
- * @returns 1 if able to set element in @p list at position @p position to @p item,
- *         0 otherwise 
-
- * @param list A valid list
- * @param position 0 =< @position < arrayListCount(@list)
- *
- */
-#endif
-#endif
-    int arrayListSet(arrayListPtr list, int position, void *item);
-
-#ifdef __cplusplus
-}
-#endif
 #endif

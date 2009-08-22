@@ -1,35 +1,45 @@
 
-/***************************************************************************
-                          xsldbgevent.c  -  event to notify app of 
-                                                   data from xsldbg
-                             -------------------
-    begin                : Fri Feb 1 2001
-    copyright            : (C) 2001 by Keith Isdale
-    email                : k_isdale@tpg.com.au
- ***************************************************************************/
+/**
+ *
+ *  This file is part of the kdewebdev package
+ *  Copyright (c) 2001 Keith Isdale <keith@kdewebdev.org>
+ *
+ *  This library is free software; you can redistribute it and/or 
+ *  modify it under the terms of the GNU General Public License as 
+ *  published by the Free Software Foundation; either version 2 of 
+ *  the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Library General Public License
+ *  along with this library; see the file COPYING.LIB.  If not, write to
+ *  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *  Boston, MA 02110-1301, USA.
+ **/
 
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
 
-#include <qapplication.h>
-#include <qtimer.h>
-#include <qfile.h>
-#include <qtextstream.h>
+#include <QApplication>
+#include <QTimer>
+#include <QFile>
+#include <QTimerEvent>
+#include <QEvent>
+#include <kurl.h>
+#include <QDebug>
+#include <QTextStream>
+
 #include <libxslt/xsltInternals.h>
-#include <libxsldbg/xsldbgevent.h>
-#include <libxsldbg/xsldbgdebuggerbase.h>
-#include <libxsldbg/arraylist.h>
-#include <libxsldbg/breakpoint.h>
-#include <libxsldbg/xsldbgmsg.h>
-#include <libxsldbg/xsldbgthread.h>
-#include <libxsldbg/options.h>
-#include <libxsldbg/files.h>
+
+#include "../libxsldbg/xsldbgevent.h"
+#include "xsldbgdebuggerbase.h"
+#include "../libxsldbg/arraylist.h"
+#include "../libxsldbg/breakpoint.h"
+#include "../libxsldbg/xsldbgmsg.h"
+#include "../libxsldbg/xsldbgthread.h"
+#include "../libxsldbg/options.h"
+#include "../libxsldbg/files.h"
 
 QString updateText;
 
@@ -38,7 +48,7 @@ XsldbgEventData::XsldbgEventData()
   int column;
 
   for (column = 0; column < XSLDBGEVENT_COLUMNS; column++){
-    textValues[column] = QString::null;
+    textValues[column].clear();
   }
 
  for (column = 0; column < XSLDBGEVENT_COLUMNS; column++){
@@ -51,7 +61,7 @@ XsldbgEventData::~XsldbgEventData()
 {
 }
 
-void XsldbgEventData::setText(int column, QString text)
+void XsldbgEventData::setText(int column, const QString & text)
 {
   if ((column >= 0) && (column < XSLDBGEVENT_COLUMNS))
     textValues[column] = text;
@@ -63,7 +73,7 @@ QString XsldbgEventData::getText(int column)
   if ((column >= 0) && (column < XSLDBGEVENT_COLUMNS))
     return textValues[column];
   else
-    return QString::null;
+    return QString();
 }
 
 
@@ -106,7 +116,7 @@ XsldbgEvent::XsldbgEvent(XsldbgMessageEnum type, const void *data)
       msgData = ::arrayListGet(msgList->list, index);
       eventData = createEventData(msgList->type, msgData);
       if (eventData != 0L)
-	list.append(eventData);      
+	list.append(eventData);
     }
     ::arrayListFree(msgList->list);
     msgList->list = 0L;
@@ -126,6 +136,11 @@ XsldbgEvent::XsldbgEvent(XsldbgMessageEnum type, const void *data)
 
 XsldbgEvent::~XsldbgEvent()
 {
+  XsldbgEventData *eventData;
+  for (int index = 0; index < list.count(); ++index){
+      eventData = list.takeAt(index);
+      delete eventData;
+  }
 }
 
 
@@ -160,22 +175,22 @@ XsldbgEventData *XsldbgEvent::createEventData(XsldbgMessageEnum type, const void
       break;
 
     /* provide more informatiom about state of xsldbg (optional) */
-    case XSLDBG_MSG_PROCESSING_RESULT:       /* 8: An error occured performing command
+    case XSLDBG_MSG_PROCESSING_RESULT:       /* 8: An error occurred performing command
                                          * requested command */
       if (msgData != 0L){
-	xsldbgErrorMsgPtr msg = (xsldbgErrorMsgPtr)msgData;      
+	xsldbgErrorMsgPtr msg = (xsldbgErrorMsgPtr)msgData;
 	if (msg->text)
 	  result->setText(0, XsldbgDebuggerBase::fromUTF8(msg->text));
       }
       break;
 
-    case XSLDBG_MSG_LINE_CHANGED:    /* 9: Changed to new line number 
+    case XSLDBG_MSG_LINE_CHANGED:    /* 9: Changed to new line number
                                  * ie a step */
       handleLineNoChanged(result, msgData);
       break;
 
-    case XSLDBG_MSG_FILE_CHANGED:    /* 10: Loaded source/data file */
-      
+    case XSLDBG_MSG_FILE_CHANGED:    /* 10: Changed selection for source/data/output file */
+	// not used 
       break;
 
     case XSLDBG_MSG_BREAKPOINT_CHANGED:      /* 11: Response to a showbreak command */
@@ -183,31 +198,36 @@ XsldbgEventData *XsldbgEvent::createEventData(XsldbgMessageEnum type, const void
       break;
 
     case XSLDBG_MSG_PARAMETER_CHANGED:       /* 12: Response to showparam command */
-      handleParameterItem(result, msgData);
       break;
 
     case XSLDBG_MSG_TEXTOUT:         /* 13 : Free form text from xsldg */
-      /* this is going to be most common and its so simple we can handle 
+      /* this is going to be most common and it is so simple we can handle
        it here */
       result->setText(0, XsldbgDebuggerBase::fromUTF8((xmlChar*)msgData));
       break;
 
-    case XSLDBG_MSG_FILEOUT:         /* 14 : Response to cat commmand, ie
+    case XSLDBG_MSG_FILEOUT:         /* 14 : Response to cat command, ie
                                  * Free form text in file */
       /* this is actualy the  file to load */
       {
-	QString fileName = XsldbgDebuggerBase::fromUTF8((xmlChar*)msgData);
+	KUrl url(XsldbgDebuggerBase::fromUTF8FileName((xmlChar*)msgData));
+	if (!url.isLocalFile()){
+	    qDebug() << "Remote path to temp file" << url.prettyUrl() << " is unsupported, unable to read message from xsldbg";
+	    break;
+	}
+	    
+	QString fileName = url.path();
 	QString outputText;
-	if (fileName != QString::null){
+	if (!fileName.isNull()){
 	  QFile file (fileName);
-	  if (file.open(IO_ReadOnly)){
+	  if (file.open(QIODevice::ReadOnly)){
 	    QTextStream textFile(&file);
 	    QString textIn = "";
-	    textFile.setEncoding(QTextStream::UnicodeUTF8);				
+	    textFile.setCodec(QTextCodec::codecForName("UTF8"));
 	    while (1){
 	      textIn = textFile.readLine();
-	      if (textIn == QString::null)
-		break;						
+	      if (textIn.isNull())
+		break;
 	      outputText.append(textIn).append("\n");
 	    }
 	    file.close();
@@ -218,17 +238,17 @@ XsldbgEventData *XsldbgEvent::createEventData(XsldbgMessageEnum type, const void
       }
       break;
 
-    case XSLDBG_MSG_LOCALVAR_CHANGED:        /* 15 : Response to locals command ie a 
+    case XSLDBG_MSG_LOCALVAR_CHANGED:        /* 15 : Response to locals command ie a
                                          * local variable */
       handleLocalVariableItem(result, msgData);
       break;
 
-    case XSLDBG_MSG_GLOBALVAR_CHANGED:       /* 16 : Response to globals command 
+    case XSLDBG_MSG_GLOBALVAR_CHANGED:       /* 16 : Response to globals command
                                          * ie a global variable */
       handleGlobalVariableItem(result, msgData);
       break;
 
-    case XSLDBG_MSG_TEMPLATE_CHANGED:        /* 17 : Response to templates commmand 
+    case XSLDBG_MSG_TEMPLATE_CHANGED:        /* 17 : Response to templates command
                                          * ie template details */
       handleTemplateItem(result, msgData);
       break;
@@ -238,8 +258,8 @@ XsldbgEventData *XsldbgEvent::createEventData(XsldbgMessageEnum type, const void
       handleSourceItem(result, msgData);
       break;
 
-    case XSLDBG_MSG_INCLUDED_SOURCE_CHANGED: /* 19: Response to stylesheets 
-                                         * command, a xmlNodeptr of 
+    case XSLDBG_MSG_INCLUDED_SOURCE_CHANGED: /* 19: Response to stylesheets
+                                         * command, a xmlNodeptr of
                                          * a included stylesheet */
       handleIncludedSourceItem(result, msgData);
       break;
@@ -249,11 +269,11 @@ XsldbgEventData *XsldbgEvent::createEventData(XsldbgMessageEnum type, const void
       handleCallStackItem(result, msgData);
       break;
 
-    case XSLDBG_MSG_ENTITIY_CHANGED: /* 21: Response to entities 
+    case XSLDBG_MSG_ENTITIY_CHANGED: /* 21: Response to entities
                                  * command */
       handleEntityItem(result, msgData);
       break;
-    
+
     case XSLDBG_MSG_RESOLVE_CHANGE:  /* 22: Response to system or
                                  * public command */
       handleResolveItem(result, msgData);
@@ -262,18 +282,16 @@ XsldbgEventData *XsldbgEvent::createEventData(XsldbgMessageEnum type, const void
     default:
       qDebug("Unhandled type in createEventData %d", type);
 
-    }  
+    }
  return result;
 }
 
 void XsldbgEvent::emitMessage(XsldbgDebuggerBase *debugger)
 {
-  XsldbgEventData *eventData;
-
   this->debugger = debugger;
 
-  for (eventData = list.first(); eventData != 0L; eventData = list.next()){
-    emitMessage(eventData);
+  for (int index = 0; index < list.count(); ++index){
+    emitMessage(list[index]);
   }
 
   /* make sure that we only temporarily set the value for debugger*/
@@ -283,7 +301,7 @@ void XsldbgEvent::emitMessage(XsldbgDebuggerBase *debugger)
 
 void XsldbgEvent::emitMessage(XsldbgEventData *eventData)
 {
-  
+
   if ((eventData == 0L) || (debugger == 0L)){
     qDebug("emitMessage failed");
     if (eventData == 0L)
@@ -293,8 +311,8 @@ void XsldbgEvent::emitMessage(XsldbgEventData *eventData)
     return;
   }
 
-  /* 
-     Method use will end up like 
+  /*
+     Method use will end up like
 
     emit debugger->lineNoChanged("", 1, false);
 
@@ -312,16 +330,18 @@ void XsldbgEvent::emitMessage(XsldbgEventData *eventData)
     case XSLDBG_MSG_THREAD_DEAD:     /* 4: The xsldbg thread died */
       /* the debugger has stopped is about to stop */
       debugger->setInitialized(false);
+      emit debugger->debuggerStopped();
       break;
 
     /* input status ( once thread is running) */
     case XSLDBG_MSG_AWAITING_INPUT:  /* 5: Waiting for user input */
       	if  ((getInputReady() == 0) && (debugger->commandQueue().count() > 0)){
+		qDebug("Command queue not empty");
       		QTimerEvent *e = new QTimerEvent(debugger->getUpdateTimerID());
       		QApplication::postEvent(debugger, e);
       	}
-	if (updateText.length() > 0){
-	  emit debugger->showMessage(updateText);
+	if (!updateText.isEmpty()){
+	  debugger->queueMessage(updateText);
 	  updateText = "";
 	}
       break;
@@ -335,19 +355,23 @@ void XsldbgEvent::emitMessage(XsldbgEventData *eventData)
       break;
 
     /* provide more informatiom about state of xsldbg (optional) */
-    case XSLDBG_MSG_PROCESSING_RESULT:       /* 8: An error occured performing command
+    case XSLDBG_MSG_PROCESSING_RESULT:       /* 8: An error occurred performing command
                                          * requested command */
-      if (eventData->getText(0) != QString::null)
+      if (!eventData->getText(0).isNull())
 	updateText.append(eventData->getText(0));
       break;
 
-    case XSLDBG_MSG_LINE_CHANGED:    /* 9: Changed to new line number 
+    case XSLDBG_MSG_LINE_CHANGED:    /* 9: Changed to new line number
                                  * ie a step */
       handleLineNoChanged(eventData, 0L);
       break;
 
     case XSLDBG_MSG_FILE_CHANGED:    /* 10: Loaded source/data file */
-      /* not used */
+	if (beenCreated == false){
+	    /* Empty data */
+	}else{
+	    emit debugger->fileDetailsChanged();
+	}
       break;
 
     case XSLDBG_MSG_BREAKPOINT_CHANGED:      /* 11: Response to a showbreak command */
@@ -355,35 +379,34 @@ void XsldbgEvent::emitMessage(XsldbgEventData *eventData)
       break;
 
     case XSLDBG_MSG_PARAMETER_CHANGED:       /* 12: Response to showparam command */
-      handleParameterItem(eventData, 0L);
       break;
 
     case XSLDBG_MSG_TEXTOUT:         /* 13 : Free form text from xsldg */
-      /* this is going to be most common and its so simple we can handle 
+      /* this is going to be most common and it is so simple we can handle
        it here */
       /*
       emit debugger->showMessage(eventData->getText(0));
-      */      
-      if (eventData->getText(0) != QString::null)
+      */
+      if (!eventData->getText(0).isNull())
 	updateText.append(eventData->getText(0));
       break;
 
- case XSLDBG_MSG_FILEOUT:         /* 14 : Response to cat commmand */
-      if (eventData->getText(0) != QString::null)
+ case XSLDBG_MSG_FILEOUT:         /* 14 : Response to cat command */
+      if (!eventData->getText(0).isNull())
 	updateText.append(eventData->getText(0));
 	break;
 
-    case XSLDBG_MSG_LOCALVAR_CHANGED:        /* 15 : Response to locals command ie a 
+    case XSLDBG_MSG_LOCALVAR_CHANGED:        /* 15 : Response to locals command ie a
                                          * local variable */
       handleLocalVariableItem(eventData, 0L);
       break;
 
-    case XSLDBG_MSG_GLOBALVAR_CHANGED:       /* 16 : Response to globals command 
+    case XSLDBG_MSG_GLOBALVAR_CHANGED:       /* 16 : Response to globals command
                                          * ie a global variable */
       handleGlobalVariableItem(eventData, 0L);
       break;
 
-    case XSLDBG_MSG_TEMPLATE_CHANGED:        /* 17 : Response to templates commmand 
+    case XSLDBG_MSG_TEMPLATE_CHANGED:        /* 17 : Response to templates command
                                          * ie template details */
       handleTemplateItem(eventData, 0L);
       break;
@@ -393,8 +416,8 @@ void XsldbgEvent::emitMessage(XsldbgEventData *eventData)
       handleSourceItem(eventData, 0L);
       break;
 
-    case XSLDBG_MSG_INCLUDED_SOURCE_CHANGED: /* 19: Response to stylesheets 
-                                         * command, a xmlNodeptr of 
+    case XSLDBG_MSG_INCLUDED_SOURCE_CHANGED: /* 19: Response to stylesheets
+                                         * command, a xmlNodeptr of
                                          * a included stylesheet */
       handleIncludedSourceItem(eventData, 0L);
       break;
@@ -404,11 +427,11 @@ void XsldbgEvent::emitMessage(XsldbgEventData *eventData)
       handleCallStackItem(eventData, 0L);
       break;
 
-    case XSLDBG_MSG_ENTITIY_CHANGED: /* 21: Response to entities 
+    case XSLDBG_MSG_ENTITIY_CHANGED: /* 21: Response to entities
                                  * command */
       handleEntityItem(eventData, 0L);
       break;
-    
+
     case XSLDBG_MSG_RESOLVE_CHANGE:  /* 22: Response to system or
                                  * public command */
       handleResolveItem(eventData, 0L);
@@ -416,7 +439,7 @@ void XsldbgEvent::emitMessage(XsldbgEventData *eventData)
 
     default:
       qDebug("Unhandled type in emitMessage %d", itemType);
-    } 
+    }
 }
 
 
@@ -426,7 +449,7 @@ void XsldbgEvent::handleLineNoChanged(XsldbgEventData *eventData, const  void *m
     if (beenCreated == false){
       /* add our specific data to eventData*/
       if (xsldbgUrl() != 0L){
-	eventData->setText(0, XsldbgDebuggerBase::fromUTF8(xsldbgUrl())); 
+	eventData->setText(0, XsldbgDebuggerBase::fromUTF8FileName(xsldbgUrl()));
 	eventData->setInt(0, xsldbgLineNo());
 	eventData->setInt(1, msgData != 0L);
       }
@@ -463,7 +486,7 @@ void XsldbgEvent::handleBreakpointItem(XsldbgEventData *eventData, const  void *
       if (msgData != 0L){
 	breakPointPtr breakItem = (breakPointPtr)msgData;
 	/* set the file name*/
-	eventData->setText(0, XsldbgDebuggerBase::fromUTF8(breakItem->url));				
+	eventData->setText(0, XsldbgDebuggerBase::fromUTF8FileName(breakItem->url));
 	/* line number*/
 	eventData->setInt(0, (int)breakItem->lineNo);
 
@@ -498,30 +521,39 @@ void XsldbgEvent::handleGlobalVariableItem(XsldbgEventData *eventData, const  vo
       /* add our specific data to eventData*/
       if (msgData != 0L){
 	xsltStackElemPtr item = (xsltStackElemPtr)msgData;
-	QString name, fileName;
+	QString name, fileName, selectXPath;
 	int lineNumber = -1;
 
 	/* variable name*/
 	if (item->nameURI)
-	  name = (XsldbgDebuggerBase::fromUTF8(item->nameURI)).append(":");	
+	  name = (XsldbgDebuggerBase::fromUTF8FileName(item->nameURI)).append(":");
 	name.append(XsldbgDebuggerBase::fromUTF8(item->name));
- 	
 
 
-	if (item->comp && item->comp->inst && item->comp->inst->doc){
-	  fileName = XsldbgDebuggerBase::fromUTF8(item->comp->inst->doc->URL);
+
+	if (item->computed && item->comp && item->comp->inst && item->comp->inst->doc){
+	  fileName = XsldbgDebuggerBase::fromUTF8FileName(item->comp->inst->doc->URL);
 	  lineNumber= xmlGetLineNo(item->comp->inst);
-	}  
+	}
+	
+	if (item->select)
+	    selectXPath   = XsldbgDebuggerBase::fromUTF8(item->select);
 
-	eventData->setText(0, name);
-	eventData->setText(1, fileName);
-	eventData->setInt(0, lineNumber);
+	  eventData->setText(0, name);
+	  eventData->setText(1, "");
+	  eventData->setText(2, fileName);
+	  eventData->setText(3, selectXPath);
+	  eventData->setInt(0, lineNumber);
+	  eventData->setInt(1, 0); 
       }
     }else{
       /* emit the event data via debugger*/
-      emit debugger->globalVariableItem(eventData->getText(0), /* variable name*/
-					eventData->getText(1), /* file name*/
-					eventData->getInt(0) /* line number */);
+      emit debugger->variableItem(eventData->getText(0), /* variable name*/
+				       eventData->getText(1), /* templatecontext*/
+				       eventData->getText(2), /* file name */
+				       eventData->getInt(0), /* line number */
+				       eventData->getText(3), /* select XPath */
+				       eventData->getInt(1) /* Is this a local variable */ );
     }
   }
 }
@@ -534,16 +566,16 @@ void XsldbgEvent::handleLocalVariableItem(XsldbgEventData *eventData, const  voi
       /* add our specific data to eventData*/
       if (msgData != 0L){
 	xsltStackElemPtr item = (xsltStackElemPtr)msgData;
-	QString name, templateContext, fileName;
+	QString name, templateContext, fileName, selectXPath;
 	int lineNumber = -1;
 	xmlNodePtr varXmlNode;
 
 	/* variable name */
 	if (item->nameURI)
-	  name = (XsldbgDebuggerBase::fromUTF8(item->nameURI)).append(":");	
+	  name = (XsldbgDebuggerBase::fromUTF8FileName(item->nameURI)).append(":");
 	name.append(XsldbgDebuggerBase::fromUTF8(item->name));
- 	
-	if (item->comp && item->comp->inst){
+
+	if (item->computed && item->comp && item->comp->inst){
 	  varXmlNode = item->comp->inst;
 
 	  /* try to find out what template this variable belongs to */
@@ -562,52 +594,58 @@ void XsldbgEvent::handleLocalVariableItem(XsldbgEventData *eventData, const  voi
 	  }
 
 	  if (varXmlNode->doc)  {
-	    fileName = XsldbgDebuggerBase::fromUTF8(varXmlNode->doc->URL);
+	    fileName = XsldbgDebuggerBase::fromUTF8FileName(varXmlNode->doc->URL);
 	    lineNumber = xmlGetLineNo(varXmlNode);
-	  }  
+	  }
+	
+	  if (item->select)
+		selectXPath   = XsldbgDebuggerBase::fromUTF8(item->select);
 
 	  eventData->setText(0, name);
 	  eventData->setText(1, templateContext);
 	  eventData->setText(2, fileName);
-	  eventData->setInt(0, lineNumber);	
-	  
+	  eventData->setText(3, selectXPath);
+	  eventData->setInt(0, lineNumber);
+	  eventData->setInt(1, 1);
 	}
       }
     }else{
       /* emit the event data via debugger*/
-      emit debugger->localVariableItem(eventData->getText(0), /* variable name*/
+      emit debugger->variableItem(eventData->getText(0), /* variable name*/
 				       eventData->getText(1), /* templatecontext*/
 				       eventData->getText(2), /* file name */
-				       eventData->getInt(0) /* line number */);
+				       eventData->getInt(0), /* line number */
+				       eventData->getText(3), /* select XPath */
+				       eventData->getInt(1) /* Is this a local variable */ );
     }
   }
 }
 
 
 void XsldbgEvent::handleTemplateItem(XsldbgEventData *eventData, const  void *msgData)
-{  
+{
 if (eventData != 0L){
     if (beenCreated == false){
       /* add our specific data to eventData*/
       if(msgData != 0L){
 	xsltTemplatePtr item = (xsltTemplatePtr)msgData;
 	QString name, mode,  fileName;
-	int lineNumber = -1;			
-				
+	int lineNumber = -1;
+
 	if (item->nameURI)
-	  name.append(XsldbgDebuggerBase::fromUTF8(item->nameURI)).append(":");
-			  	
+	  name.append(XsldbgDebuggerBase::fromUTF8FileName(item->nameURI)).append(":");
+
 	if (item->name)
 	  name.append(XsldbgDebuggerBase::fromUTF8(item->name));
-	else if (item->match)  	
+	else if (item->match)
 	  name.append(XsldbgDebuggerBase::fromUTF8(item->match));
-			  	  	
+
 	mode = XsldbgDebuggerBase::fromUTF8(item->mode);
-			  	  	
+
 	if (item->elem && item->elem->doc){
-	  fileName = XsldbgDebuggerBase::fromUTF8(item->elem->doc->URL);				  	
-	  lineNumber = xmlGetLineNo(item->elem);			  	 	
-	}  	
+	  fileName = XsldbgDebuggerBase::fromUTF8FileName(item->elem->doc->URL);
+	  lineNumber = xmlGetLineNo(item->elem);
+	}
 	eventData->setText(0, name);
 	eventData->setText(1, mode);
 	eventData->setText(2, fileName);
@@ -631,15 +669,15 @@ void XsldbgEvent::handleIncludedSourceItem(XsldbgEventData *eventData, const  vo
     if (beenCreated == false){
       /* add our specific data to eventData*/
       if (msgData != 0L){
-	xmlNodePtr item = (xmlNodePtr)msgData;			   	
+	xmlNodePtr item = (xmlNodePtr)msgData;
 	QString name,  fileName;
-	int lineNumber = -1;			
-						  	
+	int lineNumber = -1;
+
 	if (item->doc)
-	  name = XsldbgDebuggerBase::fromUTF8(item->doc->URL);
+	  name = XsldbgDebuggerBase::fromUTF8FileName(item->doc->URL);
 
 	if (item->parent && item->parent->doc){
-	  fileName = XsldbgDebuggerBase::fromUTF8(item->parent->doc->URL);
+	  fileName = XsldbgDebuggerBase::fromUTF8FileName(item->parent->doc->URL);
 	  lineNumber = xmlGetLineNo((xmlNodePtr)item->parent->doc);
 	}
 	eventData->setText(0, name);
@@ -663,16 +701,16 @@ void XsldbgEvent::handleSourceItem(XsldbgEventData *eventData, const  void *msgD
       if (msgData != 0L){
 	xsltStylesheetPtr item = (xsltStylesheetPtr)msgData;
 	QString name,  fileName;
-	int lineNumber = -1;			
-   						  	
+	int lineNumber = -1;
+
 	if (item->doc)
-	  name = XsldbgDebuggerBase::fromUTF8(item->doc->URL);
+	  name = XsldbgDebuggerBase::fromUTF8FileName(item->doc->URL);
 
 	if (item->parent && item->parent->doc){
-	  fileName = XsldbgDebuggerBase::fromUTF8(item->parent->doc->URL);
+	  fileName = XsldbgDebuggerBase::fromUTF8FileName(item->parent->doc->URL);
 	  lineNumber = xmlGetLineNo((xmlNodePtr)item->parent->doc);
 	}
-   	
+
 	eventData->setText(0, name);
 	eventData->setText(1, fileName);
 	eventData->setInt(0, lineNumber);
@@ -685,30 +723,6 @@ void XsldbgEvent::handleSourceItem(XsldbgEventData *eventData, const  void *msgD
     }
   }
 }
-
-void XsldbgEvent::handleParameterItem(XsldbgEventData *eventData, const  void *msgData)
-{
-  if (eventData != 0L){
-    if (beenCreated == false){
-      /* add our specific data to eventData*/
-      if (msgData != 0L){
-	parameterItemPtr paramItem = (parameterItemPtr)msgData;
-	QString name, value;
-	
-	name = XsldbgDebuggerBase::fromUTF8(paramItem->name);
-	value = XsldbgDebuggerBase::fromUTF8(paramItem->value);
-
-	eventData->setText(0, name);
-	eventData->setText(1, value);
-      }
-    }else{
-      /* emit the event data via debugger*/
-      emit debugger->parameterItem(eventData->getText(0), /* param name*/
-				   eventData->getText(1) /* param value*/);
-    }
-  }
-}
-
 
 void XsldbgEvent::handleCallStackItem(XsldbgEventData *eventData, const  void *msgData)
 {
@@ -723,13 +737,13 @@ void XsldbgEvent::handleCallStackItem(XsldbgEventData *eventData, const  void *m
 	/* template name */
 	if (item->info){
 	  templateName = XsldbgDebuggerBase::fromUTF8(item->info->templateName);
-	  fileName = XsldbgDebuggerBase::fromUTF8(item->info->url);
+	  fileName = XsldbgDebuggerBase::fromUTF8FileName(item->info->url);
 	  lineNumber = item->lineNo;
 	}
-	
+
 	eventData->setText(0, templateName);
 	eventData->setText(1, fileName);
-	eventData->setInt(0, lineNumber);	
+	eventData->setInt(0, lineNumber);
       }
     }else{
       /* emit the event data via debugger*/
@@ -748,11 +762,11 @@ void XsldbgEvent::handleEntityItem(XsldbgEventData *eventData, const  void *msgD
       /* add our specific data to eventData*/
       if (msgData != 0L){
 	QString SystemID, PublicID;
-	
+
 	entityInfoPtr info =  (entityInfoPtr)msgData;
-	SystemID = XsldbgDebuggerBase::fromUTF8(info->SystemID);
+	SystemID = XsldbgDebuggerBase::fromUTF8FileName(info->SystemID);
 	PublicID = XsldbgDebuggerBase::fromUTF8(info->PublicID);
-	
+
 	eventData->setText(0, SystemID);
 	eventData->setText(1, PublicID);
       }
@@ -771,8 +785,8 @@ void XsldbgEvent::handleResolveItem(XsldbgEventData *eventData, const  void *msg
     if (beenCreated == false){
       /* add our specific data to eventData*/
       if (msgData != 0L){
-	QString URI = XsldbgDebuggerBase::fromUTF8((const xmlChar*)msgData);
-	
+	QString URI = XsldbgDebuggerBase::fromUTF8FileName((const xmlChar*)msgData);
+
 	eventData->setText(0, URI);
       }
     }else{
@@ -782,47 +796,3 @@ void XsldbgEvent::handleResolveItem(XsldbgEventData *eventData, const  void *msg
   }
 }
 
-
-void XsldbgEvent::handleIntOptionItem(XsldbgEventData *eventData, const  void *msgData)
-{
-  if (eventData != 0L){
-    if (beenCreated == false){
-      /* add our specific data to eventData*/
-      if (msgData != 0L){
-	parameterItemPtr paramItem = (parameterItemPtr)msgData;
-	eventData->setText(0, XsldbgDebuggerBase::fromUTF8(paramItem->name));
-	eventData->setInt(0, paramItem->intValue);
-      }
-    }else{
-      /* emit the event data via debugger*/
-      emit debugger->intOptionItem(eventData->getText(0), /* option name*/
-				   eventData->getInt(0) /* value*/);
-    }
-  }
-}
-
-
-void XsldbgEvent::handleStringOptionItem(XsldbgEventData *eventData, const  void *msgData)
-{
-  if (eventData != 0L){
-    if (beenCreated == false){
-      /* add our specific data to eventData*/
-      if (msgData != 0L){
-	parameterItemPtr paramItem = (parameterItemPtr)msgData;
-	eventData->setText(0, XsldbgDebuggerBase::fromUTF8(paramItem->name));
-	eventData->setText(1, XsldbgDebuggerBase::fromUTF8(paramItem->value));	
-      }
-    }else{
-      /* emit the event data via debugger*/      
-      emit debugger->stringOptionItem(eventData->getText(0), /* option name*/
-				   eventData->getText(1) /* value*/);
-    }
-  }
-}
-
-
-
-void XsldbgEventDataList::deleteItem( QCollection::Item d )
-{
-    if ( del_item ) delete (XsldbgEventData *)d;
-}

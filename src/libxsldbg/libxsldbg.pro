@@ -39,36 +39,36 @@ HEADERS += arraylist.h \
 	   xsldbgwin32config.h \
 	   xsldbgnotifier.h  
 
-SOURCES += arraylist.c \
-           breakpoint.c \
-           breakpoint_cmds.c \
-           callstack.c \
-           debug.c \
-           debugXSL.c \
-           file_cmds.c \
-           files.c \
-           nodeview_cmds.c \
-           option_cmds.c \
-           options.c \
-           os_cmds.c \
-           param_cmds.c \
-           search.c \
-           search_cmds.c \
-           template_cmds.c \
-           trace_cmds.c \
-           utils.c \
-           variable_cmds.c \
-           xsldbg.c \
-           xsldbgthread.c
+SOURCES += arraylist.cpp \
+           breakpoint.cpp \
+           breakpoint_cmds.cpp \
+           callstack.cpp \
+           debug.cpp \
+           debugXSL.cpp \
+           file_cmds.cpp \
+           files.cpp \
+           nodeview_cmds.cpp \
+           option_cmds.cpp \
+           options.cpp \
+           os_cmds.cpp \
+           param_cmds.cpp \
+           search.cpp \
+           search_cmds.cpp \
+           template_cmds.cpp \
+           trace_cmds.cpp \
+           utils.cpp \
+           variable_cmds.cpp \
+           xsldbg.cpp \
+           xsldbgthread.cpp
 
 unix:SOURCES += \
-           files_unix.c \
-           help_unix.c \
-           options_unix.c 
+           files_unix.cpp \
+           help_unix.cpp \
+           options_unix.cpp 
 
 win32:SOURCES += \
-           files_win32.c \
-           help_win32.c \
-           options_win32.c 
+           files_win32.cpp \
+           help_win32.cpp \
+           options_win32.cpp 
 
 TARGET = xsldbg

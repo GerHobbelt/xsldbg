@@ -1,33 +1,40 @@
-/***************************************************************************
-                          xsldbgthread.cpp  -  description
-                             -------------------
-    begin                : Thu Dec 20 2001
-    copyright            : (C) 2001 by keith
-    email                : keith@linux
- ***************************************************************************/
 
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
+/**
+ *
+ *  This file is part of the kdewebdev package
+ *  Copyright (c) 2001 Keith Isdale <keith@kdewebdev.org>
+ *
+ *  This library is free software; you can redistribute it and/or 
+ *  modify it under the terms of the GNU General Public License as 
+ *  published by the Free Software Foundation; either version 2 of 
+ *  the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Library General Public License
+ *  along with this library; see the file COPYING.LIB.  If not, write to
+ *  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *  Boston, MA 02110-1301, USA.
+ **/
 
 
-#include "config.h"
-#include <pthread.h>            /* need to create/work with process thread */
-#include <errno.h>              /* need for EAGAIN */
+#include "config-kxsldbg.h"
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <stdarg.h>
-#include <libxml/xmlerror.h>
-#include <libxsldbg/breakpoint.h>
 
-#include <libxsldbg/xsldbgmsg.h>
-#include <libxsldbg/xsldbgthread.h>
+#include <libxml/xmlerror.h>
+
+#include "../libxsldbg/breakpoint.h"
+#include "../libxsldbg/xsldbgmsg.h"
+#include "../libxsldbg/xsldbgthread.h"
+#include "../libxsldbg/qtnotifier2.h"
+#include "../libxsldbg/xsldbg.h"
+#include <QThread>
 
 #ifdef HAVE_READLINE
 #include <readline/readline.h>
@@ -53,20 +60,40 @@ FILE *stdoutIO = NULL;
 /* -----------------------------------------------
    private functions
  ---------------------------------------------------*/
-extern "C" {
 
-/**
- * xsldbgGenericErrorFunc:
- * @ctx:  Is Valid
- * @msg:  Is valid
- * @...:  other parameters to use
- * 
- * Handles print output from xsldbg and passes it to the application
- */
-void
-xsldbgGenericErrorFunc(void *ctx, const char *msg, ...);
 
+extern "C" { 
+xmlChar * qtXslDbgShellReadline(xmlChar * prompt);
+
+};
+
+static void xsldbgThreadCleanupQt(void);
+
+class XsldbgThread : public QThread
+{
+public:
+    void run();
+};
+
+void XsldbgThread::run()
+{
+    if (getThreadStatus() != XSLDBG_MSG_THREAD_INIT){
+       fprintf(stderr, "xsldbg thread is not ready to be started. Or one is already running.\n");
+    }
+
+    xsldbgSetThreadCleanupFunc(xsldbgThreadCleanupQt);
+    setThreadStatus(XSLDBG_MSG_THREAD_RUN);
+    setInputStatus(XSLDBG_MSG_AWAITING_INPUT);
+
+    /* call the "main of xsldbg" found in debugXSL.c */
+    xsldbgMain(0,0);
+
+    setInputStatus(XSLDBG_MSG_PROCESSING_INPUT);
+    notifyXsldbgApp(XSLDBG_MSG_THREAD_DEAD, NULL);
+    setThreadStatus(XSLDBG_MSG_THREAD_DEAD);
 }
+
+static XsldbgThread *xsldbgThreadRunner = 0;
 
 /* -----------------------------------------------
    end functions
@@ -77,27 +104,29 @@ int
 xsldbgThreadInit(void)
 {
     int result = 0;
-    fprintf(stderr, "mainInit()\n");
-    xsltSetGenericErrorFunc(0, xsldbgGenericErrorFunc);	
+    xsltSetGenericErrorFunc(0, xsldbgGenericErrorFunc);
     setThreadStatus(XSLDBG_MSG_THREAD_INIT);
+    xsldbgSetAppFunc(qtNotifyXsldbgApp);
+    xsldbgSetAppStateFunc(qtNotifyStateXsldbgApp); 
+    xsldbgSetTextFunc(qtNotifyTextXsldbgApp);
+    xsldbgSetReadlineFunc(qtXslDbgShellReadline);
     
-    /* create the thread */
-    if (pthread_create(&mythread, NULL, xsldbgThreadMain, NULL) != EAGAIN) {
-      int counter;
-      for (counter = 0; counter < 11; counter++){
-	if (getThreadStatus() != XSLDBG_MSG_THREAD_INIT)
-	  break;
-	usleep(250000); /*guess that it will take at most 2.5 seconds to startup */
-      }
-      /* xsldbg should have started by now if it can */
-      if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
-        fprintf(stderr, "Created thread\n");
-	result++;
-      }else
+
+    /* create the thread and start it */
+    xsldbgThreadRunner = new XsldbgThread();
+    xsldbgThreadRunner->start();
+
+    int counter;
+    for (counter = 0; counter < 11; counter++){
+        if (getThreadStatus() != XSLDBG_MSG_THREAD_INIT)
+          break;
+        usleep(250000); /*guess that it will take at most 2.5 seconds to startup */
+    }
+    /* xsldbg should have started by now if it can */
+    if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
+        result++;
+    }else
          fprintf(stderr, "Thread did not start\n");
-    } else {
-      fprintf(stderr, "Failed to create thread\n");
-    }    
 
     return result;
 }
@@ -107,19 +136,20 @@ xsldbgThreadInit(void)
 void
 xsldbgThreadFree(void)
 {
-  fprintf(stderr, "xsldbgThreadFree()\n");
+    if (!xsldbgThreadRunner)
+	return;
+
     if (getThreadStatus() != XSLDBG_MSG_THREAD_DEAD)
     {
-      int counter;
-      fprintf(stderr, "Killing xsldbg thread\n");
-      setThreadStatus(XSLDBG_MSG_THREAD_STOP);    	
-      for (counter = 0; counter < 11; counter++){
-	if (getThreadStatus() == XSLDBG_MSG_THREAD_DEAD)
-	  break;
-	usleep(250000); /*guess that it will take at most 2.5 seconds to stop */
-      }
+      setThreadStatus(XSLDBG_MSG_THREAD_STOP);
+      /*guess that it will take at most 2.5 seconds to stop */
+      xsldbgThreadRunner->wait(2500000);
     }
-   	
+
+    if (!getThreadStatus() == XSLDBG_MSG_THREAD_DEAD)
+        fprintf(stderr, "xsldbg's thread did not stop properly killing it anyhow\n");
+    delete xsldbgThreadRunner;
+    xsldbgThreadRunner = 0;
 }
 
 const char *getFakeInput()
@@ -134,7 +164,7 @@ fakeInput(const char *text)
 {
     int result = 0;
 
-    if (!text || (getInputReady() == 1) || (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)) 
+    if (!text || (getInputReady() == 1) || (getThreadStatus() != XSLDBG_MSG_THREAD_RUN))
         return result;
 
     //    fprintf(stderr, "\nFaking input of \"%s\"\n", text);
@@ -147,16 +177,16 @@ fakeInput(const char *text)
 
 /* use this function instead of the one that was in debugXSL.c */
 /**
- * xslShellReadline:
+ * qtXslDbgShellReadline:
  * @prompt:  the prompt value
  *
  * Read a string
  *
- * Returns a copy of the text inputed or NULL if EOF in stdin found. 
+ * Returns a copy of the text inputed or NULL if EOF in stdin found.
  *    The caller is expected to free the returned string.
  */
 xmlChar *
-xslDbgShellReadline(xmlChar * prompt)
+qtXslDbgShellReadline(xmlChar * prompt)
 {
 
   const char *inputReadBuff;
@@ -194,7 +224,7 @@ xslDbgShellReadline(xmlChar * prompt)
       } else {
         strcpy(last_read, line_read);
       }
-      return (xmlChar *) xmlMemStrdup(line_read);  
+      return (xmlChar *) xmlMemStrdup(line_read);
 #endif
 
     }
@@ -207,7 +237,6 @@ xslDbgShellReadline(xmlChar * prompt)
       usleep(10000);
       /* have we been told to die */
       if (getThreadStatus() ==  XSLDBG_MSG_THREAD_STOP){
-	fprintf(stderr, "About to stop thread\n");
 	xslDebugStatus = DEBUG_QUIT;
 	return NULL;
       }
@@ -229,7 +258,7 @@ xsldbgErrorMsg msg;
 xsldbgErrorMsgPtr  msgPtr = &msg;
 xmlChar *msgText = NULL;
 
-int notifyStateXsldbgApp(XsldbgMessageEnum type, int commandId, 
+int qtNotifyStateXsldbgApp(XsldbgMessageEnum type, int commandId,
 			  XsldbgCommandStateEnum commandState, const char *text)
 {
   int result = 0;
@@ -243,7 +272,7 @@ int notifyStateXsldbgApp(XsldbgMessageEnum type, int commandId,
       return result; /* out of memory */
     }
    else
-     msg.text = NULL; 
+     msg.text = NULL;
 
   notifyXsldbgApp(XSLDBG_MSG_PROCESSING_RESULT, msgPtr);
   if (msg.text != NULL)
@@ -252,75 +281,39 @@ int notifyStateXsldbgApp(XsldbgMessageEnum type, int commandId,
 	msg.text = NULL;
       }
 
-  result++; /* */
+  result = 1; 
   return result;
 }
 
 
-int notifyTextXsldbgApp(XsldbgMessageEnum type, const char *text)
+int qtNotifyTextXsldbgApp(XsldbgMessageEnum type, const char *text)
 {
-  return notifyStateXsldbgApp(type, -1, XSLDBG_COMMAND_NOTUSED, text);
+  return qtNotifyStateXsldbgApp(type, -1, XSLDBG_COMMAND_NOTUSED, text);
 }
 
 char mainBuffer[DEBUG_BUFFER_SIZE];
 
+
 /* this is where the thread get to do all its work */
 void *
-xsldbgThreadMain(void *data)
+xsldbgThreadMain(void *)
 {
-  int defaultArgc = 2;
-  char *defaultArgv[2];
-  int i;
-
-  if (getThreadStatus() != XSLDBG_MSG_THREAD_INIT){
-    fprintf(stderr, "xsldbg thread is not ready to be started. Or one is already running.\n");
-    return NULL; /* we can't start more than one thread of xsldbg */
-  }
-
-  defaultArgv[0] = xmlMemStrdup("xsldbg");
-  defaultArgv[1] = xmlMemStrdup("--shell");
-  /*
-  defaultArgv[2] = xmlMemStrdup("xsldoc.xsl");
-  defaultArgv[3] = xmlMemStrdup("xsldoc.xml");
-  */
-  for (i = 0; i < defaultArgc; i++){
-    if (defaultArgv[i] == NULL){
-      fprintf(stderr, "Start thread failed. Unable to create xsldbg arguments\n");
-      return NULL;
-    }     
-  }
-
-    setThreadStatus(XSLDBG_MSG_THREAD_RUN);
-    setInputStatus(XSLDBG_MSG_AWAITING_INPUT);
-    fprintf(stderr, "Starting thread\n");
-
-    /* call the "main of xsldbg" found in debugXSL.c */
-    xsldbgMain(defaultArgc, defaultArgv);
-    fprintf(stderr, "Stopping thread\n");
-         
-  for (i = 0; i < defaultArgc; i++){
-    xmlFree(defaultArgv[i]);
-  }
-
-    setThreadStatus(XSLDBG_MSG_THREAD_DEAD);
-    setInputStatus(XSLDBG_MSG_PROCESSING_INPUT);
-    notifyXsldbgApp(XSLDBG_MSG_THREAD_DEAD, NULL);
+    fprintf(stderr, "xsldbgThreadMain() not used anymore update all of kxsldbg's libraries");
     return NULL;
 }
 
 
 
-/* thread has died so cleanup after it not called directly but via 
+/* thread has died so cleanup after it not called directly but via
  notifyXsldbgApp*/
 void
-xsldbgThreadCleanup(void)
+xsldbgThreadCleanupQt(void)
 {
-    fprintf(stderr, "Thread has finished\n");
     if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN)
       {
 	xsldbgThreadFree();
       }
-    /* its safe to modify threadStatus as the thread is now dead */
+    /* it is safe to modify threadStatus as the thread is now dead */
     setThreadStatus(XSLDBG_MSG_THREAD_DEAD);
 }
 
@@ -341,6 +334,6 @@ xsldbgThreadStdoutReader(void *data)
       fprintf(stderr, "Unable to read from stdout from xsldbg\n");
       break;
     }
-  } 
+  }
   return data;
 }

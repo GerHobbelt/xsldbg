@@ -1,56 +1,29 @@
 
-/***************************************************************************
-                          help.h  -  describe the help support functions
-                             -------------------
-    begin                : Sun Sep 16 2001
-    copyright            : (C) 2001 by Keith Isdale
-    email                : k_isdale@tpg.com.au
- ***************************************************************************/
+/**
+ *
+ *  This file is part of the kdewebdev package
+ *  Copyright (c) 2001 Keith Isdale <keith@kdewebdev.org>
+ *
+ *  This library is free software; you can redistribute it and/or 
+ *  modify it under the terms of the GNU General Public License as 
+ *  published by the Free Software Foundation; either version 2 of 
+ *  the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Library General Public License
+ *  along with this library; see the file COPYING.LIB.  If not, write to
+ *  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *  Boston, MA 02110-1301, USA.
+ **/
 
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
 
 #ifndef XSLDBG_HELP_H
 #define XSLDBG_HELP_H
 
-#ifdef USE_KDE_DOCS
-
-/**
- * Provide a help system for user 
- *
- * @short help system support
- *
- * @author Keith Isdale <k_isdale@tpg.com.au> 
- */
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-#ifdef USE_GNOME_DOCS
-
-/**
- * helpTop:
- * @args : Is valid command or empty string
- *
- * Display help about the command in @arg
- *
- * This is a platform specific interface
- *
- *
- * Returns 1 on success,
- *         0 otherwise
- */
-#else
-#ifdef USE_KDE_DOCS
 
 /**
  * Display help about the command in @p arg
@@ -62,12 +35,7 @@ extern "C" {
  * @returns 1 on success,
  *          0 otherwise
  */
-#endif
-#endif
-    int helpTop(const xmlChar * args);
+int helpTop(const xmlChar * args);
 
 
-#ifdef __cplusplus
-}
-#endif
 #endif

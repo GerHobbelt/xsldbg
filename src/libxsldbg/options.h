@@ -1,209 +1,139 @@
 
-/***************************************************************************
-                          options.h  -  define option related functions
-                             -------------------
-    begin                : Sat Nov 10 2001
-    copyright            : (C) 2001 by Keith Isdale
-    email                : k_isdale@tpg.com.au
- ***************************************************************************/
+/**
+ *
+ *  This file is part of the kdewebdev package
+ *  Copyright (c) 2001 Keith Isdale <keith@kdewebdev.org>
+ *
+ *  This library is free software; you can redistribute it and/or 
+ *  modify it under the terms of the GNU General Public License as 
+ *  published by the Free Software Foundation; either version 2 of 
+ *  the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Library General Public License
+ *  along with this library; see the file COPYING.LIB.  If not, write to
+ *  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *  Boston, MA 02110-1301, USA.
+ **/
 
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
 
 #ifndef OPTIONS_H
 #define OPTIONS_H
 
 #include "arraylist.h"
+#include "xsldbgsettingsmodel.h"
+#include <QSettings>
 
-#ifdef USE_KDE_DOCS
-
-/**
- * Provide a mechanism to change option. The Options structure is not in use,
- *   it has been added so that kdoc puts all option related 
- *   functions together 
- *
- * @short file support
- *
- * @author Keith Isdale <k_isdale@tpg.com.au> 
- */
-#endif
-
-/* We want skip most of these includes when building documentation */
-#ifndef BUILD_DOCS
 #include <libxslt/xslt.h>
-#endif
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 
-/* ---------------------------------------  
-        Misc options
--------------------------------------------*/
+/* ---------------------------------------
+ *   Misc options
+ *  --------------------------------------- */
 
 /** The largest number lines of text can be print print printing documents
-    This is equivant to gdb shorting of evaluation values
+  This is equivant to gdb shorting of evaluation values
  */
 #define GDB_LINES_TO_PRINT 3
+#define MAXPARAM_COUNT 31
 
 
-#ifndef USE_KDOC
-    typedef enum {
-        OPTIONS_CONFIG_READVALUE = -1,  /* Read configuration flag */
-        OPTIONS_CONFIG_READING = 1,     /* Configuration file is being read */
-        OPTIONS_CONFIG_WRITING, /* Configuration file is being written */
-        OPTIONS_CONFIG_IDLE     /* We are neither reading or writing */
-    } OptionsConfigState;
-#else
-    /* keep kdoc happy */
-    enum OptionsConfigState {
-        OPTIONS_CONFIG_READVALUE = -1,  /* Read configuration flag */
-        OPTIONS_CONFIG_READING = 1,     /* Configuration file is being read */
-        OPTIONS_CONFIG_WRITING, /* Configuration file is being written */
-        OPTIONS_CONFIG_IDLE     /* We are neither reading or writing */
-    };
-#endif
+enum OptionsConfigState {
+    OPTIONS_CONFIG_READVALUE = -1,  /* Read configuration flag */
+    OPTIONS_CONFIG_READING = 1,     /* Configuration file is being read */
+    OPTIONS_CONFIG_WRITING, /* Configuration file is being written */
+    OPTIONS_CONFIG_IDLE     /* We are neither reading or writing */
+};
 
-#ifndef USE_KDOC
-    typedef enum {
-        OPTIONS_XINCLUDE = 500, /* Use xinclude during xml parsing */
-        OPTIONS_DOCBOOK,        /* Use of docbook sgml parsing */
-        OPTIONS_TIMING,         /* Use of timing */
-        OPTIONS_PROFILING,      /* Use of profiling */
-        OPTIONS_NOVALID,        /* Disable file validation */
-        OPTIONS_NOOUT,          /* Disables output to stdout */
-        OPTIONS_HTML,           /* Enable the use of html parsing */
-        OPTIONS_DEBUG,          /* Enable the use of xml tree debugging */
-        OPTIONS_SHELL,          /* Enable the use of debugger shell */
-        OPTIONS_GDB,            /* Run in gdb modem prints more messages) */
-        OPTIONS_REPEAT,         /* The number of times to repeat */
-        OPTIONS_TRACE,          /* Trace execution */
-        OPTIONS_WALK_SPEED,     /* How fast do we walk through code */
-        OPTIONS_CATALOGS,       /* Get the catalogs from SGML_CATALOG_FILES and
-                                 * store it in OPTIONS_CATALOG_NAMES */
-        OPTIONS_PREFER_HTML,    /* Prefer html output for search results */
-        OPTIONS_AUTOENCODE,     /* Try to use the encoding from the stylesheet */
-        OPTIONS_UTF8_INPUT,     /* All input from user is in UTF-8.This is normaly 
-                                 * used when xsldbg is running as a thread */
-	OPTIONS_STDOUT,        /* Print all error messages to  stdout, 
-				 * normally error messages go to stderr */
-    	OPTIONS_AUTORESTART, 	/* When finishing the debug of a XSLT script 
-				   automaticly restart at the beginning */
-        OPTIONS_VERBOSE,        /* Be verbose with messages */
-        OPTIONS_OUTPUT_FILE_NAME,       /* what is the output file name */
-        OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */
-        OPTIONS_DOCS_PATH,      /* path of xsldbg's documentation */
-        OPTIONS_CATALOG_NAMES,  /* the names of the catalogs to use when catalogs option is active */
-        OPTIONS_ENCODING,       /* What encoding to use for standard output */
-        OPTIONS_SEARCH_RESULTS_PATH,    /* Where do we store the results of searching */
-        OPTIONS_DATA_FILE_NAME  /* xml data file to use */
-    } OptionTypeEnum;
+enum OptionTypeEnum {
+    OPTIONS_XINCLUDE = 500, /* Use xinclude during xml parsing */
+    OPTIONS_FIRST_BOOL_OPTIONID = OPTIONS_XINCLUDE,
+    OPTIONS_FIRST_INT_OPTIONID = OPTIONS_XINCLUDE,
+    OPTIONS_FIRST_OPTIONID = OPTIONS_XINCLUDE,
+    OPTIONS_DOCBOOK,        /* Use of docbook sgml parsing */
+    OPTIONS_TIMING,         /* Use of timing */
+    OPTIONS_PROFILING,      /* Use of profiling */
+    OPTIONS_VALID,          /* Enable file validation */
+    OPTIONS_NET,            /* Enable the network entity loader */
+    OPTIONS_OUT,            /* Enable output to stdout */
+    OPTIONS_HTML,           /* Enable the use of html parsing */
+    OPTIONS_DEBUG,          /* Enable the use of xml tree debugging */
+    OPTIONS_SHELL,          /* Enable the use of debugger shell */
+    OPTIONS_PREFER_HTML,    /* Prefer html output for search results */
+    OPTIONS_AUTOENCODE,     /* try to use the encoding from the stylesheet */
+    OPTIONS_UTF8_INPUT,     /* All input from user is in UTF-8.This normaly 
+                             * used when xsldbg is running as a thread */
+    OPTIONS_STDOUT,         /* Print all error messages to  stdout,
+                                * normally error messages go to stderr */
+    OPTIONS_AUTORESTART,    /* When finishing the debug of a XSLT script 
+                                   automatically restart at the beginning */
+    OPTIONS_CATALOGS,       /* Get the catalogs from SGML_CATALOG_FILES and
+                             * store it in OPTIONS_CATALOG_NAMES */
+    OPTIONS_AUTOLOADCONFIG, /* automatically load configuration */
+    OPTIONS_VERBOSE,        /* Be verbose with messages */
+    OPTIONS_LAST_BOOL_OPTIONID = OPTIONS_VERBOSE,
+    OPTIONS_GDB,            /* Run in gdb modem prints more messages) */
+    OPTIONS_REPEAT,         /* The number of times to repeat */
+    OPTIONS_TRACE,          /* Trace execution */
+    OPTIONS_WALK_SPEED,     /* How fast do we walk through code */
+    OPTIONS_LAST_INT_OPTIONID = OPTIONS_WALK_SPEED,
+    OPTIONS_OUTPUT_FILE_NAME,       /* what is the output file name */
+    OPTIONS_FIRST_STRING_OPTIONID = OPTIONS_OUTPUT_FILE_NAME,
+    OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */
+    OPTIONS_DATA_FILE_NAME,  /* xml data file to use */
+    OPTIONS_DOCS_PATH,      /* path of xsldbg's documentation */
+    OPTIONS_CATALOG_NAMES,  /* the names of the catalogs to use when catalogs option is active */
+    OPTIONS_ENCODING,       /* What encoding to use for standard output */
+    OPTIONS_SEARCH_RESULTS_PATH,    /* Where do we store the results of searching */
+    OPTIONS_CWD,             /* what directory was changed into during excecution */
+    OPTIONS_COMMENT,         /* the comment related to the current session */
+    OPTIONS_LAST_STRING_OPTIONID = OPTIONS_COMMENT,
+    OPTIONS_LAST_OPTIONID = OPTIONS_COMMENT
+};
 
+/* define what tracing is used */
+enum TraceModeEnum {
+    TRACE_OFF = 600,        /* disable tracing */
+    TRACE_ON,               /* enable tracing */
+    TRACE_RUNNING,          /* tracing is running */
+    TRACE_FINISHED          /* not needed but just in case */
+};
 
+/* what speeds can we walk through a stylesheet */
+/* must start walkSpeed enums from zero !! */
+enum WalkSpeedEnum {
+    WALKSPEED_0 = 0,
+    WALKSPEED_STOP = WALKSPEED_0,
+    WALKSPEED_1,
+    WALKSPEED_FAST = WALKSPEED_1,
+    WALKSPEED_2,
+    WALKSPEED_3,
+    WALKSPEED_4,
+    WALKSPEED_5,
+    WALKSPEED_NORMAL = WALKSPEED_5,
+    WALKSPEED_6,
+    WALKSPEED_7,
+    WALKSPEED_8,
+    WALKSPEED_9,
+    WALKSPEED_SLOW = WALKSPEED_9
+};
 
-    /* define what tracing is used */
-    typedef enum {
-        TRACE_OFF = 600,        /* disable tracing */
-        TRACE_ON,               /* enable tracing */
-        TRACE_RUNNING,          /* tracing is running */
-        TRACE_FINISHED          /* not needed but just in case */
-    } TraceModeEnum;
+extern int intVolitileOptions[OPTIONS_LAST_INT_OPTIONID - OPTIONS_FIRST_INT_OPTIONID + 1];
 
-    /* what speeds can we walk through a stylesheet */
-    /* must start at zero !! */
-    typedef enum {
-        WALKSPEED_0,
-        WALKSPEED_STOP = WALKSPEED_0,
-        WALKSPEED_1,
-        WALKSPEED_FAST = WALKSPEED_1,
-        WALKSPEED_2,
-        WALKSPEED_3,
-        WALKSPEED_4,
-        WALKSPEED_5,
-        WALKSPEED_NORMAL = WALKSPEED_5,
-        WALKSPEED_6,
-        WALKSPEED_7,
-        WALKSPEED_8,
-        WALKSPEED_9,
-        WALKSPEED_SLOW = WALKSPEED_9
-    } WalkSpeedEnum;
-
-#else
-    /* keep kdoc happy */
-    enum OptionsTypeEnum {
-        OPTIONS_XINCLUDE = 500, /* Use xinclude during xml parsing */
-        OPTIONS_DOCBOOK,        /* Use of docbook sgml parsing */
-        OPTIONS_TIMING,         /* Use of timing */
-        OPTIONS_PROFILING,      /* Use of profiling */
-        OPTIONS_NOVALID,        /* Disable file validation */
-        OPTIONS_NOOUT,          /* Disables output to stdout */
-        OPTIONS_HTML,           /* Enable the use of html parsing */
-        OPTIONS_DEBUG,          /* Enable the use of xml tree debugging */
-        OPTIONS_SHELL,          /* Enable the use of debugger shell */
-        OPTIONS_GDB,            /* Run in gdb modem prints more messages) */
-        OPTIONS_REPEAT,         /* The number of times to repeat */
-        OPTIONS_TRACE,          /* Trace execution */
-        OPTIONS_WALK_SPEED,     /* How fast do we walk through code */
-        OPTIONS_CATALOGS,       /* Get the catalogs from SGML_CATALOG_FILES and
-                                 * store it in OPTIONS_CATALOG_NAMES */
-        OPTIONS_PREFER_HTML,    /* Prefer html output for search results */
-        OPTIONS_AUTOENCODE,     /* try to use the encoding from the stylesheet */
-        OPTIONS_UTF8_INPUT,     /* All input from user is in UTF-8.This normaly 
-                                 * used when xsldbg is running as a thread */
-	OPTIONS_STDOUT,        /* Print all error messages to  stdout, 
-				 * normally error messages go to stderr */
-        OPTIONS_VERBOSE,        /* Be verbose with messages */
-        OPTIONS_OUTPUT_FILE_NAME,       /* what is the output file name */
-        OPTIONS_SOURCE_FILE_NAME,       /*  the stylesheet source to use */
-        OPTIONS_DOCS_PATH,      /* path of xsldbg's documentation */
-        OPTIONS_CATALOG_NAMES,  /* the names of the catalogs to use when catalogs option is active */
-        OPTIONS_ENCODING,       /* What encoding to use for standard output */
-        OPTIONS_SEARCH_RESULTS_PATH,    /* Where do we store the results of searching */
-        OPTIONS_DATA_FILE_NAME  /* xml data file to use */
-    };
-
-    /* define what tracing is used */
-    enum TraceModeEnum {
-        TRACE_OFF = 600,        /* disable tracing */
-        TRACE_ON,               /* enable tracing */
-        TRACE_RUNNING,          /* tracing is running */
-        TRACE_FINISHED          /* not needed but just in case */
-    };
-
-    /* what speeds can we walk through a stylesheet */
-    /* must start walkSpeed enums from zero !! */
-    enum WalkSpeedEnum {
-        WALKSPEED_0 = 0,
-        WALKSPEED_STOP = WALKSPEED_0,
-        WALKSPEED_1,
-        WALKSPEED_FAST = WALKSPEED_1,
-        WALKSPEED_2,
-        WALKSPEED_3,
-        WALKSPEED_4,
-        WALKSPEED_5,
-        WALKSPEED_NORMAL = WALKSPEED_5,
-        WALKSPEED_6,
-        WALKSPEED_7,
-        WALKSPEED_8,
-        WALKSPEED_9,
-        WALKSPEED_SLOW = WALKSPEED_9
-    };
-#endif
+class XsldbgSettingsModel;
 
 /* how many microseconds is each speed increase worth*/
 #define WALKDELAY 250000
 
+extern xmlExternalEntityLoader xsldbgDefaultEntLoader;
 
 /* for non win32 environments see the macro in xsldebugger/Makefile.am
    Win32 type systems see macro in libxslt/xsltwin32config.h
-*/
+ */
 #ifdef __riscos
 
 /* The environment variable name we are going to use is the readable version
@@ -215,137 +145,48 @@ extern "C" {
 #define XSLDBG_DOCS_DIR_VARIABLE "XSLDBG_DOCS_DIR"
 #endif
 
-/* used to keep track of libxslt paramters 
- see Parameter related options near end of file
-*/
-    typedef struct _parameterItem parameterItem;
-    typedef parameterItem *parameterItemPtr;
-    struct _parameterItem {
-        xmlChar *name;          /* libxslt parameter name */
-        xmlChar *value;         /* libxslt parameter value */
-        int intValue;           /* reserved */
-    };
-
-
-
-#ifdef USE_GNOME_DOCS
-
-/** 
- * optionsInit:
- *
- * Intialize the options module
- *
- * Returns 1 on success,
- *         0 otherwise
- */
-#else
-#ifdef USE_KDE_DOCS
-
 /** 
  * Initialized the options module
  *
  * @returns 1 on success,
  *          0 otherwise
  */
-#endif
-#endif
-    int optionsInit(void);
+int optionsInit(void);
 
 
-
-#ifdef USE_GNOME_DOCS
-
-/**
- * optionsFree:
- *
- * Free memory used by the options module
- */
-#else
-#ifdef USE_KDE_DOCS
 
 /**
  * Free memory used by the options module
  */
-#endif
-#endif
-    void optionsFree(void);
+void optionsFree(void);
 
-
-#ifdef USE_GNOME_DOCS
-
-  /**
-   * optionsGetOptionID:
-   * @optionName : A valid option name see documentation for "setoption" 
-   *        command and program usage documentation
-   *
-   * Find the option id for a given option name
-   *
-   * Returns The optionID for @optionName if successful, where  
-   *             OPTIONS_XINCLUDE<= optionID <= OPTIONS_DATA_FILE_NAME,
-   *         otherwise returns -1
-   */
-#else
-#ifdef USE_KDE_DOCS
-
-  /**
-   * Find the option id for a given option name
-   *
-   * @returns The optionID for @optionName if successful, where  
-   *             OPTIONS_XINCLUDE<= optionID <= OPTIONS_DATA_FILE_NAME,
-   *         otherwise returns -1
-   *
-   * @param optionName A valid option name see documentation for "setoption" 
-   *        command and program usage documentation
-   *
-   */
-#endif
-#endif
-    int optionsGetOptionID(xmlChar * optionName);
-
-
-
-#ifdef USE_GNOME_DOCS
-
-  /**
-   * optionsGetOptionName:
-   * @ID : A valid option ID
-   *
-   * Get the name text for an option
-   *
-   * Returns The name of option if @ID is valid, 
-   *         NULL otherwise 
-   */
-#else
-#ifdef USE_KDE_DOCS
-
-  /**
-   * Get the name text for an option
-   *
-   * Returns The name of option if @ID is valid, 
-   *         NULL otherwise 
-   *
-   * @param ID A valid option ID
-   *
-   */
-#endif
-#endif
-    const xmlChar *optionsGetOptionName(OptionTypeEnum ID);
-
-
-#ifdef USE_GNOME_DOCS
 
 /**
- * optionsSetIntOption:
- * @optionType: Is a valid integer option
- * @value: Value to adopt
+ * Find the option id for a given option name
  *
- * Set the value of an integer xsldbg option to @value
+ * @returns The optionID for @optionName if successful, where  
+ *             OPTIONS_XINCLUDE<= optionID <= OPTIONS_DATA_FILE_NAME,
+ *         otherwise returns -1
  *
- * Returns 1 on success,
- *         0 otherwise
+ * @param optionName A valid option name see documentation for "setoption" 
+ *        command and program usage documentation
+ *
  */
-#else
-#ifdef USE_KDE_DOCS
+int optionsGetOptionID(QString optionName);
+
+
+
+/**
+ * Get the name text for an option
+ *
+ * Returns The name of option if @ID is valid, 
+ *         NULL otherwise 
+ *
+ * @param ID A valid option ID
+ *
+ */
+QString optionsGetOptionName(OptionTypeEnum ID);
+
 
 /**
  * Set the value of an integer xsldbg option to @p value
@@ -356,51 +197,16 @@ extern "C" {
  * @param optionType Is a valid integer option
  * @param value Is the valid to adopt
  */
-#endif
-#endif
-    int optionsSetIntOption(OptionTypeEnum optionType, int value);
+int optionsSetIntOption(OptionTypeEnum optionType, int value);
 
-
-
-#ifdef USE_GNOME_DOCS
-
-/**
- * optionsGetIntOption:
- * @optionType: A valid integer option
- *
- * Return the state of an integer option
- *
- * Returns The state of a integer xsldbg option
- */
-#else
-#ifdef USE_KDE_DOCS
 
 /**
  * @returns The state of a integer xsldbg option
  *
  * @param optionType Is a valid integer option
  */
-#endif
-#endif
-    int optionsGetIntOption(OptionTypeEnum optionType);
+int optionsGetIntOption(OptionTypeEnum optionType);
 
-
-
-#ifdef USE_GNOME_DOCS
-
-/**
- * optionsSetStringOption:
- * @optionType: A valid string option
- * @value: The value to copy
- *
- * Set value for a string xsldbg option to @value. 
- * Any memory used currently by option @optionType will be freed
- *
- * Returns 1 on success,
- *         0 otherwise
- */
-#else
-#ifdef USE_KDE_DOCS
 
 /**
  * Set value for a string xsldbg option to @p value. 
@@ -412,25 +218,8 @@ extern "C" {
  * @param optionType A valid string option
  * @param value The value to copy
  */
-#endif
-#endif
-    int optionsSetStringOption(OptionTypeEnum optionType,
-                               const xmlChar * value);
+int optionsSetStringOption(OptionTypeEnum optionType, QString value);
 
-
-
-#ifdef USE_GNOME_DOCS
-
-/**
- * optionsGetStringOption:
- * @optionType: A valid string option 
- *
- * Get value for a string xsldbg option of @optionType
-
- * Returns current option value which may be NULL
- */
-#else
-#ifdef USE_KDE_DOCS
 
 /**
  * Get value for a string xsldbg option of @p optionType
@@ -439,495 +228,167 @@ extern "C" {
  *
  * @param optionType A valid string option 
  */
-#endif
-#endif
-    const xmlChar *optionsGetStringOption(OptionTypeEnum optionType);
+const QString optionsGetStringOption(OptionTypeEnum optionType);
 
-
-#ifdef USE_GNOME_DOCS
-
-  /**
-   * optionsCopyVolitleOptions:
-   *
-   * Copy volitile options to the working area for xsldbg to be used
-   *   just after xsldbg starts its processing loop
-   */
-#else
-#ifdef USE_KDE_DOCS
-
-  /**
-   * Copy volitile options to the working area for xsldbg to be used
-   *   just after xsldbg starts its processing loop
-   */
-#endif
-#endif
-    void optionsCopyVolitleOptions(void);
-
-
-
-/*---------------------------------------------
-          Parameter related options 
--------------------------------------------------*/
-
-
-#ifdef USE_GNOME_DOCS
 
 /**
- * optionsGetParamItemList:
- *
- * Return the list of libxlt parameters
- *
- * Returns The list of parameters to provide to libxslt when doing 
- *           stylesheet transformation if successful
- *        NULL otherwise
+ * Copy volitile options to the working area for xsldbg to be used
+ *   just after xsldbg starts its processing loop
  */
-#else
-#ifdef USE_KDE_DOCS
+void optionsCopyVolitleOptions(void);
+
+
+/* ---------------------------------------------
+ *   Platform specific option functions
+ * --------------------------------------------- */
 
 /**
- * Return the list of libxlt parameters
+ * Initialize the platform specific options module
  *
- * @returns The list of parameters to provide to libxslt when doing 
- *              stylesheet transformation if successful
- *          NULL otherwise
+ *  This is a platform specific interface
+ *
+ * @returns 1 if successful
+ *          0 otherwise  
  */
-#endif
-#endif
-    arrayListPtr optionsGetParamItemList(void);
+int optionsPlatformInit(void);
 
-
-
-#ifdef USE_GNOME_DOCS
 
 /**
- * optionsParamItemNew:
- * @name: Is valid 
- * @value: Is valid 
+ * Free memory used by the platform specific options module
  *
- * Create a new libxslt parameter item
- * Returns non-null if sucessful
- *         NULL otherwise
+ *  This is a platform specific interface
+ *
  */
-#else
-#ifdef USE_KDE_DOCS
+void optionsPlatformFree(void);
+
 
 /**
- * Create a new libxslt parameter item
+ * Set/Get the state of configuration loading/saving. Normally only used
+ *    by RISC OS
  *
- * @returns non-null if sucessful
- *          NULL otherwise
  *
- * @param name Is valid 
- * @param value Is valid 
+ * Returns The current/new value of configuration flag. Where
+ *         @p value means:
+ *           OPTIONS_CONFIG_READVALUE : No change return current 
+ *               value of read configuration flag
+ *           OPTIONS_CONFIG_WRITING  : Clear flag and return 
+ *               OPTIONS_CONFIG_WRITING which mean configuration 
+ *               file is being written
+ *           OPTIONS_CONFIG_READING : Set flag and return 
+ *               OPTIONS_CONFIG_READING, which means configuration
+ *               file is being read
+ *           OPTIONS_CONFIG_IDLE : We are neither reading or writing 
+ *               configuration and return OPTIONS_CONFIG_IDLE
+ *
+ * @param value Is valid
+ *
  */
-#endif
-#endif
-    parameterItemPtr optionsParamItemNew(const xmlChar * name,
-                                         const xmlChar * value);
+int optionsConfigState(OptionsConfigState value);
 
-
-
-#ifdef USE_GNOME_DOCS
 
 /**
- * optionsParamItemFree:
- * @item: Is valid
+ * optionsAddWatch:
+ * @xPath : A valid xPath to evaluate in a context and 
+ *          has not already been added
  *
- * Free memory used by libxslt parameter item @item
- */
-#else
-#ifdef USE_KDE_DOCS
-
-/**
- * Free memory used by libxslt parameter item @p item
+ * Add xPath to be evaluated and printed out each time the debugger stops
  *
- * @param item Is valid
+ * Returns 1 if able to add xPath to watched
+ *         0 otherwise
  */
-#endif
-#endif
-    void optionsParamItemFree(parameterItemPtr item);
+int optionsAddWatch(const xmlChar* xPath);
 
-
-
-#ifdef USE_GNOME_DOCS
 
 /**
- * optionsPrintParam:
- * @paramId: 0 =< paramID < arrayListCount(getParamList())
+ * Finds the ID of watch expression previously added
+ *
+ * @param xPath : A valid watch expression that has already been added
+ *
+ * @returns 0 if not found, 
+ *         otherwise returns the ID of watch expression
+ */
+int optionsGetWatchID(const xmlChar* xPath);
+
+
+/**
+ * Remove the watch with given ID @p watchID from our list of expressions to watch
+ *
+ * @param watchID : A valid watchID as indicated by last optionsPrintWatches
+ *
+ * @returns 1 if able to remove to watch expression
+ *         0 otherwise
+ */
+int optionsRemoveWatch(int watchID);
+
+
+/**
  * 
- * Print parameter information
+ * Return the current list of expressions to watch
  *
- * Returns 1 on success,
- *         0 otherwise
+ * @return the current list of expressions to watch
  */
-#else
-#ifdef USE_KDE_DOCS
+arrayListPtr optionsGetWatchList(void);
+
 
 /**
- * Prints all items in parameter list
+ * Read options from configuration file @p config
  *
- * @returns 1 on success,
- *          0 otherwise
+ * @returns true if able to read configuration from @p config, false otherwise
  */
-#endif
-#endif
-    int optionsPrintParam(int paramId);
+bool optionsReadConfig(const QSettings &config);
 
-
-
-#ifdef USE_GNOME_DOCS
 
 /**
- * optionsPrintParamList:
+ * Write options to configuration file
  *
- * Prints all items in parameter list
- *
- * Returns 1 on success,
- *         0 otherwise
+ * @returns true if able to write configuration to @p config, false otherwise
  */
-#else
-#ifdef USE_KDE_DOCS
+bool optionsWriteConfig(QSettings &config);
+
 
 /**
- * Prints all items in parameter list
+ * Enable auto save/loading of configuration if @p value is true
  *
- * @returns 1 on success,
- *          0 otherwise
  */
-#endif
-#endif
-    int optionsPrintParamList(void);
-#ifdef USE_GNOME_DOCS
+void optionSetAutoConfig(bool value);
 
 
-/* ---------------------------------------------
-          Option serialization functions
--------------------------------------------------*/
-
-  /**
-   * optionNode:
-   * @optionType : Is valid, option to convert to a xmlNodePtr 
-   *
-   * Convert option into a xmlNodePtr
-   *
-   * Returns the option @optionType as a xmlNodePtr if successful,
-   *          NULL otherwise
-   */
-#else
-#ifdef USE_KDE_DOCS
-
-  /**
-   * Convert option into a xmlNodePtr
-   *
-   * @returns The option @p optionType as a xmlNodePtr if successful,
-   *          NULL otherwise
-   *
-   * @param optionType Is valid, option to convert to a xmlNodePtr 
-   *
-   */
-#endif
-#endif
-    xmlNodePtr optionsNode(OptionTypeEnum optionType);
+/**
+ * Returns true if auto save/loading of configuration is enabled
+ *
+ * @returns true if auto save/loading of configuration is enabled
+ */
+bool optionsAutoConfig();
 
 
-
-#ifdef USE_GNOME_DOCS
-
-  /**
-   * optionsReadDoc:
-   * @doc : Is valid xsldbg config document, in the format as indicated 
-   *        by config.dtd
-   *
-   * Read options from document provided. 
-   *
-   * Returns 1 if able to read @doc and load options found,
-   *         0 otherwise
-   */
-#else
-#ifdef USE_KDE_DOCS
-
-  /**
-   * Read options from document provided. 
-   *
-   * @returns 1 if able to read @p doc and load options found,
-   *          0 otherwise
-   *
-   * @param doc Is valid xsldbg config document, in the format as indicated 
-   *        by config.dtd
-   */
-#endif
-#endif
-    int optionsReadDoc(xmlDocPtr doc);
+/**
+  * Determine the translated help documentation path specific file
+  *
+  * @returns an absolute path of the help file @p fname taking into account the current lanuage selection
+  */
+QString langLookupDir( const QString &fname );
 
 
-#ifdef USE_GNOME_DOCS
-
-  /**
-   * optionsSavetoFile:
-   * @fileName : Must be NON NULL be a local file that can be written to
-   *
-   * Save configuation to file specified
-   *
-   * Returns 1 if able to save options to @fileName,
-   *         0 otherwise
-   */
-#else
-#ifdef USE_KDE_DOCS
-
-  /**
-   * Save configuation to file specified
-   *
-   * @returns 1 if able to save options to @fileName,
-   *          0 otherwise
-   *
-   * @fileName : Must be NON NULL be a local file that can be written to
-   */
-#endif
-#endif
-    int optionsSavetoFile(xmlChar * fileName);
+/**
+ * Set a new options model @p newModel which will take effect after the optionsApplyNewDataModel() function is called
+ *
+ * Note: The provided model will be destroyed when optionsFree() is invoked
+ */
+void optionsSetDataModel(XsldbgSettingsModel *newModel);
 
 
-/* ---------------------------------------------
-          Platform specific option functions
--------------------------------------------------*/
-
-#ifdef USE_GNOME_DOCS
-
-  /**
-   * optionsPlatformInit:
-   *
-   * Intialize the platform specific options module
-   *
-   *  This is a platform specific interface
-   *
-   * Returns 1 if sucessful
-   *         0 otherwise  
-   */
-#else
-#ifdef USE_KDE_DOCS
-
-  /**
-   * Intialize the platform specific options module
-   *
-   *  This is a platform specific interface
-   *
-   * @returns 1 if sucessful
-   *          0 otherwise  
-   */
-#endif
-#endif
-    int optionsPlatformInit(void);
+/**
+ * Apply the model previously set by optionsSetDataModel()
+ */
+void optionsApplyNewDataModel();
 
 
-#ifdef USE_GNOME_DOCS
-
-  /**
-   * optionsPlatformFree:
-   *
-   * Free memory used by the platform specific options module
-   *
-   *  This is a platform specific interface
-   *
-   */
-#else
-#ifdef USE_KDE_DOCS
-
-  /**
-   * Free memory used by the platform specific options module
-   *
-   *  This is a platform specific interface
-   *
-   */
-#endif
-#endif
-    void optionsPlatformFree(void);
+/**
+  * Return the current options model
+  *
+  * @returns the current options model
+  */
+extern XsldbgSettingsModel * optionDataModel();
 
 
-#ifdef USE_GNOME_DOCS
-
-  /**
-   * optionsConfigFileName:
-   * 
-   * Return xsldbg's the configuration file name 
-   *
-   * Returns A copy of the file name that will be used to load xsldbgs
-   *           configuration from,
-   *         NULL otherwise
-   *
-   *  This is a platform specific interface
-   *
-   */
-#else
-#ifdef USE_KDE_DOCS
-
-  /**
-   * Return xsldbg's the configuration file name 
-   *
-   * Returns A copy of the file name that will be used to load xsldbgs
-   *           configuration from,
-   *         NULL otherwise
-   *
-   *  This is a platform specific interface
-   *
-   */
-#endif
-#endif
-    xmlChar *optionsConfigFileName(void);
-
-
-#ifdef USE_GNOME_DOCS
-
-  /**
-   * optionsLoad:
-   *
-   * Load options from configuration file/registry
-   *
-   * This is a platform specific interface
-   * 
-   * Returns 1 if able to load options
-   *         0 otherwise
-   */
-#else
-#ifdef USE_KDE_DOCS
-
-  /**
-   * Load options from configuration file/registry
-   *
-   * This is a platform specific interface
-   * 
-   * Returns 1 if able to load options
-   *         0 otherwise
-   */
-#endif
-#endif
-    int optionsLoad(void);
-
-
-#ifdef USE_GNOME_DOCS
-
-  /**
-   * optionsSave:
-   *
-   * Save options to configuration file/registry
-   *
-   * This is a platform specific interface
-   * 
-   * Returns 1 if able to save options
-   *         0 otherwise
-   */
-#else
-#ifdef USE_KDE_DOCS
-
-  /**
-   * Save options to configuration file/registry
-   *
-   * This is a platform specific interface
-   * 
-   * Returns 1 if able to load options
-   *         0 otherwise
-   */
-#endif
-#endif
-    int optionsSave(void);
-
-
-#ifdef USE_GNOME_DOCS
-
-  /**
-   * optionsConfigState:
-   * @value : Is valid
-   *
-   * Set/Get the state of configuration loading/saving. Normally only used
-   *    by RISC OS
-   *
-   * Returns The current/new value of configuration flag. Where
-   *         @value means:
-   *           OPTIONS_CONFIG_READVALUE : No change return current 
-   *               value of read configuration flag
-   *           OPTIONS_CONFIG_WRITING  : Clear flag and return 
-   *               OPTIONS_CONFIG_WRITING which mean configuration 
-   *               file is being written
-   *           OPTIONS_CONFIG_READING : Set flag and return 
-   *               OPTIONS_CONFIG_READING, which means configuration
-   *               file is being read
-   *           OPTIONS_CONFIG_IDLE : We are neither reading or writing 
-   *               configuration and return OPTIONS_CONFIG_IDLE
-   */
-#else
-#ifdef USE_KDE_DOCS
-
-  /**
-   * Set/Get the state of configuration loading/saving. Normally only used
-   *    by RISC OS
-   *
-   *
-   * Returns The current/new value of configuration flag. Where
-   *         @p value means:
-   *           OPTIONS_CONFIG_READVALUE : No change return current 
-   *               value of read configuration flag
-   *           OPTIONS_CONFIG_WRITING  : Clear flag and return 
-   *               OPTIONS_CONFIG_WRITING which mean configuration 
-   *               file is being written
-   *           OPTIONS_CONFIG_READING : Set flag and return 
-   *               OPTIONS_CONFIG_READING, which means configuration
-   *               file is being read
-   *           OPTIONS_CONFIG_IDLE : We are neither reading or writing 
-   *               configuration and return OPTIONS_CONFIG_IDLE
-   *
-   * @param value Is valid
-   *
-   */
-#endif
-#endif
-    int optionsConfigState(OptionsConfigState value);
-
-  /**
-   * optionsAddWatch:
-   * @xPath : A valid xPath to evaluate in a context and 
-   *          has not already been addded
-   *
-   * Add xPath to be evaluated and printed out each time the debugger stops
-   *
-   * Returns 1 if able to add xPath to watched
-   *         0 otherwise
-   */
-  int optionsAddWatch(const xmlChar* xPath);
-
-  /** 
-   * optionsGetWatchID:
-   * @xPath : A valid watch expression that has already been added
-   *
-   * Finds the ID of watch expression previously added
-   *
-   * Returns 0 if not found, 
-   *         otherwise returns the ID of watch expression
-   */
-  int optionsGetWatchID(const xmlChar* xPath);
-
-
-  /**
-   * optionsRemoveWatch:
-   * @watchID : A valid watchID as indicated by last optionsPrintWatches
-   *
-   * Remove the watch with given ID from our list of expressions to watch
-   *
-   * Returns 1 if able to remove to watch expression
-   *         0 otherwise
-   */
-  int optionsRemoveWatch(int watchID);
-
-
-  /**
-   * optionsGetWatchList:
-   * 
-   * Return the current list of expressions to watch
-   *
-   * Return the current list of expressions to watch
-   */
-  arrayListPtr optionsGetWatchList(void);
-
-
-#ifdef __cplusplus
-}
-#endif
 #endif

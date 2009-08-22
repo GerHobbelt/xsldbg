@@ -9,6 +9,7 @@ win32:INCLUDEPATH += $(LIBXML_PREFIX)/include
 win32:INCLUDEPATH += $(ICONV_PREFIX)/include
 INCLUDEPATH += ..
 INCLUDEPATH += ../..
+INCLUDEPATH += ../libxsldbg
 DEFINES += DOCS_PATH=\"$(DOCSPATH)\" 
 win32:DEFINES+=WIN32 QT_DLL
 
@@ -17,7 +18,9 @@ win32:TMAKE_CXXFLAGS = -GR
 
 DESTDIR =../../lib
 
-HEADERS += xsldbg
+HEADERS += \
+	../libxsldbg/xsldbgdebuggerbase.h
+
 SOURCES += qtnotifier2.cpp \
            xsldbgdebuggerbase.cpp \
            xsldbgevent.cpp\

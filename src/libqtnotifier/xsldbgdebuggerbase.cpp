@@ -1,30 +1,34 @@
-/***************************************************************************
-                          xsldbgdebuggerbase.cpp  -  The base class from
-                                                      which a debugger 
-                                                      could be built
 
-                             -------------------
-    begin                : Fri Feb 1 2001
-    copyright            : (C) 2001 by Keith Isdale
-    email                : k_isdale@tpg.com.au
- ***************************************************************************/
+/**
+ *
+ *  This file is part of the kdewebdev package
+ *  Copyright (c) 2001 Keith Isdale <keith@kdewebdev.org>
+ *
+ *  This library is free software; you can redistribute it and/or 
+ *  modify it under the terms of the GNU General Public License as 
+ *  published by the Free Software Foundation; either version 2 of 
+ *  the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Library General Public License
+ *  along with this library; see the file COPYING.LIB.  If not, write to
+ *  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *  Boston, MA 02110-1301, USA.
+ **/
 
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
 
-#include <libxsldbg/xsldbgdebuggerbase.h>
-#include <qapplication.h>
-#include <qglobal.h>
-#include <qstringlist.h>
+#include "xsldbgdebuggerbase.h"
+
+#include <QApplication>
+#include <QStringList>
+#include <kurl.h>
 
 XsldbgDebuggerBase::XsldbgDebuggerBase()
-  : QObject(0L, "XsldbgDebuggerBase")
+  : QObject(0L)
 {
   initialized = false;
   updateTimerID = -1;
@@ -32,7 +36,7 @@ XsldbgDebuggerBase::XsldbgDebuggerBase()
 
 
 XsldbgDebuggerBase::~XsldbgDebuggerBase()
-{  
+{
   /* empty*/
 }
 
@@ -56,3 +60,35 @@ QString XsldbgDebuggerBase::fromUTF8(const xmlChar *text)
 }
 
 
+QString XsldbgDebuggerBase::fromUTF8FileName(const char *text)
+{
+  QString result;
+  if (text != 0L){
+    KUrl url(((const char*)text));
+    if (url.isLocalFile())
+	result = QString("file:") + url.path();
+    else 
+	result = url.prettyUrl(); 
+  }
+  return result;
+}
+
+
+QString XsldbgDebuggerBase::fromUTF8FileName(const xmlChar *text)
+{
+  QString result;
+  if (text != 0L){
+    KUrl url(QString::fromUtf8((const char*)text));
+    if (url.isLocalFile())
+	result = QString("file:") + url.path();
+    else 
+	result = url.prettyUrl(); 
+  }
+  return result;
+}
+
+
+void XsldbgDebuggerBase::queueMessage(const QString &text)
+{
+    updateText += text;
+}

@@ -1,20 +1,25 @@
 
-/***************************************************************************
-                          xsldbgthread.h  -  description
-                             -------------------
-    begin                : Thu Dec 20 2001
-    copyright            : (C) 2001 by keith
-    email                : keith@linux
- ***************************************************************************/
+/**
+ *
+ *  This file is part of the kdewebdev package
+ *  Copyright (c) 2001 Keith Isdale <keith@kdewebdev.org>
+ *
+ *  This library is free software; you can redistribute it and/or 
+ *  modify it under the terms of the GNU General Public License as 
+ *  published by the Free Software Foundation; either version 2 of 
+ *  the License, or (at your option) any later version.
+ *
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *  Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Library General Public License
+ *  along with this library; see the file COPYING.LIB.  If not, write to
+ *  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ *  Boston, MA 02110-1301, USA.
+ **/
 
-/***************************************************************************
- *                                                                         *
- *   This program is free software; you can redistribute it and/or modify  *
- *   it under the terms of the GNU General Public License as published by  *
- *   the Free Software Foundation; either version 2 of the License, or     *
- *   (at your option) any later version.                                   *
- *                                                                         *
- ***************************************************************************/
 
 #ifndef XSLDBGTHREAD_H
 #define  XSLDBGTHREAD_H
@@ -24,64 +29,58 @@
 #endif
 
 
-#ifndef BUILD_DOCS
-#include <libxsldbg/xsldbgmsg.h>
 #include <libxml/xmlmemory.h>
 #include <libxml/tree.h>
-#endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "xsldbgmsg.h"
 
 
-    int getAppReady(void);
+int getAppReady(void);
 
-    void setAppReady(int ready);
+void setAppReady(int ready);
 
-    int getInputStatus(void);
+int getInputStatus(void);
 
-    void setInputStatus(XsldbgMessageEnum type);
+void setInputStatus(XsldbgMessageEnum type);
 
-    int getThreadStatus(void);
+int getThreadStatus(void);
 
-    void setThreadStatus(XsldbgMessageEnum type);
+void setThreadStatus(XsldbgMessageEnum type);
 
-    void *xsldbgThreadMain(void *data);
+void *xsldbgThreadMain(void *data);
 
-    int xsldbgMain(int argc, char **argv);
+int xsldbgMain(int argc, char **argv);
 
-     int xsldbgThreadInit(void);
+int xsldbgThreadInit(void);
 
-     void xsldbgThreadFree(void);
+void xsldbgThreadFree(void);
 
-    /* thread has died so cleanup after it */
-     void xsldbgThreadCleanup(void);
+/* thread has died so cleanup after it */
+void xsldbgThreadCleanup(void);
+void xsldbgSetThreadCleanupFunc(void (*cleanupFunc)(void));
 
-     const char *getFakeInput(void);
+const char *getFakeInput(void);
 
-     int fakeInput(const char *text);
+int fakeInput(const char *text);
 
-    /* Is input ready yet */
-    int getInputReady(void);
+/* Is input ready yet */
+int getInputReady(void);
 
-    /* set/clear flag that indicates if input is ready */
-    void setInputReady(int value);
+/* set/clear flag that indicates if input is ready */
+void setInputReady(int value);
 
-    xmlChar *xslDbgShellReadline(xmlChar * prompt);
+xmlChar *xslDbgShellReadline(xmlChar * prompt);
 
 
-    /* This is implemented by xsldbg.c */
+
+/* This is implemented by xsldbg.c */
 
 /**
  * xsldbgFree:
  *
  * Free memory used by xsldbg
  */
-    void xsldbgFree(void);
+void xsldbgFree(void);
 
 
-#ifdef __cplusplus
-}
-#endif
 #endif
