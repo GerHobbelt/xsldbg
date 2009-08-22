@@ -1,0 +1,238 @@
+<?xml version="1.0" ?>
+<!DOCTYPE refentry PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
+  <!ENTITY xsldbg "<application>xsldbg</application>">
+  <!ENTITY kappname "&xsldbg;">
+  <!ENTITY package "kdewebdev">
+  <!ENTITY % addindex "IGNORE">
+<!ENTITY % English "INCLUDE">
+]>
+
+<refentry lang="&language;">
+<refentryinfo>
+<author><personname><firstname>Keith</firstname><surname>Isdale</surname></personname><email>keith@kdewebdev.org</email></author>
+<date>March 27, 2006</date>
+</refentryinfo>
+
+<refmeta>
+<refentrytitle><command>xsldbg</command></refentrytitle>
+<manvolnum>1</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname><command>xsldbg</command></refname>
+<refpurpose>A command line tool to debug XSLT scripts</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<cmdsynopsis>
+<command>xsldbg</command>
+
+<group><option>--shell</option></group>
+<group><option>--cd &lt;PATH&gt;</option></group>
+<group><option>--param &lt;NAME&gt;:&lt;VALUE&gt;</option></group>
+<group><option>--lang &lt;LANG&gt;</option></group>
+<group><option>--output &lt;FILE&gt;</option></group>
+<group><option>--version</option></group>
+<group><option>--verbose</option></group>
+<group><option>--timing</option></group>
+<group><option>--repeat</option></group>
+<group><option>--debug</option></group>
+<group><option>--valid</option></group>
+<group><option>--out</option></group>
+<group><option>--maxdepth val</option></group>
+<group><option>--html</option></group>
+<group><option>--docbook</option></group>
+<group><option>--net</option></group>
+<group><option>--catalogs</option></group>
+<group><option>--xinclude</option></group>
+<group><option>--profile</option></group>
+<group><option>--gdb</option></group>
+<group><option>--autoencode</option></group>
+<group><option>--utf8input</option></group>
+<group><option>--preferhtml</option></group>
+<group><option>--stdout</option></group>
+<group><option>--autorestart</option></group>
+<group><option>+XSLSource</option></group>
+<group><option>+XMLData</option></group>
+
+</cmdsynopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>Description</title>
+
+<para>
+&xsldbg; is a tool intended to help understand stylesheets. 
+What makes it different to other stylesheet debuggers is the ability 
+to search for items of interest and trace stylesheet execution.
+</para>
+
+<para>
+&xsldbg; is a text based tool to debug stylesheets (the eXtensible
+Stylesheet Language) and has commands similar to the Unix/Linux debugger
+gdb. It has three major modes of execution of stylesheets.
+</para>
+<itemizedlist>
+<listitem><para>Run the whole stylesheet</para></listitem>
+<listitem><para>Step to next xsl instruction</para></listitem>
+<listitem><para>Continue until next break point is found, or stylesheet has restarted</para></listitem>
+</itemizedlist>
+
+</refsect1>
+
+
+
+<refsect1>
+<title>Options</title>
+
+<variablelist>
+<title>Application Options</title>
+<para>Note: To turn off an option append a 'no' before that option name, eg 'nonet'</para>
+<para>Note: Options that are marked with a '*' are on by default</para>
+<varlistentry>
+<term><option>--shell</option></term>
+<listitem><para>Start a shell, once a shell is started use &xsldbg;'s help command to get run time help.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--cd  &lt;PATH&gt;</option></term>
+<listitem><para>Path to change into before loading files. See also 'cd' command documentation</para></listitem>
+</varlistentry>
+
+<varlistentry>
+	<term><option>--param &lt;NAME&gt;:&lt;VALUE&gt;</option></term>
+	<listitem><para>Add a parameter named &lt;NAME&gt; and value &lt;VALUE&gt; to XSL environment. See also 'addparam' command documentation</para>
+		<para>Note:A '=' can be used as name, value separator instead of ':'</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--lang &lt;LANG&gt;</option></term>
+<listitem><para>Use ISO 639 language code specified; for example en_US</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--output &lt;FILE&gt;</option></term>
+<listitem><para>Save to a given file. See also output command documentation</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--version</option></term>
+<listitem><para>Show the version of libxml and libxslt used</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--verbose</option></term>
+<listitem><para>Show logs of what is happening</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--timing</option></term>
+<listitem><para>Display the time used</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--repeat</option></term>
+<listitem><para>Run the transformation 20 times, if --repeat is listed twice then run transformation 100 time</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--debug</option></term>
+<listitem><para>Dump the tree of the result instead if libxml has such support enabled</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--valid*</option></term>
+<listitem><para>Enables the DTD loading phase, by default this is on</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--out*</option></term>
+<listitem><para>Enable the output of the result, by default this is on</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--maxdepth val</option></term>
+<listitem><para>Increase the maximum depth</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--html</option></term>
+<listitem><para>The input document is(are) an HTML file(s) treat the as such if libxml has such support enabled</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--docbook</option></term>
+<listitem><para>The input document is SGML docbook if libxml has such support enabled</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--net*</option></term>
+<listitem><para>Enable the fetching DTDs or entities over network, by default this is on</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--catalogs</option></term>
+<listitem><para>Use the catalogs from $SGML_CATALOG_FILES if libxml has such support enabled</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--xinclude*</option></term>
+<listitem><para>Enable XInclude processing on document input if libxml has such support enabled, by default this is on</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--profile</option></term>
+<listitem><para>Print profiling information</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--gdb*</option></term>
+<listitem><para>Run in GDB compatability mode and print more information, by default this is on</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--autoencode*</option></term>
+<listitem><para>Detect and use encodings in the stylesheet</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--utf8input</option></term>
+<listitem><para>Treat command line input as encoded in UTF-8</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--preferhtml</option></term>
+<listitem><para>Use HTML output when generating search reports</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--stdout</option></term>
+<listitem><para>Print all error messages to stdout, normally error messages go to stderr</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>--autorestart</option></term>
+<listitem><para>Enable the automatic restarting of execution when current processing pass is complete</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>+XSLSource</option></term>
+<listitem><para>XSL script to run (optional)</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>+XMLData</option></term>
+<listitem><para>XML data to be transform (optional if XSLSource is specified)</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+</refsect1>
+
+<refsect1>
+<title>Authors</title>
+<para>&xsldbg; is currently written and maintained by Keith Isdale<email>keith@kdewebdev.org</email> </para>
+</refsect1>
+
+
+</refentry>

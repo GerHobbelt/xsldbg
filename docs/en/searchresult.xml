@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE search PUBLIC "-//xsldbg//DTD search XML V1.1//EN" "search_v1_1.dtd">
+<search>
+<callstack url="xsldoc.xsl" line="31" template="/"/>
+<breakpoint url="xsldoc.xsl" line="31" template="/" enabled="1" type="300" id="1"/>
+<source href="xsldoc.xsl">
+<comment> 
+     File : xsldoc.xsl     
+     Author: Keith Isdale &lt;k_isdale@tpg.com.au&gt;
+     Description: Stylesheet to process xsldoc.xml and generate help text
+     Copyright Reserved Under GPL     
+</comment>
+</source>
+<template match="cmd" url="xsldoc.xsl" line="123"/>
+<template match="cmd-summary" name="cmd-summary" url="xsldoc.xsl" line="116"/>
+<template match="comment" url="xsldoc.xsl" line="111"/>
+<template match="list | usage" url="xsldoc.xsl" line="100"/>
+<template match="para" url="xsldoc.xsl" line="93"/>
+<template match="text()" url="xsldoc.xsl" line="88"/>
+<template match="header" url="xsldoc.xsl" line="76"/>
+<template name="helpOnCommand" url="xsldoc.xsl" line="58"/>
+<template match="/" url="xsldoc.xsl" line="31"/>
+<variable url="xsldoc.xsl" line="13" name="overview_node" select="/xsldoc/overview"/>
+<variable url="xsldoc.xsl" line="15" name="command_nodes" select="/xsldoc/cmd"/>
+<variable url="xsldoc.xsl" line="17" name="doc_version" select="'0.6'"/>
+<variable url="xsldoc.xsl" line="19" name="xsldbg_version" select="'0.5.9'"/>
+<variable url="xsldoc.xsl" line="22" name="help" select="'_#_'"/>
+<variable url="xsldoc.xsl" line="24" name="alldocs" select="0"/>
+<variable url="xsldoc.xsl" line="26" name="help_cmd" select="$command_nodes[@name=$help or @shortcut=$help]"/>
+</search>
