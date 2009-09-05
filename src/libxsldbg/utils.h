@@ -55,7 +55,7 @@
 /* Handle the differences in path and quote character between
  * win32 and *nix systems */
 #ifdef WIN32
-#define  QUOTECHAR ' '
+#define  QUOTECHAR '\"'
 #define  PATHCHAR '\\'
 #else
 #define  QUOTECHAR '\"'

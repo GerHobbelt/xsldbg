@@ -58,27 +58,32 @@ int helpTop(const xmlChar * args)
     int result = 0;
 
     if (xmlStrLen(args) > 0) {
-        snprintf(helpParam, 100, "--param help:%c'%s'%c", QUOTECHAR, args,
+        snprintf(helpParam, 100, "--param help %c'%s'%c", QUOTECHAR, args,
                  QUOTECHAR);
     } else
         xmlStrCpy(helpParam, "");
     if (!docsDirPath.isEmpty() && filesTempFileName(0)) {
         snprintf((char *) buff, sizeof(buff), "%s %s"
-                 " --param xsldbg_version:%c'%s'%c "
-                 " --param xsldbgVerTxt:%c'%s'%c "
-                 " --param helpDocVerTxt:%c'%s'%c "
-                 " --param helpErrorTxt:%c'%s'%c "
-                 " --output %s "
+                 " --param xldbg_version %c'%s'%c "
+                 " --param xsldbgVerTxt %c'%s'%c "
+                 " --param helpDocVerTxt %c'%s'%c "
+                 " --param helpErrorTxt %c'%s'%c "
+                 " --output %c%s%c "
                  " --noautoloadconfig "
-                 " --cd %s "
-                 "xsldbghelp.xsl xsldbghelp.xml",
+                 " --cd %c%s%c "
+#ifndef WIN32
+				 "xsldbghelp.xsl xsldbghelp.xml",
+#else
+				 // for windows fallback a non-docbook based help file
+				 "xsldoc.xsl xsldoc.xml",
+#endif
                  XSLDBG_BIN, helpParam,
                  QUOTECHAR, KXSLDBG_VERSION , QUOTECHAR,
                  QUOTECHAR, xsldbgVerTxt.toUtf8().constData(), QUOTECHAR,
                  QUOTECHAR, helpDocVerTxt.toUtf8().constData(), QUOTECHAR,
                  QUOTECHAR, helpErrorTxt.toUtf8().constData(), QUOTECHAR,
-                 filesTempFileName(0),
-		 docsDirPath.constData());
+                 QUOTECHAR,filesTempFileName(0),QUOTECHAR,
+				QUOTECHAR,docsDirPath.constData(),QUOTECHAR);
         if (xslDbgShellExecute((xmlChar *) buff, optionsGetIntOption(OPTIONS_VERBOSE)) == 0) {
             if (!docsDirPath.isEmpty())
                 xsldbgGenericErrorFunc(QObject::tr("Error: Unable to display help. Help files not found in"

@@ -37,6 +37,7 @@
 #define RISCOS_PORT_VERSION "2.01"
 
 #include "xsldbg.h"
+#include <QCoreApplication>
 #include <QDateTime>
 #include <QUrl>
 #include <QStringList>
@@ -62,12 +63,15 @@
 /* need to setup catch of SIGINT */
 #include <signal.h>
 
+
 /* needed by printTemplateNames */
 #include <libxslt/transform.h>
+#include <libxml/uri.h>
 
 /* standard includes from xsltproc*/
 #include <libxslt/xslt.h>
 #include <libexslt/exslt.h>
+
 #ifdef HAVE_STRING_H
 #include <string.h>
 #endif
@@ -143,6 +147,7 @@
 char *xsldbgCommand = NULL;
 #endif
 
+static xmlChar *output = NULL;
 xmlSAXHandler mySAXhdlr;
 
 FILE *errorFile = NULL; /* we'll set this just before starting debugger */
@@ -519,10 +524,10 @@ usage(const char *name)
                      "      --preferhtml : Use html output when generating search reports.\n"
                      "                     See search command\n");
   xsltGenericError(xsltGenericErrorContext,
-		    "       --stdout : Print all error messages to stdout\n" \
-		    "                  normally error messages go to stderr\n");
+					 "      --stdout : Print all error messages to stdout\n" \
+					 "                 normally error messages go to stderr\n");
     xsltGenericError(xsltGenericErrorContext,
-                    "       --cd <PATH> : Change to specfied working directory\n");
+                     "      --cd <PATH> : Change to specfied working directory\n");
 
 
 }
@@ -543,6 +548,7 @@ int xsldbgMain(int argc, char **argv)
     
     errorFile = stderr;
 
+	QCoreApplication app(argc, argv);
 
 #ifdef __riscos
     /* Remember our invocation command such that we may call ourselves */
@@ -588,7 +594,7 @@ int xsldbgMain(int argc, char **argv)
 			break;
 
 		    default:
-			xsldbgGenericErrorFunc(QObject::tr("Error: Too many file names supplied via command line.\n"));
+			xsldbgGenericErrorFunc(QObject::tr("Error: Too many file names supplied via command line looking at option '%1'.\n").arg(argv[i]));
 			result = 0;
 		}
 		continue;
@@ -611,8 +617,12 @@ int xsldbgMain(int argc, char **argv)
 			    argv[i] = NULL;
 			    i++;
 #if defined(WIN32) || defined (__CYGWIN__)
-			    result = xmlCanonicPath(argv[i]);
-			    if (result == NULL)
+			    output = xmlCanonicPath((xmlChar*)argv[i]);
+				if (output){
+					result = xslDbgShellOutput(output);
+					xmlFree(output);
+				}
+				else
 #endif
 				    result = xslDbgShellOutput((xmlChar*)argv[i]);
 			    argv[i] = NULL;
@@ -646,8 +656,10 @@ int xsldbgMain(int argc, char **argv)
 		    } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-nonet")) {
 			    xmlSetExternalEntityLoader(xmlNoNetExternalEntityLoader);
 		    } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-param")) {
+				argv[i] = NULL;
 			    i++;
 			    optionDataModel()->addParameter(argv[i], argv[i + 1]);
+				argv[i] = NULL;
 			    i++;
 			    //##TODO check if too many parameters were added
 			    /*
@@ -674,7 +686,7 @@ int xsldbgMain(int argc, char **argv)
 				    optionsSetIntOption(OPTIONS_REPEAT, 20);
 			    else
 				    optionsSetIntOption(OPTIONS_REPEAT, 100);
-
+				argv[i] = NULL;
 		    } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-cd")) {
 			    argv[i] = NULL;
 			    if (i + 1 < argc) {
@@ -689,13 +701,22 @@ int xsldbgMain(int argc, char **argv)
 		    } else {
 			    /* From here we're only dealing with integer options */
 			    /* ignore any non-user option */
-			    if (result && (argv[i][2] != '*')) {
-				    int optID = optionsGetOptionID(argv[i] + 1);
+			    if (result && (argv[i][2] != '*') ) {
+					// allow the user to turn off an option by going --no<IntOptionName>
+					bool disableOption = false;
+					if ((argv[i][1] == 'n') && (argv[i][2]=='o')){
+						disableOption = true;
+						argv[i]+=2;
+					}
+				    int optID = optionsGetOptionID((argv[i]+1));
 
 				    /* the user might have entered a string option so reject it if so */
-				    if ((optID >= OPTIONS_XINCLUDE)
-						    && (optID <= OPTIONS_VERBOSE)) {
-					    result = optionsSetIntOption(OptionTypeEnum(optID), optionsGetIntOption(OptionTypeEnum(optID)) + 1);
+				    if ((optID >= OPTIONS_FIRST_INT_OPTIONID)
+						    && (optID <= OPTIONS_LAST_INT_OPTIONID)) {
+						if (!disableOption)
+							result = optionsSetIntOption(OptionTypeEnum(optID), optionsGetIntOption(OptionTypeEnum(optID)) + 1);
+						else
+						    result = optionsSetIntOption(OptionTypeEnum(optID), 0);
 					    argv[i] = NULL;
 				    } else {
 					    xsltGenericError(xsltGenericErrorContext,

@@ -25,51 +25,25 @@
 #include "files.h"
 #include "utils.h"
 #include "options.h"
+#include <QDir>
 
-static char *tempNames[2] = { NULL, NULL };
+#define XSLDBG_NUM_TEMP_FILES 2
+static QString tempNames[XSLDBG_NUM_TEMP_FILES];
 
 int filesPlatformInit(void)
 {
-    const char *namePrefix = "/tmp/";
-    int nameIndex;
-    int result = 1;
+	int result = 1;
 
-    /* The "base" names for files files to use */
-    const char *names[] = {
-        "_xsldbg_tmp1.txt",
-        "_xsldbg_tmp2.txt"
-    };
-
-    if (getenv("USER")) {
-        for (nameIndex = 0; nameIndex < 2; nameIndex++) {
-            tempNames[nameIndex] = (char*)
-                xmlMalloc(strlen(namePrefix) + strlen(getenv("USER")) +
-                          strlen(names[nameIndex]) + 1);
-            if (tempNames[nameIndex]) {
-                xmlStrCpy(tempNames[nameIndex], namePrefix);
-                xmlStrCat(tempNames[nameIndex], getenv("USER"));
-                xmlStrCat(tempNames[nameIndex], names[nameIndex]);
-            } else {
-                xsldbgGenericErrorFunc(i18n("Error: Out of memory.\n"));
-                break;
-                result = 0;
-            }
-        }
-    } else {
-	 xsldbgGenericErrorFunc(i18n("Error: USER environment variable is not set.\n"));
-    }
+	for (int index=0; index < XSLDBG_NUM_TEMP_FILES; index++)
+		tempNames[index] = QFile::encodeName(QString("%1%2_xsldbg_tmp%3.txt").arg(QDir::tempPath()).arg(PATHCHAR).arg(index));
+        
     return result;
 }
 
 
 void filesPlatformFree(void)
 {
-    int nameIndex;
-
-    for (nameIndex = 0; nameIndex < 2; nameIndex++) {
-        if (tempNames[nameIndex])
-            xmlFree(tempNames[nameIndex]);
-    }
+    // Empty
 }
 
 const char * filesTempFileName(int fileNumber)
@@ -77,14 +51,14 @@ const char * filesTempFileName(int fileNumber)
 
     const char *result = NULL;
 
-    if ((fileNumber < 0) || (fileNumber >= int(sizeof(tempNames)/sizeof(*tempNames)))){
+    if ((fileNumber < 0) || (fileNumber >= XSLDBG_NUM_TEMP_FILES)){
 #ifdef WITH_XSLDBG_DEBUG_PROCESS
         xsltGenericError(xsltGenericErrorContext,
                          "Error: Unable to allocate temporary file %d for xsldbg\n",
                          fileNumber);
 #endif
     }else{
-        result = tempNames[fileNumber];
+		result = tempNames[fileNumber].toLocal8Bit().constData();
     }
 
     return result;

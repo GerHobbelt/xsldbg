@@ -1,6 +1,8 @@
+TARGET = xsldbg
 TEMPLATE	= app
 CONFIG	+= warn_on release console thread
 CONFIG += qt
+QT=core
 unix {
 	INSTALL_PREFIX="/usr/local/xsldbg"
 	DEFINES+= DOCS_PATH="\"\\\"$$INSTALL_PREFIX/docs/en\\\"\""
@@ -15,6 +17,19 @@ unix {
 	INSTALLS += docs
 }
 
+win32{
+	INSTALL_PREFIX="\xsldbg"
+	# DEFINES+= DOCS_PATH="\"\\\"$$INSTALL_PREFIX\\docs\\en\\\"\""
+	target.path = $$INSTALL_PREFIX/bin
+	INSTALLS += target
+
+	docs.files = ../docs/en/*.xsl \
+		     ../docs/en/*.xml \
+		     ../docs/en/*.docbook \
+		     ../docs/en/*.txt
+	docs.path= $$INSTALL_PREFIX/docs/en/
+	INSTALLS += docs
+}
 
 unix:INCLUDEPATH += $$(LIBXSLT_PREFIX)/include
 unix:INCLUDEPATH += $$(LIBXML_PREFIX)/include/libxml2
@@ -80,8 +95,8 @@ unix:SOURCES += \
     libxsldbg/options_unix.cpp 
 
 win32:SOURCES += \
-    libxsldbg/files_win32.cpp \
-    libxsldbg/help_win32.cpp \
+    libxsldbg/files_unix.cpp \
+    libxsldbg/help_unix.cpp \
     libxsldbg/options_win32.cpp 
 
 SOURCES+=libxsldbg/xsldbgthread.cpp
@@ -89,6 +104,7 @@ SOURCES+=libxsldbg/xsldbgthread.cpp
 
 #unix:LIBS +=  -lreadline -lhistory -Llibxsldbg -lxsldbg -lexslt $(LIBXSLT_LIBS)
 unix:LIBS +=  -lreadline -lhistory -lexslt $(LIBXSLT_LIBS)
-win32:LIBS	=	kernel32.lib user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib imm32.lib winmm.lib wsock32.lib  $(LIBXSLT_PREFIX)\lib\libexslt.lib $(LIBXSLT_PREFIX)\lib\libxslt.lib $(LIBXML_PREFIX)\lib\libxml2.lib
+win32:LIBS	=	kernel32.lib user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib imm32.lib winmm.lib wsock32.lib  $(LIBXSLT_PREFIX)\lib\libexslt.lib $(LIBXSLT_PREFIX)\lib\libxslt.lib $(LIBXML_PREFIX)\lib\libxml2.lib -L\xsldbg\bin -L\xsldbg\lib
 
-TARGET = xsldbg
+
+

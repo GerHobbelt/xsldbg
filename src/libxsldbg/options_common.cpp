@@ -23,6 +23,7 @@
 #include <libxsldbg/utils.h>
 #include <QStringList>
 #include <QFileInfo>
+#include <QCoreApplication>
 
 static XsldbgSettingsModel *settingsModel = NULL;
 // the model that will apply after the run command
@@ -103,33 +104,42 @@ QString langLookupDir( const QString &fname )
     QStringList search;
 
     // assemble the local search paths
+
+	// first try looking relative to the binaries install directory
+	if (QCoreApplication::libraryPaths().count()){
+		  QString newPath =  QCoreApplication::libraryPaths().first() + "/../docs/en";
+  	      search.append(newPath);
+	}
+
 #ifdef DOCS_PATH
     search.append(DOCS_PATH);
 #endif
     QString docsEnv = getenv("DOCS_PATH");
     if (!docsEnv.isEmpty()){
 	search.append(docsEnv);
-	search.append(docsEnv + "docs/en");
+	search.append(docsEnv + "/docs/en");
     }
  
-    // also look in each of the KDEDIR paths
-    docsEnv = getenv("KDEDIRS");
+    // also look in each of the KDEDIR path
+    docsEnv = getenv("KDEDIR");
     if (!docsEnv.isEmpty()){
 	search.append(docsEnv);
-	search.append(docsEnv + "docs/en");
+	search.append(docsEnv + "/docs/en");
     }
 
+	// lastly try in QTDIR
     docsEnv = getenv("QTDIR");
     if (!docsEnv.isEmpty()){
 	search.append(docsEnv);
-	search.append(docsEnv + "docs/en");
+	search.append(docsEnv + "/docs/en");
     }
 
+
     // try to locate the file
-    QStringList::Iterator it;
+	QStringList::Iterator it;
     for (it = search.begin(); it != search.end(); ++it)
-    {
-	QString baseDir = (*it) ;
+    {	
+	QString baseDir = (*it);
 	QFileInfo info(baseDir + '/' + fname);
 	if (info.exists() && info.isFile() && info.isReadable())
 	  return baseDir;

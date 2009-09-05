@@ -36,7 +36,9 @@
 #include "options.h"
 #include <QDir>
 
+#ifndef WIN32
 #include <unistd.h>
+#endif
 #include "xsldbgthread.h"
 #ifdef WIN32
 #include <direct.h>
@@ -487,7 +489,8 @@ int filesLoadXmlFile(const xmlChar * path, FileTypeEnum fileType)
                     }
                 } else {
                     /* ie for *nix this becomes "./" */
-                    stylePathName = '.' + PATHCHAR;
+                    stylePathName = '.';
+					stylePathName = PATHCHAR;
                 }
 
                 /* try to find encoding for this stylesheet */
