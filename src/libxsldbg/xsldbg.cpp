@@ -496,6 +496,8 @@ usage(const char *name)
     xsltGenericError(xsltGenericErrorContext,
                      "                           string values must be quoted like \"'string'\"\n");
     xsltGenericError(xsltGenericErrorContext,
+                     "      --param name:value : Pass a (parameter,value) pair\n");
+    xsltGenericError(xsltGenericErrorContext,
                      "      --nonet : Refuse to fetch DTDs or entities over network\n");
 #ifdef LIBXML_CATALOG_ENABLED
 #ifdef __riscos
@@ -656,11 +658,30 @@ int xsldbgMain(int argc, char **argv)
 		    } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-nonet")) {
 			    xmlSetExternalEntityLoader(xmlNoNetExternalEntityLoader);
 		    } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-param")) {
-				argv[i] = NULL;
+			    argv[i] = NULL;
 			    i++;
-			    optionDataModel()->addParameter(argv[i], argv[i + 1]);
+			     // support name:value as well
+			    QRegExp reg("^(\\w+|[_]+):(.+)");
+			    if ((argv[i][0] == '-') || (i >= argc)){
+				xsltGenericError(xsltGenericErrorContext,
+						"Missing value to -param option");
+				return 1;
+			    }
+			    if (reg.exactMatch(argv[i]) && (reg.capturedTexts().length() == 3)){
+				optionDataModel()->addParameter(reg.capturedTexts()[1], reg.capturedTexts()[2]);
 				argv[i] = NULL;
-			    i++;
+			    }else{ 
+				if ((i + 1 < argc) && (argv[i +1][0] != '-')){ 
+				    optionDataModel()->addParameter(argv[i], argv[i + 1]);
+				    argv[i] = NULL;
+				    argv[i+1] = NULL;
+				    i++;
+				}else{
+				    xsltGenericError(xsltGenericErrorContext,
+						    "Missing value to -param option");
+				    return 1;
+				}
+			    }
 			    //##TODO check if too many parameters were added
 			    /*
 			    if (arrayListCount(optionsGetParamItemList()) >= 32) {
@@ -679,7 +700,6 @@ int xsldbgMain(int argc, char **argv)
 					    xsltMaxDepth = value;
 			    }
 			    argv[i] = NULL;
-
 
 		    } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-repeat")) {
 			    if (optionsGetIntOption(OPTIONS_REPEAT) == 0)

@@ -58,16 +58,16 @@ int helpTop(const xmlChar * args)
     int result = 0;
 
     if (xmlStrLen(args) > 0) {
-        snprintf(helpParam, 100, "--param help %c'%s'%c", QUOTECHAR, args,
+        snprintf(helpParam, 100, "--param help:%c'%s'%c", QUOTECHAR, args,
                  QUOTECHAR);
     } else
         xmlStrCpy(helpParam, "");
     if (!docsDirPath.isEmpty() && filesTempFileName(0)) {
         snprintf((char *) buff, sizeof(buff), "%s %s"
-                 " --param xldbg_version %c'%s'%c "
-                 " --param xsldbgVerTxt %c'%s'%c "
-                 " --param helpDocVerTxt %c'%s'%c "
-                 " --param helpErrorTxt %c'%s'%c "
+                 " --param xldbg_version:%c'%s'%c "
+                 " --param xsldbgVerTxt:%c'%s'%c "
+                 " --param helpDocVerTxt:%c'%s'%c "
+                 " --param helpErrorTxt:%c'%s'%c "
                  " --output %c%s%c "
                  " --noautoloadconfig "
                  " --cd %c%s%c "
