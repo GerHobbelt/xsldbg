@@ -30,7 +30,6 @@
   <!-- Main template-->
   <xsl:template match="/">
 <xsl:text>         xsldbg version </xsl:text><xsl:value-of select="$xsldbg_version"/>
-<xsl:text>Foo Bar</xsl:text>
 <xsl:text> 
 </xsl:text>   
 <xsl:text>         ====================</xsl:text><xsl:text> 
