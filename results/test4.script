@@ -8,8 +8,9 @@ addparam quotedparam "step or where"
 addparam results result/data
 addparam version '1.0'
 showparam
+
 delparam 0
-delparam 2
+delparam 3
 showparam
 delparam
 showparam

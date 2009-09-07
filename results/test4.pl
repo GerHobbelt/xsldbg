@@ -7,7 +7,7 @@ require "xsldbgmatch.pl";
       my $template ="",  $fileName ="", $identifier ="", $state ="", $line ="";
       my $testCount = 0, $failedTestCount = 0, $optionalTestCount = 0;
 
-      my $result = 1, $testName ="../results/test4";
+      my $result = 1, $testName ="";
       printf "Running test $testName\n";
         
 
@@ -19,7 +19,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: addparam command expected", 
+             "Error: Invalid arguments for the command addparam", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -30,7 +30,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: addparam command expected", 
+             "Error: Invalid arguments for the command addparam", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -41,7 +41,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: Unable to read line number. Failed to delete parameter", 
+             "Error: Unable to find parameter a23", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -52,7 +52,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: Unable to find parameter 10. Failed to delete parameter", 
+             "Error: Unable to find parameter 10", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -70,17 +70,7 @@ require "xsldbgmatch.pl";
 
 
 
-    $testCount = $testCount + 1;
-    
-    if (xsldbgmatch::parameterMatch(
-             "0",  
-               "help" , 
-                 "'step'",
-                   $testName) == 0){
-       $failedTestCount = $failedTestCount + 1;
-       $result = 0;
-    }
-  
+
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::parameterMatch(
@@ -125,18 +115,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::parameterMatch(
-             "0",  
-               "quotedparam" , 
-                 "step or where",
-                   $testName) == 0){
-       $failedTestCount = $failedTestCount + 1;
-       $result = 0;
-    }
-  
-    $testCount = $testCount + 1;
-    
-    if (xsldbgmatch::parameterMatch(
-             "1",  
+             "2",  
                "results" , 
                  "result/data",
                    $testName) == 0){

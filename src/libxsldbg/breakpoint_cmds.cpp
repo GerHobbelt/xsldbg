@@ -587,7 +587,7 @@ int xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
 
     if (!result) {
         if (url)
-            xsldbgGenericErrorFunc(QObject::tr("Error: Failed to add breakpoint for file \"%1\" at line %2.\n").arg(xsldbgUrl(url), lineNo));
+            xsldbgGenericErrorFunc(QObject::tr("Error: Failed to add breakpoint for file \"%1\" at line %2.\n").arg(xsldbgUrl(url)).arg(lineNo));
         else
             xsldbgGenericErrorFunc(QObject::tr("Error: Failed to add breakpoint.\n"));
     }
@@ -621,7 +621,7 @@ int xslDbgShellDelete(xmlChar * arg)
             if (splitString(&arg[2], 2, opts) == 2) {
                 if ((xmlStrlen(opts[1]) == 0) ||
 		    !sscanf((char *) opts[1], "%ld", &lineNo)) {
-                    xsldbgGenericErrorFunc(QObject::tr("Error: Unable to parse %1 as a line number.\n", (char*)opts[1]));
+                    xsldbgGenericErrorFunc(QObject::tr("Error: Unable to parse %1 as a line number.\n").arg((char*)opts[1]));
                 } else {
                     trimString(opts[0]);
                     url = xmlStrdup((const xmlChar*)filesExpandName(xsldbgText(opts[0])).toUtf8().constData());
@@ -715,7 +715,7 @@ int xslDbgShellEnable(xmlChar * arg, int enableType)
             if (splitString(&arg[2], 2, opts) == 2) {
                 if ((xmlStrlen(opts[1]) == 0) ||
 		    !sscanf((char *) opts[1], "%ld", &lineNo)) {
-                    xsldbgGenericErrorFunc(QObject::tr("Error: Unable to parse %1 as a line number.\n", (char*)opts[1]));
+                    xsldbgGenericErrorFunc(QObject::tr("Error: Unable to parse %1 as a line number.\n").arg((char*)opts[1]));
                 } else {
                     trimString(opts[0]);
                     url = xmlStrdup((const xmlChar *)filesExpandName(xsldbgText(opts[0])).toUtf8().constData());

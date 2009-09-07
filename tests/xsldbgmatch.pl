@@ -8,6 +8,7 @@ sub templateListMatch{
     my $result = 1;
     my $errorText = "";
     while (<STDIN>) {
+	printf "templateListMatch is looking at $_";
 	if ($_ =~ /^ template :\"(.*)\" mode :\"(.*)\" in file ([^ ]*) : line ([0-9]*)/) {
 	    if (($template ne "") && ($template ne $1 )) {
 		$errorText .= "template bad expected \"$template\" found \"$1\"\n";
@@ -46,7 +47,8 @@ sub breakpointMatch{
     my $result = 1;
     my $errorText = "";
     while (<STDIN>) {
-	if ($_ =~ /^Breakpoint at file ([^ ]*) : line ([0-9]*)/) {
+	#printf "breakpointMatch is looking at $_";
+	if ($_ =~ /^Breakpoint for file \"([^ ]*)\" at line ([0-9]*)/) {
 	    if (($fileName ne "") && ($fileName ne $1 )) {
 		$errorText .= "file bad expected \"$fileName\" found \"$1\"\n";
 		$result = 0;
@@ -68,6 +70,7 @@ sub breakpointMatch{
 	    return $result;
 	}
     }
+    printf "breakpointMatch reached end if file looking for $fileName, $line, $testName\n";
     return $result;
 }
 
@@ -76,8 +79,9 @@ sub breakpointListMatch {
     my $result = 1;
     my $errorText = "";
     while (<STDIN>) {
+	printf "breakpointListMatch is looking at $_";
 # breakpoint list match
-	if ($_ =~ /^ Breakpoint ([0-9]*) (enabled|disabled).* file ([^ ]*) : line ([0-9]*)/) {
+	if ($_ =~ /^ Breakpoint ([0-9]*) (enabled|disabled).* file \"([^ ]*)\" at line ([0-9]*)/) {
 	    if (($identifier ne "") && ($identifier ne $1 )) {
 		$errorText .= "indentifier bad expected \"$indentifier\" found \"$1\"\n";
 		$result = 0;
@@ -89,7 +93,7 @@ sub breakpointListMatch {
 	    }
 
 	    if (($fileName ne "") && ($fileName ne $3 )) {
-		$errorText .= "file bad expected \"$fileName\" found \"$3\"\n";
+		$errorText .= "file bad expected \"$fileName\" found $3\n";
 		$result = 0;
 	    }
 
@@ -123,6 +127,7 @@ sub parameterMatch{
     my $result = 1;
     my $errorText = "";
     while (<STDIN>) {
+	printf "parameterMatch is looking at $_";
 	if ($_ =~ /^ Parameter ([0-9]*) ([^=]*)=\"(.*)\"/){
 	    if (($id ne "") && ($id ne $1 )) {
 		$errorText .= "parameter id bad expected \"$id\" found \"$1\"\n";
@@ -165,12 +170,12 @@ sub textMatch{
 	    print "Text match \n  text \"$textValue\"\n";
 	    return $result;
 	}else{
-	    printf "looking at : $_";
+	    printf "looking at : $_\n";
 	}
     }
     if ($result == 0){
 	printf "In $testName, no match for\n text \"$textValue\"\n";
-	printf "Near text: $firstLine";
+	printf "Near text: $firstLine\n";
     }
     return $result;
 }

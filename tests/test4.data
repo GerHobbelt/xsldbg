@@ -23,7 +23,7 @@
 <test>addparam</test>
 <result>
 <row>
-<matchtext>Error: addparam command expected</matchtext>
+<matchtext>Error: Invalid arguments for the command addparam</matchtext>
 </row>
 </result>
 </cmd>
@@ -32,7 +32,7 @@
 <test>addparam help step step</test>
 <result>
 <row>
-<matchtext>Error: addparam command expected</matchtext>
+<matchtext>Error: Invalid arguments for the command addparam</matchtext>
 </row>
 </result>
 </cmd>
@@ -41,7 +41,7 @@
 <test>delparam a23</test>
 <result>
 <row>
-<matchtext>Error: Unable to read line number. Failed to delete parameter</matchtext>
+<matchtext>Error: Unable to find parameter a23</matchtext>
 </row>
 </result>
 </cmd>
@@ -50,7 +50,7 @@
 <test>delparam 10</test>
 <result>
 <row>
-<matchtext>Error: Unable to find parameter 10. Failed to delete parameter</matchtext>
+<matchtext>Error: Unable to find parameter 10</matchtext>
 </row>
 </result>
 </cmd>
@@ -69,16 +69,18 @@
 <test>addparam results result/data</test>
 </cmd>
 <cmd>
-<test>addparam version '1.0'</test>
 </cmd>
+<test>addparam version '1.0'</test>
 
 <!-- check what we got -->
 <cmd>
-<test>showparam</test>
+<test>showparam
+</test>
 <result>
-<row>
+<!--<row>
 <parameter id="0" name="help" value="'step'"/>
 </row>
+-->
 <row>
 <parameter id="1" name="quotedparam" value="step or where"/>
 </row>
@@ -97,18 +99,19 @@
 <test>delparam 0</test>
 </cmd>
 <cmd>
-<test>delparam 2</test>
+<test>delparam 3</test>
 </cmd>
 
 <!-- check what we got -->
 <cmd>
 <test>showparam</test>
 <result>
-<row>
-<parameter id="0" name="quotedparam" value="step or where"/>
+<!--<row>
+<parameter id="1" name="quotedparam" value="step or where"/>
 </row>
+-->
 <row>
-<parameter id="1" name="results" value="result/data"/>
+<parameter id="2" name="results" value="result/data"/>
 </row>
 </result>
 </cmd>

@@ -7,10 +7,20 @@ require "xsldbgmatch.pl";
       my $template ="",  $fileName ="", $identifier ="", $state ="", $line ="";
       my $testCount = 0, $failedTestCount = 0, $optionalTestCount = 0;
 
-      my $result = 1, $testName ="../results/test6";
+      my $result = 1, $testName ="";
       printf "Running test $testName\n";
         
 
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointMatch( 
+             "",  
+               "20",
+                 $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::breakpointMatch( 
@@ -46,16 +56,6 @@ require "xsldbgmatch.pl";
     if (xsldbgmatch::breakpointMatch( 
              "",  
                "13",
-                 $testName) == 0){
-       $failedTestCount = $failedTestCount + 1;
-       $result = 0;
-    }
-  
-    $testCount = $testCount + 1;
-    
-    if (xsldbgmatch::breakpointMatch( 
-             "",  
-               "14",
                  $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;

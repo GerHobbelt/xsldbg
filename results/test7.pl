@@ -7,7 +7,7 @@ require "xsldbgmatch.pl";
       my $template ="",  $fileName ="", $identifier ="", $state ="", $line ="";
       my $testCount = 0, $failedTestCount = 0, $optionalTestCount = 0;
 
-      my $result = 1, $testName ="../results/test7";
+      my $result = 1, $testName ="";
       printf "Running test $testName\n";
         
 
@@ -45,7 +45,7 @@ require "xsldbgmatch.pl";
     
     if (xsldbgmatch::breakpointMatch( 
              "",  
-               "17",
+               "15",
                  $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -56,6 +56,16 @@ require "xsldbgmatch.pl";
     if (xsldbgmatch::breakpointMatch( 
              "",  
                "17",
+                 $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointMatch( 
+             "",  
+               "18",
                  $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;

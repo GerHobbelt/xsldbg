@@ -995,7 +995,7 @@ xsltStylesheetPtr xsldbgLoadStylesheet()
         startTimer();
     style = xmlParseFile(sourceFile.constData());
     if (optionsGetIntOption(OPTIONS_TIMING))
-        endTimer(QObject::tr("Parsing stylesheet %1", sourceFile.constData()));
+        endTimer(QObject::tr("Parsing stylesheet %1").arg(sourceFile.constData()));
     if (style == NULL) {
         xsldbgGenericErrorFunc(QObject::tr("Error: Cannot parse file %1.\n").arg(xsldbgUrl(sourceFile)));
         cur = NULL;

@@ -16,7 +16,7 @@
   </xsl:template>
 
   <xsl:template name="perlgenerate">
-   <xsl:document href="{$baseFileName}.pl" method="text">
+   <xsl:document href="test.pl" method="text">
 
     <xsl:text disable-output-escaping="yes">
 #! perl -w
@@ -48,7 +48,7 @@ require "xsldbgmatch.pl";
 </xsl:template>
 
  <xsl:template name="scriptgenerate">
-   <xsl:document href="{$baseFileName}.script" method="text">
+   <xsl:document href="test.script" method="text">
      <xsl:for-each select="//test">
        <xsl:value-of select="."/>
        <xsl:text>

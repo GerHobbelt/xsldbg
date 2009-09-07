@@ -7,7 +7,7 @@ require "xsldbgmatch.pl";
       my $template ="",  $fileName ="", $identifier ="", $state ="", $line ="";
       my $testCount = 0, $failedTestCount = 0, $optionalTestCount = 0;
 
-      my $result = 1, $testName ="../results/test2";
+      my $result = 1, $testName ="";
       printf "Running test $testName\n";
         
 
@@ -35,7 +35,27 @@ require "xsldbgmatch.pl";
     
     if (xsldbgmatch::breakpointMatch( 
              "",  
+               "18",
+                 $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointMatch( 
+             "",  
                "21",
+                 $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointMatch( 
+             "",  
+               "104",
                  $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -85,7 +105,7 @@ require "xsldbgmatch.pl";
     
     if (xsldbgmatch::breakpointMatch( 
              "",  
-               "110",
+               "111",
                  $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -136,6 +156,16 @@ require "xsldbgmatch.pl";
     if (xsldbgmatch::breakpointMatch( 
              "",  
                "27",
+                 $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointMatch( 
+             "",  
+               "80",
                  $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -265,6 +295,16 @@ require "xsldbgmatch.pl";
     
     if (xsldbgmatch::breakpointMatch( 
              "",  
+               "84",
+                 $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointMatch( 
+             "",  
                "87",
                  $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
@@ -295,7 +335,7 @@ require "xsldbgmatch.pl";
     
     if (xsldbgmatch::breakpointMatch( 
              "",  
-               "88",
+               "90",
                  $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -325,7 +365,7 @@ require "xsldbgmatch.pl";
     
     if (xsldbgmatch::breakpointMatch( 
              "",  
-               "73",
+               "74",
                  $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -335,7 +375,7 @@ require "xsldbgmatch.pl";
     
     if (xsldbgmatch::breakpointMatch( 
              "",  
-               "74",
+               "72",
                  $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -365,7 +405,7 @@ require "xsldbgmatch.pl";
     
     if (xsldbgmatch::breakpointMatch( 
              "",  
-               "94",
+               "95",
                  $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -375,7 +415,7 @@ require "xsldbgmatch.pl";
     
     if (xsldbgmatch::breakpointMatch( 
              "",  
-               "95",
+               "93",
                  $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -455,6 +495,16 @@ require "xsldbgmatch.pl";
     
     if (xsldbgmatch::breakpointMatch( 
              "",  
+               "53",
+                 $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointMatch( 
+             "",  
                "67",
                  $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
@@ -494,11 +544,10 @@ require "xsldbgmatch.pl";
 
 
 
-
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: break command arguments not in format", 
+             "Reached template: \"/\"", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -508,7 +557,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: break command arguments not in format", 
+             "Error: Invalid arguments to command break", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -518,7 +567,17 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: Unable to read line number", 
+             "Error: Invalid arguments to command break", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Error: Unable to parse a23 as a line number", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -538,7 +597,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Warning: Breakpoint at file test2.xsl: line 18 exists", 
+             "Warning: Breakpoint exits for file \"test2.xsl\" at line 18", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -548,7 +607,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Warning: Breakpoint at file test2.xsl: line 18 exists", 
+             "Warning: Breakpoint exits for file \"test2.xsl\" at line 18", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -577,7 +636,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: enable/disable command arguments not in format", 
+             "Error: Invalid arguments for command enable", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -587,7 +646,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: enable/disable command arguments not in format", 
+             "Error: Invalid arguments for command enable", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -597,7 +656,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: Unable to read line number", 
+             "Error: Unable to parse a23 as a line number", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -663,7 +722,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Warning: Breakpoint at file", 
+             "Error: Failed to add breakpoint for file \"test2.xsl\" at line 18", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -675,7 +734,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Warning: Breakpoint at file", 
+             "Error: Failed to add breakpoint for file \"test2.xsl\" at line 18", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -703,7 +762,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: delete command arguments not in format", 
+             "Error: Invalid arguments for command delete", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -713,7 +772,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: delete command arguments not in format", 
+             "Error: Invalid arguments for command delete", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -723,7 +782,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: Unable to read line number", 
+             "Error: Unable to parse a23 as a line number", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -733,7 +792,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: Breakpoint at template", 
+             "Error: Breakpoint at template \"BAD_TEMPLATENAME\" does not exist", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -743,7 +802,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "No file breakpoints set", 
+             "No breakpoints are set for the file", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -753,7 +812,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "No file breakpoints set", 
+             "No breakpoints are set for the file", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -763,7 +822,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "No file breakpoints set", 
+             "No breakpoints are set for the file", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -773,7 +832,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "No file breakpoints set", 
+             "No breakpoints are set for the file", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;

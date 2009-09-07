@@ -20,8 +20,8 @@ showbreak</test>
 <row>
 <breakpointlist file="test1.xml" line="8" />	
 <breakpointlist file="test2.xml" line="9" />	
-<breakpointlist file="test3.xml" line="9"  />	
 <breakpointlist file="test4.xml" line="9"  />	
+<breakpointlist file="test3.xml" line="9"  />	
 </row>
 </result>
 </cmd>

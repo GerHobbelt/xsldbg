@@ -17,13 +17,18 @@
 <row>
 <breakpoint line="18"/> <!-- xsldbg restarting with tracing on -->
 </row>
-
+<row>
+<breakpoint line="18"/>
+</row>
 <row>
 <breakpoint line="18"/>
 </row>
 <!-- Test basic usage of xsl:fallback -->
 <row>
 <breakpoint line="21"/>
+</row>
+<row>
+<breakpoint line="104"/>
 </row>
 <row>
 <breakpoint line="104"/>
@@ -38,7 +43,7 @@
 <breakpoint line="110"/>
 </row>
 <row>
-<breakpoint line="110"/>  <!-- text node being proccesed-->
+<breakpoint line="111"/>  <!-- text node being proccesed-->
 </row>
 
 <!-- Basic xsl:apply-templates       -->
@@ -59,6 +64,9 @@
 <!-- Test basic usage of xsl:call-template -->
 <row>
 <breakpoint line="27"/>
+</row>
+<row>
+<breakpoint line="80"/>
 </row>
 <row>
 <breakpoint line="80"/>
@@ -106,6 +114,9 @@ Test the ability to step into a xsl:with-param child -->
 <breakpoint line="84"/>
 </row>
 <row>
+<breakpoint line="84"/>
+</row>
+<row>
 <breakpoint line="87"/>
 </row>
 <row>
@@ -115,7 +126,7 @@ Test the ability to step into a xsl:with-param child -->
 <breakpoint line="88"/>
 </row>
 <row>
-<breakpoint line="88"/> <!-- test node processing -->
+<breakpoint line="90"/> <!-- test node processing -->
 </row>
 
 <!-- Results for test -->
@@ -127,10 +138,10 @@ Test the ability to step into a xsl:with-param child -->
 <breakpoint line="72"/>
 </row>
 <row>
-<breakpoint line="73"/>
+<breakpoint line="74"/>
 </row>
 <row>
-<breakpoint line="74"/>
+<breakpoint line="72"/>
 </row>
 
 <!-- Results for test -->
@@ -142,10 +153,10 @@ Test the ability to step into a xsl:with-param child -->
 <breakpoint line="93"/>
 </row>
 <row>
-<breakpoint line="94"/>
+<breakpoint line="95"/>
 </row>
 <row>
-<breakpoint line="95"/>
+<breakpoint line="93"/>
 </row>
 <row>
 <breakpoint line="98"/>
@@ -172,6 +183,9 @@ Test the ability to step into a xsl:with-param child -->
 <breakpoint line="53"/>
 </row>
 <row>
+<breakpoint line="53"/>
+</row>
+<row>
 <breakpoint line="67"/> <!-- name="fred" -->
 </row>
 <row>
@@ -193,12 +207,17 @@ Test the ability to step into a xsl:with-param child -->
 <cmd>
 <test>run
 break /</test>
+<result>
+<row>
+<matchtext>Reached template: \"/\"</matchtext>
+</row>
+</result>
 </cmd>
 <cmd>
 <test>break -l</test>
 <result>
 <row>
-<matchtext>Error: break command arguments not in format</matchtext>
+<matchtext>Error: Invalid arguments to command break</matchtext>
 </row>
 </result>
 </cmd>
@@ -206,7 +225,7 @@ break /</test>
 <test>break -l test2.xsl</test>
 <result>
 <row>
-<matchtext>Error: break command arguments not in format</matchtext>
+<matchtext>Error: Invalid arguments to command break</matchtext>
 </row>
 </result>
 </cmd>
@@ -214,7 +233,7 @@ break /</test>
 <test>break -l test2.xsl a23</test>
 <result>
 <row>
-<matchtext>Error: Unable to read line number</matchtext>
+<matchtext>Error: Unable to parse a23 as a line number</matchtext>
 </row>
 </result>
 </cmd>
@@ -231,7 +250,7 @@ break /</test>
 break /</test>
 <result>
 <row> <!-- breakkpoint exist so we should get a warning message -->
-<matchtext>Warning: Breakpoint at file test2.xsl: line 18 exists</matchtext>
+<matchtext>Warning: Breakpoint exits for file \"test2.xsl\" at line 18</matchtext>
 </row>
 </result>
 </cmd>
@@ -239,7 +258,7 @@ break /</test>
 <test>break -l test2.xsl 18</test>
 <result>
 <row> <!-- breakkpoint exist so we should get a warning message -->
-<matchtext>Warning: Breakpoint at file test2.xsl: line 18 exists</matchtext>
+<matchtext>Warning: Breakpoint exits for file \"test2.xsl\" at line 18</matchtext>
 </row>
 </result>
 </cmd>
@@ -261,7 +280,7 @@ break /</test>
 <test>enable -l</test>
 <result>
 <row>
-<matchtext>Error: enable/disable command arguments not in format</matchtext>
+<matchtext>Error: Invalid arguments for command enable</matchtext>
 </row>
 </result>
 </cmd>
@@ -269,7 +288,7 @@ break /</test>
 <test>enable -l test2.xsl</test>
 <result>
 <row>
-<matchtext>Error: enable/disable command arguments not in format</matchtext>
+<matchtext>Error: Invalid arguments for command enable</matchtext>
 </row>
 </result>
 </cmd>
@@ -277,7 +296,7 @@ break /</test>
 <test>enable -l test2.xsl a23</test>
 <result>
 <row>
-<matchtext>Error: Unable to read line number</matchtext>
+<matchtext>Error: Unable to parse a23 as a line number</matchtext>
 </row>
 </result>
 </cmd>
@@ -330,7 +349,7 @@ showbreak</test>
 <test>break -l test2.xsl 18</test>
 <result>
 <row> <!-- breakkpoint exist so we should get an error message -->
-<matchtext>Warning: Breakpoint at file</matchtext>
+<matchtext>Error: Failed to add breakpoint for file \"test2.xsl\" at line 18</matchtext>
 </row>>
 </result>
 </cmd>
@@ -341,7 +360,7 @@ showbreak</test>
 <test>break</test>
 <result>
 <row> <!-- breakkpoint exist so we should get an error message -->
-<matchtext>Warning: Breakpoint at file</matchtext>
+<matchtext>Error: Failed to add breakpoint for file \"test2.xsl\" at line 18</matchtext>
 </row>
 </result>
 </cmd>
@@ -365,7 +384,7 @@ break</test>
 <test>delete -l</test>
 <result>
 <row>
-<matchtext>Error: delete command arguments not in format</matchtext>
+<matchtext>Error: Invalid arguments for command delete</matchtext>
 </row>
 </result>
 </cmd>
@@ -373,7 +392,7 @@ break</test>
 <test>delete -l test2.xsl</test>
 <result>
 <row>
-<matchtext>Error: delete command arguments not in format</matchtext>
+<matchtext>Error: Invalid arguments for command delete</matchtext>
 </row>
 </result>
 </cmd>
@@ -381,7 +400,7 @@ break</test>
 <test>delete -l test2.xsl a23</test>
 <result>
 <row>
-<matchtext>Error: Unable to read line number</matchtext>
+<matchtext>Error: Unable to parse a23 as a line number</matchtext>
 </row>
 </result>
 </cmd>
@@ -389,7 +408,7 @@ break</test>
 <test>delete BAD_TEMPLATENAME</test>
 <result>
 <row>
-<matchtext>Error: Breakpoint at template</matchtext>
+<matchtext>Error: Breakpoint at template \"BAD_TEMPLATENAME\" does not exist</matchtext>
 </row>
 </result>
 </cmd>
@@ -400,7 +419,7 @@ delete /
 showbreak</test>
 <result>
 <row>
-<matchtext>No file breakpoints set</matchtext>
+<matchtext>No breakpoints are set for the file</matchtext>
 </row>
 </result>
 </cmd>
@@ -410,7 +429,7 @@ delete -l test2.xsl 18
 showbreak</test>
 <result>
 <row>
-<matchtext>No file breakpoints set</matchtext>
+<matchtext>No breakpoints are set for the file</matchtext>
 </row>
 </result>
 </cmd>
@@ -420,7 +439,7 @@ delete *
 showbreak</test>
 <result>
 <row>
-<matchtext>No file breakpoints set</matchtext>
+<matchtext>No breakpoints are set for the file</matchtext>
 </row>
 </result>
 </cmd>
@@ -430,7 +449,7 @@ delete
 showbreak</test>
 <result>
 <row>
-<matchtext>No file breakpoints set</matchtext>
+<matchtext>No breakpoints are set for the file</matchtext>
 </row>
 </result>
 </cmd>
