@@ -3,18 +3,13 @@ TEMPLATE	= app
 CONFIG	+= warn_on release console thread
 CONFIG += qt
 QT=core
+
+# Documentation is now installed via ../docs/en/en.pro
 unix {
 	INSTALL_PREFIX="/usr/local/xsldbg"
 	DEFINES+= DOCS_PATH="\"\\\"$$INSTALL_PREFIX/docs/en\\\"\""
 	target.path = $$INSTALL_PREFIX/bin/
 	INSTALLS += target
-
-	docs.files = ../docs/en/*.xsl \
-		     ../docs/en/*.xml \
-		     ../docs/en/*.docbook \
-		     ../docs/en/*.txt
-	docs.path= $$INSTALL_PREFIX/docs/en/
-	INSTALLS += docs
 }
 
 win32{
@@ -22,13 +17,6 @@ win32{
 	# DEFINES+= DOCS_PATH="\"\\\"$$INSTALL_PREFIX\\docs\\en\\\"\""
 	target.path = $$INSTALL_PREFIX/bin
 	INSTALLS += target
-
-	docs.files = ../docs/en/*.xsl \
-		     ../docs/en/*.xml \
-		     ../docs/en/*.docbook \
-		     ../docs/en/*.txt
-	docs.path= $$INSTALL_PREFIX/docs/en/
-	INSTALLS += docs
 }
 
 unix:INCLUDEPATH += $$(LIBXSLT_PREFIX)/include

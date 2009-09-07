@@ -1,3 +1,6 @@
+This package requries Qt 4.x.development libraries/headers to be present
+
+
 See docs/en/website/index.html and docs/en/plain/index.html for latest information 
   
 nb: docs/en/website/index.html includes a quick tutorial about using xsldbg
@@ -11,11 +14,8 @@ For WIN32 users using tmake you will need to set
   LIBXSLT_PREFIX must be set to the location of libxslt
   ICONV_PREFIX must be set to the location of iconv
 
-  Use src/xsldbg.pro create xsldbg.exe/xsldbg  without needing to build xsldbg.lib and qtnotifier.lib. 
-  You may wish to try using/customizing src/Makefile.msvc
+The tests and results directories are only used under *nix platforms and are not built
 
-  If you want to create qxsldbg you will need to use  
-	src/libxsldbg/libxsldbg.pro to create xsldbg.lib
-	src/libqtnotifier/libqtnotifier.pro to create qtnotifier.lib
-
-The tests and results directories are only used under *nix platforms
+Compilation linux to build this package
+    qmake xsldbg.pro
+    make
