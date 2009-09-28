@@ -1,11 +1,5 @@
 config.h
-config.cache
-config.log
-configure
-config.status
 archive
 search.data
 flag.txt
 xsldbg-config
-aclocal.m4
-results
