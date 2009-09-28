@@ -1,3 +1,9 @@
+Keith Isdale 28th Sept 2009 <keith.isdale@kdewebdev.org>
+  Version 4.4.1
+  Backport changes from KDE repository
+  Remove dependancy on autoconf instead use qmake .pro files
+
+
 Keith Isdale 1st Jan 2004 <k_isdale@tpg.com.au>
   Vesion 3.1.8
   Disable DocBook SGML parsing as it is depreciated by libxml-2.6.x : see xsldbg.h IN_LIBXML

@@ -4,6 +4,61 @@ CONFIG	+= warn_on release console thread
 CONFIG += qt
 QT=core
 
+# enable readline and history support if possible
+unix {
+    system("$$QMAKE_CC -lreadline configtests/readlinetest.c -o configtests/readlinetest") {
+	message(Enabling readline support)
+	DEFINES+=HAVE_READLINE
+	LIBS+=-lreadline
+    }
+    system("$$QMAKE_CC -lhistory configtests/historytest.c -o configtests/historytest") {
+	message(Enabling history support)
+	DEFINES+=HAVE_HISTORY
+	LIBS+=-lhistory
+    }
+}
+
+system("xslt-config --help >/dev/null"){
+    unix {
+       system( "echo -n \"QMAKE_CFLAGS+=\" > xslt-config.pri") 
+       system( "xslt-config --cflags >> xslt-config.pri")
+       system( "echo -n \"QMAKE_LFLAGS+=\" >> xslt-config.pri") 
+       system( "xslt-config --libs >> xslt-config.pri")
+       include(xslt-config.pri)
+       USED_XSLT_CONFIG=true
+    }
+} else {
+    message(xslt-config not found)
+} 
+
+!equals(USED_XSLT_CONFIG,true) {
+    # try to guess the LIBS and INCLUDE paths needed to be added
+    isEmpty(LIBXSLT_PREFIX) {
+	 message(warning \$LIBXSLT_PREFIX environment variable not set)
+    } else {
+	INCLUDEPATH += $$(LIBXSLT_PREFIX)/include
+	LIBS+=-L$(LIBXSLT_PREFIX)/lib -lxslt
+    }
+    isEmpty(LIBXML_PREFIX) {
+	 message(warning \$LIBXML_PREFIX environment variable not set)
+    } else {
+	INCLUDEPATH += $$(LIBXML_PREFIX)/include/libxml2
+	INCLUDEPATH += $$(LIBXML_PREFIX)/include
+	LIBS+=-L$(LIBXML_PREFIX)/lib -lxml2 -lz -lm 
+    }
+    isEmpty(ICONV_PREFIX) {
+	 message(warning \$ICONV_PREFIX environment variable not set)
+    } else {
+	INCLUDEPATH += $$(INCONV_PREFIX)/include
+    }
+} else {
+    message(xslt-config was found it will be used to set correct LIBS and INCLUDE)
+}
+INCLUDEPATH += .. 
+INCLUDEPATH += . 
+INCLUDEPATH += ../..
+
+
 # Documentation is now installed via ../docs/en/en.pro
 unix {
 	INSTALL_PREFIX="/usr/local/xsldbg"
@@ -19,15 +74,6 @@ win32{
 	INSTALLS += target
 }
 
-unix:INCLUDEPATH += $$(LIBXSLT_PREFIX)/include
-unix:INCLUDEPATH += $$(LIBXML_PREFIX)/include/libxml2
-unix:INCLUDEPATH += $$(INCONV_PREFIX)/include
-win32:INCLUDEPATH += $$(LIBXSLT_PREFIX)/include
-win32:INCLUDEPATH += $$(LIBXML_PREFIX)/include
-win32:INCLUDEPATH += $$(ICONV_PREFIX)/include
-INCLUDEPATH += .. 
-INCLUDEPATH += . 
-INCLUDEPATH += ../..
 win32:DEFINES+=WIN32 _WINDOWS _MBCS _REENTRANT
 
 
