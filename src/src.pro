@@ -31,25 +31,61 @@ system("xslt-config --help >/dev/null"){
     message(xslt-config not found)
 } 
 
+win32 {
+   OBJECTS_DIR = ./build/obj
+   MOC_DIR = ./build/moc
+   LIBS+=-L$(QTDIR)/lib
+   CONFIG+=console
+  }
+
 !equals(USED_XSLT_CONFIG,true) {
+    TEMP_LIBXSLT_PREFIX=$$(LIBXSLT_PREFIX)
     # try to guess the LIBS and INCLUDE paths needed to be added
-    isEmpty(LIBXSLT_PREFIX) {
+    isEmpty(TEMP_LIBXSLT_PREFIX) {
 	 message(warning \$LIBXSLT_PREFIX environment variable not set)
+	 message($$(LIBXSLT_PREFIX))
     } else {
-	INCLUDEPATH += $$(LIBXSLT_PREFIX)/include
-	LIBS+=-L$(LIBXSLT_PREFIX)/lib -lxslt
+    	unix{
+	   INCLUDEPATH += $$(LIBXSLT_PREFIX)/include
+	   LIBS+=-L$$(LIBXSLT_PREFIX)/lib -lxslt
+	} else {
+	   exists($$(LIBXSLT_PREFIX)/win32/bin.msvc){
+	      LIBS+=-L$$(LIBXSLT_PREFIX)/win32/bin.msvc
+	   } else {
+	      message(probably will not find libxslt libraries)
+	      LIBS+=-L$$(LIBXSLT_PREFIX)/lib/
+	   }
+	   LIBS+=-llibexslt -llibxslt
+	}
     }
-    isEmpty(LIBXML_PREFIX) {
+    TEMP_LIBXML_PREFIX=$$(LIBXML_PREFIX)
+    isEmpty(TEMP_LIBXML_PREFIX) {
 	 message(warning \$LIBXML_PREFIX environment variable not set)
     } else {
 	INCLUDEPATH += $$(LIBXML_PREFIX)/include/libxml2
 	INCLUDEPATH += $$(LIBXML_PREFIX)/include
-	LIBS+=-L$(LIBXML_PREFIX)/lib -lxml2 -lz -lm 
+	unix {
+	    LIBS+=-L$$(LIBXML_PREFIX)/lib -lxml2 -lz -lm 
+	} else {
+	   exists($$(LIBXML_PREFIX)/win32/bin.msvc){
+	      LIBS+=-L$$(LIBXML_PREFIX)/win32/bin.msvc
+	   } else {
+	      message(Probably will not find libxml libraries)
+	      LIBS+=-L$$(LIBXML_PREFIX)/lib/
+	   }
+	   LIBS+=-llibxml2
+       }
     }
-    isEmpty(ICONV_PREFIX) {
-	 message(warning \$ICONV_PREFIX environment variable not set)
+    TEMP_ICONV_PREFIX=$$(ICONV_PREFIX)
+    isEmpty(TEMP_ICONV_PREFIX) {
+	   message(warning \$ICONV_PREFIX environment variable not set)
     } else {
-	INCLUDEPATH += $$(INCONV_PREFIX)/include
+		exists($$(ICONV_PREFIX)/include/iconv.h){
+			INCLUDEPATH += $$(ICONV_PREFIX)/include
+		    LIBS+=$$(ICONV_PREFIX)/lib/iconv.lib
+		}else {
+			error(Did not found iconv.h in \$ICONV_PREFIX, ie $$(ICONV_PREFIX)/include)
+		}
     }
 } else {
     message(xslt-config was found it will be used to set correct LIBS and INCLUDE)
@@ -136,9 +172,6 @@ win32:SOURCES += \
 SOURCES+=libxsldbg/xsldbgthread.cpp
 
 
-#unix:LIBS +=  -lreadline -lhistory -Llibxsldbg -lxsldbg -lexslt $(LIBXSLT_LIBS)
-unix:LIBS +=  -lreadline -lhistory -lexslt $(LIBXSLT_LIBS)
-win32:LIBS	=	kernel32.lib user32.lib gdi32.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib imm32.lib winmm.lib wsock32.lib  $(LIBXSLT_PREFIX)\lib\libexslt.lib $(LIBXSLT_PREFIX)\lib\libxslt.lib $(LIBXML_PREFIX)\lib\libxml2.lib -L\xsldbg\bin -L\xsldbg\lib
 
 
 

@@ -16,11 +16,11 @@
  *                                                                         *
  ***************************************************************************/
 
+#include <libxsldbg/xsldbg.h>
 #include <libxsldbg/xsldbgmsg.h>
 #include <libxsldbg/xsldbgio.h>
 #include <libxslt/xsltutils.h>
 
-int xsldbgMain(int argc, char **argv);
 
 int main(int argc, char **argv)
 {
