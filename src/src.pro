@@ -24,6 +24,7 @@ system("xslt-config --help >/dev/null"){
        system( "xslt-config --cflags >> xslt-config.pri")
        system( "echo -n \"QMAKE_LFLAGS+=\" >> xslt-config.pri") 
        system( "xslt-config --libs >> xslt-config.pri")
+       LIBS+=-lexslt
        include(xslt-config.pri)
        USED_XSLT_CONFIG=true
     }
