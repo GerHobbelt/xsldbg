@@ -72,18 +72,6 @@
 #include <libxslt/xslt.h>
 #include <libexslt/exslt.h>
 
-#ifdef HAVE_STRING_H
-#include <string.h>
-#endif
-#ifdef HAVE_SYS_STAT_H
-#include <sys/stat.h>
-#endif
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#ifdef HAVE_STDLIB_H
-#include <stdlib.h>
-#endif
 #include <libxml/xmlmemory.h>
 #include <libxml/debugXML.h>
 #include <libxml/xmlerror.h>
@@ -105,38 +93,6 @@
 #include <libexslt/exsltconfig.h>
 
 #include <QFile>
-
-#ifdef WIN32
-#ifdef _MSC_VER
-#include <winsock2.h>
-#pragma comment(lib, "ws2_32.lib")
-#define gettimeofday(p1,p2)
-#define HAVE_TIME_H
-#include <time.h>
-#define HAVE_STDARG_H
-#include <stdarg.h>
-#endif /* _MS_VER */
-#else /* WIN32 */
-#if defined(HAVE_SYS_TIME_H)
-#include <sys/time.h>
-#elif defined(HAVE_TIME_H)
-#include <time.h>
-#endif
-
-
-#endif /* WIN32 */
-
-#ifndef HAVE_STAT
-#  ifdef HAVE__STAT
-
-/* MS C library seems to define stat and _stat. The definition
-      *         is identical. Still, mapping them to each other causes a warning. */
-#    ifndef _MSC_VER
-#      define stat(x,y) _stat(x,y)
-#    endif
-#    define HAVE_STAT
-#  endif
-#endif
 
 #ifdef __riscos
 
