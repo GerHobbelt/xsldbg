@@ -26,10 +26,14 @@
   <xsl:variable name="help_cmd" select="$command_nodes[@name=$help or @shortcut=$help]"/>
 
 
+  <!-- Our translatables -->
+  <xsl:param name="xsldbgVerTxt" select="'xsldbg version'"/>
+  <xsl:param name="helpDocVerTxt" select="'Help document version'"/>
+  <xsl:param name="helpErrorTxt" select="'Help not found for command'"/>
 
   <!-- Main template-->
   <xsl:template match="/">
-<xsl:text>         xsldbg version </xsl:text><xsl:value-of select="$xsldbg_version"/>
+<xsl:text>         </xsl:text><xsl:value-of select="$xsldbgVerTxt"/><xsl:text> </xsl:text><xsl:value-of select="$xsldbg_version"/>
 <xsl:text> 
 </xsl:text>   
 <xsl:text>         ====================</xsl:text><xsl:text> 
@@ -51,7 +55,7 @@
     </xsl:choose>
 <xsl:text> 
 </xsl:text> 
-<xsl:text>  Help document version </xsl:text><xsl:value-of select="$doc_version"/><xsl:text> 
+<xsl:value-of select="$helpDocVerTxt"/><xsl:text> </xsl:text><xsl:value-of select="$doc_version"/><xsl:text> 
 </xsl:text> 
   </xsl:template>
 
@@ -64,10 +68,8 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:if test="$help !='_#_'">
-          <xsl:text>Help about </xsl:text>
+	  <xsl:value-of select="$helpErrorTxt"/><xsl:text> </xsl:text>  
           <xsl:value-of select="$help"/>
-          <xsl:text> was not found.</xsl:text><xsl:text> 
-        </xsl:text>
       </xsl:if>
       <xsl:apply-templates select="$overview_node"/>
     </xsl:otherwise>

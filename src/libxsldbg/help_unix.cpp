@@ -33,7 +33,8 @@
 #include "debugXSL.h"
 #include "help.h"
 #include "files.h"
-#include <stdlib.h>
+#include <QCoreApplication>
+#include <QDebug>
 
 int helpTop(const xmlChar * args)
 {
@@ -50,12 +51,14 @@ int helpTop(const xmlChar * args)
     QString xsldbgVerTxt(QObject::tr("xsldbg version"));
     QString helpDocVerTxt(QObject::tr("Help document version"));
     QString helpErrorTxt(QObject::tr("Help not found for command"));
-    
+    QString xsldbg_bin(QLatin1String(XSLDBG_BIN));
 
     char buff[500], helpParam[100];
 
     QByteArray docsDirPath(optionsGetStringOption(OPTIONS_DOCS_PATH).toUtf8().constData());
     int result = 0;
+    // Do not require xsldbg to be in %PATH%
+    xsldbg_bin = QCoreApplication::applicationDirPath() + PATHCHAR + xsldbg_bin;
 
     if (xmlStrLen(args) > 0) {
         snprintf(helpParam, 100, "--param help:%c'%s'%c", QUOTECHAR, args,
@@ -64,7 +67,7 @@ int helpTop(const xmlChar * args)
         xmlStrCpy(helpParam, "");
     if (!docsDirPath.isEmpty() && filesTempFileName(0)) {
         snprintf((char *) buff, sizeof(buff), "%s %s"
-                 " --param xldbg_version:%c'%s'%c "
+                 " --param xsldbg_version:%c'%s'%c "
                  " --param xsldbgVerTxt:%c'%s'%c "
                  " --param helpDocVerTxt:%c'%s'%c "
                  " --param helpErrorTxt:%c'%s'%c "
@@ -77,13 +80,13 @@ int helpTop(const xmlChar * args)
 				 // for windows fallback a non-docbook based help file
 				 "xsldoc.xsl xsldoc.xml",
 #endif
-                 XSLDBG_BIN, helpParam,
+                 xsldbg_bin.toLocal8Bit().constData(), helpParam,
                  QUOTECHAR, KXSLDBG_VERSION , QUOTECHAR,
-                 QUOTECHAR, xsldbgVerTxt.toUtf8().constData(), QUOTECHAR,
-                 QUOTECHAR, helpDocVerTxt.toUtf8().constData(), QUOTECHAR,
-                 QUOTECHAR, helpErrorTxt.toUtf8().constData(), QUOTECHAR,
-                 QUOTECHAR,filesTempFileName(0),QUOTECHAR,
-				QUOTECHAR,docsDirPath.constData(),QUOTECHAR);
+                 QUOTECHAR, xsldbgVerTxt.toLocal8Bit().constData(), QUOTECHAR,
+                 QUOTECHAR, helpDocVerTxt.toLocal8Bit().constData(), QUOTECHAR,
+                 QUOTECHAR, helpErrorTxt.toLocal8Bit().constData(), QUOTECHAR,
+                 QUOTECHAR, filesTempFileName(0), QUOTECHAR,
+		 QUOTECHAR, docsDirPath.constData(),QUOTECHAR);
         if (xslDbgShellExecute((xmlChar *) buff, optionsGetIntOption(OPTIONS_VERBOSE)) == 0) {
             if (!docsDirPath.isEmpty())
                 xsldbgGenericErrorFunc(QObject::tr("Error: Unable to display help. Help files not found in"

@@ -105,11 +105,8 @@ QString langLookupDir( const QString &fname )
 
     // assemble the local search paths
 
-	// first try looking relative to the binaries install directory
-	if (QCoreApplication::libraryPaths().count()){
-		  QString newPath =  QCoreApplication::libraryPaths().first() + "/../docs/en";
-  	      search.append(newPath);
-	}
+    // first try looking relative to the binaries install directory
+    search.append(QCoreApplication::applicationDirPath() + "/../docs/en");
 
 #ifdef DOCS_PATH
     search.append(DOCS_PATH);
