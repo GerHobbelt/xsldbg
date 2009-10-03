@@ -90,8 +90,10 @@ If your operating system supports it file names will be expanded.
 </li>
 
 <li>Expression viewing(xpath) : <link href="cat">cat</link></li>
+
 <li>Node viewing : <link href="ls">ls</link>, <link href="dir">dir</link>, 
-<link href="du">du</link>, <link href="cat">cat</link>, <link href="pwd">pwd</link></li>, <link href="addwatch">addwatch</link>, <link href="showwatch">showwatch</link>, <link href="delwatch">delwatch</link>
+	<link href="du">du</link>, <link href="cat">cat</link>, <link href="pwd">pwd</link>, <link href="addwatch">addwatch</link>, <link href="showwatch">showwatch</link>, <link href="delwatch">delwatch</link></li>
+
 <li>Variable viewing : <link href="globals">globals</link>, 
 <link href="locals">locals</link>, 
 <link href="cat">cat</link>
@@ -108,7 +110,6 @@ If your operating system supports it file names will be expanded.
 
 <li>Operating system related :<link href="chdir">chdir</link>,
 <link href="shell">shell</link>,<link href="tty">tty</link>
-
 </li>
 
 <li>File related : <link href="output">output</link>, 
