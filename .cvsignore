@@ -7,3 +7,4 @@ xsldbg-config
 Makefile*
 *~
 *.swp
+*.sln
