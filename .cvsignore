@@ -4,3 +4,6 @@ archive
 search.data
 flag.txt
 xsldbg-config
+Makefile*
+*~
+*.swp

@@ -1,3 +1,13 @@
 xsldbg                                                    
 xsldbg.exe                                                    
 xslt-config.pri                                           
+Makefile*
+*.sln
+*.suo
+*.ncb
+*~
+*.swp
+*.vcproj
+debug
+release
+build
