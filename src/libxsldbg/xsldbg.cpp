@@ -506,8 +506,6 @@ int xsldbgMain(int argc, char **argv)
     
     errorFile = stderr;
 
-	QCoreApplication app(argc, argv);
-
 #ifdef __riscos
     /* Remember our invocation command such that we may call ourselves */
     xsldbgCommand = argv[0];

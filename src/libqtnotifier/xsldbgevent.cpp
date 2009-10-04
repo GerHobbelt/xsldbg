@@ -26,9 +26,10 @@
 #include <QFile>
 #include <QTimerEvent>
 #include <QEvent>
-#include <kurl.h>
+#include <QUrl>
 #include <QDebug>
 #include <QTextStream>
+#include <QTextCodec>
 
 #include <libxslt/xsltInternals.h>
 
@@ -210,9 +211,9 @@ XsldbgEventData *XsldbgEvent::createEventData(XsldbgMessageEnum type, const void
                                  * Free form text in file */
       /* this is actualy the  file to load */
       {
-	KUrl url(XsldbgDebuggerBase::fromUTF8FileName((xmlChar*)msgData));
-	if (!url.isLocalFile()){
-	    qDebug() << "Remote path to temp file" << url.prettyUrl() << " is unsupported, unable to read message from xsldbg";
+	QUrl url(XsldbgDebuggerBase::fromUTF8FileName((xmlChar*)msgData));
+	if (url.scheme() == QLatin1String("file")){
+	    qDebug() << "Remote path to temp file" << url.toString() << " is unsupported, unable to read message from xsldbg";
 	    break;
 	}
 	    

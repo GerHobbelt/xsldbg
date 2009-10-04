@@ -25,7 +25,7 @@
 
 #include <QApplication>
 #include <QStringList>
-#include <kurl.h>
+#include <QUrl>
 
 XsldbgDebuggerBase::XsldbgDebuggerBase()
   : QObject(0L)
@@ -64,11 +64,8 @@ QString XsldbgDebuggerBase::fromUTF8FileName(const char *text)
 {
   QString result;
   if (text != 0L){
-    KUrl url(((const char*)text));
-    if (url.isLocalFile())
-	result = QString("file:") + url.path();
-    else 
-	result = url.prettyUrl(); 
+    QUrl url(((const char*)text));
+    result = url.toString();
   }
   return result;
 }
@@ -78,11 +75,8 @@ QString XsldbgDebuggerBase::fromUTF8FileName(const xmlChar *text)
 {
   QString result;
   if (text != 0L){
-    KUrl url(QString::fromUtf8((const char*)text));
-    if (url.isLocalFile())
-	result = QString("file:") + url.path();
-    else 
-	result = url.prettyUrl(); 
+    QUrl url(QString::fromUtf8((const char*)text));
+    result = url.toString();
   }
   return result;
 }
@@ -92,4 +86,3 @@ void XsldbgDebuggerBase::queueMessage(const QString &text)
 {
     updateText += text;
 }
-#include "xsldbgdebuggerbase.moc"
