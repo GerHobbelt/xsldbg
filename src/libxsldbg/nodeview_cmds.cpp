@@ -191,12 +191,12 @@ static int printXPathObject(xmlXPathObjectPtr item, xmlChar* xPath){
 	   lines of text */
 	int indx;
 
-	const char *fileName = filesTempFileName(0);
+	QByteArray fileName = filesTempFileName(0);
 	FILE *file = NULL;
 
-	if (!fileName)
+	if (fileName.isEmpty())
 	  break;
-	file = fopen(fileName, "w+");
+	file = fopen(fileName.constData(), "w+");
 	if (!file) {
 	   xsldbgGenericErrorFunc(QObject::tr("Error: Unable to save temporary results to %1.\n").arg(xsldbgText(fileName)));
 	  break;

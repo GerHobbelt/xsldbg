@@ -2,6 +2,8 @@ Keith Isdale 28th Sept 2009 <keith.isdale@kdewebdev.org>
   Version 4.4.1
   Backport changes from KDE repository
   Remove dependancy on autoconf instead use qmake .pro files
+  Fix bug in filesTempFile() which can lead to help not showing for unix
+     o	return QByteArray of file name encoded with QFile::encodeName()
 
 
 Keith Isdale 1st Jan 2004 <k_isdale@tpg.com.au>

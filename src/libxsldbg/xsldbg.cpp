@@ -275,7 +275,7 @@ static void xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
                 res = xsltProfileStylesheet(cur, doc, params, terminalIO);
             else if ((optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME) ==
                       NULL) || (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)
-                     || (filesTempFileName(1) == NULL))
+                     || (filesTempFileName(1).isEmpty()))
                 res = xsltProfileStylesheet(cur, doc, params, stderr);
             else {
                 /* We now have to output to using notify using 
@@ -290,7 +290,7 @@ static void xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
                     notifyXsldbgApp(XSLDBG_MSG_FILEOUT,
                                     filesTempFileName(1));
                 } else {
-		     xsldbgGenericErrorFunc(QObject::tr("Error: Unable to write temporary results to %1.\n").arg(filesTempFileName(1)));
+		     xsldbgGenericErrorFunc(QObject::tr("Error: Unable to write temporary results to %1.\n").arg(filesTempFileName(1).constData()));
                     res = xsltProfileStylesheet(cur, doc, params, stderr);
                 }
             }
@@ -323,7 +323,7 @@ static void xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
 		    xmlDebugDumpDocument(terminalIO, res);
 		else if ((optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME) ==
 			    NULL) || (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)
-			|| (filesTempFileName(1) == NULL))
+			|| (filesTempFileName(1).isEmpty()))
 		    xmlDebugDumpDocument(stdout, res);
 		else {
 		    FILE *tempFile = fopen(filesTempFileName(1), "w");
@@ -336,7 +336,7 @@ static void xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
 			notifyXsldbgApp(XSLDBG_MSG_FILEOUT,
 				filesTempFileName(1));
 		    } else {
-			 xsldbgGenericErrorFunc(QObject::tr("Error: Unable to write temporary results to %1.\n").arg(filesTempFileName(1)));
+			 xsldbgGenericErrorFunc(QObject::tr("Error: Unable to write temporary results to %1.\n").arg(filesTempFileName(1).constData()));
 			xmlDebugDumpDocument(stdout, res);
 		    }
 

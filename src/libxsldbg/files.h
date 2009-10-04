@@ -116,9 +116,9 @@ xmlChar *filesGetBaseUri(xmlNodePtr node);
  *  This is a platform specific interface
  *
  * Returns The name of temp file to be used for temporary results if successful,
- *         NULL otherwise
+ *         an empty QByteArray otherwise
  */
-const char *filesTempFileName(int fileNumber);
+QByteArray filesTempFileName(int fileNumber);
 
 
 /**

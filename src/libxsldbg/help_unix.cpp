@@ -35,6 +35,7 @@
 #include "files.h"
 #include <QCoreApplication>
 #include <QDebug>
+#include <QFile>
 
 int helpTop(const xmlChar * args)
 {
@@ -55,7 +56,7 @@ int helpTop(const xmlChar * args)
 
     char buff[500], helpParam[100];
 
-    QByteArray docsDirPath(optionsGetStringOption(OPTIONS_DOCS_PATH).toUtf8().constData());
+    QByteArray docsDirPath(QFile::encodeName(optionsGetStringOption(OPTIONS_DOCS_PATH)));
     int result = 0;
     // Do not require xsldbg to be in %PATH%
     xsldbg_bin = QCoreApplication::applicationDirPath() + PATHCHAR + xsldbg_bin;
@@ -65,7 +66,7 @@ int helpTop(const xmlChar * args)
                  QUOTECHAR);
     } else
         xmlStrCpy(helpParam, "");
-    if (!docsDirPath.isEmpty() && filesTempFileName(0)) {
+    if (!docsDirPath.isEmpty() && !filesTempFileName(0).isEmpty()) {
         snprintf((char *) buff, sizeof(buff), "%s %s"
                  " --param xsldbg_version:%c'%s'%c "
                  " --param xsldbgVerTxt:%c'%s'%c "
@@ -85,7 +86,7 @@ int helpTop(const xmlChar * args)
                  QUOTECHAR, xsldbgVerTxt.toLocal8Bit().constData(), QUOTECHAR,
                  QUOTECHAR, helpDocVerTxt.toLocal8Bit().constData(), QUOTECHAR,
                  QUOTECHAR, helpErrorTxt.toLocal8Bit().constData(), QUOTECHAR,
-                 QUOTECHAR, filesTempFileName(0), QUOTECHAR,
+                 QUOTECHAR, filesTempFileName(0).constData(), QUOTECHAR,
 		 QUOTECHAR, docsDirPath.constData(),QUOTECHAR);
         if (xslDbgShellExecute((xmlChar *) buff, optionsGetIntOption(OPTIONS_VERBOSE)) == 0) {
             if (!docsDirPath.isEmpty())
@@ -94,7 +95,7 @@ int helpTop(const xmlChar * args)
             else
                 xsldbgGenericErrorFunc(QObject::tr("Error: Unable to find xsldbg or help files.\n"));
         } else {
-            if (filesMoreFile((xmlChar*)filesTempFileName(0), NULL) == 1) {
+            if (filesMoreFile((xmlChar*)filesTempFileName(0).constData(), NULL) == 1) {
                 result = 1;
             } else {
                 xsldbgGenericErrorFunc(QObject::tr("Error: Unable to print help file.\n"));

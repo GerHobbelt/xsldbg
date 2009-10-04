@@ -28,7 +28,7 @@
 #include <QDir>
 
 #define XSLDBG_NUM_TEMP_FILES 2
-static QString tempNames[XSLDBG_NUM_TEMP_FILES];
+static QByteArray tempNames[XSLDBG_NUM_TEMP_FILES];
 
 int filesPlatformInit(void)
 {
@@ -46,10 +46,10 @@ void filesPlatformFree(void)
     // Empty
 }
 
-const char * filesTempFileName(int fileNumber)
+QByteArray filesTempFileName(int fileNumber)
 {
 
-    const char *result = NULL;
+    QByteArray result;
 
     if ((fileNumber < 0) || (fileNumber >= XSLDBG_NUM_TEMP_FILES)){
 #ifdef WITH_XSLDBG_DEBUG_PROCESS
@@ -58,7 +58,7 @@ const char * filesTempFileName(int fileNumber)
                          fileNumber);
 #endif
     }else{
-		result = tempNames[fileNumber].toLocal8Bit().constData();
+		result = tempNames[fileNumber];
     }
 
     return result;
