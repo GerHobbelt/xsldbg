@@ -4,6 +4,9 @@ Keith Isdale 28th Sept 2009 <keith.isdale@kdewebdev.org>
   Remove dependancy on autoconf instead use qmake .pro files
   Fix bug in filesTempFile() which can lead to help not showing for unix
      o	return QByteArray of file name encoded with QFile::encodeName()
+  Fix bug in autoloading of last used session (autoloadconfig)
+    o ensure that the old settings are loaded first then apply the new options provided on 
+       command line
 
 
 Keith Isdale 1st Jan 2004 <k_isdale@tpg.com.au>

@@ -517,14 +517,13 @@ bool XsldbgSettingsModel::updateSetting(int optionID, QVariant & value)
 bool XsldbgSettingsModel::saveSettings (QSettings & configSettings ) const
 {
     bool result = true;
-/*
 
     // remove any old parameters 
-    QStringList settingsList = configGroup.keyList();
+    QStringList settingsList = configSettings.allKeys();
     QString setting;
     foreach (setting, settingsList){
         if (setting.startsWith(paramPrefix))
-            configGroup.deleteEntry(setting);
+            configSettings.remove(setting);
     }
 
     for (XsldbgSettingDataConstIterator it = d_ptr->settingData.constBegin();
@@ -532,12 +531,11 @@ bool XsldbgSettingsModel::saveSettings (QSettings & configSettings ) const
         // do not save any hidden options to disk
         if (!(it->m_type & XsldbgSettingsModel::HiddenSettingType)){
             if (it->m_type & XsldbgSettingsModel::ParamSettingType) 
-                configGroup.writeEntry(paramPrefix + it->m_name, it->m_value);
+                configSettings.setValue(paramPrefix + it->m_name, it->m_value);
             else
-                configGroup.writeEntry(optionPrefix + it->m_name, it->m_value);
+                configSettings.setValue(optionPrefix + it->m_name, it->m_value);
         }
     }
-*/
     return result;
 }
 
@@ -545,10 +543,9 @@ bool XsldbgSettingsModel::saveSettings (QSettings & configSettings ) const
 bool XsldbgSettingsModel::loadSettings (const QSettings & configSettings )
 {
     bool result = true;
-/*
     init(); // remove any parameters and set settings back to thier defaults
     XsldbgSettingData item;
-    QStringList settingsList = configGroup.keyList();
+    QStringList settingsList = configSettings.allKeys();
     QString setting;
     QVariant value;
     int optionPrefixLen = optionPrefix.length();
@@ -556,7 +553,7 @@ bool XsldbgSettingsModel::loadSettings (const QSettings & configSettings )
     // options are anything other than XSLT parameters
     XsldbgSettingsModel::SettingsType optionType = XsldbgSettingsModel::AnySimpleSettingType;
     foreach (setting, settingsList) {
-        value = configGroup.readEntry(setting, "");
+        value = configSettings.value(setting, "");
         if (setting.startsWith(optionPrefix)){
             if (findSetting(setting.mid(optionPrefixLen), optionType,  item))
                 updateSetting(item.m_id, value);
@@ -564,7 +561,6 @@ bool XsldbgSettingsModel::loadSettings (const QSettings & configSettings )
             addParameter(setting.mid(paramPrefixLen), value);
         }
     }
-*/
     return result;
 }
 

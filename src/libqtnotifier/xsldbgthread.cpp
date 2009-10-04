@@ -136,9 +136,6 @@ xsldbgThreadInit(void)
 void
 xsldbgThreadFree(void)
 {
-    if (!xsldbgThreadRunner)
-	return;
-
     if (getThreadStatus() != XSLDBG_MSG_THREAD_DEAD)
     {
       setThreadStatus(XSLDBG_MSG_THREAD_STOP);

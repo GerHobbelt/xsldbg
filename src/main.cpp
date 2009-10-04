@@ -20,10 +20,13 @@
 #include <libxsldbg/xsldbgmsg.h>
 #include <libxsldbg/xsldbgio.h>
 #include <libxslt/xsltutils.h>
+#include <QCoreApplication>
 
 
 int main(int argc, char **argv)
 {
+    QCoreApplication::setApplicationName(QObject::tr("xsldbg"));
+    QCoreApplication::setApplicationVersion(QLatin1String(KXSLDBG_VERSION));
     return xsldbgMain(argc, argv);
 }
 

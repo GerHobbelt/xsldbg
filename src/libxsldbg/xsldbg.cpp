@@ -530,6 +530,22 @@ int xsldbgMain(int argc, char **argv)
 
 
     if (argc >1){
+	// Do a quick scan to see if -*autoloadconfig is supplied
+	for (i = 1; i < argc; i++) {
+	    if ((argv[i][0] == '-') && (argv[i][1] == '-'))
+		    argv[i]++;          /* treat --<OPTION_NAME> as -<OPTION_NAME> */
+	    
+	    if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-noautoloadconfig")) 
+		optionSetAutoConfig(false);
+	    else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-autoloadconfig")) 
+		optionSetAutoConfig(true);
+	}
+
+       if (optionsAutoConfig()){
+            xmlChar *profile=0;
+            xsldbgReadConfig(profile);
+        }
+
 	for (i = 1; i < argc; i++) {
 	    if (!result)
 		break;
@@ -557,8 +573,6 @@ int xsldbgMain(int argc, char **argv)
 		}
 		continue;
 	    }
-	    if ((argv[i][0] == '-') && (argv[i][1] == '-'))
-		    argv[i]++;          /* treat --<OPTION_NAME> as -<OPTION_NAME> */
 
 #ifdef LIBXML_DEBUG_ENABLED
 	    if (!xmlStrCmp(argv[i], "-debug")) {
@@ -714,10 +728,6 @@ int xsldbgMain(int argc, char **argv)
 	    xsldbgFree();
 	    return (1);
 	}
-      if (optionsAutoConfig()){
-            xmlChar *profile=0;
-            xsldbgReadConfig(profile);
-        }
 
         // No extra arguments go straight to the shell
         if (argc <= 1)

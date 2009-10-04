@@ -278,10 +278,8 @@ int optionsRemoveWatch(int watchID)
 bool optionsReadConfig(const QSettings &config)
 {
     bool result = false;
-/*
     if (optionDataModel())
         result = optionDataModel()->loadSettings(config);
-*/
 
     return result;
 }
@@ -290,10 +288,8 @@ bool optionsReadConfig(const QSettings &config)
 bool optionsWriteConfig(QSettings &config)
 {
     bool result = false;
-/*
     if (optionDataModel())
         result = optionDataModel()->saveSettings(config);
-*/
 
     return result;
 }

@@ -92,3 +92,4 @@ void XsldbgDebuggerBase::queueMessage(const QString &text)
 {
     updateText += text;
 }
+#include "xsldbgdebuggerbase.moc"

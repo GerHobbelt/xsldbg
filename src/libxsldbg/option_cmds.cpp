@@ -226,32 +226,25 @@ int xslDbgShellDeleteWatch(xmlChar* arg)
 
 
 
-int xsldbgWriteConfig(xmlChar *arg)
+int xsldbgWriteConfig(xmlChar * arg)
 {
     Q_UNUSED(arg);
     int result = 0;
-/*
-    KSharedConfigPtr cfg = KGlobal::config();
-    KConfigGroup config(cfg->group("KXSLDbg"));
-    if (optionsWriteConfig(config)){
-        cfg->sync();
+    QSettings settings;
+    if (optionsWriteConfig(settings)){
         result = 1;
     }
-*/
     return result;
 }
 
 
-int xsldbgReadConfig(xmlChar *arg)
+int xsldbgReadConfig(xmlChar * arg)
 {
     Q_UNUSED(arg);
     int result = 0;
-/*
-    KSharedConfigPtr cfg=KGlobal::config();
-    KConfigGroup config(cfg->group("qxsldbg"));
-    if (optionsReadConfig(config)){
+    QSettings settings;
+    if (optionsReadConfig(settings)){
         result = 1;
     }
-*/
     return result;
 }
