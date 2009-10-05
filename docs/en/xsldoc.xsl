@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!-- 
      File : xsldoc.xsl     
-     Author: Keith Isdale <k_isdale@tpg.com.au>
+     Author: Keith Isdale <keith@kdewebdev.org>
      Description: Stylesheet to process xsldoc.xml and generate help text
      Copyright Reserved Under GPL     
 -->

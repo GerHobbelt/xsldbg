@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!-- 
      File : searchhtml.xsl     
-     Author: Keith Isdale <k_isdale@tpg.com.au>
+     Author: Keith Isdale <keith@kdewebdev.org>
      Description: Stylesheet to process searchreslt.xml and generate list of 
                  breakPoints, templates, callStack items etc.
                  This uses html format for its output in contrast to

@@ -9,11 +9,11 @@
        <title>Authors</title>
   <para>
    <application>xsldbg</application> was written by Keith Isdale
-   (<email>k_isdale@tpg.com.au</email>). To find more information about
+   (<email>keith@kdewebdev.org</email>). To find more information about
    <application>xsldbg</application>, please visit the <ulink
    url="http://xsldbg.sourceforge.net" type="http">xsldbg Web
    page</ulink>.  This manual was written by Keith Isdale
-   (<email>k_isdale@tpg.com.au</email>).
+   (<email>keith@kdewebdev.org</email>).
   </para>
   <para>
     If you have some comments or suggestions regarding this

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- 
      File : test1.xsl     
-     Author: Keith Isdale <k_isdale@tpg.com.au>
+     Author: Keith Isdale <keith@kdewebdev.org>
      Description: stylesheet for test "test1"
      Copyright Reserved Under GPL     
 -->

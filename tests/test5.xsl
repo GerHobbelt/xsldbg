@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!-- 
      File : test5.xsl     
-     Author: Keith Isdale <k_isdale@tpg.com.au>
+     Author: Keith Isdale <keith@kdewebdev.org>
      Description: stylesheet for test "test5"
      Copyright Reserved Under GPL     
 -->

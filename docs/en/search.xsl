@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!-- 
      File : search.xsl     
-     Author: Keith Isdale <k_isdale@tpg.com.au>
+     Author: Keith Isdale <keith@kdewebdev.org>
      Description: Stylesheet to process search.data and generate list of 
                  breakPoints, templates, callStack items
      Copyright Reserved Under GPL     
