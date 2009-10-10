@@ -1,9 +1,9 @@
 %define name xsldbg
-%define version 3.1.7
+%define version 4.4.1
 %define release 1
 %define prefix /usr
-%define kdeprefix /opt/kde3
-%define qtprefix /usr/lib/qt3
+%define kdeprefix /opt/kde4
+%define qtprefix /usr/lib/qt4
 %define gnomeprefix /opt/gnome
 %define builddir $RPM_BUILD_DIR/%{name}-%{version}
 
@@ -19,7 +19,7 @@ Vendor: Keith Isdale <k_isdale@tpg.com.au>
 Packager: Keith Isdale <k_isdale@tpg.com.au>
 Source: %{name}-%{version}.tar.gz
 URL: http://xsldbg.sourceforge.net/ 
-Requires: kdelibs >= 3.0 libxml2 >= 2.4.3 libxslt >= 1.0.13
+Requires: kdelibs >= 4.0 libxml2 >= 2.4.3 libxslt >= 1.0.13
 BuildRoot: /tmp/build-%{name}-%{version}
 
 %description
@@ -41,8 +41,7 @@ aclocal
 autoheader
 automake
 autoconf
-CXXFLAGS="$RPM_OPT_FLAGS" CFLAGS="$RPM_OPT_FLAGS" ./configure \
-	--prefix=%{prefix} --enable-xsldbgthread --enable-kde-docs --with-html-dir=%{prefix}/share/doc/packages --with-kde-dir=%{kdeprefix} --with-qt-dir=%{qtprefix} --with-gnome-prefix=%{gnomeprefix}
+CXXFLAGS="$RPM_OPT_FLAGS" CFLAGS="$RPM_OPT_FLAGS" qmake
 make
 
 
