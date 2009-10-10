@@ -125,16 +125,10 @@ QString xsldbgText(const xmlChar *utf8Text);
 #ifndef KDE
     #define I18N_NOOP(a) a
     #define i18n(a) QObject::tr(a)
-#include <QObject> 
-    #ifndef XSLDBG_BIN
-	#define XSLDBG_BIN "xsldbg"
-    #endif
-    #ifndef KXSLDBG_VERSION
-    #define KXSLDBG_VERSION "4.4.1"
-    #endif
-    #ifndef TIMESTAMP
-	#define TIMESTAMP "NOW"
-    #endif  
+    #include <QObject> 
 #endif
+#define XSLDBG_BIN "xsldbg"
+#define XSLDBG_VERSION "4.4.1" 
+#define TIMESTAMP __DATE__
 
 #endif // XSLDEBUGGER_H

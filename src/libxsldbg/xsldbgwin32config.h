@@ -20,12 +20,6 @@
 #ifndef XSLDBG_WIN32CONFIG_H
 #define XSLDBG_WIN32CONFIG_H
 
-#define XSLDBG_BIN "xsldbg"
-
-#define VERSION "4.4.1"
-
-#define TIMESTAMP __DATE__
-
 #ifdef XSLDBG_SO_EXPORTS
 #   define XSLDBG_SO_API __declspec(dllexport)
 #else

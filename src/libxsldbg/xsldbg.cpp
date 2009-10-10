@@ -531,19 +531,19 @@ int xsldbgMain(int argc, char **argv)
 	// Do a quick scan to see if -*autoloadconfig is supplied
 	for (i = 1; i < argc; i++) {
 	    if ((argv[i][0] == '-') && (argv[i][1] == '-'))
-		    argv[i]++;          /* treat --<OPTION_NAME> as -<OPTION_NAME> */
-	    
+		argv[i]++;          /* treat --<OPTION_NAME> as -<OPTION_NAME> */
+
 	    if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-noautoloadconfig")) 
 		optionSetAutoConfig(false);
 	    else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-autoloadconfig")) 
 		optionSetAutoConfig(true);
 	}
-
-       if (optionsAutoConfig()){
-            xmlChar *profile=0;
-            xsldbgReadConfig(profile);
-        }
-
+    }
+    if (optionsAutoConfig()){
+	xmlChar *profile=0;
+	xsldbgReadConfig(profile);
+    }
+    if (argc >1){
 	for (i = 1; i < argc; i++) {
 	    if (!result)
 		break;
@@ -601,7 +601,7 @@ int xsldbgMain(int argc, char **argv)
 			    xsltGenericError(xsltGenericErrorContext,
 					    " xsldbg created by Keith Isdale <keith@kdewebdev.org\n");
 			    xsltGenericError(xsltGenericErrorContext,
-					    " Version %s, Date created %s\n", KXSLDBG_VERSION,
+					    " Version %s, Date created %s\n", XSLDBG_VERSION,
 					    TIMESTAMP);
 			    xsltGenericError(xsltGenericErrorContext,
 					    "Using libxml %s, libxslt %s and libexslt %s\n",
@@ -635,7 +635,7 @@ int xsldbgMain(int argc, char **argv)
 						"Missing value to -param option");
 				return 1;
 			    }
-			    if (reg.exactMatch(argv[i]) && (reg.capturedTexts().length() == 3)){
+			    if (reg.exactMatch(argv[i]) && (reg.capturedTexts().count() == 3)){
 				optionDataModel()->addParameter(reg.capturedTexts()[1], reg.capturedTexts()[2]);
 				argv[i] = NULL;
 			    }else{ 
@@ -749,7 +749,7 @@ int xsldbgMain(int argc, char **argv)
         xslDebugStatus = DEBUG_NONE;
     } else {
         xslDebugStatus = DEBUG_STOP;
-        xsltGenericError(xsltGenericErrorContext, "XSLDBG %s\n", KXSLDBG_VERSION);
+        xsltGenericError(xsltGenericErrorContext, "XSLDBG %s\n", XSLDBG_VERSION);
     }
 
     if (optionsGetIntOption(OPTIONS_VALID))
@@ -1255,7 +1255,7 @@ int xsldbgInit()
         /* catch SIGINT */
         oldHandler = signal(SIGINT, catchSigInt);
 #else
-        if (SetConsoleCtrlHandler(handler_routine, true) != true)
+        if (SetConsoleCtrlHandler(handler_routine, true) != TRUE)
             return result;
 #endif
 

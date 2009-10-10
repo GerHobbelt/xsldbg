@@ -26,8 +26,9 @@
 int main(int argc, char **argv)
 {
     QCoreApplication app(argc, argv);
-    QCoreApplication::setApplicationName(QObject::tr("xsldbg"));
-    QCoreApplication::setApplicationVersion(QLatin1String(KXSLDBG_VERSION));
+    app.setApplicationName(QObject::tr("xsldbg"));
+	app.setOrganizationDomain("xsldbg");
+    app.setApplicationVersion(QLatin1String(XSLDBG_VERSION));
     return xsldbgMain(argc, argv);
 }
 

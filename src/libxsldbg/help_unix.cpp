@@ -82,7 +82,7 @@ int helpTop(const xmlChar * args)
 				 "xsldoc.xsl xsldoc.xml",
 #endif
                  xsldbg_bin.toLocal8Bit().constData(), helpParam,
-                 QUOTECHAR, KXSLDBG_VERSION , QUOTECHAR,
+                 QUOTECHAR, XSLDBG_VERSION , QUOTECHAR,
                  QUOTECHAR, xsldbgVerTxt.toLocal8Bit().constData(), QUOTECHAR,
                  QUOTECHAR, helpDocVerTxt.toLocal8Bit().constData(), QUOTECHAR,
                  QUOTECHAR, helpErrorTxt.toLocal8Bit().constData(), QUOTECHAR,

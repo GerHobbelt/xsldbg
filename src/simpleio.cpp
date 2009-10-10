@@ -35,17 +35,25 @@
 
 int notifyXsldbgApp(XsldbgMessageEnum type, const void *data)
 {
+  Q_UNUSED(type);
+  Q_UNUSED(data);
   return 1;
 }
 
 int notifyStateXsldbgApp(XsldbgMessageEnum type, int commandId, 
 			   XsldbgCommandStateEnum commandState, const char *text)
 {
+  Q_UNUSED(type);
+  Q_UNUSED(commandId);
+  Q_UNUSED(commandState);
+  Q_UNUSED(text);
   return 1;
 }
 
 int notifyTextXsldbgApp(XsldbgMessageEnum type, const char *text)
 {
+  Q_UNUSED(type);
+  Q_UNUSED(text);
   return 1;
 }
 
