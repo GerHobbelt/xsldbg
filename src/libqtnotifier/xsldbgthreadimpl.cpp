@@ -23,7 +23,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include <stdarg.h>
 
 #include <libxml/xmlerror.h>
@@ -34,6 +33,11 @@
 #include "../libxsldbg/qtnotifier2.h"
 #include "../libxsldbg/xsldbg.h"
 #include <QThread>
+#ifdef Q_OS_WIN32
+#include <Windows.h>
+#else
+#include <unistd.h>
+#endif
 
 #ifdef HAVE_READLINE
 #include <readline/readline.h>
@@ -46,12 +50,6 @@
 
 static char inputBuffer[DEBUG_BUFFER_SIZE];
 static char outputBuffer[DEBUG_BUFFER_SIZE];
-
-/*the major structure to hold information about the process thread */
-pthread_t mythread;
-
-/* The reader for stdout */
-pthread_t stdoutReaderThread;
 
 FILE *stdoutIO = NULL;
 
@@ -84,7 +82,7 @@ void XsldbgThread::run()
     setThreadStatus(XSLDBG_MSG_THREAD_RUN);
     setInputStatus(XSLDBG_MSG_AWAITING_INPUT);
 
-    /* call the "main of xsldbg" found in debugXSL.c */
+	/* call the "main of xsldbg" found in debugXSL.c */
     xsldbgMain(0,0);
 
     setInputStatus(XSLDBG_MSG_PROCESSING_INPUT);
@@ -119,13 +117,18 @@ xsldbgThreadInit(void)
     for (counter = 0; counter < 11; counter++){
         if (getThreadStatus() != XSLDBG_MSG_THREAD_INIT)
           break;
-        usleep(250000); /*guess that it will take at most 2.5 seconds to startup */
+		/*guess that it will take at most 2.5 seconds to startup */
+#ifdef Q_OS_WIN32
+		Sleep(250);
+#else
+		sleep(250);
+#endif
     }
     /* xsldbg should have started by now if it can */
     if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
         result++;
     }else
-         fprintf(stderr, "Thread did not start\n");
+         qWarning("Thread did not start\n");
 
     return result;
 }
@@ -139,11 +142,15 @@ xsldbgThreadFree(void)
     {
       setThreadStatus(XSLDBG_MSG_THREAD_STOP);
       /*guess that it will take at most 2.5 seconds to stop */
-      xsldbgThreadRunner->wait(2500000);
+#ifdef Q_OS_WIN32
+		Sleep(250);
+#else
+		sleep(250);
+#endif
     }
 
-    if (!getThreadStatus() == XSLDBG_MSG_THREAD_DEAD)
-        fprintf(stderr, "xsldbg's thread did not stop properly killing it anyhow\n");
+	if (getThreadStatus() != XSLDBG_MSG_THREAD_DEAD)
+        qWarning("xsldbg's thread did not stop properly killing it anyhow\n");
     delete xsldbgThreadRunner;
     xsldbgThreadRunner = 0;
 }
@@ -230,7 +237,11 @@ qtXslDbgShellReadline(xmlChar * prompt)
     notifyXsldbgApp(XSLDBG_MSG_AWAITING_INPUT, NULL);
 
     while (getInputReady() == 0){
-      usleep(10000);
+#ifdef Q_OS_WIN32
+		Sleep(10);
+#else
+		sleep(10);
+#endif
       /* have we been told to die */
       if (getThreadStatus() ==  XSLDBG_MSG_THREAD_STOP){
 	xslDebugStatus = DEBUG_QUIT;
@@ -323,11 +334,15 @@ xsldbgThreadStdoutReader(void *data)
 
   while (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
     if (fgets(outputBuffer, sizeof(outputBuffer -1), stdoutIO)){
-      usleep(10000);
+#ifdef Q_OS_WIN32
+	  Sleep(250);
+#else
+	  sleep(250);
+#endif
       strcat(outputBuffer, "\n");
       notifyTextXsldbgApp(XSLDBG_MSG_TEXTOUT, outputBuffer);
     }else{
-      fprintf(stderr, "Unable to read from stdout from xsldbg\n");
+      qWarning("Unable to read from stdout from xsldbg\n");
       break;
     }
   }

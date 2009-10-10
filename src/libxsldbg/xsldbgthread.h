@@ -34,7 +34,6 @@
 
 #include "xsldbgmsg.h"
 
-
 int getAppReady(void);
 
 void setAppReady(int ready);

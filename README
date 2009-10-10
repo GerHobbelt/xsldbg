@@ -22,6 +22,8 @@ for Windows (MSVC) :
   qmake
   nmake
   nmake install
+then install xsldbg's catalog.xml via running
+  createcatalog.bat
 
 The tests and results directories are only used under *nix platforms and are not built
     if you want to run them :
