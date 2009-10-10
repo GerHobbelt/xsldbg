@@ -137,16 +137,15 @@ callPointInfoPtr addCallInfo(const xmlChar * templateName, const xmlChar *templa
 
     while (cur->next) {
         found = 1;
-        if (templateName && cur->templateName 
-	    && !xmlStrEqual(cur->templateName, templateName)) 
+	if (templateName && cur->templateName && !xmlStrEqual(cur->templateName, templateName)) 
 	    found = 0;
-	if (found && !xmlStrEqual(cur->templateURI, templateURI)) 
+	if (found && cur->templateURI && templateURI && !xmlStrEqual(cur->templateURI, templateURI)) 
 	    found = 0;
-	if (found && !xmlStrEqual(cur->modeName, modeName))
+	if (found && cur->modeName && modeName && !xmlStrEqual(cur->modeName, modeName))
 	    found = 0;
-	if (found && !xmlStrEqual(cur->modeURI, modeURI))
+	if (found && cur->modeURI && modeURI && !xmlStrEqual(cur->modeURI, modeURI))
 	    found = 0;
-	if (found && !xmlStrEqual(cur->url, url))
+	if (found && cur->url && url && !xmlStrEqual(cur->url, url))
 	   found = 0;
 
 	if (found){
@@ -168,13 +167,23 @@ callPointInfoPtr addCallInfo(const xmlChar * templateName, const xmlChar *templa
             cur->next = result;
 	  }
 	  result->templateName =
-	    (xmlChar *) xmlMemStrdup((char *) templateName);
-	  result->templateURI =
-	    (xmlChar *) xmlMemStrdup((char *) templateURI);
-	  result->modeName =
-                (xmlChar *) xmlMemStrdup((char *) modeName);
-	  result->modeURI =
-	    (xmlChar *) xmlMemStrdup((char *) modeURI);
+	      (xmlChar *) xmlMemStrdup((char *) templateName);
+
+	  if (templateURI)
+	      result->templateURI = (xmlChar *) xmlMemStrdup((char *) templateURI);
+	  else
+	      result->templateURI = NULL;
+
+	  if (modeName)
+	      result->modeName = (xmlChar *) xmlMemStrdup((char *) modeName);
+	  else
+	      result->modeName = NULL;
+
+	  if (modeURI)
+	      result->modeURI = (xmlChar *) xmlMemStrdup((char *) modeURI);
+	  else
+	      result->modeURI = NULL;
+
 	  result->url = (xmlChar *) xmlMemStrdup((char *) url);
 	  result->next = NULL;
 	}else {
