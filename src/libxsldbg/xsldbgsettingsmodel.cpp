@@ -227,7 +227,8 @@ void XsldbgSettingsModel::init()
         (void)removeParameter(param);
 
     d_ptr->updateIndex();
-    reset();
+    beginResetModel();
+    endResetModel();
 }
 
 bool XsldbgSettingsModel::setData(const QModelIndex & index, const QVariant & value, int role)
@@ -347,7 +348,8 @@ bool XsldbgSettingsModel::addParameter(const QString & name, const QVariant &val
         d_ptr->updateIndex();
         endInsertRows();
         result = true;
-        reset();
+        beginResetModel();
+        endResetModel();
     }else {
         qWarning("Unable to update existing libxslt parameter %s", name.toLatin1().constData());
         //TODO update the existing value
@@ -397,8 +399,10 @@ bool XsldbgSettingsModel::removeParameter(const QString & name)
 
     }
     lock(false);
-    if (result)
-        reset();
+    if (result) {
+        beginResetModel();
+        endResetModel();
+    }
     return result;
 }
 

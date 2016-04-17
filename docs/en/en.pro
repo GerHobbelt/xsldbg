@@ -22,7 +22,7 @@ unix{
 
     # nasty shell script to seek to install xsldbg's catalog
     xmldocCatalog2.commands=\
-		echo "" > result.txt'; \
+                echo "" > result.txt; \
 		if ! test -e /etc/xml/catalog; then \
 		     echo "Creating /etc/xml/catalog" >> result.txt 2>&1  ; \
 		     xmlcatalog -v --noout --create /etc/xml/catalog >> result.txt 2>&1 ; \

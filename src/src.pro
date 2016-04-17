@@ -1,17 +1,17 @@
 TARGET = xsldbg
-TEMPLATE	= app
+TEMPLATE = app
 CONFIG	+= warn_on release console thread
 CONFIG += qt
 QT=core
 
 # enable readline and history support if possible
 unix {
-    system("$$QMAKE_CC -lreadline configtests/readlinetest.c -o configtests/readlinetest") {
+    system("$$QMAKE_CC -lreadline configtests/readlinetest.c -o configtests/readlinetest > /dev/null 2>&1") {
 	message(Enabling readline support)
 	DEFINES+=HAVE_READLINE
 	LIBS+=-lreadline
     }
-    system("$$QMAKE_CC -lhistory configtests/historytest.c -o configtests/historytest") {
+    system("$$QMAKE_CC -lhistory configtests/historytest.c -o configtests/historytest > /dev/null 2>&1") {
 	message(Enabling history support)
 	DEFINES+=HAVE_HISTORY
 	LIBS+=-lhistory
@@ -20,10 +20,10 @@ unix {
 
 system("xslt-config --help >/dev/null"){
     unix {
-       system( "echo -n \"QMAKE_CFLAGS+=\" > xslt-config.pri") 
-       system( "xslt-config --cflags >> xslt-config.pri")
-       system( "echo -n \"QMAKE_LFLAGS+=\" >> xslt-config.pri") 
-       system( "xslt-config --libs >> xslt-config.pri")
+       system( 'echo "QMAKE_CXXFLAGS+=\c" > xslt-config.pri')
+       system( 'xslt-config --cflags >> xslt-config.pri')
+       system( 'echo "QMAKE_LFLAGS+=\c" >> xslt-config.pri')
+       system( 'xslt-config --libs >> xslt-config.pri')
        LIBS+=-lexslt
        include(xslt-config.pri)
        USED_XSLT_CONFIG=true
@@ -31,6 +31,22 @@ system("xslt-config --help >/dev/null"){
 } else {
     message(xslt-config not found)
 } 
+
+system("xml2-config --help >/dev/null"){
+    unix {
+       system( 'echo "QMAKE_CXXFLAGS+=\c" > xml2-config.pri')
+       system( 'xml2-config --cflags >> xml2-config.pri')
+       system( 'echo "QMAKE_LFLAGS+=\c" >> xml2-config.pri')
+       system( 'xml2-config --libs >> xml2-config.pri')
+       LIBS+=-lexslt
+       include(xml2-config.pri)
+       USED_XML2_CONFIG=true
+    }
+} else {
+    message(xml2-config not found)
+}
+
+#       error($${QMAKE_CFLAGS} here!! $${QMAKE_LFLAGS} there!!)
 
 win32 {
    OBJECTS_DIR = ./build/obj
