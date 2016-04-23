@@ -4,6 +4,11 @@ CONFIG	+= warn_on release console thread
 CONFIG += qt
 QT *=core
 
+equals(QT_MAJOR_VERSION, "4") {
+   error(Qt 4 is no longer supported)
+}
+
+
 # enable readline and history support if possible
 unix {
     system("$$QMAKE_CC -lreadline configtests/readlinetest.c -o configtests/readlinetest > /dev/null 2>&1") {
