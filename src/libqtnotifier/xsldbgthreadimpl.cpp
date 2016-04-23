@@ -126,7 +126,6 @@ xsldbgThreadInit(void)
     xsldbgThreadRunner->start();
 
     int counter;
-    qDebug("Waiting for xsldb thread to start");
     for (counter = 0; counter < 20; counter++){
         if (getThreadStatus() != XSLDBG_MSG_THREAD_INIT)
           break;
@@ -145,7 +144,6 @@ void
 xsldbgThreadFree(void)
 {
     int counter;
-    qDebug("Waiting for xsldb thread to stop");
     for (counter = 0; counter < 20; counter++){
         if (getThreadStatus() != XSLDBG_MSG_THREAD_DEAD)
         {
