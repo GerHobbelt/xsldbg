@@ -401,7 +401,7 @@ static void xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
 	    xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
         }
     }
-    if ((xslDebugStatus != DEBUG_RUN_RESTART) && (bytesWritten == -1))
+    if (((xslDebugStatus != DEBUG_RUN_RESTART) && (xslDebugStatus != DEBUG_QUIT)) && (bytesWritten == -1))
 	xsldbgGenericErrorFunc(QObject::tr("Error: Unable to save results of transformation to file %1.\n").arg(optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME))); 
 
 }
