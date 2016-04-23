@@ -58,6 +58,19 @@ FILE *stdoutIO = NULL;
    private functions
  ---------------------------------------------------*/
 
+void _sleepThread(void)
+{
+#if defined(Q_OS_WIN32)
+        Sleep(250);
+#else
+       timespec sleepTime;
+       sleepTime.tv_sec = 0;
+       sleepTime.tv_nsec = 250000000;
+        nanosleep(&sleepTime, NULL);
+#endif
+}
+
+
 
 extern "C" { 
 xmlChar * qtXslDbgShellReadline(xmlChar * prompt);
@@ -104,10 +117,9 @@ xsldbgThreadInit(void)
     xsltSetGenericErrorFunc(0, xsldbgGenericErrorFunc);
     setThreadStatus(XSLDBG_MSG_THREAD_INIT);
     xsldbgSetAppFunc(qtNotifyXsldbgApp);
-    xsldbgSetAppStateFunc(qtNotifyStateXsldbgApp); 
+    xsldbgSetAppStateFunc(qtNotifyStateXsldbgApp);
     xsldbgSetTextFunc(qtNotifyTextXsldbgApp);
     xsldbgSetReadlineFunc(qtXslDbgShellReadline);
-    
 
     /* create the thread and start it */
     xsldbgThreadRunner = new XsldbgThread();
@@ -118,21 +130,15 @@ xsldbgThreadInit(void)
         if (getThreadStatus() != XSLDBG_MSG_THREAD_INIT)
           break;
 		/*guess that it will take at most 2.5 seconds to startup */
-#ifdef Q_OS_WIN32
-		Sleep(250);
-#else
-		sleep(250);
-#endif
+        _sleepThread();
     }
     /* xsldbg should have started by now if it can */
     if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
         result++;
     }else
          qWarning("Thread did not start\n");
-
     return result;
 }
-
 
 /* tell the thread to stop and free that memory !*/
 void
@@ -142,11 +148,7 @@ xsldbgThreadFree(void)
     {
       setThreadStatus(XSLDBG_MSG_THREAD_STOP);
       /*guess that it will take at most 2.5 seconds to stop */
-#ifdef Q_OS_WIN32
-		Sleep(250);
-#else
-		sleep(250);
-#endif
+      _sleepThread();
     }
 
 	if (getThreadStatus() != XSLDBG_MSG_THREAD_DEAD)
@@ -237,11 +239,7 @@ qtXslDbgShellReadline(xmlChar * prompt)
     notifyXsldbgApp(XSLDBG_MSG_AWAITING_INPUT, NULL);
 
     while (getInputReady() == 0){
-#ifdef Q_OS_WIN32
-		Sleep(10);
-#else
-		sleep(10);
-#endif
+      _sleepThread();
       /* have we been told to die */
       if (getThreadStatus() ==  XSLDBG_MSG_THREAD_STOP){
 	xslDebugStatus = DEBUG_QUIT;
@@ -333,12 +331,8 @@ xsldbgThreadStdoutReader(void *data)
     return data;
 
   while (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
-    if (fgets(outputBuffer, sizeof(outputBuffer -1), stdoutIO)){
-#ifdef Q_OS_WIN32
-	  Sleep(250);
-#else
-	  sleep(250);
-#endif
+    if (fgets(outputBuffer, sizeof(outputBuffer) -1, stdoutIO)){
+      _sleepThread();
       strcat(outputBuffer, "\n");
       notifyTextXsldbgApp(XSLDBG_MSG_TEXTOUT, outputBuffer);
     }else{
