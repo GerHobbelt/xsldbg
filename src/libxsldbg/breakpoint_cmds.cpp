@@ -728,7 +728,7 @@ int xslDbgShellEnable(xmlChar * arg, int enableType)
                         if (breakPtr){
                             result = breakPointEnable(breakPtr, enableType);
                         }else{
-                            xsldbgGenericErrorFunc(QObject::tr("Error: Breakpoint does not exist for file \"%1\" at line %2.\n").arg(xsldbgUrl(url), lineNo));
+                            xsldbgGenericErrorFunc(QObject::tr("Error: Breakpoint does not exist for file \"%1\" at line %2.\n").arg(xsldbgUrl(url)).arg(lineNo));
 			}
                         xmlFree(url);
                     }
