@@ -2,7 +2,7 @@ TARGET = xsldbg
 TEMPLATE = app
 CONFIG	+= warn_on release console thread
 CONFIG += qt
-QT=core
+QT *=core
 
 # enable readline and history support if possible
 unix {
