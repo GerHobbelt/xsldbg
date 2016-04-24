@@ -77,9 +77,6 @@
 #include <libxml/xmlerror.h>
 #include <libxml/HTMLtree.h>
 #include <libxml/xmlIO.h>
-#ifdef LIBXML_DOCB_ENABLED
-#include <libxml/DOCBparser.h>
-#endif
 #ifdef LIBXML_XINCLUDE_ENABLED
 #include <libxml/xinclude.h>
 #endif
@@ -442,10 +439,6 @@ usage(const char *name)
 #ifdef LIBXML_HTML_ENABLED
     xsltGenericError(xsltGenericErrorContext,
                      "      --html : The input document is(are) an HTML file(s)\n");
-#endif
-#ifdef LIBXML_DOCB_ENABLED
-    xsltGenericError(xsltGenericErrorContext,
-                     "      --docbook : The input document is SGML docbook\n");
 #endif
     xsltGenericError(xsltGenericErrorContext,
                      "      --param name value : Pass a (parameter,value) pair\n");
@@ -1011,12 +1004,6 @@ xmlDocPtr xsldbgLoadXmlData(void)
         doc = htmlParseFile(dataFile.constData(), NULL);
     else
 #endif
-#ifdef LIBXML_DOCB_ENABLED
-    if (optionsGetIntOption(OPTIONS_DOCBOOK))
-        doc = docbParseFile(dataFile.constData(), NULL);
-    else
-#endif
-
 #if LIBXML_VERSION >= 20600
         doc = xmlSAXParseFile(&mySAXHandler, dataFile.constData(), 0);
 #else
@@ -1048,11 +1035,6 @@ xmlDocPtr xsldbgLoadXmlTemporary(const xmlChar * path)
 #ifdef LIBXML_HTML_ENABLED
     if (optionsGetIntOption(OPTIONS_HTML))
         doc = htmlParseFile((char *) path, NULL);
-    else
-#endif
-#ifdef LIBXML_DOCB_ENABLED
-    if (optionsGetIntOption(OPTIONS_DOCBOOK))
-        doc = docbParseFile((char *) path, NULL);
     else
 #endif
         doc = xmlSAXParseFile(&mySAXhdlr, (char *) path, 0);
