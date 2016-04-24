@@ -27,7 +27,7 @@ system("xslt-config --help >/dev/null"){
     unix {
        system( 'echo "QMAKE_CXXFLAGS+=\c" > xslt-config.pri')
        system( 'xslt-config --cflags >> xslt-config.pri')
-       system( 'echo "QMAKE_LFLAGS+=\c" >> xslt-config.pri')
+       system( 'echo "LIBS+=\c" >> xslt-config.pri')
        system( 'xslt-config --libs >> xslt-config.pri')
        LIBS+=-lexslt
        include(xslt-config.pri)
@@ -41,7 +41,7 @@ system("xml2-config --help >/dev/null"){
     unix {
        system( 'echo "QMAKE_CXXFLAGS+=\c" > xml2-config.pri')
        system( 'xml2-config --cflags >> xml2-config.pri')
-       system( 'echo "QMAKE_LFLAGS+=\c" >> xml2-config.pri')
+       system( 'echo "LIBS+=\c" >> xml2-config.pri')
        system( 'xml2-config --libs >> xml2-config.pri')
        LIBS+=-lexslt
        include(xml2-config.pri)
