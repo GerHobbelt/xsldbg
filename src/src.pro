@@ -1,6 +1,7 @@
 TARGET = xsldbg
 TEMPLATE = app
 CONFIG	+= warn_on release console thread
+CONFIG-=app_bundle
 CONFIG += qt
 QT *=core
 
