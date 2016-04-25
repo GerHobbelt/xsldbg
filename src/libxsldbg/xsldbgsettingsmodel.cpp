@@ -88,18 +88,17 @@ void XsldbgSettingsModelPrivate::updateIndex()
 {
 }
 
-
     XsldbgSettingData::XsldbgSettingData(const QString & name, const QVariant &value, int row)
 : m_name(name),
     m_value(value),
     m_type(XsldbgSettingsModel::ParamSettingType),
     m_row(row)
 {
-    static int paramId = 0;
     m_id = paramId++;
 }
 
 
+int XsldbgSettingData::paramId = 0;
 
     XsldbgSettingData::XsldbgSettingData(int optionID, const QVariant &value, int row)
 : m_id(optionID),
@@ -222,10 +221,7 @@ void XsldbgSettingsModel::init()
     stringValue = QString();
     updateSetting(OPTIONS_OUTPUT_FILE_NAME, stringValue);
 
-    QStringList paramsList = settingsList(XsldbgSettingsModel::ParamSettingType);
-    QString param;
-    foreach (param, paramsList)
-        (void)removeParameter(param);
+    removeAllParameters();
 
     d_ptr->updateIndex();
     beginResetModel();
@@ -359,7 +355,7 @@ bool XsldbgSettingsModel::addParameter(const QString & name, const QVariant &val
     lock(false);
 
     if (xslDebugStatus > DEBUG_INIT)
-       xsldbgGenericErrorFunc(QObject::tr("Restart to apply new parameter value"));
+       xsldbgGenericErrorFunc(QObject::tr("Restart to apply new parameter value\n"));
 
     return result;
 }
@@ -409,7 +405,7 @@ bool XsldbgSettingsModel::removeParameter(const QString & name, bool removingAll
         beginResetModel();
         endResetModel();
         if (!removingAllParameters && (xslDebugStatus > DEBUG_INIT))
-            xsldbgGenericErrorFunc(QObject::tr("Restart to apply removed parameter value"));
+            xsldbgGenericErrorFunc(QObject::tr("Restart to apply removed parameter value\n"));
     }
     return result;
 }
@@ -421,7 +417,10 @@ void XsldbgSettingsModel::removeAllParameters()
         removeParameter(param);
 
      if (xslDebugStatus > DEBUG_INIT)
-        xsldbgGenericErrorFunc(QObject::tr("Restart to apply removal of all parameter values"));
+        xsldbgGenericErrorFunc(QObject::tr("Restart to apply removal of all parameter values\n"));
+
+     // reset the parameter id values
+     XsldbgSettingData::paramId = 0;
 }
 
 

@@ -47,6 +47,7 @@ class XsldbgSettingData
         int m_id;
         int m_row;
         static QString myKey(const QString &name, int type);
+        static int paramId;
 };
 
 typedef QHash<QString, XsldbgSettingData>::iterator XsldbgSettingDataIterator;

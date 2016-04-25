@@ -115,6 +115,7 @@ int xslDbgShellShowParam(xmlChar * arg)
         QString param;
         XsldbgSettingData item;
         if (!paramsList.isEmpty()){
+            xsldbgGenericErrorFunc(QObject::tr("\n"));
             foreach (param, paramsList){
                 if (optionDataModel()->findSetting(param, XsldbgSettingsModel::ParamSettingType,  item))
                         xsldbgGenericErrorFunc(QObject::tr(" Parameter %1 %2=\"%3\"\n").arg(item.m_id).arg(item.m_name).arg(item.m_value.toString()));
