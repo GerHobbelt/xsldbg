@@ -54,6 +54,7 @@ enum OptionTypeEnum {
     OPTIONS_FIRST_BOOL_OPTIONID = OPTIONS_XINCLUDE,
     OPTIONS_FIRST_INT_OPTIONID = OPTIONS_XINCLUDE,
     OPTIONS_FIRST_OPTIONID = OPTIONS_XINCLUDE,
+    OPTIONS_DOCBOOK,        /* Use of docbook sgml parsing */
     OPTIONS_TIMING,         /* Use of timing */
     OPTIONS_PROFILING,      /* Use of profiling */
     OPTIONS_VALID,          /* Enable file validation */
