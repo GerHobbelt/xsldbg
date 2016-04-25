@@ -8,10 +8,10 @@ unix{
     xsldoctxt.commands = touch $$xsldoctxt.target
     xsldoctxt.depends = xsldoctxt2
 
-    xsldoctxt2.files = xsldoc.txt 
-    xsldoctxt2.depends = xsldoc.xsl xsldoc.xml xsldoc.dtd
+    xsldoctxt2.files = $$PWD/xsldoc.txt
+    xsldoctxt2.depends = $$PWD/xsldoc.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd
     xsldoctxt2.path = ./plain/
-    xsldoctxt2.commands = ../../src/xsldbg -param alldocs:\"\'1\'\" --param xsldbg_version:\"\'4.4.1\'\" --output xsldoc.txt xsldoc.xsl xsldoc.xml 
+    xsldoctxt2.commands = ../../src/xsldbg -param alldocs:\"\'1\'\" --param xsldbg_version:\"\'4.4.1\'\" --output $$PWD/xsldoc.txt $$PWD/xsldoc.xsl $$PWD/xsldoc.xml
 
     INSTALLS+=xsldoctxt2
 
