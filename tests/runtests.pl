@@ -6,7 +6,7 @@ use English;
 my @tests = qw (test1 test2 test3 test4 test5 test6 test7 test8 
 		test9 test10 test13);
 
-my $xsldbg = "../src/xsldbg";
+my $xsldbg = "/Users/keithisdale/Documents/lang/cpp/build-xsldbg-Desktop_Qt_5_6_0_clang_64bit-Release/src/xsldbg";
 my $test = "";
 my $testResult = 0;
 

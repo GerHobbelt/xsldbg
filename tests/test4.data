@@ -11,9 +11,12 @@
 
 <testcmd>
 
-<!-- Clear the decks before starting -->
+<!-- Clear the decks before starting
+    note that delparam without arguments will remove all parameters
+-->
 <cmd>
 <test>delparam</test>
+<result/>
 </cmd>
 
 <!-- Check robustness of command format 
@@ -38,10 +41,10 @@
 </cmd>
 
 <cmd>
-<test>delparam a23</test>
+<test>delparam a24</test>
 <result>
 <row>
-<matchtext>Error: Unable to find parameter a23</matchtext>
+<matchtext>Error: Unable to find parameter a24</matchtext>
 </row>
 </result>
 </cmd>
@@ -60,27 +63,50 @@
 <!-- Add some parameters -->
 <cmd>
 <test>addparam help 'step'</test>
+<result>
+<row>
+<matchtext>Restart to apply new parameter value</matchtext>
+</row>
+</result>
 </cmd>
+
 <!-- Where double quotes are use treat as a single argument -->
 <cmd>
 <test>addparam quotedparam "step or where"</test>
+<result>
+<row>
+<matchtext>Restart to apply new parameter value</matchtext>
+</row>
+</result>
 </cmd>
+
 <cmd>
 <test>addparam results result/data</test>
+<result>
+<row>
+<matchtext>Restart to apply new parameter value</matchtext>
+</row>
+</result>
 </cmd>
+
 <cmd>
-</cmd>
 <test>addparam version '1.0'</test>
+<result>
+<row>
+<matchtext>Restart to apply new parameter value</matchtext>
+</row>
+</result>
+</cmd>
+
 
 <!-- check what we got -->
 <cmd>
 <test>showparam
 </test>
 <result>
-<!--<row>
+<row>
 <parameter id="0" name="help" value="'step'"/>
 </row>
--->
 <row>
 <parameter id="1" name="quotedparam" value="step or where"/>
 </row>
@@ -97,19 +123,29 @@
 <!-- remove the top and bottom arguments-->
 <cmd>
 <test>delparam 0</test>
+<result>
+<row>
+<matchtext>Restart to apply removed parameter value</matchtext>
+</row>
+</result>
 </cmd>
 <cmd>
 <test>delparam 3</test>
+<result>
+<row>
+<matchtext>Restart to apply removed parameter value</matchtext>
+</row>
+</result>
 </cmd>
+
 
 <!-- check what we got -->
 <cmd>
 <test>showparam</test>
 <result>
-<!--<row>
+<row>
 <parameter id="1" name="quotedparam" value="step or where"/>
 </row>
--->
 <row>
 <parameter id="2" name="results" value="result/data"/>
 </row>
