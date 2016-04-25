@@ -24,6 +24,7 @@ require "xsldbgmatch.pl";
        $result = 0;
     }
   
+
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::breakpointListMatch(
@@ -36,24 +37,26 @@ require "xsldbgmatch.pl";
        $result = 0;
     }
   
-    $testCount = $testCount + 1;
-    
-    if (xsldbgmatch::breakpointListMatch(
-             "",  
-               "" , 
-                 "test4.xml",  
-                   "9",
-                     $testName) == 0){
-       $failedTestCount = $failedTestCount + 1;
-       $result = 0;
-    }
-  
+
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::breakpointListMatch(
              "",  
                "" , 
                  "test3.xml",  
+                   "9",
+                     $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointListMatch(
+             "",  
+               "" , 
+                 "test4.xml",  
                    "9",
                      $testName) == 0){
        $failedTestCount = $failedTestCount + 1;

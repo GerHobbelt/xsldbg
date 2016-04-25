@@ -18,10 +18,31 @@ break -l test4.xml 9
 showbreak</test>
 <result>
 <row>
-<breakpointlist file="test1.xml" line="8" />	
-<breakpointlist file="test2.xml" line="9" />	
-<breakpointlist file="test4.xml" line="9"  />	
-<breakpointlist file="test3.xml" line="9"  />	
+<breakpointlist file="test1.xml" line="8" />
+</row>
+</result>
+</cmd>
+<cmd>
+<test>showbreak</test>
+<result>
+<row>
+<breakpointlist file="test2.xml" line="9" />
+</row>
+</result>
+</cmd>
+<cmd>
+<test>showbreak</test>
+<result>
+<row>
+<breakpointlist file="test3.xml" line="9" />
+</row>
+</result>
+</cmd>
+<cmd>
+<test>showbreak</test>
+<result>
+<row>
+<breakpointlist file="test4.xml" line="9" />
 </row>
 </result>
 </cmd>
