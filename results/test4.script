@@ -1,7 +1,7 @@
 delparam
 addparam
 addparam help step step
-delparam a23
+delparam a24
 delparam 10
 addparam help 'step'
 addparam quotedparam "step or where"
