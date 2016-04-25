@@ -256,8 +256,8 @@ static void xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
     if (optionsGetIntOption(OPTIONS_TIMING) ||
         optionsGetIntOption(OPTIONS_PROFILING))
         startTimer();
-    if ((optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME) == NULL) ||
-        optionsGetIntOption(OPTIONS_SHELL)) {
+    if ((optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME).isEmpty())
+            || optionsGetIntOption(OPTIONS_SHELL)) {
         if (optionsGetIntOption(OPTIONS_REPEAT)) {
             int j;
 
@@ -270,8 +270,8 @@ static void xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
         if (optionsGetIntOption(OPTIONS_PROFILING)) {
             if (terminalIO != NULL)
                 res = xsltProfileStylesheet(cur, doc, params, terminalIO);
-            else if ((optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME) ==
-                      NULL) || (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)
+            else if ((optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME).isEmpty())
+                     || (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)
                      || (filesTempFileName(1).isEmpty()))
                 res = xsltProfileStylesheet(cur, doc, params, stderr);
             else {
@@ -316,16 +316,16 @@ static void xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
 #ifdef LIBXML_DEBUG_ENABLED
         if (optionsGetIntOption(OPTIONS_DEBUG)) {
 	    if (xslDebugStatus != DEBUG_RUN_RESTART){
-		if (terminalIO != NULL)
+        if (terminalIO != NULL)
 		    xmlDebugDumpDocument(terminalIO, res);
-		else if ((optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME) ==
-			    NULL) || (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)
-			|| (filesTempFileName(1).isEmpty()))
+        else if ((optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME).isEmpty())
+                || (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)
+                || (filesTempFileName(1).isEmpty()))
 		    xmlDebugDumpDocument(stdout, res);
-		else {
+        else {
 		    FILE *tempFile = fopen(filesTempFileName(1), "w");
 
-		    if (tempFile) {
+            if (tempFile) {
 			bytesWritten = 0; // flag that we have writen at least zero bytes
 			xmlDebugDumpDocument(tempFile, res);
 			fclose(tempFile);
@@ -333,9 +333,9 @@ static void xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
 			notifyXsldbgApp(XSLDBG_MSG_FILEOUT,
 				filesTempFileName(1));
 		    } else {
-			 xsldbgGenericErrorFunc(QObject::tr("Error: Unable to write temporary results to %1.\n").arg(filesTempFileName(1).constData()));
+             xsldbgGenericErrorFunc(QObject::tr("Error: Unable to write temporary results to %1.\n").arg(filesTempFileName(1).constData()));
 			xmlDebugDumpDocument(stdout, res);
-		    }
+            }
 
 		}
 	    }
@@ -346,26 +346,26 @@ static void xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
 		    if (optionsGetIntOption(OPTIONS_TIMING))
 			startTimer();
 		    if (xslDebugStatus != DEBUG_QUIT) {
-			if (terminalIO != NULL)
+            if (terminalIO != NULL)
 			    bytesWritten = xsltSaveResultToFile(terminalIO, res, cur);
-			else if (optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME).isEmpty())
+            else if (optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME).isEmpty())
 			    bytesWritten = xsltSaveResultToFile(stdout, res, cur);
-			else{
+            else{
                             QByteArray outFile(optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME).toUtf8().constData());
-			    bytesWritten =
+                bytesWritten =
                                 xsltSaveResultToFilename(outFile.constData(), res, cur, 0);
 		        }
 		    }
 		    if (optionsGetIntOption(OPTIONS_TIMING))
 			/* Indicate how long it took to save to file */
-			endTimer(QObject::tr("Saving result"));
+            endTimer(QObject::tr("Saving result"));
 		} else {
 		    if (xmlStrEqual(cur->method, (const xmlChar *) "xhtml")) {
 			xsldbgGenericErrorFunc(QObject::tr("Warning: Generating non-standard output XHTML.\n"));
 			if (optionsGetIntOption(OPTIONS_TIMING))
 			    startTimer();
 			if (terminalIO != NULL){
-			    bytesWritten = xsltSaveResultToFile(terminalIO, res, cur);
+                bytesWritten = xsltSaveResultToFile(terminalIO, res, cur);
                         }else if (optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME).isEmpty()){
 			    bytesWritten = xsltSaveResultToFile(stdout, res, cur);
                         }else{
