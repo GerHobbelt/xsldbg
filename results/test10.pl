@@ -7,7 +7,7 @@ require "xsldbgmatch.pl";
       my $template ="",  $fileName ="", $identifier ="", $state ="", $line ="";
       my $testCount = 0, $failedTestCount = 0, $optionalTestCount = 0;
 
-      my $result = 1, $testName ="";
+      my $result = 1, $testName ="test10";
       printf "Running test $testName\n";
         
 
