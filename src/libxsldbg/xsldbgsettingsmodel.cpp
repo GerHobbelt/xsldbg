@@ -22,6 +22,7 @@
 
 #include <QDebug>
 #include "libxsldbg/options.h"
+#include "debugXSL.h"
 
 
 QString XsldbgSettingData::myKey(const QString &name, int type)
@@ -338,27 +339,32 @@ bool XsldbgSettingsModel::addParameter(const QString & name, const QVariant &val
     if (name.isEmpty())
         return result;
 
-    lock(true);
+
     QString key(XsldbgSettingData::myKey(name, XsldbgSettingsModel::ParamSettingType));
-    if (d_ptr->settingData.find(key) == d_ptr->settingData.end()){
-        int row = d_ptr->settingData.count();
-        XsldbgSettingData item(name, value, row);
-        beginInsertRows(QModelIndex(), row, row);
-        d_ptr->settingData.insert(key, item);
-        d_ptr->updateIndex();
-        endInsertRows();
-        result = true;
-        beginResetModel();
-        endResetModel();
-    }else {
-        qWarning("Unable to update existing libxslt parameter %s", name.toLatin1().constData());
-        //TODO update the existing value
+    if (d_ptr->settingData.find(key) != d_ptr->settingData.end()){
+        if (!removeParameter(name))
+            return false;
     }
+
+    lock(true);
+    int row = d_ptr->settingData.count();
+    XsldbgSettingData item(name, value, row);
+    beginInsertRows(QModelIndex(), row, row);
+    d_ptr->settingData.insert(key, item);
+    d_ptr->updateIndex();
+    endInsertRows();
+    result = true;
+    beginResetModel();
+    endResetModel();
     lock(false);
+
+    if (xslDebugStatus > DEBUG_INIT)
+       xsldbgGenericErrorFunc(QObject::tr("Restart to apply new parameter value"));
+
     return result;
 }
 
-bool XsldbgSettingsModel::removeParameter(const QString & name)
+bool XsldbgSettingsModel::removeParameter(const QString & name, bool removingAllParameters)
 {
     bool result = false;
     int paramId = -1;
@@ -402,6 +408,8 @@ bool XsldbgSettingsModel::removeParameter(const QString & name)
     if (result) {
         beginResetModel();
         endResetModel();
+        if (!removingAllParameters && (xslDebugStatus > DEBUG_INIT))
+            xsldbgGenericErrorFunc(QObject::tr("Restart to apply removed parameter value"));
     }
     return result;
 }
@@ -411,6 +419,9 @@ void XsldbgSettingsModel::removeAllParameters()
     QStringList paramList = settingsList(XsldbgSettingsModel::ParamSettingType);
     foreach (QString param, paramList)
         removeParameter(param);
+
+     if (xslDebugStatus > DEBUG_INIT)
+        xsldbgGenericErrorFunc(QObject::tr("Restart to apply removal of all parameter values"));
 }
 
 

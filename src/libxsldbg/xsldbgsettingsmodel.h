@@ -155,7 +155,7 @@ class XsldbgSettingsModel : public QAbstractTableModel
         /**
          * Remove a XSLT parameter
          */
-        bool removeParameter(const QString & name);
+        bool removeParameter(const QString & name, bool removingAllParameters=false);
 
         void removeAllParameters();
 
