@@ -1,12 +1,12 @@
-This package requries Qt 4.x.development libraries/headers to be present
+This package requries Qt 5.x.development libraries/headers to be present
 
 See docs/en/website/index.html and docs/en/plain/index.html for latest information 
   
 nb: docs/en/website/index.html includes a quick tutorial about using xsldbg
 
 For all users of qxsldbg and KDE style documentation you will need to set your KDEDIR and QTDIR paths eg:
-  export QTDIR=/usr/lib/qt4
-  export KDEDIR=/opt/kde4 
+  export QTDIR=/usr/lib/qt5
+  export KDEDIR=/opt/kde5 
 
 This package can be built on *nix and Windows:
   $LIBXML_PREFIX must be set to the location of libxml
