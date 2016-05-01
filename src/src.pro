@@ -6,7 +6,7 @@ CONFIG += qt
 QT *=core
 
 equals(QT_MAJOR_VERSION, "4") {
-   error(Qt 4 is no longer supported)
+   DEFINES += USE_QT4
 }
 
 

@@ -224,8 +224,12 @@ void XsldbgSettingsModel::init()
     removeAllParameters();
 
     d_ptr->updateIndex();
+#ifdef USE_QT4
+    reset();
+#else
     beginResetModel();
     endResetModel();
+#endif
 }
 
 bool XsldbgSettingsModel::setData(const QModelIndex & index, const QVariant & value, int role)
