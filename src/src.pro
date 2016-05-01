@@ -26,12 +26,11 @@ unix {
 
 system("xslt-config --help >/dev/null"){
     unix {
-       system( 'echo "QMAKE_CXXFLAGS+=\c" > xslt-config.pri')
-       system( 'xslt-config --cflags >> xslt-config.pri')
-       system( 'echo "LIBS+=\c" >> xslt-config.pri')
-       system( 'xslt-config --libs >> xslt-config.pri')
+       xslt_cflags = $$system( 'xslt-config --cflags' )
+       QMAKE_CXXFLAGS+=$$xslt_cflags
+       xslt_libs = $$system( 'xslt-config --libs' )
+       LIBS+=$$xslt_libs
        LIBS+=-lexslt
-       include(xslt-config.pri)
        USED_XSLT_CONFIG=true
     }
 } else {
@@ -40,12 +39,12 @@ system("xslt-config --help >/dev/null"){
 
 system("xml2-config --help >/dev/null"){
     unix {
-       system( 'echo "QMAKE_CXXFLAGS+=\c" > xml2-config.pri')
-       system( 'xml2-config --cflags >> xml2-config.pri')
-       system( 'echo "LIBS+=\c" >> xml2-config.pri')
-       system( 'xml2-config --libs >> xml2-config.pri')
-       LIBS+=-lexslt
-       include(xml2-config.pri)
+
+       xml2_cflags = $$system( 'xml2-config --cflags' )
+       QMAKE_CXXFLAGS+=$$xml2_cflags
+       xml2__libs = $$system( 'xml2-config --libs' )
+       LIBS+=$$xml2_libs
+       LIBS*=-lexslt
        USED_XML2_CONFIG=true
     }
 } else {
