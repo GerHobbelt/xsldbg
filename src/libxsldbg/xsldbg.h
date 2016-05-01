@@ -128,7 +128,6 @@ QString xsldbgText(const xmlChar *utf8Text);
     #include <QObject> 
 #endif
 #define XSLDBG_BIN "xsldbg"
-#define XSLDBG_VERSION "4.4.1" 
 #define TIMESTAMP __DATE__
 
 #endif // XSLDEBUGGER_H
