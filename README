@@ -1,17 +1,22 @@
-This package requries Qt 4.x or Qt5.x development libraries/headers to be present
+This package requiries
+* Qt 4.x or Qt5.x development libraries/headers to be present
+* libxslt and libxml2 libraries/headers to be present
 
 See docs/en/website/index.html and docs/en/plain/index.html for latest information 
   
 nb: docs/en/website/index.html includes a quick tutorial about using xsldbg
 
-For all users of qxsldbg and KDE style documentation you will need to set your KDEDIR and QTDIR paths eg:
+For all users of xsldbg and KDE style documentation you will need to set your KDEDIR and QTDIR paths eg:
   export QTDIR=/usr/lib/qt4
   export KDEDIR=/opt/kde4
 
-This package can be built on *nix and Windows:
+This package can be built on *nix and Windows. If in path xslt-config and xml2-config will be used to set
+library and compliler flags otherwise there is need have:
   $LIBXML_PREFIX must be set to the location of libxml
   $LIBXSLT_PREFIX must be set to the location of libxslt
   $ICONV_PREFIX must be set to the location of iconv
+
+To change the xsldbg installation path see "INSTALL_PREFIX" in xsldbg.pri
 
 For unix run for (*nix):
   qmake
@@ -25,8 +30,8 @@ for Windows (MSVC) :
 then install xsldbg's catalog.xml via running
   createcatalog.bat
 
-The tests and results directories are only used under *nix platforms and are not built
-    if you want to run them :
+The tests and results directories are only used under *nix platforms and are not built see test/README.
+if you want to run them :
     cd tests
-    qmake
-    make
+    perl runtests.pl
+

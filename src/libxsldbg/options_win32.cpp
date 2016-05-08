@@ -3,8 +3,8 @@
                           options_win32.c  -  win32 specific option functions
                              -------------------
     begin                : Tue Jan 29 2002
-    copyright            : (C) 2001 by Keith Isdale
-    email                : keith@kdewebdev.org
+    copyright            : (C) 2016 by Keith Isdale
+    email                : keithisdale@gmail.com
  ***************************************************************************/
 
 /***************************************************************************

@@ -2,7 +2,7 @@
 /**
  *
  *  This file is part of the kdewebdev package
- *  Copyright (c) 2001 Keith Isdale <keith@kdewebdev.org>
+ *  Copyright (c) 2001 Keith Isdale <keithisdale@gmail.com>
  *
  *  This library is free software; you can redistribute it and/or 
  *  modify it under the terms of the GNU General Public License as 

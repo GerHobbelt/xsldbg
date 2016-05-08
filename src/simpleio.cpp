@@ -1,10 +1,10 @@
 
 /***************************************************************************
-                          simpleio.c  - use console io only
+                          simpleio.cpp  - use console io only
                              -------------------
     begin                : Sun Dec 23 2001
-    copyright            : (C) 2001 by Keith Isdale
-    email                : keith@kdewebdev.org
+    copyright            : (C) 2016 by Keith Isdale
+    email                : keithisdale@gmail.com
  ***************************************************************************/
 
 /***************************************************************************

@@ -1,4 +1,6 @@
-Keith Isdale <keith@kdewebdev.org>
+Keith Isdale <keithisdale@gmail.com> original xsldbg author
 
 Justin Fletcher <justin.fletcher@ntlworld.com> for risc os specific code
  and many patches/bug notices.
+
+Daniel Veillard <daniel@veillard.com> for libxml/libxslt code that was extended to support debugger

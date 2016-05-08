@@ -1,10 +1,10 @@
 
 /***************************************************************************
-                          main.c  - main fiule for xsldbg
+                          main.cpp  - main file for xsldbg
                              -------------------
     begin                : Sat Dec 22 2001
-    copyright            : (C) 2001 by Keith Isdale
-    email                : keith@kdewebdev.org
+    copyright            : (C) 2016 by Keith Isdale
+    email                : keithisdale@gmail.com
  ***************************************************************************/
 
 /***************************************************************************
