@@ -21,28 +21,23 @@ unix {
 }
 
 system("xslt-config --help >/dev/null"){
-    unix {
        xslt_cflags = $$system( 'xslt-config --cflags' )
        QMAKE_CXXFLAGS+=$$xslt_cflags
        xslt_libs = $$system( 'xslt-config --libs' )
        LIBS+=$$xslt_libs
        LIBS+=-lexslt
        USED_XSLT_CONFIG=true
-    }
 } else {
     message(xslt-config not found)
 }
 
 system("xml2-config --help >/dev/null"){
-    unix {
-
        xml2_cflags = $$system( 'xml2-config --cflags' )
        QMAKE_CXXFLAGS+=$$xml2_cflags
-       xml2__libs = $$system( 'xml2-config --libs' )
+       xml2_libs = $$system( 'xml2-config --libs' )
        LIBS+=$$xml2_libs
        LIBS*=-lexslt
        USED_XML2_CONFIG=true
-    }
 } else {
     message(xml2-config not found)
 }
@@ -56,7 +51,7 @@ win32 {
    CONFIG+=console
   }
 
-!equals(USED_XSLT_CONFIG,true) {
+!equals(USED_XSLT_CONFIG,true){
     TEMP_LIBXSLT_PREFIX=$$(LIBXSLT_PREFIX)
     # try to guess the LIBS and INCLUDE paths needed to be added
     isEmpty(TEMP_LIBXSLT_PREFIX) {
@@ -76,6 +71,11 @@ win32 {
            LIBS+=-llibexslt -llibxslt
         }
     }
+} else {
+    message(xslt-config was found it will be used to set correct LIBS and INCLUDE for libxslt)
+}
+
+!equals(USED_XML2_CONFIG,true){
     TEMP_LIBXML_PREFIX=$$(LIBXML_PREFIX)
     isEmpty(TEMP_LIBXML_PREFIX) {
          message(warning \$LIBXML_PREFIX environment variable not set)
@@ -106,8 +106,9 @@ win32 {
                 }
     }
 } else {
-    message(xslt-config was found it will be used to set correct LIBS and INCLUDE)
+    message(xml2-config was found it will be used to set correct LIBS and INCLUDE for libxml2)
 }
+
 INCLUDEPATH += ..
 INCLUDEPATH += .
 INCLUDEPATH += ../..
