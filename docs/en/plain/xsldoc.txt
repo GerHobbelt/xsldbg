@@ -1,4 +1,4 @@
-         xsldbg version 4.4.1 
+         xsldbg version 4.5.0 
          ==================== 
 xsldbg help 
     ___________ 
@@ -42,7 +42,7 @@ Several commands take more that one argument. Some arguments can be sourrounded 
             Template related :templates,where,frame 
             Break point related :break,showbreak,delete,enable 
             Expression viewing(xpath) :cat 
-            Node viewing :ls,dir,du,cat,pwd 
+            Node viewing :ls,dir,du,cat,pwd,addwatch,showwatch,delwatch 
             Variable viewing :globals,locals,cat 
             Variable setting:set 
             Node selection :source,data,cd 
@@ -606,4 +606,4 @@ Usage:
  
         write 
  
-  Help document version 0.6 
+Help document version 0.6 

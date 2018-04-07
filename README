@@ -1,6 +1,10 @@
 This package requiries
 * Qt 4.x or Qt5.x development libraries/headers to be present
-* libxslt and libxml2 libraries/headers to be present
+* libxslt and libxml2 libraries/headers to be present.
+
+As example install prerequisites on OpenSuse Linux
+* sudo zypper install patterns-openSUSE-devel_qt5 patterns-openSUSE-devel_basis patterns-openSUSE-devel_C_C++ libxslt-devel libxml2-devel libxslt libxml2
+
 
 See docs/en/website/index.html and docs/en/plain/index.html for latest information 
   
@@ -10,9 +14,11 @@ For all users of xsldbg and KDE style documentation you will need to set your KD
   export QTDIR=/usr/lib/qt4
   export KDEDIR=/opt/kde4
 
-This package can be built on *nix and Windows. If in path xslt-config and xml2-config will be used to set
-library and compliler flags otherwise there is need have:
-  $LIBXML_PREFIX must be set to the location of libxml
+This package can be built on *nix and Windows.
+
+If found tools xslt-config and xml2-config will be used to set
+library and compliler flags, otherwise:
+  $LIBXML_PREFIX must be set to the location of libxml2
   $LIBXSLT_PREFIX must be set to the location of libxslt
   $ICONV_PREFIX must be set to the location of iconv
 

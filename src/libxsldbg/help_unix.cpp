@@ -70,10 +70,10 @@ int helpTop(const xmlChar * args)
                  " --output %c%s%c "
                  " --noautoloadconfig "
                  " --cd %c%s%c "
-#ifndef WIN32
+#if 0  // for moment always use text version of help
 				 "xsldbghelp.xsl xsldbghelp.xml",
 #else
-				 // for windows fallback a non-docbook based help file
+				 // fallback a non-docbook based help file
 				 "xsldoc.xsl xsldoc.xml",
 #endif
                  xsldbg_bin.toLocal8Bit().constData(), helpParam,
