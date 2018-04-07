@@ -33,7 +33,9 @@ docs.files = *.xsl \
 	     *.docbook \
 	     *.dtd \
 	     *.txt \
-	     CATALOG
+	     CATALOG \
+	     $PWD/xsldoc.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.txt
+	     
 
 docs.path= $$INSTALL_PREFIX/docs/en/
 
