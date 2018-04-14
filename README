@@ -5,14 +5,12 @@ This package requiries
 As example install prerequisites on OpenSuse Linux
 * sudo zypper install patterns-openSUSE-devel_qt5 patterns-openSUSE-devel_basis patterns-openSUSE-devel_C_C++ libxslt-devel libxml2-devel libxslt libxml2
 
-To regenerate docbook documentation saxon version 6 must be in path. See docs/en/en.pro
-
-
-See docs/en/website/index.html and docs/en/plain/index.html for latest information 
-  
-nb: docs/en/website/index.html includes a quick tutorial about using xsldbg
-
-For all users of xsldbg and KDE style documentation you will need to set your KDEDIR and QTDIR paths eg:
+Documentation
+* To regenerate docbook documentation saxon version 6 must be in path. See docs/en/en.pro
+* docs/en/website/index.html includes a quick tutorial about using xsldbg
+* docs/en/website/index.html and docs/en/plain/index.html for latest information 
+* to add docbook DTD support to catalog on Linux use command like: sudo  xmlcatalog -v --add nextCatalog '' "file:///usr/share/xml/docbook/schema/dtd/4.5/catalog.xml" /etc/xml/catalog
+* for users of xsldbg's KDE style documentation you will need to set your KDEDIR and QTDIR paths eg:
   export QTDIR=/usr/lib/qt4
   export KDEDIR=/opt/kde4
 
