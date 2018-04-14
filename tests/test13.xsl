@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!-- 
      File : test13.xsl     
-     Author: Keith Isdale <keith@kdewebdev.org>
+     Author: Keith Isdale <keithisdale@gmail.com>
      Description: stylesheet for test "test13"
      Test the ability to guess stylesheet and data file names
      Copyright Reserved Under GPL     

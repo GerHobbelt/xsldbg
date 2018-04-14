@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!-- 
      File : test11.xsl     
-     Author: Keith Isdale <keith@kdewebdev.org>
+     Author: Keith Isdale <keithisdale@gmail.com>
      Description: stylesheet for test "test11"
      This test is so tricky it will be done by hand
      Copyright Reserved Under GPL     

@@ -10,7 +10,7 @@
           <firstname>Keith</firstname>
           <surname>Isdale</surname>
           <affiliation>
-            <address><email>keith@kdewebdev.org</email></address>
+            <address><email>keithisdale@gmail.com</email></address>
           </affiliation>
         </author>
       </authorgroup>
@@ -46,7 +46,7 @@ to search for items of interest and trace stylesheet execution. You can
 use the test framework in the tests directory to describe automatic tests
 to be done on the output of stylesheet execution/debugging. This will be 
 useful for quality assurance purposes. Also a good deal of effort has 
-been put into creating a xemacs and KDbg front ends to xsldbg.
+been put into creating a xemacs front end to xsldbg.
       </para>
       </abstract>
     </bookinfo>

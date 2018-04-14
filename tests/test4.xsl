@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!-- 
      File : test4.xsl     
-     Author: Keith Isdale <keith@kdewebdev.org>
+     Author: Keith Isdale <keithisdale@gmail.com>
      Description: stylesheet for test "test4"
      Copyright Reserved Under GPL     
 -->

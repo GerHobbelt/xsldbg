@@ -35,7 +35,7 @@
 int helpTop(const xmlChar * args)
 {
 
-    //Extra phrases to support translation of help display see kdewebdev/doc/xsldbg/xsldbghelp.xml and kdewebdev/kxsldbg/xsldbghelp.xsl
+    //Extra phrases to support translation of help display
     static const char* xsldbghelp_translations[] =
     {
 	I18N_NOOP("xsldbg version"),
@@ -70,12 +70,7 @@ int helpTop(const xmlChar * args)
                  " --output %c%s%c "
                  " --noautoloadconfig "
                  " --cd %c%s%c "
-#if 0  // for moment always use text version of help
-				 "xsldbghelp.xsl xsldbghelp.xml",
-#else
-				 // fallback a non-docbook based help file
-				 "xsldoc.xsl xsldoc.xml",
-#endif
+		 "xsldoc.xsl xsldoc.xml",
                  xsldbg_bin.toLocal8Bit().constData(), helpParam,
                  QUOTECHAR, XSLDBG_VERSION , QUOTECHAR,
                  QUOTECHAR, xsldbgVerTxt.toLocal8Bit().constData(), QUOTECHAR,

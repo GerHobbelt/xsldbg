@@ -37,11 +37,11 @@ A:link, A:visited, A:active { text-decoration: underline }
 
 --></style>
 <title>
-           xsldbg 3.1.7 documentation
+           xsldbg 4.5.0 documentation
          </title>
 </head>
 <body bgcolor="#8b7765" text="#000000" link="#000000" vlink="#000000"><table class="listbody"><tr><td>
-<h1 class="cmdth">xsldbg 3.1.7</h1>
+<h1 class="cmdth">xsldbg 4.5.0</h1>
 <h2 class="cmdth">Overview</h2>
 <h3>xsldbg help</h3>
 
@@ -123,7 +123,7 @@ If your operating system supports it file names will be expanded.
 <a href="#enable">enable</a>    </td></tr>
 <tr><td>Expression viewing(xpath) : <a href="#cat">cat</a>    </td></tr>
 <tr><td>Node viewing : <a href="#ls">ls</a>, <a href="#dir">dir</a>, 
-<a href="#du">du</a>, <a href="#cat">cat</a>, <a href="#pwd">pwd</a>    </td></tr>
+	<a href="#du">du</a>, <a href="#cat">cat</a>, <a href="#pwd">pwd</a>, <a href="#addwatch">addwatch</a>, <a href="#showwatch">showwatch</a>, <a href="#delwatch">delwatch</a>    </td></tr>
 <tr><td>Variable viewing : <a href="#globals">globals</a>, 
 <a href="#locals">locals</a>, 
 <a href="#cat">cat</a>    </td></tr>
@@ -731,8 +731,7 @@ then searchresult.txt is printed to display.
 <tr><td>utf8input&nbsp;&nbsp;&nbsp;&nbsp;<i>(All input from user is in UTF-8.This is normaly used when xsldbg is running as a thread)</i>    </td></tr>
 <tr><td>gdb&nbsp;&nbsp;&nbsp;&nbsp;<i>(Run in gdb compatability mode)</i><table class="list"><tr>
 <td width="10"></td>
-<td><table class="listbody">
-<tr><td>For a value of 1 this means
+<td><table class="listbody"><tr><td>For a value of 1 this means
 <table class="list"><tr>
 <td width="10"></td>
 <td><table class="listbody">
@@ -741,14 +740,7 @@ then searchresult.txt is printed to display.
 <tr><td>Both local and globals will be printed when the "locals" command is issued     </td></tr>
 <tr><td>When printing expresssions with cat/print. The evaluated value will be prefixed by "= "  &lt; EXPRESSION &gt;    </td></tr>
 </table></td>
-</tr></table>    </td></tr>
-<tr><td>    </td></tr>
-<tr><td>For a value of 2 this means
-<table class="list"><tr>
-<td width="10"></td>
-<td><table class="listbody"><tr><td>Print messages needed by KDbg as well as the output state above (when value is 1)     </td></tr></table></td>
-</tr></table>    </td></tr>
-</table></td>
+</tr></table>    </td></tr></table></td>
 </tr></table>    </td></tr>
 <tr><td>nonet&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true refuse to fetch DTDs or entities over network)</i>    </td></tr>
 <tr><td>novalid&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true skip the DTD loading phase)</i>    </td></tr>

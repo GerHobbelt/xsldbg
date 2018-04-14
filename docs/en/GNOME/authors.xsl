@@ -9,11 +9,11 @@
        <title>Authors</title>
   <para>
    <application>xsldbg</application> was written by Keith Isdale
-   (<email>keith@kdewebdev.org</email>). To find more information about
+   (<email>keithisdale@gmail.com</email>). To find more information about
    <application>xsldbg</application>, please visit the <ulink
    url="http://xsldbg.sourceforge.net" type="http">xsldbg Web
    page</ulink>.  This manual was written by Keith Isdale
-   (<email>keith@kdewebdev.org</email>).
+   (<email>keithisdale@gmail.com</email>).
   </para>
   <para>
     If you have some comments or suggestions regarding this
@@ -23,15 +23,12 @@
    feedback</citetitle></ulink>
   </para>
 
-  <xsl:comment>For translations: uncomment this:
-
   <para>
    Latin translation was done by ME
-   (<email>MYNAME@MYADDRESS</email>). Please send all  comments  and
+   (<email>keithisdale@gmail.com</email>). Please send all  comments  and
    suggestions regarding this translation to SOMEWHERE.
   </para>
 
-   </xsl:comment>
     </sect1>
   </xsl:template>
 

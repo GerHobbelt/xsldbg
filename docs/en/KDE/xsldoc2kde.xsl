@@ -2,14 +2,14 @@
 <!-- 
   File : xsldoc2html.xsl 
   Purpose :Convert xsldoc.xml to kde style xmlDocbook
-  Author : Keith Isdale <keith@kdewebdev.org>
+  Author : Keith Isdale <keithisdale@gmail.com>
 -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
 
-  <xsl:output method="xml" doctype-public="-//KDE//DTD DocBook XML V4.1.2-Based Variant V1.1//EN" 
-    doctype-system="dtd/kdex.dtd"/>
+  <xsl:output method="xml" doctype-public="-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" 
+    doctype-system="dtd/kdedbx45.dtd"/>
   <xsl:param name="xsldbg_version" select="'0.5.9'"/>
   <xsl:param name="use_cs2" select="0"/>
   <xsl:variable name="doc_version" select="'0.4'"/>
@@ -62,9 +62,9 @@
     <informaltable>
       <tgroup cols="1">
       <tbody>  
-      <xsl:for-each select ="li">
+      <xsl:for-each select="li">
        <row>
-         <entry><xsl:apply-templates /></entry>
+         <!-- <entry><xsl:apply-templates /></entry> -->
        </row>
        </xsl:for-each>
       </tbody>
@@ -91,10 +91,9 @@
 
   <xsl:template match="comment">
     <markup>      
-      <xsl:text disable-output-escaping="yes">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</xsl:text>
-      <emphasis>
-        <xsl:value-of select="."/>
-      </emphasis>
+        <emphasis>
+            <xsl:value-of select="."/>
+        </emphasis>
     </markup>
 
   </xsl:template>
