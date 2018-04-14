@@ -2,7 +2,7 @@
 <!-- 
   File : xsldoc2html.xsl 
   Purpose :Convert xsldoc.xml to html 
-  Author : Keith Isdale <keith@kdewebdev.org>
+  Author : Keith Isdale <keithisdale@gmail.com>
 -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"

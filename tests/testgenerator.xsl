@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!-- 
      File : testgenerator.xsl    
-     Author: Keith Isdale <keith@kdewebdev.org>
+     Author: Keith Isdale <keithisdale@gmail.com>
      Description: generate tests
      Copyright Reserved Under GPL     
 -->

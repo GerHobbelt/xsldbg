@@ -99,8 +99,8 @@
 		  </para>
 		</listitem>
 	  </orderedlist></para>
-  </legalnotice><authorgroup><author><firstname>Keith</firstname><surname>Isdale</surname><affiliation><orgname/><address><email>keith@kdewebdev.org</email></address></affiliation></author></authorgroup><revhistory><revision><revnumber>xsldbg Manual V1.0</revnumber><date>2003-07-27</date><revdescription><para role="author">Keith Isdale
-	    	<email>keith@kdewebdev.org</email></para><para role="publisher"/></revdescription></revision></revhistory><releaseinfo>
+  </legalnotice><authorgroup><author><firstname>Keith</firstname><surname>Isdale</surname><affiliation><orgname/><address><email>keithisdale@gmail.com</email></address></affiliation></author></authorgroup><revhistory><revision><revnumber>xsldbg Manual V1.0</revnumber><date>2003-07-27</date><revdescription><para role="author">Keith Isdale
+	    	<email>keithisdale@gmail.com</email></para><para role="publisher"/></revdescription></revision></revhistory><releaseinfo>
       This manual describes version 3.1.7 of xsldbg. It was
        last updated on 2003-07-27.
     </releaseinfo><legalnotice><title>Feedback</title><para>To report a bug or make a suggestion regarding xsldbg application or this manual, follow the directions in the <ulink url="http://xsldbg.sourceforge.net"> xsldbg Feedback Page</ulink>. 
@@ -358,7 +358,7 @@ Walk through code using a range of speeds
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>walk &lt;SPEED&gt;<markup>&nbsp;&nbsp;&nbsp;&nbsp;<emphasis>(Use Ctrl-c to stop execution, &lt;SPEED&gt; is a value between 0 and 9. Where 0 means stop, 1 is very fast, 9 is very slow)</emphasis></markup></entry></row></tbody></tgroup></table>
 </sect2></sect1><!--============= About ================================ -->
 <sect1 id="about_section"><title>About xsldbg</title><para><application>xsldbg</application> was written by Keith Isdale
-   (<email>keith@kdewebdev.org</email>). To find more information about
+   (<email>keithisdale@gmail.com</email>). To find more information about
    <application>xsldbg</application>, please visit the <ulink url="http://xsldbg.sourceforge.net" type="http">xsldbg Web
    page</ulink>.  
   </para><para>

@@ -64,7 +64,7 @@
 		<surname>Isdale</surname> 
 		<affiliation> 
 	  		<orgname></orgname> 
-	  		<address> <email>keith@kdewebdev.org</email> </address> 
+	  		<address> <email>keithisdale@gmail.com</email> </address> 
 		</affiliation> 
       </author> 
 
@@ -89,7 +89,7 @@
 		<date><xsl:value-of select="$date"/></date> 
 		<revdescription> 
 	  		<para role="author">Keith Isdale
-	    	<email>keith@kdewebdev.org</email>
+	    	<email>keithisdale@gmail.com</email>
 	  		</para>
 	  		<para role="publisher"></para>
 		</revdescription> 

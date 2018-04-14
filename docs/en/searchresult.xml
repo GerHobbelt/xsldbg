@@ -6,7 +6,7 @@
 <source href="xsldoc.xsl">
 <comment> 
      File : xsldoc.xsl     
-     Author: Keith Isdale &lt;keith@kdewebdev.org&gt;
+     Author: Keith Isdale &lt;keithisdale@gmail.com&gt;
      Description: Stylesheet to process xsldoc.xml and generate help text
      Copyright Reserved Under GPL     
 </comment>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!-- 
      File : test12.xsl     
-     Author: Keith Isdale <keith@kdewebdev.org>
+     Author: Keith Isdale <keithisdale@gmail.com>
      Description: stylesheet for test "test12"
      This is uncertain as to whether it will be testable under WIN32
        since the DOS prompt, in my opinion, only supports ASCI properly

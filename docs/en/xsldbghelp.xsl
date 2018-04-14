@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- 
      File : xsldoc.xsl     
-     Author: Keith Isdale <keith@kdewebdev.org>
+     Author: Keith Isdale <keithisdale@gmail.com>
      Description: Stylesheet to process xsldoc.xml and generate help text
      Copyright Reserved Under GPL     
 -->

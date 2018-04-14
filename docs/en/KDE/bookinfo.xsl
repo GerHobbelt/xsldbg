@@ -10,7 +10,7 @@
           <firstname>Keith</firstname>
           <surname>Isdale</surname>
           <affiliation>
-            <address><email>keith@kdewebdev.org</email></address>
+            <address><email>keithisdale@gmail.com</email></address>
           </affiliation>
         </author>
       </authorgroup>

@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!-- 
      File : test_import.xsl     
-     Author: Keith Isdale <keith@kdewebdev.org>
+     Author: Keith Isdale <keithisdale@gmail.com>
      Description: stylesheet for import testing by test "test2"
      Copyright Reserved Under GPL     
 -->

@@ -2,7 +2,7 @@
 <!DOCTYPE testcmd SYSTEM "testcmd.dtd">
 <!-- 
      File : test10.data     
-     Author: Keith Isdale <keith@kdewebdev.org>
+     Author: Keith Isdale <keithisdale@gmail.com>
      Description: xml data that describes what to do for "test10"
        Test the ability to set break points at XML file entities 
        and changing variables 

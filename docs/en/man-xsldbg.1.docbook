@@ -9,7 +9,7 @@
 
 <refentry lang="&language;">
 <refentryinfo>
-<author><personname><firstname>Keith</firstname><surname>Isdale</surname></personname><email>keith@kdewebdev.org</email></author>
+<author><personname><firstname>Keith</firstname><surname>Isdale</surname></personname><email>keithisdale@gmail.com</email></author>
 <date>March 27, 2006</date>
 </refentryinfo>
 
@@ -231,7 +231,7 @@ gdb. It has three major modes of execution of stylesheets.
 
 <refsect1>
 <title>Authors</title>
-<para>&xsldbg; is currently written and maintained by Keith Isdale<email>keith@kdewebdev.org</email> </para>
+<para>&xsldbg; is currently written and maintained by Keith Isdale<email>keithisdale@gmail.com</email> </para>
 </refsect1>
 
 

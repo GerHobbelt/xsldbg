@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!-- 
      File : test14.xml     
-     Author: Keith Isdale <keith@kdewebdev.org>
+     Author: Keith Isdale <keithisdale@gmail.com>
      Description: second xml data for stylesheet for test "test13". This will
      be included via an entity refernce so no need for a root node
      Copyright Reserved Under GPL     

@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <!-- 
      File : test9.xsl     
-     Author: Keith Isdale <keith@kdewebdev.org>
+     Author: Keith Isdale <keithisdale@gmail.com>
      Description: stylesheet for test "test9" which show elements that are not
                   supported by xsldbg 
      Copyright Reserved Under GPL     
