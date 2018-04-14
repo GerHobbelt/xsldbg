@@ -5,7 +5,7 @@
     <chapter id="command_chapter">
       <title>Command summary</title>
         <xsl:apply-templates select="cmd">
-          <xsl:sort name="@name"/>
+          <xsl:sort select="@name"/>
         </xsl:apply-templates>
     </chapter>
   </xsl:template>

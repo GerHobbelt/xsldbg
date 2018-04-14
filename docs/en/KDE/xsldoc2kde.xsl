@@ -62,9 +62,9 @@
     <informaltable>
       <tgroup cols="1">
       <tbody>  
-      <xsl:for-each select ="li">
+      <xsl:for-each select="li">
        <row>
-         <entry><xsl:apply-templates /></entry>
+         <!-- <entry><xsl:apply-templates /></entry> -->
        </row>
        </xsl:for-each>
       </tbody>
