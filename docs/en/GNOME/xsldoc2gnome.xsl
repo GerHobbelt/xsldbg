@@ -8,8 +8,8 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
 
-  <xsl:output method="xml" doctype-public="-//OASIS//DTD DocBook XML V4.1.2//EN"
-    doctype-system="http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" indent="yes"/>
+  <xsl:output method="xml" doctype-public="-//OASIS//DTD DocBook XML V4.5//EN"
+    doctype-system="http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" indent="yes"/>
 
   <!--
 GNOME docs template state this as its preable of 
@@ -109,11 +109,10 @@ This is achieved useing $xsldbg_version and $xsldbg_date
 
 
   <xsl:template match="comment">
-    <markup>      
-      <xsl:text disable-output-escaping="yes">&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;</xsl:text>
-      <emphasis>
-        <xsl:value-of select="."/>
-      </emphasis>
+    <markup>
+        <emphasis>
+            <xsl:value-of select="."/>
+        </emphasis>
     </markup>
 
   </xsl:template>
