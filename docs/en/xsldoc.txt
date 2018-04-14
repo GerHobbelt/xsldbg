@@ -420,10 +420,6 @@ Usage:
                     Both local and globals will be printed when the "locals" command is issued 
                     When printing expresssions with cat/print. The evaluated value will be prefixed by "= " < EXPRESSION > 
  
-                 
-                For a value of 2 this means 
-                    Print messages needed by KDbg as well as the output state above (when value is 1) 
- 
  
             nonet   (If <INTEGER_VALUE> is true refuse to fetch DTDs or entities over network) 
             novalid   (If <INTEGER_VALUE> is true skip the DTD loading phase) 

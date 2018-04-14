@@ -49,8 +49,7 @@ useful for quality assurance purposes.
 	</para>
 	<para>
 A good deal of effort has been put into, creating a <ulink url="http://www.xemacs.org/">XEmacs</ulink> front end 
-called <ulink url="http://sourceforge.net/project/showfiles.php?group_id=35673&amp;release_id=109542">xsldbg-mode</ulink>, and
-adding support for xsldbg to <ulink url="http://members.nextra.at/johsixt/kdbg.html">KDbg</ulink>.
+called <ulink url="http://sourceforge.net/project/showfiles.php?group_id=35673&amp;release_id=109542">xsldbg-mode</ulink>.
       </para>
       </abstract>
     </bookinfo>
