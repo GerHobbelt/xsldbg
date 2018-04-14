@@ -9,7 +9,7 @@
        <title>About xsldbg</title>
   <para>
    <application>xsldbg</application> was written by Keith Isdale
-   (<email>keith@kdewebdev.org</email>). To find more information about
+   (<email>keithisdale@gmail.com</email>). To find more information about
    <application>xsldbg</application>, please visit the <ulink
    url="http://xsldbg.sourceforge.net" type="http">xsldbg Web
    page</ulink>.  
@@ -30,15 +30,13 @@
       COPYING included with the source code of this program. </para>
 
 
-  <xsl:comment>For translations: uncomment this:
+  <xsl:comment> translators: update the following </xsl:comment>
 
   <para>
    Latin translation was done by ME
    (<email>MYNAME@MYADDRESS</email>). Please send all  comments  and
    suggestions regarding this translation to SOMEWHERE.
   </para>
-
-   </xsl:comment>
 
       <sect2>
         <title>Thanks to </title>

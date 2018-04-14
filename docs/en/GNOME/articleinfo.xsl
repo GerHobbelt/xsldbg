@@ -41,14 +41,14 @@
       <holder>Keith Isdale</holder>
     </copyright>
 
-   <xsl:comment> translators: uncomment this:
+   <xsl:comment> translators: update the following </xsl:comment>
 
   <copyright>
    <year>2000</year>
    <holder>ME-THE-TRANSLATOR (Latin translation)</holder>
   </copyright>
 
-</xsl:comment><xsl:text>
+<xsl:text>
 
 </xsl:text>
 
