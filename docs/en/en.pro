@@ -3,6 +3,7 @@ SUBDIRS=
 include(../../xsldbg.pri)
 
 unix{
+    #generate the plain text documentation
     xsldoctxt.target = .buildfile
     xsldoctxt.commands = touch $$xsldoctxt.target
     xsldoctxt.depends = xsldoctxt2
@@ -13,6 +14,19 @@ unix{
     xsldoctxt2.commands = ../../src/xsldbg -param alldocs:\"\'1\'\" --param xsldbg_version:\"\'$${XSLDBG_VERSION}\'\" --output $$PWD/xsldoc.txt $$PWD/xsldoc.xsl $$PWD/xsldoc.xml
 
     INSTALLS+=xsldoctxt2
+    
+    # generate the HTML documentation
+    xsldoctxtplain.target = .buildfile
+    xsldoctxtplain.commands = touch $$xsldoctxt.target
+    xsldoctxtplain.depends = xsldoctxtplain2
+    
+    xsldoctxtplain2.files = $$PWD/plain/index.html
+    xsldoctxtplain2.depends = $$PWD/plain/xsldoc2html.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd
+    xsldoctxtplain2.path = ./plain/
+    xsldoctxtplain2.commands = ../../src/xsldbg --noshell --param alldocs:\"\'1\'\" --verbose --param xsldbg_version:\"\'$${XSLDBG_VERSION}\'\" --output $$PWD/plain/index.html $$PWD/plain/xsldoc2html.xsl $$PWD/xsldoc.xml
+    
+    INSTALLS+=xsldoctxtplain2
+    
 
     xmldocCatalog.target = .buildfile
     xmldocCatalog.commands = touch $$xmldocCatalog.target
