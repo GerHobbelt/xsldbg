@@ -14,7 +14,7 @@
   <!-- The list of valid xsldbg commands -->
   <xsl:variable name="command_nodes" select="/xsldoc/cmd"/>
   <!-- What version is this document-->
-  <xsl:variable name="doc_version" select="'0.6'"/>
+  <xsl:variable name="doc_version" select="'0.7'"/>
   <!-- The default version of xsldbg -->
   <xsl:param name="xsldbg_version" select="'0.5.9'"/>
   <!-- We want 'help' to point to a invalid command if stylesheet

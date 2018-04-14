@@ -171,7 +171,7 @@ void XsldbgSettingsModel::init()
 
     // set the default values for certain options
     /* setup the docs path */
-    stringValue = langLookupDir("xsldbghelp.xml");
+    stringValue = langLookupDir("xsldoc.xml");
     updateSetting(OPTIONS_DOCS_PATH, stringValue);
 
     intValue = TRACE_OFF;

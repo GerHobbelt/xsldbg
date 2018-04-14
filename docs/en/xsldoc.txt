@@ -602,4 +602,4 @@ Usage:
  
         write 
  
-Help document version 0.6 
+Help document version 0.7 
