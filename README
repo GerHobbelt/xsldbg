@@ -22,26 +22,23 @@ library and compliler flags, otherwise:
   $LIBXSLT_PREFIX must be set to the location of libxslt
   $ICONV_PREFIX must be set to the location of iconv
 
-To change the xsldbg installation path see "INSTALL_PREFIX" in xsldbg.pri
-
 For unix run for (*nix):
   qmake
   make
-  make install # may require sudo 
+  make install # may require sudo and it will update the System's XML catalog to include xsldbg's DTDs.
   
 The provided xsldbg.spec can be used to create a RPM, note by default Qt4 is used in xsldbg.spec. Usage example
    rpmbuild -tb xsldbg-4.5.0.tar.gz
 
-
-for Windows (MSVC) :
+Currenty no testing has been done using version 4.5.0 on Windows(MSVC) though the following should work if Qt and other dependencies are setup correctly:
   qmake
   nmake
   nmake install
-then install xsldbg's catalog.xml via running
+then if wished install xsldbg's catalog.xml via running
   createcatalog.bat
 
-The tests and results directories are only used under *nix platforms and are not built see test/README.
-if you want to run them :
+If on *nix xsldbg and xsldbg is built in same directory as its tests can be run. For details see test/README. Note currently 'test10' is known to fail at moment.
+If you want to run test then:
     cd tests
     perl runtests.pl
 
