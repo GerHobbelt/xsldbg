@@ -3,16 +3,11 @@ DEFINES+=XSLDBG_VERSION=\\\"$$XSLDBG_VERSION\\\"
 
 # Documentation is now installed via ../docs/en/en.pro
 unix {
-        INSTALL_PREFIX="/opt/local/xsldbg"
-        DEFINES+= DOCS_PATH="\"\\\"$$INSTALL_PREFIX/docs/en\\\"\""
-        target.path = $$INSTALL_PREFIX/bin/
-        INSTALLS += target
+        DOCS_ROOT="$$[QT_INSTALL_DOCS]/xsldbg" 
+        DEFINES+= DOCS_PATH="\"\\\"$$DOCS_ROOT/en\\\"\""
 }
 
 win32{
-        INSTALL_PREFIX="\xsldbg"
         # DEFINES+= DOCS_PATH="\"\\\"$$INSTALL_PREFIX\\docs\\en\\\"\""
-        target.path = $$INSTALL_PREFIX/bin
-        INSTALLS += target
 }
 
