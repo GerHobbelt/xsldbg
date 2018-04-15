@@ -1,5 +1,5 @@
 %define name xsldbg
-%define version 4.4.1
+%define version 4.5.0
 %define release 1
 %define prefix /usr
 %define kdeprefix /opt/kde4
@@ -13,10 +13,10 @@ Version: %{version}
 Release: %{release}
 Prefix: %{prefix}
 Group: Development/Debuggers
-Copyright: GPL
+License: GPL
 Distribution: Any GCC 3.2 based 
-Vendor: Keith Isdale <k_isdale@tpg.com.au>
-Packager: Keith Isdale <k_isdale@tpg.com.au>
+Vendor: Keith Isdale <keithisdale@gmail.com>
+Packager: Keith Isdale <keithisdale@gmail.com>
 Source: %{name}-%{version}.tar.gz
 URL: http://xsldbg.sourceforge.net/ 
 Requires: kdelibs >= 4.0 libxml2 >= 2.4.3 libxslt >= 1.0.13
