@@ -169,11 +169,6 @@ void XsldbgSettingsModel::init()
     QVariant intValue(QVariant::Int);
     QVariant stringValue(QVariant::String);
 
-    // set the default values for certain options
-    /* setup the docs path */
-    stringValue = langLookupDir("xsldoc.xml");
-    updateSetting(OPTIONS_DOCS_PATH, stringValue);
-
     intValue = TRACE_OFF;
     updateSetting(OPTIONS_TRACE, intValue);
 
@@ -575,6 +570,12 @@ bool XsldbgSettingsModel::loadSettings (const QSettings & configSettings )
             addParameter(setting.mid(paramPrefixLen), value);
         }
     }
+
+    /* setup the docs path */
+    QVariant docsPath(QVariant::String);
+    docsPath = langLookupDir("xsldoc.xml");
+    updateSetting(OPTIONS_DOCS_PATH, docsPath);
+
     return result;
 }
 
