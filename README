@@ -37,7 +37,7 @@ Currenty no testing has been done using version 4.5.0 on Windows(MSVC) though th
 then if wished install xsldbg's catalog.xml via running
   createcatalog.bat
 
-If on *nix and xsldbg is built in same directory as its tests can be run. For details see test/README. Note currently 'test10' is known to fail at moment.
+If on *nix and xsldbg is built in same directory as source tests can be run. For details see tests/README. Note currently 'test10' is known to fail at moment.
 If you want to run test then:
     cd tests
     perl runtests.pl
