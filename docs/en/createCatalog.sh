@@ -5,9 +5,9 @@ else
     LOCALXML_CATALOG_FILES=$XML_CATALOG_FILES
 fi
 
-INSTALL_PREFIX=$1
+DOCS_DIR=$1
 
-if test -z "$INSTALL_PREFIX";then
+if test -z "$DOCS_DIR";then
     echo Install prefix not passed as parameter to $0
     exit 1
 fi
@@ -31,10 +31,10 @@ if test -d $CATALOG_DIR; then
     echo "" > result.txt
     if ! test -e $LOCALXML_CATALOG_FILES; then 
             echo "Creating $LOCALXML_CATALOG_FILES" >> result.txt 2>&1
-            xmlcatalog -v --noout --create $LOCALXML_CATALOG_FILES >> result.txt 2>&1
+            xmlcatalog --noout --create $LOCALXML_CATALOG_FILES >> result.txt 2>&1
     fi
     if test "x`grep xsldbg.*catalog.xml $LOCALXML_CATALOG_FILES`" = "x" ;then
-        xmlcatalog -v --noout --add nextCatalog '' "file://$INSTALL_PREFIX/docs/en/catalog.xml" $LOCALXML_CATALOG_FILES >> result.txt 2>&1
+        xmlcatalog --noout --add nextCatalog '' "file://$DOCS_DIR/catalog.xml" $LOCALXML_CATALOG_FILES >> result.txt 2>&1
         echo "Adding xsldbg DTD to default xml catalog /etc/xml/catalog" >> result.txt 2>&1
         echo "Warning you may need to edit these by hand using xmlcatalog" >> result.txt 2>&1
     else

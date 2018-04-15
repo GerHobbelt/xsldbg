@@ -3,6 +3,7 @@ SUBDIRS=
 include(../../xsldbg.pri)
 
 unix{
+    message(doc root $$DOCS_ROOT)
     #generate the plain text documentation
     xsldoctxt.target = .buildfile1
     xsldoctxt.commands = touch $$xsldoctxt.target
@@ -10,7 +11,7 @@ unix{
 
     xsldoctxt2.files = $$PWD/xsldoc.txt
     xsldoctxt2.depends = $$PWD/xsldoc.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd
-    xsldoctxt2.path = $$DOCS_PATH
+    xsldoctxt2.path = $$DOCS_ROOT/en
     xsldoctxt2.commands = ../../src/xsldbg -noshell -param alldocs:\"\'1\'\" --param xsldbg_version:\"\'$${XSLDBG_VERSION}\'\" --output $$PWD/xsldoc.txt $$PWD/xsldoc.xsl $$PWD/xsldoc.xml
 
     INSTALLS+=xsldoctxt2
@@ -66,9 +67,9 @@ unix{
  
 
     # nasty shell script to seek to install xsldbg catalog
-    xmldocCatalog2.commands=sh $$PWD/createCatalog.sh $${INSTALL_PREFIX}
+    xmldocCatalog2.commands=sh $$PWD/createCatalog.sh $${DOCS_ROOT}/en
     xmldocCatalog2.files =
-    xmldocCatalog2.path = $$INSTALL_PREFIX
+    xmldocCatalog2.path = $$DOCS_ROOT
 
     INSTALLS+=xmldocCatalog2
 }
