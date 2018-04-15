@@ -10,7 +10,7 @@ unix{
 
     xsldoctxt2.files = $$PWD/xsldoc.txt
     xsldoctxt2.depends = $$PWD/xsldoc.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd
-    xsldoctxt2.path = $$INSTALL_PREFIX/docs/en
+    xsldoctxt2.path = $$DOCS_PATH
     xsldoctxt2.commands = ../../src/xsldbg -noshell -param alldocs:\"\'1\'\" --param xsldbg_version:\"\'$${XSLDBG_VERSION}\'\" --output $$PWD/xsldoc.txt $$PWD/xsldoc.xsl $$PWD/xsldoc.xml
 
     INSTALLS+=xsldoctxt2
@@ -22,7 +22,7 @@ unix{
     
     xsldoctxtplain2.files = $$PWD/plain/index.html
     xsldoctxtplain2.depends = $$PWD/plain/xsldoc2html.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd
-    xsldoctxtplain2.path = $$INSTALL_PREFIX/docs/en/html
+    xsldoctxtplain2.path = $$DOCS_ROOT/en/html
     xsldoctxtplain2.commands = ../../src/xsldbg --noshell --param alldocs:\"\'1\'\" --param xsldbg_version:\"\'$${XSLDBG_VERSION}\'\" --output $$PWD/plain/index.html $$PWD/plain/xsldoc2html.xsl $$PWD/xsldoc.xml
     
     INSTALLS+=xsldoctxtplain2
@@ -38,7 +38,7 @@ unix{
         
         xsldocKDEdocs2.files = $$PWD/KDE/index.docbook 
         xsldocKDEdocs2.depends = $$PWD/KDE/xsldoc2kde.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd
-        xsldocKDEdocs2.path = $$INSTALL_PREFIX/docs/en/KDE
+        xsldocKDEdocs2.path = $$DOCS_ROOT/en/KDE
         xsldocKDEdocs2.commands = saxon -o $$PWD/KDE/index.docbook $$PWD/xsldoc.xml $$PWD/KDE/xsldoc2kde.xsl alldocs=\"\'1\'\" xsldbg_version=\"\'$${XSLDBG_VERSION}\'\" 
         
         INSTALLS+=xsldocKDEdocs2
@@ -50,7 +50,7 @@ unix{
         
         xsldocGnomedocs2.files = $$PWD/GNOME/gnome.docbook 
         xsldocGnomedocs2.depends = $$PWD/GNOME/xsldoc2gnome.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd
-        xsldocGnomedocs2.path = $$INSTALL_PREFIX/docs/en/GNOME
+        xsldocGnomedocs2.path = $$DOCS_ROOT/en/GNOME
         xsldocGnomedocs2.commands = saxon -o $$PWD/GNOME/gnome.docbook $$PWD/xsldoc.xml $$PWD/GNOME/xsldoc2gnome.xsl alldocs=\"\'1\'\" xsldbg_version=\"\'$${XSLDBG_VERSION}\'\" 
         
         INSTALLS+=xsldocGnomedocs2
@@ -82,6 +82,6 @@ docs.files = *.xsl \
 	     $PWD/xsldoc.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.txt
 	     
 
-docs.path= $$INSTALL_PREFIX/docs/en/
+docs.path= $$DOCS_ROOT/en/
 
 INSTALLS += docs
