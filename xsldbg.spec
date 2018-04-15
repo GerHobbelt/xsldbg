@@ -1,10 +1,7 @@
 %define name xsldbg
-%define version 4.4.1
+%define version 4.5.0
 %define release 1
 %define prefix /usr
-%define kdeprefix /opt/kde4
-%define qtprefix /usr/lib/qt4
-%define gnomeprefix /opt/gnome
 %define builddir $RPM_BUILD_DIR/%{name}-%{version}
 
 Summary: xsldbg XSLT debugging/execution 
@@ -13,13 +10,14 @@ Version: %{version}
 Release: %{release}
 Prefix: %{prefix}
 Group: Development/Debuggers
-Copyright: GPL
+License: GPL
 Distribution: Any GCC 3.2 based 
-Vendor: Keith Isdale <k_isdale@tpg.com.au>
-Packager: Keith Isdale <k_isdale@tpg.com.au>
+Vendor: Keith Isdale <keithisdale@gmail.com>
+Packager: Keith Isdale <keithisdale@gmail.com>
 Source: %{name}-%{version}.tar.gz
 URL: http://xsldbg.sourceforge.net/ 
-Requires: kdelibs >= 4.0 libxml2 >= 2.4.3 libxslt >= 1.0.13
+Requires: libqt4 >= 4.4 libxml2 >= 2.4.3 libxslt >= 1.0.13
+#Requires: libQt5Core5 >= 5.5 libxml2 >= 2.4.3 libxslt >= 1.0.13
 BuildRoot: /tmp/build-%{name}-%{version}
 
 %description
@@ -37,17 +35,15 @@ rm -rf %{builddir}
 touch `find . -type f`
 
 %build
-aclocal
-autoheader
-automake
-autoconf
-CXXFLAGS="$RPM_OPT_FLAGS" CFLAGS="$RPM_OPT_FLAGS" qmake
+qmake
 make
-
 
 %install
 rm -rf $RPM_BUILD_ROOT
-make DESTDIR=$RPM_BUILD_ROOT install-strip
+INSTALL_ROOT=$RPM_BUILD_ROOT make install
+
+QT_INSTALL_DOCS=`qmake -query QT_INSTALL_DOCS`
+QT_INSTALL_BINS=`qmake -query QT_INSTALL_BINS`
 
 cd $RPM_BUILD_ROOT
 find . -type d | sed '1,2d;s,^\.,\%attr(-\,root\,root) \%dir ,' > \
@@ -57,12 +53,11 @@ find . -type f | sed -e 's,^\.,\%attr(-\,root\,root) ,' \
 	$RPM_BUILD_DIR/file.list.%{name}
 find . -type l | sed 's,^\.,\%attr(-\,root\,root) ,' >> \
 	$RPM_BUILD_DIR/file.list.%{name}
-echo "%docdir %{prefix}/share/packages/xsldbg" >> $RPM_BUILD_DIR/file.list.%{name}
-echo "%docdir %{kdeprefix}/share/doc/HTML/en/xsldbg" >> $RPM_BUILD_DIR/file.list.%{name}
-echo "%docdir %{prefix}/share/gnome/help/xsldbg" >> $RPM_BUILD_DIR/file.list.%{name}
-echo "Sleeping for a minute to ensure that the timestamp in index.cashe.bz2 is correct"
-sleep 60
-touch ./%{kdeprefix}/share/doc/HTML/en/xsldbg/index.cache.bz2
+echo "%docdir $QT_INSTALL_DOCS/xsldbg" >> $RPM_BUILD_DIR/file.list.%{name}
+echo "%docdir $QT_INSTALL_DOCS/xsldbg/en" >> $RPM_BUILD_DIR/file.list.%{name}
+#echo "Sleeping for a minute to ensure that the timestamp in index.cashe.bz2 is correct"
+#sleep 60
+#touch ./%{kdeprefix}/share/doc/HTML/en/xsldbg/index.cache.bz2
 
 
 %clean

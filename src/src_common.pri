@@ -12,12 +12,16 @@ unix {
         message(Enabling readline support)
         DEFINES+=HAVE_READLINE
         LIBS+=-lreadline
+    } else {
+	message(Unable to complile test with readline support enabled)
     }
     system("$$QMAKE_CC -lhistory configtests/historytest.c -o configtests/historytest > /dev/null 2>&1") {
         message(Enabling history support)
         DEFINES+=HAVE_HISTORY
         LIBS+=-lhistory
-    }
+    } else {
+	message(Unable to complile test with history support enabled)
+    } 
 }
 
 system("xslt-config --help >/dev/null"){

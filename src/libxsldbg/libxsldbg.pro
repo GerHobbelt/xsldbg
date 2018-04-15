@@ -10,7 +10,7 @@ win32:INCLUDEPATH += $(LIBXML_PREFIX)/include
 win32:INCLUDEPATH += $(ICONV_PREFIX)/include
 INCLUDEPATH += ..
 INCLUDEPATH += ../..
-DEFINES += DOCS_PATH=\"$(DOCSPATH)\"
+# note 'DOCS_PATH' is defined in ../xsldbg.pri
 win32:DEFINES += WIN32 QT_DLL
 win32:LIBS += $(LIBXSLT_PREFIX)\lib\libexslt.lib $(LIBXSLT_PREFIX)\lib\libxslt.lib $(LIBXML_PREFIX)\lib\libxml2.lib 
 

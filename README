@@ -28,6 +28,10 @@ For unix run for (*nix):
   qmake
   make
   make install # may require sudo 
+  
+The provided xsldbg.spec can be used to create a RPM, note by default Qt4 is used in xsldbg.spec. Usage example
+   rpmbuild -tb xsldbg-4.5.0.tar.gz
+
 
 for Windows (MSVC) :
   qmake
