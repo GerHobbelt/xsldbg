@@ -1,0 +1,8 @@
+test*.log
+test*.results
+historytest
+readlinetest
+*.o
+*.obj
+Makefile
+moc_*.cpp
