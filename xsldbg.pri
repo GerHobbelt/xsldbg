@@ -1,4 +1,4 @@
-XSLDBG_VERSION="4.5.0"
+XSLDBG_VERSION="4.5.1"
 DEFINES+=XSLDBG_VERSION=\\\"$$XSLDBG_VERSION\\\"
 
 # Documentation is now installed via ../docs/en/en.pro
