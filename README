@@ -37,8 +37,20 @@ Currenty no testing has been done using version 4.5.0 on Windows(MSVC) though th
 then if wished install xsldbg's catalog.xml via running
   createcatalog.bat
 
+For WIN32 you must ensure that %LIBXML_PREFIX%\lib, %LIBXSLT_PREFIX%\lib, %ICONV_PREFIX%\lib has been added to your %PATH% before starting xsldbg.exe. It is recommended that you install xsldbg into c:\xsldbg 
+
 If on *nix and xsldbg is built in same directory as source tests can be run. For details see tests/README. Note currently 'test10' is known to fail at moment.
 If you want to run test then:
     cd tests
     perl runtests.pl
+
+For WIN32 user you will need to set several environment variables
+ XSLDBG_PREFIX must to set to the location of xsldbg cvs checkout or the
+                directory where you extracted the libxsldbg.zip AND libqtnotifier.zip
+  LIBXML_PREFIX must be set to the location of libxml
+  LIBXSLT_PREFIX  must be set to the location of libxslt
+  ICONV_PREFIX must be set to the location of iconv
+
+  You must ensure that %LIBXML_PREFIX%\lib, %LIBXSLT_PREFIX%\lib, %ICONV_PREFIX%\lib has been added to your %PATH% before starting qxsldbg.exe. Unless you yave copied the dll's found in these directories into you qxsldbg the \qxsldbg
+  It is recommended that you install qxsldbg into c:\qxsldbg
 
