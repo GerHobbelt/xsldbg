@@ -1,3 +1,17 @@
+Keith Isdale 15th April 2018 <keithisdale@gmail.com>
+  Version 4.5.0
+  Migrate xsldbg to sourceforge git repository 
+  Remove all autoconf and automake related files
+  Correct logic for determining libxml2 paths (still uses xml2-config and xslt-config)
+  Support Qt4 and Qt5 builds of xsldbg  
+  Fix creation of docbook and documentation - see README for important details
+  Update README documentation for thing such as build dependencies in OpenSUSE
+  Update personal email address in files to keithisdale@gmail.com
+  Fix logic for creating xmlCatog in *nix
+  Remove execution permission for files that do net need it
+  Improve xslt parameter removal better
+  Warn if unable to fully write xsl transformation result output 
+  
 Keith Isdale 28th Sept 2009 <keith.isdale@kdewebdev.org>
   Version 4.4.1
   Backport changes from KDE repository
