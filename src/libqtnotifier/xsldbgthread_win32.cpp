@@ -1,8 +1,9 @@
+
 /***************************************************************************
                           xsldbgthread_win32.cpp  -  description
                              -------------------
     begin                : Thu April 6 2002
-    copyright            : (C) 2002 by keith
+    copyright            : (C) 2002-2018 by keith
     email                : keithisdale@gmail.com
  ***************************************************************************/
 

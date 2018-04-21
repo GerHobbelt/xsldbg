@@ -1,3 +1,4 @@
+
 /***************************************************************************
                           xsldbgdebuggerbase.h  -  The base class from
                                                       which a debugger 
@@ -5,7 +6,7 @@
 
                              -------------------
     begin                : Fri Feb 1 2001
-    copyright            : (C) 2001 by Keith Isdale
+    copyright            : (C) 2001-2018 by Keith Isdale
     email                : keithisdale@gmail.com
  ***************************************************************************/
 

@@ -1,6 +1,7 @@
 Keith Isdale 21st April 2018 <keithisdale@gmail.com>
   Version 4.5.1
   Build system cleanup, includes updates to create dist packages on *nix via makedist.sh
+  Update license preemable in all source files
 
 Keith Isdale 15th April 2018 <keithisdale@gmail.com>
   Version 4.5.0

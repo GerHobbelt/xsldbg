@@ -1,8 +1,7 @@
+
 /***************************************************************************
-                          qtnotifier.cpp  -  description
-                             -------------------
-    begin                : Sun Dec 23 2001
-    copyright            : (C) 2001 by keith
+    begin                : Sat Dec 22 2001
+    copyright            : (C) 2001-2018 by Keith Isdale
     email                : keithisdale@gmail.com
  ***************************************************************************/
 

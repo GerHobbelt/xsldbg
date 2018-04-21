@@ -1,3 +1,4 @@
+
 /***************************************************************************
               xslgdbgsettingsmodel.cpp  - data container for all settings
                              -------------------

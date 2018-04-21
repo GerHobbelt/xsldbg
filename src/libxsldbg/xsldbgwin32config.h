@@ -3,7 +3,7 @@
                           xsldbgwin32config.h  - make win32 specific definitions
                              -------------------
     begin                : Sun Dec 16 2001
-    copyright            : (C) 2001 by Keith Isdale
+    copyright            : (C) 2001-2018 by Keith Isdale
     email                : keithisdale@gmail.com
  ***************************************************************************/
 

@@ -1,8 +1,9 @@
+
 /***************************************************************************
                           qtnotifier.h  - notify the qt app of changes
                              -------------------
     begin                : Sun Dec 23 2001
-    copyright            : (C) 2001 by Keith Isdale
+    copyright            : (C) 2001-2018 by Keith Isdale
     email                : keithisdale@gmail.com
  ***************************************************************************/
 
