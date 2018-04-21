@@ -6,3 +6,5 @@ readlinetest
 *.obj
 Makefile
 moc_*.cpp
+*.swp
+*.pro.user
