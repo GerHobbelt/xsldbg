@@ -1,5 +1,5 @@
 %define name xsldbg
-%define version 4.5.0
+%define version 4.5.1
 %define release 1
 %define prefix /usr
 %define builddir $RPM_BUILD_DIR/%{name}-%{version}
