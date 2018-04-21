@@ -1,17 +1,22 @@
 #!/bin/sh
 # This script will create the xsldbg dist on most unix based systems
-VERSION=4.5.0
+VERSION=$(grep -re "^XSLDBG_VERSION" xsldbg.pri | sed 's/\(^XSLDBG_VERSION="\)\([0-9,.]\+\)\(.*\".*$\)/\2/')
+
 TMPDIR=~/tmp-xsldbg
-SOURCEDIR=`dirname $0`
+SOURCEDIR=`dirname $(readlink -f $0)`
 
 echo Temp dir is $TMPDIR
 echo xsldbg source dir is $SOURCEDIR
-if [ ! -d $TMPDIR ]; then mkdir $TMPDIR; fi 
-rm -rf $TMPDIR/xsldbg*
-cp -r $SOURCEDIR $TMPDIR/xsldbg-$VERSION
+if [ -d $TMPDIR ]; then rm -rf $TMPDIR; fi 
+mkdir $TMPDIR
+
+cd $SOURCEDIR
+git clone . $TMPDIR/xsldbg-$VERSION
 
 cd $TMPDIR
 
-tar czf xsldbg-$VERSION.tar.gz --exclude .git --exclude .cvsignore --exclude *.swp xsldbg-$VERSION 
+tar czf xsldbg-$VERSION.tar.gz --exclude .git --exclude-from=$SOURCEDIR/.gitignore xsldbg-$VERSION
 echo created $PWD/xsldbg-$VERSION.tar.gz
 
+zip -r -l --exclude .git --exclude .gitignore --exclude .gitmodules --exclude \*.git/\* -x@$SOURCEDIR/.gitignore xsldbg-$VERSION.zip xsldbg-$VERSION
+echo created $PWD/xsldbg-$VERSION.zip

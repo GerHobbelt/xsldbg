@@ -54,3 +54,7 @@ For WIN32 user you will need to set several environment variables
   You must ensure that %LIBXML_PREFIX%\lib, %LIBXSLT_PREFIX%\lib, %ICONV_PREFIX%\lib has been added to your %PATH% before starting qxsldbg.exe. Unless you yave copied the dll's found in these directories into you qxsldbg the \qxsldbg
   It is recommended that you install qxsldbg into c:\qxsldbg
 
+To create dist packages in *nix the following must be present, see the makedist.sh script
+* tar
+* bzip2
+* zip
