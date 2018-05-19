@@ -121,7 +121,9 @@ INCLUDEPATH += ../..
 win32:DEFINES+=WIN32 _WINDOWS _MBCS _REENTRANT
 
 
-SOURCES	=  main.cpp simpleio.cpp
+!xsldbg_GUI {
+    SOURCES	=  main.cpp simpleio.cpp
+}
 
 HEADERS += \
     libxsldbg/breakpoint.h \
