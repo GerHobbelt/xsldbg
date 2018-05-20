@@ -546,12 +546,10 @@ void XsldbgEvent::handleGlobalVariableItem(XsldbgEventData *eventData, const  vo
             }
         }else{
             /* emit the event data via debugger*/
-            emit debugger->variableItem(eventData->getText(0), /* variable name*/
-                                        eventData->getText(1), /* templatecontext*/
+            emit debugger->globalVariableItem(eventData->getText(0), /* variable name*/
                                         eventData->getText(2), /* file name */
                                         eventData->getInt(0), /* line number */
-                                        eventData->getText(3), /* select XPath */
-                                        eventData->getInt(1) /* Is this a local variable */ );
+                                        eventData->getText(3) /* select XPath */);
         }
     }
 }
@@ -609,12 +607,11 @@ void XsldbgEvent::handleLocalVariableItem(XsldbgEventData *eventData, const  voi
             }
         }else{
             /* emit the event data via debugger*/
-            emit debugger->variableItem(eventData->getText(0), /* variable name*/
+            emit debugger->localVariableItem(eventData->getText(0), /* variable name*/
                                         eventData->getText(1), /* templatecontext*/
                                         eventData->getText(2), /* file name */
                                         eventData->getInt(0), /* line number */
-                                        eventData->getText(3), /* select XPath */
-                                        eventData->getInt(1) /* Is this a local variable */ );
+                                        eventData->getText(3) /* select XPath */);
         }
     }
 }

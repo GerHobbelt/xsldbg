@@ -117,7 +117,7 @@ class  XsldbgEventData {
 
         //	/** Add global variable to view, First parameter is QString()
         //        to indicate start of global variable list notfication */
-        //	void globalVariableItem(QString /* name */, QString /* fileName */, int /* lineNumber */);
+        //	void globalVariableItem(QString /* name */, QString /* fileName */, int /* lineNumber */, QString XPath);
         // These data items are mapped to attributes of this class with the same name
 
 

@@ -74,64 +74,58 @@ protected:
   int updateTimerID;
   QStringList _commandQueue;	
 
-  signals: // Signals
+signals: // Signals
    /** line number and/or file name changed */
-   void lineNoChanged(QString /* fileName */, int /* lineNumber */, bool /* breakpoint */);
+   void lineNoChanged(QString fileName, int lineNumber, bool /* breakpoint */);
 
    /** Show a message in debugger window */
    void showMessage(QString /* msg*/);
 
    /** Add breakpoint to view, First parameter is QString()
        to indicate start of breakpoint list notfication */
-   void breakpointItem(QString /* fileName*/, int /* lineNumber */, 
-		       QString /*templateName*/, QString /* modeName */,
- 		      bool /* enabled */, int /* id */);
+   void breakpointItem(QString fileName, int lineNumber,
+               QString templateName, QString modeName,
+              bool enabled, int id);
 
   /** Add global variable to view, First parameter is QString()
       to indicate start of global variable list notfication */
-  void globalVariableItem(QString /* name */, QString /* fileName */, int /* lineNumber */);
+  void globalVariableItem(QString name, QString fileName, int lineNumber, QString XPath);
 
   /** Add local variable to view, First parameter is QString()
       to indicate start of local variable list notfication */
-  void localVariableItem(QString /*name */, QString /* templateContext*/,
-			 QString /* fileName */, int /*lineNumber */);	
+  void localVariableItem(QString name, QString templateContext,
+             QString fileName, int lineNumber, QString XPath);
   
-    /** Add a variable to view, First parameter is QString()
-      to indicate start of local variable list notfication */
-  void variableItem(QString /*name */, QString /* templateContext*/,
-			 QString /* fileName */, int /*lineNumber */, 
-			 QString /* select XPath */, bool /* is it a local variable */);	
-
   /** Add template to view, First parameter is QString()
       to indicate start of template list notfication */
-  void templateItem(QString /* name*/, QString /*mode*/, QString /* fileName */, int /* lineNumber */);
+  void templateItem(QString name, QString mode, QString fileName, int lineNumber);
 
   /** Add source to view, First parameter is QString()
       to indicate start of source list notfication */
-  void sourceItem(QString /* fileName */, QString /* parentFileName */, int /*lineNumber */);
+  void sourceItem(QString fileName, QString parentFileName, int lineNumber);
 
   /** Add parameter to view, First parameter is QString()
       to indicate start of parameter list notfication */
-  void parameterItem(QString /* name*/, QString /* value */);
+  void parameterItem(QString name, QString value);
 
   /** Add callStack to view, First parameter is QString()
       to indicate start of callstack list notfication */
-  void callStackItem(QString /* tempalteName*/, QString /* fileName */, int /* lineNumber */);
+  void callStackItem(QString templateName, QString fileName, int lineNumber);
 	
   /** Add entity to view, First parameter is QString()
       to indicate start of entity list notfication */
-  void entityItem(QString /*SystemID*/,  QString /*PublicID*/);	
+  void entityItem(QString SystemID,  QString PublicID);
 	
   /* Show the URI for SystemID or PublicID requested */
-  void resolveItem(QString /*URI*/);
+  void resolveItem(QString URI);
   
   /* Display a integer option value First parameter is QString()
      to indicate start of option list notification */
-  void intOptionItem(QString /* name*/, int /* value */);
+  void intOptionItem(QString name, int value);
 
   /* Display a string option value. First parameter is QString()
      to indicate start of option list notification */
-  void stringOptionItem(QString /* name*/, QString /* value */);
+  void stringOptionItem(QString name, QString value);
 
   /* Cause the names for source, data and output files to be reload from xsldbg */
   void fileDetailsChanged();
