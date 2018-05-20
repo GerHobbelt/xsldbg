@@ -14,9 +14,10 @@
   <xsl:variable name="fred" select="'man'"/>
 
   <xsl:template match="/">
-    <xsl:variable name="wilma">
-      <woman/>
-    </xsl:variable>
+    <xsl:variable name="wilma" select="'wilma'"/>
+    <xsl:variable name="barney" select="'barney'"/>
+    <xsl:variable name="fred">Fred</xsl:variable>    
+    <output>Here</output>
   </xsl:template>
 
 </xsl:stylesheet>
