@@ -42,7 +42,7 @@ static int printVariableValue = 0;
  *
  * @param payload : not used
  * @param data : not used
- * @param name : the variable name 
+ * @param name : the variable name
  */
 void *xslDbgShellPrintNames(void *payload,
                             void *data, xmlChar * name);
@@ -101,25 +101,25 @@ int xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir)
         list = xmlXPathEval(arg, ctxt->pctxt);
         if (list != NULL) {
             switch (list->type) {
-                case XPATH_NODESET:{
-                        int indx;
+            case XPATH_NODESET:{
+                int indx;
 
-                        for (indx = 0;
-                             indx < list->nodesetval->nodeNr; indx++) {
-                            if (dir)
-                                xmlShellList(ctxt, NULL,
-                                             list->nodesetval->
-                                             nodeTab[indx], NULL);
-                            else
-                                xmlShellList(ctxt, NULL,
-                                             list->nodesetval->
-                                             nodeTab[indx], NULL);
-                        }
-                        result = 1;
-                        break;
-                    }
-                default:
-                    xmlShellPrintXPathError(list->type, (char *) arg);
+                for (indx = 0;
+                     indx < list->nodesetval->nodeNr; indx++) {
+                    if (dir)
+                        xmlShellList(ctxt, NULL,
+                                     list->nodesetval->
+                                     nodeTab[indx], NULL);
+                    else
+                        xmlShellList(ctxt, NULL,
+                                     list->nodesetval->
+                                     nodeTab[indx], NULL);
+                }
+                result = 1;
+                break;
+            }
+            default:
+                xmlShellPrintXPathError(list->type, (char *) arg);
             }
             xmlXPathFreeObject(list);
         } else {
@@ -135,7 +135,7 @@ int xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir)
 void xslDbgCatToFile(xmlNodePtr node, FILE * file)
 {
     if (!node || !file)
-      return;
+        return;
 
     /* assume that HTML usage is enabled */
     if (node->doc->type == XML_HTML_DOCUMENT_NODE) {
@@ -144,7 +144,7 @@ void xslDbgCatToFile(xmlNodePtr node, FILE * file)
         else
             htmlNodeDumpFile(file, node->doc, node);
     } else if (node->type == XML_DOCUMENT_NODE) {
-        /* turn off encoding for the moment and just dump UTF-8 
+        /* turn off encoding for the moment and just dump UTF-8
          * which will be converted by xsldbgGeneralErrorFunc */
         xmlDocPtr doc = (xmlDocPtr) node;
         const xmlChar *encoding = doc->encoding;
@@ -156,139 +156,139 @@ void xslDbgCatToFile(xmlNodePtr node, FILE * file)
         xmlDocDump(file, (xmlDocPtr) node);
         doc->encoding = encoding;
     } else {
-	xmlElemDump(file, node->doc, node);
+        xmlElemDump(file, node->doc, node);
     }
 }
 
 
 
 static int printXPathObject(xmlXPathObjectPtr item, xmlChar* xPath){
-  int result = 0;
-  if (item){ 
-    switch (item->type) {
-    case XPATH_BOOLEAN:
-      xsltGenericError(xsltGenericErrorContext,
-		       "= %s\n%s\n", xPath,
-		       xmlBoolToText(item->boolval));
-      result = 1;
-      break;
+    int result = 0;
+    if (item){
+        switch (item->type) {
+        case XPATH_BOOLEAN:
+            xsltGenericError(xsltGenericErrorContext,
+                             "= %s\n%s\n", xPath,
+                             xmlBoolToText(item->boolval));
+            result = 1;
+            break;
 
-    case XPATH_NUMBER:
-      xsltGenericError(xsltGenericErrorContext,
-		       "= %s\n%0g\n", xPath, item->floatval);
-      result = 1;
-      break;
+        case XPATH_NUMBER:
+            xsltGenericError(xsltGenericErrorContext,
+                             "= %s\n%0g\n", xPath, item->floatval);
+            result = 1;
+            break;
 
-      /*  case XPATH_NODESET:*/
-    default:{
-	/* We may need to convert this XPath to a string,
-	   plus ensure that we print required the number of
-	   lines of text */
-	int indx;
+            /*  case XPATH_NODESET:*/
+        default:{
+            /* We may need to convert this XPath to a string,
+       plus ensure that we print required the number of
+       lines of text */
+            int indx;
 
-	QByteArray fileName = filesTempFileName(0);
-	FILE *file = NULL;
+            QByteArray fileName = filesTempFileName(0);
+            FILE *file = NULL;
 
-	if (fileName.isEmpty())
-	  break;
-	file = fopen(fileName.constData(), "w+");
-	if (!file) {
-	   xsldbgGenericErrorFunc(QObject::tr("Error: Unable to save temporary results to %1.\n").arg(xsldbgText(fileName)));
-	  break;
-	} else {
-	  fprintf(file, "= %s\n", xPath);
-	  switch(item->type){
+            if (fileName.isEmpty())
+                break;
+            file = fopen(fileName.constData(), "w+");
+            if (!file) {
+                xsldbgGenericErrorFunc(QObject::tr("Error: Unable to save temporary results to %1.\n").arg(xsldbgText(fileName)));
+                break;
+            } else {
+                fprintf(file, "= %s\n", xPath);
+                switch(item->type){
 
-	  case XPATH_NODESET:
-	    if (item->nodesetval){
-	      for (indx = 0;
-		   indx < item->nodesetval->nodeNr; indx++){ 
-				xslDbgCatToFile(item->nodesetval->
-						nodeTab[indx], file);
-	      }
-	    } else {
-	      xsldbgGenericErrorFunc(QObject::tr("Error: XPath %1 results in an empty Node Set.\n").arg(xsldbgText(xPath)));
-	    }
-	    break;
-			     
-	  case XPATH_STRING:
-	    if (item->stringval)
-	      fprintf(file, "\'%s\'", item->stringval);
-	    else
-	      fprintf(file, "%s", QObject::tr("NULL string value supplied.").toUtf8().constData());
-	    break;
-			     
-	  default:{
-	      xmlXPathObjectPtr tempObj = 
-		xmlXPathObjectCopy(item);
-	      if (tempObj)
-		tempObj = xmlXPathConvertString(tempObj);
-	      if (tempObj && tempObj->stringval){
-		fprintf(file, "%s", tempObj->stringval);
-	      }else{
-		fprintf(file, "%s", QObject::tr("Unable to convert XPath to string.").toUtf8().constData());	
-	      }
-	      if (tempObj)
-		xmlXPathFreeObject(tempObj);
-	    }
-	    break;
-	    fprintf(file,"\n");	    
+                case XPATH_NODESET:
+                    if (item->nodesetval){
+                        for (indx = 0;
+                             indx < item->nodesetval->nodeNr; indx++){
+                            xslDbgCatToFile(item->nodesetval->
+                                            nodeTab[indx], file);
+                        }
+                    } else {
+                        xsldbgGenericErrorFunc(QObject::tr("Error: XPath %1 results in an empty Node Set.\n").arg(xsldbgText(xPath)));
+                    }
+                    break;
 
-	  } /* inner switch statement  */
-	  if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
-	    fclose(file);
-	    file = NULL;
-	    /* send the data to application */
-	    notifyXsldbgApp(XSLDBG_MSG_FILEOUT, fileName);
-	  } else {
-	    int lineCount = 0, gdbModeEnabled = 0;
+                case XPATH_STRING:
+                    if (item->stringval)
+                        fprintf(file, "\'%s\'", item->stringval);
+                    else
+                        fprintf(file, "%s", QObject::tr("NULL string value supplied.").toUtf8().constData());
+                    break;
 
-	    /* save the value of option to speed things up
-	     * a bit */
-	    gdbModeEnabled =
-	      optionsGetIntOption(OPTIONS_GDB);
-	    rewind(file);
+                default:{
+                    xmlXPathObjectPtr tempObj =
+                            xmlXPathObjectCopy(item);
+                    if (tempObj)
+                        tempObj = xmlXPathConvertString(tempObj);
+                    if (tempObj && tempObj->stringval){
+                        fprintf(file, "%s", tempObj->stringval);
+                    }else{
+                        fprintf(file, "%s", QObject::tr("Unable to convert XPath to string.").toUtf8().constData());
+                    }
+                    if (tempObj)
+                        xmlXPathFreeObject(tempObj);
+                }
+                    break;
+                    fprintf(file,"\n");
 
-	    /* when gdb mode is enable then only print the first
-	     * GDB_LINES_TO_PRINT lines */
-	    while (!feof(file)) {
-	      if (fgets
-		  ((char *) nodeViewBuffer, sizeof(nodeViewBuffer),
-		   file))
-		xsltGenericError
-		  (xsltGenericErrorContext, "%s",
-		   nodeViewBuffer);
-	      if (gdbModeEnabled) {
-		lineCount++;
-		/* there is an overhead of two lines
-		 * when print expression values */
-		if (lineCount ==
-		    GDB_LINES_TO_PRINT + 2) {
-		  xsltGenericError
-		    (xsltGenericErrorContext,
-		     "...");
-		  break;
-		}
-	      }
-	    }
-	    xsltGenericError
-	      (xsltGenericErrorContext, "\n");
-	  }
-	  if (file)
-	    fclose(file);
-	  result = 1;
-	  break;
-	}
-      }
+                } /* inner switch statement  */
+                if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
+                    fclose(file);
+                    file = NULL;
+                    /* send the data to application */
+                    notifyXsldbgApp(XSLDBG_MSG_FILEOUT, fileName);
+                } else {
+                    int lineCount = 0, gdbModeEnabled = 0;
+
+                    /* save the value of option to speed things up
+         * a bit */
+                    gdbModeEnabled =
+                            optionsGetIntOption(OPTIONS_GDB);
+                    rewind(file);
+
+                    /* when gdb mode is enable then only print the first
+         * GDB_LINES_TO_PRINT lines */
+                    while (!feof(file)) {
+                        if (fgets
+                                ((char *) nodeViewBuffer, sizeof(nodeViewBuffer),
+                                 file))
+                            xsltGenericError
+                                    (xsltGenericErrorContext, "%s",
+                                     nodeViewBuffer);
+                        if (gdbModeEnabled) {
+                            lineCount++;
+                            /* there is an overhead of two lines
+         * when print expression values */
+                            if (lineCount ==
+                                    GDB_LINES_TO_PRINT + 2) {
+                                xsltGenericError
+                                        (xsltGenericErrorContext,
+                                         "...");
+                                break;
+                            }
+                        }
+                    }
+                    xsltGenericError
+                            (xsltGenericErrorContext, "\n");
+                }
+                if (file)
+                    fclose(file);
+                result = 1;
+                break;
+            }
+        }
+        }
     }
-  }
-  return result;
+    return result;
 }
 
 
 
 int xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
-               xmlChar * arg)
+                   xmlChar * arg)
 {
     xmlXPathObjectPtr list;
     int result = 0;
@@ -300,16 +300,16 @@ int xslDbgShellCat(xsltTransformContextPtr styleCtxt, xmlShellCtxtPtr ctxt,
 
     /* Do we quietly ingore style context errors */
     if (strncasecmp((char*)arg, QUIET_STR, strlen(QUIET_STR))== 0){
-      silenceCtxtErrors = true;	
-      arg = arg + strlen(QUIET_STR);
-      while (isspace(*arg)){
-	arg++;
-      }
+        silenceCtxtErrors = true;
+        arg = arg + strlen(QUIET_STR);
+        while (isspace(*arg)){
+            arg++;
+        }
     }
 
     if (!styleCtxt || !ctxt || !ctxt->node) {
-	if (!(!xsldbgReachedFirstTemplate && silenceCtxtErrors)) 
-        xsldbgGenericErrorFunc(QObject::tr("Warning: Unable to print expression. No stylesheet was properly loaded.\n"));
+        if (!(!xsldbgReachedFirstTemplate && silenceCtxtErrors))
+            xsldbgGenericErrorFunc(QObject::tr("Warning: Unable to print expression. No stylesheet was properly loaded.\n"));
         return 0;
     }
 
@@ -345,7 +345,7 @@ static int varCount;
 
 
 void * xslDbgShellPrintNames(void *payload,
-                      void *data, xmlChar * name)
+                             void *data, xmlChar * name)
 {
     Q_UNUSED(payload);
     Q_UNUSED(data);
@@ -354,28 +354,28 @@ void * xslDbgShellPrintNames(void *payload,
     } else if (payload && name) {
         xmlChar * fullQualifiedName = nodeViewBuffer;
         xsltStackElemPtr item = (xsltStackElemPtr)payload;
-	if (item->nameURI == NULL){
-	    snprintf((char*)fullQualifiedName, sizeof(nodeViewBuffer), "$%s", item->name);
-	}else{
-	    snprintf((char*)fullQualifiedName, sizeof(nodeViewBuffer), "$%s:%s",
-		     item->nameURI, item->name);
-	}
-        if (printVariableValue == 0){
-	    xsldbgGenericErrorFunc(QObject::tr(" Global %1\n").arg(xsldbgText(fullQualifiedName)));
+        if (item->nameURI == NULL){
+            snprintf((char*)fullQualifiedName, sizeof(nodeViewBuffer), "$%s", item->name);
         }else{
-	      if (item->computed == 1){
-	         xsldbgGenericErrorFunc(QObject::tr(" Global "));
-		 printXPathObject(item->value, fullQualifiedName);
-	      }else if (item->tree){
-	         xsldbgGenericErrorFunc(QObject::tr(" Global = %1\n").arg(xsldbgText(fullQualifiedName)));
-		 xslDbgCatToFile(item->tree, stderr);
-	      }else if (item->select){
-	         xsldbgGenericErrorFunc(QObject::tr(" Global = %1\n%2").arg(xsldbgText(fullQualifiedName)).arg(xsldbgText(item->select)));
-	      }else{
-		/* can't find a value give only a variable name an error message */
-		xsldbgGenericErrorFunc(QObject::tr(" Global = %1\n%2").arg(xsldbgText(fullQualifiedName)).arg(QObject::tr("Warning: No value assigned to variable.\n")));
-	      }
-	    xsltGenericError(xsltGenericErrorContext, "\n\032\032\n");
+            snprintf((char*)fullQualifiedName, sizeof(nodeViewBuffer), "$%s:%s",
+                     item->nameURI, item->name);
+        }
+        if (printVariableValue == 0){
+            xsldbgGenericErrorFunc(QObject::tr(" Global %1\n").arg(xsldbgText(fullQualifiedName)));
+        }else{
+            if (item->computed == 1){
+                xsldbgGenericErrorFunc(QObject::tr(" Global "));
+                printXPathObject(item->value, fullQualifiedName);
+            }else if (item->tree){
+                xsldbgGenericErrorFunc(QObject::tr(" Global = %1\n").arg(xsldbgText(fullQualifiedName)));
+                xslDbgCatToFile(item->tree, stderr);
+            }else if (item->select){
+                xsldbgGenericErrorFunc(QObject::tr(" Global = %1\n%2").arg(xsldbgText(fullQualifiedName)).arg(xsldbgText(item->select)));
+            }else{
+                /* can't find a value give only a variable name an error message */
+                xsldbgGenericErrorFunc(QObject::tr(" Global = %1\n%2").arg(xsldbgText(fullQualifiedName)).arg(QObject::tr("Warning: No value assigned to variable.\n")));
+            }
+            xsltGenericError(xsltGenericErrorContext, "\n\032\032\n");
         }
         varCount++;
     }
@@ -385,7 +385,7 @@ void * xslDbgShellPrintNames(void *payload,
 
 
 int xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
-                         VariableTypeEnum type)
+                             VariableTypeEnum type)
 {
     int result = 0;
     /* command argument to include both name and its value */
@@ -403,28 +403,29 @@ int xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
     }
 
     varCount = 0;
+    printVariableValue = 1;
     /* Do we quietly ingore style context errors */
     if (strncasecmp((char*)arg, QUIET_STR, strlen(QUIET_STR))== 0){
-      silenceCtxtErrors = true;	
-      arg = arg + strlen(QUIET_STR);
-      while (isspace(*arg)){
-	arg++;
-      }
+        silenceCtxtErrors = true;
+        printVariableValue = 0;
+        arg = arg + strlen(QUIET_STR);
+        while (isspace(*arg)){
+            arg++;
+        }
     }
 
     if (!styleCtxt) {
-	if (!(!xsldbgReachedFirstTemplate && silenceCtxtErrors)) 
-	    xsldbgGenericErrorFunc(QObject::tr("Error: Debugger has no files loaded or libxslt has not reached a template.\nTry reloading files or taking more steps.\n"));
+        if (!(!xsldbgReachedFirstTemplate && silenceCtxtErrors))
+            xsldbgGenericErrorFunc(QObject::tr("Error: Debugger has no files loaded or libxslt has not reached a template.\nTry reloading files or taking more steps.\n"));
         return result;
     }
 
     /* Do we include the name as well as its value */
     if (strncasecmp((char*)arg, FULLNAME_STR, strlen(FULLNAME_STR))== 0){
-      printVariableValue = 1;
-      arg = arg + strlen(FULLNAME_STR);
-      while (isspace(*arg)){
-	arg++;
-      }
+        arg = arg + strlen(FULLNAME_STR);
+        while (isspace(*arg)){
+            arg++;
+        }
     }
     if (arg[0] == 0) {
         /* list variables of type requested */
@@ -443,13 +444,13 @@ int xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
                                 (xmlHashScanner) xslDbgShellPrintNames,
                                 NULL);
                 result = 1;
-                /* ensure that the locals follow imediately after the 
+                /* ensure that the locals follow imediately after the
                  * globals when in gdb mode */
                 if (optionsGetIntOption(OPTIONS_GDB) == 0)
                     xsltGenericError(xsltGenericErrorContext, "\n");
             } else {
                 if (getThreadStatus() != XSLDBG_MSG_THREAD_RUN) {
-                    /* Don't show this message when running as a thread as it 
+                    /* Don't show this message when running as a thread as it
                      * is annoying */
                     xsldbgGenericErrorFunc(QObject::tr("Error: Libxslt has not initialized variables yet; try stepping to a template.\n"));
                 } else {
@@ -461,38 +462,38 @@ int xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
             }
         } else {
             /* list local variables */
-            if (styleCtxt->varsNr && styleCtxt->varsBase) {
-		if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
-		    notifyListStart(XSLDBG_MSG_LOCALVAR_CHANGED);
-		    for (int i = styleCtxt->varsNr; i > styleCtxt->varsBase; i--) {
+            if (styleCtxt->varsNr) {
+                if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
+                    notifyListStart(XSLDBG_MSG_LOCALVAR_CHANGED);
+                    for (int i = styleCtxt->varsNr; i > styleCtxt->varsBase; i--) {
                         xsltStackElemPtr item = styleCtxt->varsTab[i-1];
                         while (item) {
                             notifyListQueue(item);
                             item = item->next;
                         }
-		    }
-		    notifyListSend();
+                    }
+                    notifyListSend();
                 } else {
-		    xmlChar * fullQualifiedName = nodeViewBuffer;
-		    for (int i = styleCtxt->varsNr; i > styleCtxt->varsBase; i--) {
+                    xmlChar * fullQualifiedName = nodeViewBuffer;
+                    for (int i = styleCtxt->varsNr; i > styleCtxt->varsBase; i--) {
                         xsltStackElemPtr item = styleCtxt->varsTab[i-1];
-                        while (item) {		      
-                            if (item->name) {			     
+                        while (item) {
+                            if (item->name) {
                                 if (item->nameURI == NULL){
                                     snprintf((char*)fullQualifiedName, sizeof(nodeViewBuffer), "$%s",
-                                                    item->name);
+                                             item->name);
                                 }else{
                                     snprintf((char*)fullQualifiedName, sizeof(nodeViewBuffer), "$%s:%s",
-                                                    item->nameURI, item->name);
+                                             item->nameURI, item->name);
                                 }
                                 if (printVariableValue == 0){
-                                    xsldbgGenericErrorFunc(QObject::tr(" Local %1").arg(xsldbgText(fullQualifiedName)));
+                                    xsldbgGenericErrorFunc(QObject::tr(" Local %1\n").arg(xsldbgText(fullQualifiedName)));
                                 }else{
                                     if (item->computed == 1){
                                         xsldbgGenericErrorFunc(QObject::tr(" Local "));
                                         printXPathObject(item->value, fullQualifiedName);
                                     }else if (item->tree){
-                                        xsldbgGenericErrorFunc(QObject::tr(" Local = %1\n").arg(xsldbgText(fullQualifiedName)));
+                                        xsldbgGenericErrorFunc(QObject::tr(" Local = %1").arg(xsldbgText(fullQualifiedName)));
                                         xslDbgCatToFile(item->tree, stderr);
                                     }else if (item->select){
                                         xsldbgGenericErrorFunc(QObject::tr(" Local = %1\n%2").arg(xsldbgText(fullQualifiedName)).arg(xsldbgText(item->select)));
@@ -500,18 +501,18 @@ int xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
                                         /* can't find a value give only a variable name and an error */
                                         xsldbgGenericErrorFunc(QObject::tr(" Local = %1\n%2").arg(xsldbgText(fullQualifiedName)).arg(QObject::tr("Warning: No value assigned to variable.\n")));
                                     }
+                                    xsltGenericError(xsltGenericErrorContext, "\n\032\032\n");
                                 }
-                                xsltGenericError(xsltGenericErrorContext, "\n\032\032\n");
-                                }
+                            }
                             item = item->next;
                         }
-		    }
+                    }
                 }
                 result = 1;
                 xsltGenericError(xsltGenericErrorContext, "\n");
             } else {
                 if (getThreadStatus() != XSLDBG_MSG_THREAD_RUN) {
-                    /* Don't show this message when running as a thread as it 
+                    /* Don't show this message when running as a thread as it
                      * is annoying */
                     xsldbgGenericErrorFunc(QObject::tr("Error: Libxslt has not initialized variables yet; try stepping past the xsl:param elements in the template.\n"));
                 } else {
@@ -526,13 +527,13 @@ int xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
         /* Display the value of variable */
         if (arg[0] == '$') {
             printXPathObject(xmlXPathEval(arg, styleCtxt->xpathCtxt), arg);
-	    xsltGenericError(xsltGenericErrorContext, "\032\032\n");
+            xsltGenericError(xsltGenericErrorContext, "\032\032\n");
         } else {
             xmlStrCpy(nodeViewBuffer, "$");
             xmlStrCat(nodeViewBuffer, arg);
-	    printXPathObject(xmlXPathEval((xmlChar*)nodeViewBuffer,styleCtxt->xpathCtxt),
-			     (xmlChar*)nodeViewBuffer);
-	    xsltGenericError(xsltGenericErrorContext, "\032\032\n");
+            printXPathObject(xmlXPathEval((xmlChar*)nodeViewBuffer,styleCtxt->xpathCtxt),
+                             (xmlChar*)nodeViewBuffer);
+            xsltGenericError(xsltGenericErrorContext, "\032\032\n");
         }
 
     }
