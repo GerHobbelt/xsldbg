@@ -1,3 +1,12 @@
+Keith Isdale 23rd May 2018 <keithisdale@gmail.com>
+    4.6.0
+    Fix logic for finding local LIBXSLT variables
+    Remove build support for Qt3
+    Fixed data for test5, valid XML documents must have encoding and only one root node
+    If building code for GUI application don't define DOCS_PATH macro
+    Fixed logic in starting xsldbg as worker thread: Ensure that debugger is in initialized state when past 'Run' state
+    Update my old email addresses in below change log to keithisdale@gmail.com
+
 Keith Isdale 21st April 2018 <keithisdale@gmail.com>
   Version 4.5.1
   Build system cleanup, includes updates to create dist packages on *nix via makedist.sh
@@ -17,7 +26,7 @@ Keith Isdale 15th April 2018 <keithisdale@gmail.com>
   Improve xslt parameter removal better
   Warn if unable to fully write xsl transformation result output 
   
-Keith Isdale 28th Sept 2009 <keith.isdale@kdewebdev.org>
+Keith Isdale 28th Sept 2009 <keithisdale@gmail.com>
   Version 4.4.1
   Backport changes from KDE repository
   Remove dependancy on autoconf instead use qmake .pro files
@@ -28,7 +37,7 @@ Keith Isdale 28th Sept 2009 <keith.isdale@kdewebdev.org>
        command line
 
 
-Keith Isdale 1st Jan 2004 <k_isdale@tpg.com.au>
+Keith Isdale 1st Jan 2004 <keithisdale@gmail.com>
   Vesion 3.1.8
   Disable DocBook SGML parsing as it is depreciated by libxml-2.6.x : see xsldbg.h IN_LIBXML
   Sort the printing of breakpoints in order of breakpoint ID. 
@@ -37,16 +46,16 @@ Keith Isdale 1st Jan 2004 <k_isdale@tpg.com.au>
     o required updating tests to take sorted breakpoints into account
     o sorting has not been used when running xsldbg as a thread to avoid side effects on qxsldbg and kxsldgb.  
 
-Keith Isdale 30 Nov 2003 <k_isdale@tpg.com.au>
+Keith Isdale 30 Nov 2003 <keithisdale@gmail.com>
   Update SAX usage to handle libxml-2.6.0: Usage of libxml-2.6.3 or the libxml module from GNOME cvs is 
 	required to avoid segfaults due encoding problems in libxml
   Set encoding as UTF-8 in XML files used in automated tests
  
-Keith Isdale 26 July 2003 <k_isdale@tpg.com.au>
+Keith Isdale 26 July 2003 <keithisdale@gmail.com>
   Detect the lixbml version at run time rather than compile time, so that can use different
     XML entity handling code to suit the installed libxml
 
-Keith Isdale 19 July 2003 <k_isdale@tpg.com.au>
+Keith Isdale 19 July 2003 <keithisdale@gmail.com>
   Vesion 3.1.7
   Remove old method of finding line numbers from XML documents as it causes conflicts  
   Fix bug in "run' behavior, 
@@ -57,7 +66,7 @@ Keith Isdale 19 July 2003 <k_isdale@tpg.com.au>
   Win32 specific compiler fixes to suit changes made to libxml2.dll
      updated src/Makefile.msvc to make it more useful	
  
-Keith Isdale 05-17 July 2003 <k_isdale@tpg.com.au>
+Keith Isdale 05-17 July 2003 <keithisdale@gmail.com>
   Version 3.1.6
   Mac OS X fixes 
     o if needed use glibtoolize not libtoolize
@@ -65,7 +74,7 @@ Keith Isdale 05-17 July 2003 <k_isdale@tpg.com.au>
   Fix cause of crash with newer versions of libxml/libxslt when the -o command line argument is specified
   Handle change in libxml behaviour which stops breakpoints being set on XML data ( caused test10 to fail)
 
-Keith Isdale 29 June 2003 <k_isdale@tpg.com.au>
+Keith Isdale 29 June 2003 <keithisdale@gmail.com>
   Version 3.1.5
   Fix bug that can cause the warning message not to display when adding a existing template breakpoint
     - change test2 to suit
@@ -79,7 +88,7 @@ Keith Isdale 29 June 2003 <k_isdale@tpg.com.au>
 	    that xsldbg should print out the extra information needed by kdbg 
   Documentation bug fixes
 
-Keith Isdale 22 June 2003 <k_isdale@tpg.com.au>
+Keith Isdale 22 June 2003 <keithisdale@gmail.com>
    Rename xsldbg.suse.8.1.spec to xsldbg.suse.8.0.spec
    Convert xsldbg.spec to be a GCC 3.2, i386, spec file 
    Minor code clean up get rid of some warnings
@@ -90,14 +99,14 @@ Keith Isdale 22 June 2003 <k_isdale@tpg.com.au>
     Fix crash bug when adding a template breakpoint
     Started support for orphaned template breakpoints
 
-Keith Isdale 15 June 2003 <k_isdale@tpg.com.au>
+Keith Isdale 15 June 2003 <keithisdale@gmail.com>
    Fixed the specification for test2. All xsldbg automatic tests now pass  
    Update spec files to new vesion
    Updated configure.in, Makefile.am, spec files to make use of explicit specification of KDE, Qt and GMOME dir's (handy during RPM builds)
    Fixed KDE help centre docs to now they are found in help:/xsldbg/index.html.
    Added a xsldbg.desktop file for KDE which is placed into Development menu
 
-Keith Isdale 1st,9th,14,15 June 2003 <k_isdale@tpg.com.au>
+Keith Isdale 1st,9th,14,15 June 2003 <keithisdale@gmail.com>
   Version 3.1.4
   Completed implementation to support orphaned breakpoints for KDbg 1.9.0, and when in xsldbg is running in gdb compatbility mode
   This means that you can set a breakpoint at a line number for a file that has not been loaded yet 
@@ -114,7 +123,7 @@ Keith Isdale 1st,9th,14,15 June 2003 <k_isdale@tpg.com.au>
    Fixed the specification for and test10
 
 
-Keith Isdale 31st May 2003 <k_isdale@tpg.com.au>
+Keith Isdale 31st May 2003 <keithisdale@gmail.com>
   Version 3.1.3
   Implement suggestion made by Hannes
 	- add "autorestart" option to xsldbg. When this boolean option is 
@@ -125,49 +134,49 @@ Keith Isdale 31st May 2003 <k_isdale@tpg.com.au>
 
 		
 
-Keith Isdale 22nd May 2003 <k_isdale@tpg.com.au>
+Keith Isdale 22nd May 2003 <keithisdale@gmail.com>
   Minor documentation updates.
   First try a creating a xsldbg.spec (GCC 2.9.5 based systems ie Suse8.0) , comments welcome
   First try a creating a xsldbg.spec (GCC 3.x based systems ie Suse8.1) , comments welcome
   Fix bug stoping compilation using GCC 3.x
 
-Keith Isdale 22nd May 2003 <k_isdale@tpg.com.au>
+Keith Isdale 22nd May 2003 <keithisdale@gmail.com>
   Version 3.1.2
   When gdb mode is enabled print out the details of the breakpoint- required for KDbg 1.9.0 
 
-Keith Isdale 25th March 2003 <k_isdale@tpg.com.au>
+Keith Isdale 25th March 2003 <keithisdale@gmail.com>
    Update configure.in to support newer versions of auto* by getting rid of acconfig.h and friends
  		
-Keith Isdale 9th March 2003 <k_isdale@tpg.com.au>
+Keith Isdale 9th March 2003 <keithisdale@gmail.com>
   Be more descriptive about QTDIR and KDEDIR   
   
-Keith Isdale 16th  Feb 2003 <k_isdale@tpg.com.au>
+Keith Isdale 16th  Feb 2003 <keithisdale@gmail.com>
   Update web site address for the download of Igor's Win32 binaries 
   Fix compile errors under certain configurations 
 
-Keith Isdale 7th  Dec 2002 <k_isdale@tpg.com.au>
+Keith Isdale 7th  Dec 2002 <keithisdale@gmail.com>
    Created "pro" files to aid creation of xsldbg under win32
    See README for more information  
    Version 3.1.1
 
-Keith Isdale 14th Sepg 2002 <k_isdale@tpg.com.au>
+Keith Isdale 14th Sepg 2002 <keithisdale@gmail.com>
   Requires/strongly recommend using libxslt-1.0.20 to avoid bug in libxslt that causes segfaults in xsldbg	
 
-Keith Isdale 21 Aug 2002 <k_isdale@tpg.com.au>
+Keith Isdale 21 Aug 2002 <keithisdale@gmail.com>
   Received feedback from Igor, applied patch to fix win32 specific 
 	 problem  (use strnicmp not strncasecmp)
   Retagged cvs. Started on full release
 	
 	
-Keith Isdale 11 Aug 2002 <k_isdale@tpg.com.au>
+Keith Isdale 11 Aug 2002 <keithisdale@gmail.com>
    Version 3.1.0
    Fixed segfault in printing xPaths when in running xsldbg as a thread
 	
-Keith Isdale 10 Aug 2002 <k_isdale@tpg.com.au>
+Keith Isdale 10 Aug 2002 <keithisdale@gmail.com>
    Fixed typo in when using RUNTEST10 in configure.in
    Fixed ordering of tests in "test10" so that it passes (was ordered by file name)	   
 	
-Keith Isdale 4 Aug 2002 <k_isdale@tpg.com.au>
+Keith Isdale 4 Aug 2002 <keithisdale@gmail.com>
       Version 3.0.9
        Fixed handling of stopping xsldbg when tracing or walking 
 	 and running xsldbg as a thread
@@ -177,7 +186,7 @@ Keith Isdale 4 Aug 2002 <k_isdale@tpg.com.au>
 		if it is not present skip test 10 
 	
 	
-Keith Isdale 31 July 2002 <k_isdale@tpg.com.au>
+Keith Isdale 31 July 2002 <keithisdale@gmail.com>
 	Version 3.0.8
 	Fixed bugs found by Robert JACOLIN, in
 	    xsldbg.h check for either WITH_XSLT_DEBUGGER or WITH_DEBUGGER
@@ -199,19 +208,19 @@ Keith Isdale 31 July 2002 <k_isdale@tpg.com.au>
 	    system does replace them correctly. 
 	
 	
-Keith Isdale 31 July 2002 <k_isdale@tpg.com.au>
+Keith Isdale 31 July 2002 <keithisdale@gmail.com>
 	Version 3.0.7
 	Added commands "addwatch", "showwatch" and "delwatch"
 		to support watching of expressions
 	
-Keith Isdale 30 July 2002 <k_isdale@tpg.com.au>	
+Keith Isdale 30 July 2002 <keithisdale@gmail.com>	
 	Version 3.0.6
 	Fix memory leaks as detected by valgrind
 	Fixed printing of intermidate location when executing a "next"
 	  command
 	Enabled repeating of last command with <ENTER> when in gdb mode
 	
-Keith Isdale 29 July 2002 <k_isdale@tpg.com.au>	
+Keith Isdale 29 July 2002 <keithisdale@gmail.com>	
 	Version 3.0.5
 	Added "next" command 
 	   o after email from Hannes I had the idea of how a "next" command
@@ -220,7 +229,7 @@ Keith Isdale 29 July 2002 <k_isdale@tpg.com.au>
 	Fix the output of tty command when in gdb mode
 	
 	
-Keith Isdale 28 July 2002 <k_isdale@tpg.com.au>	
+Keith Isdale 28 July 2002 <keithisdale@gmail.com>	
 	Version 3.0.4
 	Fixed output of cat command so that expressions that
 	  result in an string have surrounding single quotes
@@ -236,12 +245,12 @@ Keith Isdale 28 July 2002 <k_isdale@tpg.com.au>
 		"show" command to suit
 	
 	
-Keith Isdale 26 July 2002 <k_isdale@tpg.com.au>	
+Keith Isdale 26 July 2002 <keithisdale@gmail.com>	
 	Version 3.0.3
 	Fixed typos so that "Error :" to become "Error:"
 	Fixed poutput of templates command when running xsldbg as a thread
 	
-Keith Isdale 26 July 2002 <k_isdale@tpg.com.au>
+Keith Isdale 26 July 2002 <keithisdale@gmail.com>
         Version 3.0.2
 	Changed break command so that if "" is provided as an
 	      template name then we are matching only a mode name.  eg.
@@ -251,7 +260,7 @@ Keith Isdale 26 July 2002 <k_isdale@tpg.com.au>
 	
 		
 	
-Keith Isdale 25 July 2002 <k_isdale@tpg.com.au>
+Keith Isdale 25 July 2002 <keithisdale@gmail.com>
 	Version 3.0.1
 	Added support for templates with a mode
 	Break compatability with previous versions due to problems with 
@@ -283,25 +292,25 @@ Keith Isdale 25 July 2002 <k_isdale@tpg.com.au>
 			
 	
 	
-Keith Isdale 13th July 2002 <k_isdale@tpg.com.au>
+Keith Isdale 13th July 2002 <keithisdale@gmail.com>
       	Version 2.2.3
 	Fixed printing of values for xpath expressions
 	Try to guess the location of docbook xsl when provided a docbook prefix
 	
-Keith Isdale 7th July 2002 <k_isdale@tpg.com.au>
+Keith Isdale 7th July 2002 <keithisdale@gmail.com>
 	Version 2.2.2
 	Fixed addparam command to update parameter value if it
 	   already has been added
 	Fixed typos in error messages
 	Removed WITH_DEBUGGER macro from acconfig.h
 	
-Keith Isdale 26th June 2002 <k_isdale@tpg.com.au>
+Keith Isdale 26th June 2002 <keithisdale@gmail.com>
 	Added "-f" option to globals and locals command that when used ot 
 	  will  print out the values as well as variable names.
 	Fixed globals and locals command to print fully qualified 
 	  variable names eg "xsl:myvar"
 	
-Keith Isdale 21st April 2002 <k_isdale@tpg.com.au>
+Keith Isdale 21st April 2002 <keithisdale@gmail.com>
   Version 2.1.9 
   Win32 specific udates:
 	o  Added win32/Makefile.msvc, a  make file for building under MSVC 
@@ -311,7 +320,7 @@ Keith Isdale 21st April 2002 <k_isdale@tpg.com.au>
 	o  Fixed bug reported by Igor that caused xsldbg to crash 
 
 	
-Keith Isdale 07th April 2002 <k_isdale@tpg.com.au>
+Keith Isdale 07th April 2002 <keithisdale@gmail.com>
   Version 2.1.8
   Merge changes due to qxsldbg for WIN32 
   Added win32/dsp_6_0 for building xsldbg under VC6.0 with 
@@ -320,7 +329,7 @@ Keith Isdale 07th April 2002 <k_isdale@tpg.com.au>
   Fixed display of profiling output under qxsldg
   
 	
-Keith Isdale 05th April 2002 <k_isdale@tpg.com.au>
+Keith Isdale 05th April 2002 <keithisdale@gmail.com>
  Version 2.1.7
  Changes needed by qtxsldbg under WIN32
     Updated xsldbgwin32config.h to support dll declares
@@ -331,7 +340,7 @@ Keith Isdale 05th April 2002 <k_isdale@tpg.com.au>
   cvs remove from src/libqtnotifier
      qnotifer2.h xsldbgevent.h xsldbgdebuggerbase.h	
 	
-Keith Isdale 30th March 2002 <k_isdale@tpg.com.au>
+Keith Isdale 30th March 2002 <keithisdale@gmail.com>
   Version 2.1.6 	
   Fixed bug: Enable command may crash if file name provided 
 	is not found. ( breakpoint_cmds.c )
@@ -345,7 +354,7 @@ Keith Isdale 30th March 2002 <k_isdale@tpg.com.au>
 
  		
 	
-Keith Isdale 1st/2nd/3rd Feb 2002 <k_isdale@tpg.com.au>
+Keith Isdale 1st/2nd/3rd Feb 2002 <keithisdale@gmail.com>
    Version 2.1.5
    Changes needed to get xsldbg work under Cygwin
 	Seems to require development versions of autoconf and automake
@@ -371,7 +380,7 @@ Keith Isdale 1st/2nd/3rd Feb 2002 <k_isdale@tpg.com.au>
 	xsldbgconf.h*
 
 	
-Keith Isdale 24rd Feb 2002 <k_isdale@tpg.com.au>
+Keith Isdale 24rd Feb 2002 <keithisdale@gmail.com>
    Version 2.1.4
    Created perl script to run most of the tests in tests directory
 	This should be able to be reused/modified for platforms other than *nix
@@ -386,7 +395,7 @@ Keith Isdale 24rd Feb 2002 <k_isdale@tpg.com.au>
    Added further details to tests in tests/*
 
 	
-Keith Isdale 23rd Feb 2002 <k_isdale@tpg.com.au>
+Keith Isdale 23rd Feb 2002 <keithisdale@gmail.com>
    Version 2.1.3
    Added support for output file to be specified as "file://" protocol URI
 	Created filesURItoFileName (files.c) and xslDbgShellOutput (file_cmds.c)
@@ -398,7 +407,7 @@ Keith Isdale 23rd Feb 2002 <k_isdale@tpg.com.au>
    Simplify filesLoadCatalogs (files.c), updated files effected (xsldbg.c and  file_cmds.c)
    Updated docs/en/xsldoc.xml to suit changes
 	
-Keith Isdale 22th Feb 2002 <k_isdale@tpg.com.au>	
+Keith Isdale 22th Feb 2002 <keithisdale@gmail.com>	
    Version 2.1.2		
    Applied patches by Justin
    Added searchresultspath option (OPTIONS_SEARCH_RESULTS_PATH), see setoption command
@@ -415,7 +424,7 @@ Keith Isdale 22th Feb 2002 <k_isdale@tpg.com.au>
 !Todo!
  cvs add tests/subdir tests/subdir/Makefile.am tests/subdir/test14.xsl tests/subdir/test14.xml tests/test13.xsl tests/test13.xml
 	
-Keith Isdale 20th Feb 2002 <k_isdale@tpg.com.au>	
+Keith Isdale 20th Feb 2002 <keithisdale@gmail.com>	
   Version 2.1.1		
   Found the WIN32 requires output to be flushed before any input
 	o added fflush to xslDbgWalkContinue (debugXSL.c) 
@@ -442,14 +451,14 @@ Keith Isdale 20th Feb 2002 <k_isdale@tpg.com.au>
   cvs add docs/en/website/*.png
 	
 	
-Keith Isdale 19th Feb 2002 <k_isdale@tpg.com.au>
+Keith Isdale 19th Feb 2002 <keithisdale@gmail.com>
    Version 2.1.0
    Added missing line feeds to some error messages
    Found that win32's chdir fails if candidate path has trailing \\
 	In changeDir strip off extra PATHCHARS (files.c)
 
 	
-Keith Isdale 18 Feb 2002 <k_isdale@tpg.com.au>
+Keith Isdale 18 Feb 2002 <keithisdale@gmail.com>
   Version 2.0.9
   Changes requested to suit upcomming KDbg release 
      o Disabled the echoing enter commands in gdb mode
@@ -479,7 +488,7 @@ Keith Isdale 18 Feb 2002 <k_isdale@tpg.com.au>
 
  cvs add win32/Makefile.am win32/dsp/Makefile.am
 	
-Keith Isdale 17 Feb 2002 <k_isdale@tpg.com.au>
+Keith Isdale 17 Feb 2002 <keithisdale@gmail.com>
   Version 2.0.8
   Bug fixes suggested by Hannes
 	o  Applied patches to fix the order of values in 
@@ -507,7 +516,7 @@ Keith Isdale 17 Feb 2002 <k_isdale@tpg.com.au>
 	
 	
 	
-Keith Isdale 15 Feb 2002 <k_isdale@tpg.com.au>
+Keith Isdale 15 Feb 2002 <keithisdale@gmail.com>
   Version 2.0.7
   Advised by Hannes that the Makefile.am's were broken :-(
   Read libtool docs again. 
@@ -524,13 +533,13 @@ Keith Isdale 15 Feb 2002 <k_isdale@tpg.com.au>
 	tracing or walking through stylesheet
 	 
 	
-Keith Isdale 12 Feb 2002 <k_isdale@tpg.com.au>
+Keith Isdale 12 Feb 2002 <keithisdale@gmail.com>
   Version 2.0.6
   Depreciated breakPointSetActiveBreakPoint and breakPointGetActiveBreakPoint
 	They now do nothing, removes bug in printing current location and when gdb
 	mode is enabled
 	
-Keith Isdale 10 Feb 2002 <k_isdale@tpg.com.au>
+Keith Isdale 10 Feb 2002 <keithisdale@gmail.com>
   Version 2.0.5	
   Copied Igor's MSVC project files to win32\dsp\
 	As normal user may need to change paths for location of 
@@ -559,16 +568,16 @@ Keith Isdale 10 Feb 2002 <k_isdale@tpg.com.au>
 	 win32/dsp/xsldbg.dsw win32/dsp/libxsldbg.dsp
  cvs remove xsldbg.kdevprj  and xsldbg.kdevses
 	
-Keith Isdale 9 Feb 2002 <k_isdale@tpg.com.au>
+Keith Isdale 9 Feb 2002 <keithisdale@gmail.com>
   Version 2.0.4
   Tidy the files docs/en/*.dtd
-  Put better comments in docs/en///*.xsl to suit xsltdoc.xsl by Fabrice Desré 
+  Put better comments in docs/en///*.xsl to suit xsltdoc.xsl by Fabrice Desr  
   Simplified processing of optional aurguments to xsldbg
 	added new API optionsGetOptionID and optionsGetOptionName to options.[ch]
 	updated xsldbg.c and option_cmds.c to make use of these functions
   Updated usage function in xsldbg.c to describe newly addded options
   Fixed typo in docs/en/catalog.xml (changed comfig to config)
-  Added reference to XML/XSL documentation tool by Fabrice Desré 
+  Added reference to XML/XSL documentation tool by Fabrice Desr  
   Sent email to Waldo about xsldbg's notification system
   Fixed definition of TIMESTAMP in xsldbgwin32config.h.in to use __DATE__
   Updated version number of risc os port
@@ -587,7 +596,7 @@ Keith Isdale 9 Feb 2002 <k_isdale@tpg.com.au>
 
  cvs add search_v1_1.dtd
 	
-Keith Isdale 7 Feb 2002 <k_isdale@tpg.com.au>
+Keith Isdale 7 Feb 2002 <keithisdale@gmail.com>
  Version 2.0.3
  Added OPTONS_UTF8_INPUT, Made decoding input optional which allows a program
 	to send UTF-8 to xsldbg. Added "utf8input" to list of known options
@@ -602,7 +611,7 @@ Keith Isdale 7 Feb 2002 <k_isdale@tpg.com.au>
  cvs remove dead config files xsldbwing* 
  cvs add xsldbgwin32config.h and xsldbgwin32config.h.in
 	
-Keith Isdale 6 Feb 2002 <k_isdale@tpg.com.au>
+Keith Isdale 6 Feb 2002 <keithisdale@gmail.com>
   Version 2.0.2
   Fixed includes for libqtnotifier  (missed moc file)
   Fixed Makefile.am for libqtnotifier (missed generation of moc file)
@@ -614,7 +623,7 @@ Keith Isdale 6 Feb 2002 <k_isdale@tpg.com.au>
 	and understand.
 	
 	
-Keith Isdale 5 Feb 2002 <k_isdale@tpg.com.au>
+Keith Isdale 5 Feb 2002 <keithisdale@gmail.com>
   Fixed printing of local and globals to have a space before them
 	ie " Local <VARIABLE_NAME>"
   Fixed set command to be consistant with "setoption" command
@@ -635,7 +644,7 @@ Keith Isdale 5 Feb 2002 <k_isdale@tpg.com.au>
  Updated xsldbgwin32config.h via xsldbgwin32config.h.in and running ./config.status
 	
 	
-Keith Isdale 2 Feb 2002 <k_isdale@tpg.com.au>
+Keith Isdale 2 Feb 2002 <keithisdale@gmail.com>
   Created win32 project file for MSVC  (still broken)
   Added src/libxsldbg/xsldbgwin32config.h.in
 	src/xsldbgwin32* is to be removed from cvs
@@ -645,7 +654,7 @@ Keith Isdale 2 Feb 2002 <k_isdale@tpg.com.au>
   Fixed typo of #include "stdlib.h" to #include <stdlib.h>
   Made first argument in findTemplateNode to be non const 
 	
-Keith Isdale 1 Feb 2002 <k_isdale@tpg.com.au>
+Keith Isdale 1 Feb 2002 <keithisdale@gmail.com>
   Version 2.0.1		
   Continue source code clean up 	
 	Fixed the name of structure ParameterItem to be parameterItem
@@ -676,7 +685,7 @@ Keith Isdale 1 Feb 2002 <k_isdale@tpg.com.au>
 		help_*.c options_*.c files_*.c option_cmds.c
 	o removed src/libxsldbg/dbg*.c
 	
-Keith Isdale 31 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 31 Jan 2002 <keithisdale@gmail.com>
   Version 2.0.0
   Synchronize function declaration documentation in header and implementation files
   Rename "module level" functions to follow the form of 
@@ -695,7 +704,7 @@ Keith Isdale 31 Jan 2002 <k_isdale@tpg.com.au>
 	
 	
 	
-Keith Isdale 29 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 29 Jan 2002 <keithisdale@gmail.com>
    Added platform specific interface optionsConfigFileName to 
 	options.h
    Added optionsRead and optionsNode functions to read/save options	
@@ -708,7 +717,7 @@ Keith Isdale 29 Jan 2002 <k_isdale@tpg.com.au>
    Commited new files to cvs
    Fixed response to cd command when use xsldbg as a thread	
 	
-Keith Isdale 28 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 28 Jan 2002 <keithisdale@gmail.com>
    Version 1.0.2
    Added support for encoding output to standard output ( encoding command )
    Added auto detection of encodinge ( autoencode option )
@@ -717,7 +726,7 @@ Keith Isdale 28 Jan 2002 <k_isdale@tpg.com.au>
    Fixed formatting of several error messages
    Fixed disable command to always disable the breakpoint
 	
-Keith Isdale 27 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 27 Jan 2002 <keithisdale@gmail.com>
    Version 1.0.1
    Added suport for quoted values to splitstring function in debugXSL.c so you now 
 	can do something like
@@ -726,7 +735,7 @@ Keith Isdale 27 Jan 2002 <k_isdale@tpg.com.au>
    Updates xsldoc.xml to suit
    Merged in changes suggested by Justin to suit risc os   
 	
-Keith Isdale 24 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 24 Jan 2002 <keithisdale@gmail.com>
    Version 1.0.0
    Changed default "data" file name for  searchQuery to searchresults.xml
 	Set the "base path" for temporary and output files to current stylesheet path
@@ -738,18 +747,18 @@ Keith Isdale 24 Jan 2002 <k_isdale@tpg.com.au>
    Forward output when tracing to terminalIO or message window	
    Fixed usaged of readline in simpleio.c
 	
-Keith Isdale 23 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 23 Jan 2002 <keithisdale@gmail.com>
    Changed meaning of data for XSLDBG_MSG_FILEOUT message to mean 
 	a file name
         Removed filesCreateTempFile function, added filesTempFileName function
 	
-Keith Isdale 22 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 22 Jan 2002 <keithisdale@gmail.com>
    Version 0.9.9
    Fix bugs thread notifiation
    Changed xsldbg.c so profile and debug output can go to the 
 	target document
 	
-Keith Isdale 21 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 21 Jan 2002 <keithisdale@gmail.com>
   Fixed bugs in using --catalogs and --xinclude options
   Added a means to notify app of a list of message increasing
 	its speed because of low transaction rate to application
@@ -760,7 +769,7 @@ Keith Isdale 21 Jan 2002 <k_isdale@tpg.com.au>
 	filesGetBaseUri
 	
 		
-Keith Isdale 20 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 20 Jan 2002 <keithisdale@gmail.com>
   Fixed the use of an array for integer options
   Added setoption command and updated main logic in debugXSL.c to suit, 
 	as well as  updated cmds.h and xmldoc.xml, added a 
@@ -770,28 +779,28 @@ Keith Isdale 20 Jan 2002 <k_isdale@tpg.com.au>
 
 	
 	
-Keith Isdale 19 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 19 Jan 2002 <keithisdale@gmail.com>
   Added entities command to print out list of external entites 
 	included in document
  Added system and public command to show what system file and public ID
 	maps to via the current xml catalog
 	
-Keith Isdale 18 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 18 Jan 2002 <keithisdale@gmail.com>
   Fix bugs in validData and validSource to validiate if
 	stylesheet, document has been loaded
 	
-Keith Isdale 17 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 17 Jan 2002 <keithisdale@gmail.com>
   Added support for notifying of result of local/global variables,
  	  stylesheets and templates 
   Redirected error output from libxml to as a text message notification
 	to application	when running as xsldbg a thread
 	
-Keith Isdale 13 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 13 Jan 2002 <keithisdale@gmail.com>
   Started work on redirecting stdout to the application when running as 
 	thread
 	
 	
-Keith Isdale 12 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 12 Jan 2002 <keithisdale@gmail.com>
   Second attempt at fixing included xml file bug
   Stripped out garbage relating to other method tried
   Added functions filesSetBaseUri,  filesGetBaseUri and modified 
@@ -800,29 +809,29 @@ Keith Isdale 12 Jan 2002 <k_isdale@tpg.com.au>
   Fixed bugs in gnome/gnome-xml/tree.c 	
 	
 	
-Keith Isdale 6 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 6 Jan 2002 <keithisdale@gmail.com>
    VERSION 0.9.8
    Made a patch for libxml to fix problems with debugging xml included files
    Added support functions for src/libxsldbg/files.c
    Fixed bug in changeDir ( /src/libxslt/files.c ) to make use "~" shortcut
 	
-Keith Isdale 6 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 6 Jan 2002 <keithisdale@gmail.com>
    Fixed the guessing of file names when using break, delete, enable commands
 
-Keith Isdale 5 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 5 Jan 2002 <keithisdale@gmail.com>
   Added XSLDBG_MSG_PARAMETER_CHANGED message to notifier, modified
 	param_cmds to make use of it. A notify message is sent when all parameters
 	are deleted and when a parameter is added, or when "showparam"  command is 
 	used
  		
-Keith Isdale 3 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 3 Jan 2002 <keithisdale@gmail.com>
   Added XsldbgCommandStateEnum to xsldbgmsg.h, changed xsldbgErrorMsg to use these values
   Added messageFileName to xsldbgErrorMsg to be used for larger messages
   Added messageBuffer to debugXSL.c use for small nofify messages
 
 	
 	
-Keith Isdale 2 Jan 2002 <k_isdale@tpg.com.au>
+Keith Isdale 2 Jan 2002 <keithisdale@gmail.com>
   Added output command, updated xsldoc.xml, cmds.h, debugXSL.c to suit 
   Fix bug in templates command 
 	- added a print of new line before printing templates
@@ -832,7 +841,7 @@ Keith Isdale 2 Jan 2002 <k_isdale@tpg.com.au>
   Fixed test/seachTest.c to use varaibles named "info" instead of 
 	"searchInf" which was causing errors
 	
-Keith Isdale 30 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 30 Dec 2001 <keithisdale@gmail.com>
   Added src/libxsldbg/variable_cmds.c	to handle setting variable values
   Added "set" to list of commands, added DEBUG_SET_CMD to list of command ID's 
   Added variableSearchData to xslsearch.h and updated searchNewInfo, searchFreeInfo
@@ -840,7 +849,7 @@ Keith Isdale 30 Dec 2001 <k_isdale@tpg.com.au>
   Modified libxslt to enable this to work
 	
 	
-Keith Isdale 27 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 27 Dec 2001 <keithisdale@gmail.com>
 	Added cmds.h and moves command id declarations to cmds.h
      To be added to cvs
   Updated all top "command functions" to return a 1 if successful, 0 otherwise
@@ -851,7 +860,7 @@ Keith Isdale 27 Dec 2001 <k_isdale@tpg.com.au>
     Created threadUsage.html
 
 
-Keith Isdale 22 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 22 Dec 2001 <keithisdale@gmail.com>
   Second attempt at a mechanism for a thread of xsldbg via a KPart
 	created src/libqtnotifier/*
 	moved xsldbgnotifier as /src/libqcnotifier/qtnotifier.cpp
@@ -860,7 +869,7 @@ Keith Isdale 22 Dec 2001 <k_isdale@tpg.com.au>
    Notification events now being received by the KPart. 
 	Now to fix the details of notification messages
 	
-Keith Isdale 21 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 21 Dec 2001 <keithisdale@gmail.com>
    Converted most of xsldbg to be a library in src/libxsldbg/*
       	added src/main.c to allow a command line acess to xsldbg
    Added xsldbg thread support 
@@ -869,18 +878,18 @@ Keith Isdale 21 Dec 2001 <k_isdale@tpg.com.au>
 	src/libxsldbg/xsldbgnotifier.*
    Update all Makefile.am's and configure.in 		
 	
-Keith Isdale 20 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 20 Dec 2001 <keithisdale@gmail.com>
    Version 0.9.6
    Sent email with thr modified libxml/xslt WIN32 project files
    Removed win32/dsp/libxml2_new_files, win32/dsp/libxslt_new_files
 	from cvs
 	
-Keith Isdale 19 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 19 Dec 2001 <keithisdale@gmail.com>
    Fixed configure.in to enable/disable xsldbg helpsystem
    Created email about problems with xmlcatalog for WIN32
    Small updates to docs/en/website/win32_install.html	
 	
-Keith Isdale 18 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 18 Dec 2001 <keithisdale@gmail.com>
   Version 0.9.5
   First try at a win32 build, does not use dll's because not 
 	all exports required are in libxslt.def and libxmldef.src
@@ -888,7 +897,7 @@ Keith Isdale 18 Dec 2001 <k_isdale@tpg.com.au>
   Made WIN32 specific SIGNIT and SIGTERM handling in see xslInit : xsldbg.c   	
   Fixed bug that the xmlInit() return value was being ignored
  	
-Keith Isdale 17 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 17 Dec 2001 <keithisdale@gmail.com>
   Version 0.9.4
   Replaced config_risc_os.h with file suppled by Justin
   Added highlighting to tutorial in docs/en/website/index.html
@@ -898,11 +907,11 @@ Keith Isdale 17 Dec 2001 <k_isdale@tpg.com.au>
 	docs/en/website/(risc_os.install.html, win32_install.html)
 	to be added to cvs later
 	
-Keith Isdale 16 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 16 Dec 2001 <keithisdale@gmail.com>
   Version 0.9.3
   Applied a small set of patches my Justin
 	
-Keith Isdale 15 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 15 Dec 2001 <keithisdale@gmail.com>
   version 0.9.2
   Applied patches for risc os from Justin, 
 	mainly risc os specific, but does include some typos he found and missing casts
@@ -917,7 +926,7 @@ Keith Isdale 15 Dec 2001 <k_isdale@tpg.com.au>
   Fix xsltProcess so that the results of transformation are NOT printed if quit is requested
 	
 	
-Keith Isdale 14 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 14 Dec 2001 <keithisdale@gmail.com>
  version 0.9.1
   Fixed GNOME docs again!
   Synchronized function comments in header and source (mainly GNOME doc comments)
@@ -926,7 +935,7 @@ Keith Isdale 14 Dec 2001 <k_isdale@tpg.com.au>
 	remove xslbreakpoint_2.h in cvs later(done!)
 	
 	
-Keith Isdale 13 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 13 Dec 2001 <keithisdale@gmail.com>
    added DOCBOOK_PREFIX and DOCBOOK_VERSION to configure.in to be used by docs/en/GNOME/Makefile.am
    fix bug in catchSigInt, control-c tryies to start debugger shell when debugging is disabled
 	 change DEBUG_RUN to DEBUG_NONE	
@@ -934,13 +943,13 @@ Keith Isdale 13 Dec 2001 <k_isdale@tpg.com.au>
    added TIMESTAMP to AC_SUBST's  and used in docs/en/GNOME/Makefile.am 
    added docs/en/GNOME/authors.xsl
 	
-Keith Isdale 12 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 12 Dec 2001 <keithisdale@gmail.com>
    Fixed docs/en/xsldoc.xsl to make use of $alldocs not $alldoc 
    Clarified the meaning of tty command in docs/en/xsldoc.xml, yet to fix this
 	in src/files.c
    Fixed typos in docs/en/xmldoc.xml 
 	
-Keith Isdale 11 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 11 Dec 2001 <keithisdale@gmail.com>
   version 0.9.1
   I was told of a show stopper name clashes between xsldbg and libxslt
 	also found xsldbg did not run at all well with libxslt-1.0.9
@@ -955,7 +964,7 @@ Keith Isdale 11 Dec 2001 <k_isdale@tpg.com.au>
 	
 	
 	
-Keith Isdale 10 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 10 Dec 2001 <keithisdale@gmail.com>
   Version 0.9.0 
   Extended xsldoc.dtd so that a "cmd" has a shortcut. Then changed xsldoc.xsl
 	to search on @name or @shortcut
@@ -973,7 +982,7 @@ Keith Isdale 10 Dec 2001 <k_isdale@tpg.com.au>
   Changed required libxslt version to 1.0.9
   	
 	
-Keith Isdale 8/9 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 8/9 Dec 2001 <keithisdale@gmail.com>
    Version 0.8.9
    Fixed problem with GNOME documentation building
    Created gnome style documentation
@@ -1002,7 +1011,7 @@ Keith Isdale 8/9 Dec 2001 <k_isdale@tpg.com.au>
 	    			
 	
 		
-Keith Isdale 7 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 7 Dec 2001 <keithisdale@gmail.com>
   Created KDE style API documentation headers in docs/en/KDE/src
 	updated Makefile.am to suit. Will need to merge these with 
 	the main source after the first beta :-(
@@ -1024,7 +1033,7 @@ Keith Isdale 7 Dec 2001 <k_isdale@tpg.com.au>
   Version 0.8.8
 	
 	
-Keith Isdale 6 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 6 Dec 2001 <keithisdale@gmail.com>
 Fixed inconsitancies in src/*.h	
     o ensure that enums are declared that same way, made use of 
 	enums rather that using int's and have a unique range of values
@@ -1060,14 +1069,14 @@ Fixed inconsitancies in src/*.h
 		
 	
 	
-Keith Isdale 5 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 5 Dec 2001 <keithisdale@gmail.com>
 Updated docs/en/website/index.html
 Fixed configure.in to generated GNOME docs if asked
 Updated docs/en/GNOME/Makefile.am to try generate gtkdoc style docs but it is 
 	still broken
 	
 	
-Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>
+Keith Isdale 4 Dec 2001 <keithisdale@gmail.com>
  Fixed configure.in and all Makefile.am's so that they setup and 
    use LIBXSLT_PREFIX, LIBXML_PREFIX. and that all executions
    of xsldbg use these libraries at theses locations 
@@ -1085,7 +1094,7 @@ Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>
 
 	
  *************************************
- Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>	
+ Keith Isdale 4 Dec 2001 <keithisdale@gmail.com>	
  Feature freeze active 	
      o no new features are to be added
      o bug and documentation updates only until after beta release 	
@@ -1093,7 +1102,7 @@ Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>
 
  	
 
- Keith Isdale 3 Dec 2001 <k_isdale@tpg.com.au>
+ Keith Isdale 3 Dec 2001 <keithisdale@gmail.com>
  Version 0.8.5		
  Added validation of file:line number for stylesheet breakpoints
    It now generates a warning if a stylsheeet breakPoint appears to be invalid
@@ -1112,7 +1121,7 @@ Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>
 	
 
 	
- Keith Isdale 1 Dec 2001 <k_isdale@tpg.com.au>
+ Keith Isdale 1 Dec 2001 <keithisdale@gmail.com>
  Version 0.8.4	
  Added	--with-libxslt-prefix to configure.in
  Changed source and data commands so that they clear any breakpoints present 	
@@ -1125,7 +1134,7 @@ Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>
 
 
 	
- Keith Isdale 30 Nov 2001 <k_isdale@tpg.com.au>
+ Keith Isdale 30 Nov 2001 <keithisdale@gmail.com>
  Version 0.8.3	
  Applied fixes as suggested by Justin
  Fixed configure.in, acconfig.h, breakpointInternals.h so that
@@ -1133,7 +1142,7 @@ Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>
 
 	
 	
- Keith Isdale 29 Nov 2001 <k_isdale@tpg.com.au>
+ Keith Isdale 29 Nov 2001 <keithisdale@gmail.com>
  Change help so that is can either display static text file or respond to 
    queries, added docs/en/xsldoc.txt
    Removed #include "config.h" from*.c files and replace with 
@@ -1145,12 +1154,12 @@ Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>
 
 	
 	
- Keith Isdale 28 Nov 2001 <k_isdale@tpg.com.au>
+ Keith Isdale 28 Nov 2001 <keithisdale@gmail.com>
  Applied patches by Justin Fletcher to suit risc os	
 
 	
 	
- Keith Isdale 27 Nov 2001 <k_isdale@tpg.com.au>
+ Keith Isdale 27 Nov 2001 <keithisdale@gmail.com>
  Converted all functions to work under libxslt-1.0.7	
  Added OPTIONS_DOCS_PATH to options.[ch] and set help.c and dbgsearch.c 
 	to use this new option 	
@@ -1161,7 +1170,7 @@ Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>
 
 	
 	 	
- Keith Isdale 26 Nov 2001 <k_isdale@tpg.com.au>
+ Keith Isdale 26 Nov 2001 <keithisdale@gmail.com>
  Fixed errors, and inconsistancies in xsldoc.xml
    Changes needed for the xsldbg mode for kdbg
           Changed templates command to accept a template name to look for 
@@ -1173,7 +1182,7 @@ Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>
 
 
 	
- Keith Isdale 25 Nov 2001 <k_isdale@tpg.com.au>
+ Keith Isdale 25 Nov 2001 <keithisdale@gmail.com>
    Changes needed for the xsldbg mode for kdbg
          Added prefix of #<frame_no> to output where of command	
          Added frame command 
@@ -1181,7 +1190,7 @@ Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>
 
 
 	
- Keith Isdale 21 Nov 2001 <k_isdale@tpg.com.au>
+ Keith Isdale 21 Nov 2001 <keithisdale@gmail.com>
  Version 0.7.9
  Changed searching
      removed xslWalkVariables, searchVariableNode
@@ -1200,7 +1209,7 @@ Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>
  Fixed logic of walk function so it does not restart the stylesheet 
 	
 	
- Keith Isdale 20 Nov 2001 <k_isdale@tpg.com.au>
+ Keith Isdale 20 Nov 2001 <keithisdale@gmail.com>
  moved as many of the xsldbg commands from debugXSL.c that were possible
   into files of related commands and placed their declaratons into debugXSL.h
    Added files 
@@ -1213,7 +1222,7 @@ Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>
 
 
 	
- Keith Isdale 20 Nov 2001 <k_isdale@tpg.com.au>
+ Keith Isdale 20 Nov 2001 <keithisdale@gmail.com>
  Added file breakpoint/breakpointInternals.h to libxslt
    Put all the declarations of potential useful internal breakpoint functions 
    in 	breakpointInternals.h
@@ -1240,7 +1249,7 @@ Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>
 	
 
 	
- Keith Isdale 19 Nov 2001 <k_isdale@tpg.com.au>
+ Keith Isdale 19 Nov 2001 <keithisdale@gmail.com>
  Added automatic replacement of '~' for $HOME environment variable value
          when using source and data commands
  Added xslEmptyBreakPoint to breakpoint API
@@ -1258,7 +1267,7 @@ Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>
 
 	
 	
- Keith Isdale 18 Nov 2001 <k_isdale@tpg.com.au>
+ Keith Isdale 18 Nov 2001 <keithisdale@gmail.com>
  Implemented  new breakpoint API changed 
 	in libxslt breakpoint/dbgbreakpoint.c
 	in libxslt breakpoint/breakpoint.h	
@@ -1266,7 +1275,7 @@ Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>
 
 	
 	
- Keith Isdale 17 Nov 2001 <k_isdale@tpg.com.au>
+ Keith Isdale 17 Nov 2001 <keithisdale@gmail.com>
  Add libxslt parameter commands ie addparam, delparam, showparam
  Added shell, chdir commands
  Added trace, walk commands
@@ -1278,7 +1287,7 @@ Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>
  Added test 5, 6, 7 all libxst intructions able to be stepped into are now covered	
 
 	
- Keith Isdale 11 Nov 2001 <k_isdale@tpg.com.au>
+ Keith Isdale 11 Nov 2001 <keithisdale@gmail.com>
  Separated parameter storage from xsldbg.c and put into options.[ch]
  Added files.[ch] 
 	 handles file interaction. But still uses xsldbg.c to do
@@ -1296,20 +1305,20 @@ Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>
 
 
 	
- Keith Isdale 10 Nov 2001 <k_isdale@tpg.com.au>
+ Keith Isdale 10 Nov 2001 <keithisdale@gmail.com>
  Reverted to orginal name for XSL_DEBUGGER definition
 
 	
- Keith Isdale 9 Nov 2001 <k_isdale@tpg.com.au>
+ Keith Isdale 9 Nov 2001 <keithisdale@gmail.com>
  Checked cvs -ok
  taged repository to rel-0-6-5
 
 	
- Keith Isdale 8 Nov 2001 <k_isdale@tpg.com.au>
+ Keith Isdale 8 Nov 2001 <keithisdale@gmail.com>
  Fixed typos in cvs log messages to spell Daniel's name correctly
  taged repository to rel-0-6-4
 
- Keith Isdale 7 Nov 2001 <k_isdale@tpg.com.au>
+ Keith Isdale 7 Nov 2001 <keithisdale@gmail.com>
  Version 0.6.5 	
  Applied Daniel's patch see
 	http://mail.gnome.org/archives/xslt/2001-November/msg00015.html
@@ -1317,10 +1326,10 @@ Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>
  Added problem_analysis directory to keep record of analysies performed
 
 	
- Keith Isdale  6 Nov 2001 <k_isdale@tpg.com.au>
+ Keith Isdale  6 Nov 2001 <keithisdale@gmail.com>
 	fix of stray '/' in line 54 , found by Justin Fletcher  in help.c
 	
- Keith Isdale 3 Nov 2001< k_isdale@tpg.com.au>
+ Keith Isdale 3 Nov 2001 <keithisdale@gmail.com>
  Version 0.6.4	
  Ported xsldbg to use  xmlNoNetExternalEntityLoader in libxml 
 	(xsldbg.c is a rehash of /xsltproc/xsltproc.c in libxslt)
@@ -1335,7 +1344,7 @@ Keith Isdale 4 Dec 2001 <k_isdale@tpg.com.au>
 	Adapt /configure.in to abort if debugger support not built into libxslt
 
 	
- Keith Isdale 1 Nov 2001 <k_isdale@tpg.com.au>
+ Keith Isdale 1 Nov 2001 <keithisdale@gmail.com>
  Version 0.6.3	
  Changed xslDbgPrintTemplateNames so that the order of printing templates so
 	it matches the order it is in file 
