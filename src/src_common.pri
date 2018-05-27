@@ -1,10 +1,6 @@
-CONFIG	+= warn_on release thread
+CONFIG	+= warn_on thread
 CONFIG += qt
 QT *=core
-
-equals(QT_MAJOR_VERSION, "4") {
-   DEFINES += USE_QT4
-}
 
 # enable readline and history support if possible
 unix {
