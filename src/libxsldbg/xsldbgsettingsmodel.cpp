@@ -18,7 +18,7 @@
 
 
 #include <QDebug>
-#include "libxsldbg/options.h"
+#include "options.h"
 #include "debugXSL.h"
 
 

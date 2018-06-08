@@ -28,9 +28,9 @@
 #endif
 
 #include <string.h>
-#include <libxsldbg/xsldbgmsg.h>
-#include <libxsldbg/xsldbgio.h>
-#include <libxsldbg/options.h>
+#include <xsldbgmsg.h>
+#include <xsldbgio.h>
+#include <options.h>
 
 
 int notifyXsldbgApp(XsldbgMessageEnum type, const void *data)

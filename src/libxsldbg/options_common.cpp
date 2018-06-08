@@ -16,8 +16,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <libxsldbg/options.h>
-#include <libxsldbg/utils.h>
+#include "options.h"
+#include "utils.h"
 #include <QStringList>
 #include <QFileInfo>
 #include <QCoreApplication>
