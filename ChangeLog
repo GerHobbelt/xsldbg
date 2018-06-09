@@ -1,3 +1,10 @@
+Keith Isdale 9th June 2018 <keithisdale@gmail.com>
+    4.6.1
+    Fix walking, tracing command logic.
+    For best walking speed accuracy on *nix run qmake with addition of
+        CONFIG+=have_usleep
+    To improve UI in qxslbg emit XsldbgDebuggerBase::completeTransform() signal when completed XSLT tranformation
+
 Keith Isdale 23rd May 2018 <keithisdale@gmail.com>
     4.6.0
     Fix logic for finding local LIBXSLT variables

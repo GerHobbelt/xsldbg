@@ -274,6 +274,9 @@ XsldbgEventData *XsldbgEvent::createEventData(XsldbgMessageEnum type, const void
         handleResolveItem(result, msgData);
         break;
 
+    case XSLDBG_MSG_COMPLETED_TRANSFORMATION:    /* 26:  Completed XSLT exexcution */
+        break;
+
     default:
         qDebug("Unhandled type in createEventData %d", type);
 
@@ -433,6 +436,10 @@ void XsldbgEvent::emitMessage(XsldbgEventData *eventData)
     case XSLDBG_MSG_RESOLVE_CHANGE:  /* 22: Response to system or
                                  * public command */
         handleResolveItem(eventData, 0L);
+        break;
+
+    case XSLDBG_MSG_COMPLETED_TRANSFORMATION:    /* 26:  Completed XSLT exexcution */
+        emit debugger->completedTransform();
         break;
 
     default:

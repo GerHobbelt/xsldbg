@@ -1,9 +1,9 @@
 This package requiries
-* Qt 4.x or Qt5.x development libraries/headers to be present
-* libxslt and libxml2 libraries/headers to be present.
+* Qt5.x development libraries/headers to be present
+* libexslt, libxslt and libxml2 libraries/headers to be present.
 
-As example install prerequisites on OpenSuse Linux for Qt4 build of xsldbg
-* sudo zypper install rpmbuild patterns-openSUSE-devel_qt4 patterns-openSUSE-devel_basis patterns-openSUSE-devel_C_C++ libxslt-devel libxml2-devel libxslt libxml2
+As example install prerequisites on OpenSuse Linux for Qt5 build of xsldbg
+* sudo zypper install rpmbuild patterns-openSUSE-devel_qt5 patterns-openSUSE-devel_basis patterns-openSUSE-devel_C_C++ libxslt-devel libxml2-devel libxslt libxml2
 
 Documentation
 * To regenerate docbook documentation saxon version 6 must be in path. See docs/en/en.pro
@@ -11,8 +11,8 @@ Documentation
 * docs/en/website/index.html and docs/en/plain/index.html for latest information 
 * to add docbook DTD support to catalog on Linux use command like: sudo  xmlcatalog -v --add nextCatalog '' "file:///usr/share/xml/docbook/schema/dtd/4.5/catalog.xml" /etc/xml/catalog
 * for users of xsldbg's KDE style documentation you will need to set your KDEDIR and QTDIR paths eg:
-  export QTDIR=/usr/lib/qt4
-  export KDEDIR=/opt/kde4
+  export QTDIR=/usr/lib/qt5
+  export KDEDIR=/opt/kde5
 
 This package can be built on *nix and Windows.
 
@@ -26,9 +26,12 @@ For unix run for (*nix):
   qmake
   make
   make install # may require sudo and it will update the System's XML catalog to include xsldbg's DTDs.
+
+For *nix based systems usleep can be used to give accurate time delays when running "walk" command, run qmake like
+  qmake CONFIG+=have_usleep
   
-The provided xsldbg.spec can be used to create a RPM, note by default Qt4 is used in xsldbg.spec. Usage example
-   rpmbuild -tb xsldbg-4.5.0.tar.gz
+The provided xsldbg.spec can be used to create a RPM. Usage example
+   rpmbuild -tb xsldbg-4.6.1.tar.gz
 
 Currenty no testing has been done using version 4.5.0 on Windows(MSVC) though the following should work if Qt and other dependencies are setup correctly:
   qmake

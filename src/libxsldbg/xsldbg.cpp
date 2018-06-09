@@ -841,33 +841,15 @@ int xsldbgMain(int argc, char **argv)
 		    /*goto a xsldbg command prompt */
 		    showPrompt = 1;
 		    xslDebugStatus = DEBUG_STOP;
+            notifyXsldbgApp(XSLDBG_MSG_COMPLETED_TRANSFORMATION, NULL);
 		} else {
 		    xsldbgGenericErrorFunc(QObject::tr("\nFinished stylesheet\n\n"));
-		    {
-			/* handle trace execution */
-			int trace = optionsGetIntOption(OPTIONS_TRACE);
-
-			switch (trace) {
-			    case TRACE_OFF:
-				/* no trace of execution */
-				break;
-
-			    case TRACE_ON:
-				/* tell xsldbg to stop tracing next time we get here */
-				optionsSetIntOption(OPTIONS_TRACE,
-					TRACE_RUNNING);
-				xslDebugStatus = DEBUG_TRACE;
-				break;
-
-			    case TRACE_RUNNING:
-				/* turn off tracing */
-				xslDebugStatus = DEBUG_CONT;
-				optionsSetIntOption(OPTIONS_TRACE,
-					TRACE_OFF);
-				break;
-			}
-		    }
-		    if (!optionsGetIntOption(OPTIONS_AUTORESTART) && (xslDebugStatus != DEBUG_RUN_RESTART)){ 
+            bool walking = optionsGetIntOption(OPTIONS_WALK_SPEED) != WALKSPEED_STOP;
+            bool tracing = optionsGetIntOption(OPTIONS_TRACE) != TRACE_OFF;
+            optionsSetIntOption(OPTIONS_WALK_SPEED, WALKSPEED_STOP);
+            optionsSetIntOption(OPTIONS_TRACE, TRACE_OFF);
+            notifyXsldbgApp(XSLDBG_MSG_COMPLETED_TRANSFORMATION, NULL);
+            if (!(walking || tracing) && !optionsGetIntOption(OPTIONS_AUTORESTART) && (xslDebugStatus != DEBUG_RUN_RESTART)){
 			/* pass control to user they won't be able to do much
 			   other than add breakpoints, quit, run, continue */
 			debugXSLBreak((xmlNodePtr) cur->doc, (xmlNodePtr) doc,

@@ -32,8 +32,8 @@
 int xslDbgShellTrace(xmlChar * arg)
 {
     Q_UNUSED(arg);
-    xslDebugStatus = DEBUG_RUN_RESTART;
     optionsSetIntOption(OPTIONS_TRACE, TRACE_ON);
+    xslDebugStatus = DEBUG_TRACE;
     return 1;
 }
 

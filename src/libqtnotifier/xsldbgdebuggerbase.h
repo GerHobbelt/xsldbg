@@ -132,6 +132,7 @@ signals: // Signals
 
   void debuggerReady();
   void debuggerStopped();
+  void completedTransform();
 
 };
 

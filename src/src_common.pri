@@ -2,6 +2,9 @@ CONFIG	+= warn_on thread
 CONFIG += qt
 QT *=core
 
+# for linux based systems, usleep can be used to give accurate walking speed
+have_usleep:DEFINES+=HAVE_USLEEP
+
 # enable readline and history support if possible
 unix {
     system("$$QMAKE_CC -lreadline configtests/readlinetest.c -o configtests/readlinetest > /dev/null 2>&1") {

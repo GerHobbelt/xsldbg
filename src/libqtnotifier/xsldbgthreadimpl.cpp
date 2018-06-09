@@ -51,17 +51,11 @@ FILE *stdoutIO = NULL;
 /* -----------------------------------------------
    private functions
  ---------------------------------------------------*/
+void xslDbgSleep(long delay);
 
 void _sleepThread(void)
 {
-#if defined(Q_OS_WIN32)
-        Sleep(250);
-#else
-       timespec sleepTime;
-       sleepTime.tv_sec = 0;
-       sleepTime.tv_nsec = 250000000;
-        nanosleep(&sleepTime, NULL);
-#endif
+    xslDbgSleep(250000);
 }
 
 

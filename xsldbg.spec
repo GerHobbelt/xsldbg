@@ -1,5 +1,5 @@
 %define name xsldbg
-%define version 4.5.1
+%define version 4.6.1
 %define release 1
 %define prefix /usr
 %define builddir $RPM_BUILD_DIR/%{name}-%{version}
@@ -16,8 +16,7 @@ Vendor: Keith Isdale <keithisdale@gmail.com>
 Packager: Keith Isdale <keithisdale@gmail.com>
 Source: %{name}-%{version}.tar.gz
 URL: http://xsldbg.sourceforge.net/ 
-Requires: libqt4 >= 4.4 libxml2 >= 2.4.3 libxslt >= 1.0.13
-#Requires: libQt5Core5 >= 5.5 libxml2 >= 2.4.3 libxslt >= 1.0.13
+Requires: libQt5Core5 >= 5.5 libxml2 >= 2.4.3 libxslt >= 1.0.13
 BuildRoot: /tmp/build-%{name}-%{version}
 
 %description
