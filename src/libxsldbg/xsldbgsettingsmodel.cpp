@@ -523,7 +523,7 @@ bool XsldbgSettingsModel::updateSetting(int optionID, QVariant & value)
 bool XsldbgSettingsModel::saveSettings (QSettings & configSettings ) const
 {
     bool result = true;
-
+    //qWarning() << "XsldbgSettingsModel::saveSettings:" << configSettings.fileName();
     // remove any old parameters 
     QStringList settingsList = configSettings.allKeys();
     QString setting;
@@ -536,10 +536,13 @@ bool XsldbgSettingsModel::saveSettings (QSettings & configSettings ) const
             it != d_ptr->settingData.constEnd(); it++) {
         // do not save any hidden options to disk
         if (!(it->m_type & XsldbgSettingsModel::HiddenSettingType)){
-            if (it->m_type & XsldbgSettingsModel::ParamSettingType) 
+            if (it->m_type & XsldbgSettingsModel::ParamSettingType) {
+                //qWarning() << "XsldbgSettingsModel::saveSettings: " << paramPrefix + it->m_name << it->m_value;
                 configSettings.setValue(paramPrefix + it->m_name, it->m_value);
-            else
+            }else {
+                //qWarning() << "XsldbgSettingsModel::saveSettings: " << optionPrefix + it->m_name << it->m_value;
                 configSettings.setValue(optionPrefix + it->m_name, it->m_value);
+            }
         }
     }
     return result;
@@ -549,6 +552,7 @@ bool XsldbgSettingsModel::saveSettings (QSettings & configSettings ) const
 bool XsldbgSettingsModel::loadSettings (const QSettings & configSettings )
 {
     bool result = true;
+    //qWarning() << "XsldbgSettingsModel::loadSettings:" << configSettings.fileName();
     init(); // remove any parameters and set settings back to thier defaults
     XsldbgSettingData item;
     QStringList settingsList = configSettings.allKeys();
@@ -561,8 +565,10 @@ bool XsldbgSettingsModel::loadSettings (const QSettings & configSettings )
     foreach (setting, settingsList) {
         value = configSettings.value(setting, "");
         if (setting.startsWith(optionPrefix)){
-            if (findSetting(setting.mid(optionPrefixLen), optionType,  item))
+            if (findSetting(setting.mid(optionPrefixLen), optionType,  item)) {
+                //qWarning() << "XsldbgSettingsModel::loadSettings:" << item.m_id << value;
                 updateSetting(item.m_id, value);
+	    }
         }else if (setting.startsWith(paramPrefix)){
             addParameter(setting.mid(paramPrefixLen), value);
         }

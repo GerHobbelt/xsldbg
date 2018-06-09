@@ -37,7 +37,6 @@ xmlExternalEntityLoader xsldbgDefaultEntLoader;
 /* what are the expressions to be printed out when xsldbg stops */
 static arrayListPtr watchExpressionList;
 
-
 int optionsInit(void)
 {
     xsldbgDefaultEntLoader = xmlGetExternalEntityLoader(); 
@@ -271,12 +270,11 @@ int optionsRemoveWatch(int watchID)
   return watchExpressionList;
 }
 
-bool optionsReadConfig(const QSettings &config)
+bool optionsReadConfig(QSettings &config)
 {
     bool result = false;
     if (optionDataModel())
         result = optionDataModel()->loadSettings(config);
-
     return result;
 }
 

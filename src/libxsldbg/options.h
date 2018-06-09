@@ -327,17 +327,18 @@ arrayListPtr optionsGetWatchList(void);
  * Read options from configuration file @p config
  *
  * @returns true if able to read configuration from @p config, false otherwise
+ * @see optionsDefaultConfig()
  */
-bool optionsReadConfig(const QSettings &config);
+bool optionsReadConfig(QSettings &config);
 
 
 /**
  * Write options to configuration file
  *
  * @returns true if able to write configuration to @p config, false otherwise
+ * @see optionsDefaultConfig()
  */
 bool optionsWriteConfig(QSettings &config);
-
 
 /**
  * Enable auto save/loading of configuration if @p value is true

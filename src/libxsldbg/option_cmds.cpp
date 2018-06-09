@@ -226,7 +226,11 @@ int xsldbgWriteConfig(xmlChar * arg)
 {
     Q_UNUSED(arg);
     int result = 0;
+#ifndef XSLDBG_APP
     QSettings settings;
+#else
+    QSettings settings("xsldbg", XSLDBG_APP);
+#endif
     if (optionsWriteConfig(settings)){
         result = 1;
     }
@@ -238,7 +242,11 @@ int xsldbgReadConfig(xmlChar * arg)
 {
     Q_UNUSED(arg);
     int result = 0;
+#ifndef XSLDBG_APP
     QSettings settings;
+#else
+    QSettings settings("xsldbg", XSLDBG_APP);
+#endif
     if (optionsReadConfig(settings)){
         result = 1;
     }
