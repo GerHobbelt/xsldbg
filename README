@@ -27,9 +27,6 @@ For unix run for (*nix):
   make
   make install # may require sudo and it will update the System's XML catalog to include xsldbg's DTDs.
 
-For *nix based systems usleep can be used to give accurate time delays when running "walk" command, run qmake like
-  qmake CONFIG+=have_usleep
-  
 The provided xsldbg.spec can be used to create a RPM. Usage example
    rpmbuild -tb xsldbg-4.6.1.tar.gz
 

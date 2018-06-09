@@ -45,11 +45,10 @@
 #include <libxml/debugXML.h>
 #include <libxml/parser.h>
 #include <libxml/parserInternals.h>
-#include <QSettings>
 
-#ifdef HAVE_USLEEP
-#include <unistd.h>
-#endif
+#include <QSettings>
+#include <QThread>
+
 #include <stdio.h>
 
 #ifdef WIN32
@@ -660,24 +659,7 @@ int xslDbgPrintCallStack(const xmlChar * arg)
 
 void xslDbgSleep(long delay)
 {
-#ifdef HAVE_USLEEP
-    usleep(delay);
-#else
-#ifdef WIN32
-    Sleep(delay / 1000);
-#else
-    /* try to delay things by doing a lot of floating point 
-     * multiplication   
-     */
-    long loop1, loop2;
-    float f1 = 1.0000001, f2;
-
-    for (loop1 = 0; loop1 < 100000 * delay; loop1++)
-        for (loop2 = 0; loop2 < 100000; loop2++) {
-            f2 = f1 * f1;
-        }
-#endif
-#endif
+    QThread::msleep(delay/1000);
 }
 
 
