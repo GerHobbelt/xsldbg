@@ -80,6 +80,7 @@ docs.files = *.xsl \
 	     *.dtd \
 	     *.txt \
 	     CATALOG \
+             catalog.xml \
 	     $PWD/xsldoc.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.txt
 	     
 

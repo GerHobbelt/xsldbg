@@ -1,5 +1,5 @@
 -- 
-   Catalog file for xsldbg 2.0.1
+   Catalog file for xsldbg 4.6.1
  
   See http://xsldbg.sourceforge.net for general information about xsldbg --
 
@@ -22,5 +22,12 @@ PUBLIC "-//xsldbg//DTD xsldoc XML V1.0//EN"
 PUBLIC "-//xsldbg//DTD config XML V1.0//EN" 
 	"config.dtd"
 
+-- test data --
 
--- End of catalog data for xsldbg 2.0.1 --
+SYSTEM "notemessage1.xml"
+
+PUBLIC "-//xsldbg//tests notemessage2 XML V1.0//EN"
+        "notemessage2.xml"
+
+
+-- End of catalog data for xsldbg 4.6.1 --
