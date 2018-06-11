@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+     File : note3.xml
+     Author: Keith Isdale <keithisdale@gmail.com>
+     Description: xml data for stylesheet for test "test14"
+     Copyright Reserved Under GPL
+-->
+
+<note>
+<to>Tove 3</to>
+<from>Jani 3</from>
+<heading>Reminder 3</heading>
+<body>Don't forget me this weekend 3</body>
+</note>

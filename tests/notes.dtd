@@ -1,0 +1,20 @@
+<!-- This DTD is based on example from https://www.w3schools.com/xml/xml_dtd_intro.asp -->
+<!ELEMENT notes (note+)>
+<!ELEMENT note (to,from,heading,body)>
+<!ELEMENT to (#PCDATA)>
+<!ELEMENT from (#PCDATA)>
+<!ELEMENT heading (#PCDATA)>
+<!ELEMENT body (#PCDATA)>
+<!ENTITY sender1 "Tove1">
+<!ENTITY receiver1 "Jani1">
+<!ENTITY message1 SYSTEM "notemessage1.xml">
+<!ENTITY sender2 "Tove2">
+<!ENTITY receiver2 "Jani2">
+<!ENTITY message2 PUBLIC "-//xsldbg//tests notemessage2 XML V1.0//EN" "notemessage2.xml">
+<!ENTITY note3 SYSTEM "note3.xml">
+<!--
+<!ENTITY sender2 "Tove2">
+<!ENTITY receiver2 "Jani2">
+<!ENTITY message2 SYSTEM "https://sourceforge.net/p/xsldbg/xsldbg/ci/master/tree/tests/README.txt?format=raw
+">
+-->

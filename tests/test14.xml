@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This test is based on example from https://www.w3schools.com/xml/xml_dtd_intro.asp -->
+<!--
+     File : test14.xml
+     Author: Keith Isdale <keithisdale@gmail.com>
+     Description: xml data for stylesheet for test "test14"
+     Copyright Reserved Under GPL
+-->
+<!DOCTYPE notes SYSTEM "notes.dtd">
+<notes>
+    <note>
+     <to>&receiver1;</to>
+     <from>&sender1;</from>
+     <heading>Reminder</heading>
+     &message1;
+    </note>
+    &note3;
+</notes>

@@ -13,3 +13,10 @@ DEFINES+=XSLDBG_VERSION=\\\"$$XSLDBG_VERSION\\\"
     }
 }
 
+DISTFILES += \
+    $$PWD/tests/test14.xml \
+    $$PWD/tests/note.dtd \
+    $$PWD/tests/notemessage1.xml \
+    $$PWD/tests/note3.xml \
+    $$PWD/tests/test14.xsl
+

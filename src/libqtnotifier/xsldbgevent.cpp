@@ -763,19 +763,19 @@ void XsldbgEvent::handleEntityItem(XsldbgEventData *eventData, const  void *msgD
         if (beenCreated == false){
             /* add our specific data to eventData*/
             if (msgData != 0L){
-                QString SystemID, PublicID;
+                QString PublicID, SystemID;
 
                 entityInfoPtr info =  (entityInfoPtr)msgData;
-                SystemID = XsldbgDebuggerBase::fromUTF8FileName(info->SystemID);
                 PublicID = XsldbgDebuggerBase::fromUTF8(info->PublicID);
+                SystemID = XsldbgDebuggerBase::fromUTF8FileName(info->SystemID);
 
-                eventData->setText(0, SystemID);
-                eventData->setText(1, PublicID);
+                eventData->setText(0, PublicID);
+                eventData->setText(1, SystemID);
             }
         }else{
             /* emit the event data via debugger*/
-            emit debugger->entityItem(eventData->getText(0), /* SystemID*/
-                                      eventData->getText(1) /* PublicID*/);
+            emit debugger->entityItem(eventData->getText(0), /* PublicID*/
+                                      eventData->getText(1) /* SystemID*/);
         }
     }
 }
