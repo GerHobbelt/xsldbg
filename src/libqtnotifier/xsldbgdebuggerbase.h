@@ -114,7 +114,7 @@ signals: // Signals
 	
   /** Add entity to view, First parameter is QString()
       to indicate start of entity list notfication */
-  void entityItem(QString SystemID,  QString PublicID);
+  void entityItem(QString SystemID,  QString PublicID, QString URI);
 	
   /* Show the URI for SystemID or PublicID requested */
   void resolveItem(QString URI);

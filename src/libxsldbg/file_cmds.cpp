@@ -54,12 +54,17 @@ int xslDbgEntities(const xmlChar *arg)
                                                        entityIndex);
                 if (entInfo){
                     // always attempt to resolve file entities with their URI
-                    if (!entInfo->ResolvedURI) {
+                    if (entInfo->ResolvedURI && xmlStrlen(entInfo->ResolvedURI) == 0) {
                         if (entInfo->PublicID && xmlStrlen(entInfo->PublicID)
-                                && entInfo->SystemID && xmlStrlen(entInfo->SystemID))
-                        entInfo->ResolvedURI = xmlCatalogResolvePublic(entInfo->PublicID);
-                    } else if (entInfo->SystemID && xmlStrlen(entInfo->SystemID)) {
-                        entInfo->ResolvedURI = xmlCatalogResolveSystem(entInfo->SystemID);
+                                && entInfo->SystemID && xmlStrlen(entInfo->SystemID)) {
+                            entInfo->ResolvedURI = xmlCatalogResolvePublic(entInfo->PublicID);
+                        } else if (entInfo->SystemID && xmlStrlen(entInfo->SystemID)) {
+                            if (!xmlStrnCmp(arg, "file:/", 6) || !xmlStrnCmp(arg, "ftp:/", 5) || !xmlStrnCmp(arg, "http://", 6)) {
+                                entInfo->ResolvedURI = xmlStrdup(entInfo->SystemID);
+                            } else {
+                                entInfo->ResolvedURI = xmlCatalogResolveSystem(entInfo->SystemID);
+                            }
+                        }
                     }
                     notifyListQueue(entInfo);
                 }
@@ -94,7 +99,11 @@ int xslDbgEntities(const xmlChar *arg)
                                         && entInfo->SystemID && xmlStrlen(entInfo->SystemID)) {
                                 entInfo->ResolvedURI = xmlCatalogResolvePublic(entInfo->PublicID);
                             } else if (entInfo->SystemID && xmlStrlen(entInfo->SystemID)) {
-                                entInfo->ResolvedURI = xmlCatalogResolveSystem(entInfo->SystemID);
+                                if (!xmlStrnCmp(arg, "file:/", 6) || !xmlStrnCmp(arg, "ftp:/", 5) || !xmlStrnCmp(arg, "http:/", 6)) {
+                                    entInfo->ResolvedURI = xmlStrdup(entInfo->SystemID);
+                                } else {
+                                    entInfo->ResolvedURI = xmlCatalogResolveSystem(entInfo->SystemID);
+                                }
                             }
                         }
                         if (entInfo->ResolvedURI && xmlStrlen(entInfo->ResolvedURI))

@@ -7,7 +7,10 @@ Keith Isdale 9th June 2018 <keithisdale@gmail.com>
         'entities' command output now in two new forms with "<ID>"values now quoted
             Enties PublicID:"<ID>" SystemID:"<ID>"
             Enties SystemID:"<ID>"
-
+        'entities' command output now support '-r' argument that prints resolved URI for entity
+            Enties PublicID:"<ID>" SystemID:"<ID>" URI:"<URI>"
+            Enties SystemID:"<ID>" URI:"<URI>"
+        Update XsldbgDebuggerBase to emit the resolved URI of entities
 
 Keith Isdale 23rd May 2018 <keithisdale@gmail.com>
     4.6.0
