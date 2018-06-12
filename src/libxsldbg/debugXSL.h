@@ -309,11 +309,12 @@
 
 /**
  * Print list of entites found 
+ * @param arg extra arguments such as "-r" to show resolved URI for enitities found
  *
  * @returns 1 on success,
  *          0 otherwise
  */
-    int xslDbgEntities(void);
+    int xslDbgEntities(const xmlChar *arg);
 
 
 

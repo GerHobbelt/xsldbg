@@ -152,7 +152,7 @@
          </revision>
       </revhistory>
       <releaseinfo>
-      This manual describes version '4.5.1' of xsldbg. It was
+      This manual describes version '4.6.1' of xsldbg. It was
        last updated on 12/13/2001.
     </releaseinfo>
       <legalnotice>
@@ -878,17 +878,23 @@ Enable or disable a breakpoint (Toggle enable/disable/)
       <sect2 id="entities_cmd">
          <title id="entities_cmd.title">Entities</title>
 Print list of external General Parsed entities used data file (document)
-<para>Shortcut name : ent</para>
-
-         <table label="of usage">
+<table label="of usage">
             <tgroup cols="1">
                <tbody>
                   <row>
                      <entry>entities</entry>
                   </row>
+                  <row>
+                     <entry>entities -r<markup>
+                           <emphasis>(Also print fully resolved URI for General Parsed entities)</emphasis>
+                        </markup>
+                     </entry>
+                  </row>
                </tbody>
             </tgroup>
          </table>
+
+         <para>Shortcut name : ent</para>
 
       </sect2>
       <sect2 id="exit_cmd">

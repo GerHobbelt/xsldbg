@@ -1598,7 +1598,7 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
                 /* --- File related commands --- */
             case DEBUG_ENTITIES_CMD:
-                cmdResult = xslDbgEntities();
+                cmdResult = xslDbgEntities(arg);
                 break;
 
             case DEBUG_SYSTEM_CMD:

@@ -14,5 +14,11 @@
      <heading>Reminder</heading>
      &message1;
     </note>
+    <note>
+     <to>&receiver2;</to>
+     <from>&sender2;</from>
+     <heading>Reminder</heading>
+     &message2;
+    </note>
     &note3;
 </notes>

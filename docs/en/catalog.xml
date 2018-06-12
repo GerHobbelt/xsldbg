@@ -7,4 +7,5 @@
 <public publicId="-//xsldbg//DTD config XML V1.0//EN" uri="config.dtd"/>
 <system systemId="notemessage1.xml" uri="notemessage1.xml"/>
 <public publicId="-//xsldbg//tests notemessage2 XML V1.0//EN" uri="notemessage2.xml"/>
+<system systemId="note3.xml" uri="note3.xml"/>
 </catalog>

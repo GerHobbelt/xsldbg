@@ -963,12 +963,16 @@ the first template has been seen by xsldbg. Breakpoints are re-validated shortly
 
 <cmd name="entities" shortcut="ent" title="Entities">
 <summary>Print list of external General Parsed entities used data file (document)</summary>
+<usage>
+<li><text>entities</text></li>
+<li>
+<text>entities -r</text>
+<comment>(Also print fully resolved URI for General Parsed entities)</comment>
+</li>
+</usage>
 <body>
 <para>Shortcut name : ent</para>
 </body>
-<usage>
-<li><text>entities</text></li>
-</usage>
 </cmd>
 
 <cmd name="system" shortcut="sys" title="System">

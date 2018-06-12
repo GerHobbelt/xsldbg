@@ -30,9 +30,15 @@
 
 static char buffer[500];
 
-int xslDbgEntities(void)
+int xslDbgEntities(const xmlChar *arg)
 {
     int result = 0;
+    bool resolveURIOption = (xmlStrcmp(arg, (const xmlChar*)"-r") == 0);
+    if (!resolveURIOption && xmlStrLen(arg)) {
+        QString providedArgs(xsldbgText(arg));
+        xsldbgGenericErrorFunc(QObject::tr("Unknown argument to entities command: \"%1\"\n").arg(providedArgs));
+        return result;
+    }
 
     if (filesEntityList()) {
         int entityIndex;
@@ -46,8 +52,17 @@ int xslDbgEntities(void)
                  entityIndex++) {
                 entInfo = (entityInfoPtr) arrayListGet(filesEntityList(),
                                                        entityIndex);
-                if (entInfo)
+                if (entInfo){
+                    // always attempt to resolve file entities with their URI
+                    if (!entInfo->ResolvedURI) {
+                        if (entInfo->PublicID && xmlStrlen(entInfo->PublicID)
+                                && entInfo->SystemID && xmlStrlen(entInfo->SystemID))
+                        entInfo->ResolvedURI = xmlCatalogResolvePublic(entInfo->PublicID);
+                    } else if (entInfo->SystemID && xmlStrlen(entInfo->SystemID)) {
+                        entInfo->ResolvedURI = xmlCatalogResolveSystem(entInfo->SystemID);
+                    }
                     notifyListQueue(entInfo);
+                }
 
             }
             notifyListSend();
@@ -60,10 +75,36 @@ int xslDbgEntities(void)
                                                        entityIndex);
                 if (entInfo) {
 		    /* display identifier of an XML entity */
-                    xsldbgGenericErrorFunc(QObject::tr("Entity %1 ").arg(xsldbgText(entInfo->SystemID)));
+                    QString publicID, systemID;
                     if (entInfo->PublicID)
-			xsldbgGenericErrorFunc(xsldbgText(entInfo->PublicID));
-		    xsldbgGenericErrorFunc("\n");
+                        publicID = xsldbgText(entInfo->PublicID);
+                    if (entInfo->SystemID)
+                        systemID = xsldbgText(entInfo->SystemID);
+
+                    if (!resolveURIOption) {
+                        if (!publicID.isEmpty() && !systemID.isEmpty()) {
+                            xsldbgGenericErrorFunc(QObject::tr("Entity PublicID:\"%1\" SystemID:\"%2\"\n").arg(publicID).arg(systemID));
+                        } else {
+                            xsldbgGenericErrorFunc(QObject::tr("Entity SystemID:\"%1\"\n").arg(systemID));
+                        }
+                    } else {
+                        QString resolveURI;
+                        if (entInfo->ResolvedURI && xmlStrlen(entInfo->ResolvedURI) == 0) {
+                            if (entInfo->PublicID && xmlStrlen(entInfo->PublicID)
+                                        && entInfo->SystemID && xmlStrlen(entInfo->SystemID)) {
+                                entInfo->ResolvedURI = xmlCatalogResolvePublic(entInfo->PublicID);
+                            } else if (entInfo->SystemID && xmlStrlen(entInfo->SystemID)) {
+                                entInfo->ResolvedURI = xmlCatalogResolveSystem(entInfo->SystemID);
+                            }
+                        }
+                        if (entInfo->ResolvedURI && xmlStrlen(entInfo->ResolvedURI))
+                            resolveURI = xsldbgText(entInfo->ResolvedURI);
+                        if (!publicID.isEmpty() && !systemID.isEmpty()) {
+                            xsldbgGenericErrorFunc(QObject::tr("Entity PublicID:\"%1\" SystemID:\"%2\" URI:\"%3\"\n").arg(publicID).arg(systemID).arg(resolveURI));
+                        } else {
+                            xsldbgGenericErrorFunc(QObject::tr("Entity SystemID:\"%1\" URI:\"%3\"\n").arg(systemID).arg(resolveURI));
+                        }
+                    }
                 }
             }
             if (arrayListCount(filesEntityList()) == 0) {

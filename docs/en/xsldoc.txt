@@ -1,4 +1,4 @@
-         xsldbg version 4.5.1 
+         xsldbg version 4.6.1 
          ==================== 
 xsldbg help 
     ___________ 
@@ -241,6 +241,7 @@ Shortcut name : ent
 Usage: 
  
         entities 
+        entities -r   (Also print fully resolved URI for General Parsed entities) 
 - - - - - - - - - - - - - - - - - - - - 
 
 Command : Exit

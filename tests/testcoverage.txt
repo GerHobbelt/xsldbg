@@ -62,3 +62,4 @@ enable			2
 showbreak		2
 showparam		4
 set			10, 11
+entities                14

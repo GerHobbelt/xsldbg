@@ -680,6 +680,8 @@ entityInfoPtr filesNewEntityInfo(const xmlChar * SystemID, const xmlChar * Publi
             result->PublicID = xmlStrdup(PublicID);
         else
             result->PublicID = xmlStrdup(BAD_CAST "");
+
+        result->ResolvedURI = xmlStrdup(BAD_CAST "");
     }
     return result;
 }
@@ -694,6 +696,10 @@ void filesFreeEntityInfo(entityInfoPtr info)
 
     if (info->PublicID)
         xmlFree(info->PublicID);
+
+    if (info->ResolvedURI)
+        xmlFree(info->ResolvedURI);
+
     xmlFree(info);
 }
 

@@ -1,9 +1,13 @@
 Keith Isdale 9th June 2018 <keithisdale@gmail.com>
     4.6.1
-    Fix walking, tracing command logic.
-    For best walking speed accuracy on *nix run qmake with addition of
-        CONFIG+=have_usleep
-    To improve UI in qxslbg emit XsldbgDebuggerBase::completeTransform() signal when completed XSLT tranformation
+    Fixes
+        Fix walking, tracing command logic.
+    Features
+        To improve UI in qxslbg emit XsldbgDebuggerBase::completeTransform() signal when completed XSLT tranformation
+        'entities' command output now in two new forms with "<ID>"values now quoted
+            Enties PublicID:"<ID>" SystemID:"<ID>"
+            Enties SystemID:"<ID>"
+
 
 Keith Isdale 23rd May 2018 <keithisdale@gmail.com>
     4.6.0

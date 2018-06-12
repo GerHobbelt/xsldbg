@@ -34,6 +34,7 @@ typedef entityInfo *entityInfoPtr;
 struct _entityInfo {
     xmlChar *SystemID;
     xmlChar *PublicID;
+    xmlChar *ResolvedURI;
 };
 
 

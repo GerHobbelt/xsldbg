@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE book
   PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd">
-<book><bookinfo><title>Xsldbg '4.5.1'</title><subtitle>Command and usage documentation</subtitle><authorgroup><author><firstname>Keith</firstname><surname>Isdale</surname><affiliation><address><email>keithisdale@gmail.com</email></address></affiliation></author></authorgroup><copyright><year>2003</year><holder>Keith Isdale</holder></copyright><legalnotice>&FDLNotice;</legalnotice><date>24/05/2003</date><releaseinfo>'4.5.1'</releaseinfo><abstract><para>
+<book><bookinfo><title>Xsldbg '4.6.1'</title><subtitle>Command and usage documentation</subtitle><authorgroup><author><firstname>Keith</firstname><surname>Isdale</surname><affiliation><address><email>keithisdale@gmail.com</email></address></affiliation></author></authorgroup><copyright><year>2003</year><holder>Keith Isdale</holder></copyright><legalnotice>&FDLNotice;</legalnotice><date>24/05/2003</date><releaseinfo>'4.6.1'</releaseinfo><abstract><para>
 xsldbg is a tool intended to help understand stylesheets. 
 What makes it different to other stylesheet debuggers is the ability 
 to search for items of interest and trace stylesheet execution. You can
@@ -104,8 +104,8 @@ Enable or disable a breakpoint (Toggle enable/disable/)
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>enable<markup><emphasis>(To enable/disable breakpoint at current node)</emphasis></markup></entry></row><row><entry>enable   &lt;BREAKPOINT_ID&gt;<markup><emphasis>(To enable/disable breakpoint at specified break point number</emphasis></markup></entry></row><row><entry>enable -l &lt;FILENAME&gt; &lt;LINENO&gt;<markup><emphasis>(Enable/disable breakpoint at specifed file, line number)</emphasis></markup></entry></row><row><entry>enable -l &lt;URI&gt; &lt;LINENO&gt;<markup><emphasis>(Enable/disable breakpoint at specifed URI, line number)</emphasis></markup></entry></row></tbody></tgroup></table>
 </section><section id="entities_cmd"><title id="entities_cmd.title">Entities</title>
 Print list of external General Parsed entities used data file (document)
+<table label="of usage"><tgroup cols="1"><tbody><row><entry>entities</entry></row><row><entry>entities -r<markup><emphasis>(Also print fully resolved URI for General Parsed entities)</emphasis></markup></entry></row></tbody></tgroup></table>
 <para>Shortcut name : ent</para>
-<table label="of usage"><tgroup cols="1"><tbody><row><entry>entities</entry></row></tbody></tgroup></table>
 </section><section id="exit_cmd"><title id="exit_cmd.title">Exit</title>
 Exit processing stylesheet as soon as possible.
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>exit</entry></row></tbody></tgroup></table>
