@@ -199,6 +199,33 @@ the &lt;ENTER&gt; key.
 If your operating system supports it file names will be expanded. 
 </para>
 
+         <para>
+Note that the libxml2 library used support the following path types for XSLT/XML documents
+<informaltable>
+               <tgroup cols="1">
+                  <tbody>
+                     <row>
+                        <entry>&lt;SomePath&gt;</entry>
+                     </row>
+                     <row>
+                        <entry>file://&lt;SomePath&gt;</entry>
+                     </row>
+                     <row>
+                        <entry>http://&lt;SomePath&gt;</entry>
+                     </row>
+                     <row>
+                        <entry>ftp://[user[:password]@]host[:port]/path</entry>
+                     </row>
+                  </tbody>
+               </tgroup>
+            </informaltable>
+         </para>
+
+         <para>
+Nornmally support for http:// and ftp:// XML document paths enabled in libxml2. When specifier http:// or ftp:// document paths ensure that host maps to IPv4 or IPv6 address used by related server. For
+  example instead of localhost you may need to use the IPv4 address 127.0.0.1
+</para>
+
          <para>Several commands take more that one argument. Some arguments can be 
  sourrounded by quotes to complex argument to be proceesed as one 
   argument. eg break quot;* | @quot; would allow you to se a breakpoint on the 

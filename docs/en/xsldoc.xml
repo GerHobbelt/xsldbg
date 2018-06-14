@@ -38,7 +38,7 @@ Note that the libxml2 library used support the following path types for XSLT/XML
 </list>
 </para>
 <para>
-When specifier http:// or ftp:// document paths ensure that host maps to IPv4 or IPv6 address used by related server. For
+Nornmally support for http:// and ftp:// XML document paths enabled in libxml2. When specifier http:// or ftp:// document paths ensure that host maps to IPv4 or IPv6 address used by related server. For
   example instead of localhost you may need to use the IPv4 address 127.0.0.1
 </para>
 <para>Several commands take more that one argument. Some arguments can be 

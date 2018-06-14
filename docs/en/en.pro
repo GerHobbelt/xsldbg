@@ -2,15 +2,43 @@ TEMPLATE=subdirs
 SUBDIRS=
 include(../../xsldbg.pri)
 
+extradocs.files = $$PWD/*.xsl \
+             $$PWD/*.xml \
+             $$PWD/*.docbook \
+             $$PWD/*.dtd \
+             $$PWD/*.txt \
+             $$PWD/CATALOG \
+             $$PWD/catalog.xml \
+             $$PWD/xsldoc.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.txt
+
+
+extradocs.path= $$DOCS_ROOT/en/
+
+INSTALLS += extradocs
+DIST += docs
+
 unix{
     message(doc root $$DOCS_ROOT)
+
+    # created XML catalog as needed
+    xmldocCatalog.target = .buildfile5
+    xmldocCatalog.commands = touch $$xmldocCatalog.target
+    xmldocCatalog.depends = xmldocCatalog2
+
+    # nasty shell script to seek to install xsldbg catalog
+    xmldocCatalog2.commands=sh $$PWD/createCatalog.sh $${DOCS_ROOT}/en
+    xmldocCatalog2.files =
+    xmldocCatalog2.path = $$DOCS_ROOT
+
+    INSTALLS+=xmldocCatalog2
+
     #generate the plain text documentation
     xsldoctxt.target = .buildfile1
     xsldoctxt.commands = touch $$xsldoctxt.target
     xsldoctxt.depends = xsldoctxt2
 
     xsldoctxt2.files = $$PWD/xsldoc.txt
-    xsldoctxt2.depends = $$PWD/xsldoc.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd
+    xsldoctxt2.depends = $$PWD/xsldoc.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd install_extradocs
     xsldoctxt2.path = $$DOCS_ROOT/en
     xsldoctxt2.commands = ../../src/xsldbg -noshell -param alldocs:\"\'1\'\" --param xsldbg_version:\"\'$${XSLDBG_VERSION}\'\" --output $$PWD/xsldoc.txt $$PWD/xsldoc.xsl $$PWD/xsldoc.xml
 
@@ -22,7 +50,7 @@ unix{
     xsldoctxtplain.depends = xsldoctxtplain2
     
     xsldoctxtplain2.files = $$PWD/plain/index.html
-    xsldoctxtplain2.depends = $$PWD/plain/xsldoc2html.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd
+    xsldoctxtplain2.depends = $$PWD/plain/xsldoc2html.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd install_extradocs
     xsldoctxtplain2.path = $$DOCS_ROOT/en/html
     xsldoctxtplain2.commands = ../../src/xsldbg --noshell --param alldocs:\"\'1\'\" --param xsldbg_version:\"\'$${XSLDBG_VERSION}\'\" --output $$PWD/plain/index.html $$PWD/plain/xsldoc2html.xsl $$PWD/xsldoc.xml
     
@@ -35,7 +63,7 @@ unix{
        # generate the docbook documentation for KDE
         xsldocKDEdocs.target = .buildfile3
         xsldocKDEdocs.commands = touch $$xsldocKDEdocs.target
-        xsldocKDEdocs.depends = xsldocKDEdocs2
+        xsldocKDEdocs.depends = xsldocKDEdocs2 install_extradocs xmldocCatalog
         
         xsldocKDEdocs2.files = $$PWD/KDE/index.docbook 
         xsldocKDEdocs2.depends = $$PWD/KDE/xsldoc2kde.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd
@@ -47,7 +75,7 @@ unix{
         # generate the docbook documentation for Gnome
         xsldocGnomedocs.target = .buildfile4
         xsldocGnomedocs.commands = touch $$xsldocGnomedocs.target
-        xsldocGnomedocs.depends = xsldocGnomedocs2
+        xsldocGnomedocs.depends = xsldocGnomedocs2 install_extradocs xmldocCatalog
         
         xsldocGnomedocs2.files = $$PWD/GNOME/gnome.docbook 
         xsldocGnomedocs2.depends = $$PWD/GNOME/xsldoc2gnome.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd
@@ -58,32 +86,5 @@ unix{
         
     }else {
        message(Did not find saxon, skipping generation of docbook documentation)
-    }
-    
-
-    xmldocCatalog.target = .buildfile5
-    xmldocCatalog.commands = touch $$xmldocCatalog.target
-    xmldocCatalog.depends = xmldocCatalog2
- 
-
-    # nasty shell script to seek to install xsldbg catalog
-    xmldocCatalog2.commands=sh $$PWD/createCatalog.sh $${DOCS_ROOT}/en
-    xmldocCatalog2.files =
-    xmldocCatalog2.path = $$DOCS_ROOT
-
-    INSTALLS+=xmldocCatalog2
+    }    
 }
-
-docs.files = *.xsl \
-	     *.xml \
-	     *.docbook \
-	     *.dtd \
-	     *.txt \
-	     CATALOG \
-             catalog.xml \
-	     $PWD/xsldoc.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.txt
-	     
-
-docs.path= $$DOCS_ROOT/en/
-
-INSTALLS += docs

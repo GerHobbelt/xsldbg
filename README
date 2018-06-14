@@ -14,6 +14,15 @@ Documentation
   export QTDIR=/usr/lib/qt5
   export KDEDIR=/opt/kde5
 
+Note that the libxml2 library used support the following path types for XSLT/XML documents
+* <SomePath>
+* file://<SomePath>
+* http://<SomePath>
+* ftp://[user[:password]@]host[:port]/path
+
+When specifier http:// or ftp:// document paths ensure that host maps to IPv4 or IPv6 address used by related server. For
+  example instead of localhost you may need to use the IPv4 address 127.0.0.1
+
 This package can be built on *nix and Windows.
 
 If found tools xslt-config and xml2-config will be used to set
