@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE testcmd SYSTEM "testcmd.dtd">
+<!-- 
+     File : test19.data
+     Author: Keith Isdale <keithisdale@gmail.com>
+     Description: xml data that decribes what to do for "test19"
+     Copyright Reserved Under GPL     
+-->
+
+  <!-- Test ftp source/XML commands -->
+
+<testcmd>
+
+<cmd>
+<test>break /
+</test>
+<result>
+<row>
+<matchtext>Reached template: \"/\"</matchtext>
+</row>
+</result>
+</cmd>
+
+<cmd>
+<test>show break</test>
+<result>
+<row>
+<breakpointlist file="ftp://xsldbg:xsldbg\@127.0.0.1/home/xsldbg/xsldbg_tests/test19.xsl" line="16" />
+</row>
+</result>
+</cmd>
+
+</testcmd>
+
+<!-- initialization code for xemacs -->
+<!--
+Local Variables:
+mode: sgml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+-->

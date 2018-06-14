@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- 
+     File : test17.xml
+     Author: Keith Isdale <keithisdale@gmail.com>
+     Description: xml data for stylesheet for test "test17"
+     Copyright Reserved Under GPL     
+-->
+
+<result>
+  <data/>
+  <extra/>
+</result>
+
+
+
+<!-- initialization code for xemacs -->
+<!--
+Local Variables:
+mode: sgml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+-->

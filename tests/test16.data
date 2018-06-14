@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE testcmd SYSTEM "testcmd.dtd">
+<!-- 
+     File : test16.data
+     Author: Keith Isdale <keithisdale@gmail.com>
+     Description: xml data that decribes what to do for "test16"
+     Copyright Reserved Under GPL     
+-->
+
+  <!-- Test chdir commands -->
+
+<testcmd>
+
+<cmd>
+<test>run
+break /
+continue
+</test>
+<result>
+<row>
+<matchtext>Reached template: \"/\"</matchtext>
+</row>
+</result>
+</cmd>
+
+<cmd>
+<test>show break</test>
+<result>
+<row>
+<breakpointlist file="tests/test16.xsl" line="16" />
+</row>
+</result>
+</cmd>
+
+<cmd>
+<test>chdir docs
+source ../tests/test16.xsl
+data ../tests/test15.xml
+delete *
+run
+break /
+continue</test>
+<result>
+<row>
+<matchtext>Changed to directory.*docs</matchtext>
+</row>
+<row>
+<matchtext>Reached template: \"/\"</matchtext>
+</row>
+</result>
+</cmd>
+
+<cmd>
+<test>show break</test>
+<result>
+<row>
+<breakpointlist file="../tests/test16.xsl" line="16" />
+</row>
+</result>
+</cmd>
+
+<cmd>
+<test>
+<!-- Clear current working directory before exiting -->
+setoption cwd ""
+quit</test>
+</cmd>
+
+</testcmd>
+
+
+<!-- initialization code for xemacs -->
+<!--
+Local Variables:
+mode: sgml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+-->

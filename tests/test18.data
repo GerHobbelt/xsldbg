@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE testcmd SYSTEM "testcmd.dtd">
+<!-- 
+     File : test18.data
+     Author: Keith Isdale <keithisdale@gmail.com>
+     Description: xml data that decribes what to do for "test18"
+     Copyright Reserved Under GPL     
+-->
+
+  <!-- Test chdir commands -->
+
+<testcmd>
+
+<cmd>
+<test></test>
+<result>
+<row>
+<matchtext>Error: Unexpected end in STDIN, aborting!!</matchtext>
+</row>
+</result>
+</cmd>
+</testcmd>
+
+
+<!-- initialization code for xemacs -->
+<!--
+Local Variables:
+mode: sgml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+-->

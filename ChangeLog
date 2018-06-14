@@ -11,6 +11,8 @@ Keith Isdale 9th June 2018 <keithisdale@gmail.com>
             Enties PublicID:"<ID>" SystemID:"<ID>" URI:"<URI>"
             Enties SystemID:"<ID>" URI:"<URI>"
         Update XsldbgDebuggerBase to emit the resolved URI of entities
+        Add tests for walk and trace commands
+	Add test for http:// and ftp:// XML/XSLT document paths
 
 Keith Isdale 23rd May 2018 <keithisdale@gmail.com>
     4.6.0

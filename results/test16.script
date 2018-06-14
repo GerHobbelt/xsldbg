@@ -1,0 +1,17 @@
+run
+break /
+continue
+
+show break
+chdir docs
+source ../tests/test16.xsl
+data ../tests/test15.xml
+delete *
+run
+break /
+continue
+show break
+
+
+setoption cwd ""
+quit
