@@ -1110,6 +1110,10 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     xmlFree(cmdline);
                     cmdline = tempResult;
                 }
+            } else if (!cmdline) {
+                //pannic ran out of command line instructions
+                xsldbgGenericErrorFunc("\nError: Unexpected end in STDIN, aborting!!\n");
+                xslDebugStatus = DEBUG_QUIT;
             }
         } else {
             /* don't need a prompt for running as when running as a thread */
