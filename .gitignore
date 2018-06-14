@@ -9,3 +9,4 @@ moc_*.cpp
 *.swp
 *.pro.user
 .directory
+*.output
