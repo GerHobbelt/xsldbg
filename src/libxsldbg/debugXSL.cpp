@@ -816,10 +816,10 @@ int updateSearchData(xsltTransformContextPtr styleCtxt,
     return result;
 }
 
-
 void debugXSLBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
               xsltTransformContextPtr ctxt)
 {
+    static QString lastMatch, lastMode;
     xmlDocPtr tempDoc = NULL;
     xmlNodePtr tempNode = NULL;
     rootCopy = root;
@@ -860,24 +860,33 @@ void debugXSLBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
 	nameTemp = fullQName(root->nameURI, root->name);
 	modeTemp = fullQName(root->modeURI, root->mode);
 	if (!nextCommandActive){
+        QString currentMatch, currentMode;
+
+        if (root->match) {
+            currentMatch = xsldbgText(root->match);
+            currentMode = xsldbgText(modeTemp);
+        }else {
+            currentMatch = xsldbgText(nameTemp);
+            currentMode = xsldbgText(modeTemp);
+        }
 	  /* we only want messages if we are not
 	    in the process of completing the next command */
 	  if (terminalIO == NULL) {
-            if (root->match)
-                xsldbgGenericErrorFunc(QObject::tr("\nReached template: \"%1\" mode: \"%2\"\n").arg(xsldbgText(root->match)).arg(xsldbgText(modeTemp)));
-            else
-                xsldbgGenericErrorFunc(QObject::tr("\nReached template: \"%1\" mode: \"%2\"\n").arg(xsldbgText(nameTemp)).arg(xsldbgText(modeTemp)));
+            // only show "Reached template" where something has match or mode is different
+            if ((currentMatch != lastMatch) || (currentMode != lastMode))
+                xsldbgGenericErrorFunc(QObject::tr("Reached template: \"%1\" mode: \"%2\"\n").arg(currentMatch).arg(currentMode));
 	  } else {
             if ((xslDebugStatus == DEBUG_TRACE) ||
                 (xslDebugStatus == DEBUG_WALK)) {
-		QString message;
-                if (root->match)
-		  message = QObject::tr("\nReached template: \"%1\" mode: \"%2\"\n").arg(xsldbgText(root->match)).arg(xsldbgText(modeTemp));
-                else
-		  message = QObject::tr("\nReached template: \"%1\" mode: \"%2\"\n").arg(xsldbgText(nameTemp)).arg(xsldbgText(modeTemp));
-		fprintf(terminalIO, "%s", message.toUtf8().constData());
+                // only show "Reached template" where something has match or mode is different
+                if ((currentMatch != lastMatch) || (currentMode != lastMode)) {
+                    QString message = QObject::tr("Reached template: \"%1\" mode: \"%2\"\n").arg(currentMatch).arg(currentMode);
+                    fprintf(terminalIO, "%s", message.toUtf8().constData());
+                }
             }
 	  }
+      lastMatch = currentMatch;
+      lastMode = currentMode;
 	}
 	if (nameTemp)
 	  xmlFree(nameTemp);
@@ -1341,9 +1350,9 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     walkBreakPoints((xmlHashScanner)
                                     xslDbgShellPrintBreakPoint, NULL);
                     if (printCount == 0)
-                        xsldbgGenericErrorFunc(QObject::tr("\nNo breakpoints are set for the file.\n"));
+                        xsldbgGenericErrorFunc(QObject::tr("\nNo breakpoints are set for the file.\n\n"));
                     else
-                        xsldbgGenericErrorFunc(QObject::tr("\tTotal of %1 breakpoints present.").arg(printCount) + QString("\n"));
+                        xsldbgGenericErrorFunc(QObject::tr("\tTotal of %1 breakpoints present.\n\n").arg(printCount));
                 }
                 cmdResult = 1;
                 break;
