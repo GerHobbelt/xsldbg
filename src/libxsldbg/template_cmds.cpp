@@ -113,9 +113,9 @@ void printTemplateHelper(xsltTemplatePtr templ, int verbose,
 	  } else {
 	    modeTemp = fullQName(templ->modeURI, templ->mode);
 	    if (verbose)
-	      xsldbgGenericErrorFunc(QObject::tr(" template: \"%1\" mode: \"%2\" in file \"%3\" at line %4\n").arg(xsldbgText(name)).arg(xsldbgText(modeTemp)).arg(xsldbgUrl(url)).arg(xmlGetLineNo(templ->elem)));
+          xsldbgGenericErrorFunc(QObject::tr(" template: \"%1\" mode: \"%2\" in file \"%3\" at line %4\n").arg(xsldbgText(name)).arg(xsldbgText(modeTemp)).arg(xsldbgUrl(url)).arg(xmlGetLineNo(templ->elem)));
 	    else
-	       xsldbgGenericErrorFunc(QString("\"%s\" ").arg(xsldbgText(name)));
+           xsldbgGenericErrorFunc(QString("\"%s\" \n").arg(xsldbgText(name)));
 	    if (modeTemp)
 	      xmlFree(modeTemp);
 	  }
@@ -179,17 +179,16 @@ int xslDbgShellPrintTemplateNames(xsltTransformContextPtr styleCtxt,
             /* print them out in the order their in the file */
             printTemplateHelper(templ, verbose, &templateCount,
                                 &printedTemplateCount, arg);
-            xsltGenericError(xsltGenericErrorContext, "\n");
             if (curStyle->next)
                 curStyle = curStyle->next;
             else
                 curStyle = curStyle->imports;
         }
         if (templateCount == 0) {
-            xsldbgGenericErrorFunc(QObject::tr("\tNo XSLT templates found.\n"));
+            xsldbgGenericErrorFunc(QObject::tr("\n\tNo XSLT templates found.\n"));
         } else {
-	    xsldbgGenericErrorFunc(QObject::tr("\tTotal of %1 XSLT templates found").arg(templateCount) + QString("\n"));
-	    xsldbgGenericErrorFunc(QObject::tr("\tTotal of %1 XSLT templates printed").arg(printedTemplateCount) + QString("\n"));
+        xsldbgGenericErrorFunc(QObject::tr("\n\tTotal of %1 XSLT templates found").arg(templateCount) + QString("\n"));
+        xsldbgGenericErrorFunc(QObject::tr("\tTotal of %1 XSLT templates printed").arg(printedTemplateCount) + QString("\n"));
         }
     }
 
