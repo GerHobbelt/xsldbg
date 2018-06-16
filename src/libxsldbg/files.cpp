@@ -215,8 +215,6 @@ void guessStylesheetHelper(void *payload, void *data,
     xsltStylesheetPtr style = (xsltStylesheetPtr) payload;
     searchInfoPtr searchCriteria = (searchInfoPtr) data;
     nodeSearchDataPtr searchData = NULL;
-    /* where did the directory/URI separator occur */
-    char *lastSlash;
 
     if (!style || !style->doc || !searchCriteria || !searchCriteria->data
         || (searchCriteria->type != SEARCH_NODE))
@@ -235,12 +233,22 @@ void guessStylesheetHelper(void *payload, void *data,
             return;
         }
 
-
         /* try to guess we assume that the files are unique */
         xmlStrCpy(filesBuffer, "__#!__");
+
         /* try relative to top stylesheet directory */
         if (!stylePath().isEmpty()) {
+            QChar pathSeparator = QDir::separator();
+            QChar lastChar = stylePath().at(stylePath().length() - 1);
+
+            if (stylePath().indexOf(':') != -1) { // if URI then always use forward slash
+                pathSeparator = '/';
+            }
             xmlStrCpy(filesBuffer, stylePath().toUtf8().constData());
+            if (lastChar != pathSeparator) { //ensure that there is a final path separator present
+                QString pathSeparatorString(pathSeparator);
+                xmlStrCat(filesBuffer, pathSeparatorString.toUtf8().constData());
+            }
             xmlStrCat(filesBuffer, searchData->nameInput);
         }
         if (xmlStrCmp(style->doc->URL, filesBuffer) == 0) {
@@ -254,7 +262,14 @@ void guessStylesheetHelper(void *payload, void *data,
 
         if (!workingPath().isEmpty()) {
             /* try relative to working directory */
+            QChar pathSeparator = QDir::separator();
+            QChar lastChar = workingPath().at(workingPath().length() - 1);
+
             xmlStrCpy(filesBuffer, workingPath().toUtf8().constData());
+            if (lastChar != pathSeparator) { //ensure that there is a final path separator present
+                QString pathSeparatorString(pathSeparator);
+                xmlStrCat(filesBuffer, pathSeparatorString.toUtf8().constData());
+            }
             xmlStrCat(filesBuffer, searchData->nameInput);
         }
         if (xmlStrCmp(style->doc->URL, filesBuffer) == 0) {
@@ -267,23 +282,27 @@ void guessStylesheetHelper(void *payload, void *data,
         }
 
 
-	/* Find the last separator of the stylsheet's URL */
-	lastSlash = xmlStrChr(style->doc->URL, URISEPARATORCHAR);
-	if (!lastSlash)
-	  lastSlash = xmlStrChr(style->doc->URL, PATHCHAR);
+        /* Find the last separator of the stylsheet's URL */
+        xmlChar pathSeparator = URISEPARATORCHAR;
 
+        if (xmlStrChr(style->doc->URL, ':') != 0) { // if URI then always use forward slash
+            pathSeparator = '/';
+        }
+
+        xmlChar* lastSlash = (xmlChar*)xmlStrChr(style->doc->URL, pathSeparator);
         if (lastSlash) {
-            /* Last try, assume nameInput contains only a file name
-             * Strip of the file name at end of the stylesheet doc URL */
-	  lastSlash++;    /* skip the slash */
-	  if (xmlStrCmp(lastSlash, searchData->nameInput) == 0) {
-	    /* guessed right! */
-	    searchData->guessedNameMatch =
-                        (xmlChar *) xmlMemStrdup((char *) style->doc->URL);
-                    searchData->node = (xmlNodePtr) style->doc;
-                    searchCriteria->found = 1;
-                }
+            xmlStrnCpy(filesBuffer, style->doc->URL, lastSlash - style->doc->URL);
+            xmlStrCat(filesBuffer, " "); //quick and dirty to append a char
+            filesBuffer[xmlStrlen(filesBuffer) - 1] = pathSeparator;
+            xmlStrCat(filesBuffer, searchData->nameInput);
+          if (xmlStrCmp(style->doc->URL, filesBuffer) == 0) {
+                /* guessed right! */
+                searchData->guessedNameMatch =
+                      (xmlChar *) xmlMemStrdup((char *) filesBuffer);
+                searchData->node = (xmlNodePtr) style->doc;
+                searchCriteria->found = 1;
             }
+         }
     }
 }
 
@@ -295,8 +314,6 @@ void guessStylesheetHelper2(void *payload, void *data,
     xmlNodePtr node = (xmlNodePtr) payload;
     searchInfoPtr searchCriteria = (searchInfoPtr) data;
     nodeSearchDataPtr searchData = NULL;
-    /* where did the directory/URI separator occur */
-    char *lastSlash;
 
     if (!node || !node->doc || !searchCriteria || !searchCriteria->data ||
         (searchCriteria->type != SEARCH_NODE))
@@ -320,7 +337,17 @@ void guessStylesheetHelper2(void *payload, void *data,
         xmlStrCpy(filesBuffer, "__#!__");
         /* try relative to top stylesheet directory */
         if (!stylePath().isEmpty()) {
+            QChar pathSeparator = QDir::separator();
+            QChar lastChar = stylePath().at(stylePath().length() - 1);
+
+            if (stylePath().indexOf(':') != -1) { // if URI then always use forward slash
+                pathSeparator = '/';
+            }
             xmlStrCpy(filesBuffer, stylePath().toUtf8().constData());
+            if (lastChar != pathSeparator) { //ensure that there is a final path separator present
+                QString pathSeparatorString(pathSeparator);
+                xmlStrCat(filesBuffer, pathSeparatorString.toUtf8().constData());
+            }
             xmlStrCat(filesBuffer, searchData->nameInput);
         }
         if (xmlStrCmp(node->doc->URL, filesBuffer) == 0) {
@@ -334,9 +361,15 @@ void guessStylesheetHelper2(void *payload, void *data,
 
         if (!workingPath().isEmpty()) {
             /* try relative to working directory */
+            QChar pathSeparator = QDir::separator();
+            QChar lastChar = workingPath().at(workingPath().length() - 1);
+
             xmlStrCpy(filesBuffer, workingPath().toUtf8().constData());
-            xmlStrCat(filesBuffer, searchData->nameInput);
-        }
+            if (lastChar != pathSeparator) { //ensure that there is a final path separator present
+                QString pathSeparatorString(pathSeparator);
+                xmlStrCat(filesBuffer, pathSeparatorString.toUtf8().constData());
+            }
+            xmlStrCat(filesBuffer, searchData->nameInput);        }
         if (xmlStrCmp(node->doc->URL, filesBuffer) == 0) {
             /* guessed right! */
             searchData->guessedNameMatch =
@@ -347,23 +380,27 @@ void guessStylesheetHelper2(void *payload, void *data,
         }
 
 
-	/* Find the last separator of the stylsheet's URL */
-	lastSlash = xmlStrChr(node->doc->URL, URISEPARATORCHAR);
-	if (!lastSlash)
-	  lastSlash = xmlStrChr(node->doc->URL, PATHCHAR);
+        /* Find the last separator of the document's URL */
+        xmlChar pathSeparator = URISEPARATORCHAR;
 
+        if (xmlStrChr(node->doc->URL, ':') != 0) { // if URI then always use forward slash
+            pathSeparator = '/';
+        }
+
+        xmlChar* lastSlash = (xmlChar*)xmlStrChr(node->doc->URL, pathSeparator);
         if (lastSlash) {
-	  /* Last try, assume nameInput contains only a file name
-	   * Strip of the file name at end of the stylesheet doc URL */
-	  lastSlash++;    /* skip the slash */
-	  if (xmlStrCmp(lastSlash, searchData->nameInput) == 0) {
-	    /* guessed right! */
-	    searchData->guessedNameMatch =
-                        (xmlChar *) xmlMemStrdup((char *) node->doc->URL);
-	    searchData->node = node;
-	    searchCriteria->found = 1;
-	  }
-	}
+            xmlStrnCpy(filesBuffer, node->doc->URL, lastSlash - node->doc->URL);
+            xmlStrCat(filesBuffer, " "); //quick and dirty to append a char
+            filesBuffer[xmlStrlen(filesBuffer) - 1] = pathSeparator;
+            xmlStrCat(filesBuffer, searchData->nameInput);
+          if (xmlStrCmp(node->doc->URL, filesBuffer) == 0) {
+                /* guessed right! */
+                searchData->guessedNameMatch =
+                      (xmlChar *) xmlMemStrdup((char *) filesBuffer);
+                searchData->node = node;
+                searchCriteria->found = 1;
+            }
+         }
     }
 }
 
