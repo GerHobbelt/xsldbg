@@ -7,27 +7,119 @@
      Copyright Reserved Under GPL     
 -->
 
-  <!-- Test http source/XML -->
+  <!-- Test simple breakpoint http source/XML -->
 
 <testcmd>
 
 <cmd>
-<test>break /
-</test>
+<test>break data
+show break
+continue</test>
 <result>
 <row>
-<matchtext>Reached template: \"/\"</matchtext>
+<breakpointlist file="http://localhost/xsldbg/tests/test17.xsl" line="20" />
+</row>
+<row>
+<matchtext>Total of 1 breakpoints present</matchtext>
+</row>
+<row>
+<matchtext>Reached template: \"data\"</matchtext>
+</row>
+<row>
+<matchtext>Breakpoint for file \"http://localhost/xsldbg/tests/test17.xsl\" at line 20</matchtext>
 </row>
 </result>
 </cmd>
 
 <cmd>
-<test>show break</test>
+<test>delete *
+break -l "test17.xsl" 20
+showbreak
+run
+continue</test>
 <result>
 <row>
-<breakpointlist file="http://localhost/xsldbg/tests/test16.xsl" line="16" />
+<breakpointlist file="http://localhost/xsldbg/tests/test17.xsl" line="20" />
+</row>
+<row>
+<matchtext>Total of 1 breakpoints present</matchtext>
+</row>
+<row>
+<matchtext>Reached template: \"data\"</matchtext>
+</row>
+<row>
+<matchtext>Breakpoint for file \"http://localhost/xsldbg/tests/test17.xsl\" at line 20</matchtext>
 </row>
 </result>
+</cmd>
+
+<cmd> <!--  Set breakpoint on full URI for XSLT script -->
+<test>delete *
+break -l "http://localhost/xsldbg/tests/test17.xsl" 20
+showbreak
+run
+continue</test>
+<result>
+<row>
+<breakpointlist file="http://localhost/xsldbg/tests/test17.xsl" line="20" />
+</row>
+<row>
+<matchtext>Total of 1 breakpoints present</matchtext>
+</row>
+<row>
+<matchtext>Reached template: \"data\"</matchtext>
+</row>
+<row>
+<matchtext>Breakpoint for file \"http://localhost/xsldbg/tests/test17.xsl\" at line 20</matchtext>
+</row>
+</result>
+</cmd>
+
+<cmd> <!-- set breakpoint on XML data -->
+<test>delete *
+break -l test17.xml 11
+showbreak
+run
+continue
+data
+source</test>
+<result>
+<row>
+<breakpointlist file="http://localhost/xsldbg/tests/test17.xml" line="11" />
+</row>
+<row>
+<matchtext>Total of 1 breakpoints present</matchtext>
+</row>
+<row>
+<matchtext>Reached template: \"extra\"</matchtext>
+</row>
+<row>
+<matchtext>.xsldbg. extra .+xsldbg. xsl:template</matchtext>
+</row>
+</result>
+</cmd>
+
+<cmd> <!-- set breakpoint on full URI for XML data -->
+<test>delete *
+break -l "http://localhost/xsldbg/tests/test17.xml" 11
+showbreak
+run
+continue</test>
+<result>
+<row>
+<breakpointlist file="http://localhost/xsldbg/tests/test17.xml" line="11" />
+</row>
+<row>
+<matchtext>Total of 1 breakpoints present</matchtext>
+</row>
+<row>
+<matchtext>Reached template: \"extra\"</matchtext>
+</row>
+</result>
+</cmd>
+
+<cmd>
+    <test>quit</test>
 </cmd>
 
 </testcmd>

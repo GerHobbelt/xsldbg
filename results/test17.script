@@ -1,3 +1,26 @@
-break /
-
+break data
 show break
+continue
+delete *
+break -l "test17.xsl" 20
+showbreak
+run
+continue
+delete *
+break -l "http://localhost/xsldbg/tests/test17.xsl" 20
+showbreak
+run
+continue
+delete *
+break -l test17.xml 11
+showbreak
+run
+continue
+data
+source
+delete *
+break -l "http://localhost/xsldbg/tests/test17.xml" 11
+showbreak
+run
+continue
+quit

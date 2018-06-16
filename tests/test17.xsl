@@ -14,7 +14,14 @@
   <xsl:output method="text"/>
 
   <xsl:template match="/">
-    <!-- ignore node content -->
+    <xsl:apply-templates/>
   </xsl:template>
 
+  <xsl:template match="data">
+    <xsl:apply-templates/>
+  </xsl:template>
+
+    <xsl:template match="extra">
+      <xsl:apply-templates/>
+    </xsl:template>
 </xsl:stylesheet>
