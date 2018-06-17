@@ -78,69 +78,161 @@ void printTemplateHelper(xsltTemplatePtr templ, int verbose,
 
 
 void printTemplateHelper(xsltTemplatePtr templ, int verbose,
-                    int *templateCount, int *count, xmlChar * templateName)
+                    int *templateCount, int *count, xmlChar * templateName, xmlListPtr templateList)
 {
-  xmlChar *name, *defaultUrl = (xmlChar *) "<n/a>";
-    const xmlChar *url;
-
       if (!templ) 
         return;
 
+      xmlChar *name, *defaultUrl = (xmlChar *) "<n/a>";
+      const xmlChar *url;
+
       *templateCount = *templateCount + 1;
       printTemplateHelper(templ->next, verbose,
-			  templateCount, count, templateName);
+                          templateCount, count, templateName, templateList);
       if (templ->elem && templ->elem->doc && templ->elem->doc->URL) {
-	url = templ->elem->doc->URL;
+          url = templ->elem->doc->URL;
       } else {
-	url = defaultUrl;
+          url = defaultUrl;
       }
 
       if (templ->match)
-	name = xmlStrdup(templ->match);
+          name = xmlStrdup(templ->match);
       else
-	name = fullQName(templ->nameURI, templ->name);
+          name = fullQName(templ->nameURI, templ->name);
 
       if (name) {
-	if (templateName &&
-	    (xmlStrcmp(templateName, name) != 0)) {
-	  /*  search for template name supplied failed */
-	  /* empty */
-	} else {
-	  xmlChar *modeTemp = NULL;
-	  *count = *count + 1;
-	  if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
-	    notifyListQueue(templ);
-	  } else {
-	    modeTemp = fullQName(templ->modeURI, templ->mode);
-	    if (verbose)
-          xsldbgGenericErrorFunc(QObject::tr(" template: \"%1\" mode: \"%2\" in file \"%3\" at line %4\n").arg(xsldbgText(name)).arg(xsldbgText(modeTemp)).arg(xsldbgUrl(url)).arg(xmlGetLineNo(templ->elem)));
-	    else
-           xsldbgGenericErrorFunc(QString("\"%s\" \n").arg(xsldbgText(name)));
-	    if (modeTemp)
-	      xmlFree(modeTemp);
-	  }
-	}
-	       
-	xmlFree(name);
-	  
+          if (templateName &&
+                  (xmlStrcmp(templateName, name) != 0)) {
+              /*  search for template name supplied failed */
+              /* empty */
+          } else {
+              *count = *count + 1;
+              if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
+                  notifyListQueue(templ);
+              } else {
+                  xmlListAppend(templateList, templ);
+              }
+          }
+
+          xmlFree(name);
+
       }
+}
+/**
+ * _compareTemplates:
+ * @data1:		the pointer to first Template
+ * @data2:		the pointer to second Template
+ *
+ * Compares the namespaces by breakpoint id.
+ *
+ * Returns -1 if data1 < data2, 0 if data1 == data2 or 1 if data1 > data2.
+ */
+static int _compareTemplates(const void *data1, const void *data2)
+{
+    Q_CHECK_PTR(data1);
+    Q_CHECK_PTR(data2);
+    xmlChar *defaultUrl = (xmlChar *) "<n/a>";
+    const xmlChar *url1, *url2;
+    xsltTemplatePtr templ1 = (xsltTemplatePtr)data1;
+    xsltTemplatePtr templ2 = (xsltTemplatePtr)data2;
+    int temp1_lineNo = xmlGetLineNo(templ1->elem);
+    int temp2_lineNo = xmlGetLineNo(templ2->elem);
+
+    if (templ1->elem && templ1->elem->doc && templ1->elem->doc->URL) {
+        url1 = templ1->elem->doc->URL;
+    } else {
+        url1 = defaultUrl;
+    }
+
+    if (templ2->elem && templ2->elem->doc && templ2->elem->doc->URL) {
+        url2 = templ2->elem->doc->URL;
+    } else {
+        url2 = defaultUrl;
+    }
+
+    int result = xmlStrcmp(url1, url2);
+    if (result == 0) {
+        result = temp1_lineNo - temp2_lineNo;
+    }
+
+    return result;
+}
+
+struct templateListInfo {
+    bool verbose;
+    const xmlChar *templateSearchName;
+    int templatesMatching;
+};
+
+static int _templateListPrinter(const void *data, const void *user)
+{
+    Q_CHECK_PTR(data);
+    Q_CHECK_PTR(user);
+
+    xsltTemplatePtr templ = (xsltTemplatePtr)data;
+    templateListInfo *infoPtr = (templateListInfo*)user;
+    bool verbose = infoPtr->verbose;
+    const xmlChar *templateName = infoPtr->templateSearchName;
+    xmlChar *name, *defaultUrl = (xmlChar *) "<n/a>";
+    const xmlChar *url;
+
+    if (!templ)
+        return 0;
+
+    if (templ->elem && templ->elem->doc && templ->elem->doc->URL) {
+        url = templ->elem->doc->URL;
+    } else {
+        url = defaultUrl;
+    }
+
+    if (templ->match)
+        name = xmlStrdup(templ->match);
+    else
+        name = fullQName(templ->nameURI, templ->name);
+
+    if (name) {
+        if (templateName &&
+                (xmlStrstr(name, templateName) == 0)) {
+            /*  search for template name supplied failed */
+            /* empty */
+        } else {
+            xmlChar *modeTemp = NULL;
+            infoPtr->templatesMatching++;
+            if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
+                notifyListQueue(templ);
+            } else {
+                modeTemp = fullQName(templ->modeURI, templ->mode);
+                if (verbose)
+                    xsldbgGenericErrorFunc(QObject::tr(" template: \"%1\" mode: \"%2\" in file \"%3\" at line %4\n").arg(xsldbgText(name)).arg(xsldbgText(modeTemp)).arg(xsldbgUrl(url)).arg(xmlGetLineNo(templ->elem)));
+                else
+                    xsldbgGenericErrorFunc(QString(" template: \"%1\"\n").arg(xsldbgText(name)));
+                if (modeTemp)
+                    xmlFree(modeTemp);
+            }
+        }
+
+        xmlFree(name);
+    }
+
+    return 1; // keep walking list
 }
 
 
 int xslDbgShellPrintTemplateNames(xsltTransformContextPtr styleCtxt,
                               xmlShellCtxtPtr ctxt,
-                              xmlChar * arg, int verbose, int allFiles)
+                              xmlChar * arg, int verbose)
 {
     Q_UNUSED(ctxt);
-    int templateCount = 0, printedTemplateCount = 0;
     int result = 0;
     xsltStylesheetPtr curStyle;
     xsltTemplatePtr templ;
+    xmlListPtr templateList = xmlListCreate(NULL, _compareTemplates);
+    const xmlChar *templateSearchName = NULL;
 
     if (xmlStrLen(arg) == 0) {
         arg = NULL;
     } else {
-        allFiles = 1;           /* make sure we find it if we can */
+        templateSearchName = arg;
     }
 
     if (!styleCtxt) {
@@ -148,49 +240,47 @@ int xslDbgShellPrintTemplateNames(xsltTransformContextPtr styleCtxt,
         return result;
     }
 
-    if (allFiles)
-        curStyle = styleCtxt->style;
-    else {
-        /* try to find files in the current stylesheet */
-        /* root copy is set to the stylesheet found by debugXSLBreak */
-        if (debugXSLGetTemplate())
-            curStyle = debugXSLGetTemplate()->style;
+    curStyle = styleCtxt->style;
+
+    while (curStyle) {
+        templ = curStyle->templates;
+        while(templ) {
+            xmlListAppend(templateList, templ);
+            templ = templ->next;
+        }
+        if (curStyle->next)
+            curStyle = curStyle->next;
         else
-            curStyle = NULL;
+            curStyle = curStyle->imports;
     }
+
+    templateListInfo templateInfo;
+    templateInfo.verbose = verbose;
+    templateInfo.templatesMatching = 0;
+    templateInfo.templateSearchName = templateSearchName;
 
     if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
         notifyListStart(XSLDBG_MSG_TEMPLATE_CHANGED);
-        while (curStyle) {
-            templ = curStyle->templates;
-            /* print them out in the order their in the file */
-            printTemplateHelper(templ, verbose, &templateCount,
-                                &printedTemplateCount, arg);
-            if (curStyle->next)
-                curStyle = curStyle->next;
-            else
-                curStyle = curStyle->imports;
-        }
-        notifyListSend();
+    }
+
+    xmlListSort(templateList);
+    xmlListWalk(templateList, _templateListPrinter, &templateInfo);
+
+    if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
+         notifyListSend();
     } else {
-        xsltGenericError(xsltGenericErrorContext, "\n");
-        while (curStyle) {
-            templ = curStyle->templates;
-            /* print them out in the order their in the file */
-            printTemplateHelper(templ, verbose, &templateCount,
-                                &printedTemplateCount, arg);
-            if (curStyle->next)
-                curStyle = curStyle->next;
-            else
-                curStyle = curStyle->imports;
-        }
-        if (templateCount == 0) {
+        int templateCount = xmlListSize(templateList);
+        if (!templateCount) {
             xsldbgGenericErrorFunc(QObject::tr("\n\tNo XSLT templates found.\n"));
         } else {
-        xsldbgGenericErrorFunc(QObject::tr("\n\tTotal of %1 XSLT templates found").arg(templateCount) + QString("\n"));
-        xsldbgGenericErrorFunc(QObject::tr("\tTotal of %1 XSLT templates printed").arg(printedTemplateCount) + QString("\n"));
+            xsldbgGenericErrorFunc(QObject::tr("\n\tTotal of %1 XSLT templates found\n").arg(templateInfo.templatesMatching));
+            if (templateSearchName) {
+                xsldbgGenericErrorFunc(QObject::tr("\tTotal of %1 XSLT templates available\n").arg(templateCount));
+            }
         }
     }
+
+    xmlListDelete(templateList);
 
     result = 1;
     return result;

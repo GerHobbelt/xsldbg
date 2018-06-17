@@ -84,7 +84,7 @@ Usage:
 - - - - - - - - - - - - - - - - - - - - 
 
 Command : Break
-Summary : Break at a template, at a location in a stylesheet or xml file loaded by xsldbg, or at the current node. 
+Summary : Break at a template, at a location in a stylesheet or xml file loaded by xsldbg, or at the current node.
 New for xsldbg 3.1.4: When in gdb compatabilty mode orpaned breakpoints can be set at a specific file and line number and be resolved to an active later on. 
  
 Shortcut name: b 
@@ -557,7 +557,8 @@ Shortcut name: t
 Usage: 
  
         templates 
-        templates <TEMPLATE>   (Print details of template named <TEMPLATE> if it can be found) 
+        templates <TEMPLATE>   (Print details of templates matching <TEMPLATE> if it can be found) 
+        templates -q [<TEMPLATE>]   (Print brief details of templates. If <TEMPLATE> argument is provided look for templates matching <TEMPLATE>) 
 - - - - - - - - - - - - - - - - - - - - 
 
 Command : Trace

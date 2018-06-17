@@ -218,17 +218,12 @@
  * @param arg Not used
  * @param verbose If 1 then print extra messages about templates found,
  *            otherwise print normal messages only 
- * @param allFiles If 1 then look for all templates in stylsheets found in 
- *                 @p styleCtxt
- *             otherwise look in the stylesheet found by 
- *                 debugXSLBreak function
  * @returns 1 on success,
  *          0 otherwise
  */
     int xslDbgShellPrintTemplateNames(xsltTransformContextPtr styleCtxt,
                                       xmlShellCtxtPtr ctxt,
-                                      xmlChar * arg, int verbose,
-                                      int allFiles);
+                                      xmlChar * arg, int verbose);
 
 
 

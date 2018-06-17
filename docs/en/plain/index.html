@@ -204,11 +204,11 @@ Nornmally support for http:// and ftp:// XML document paths enabled in libxml2. 
 </table>
 <br><br><a name="break"></a><table width="100%" class="cmd">
 <th class="cmdth">Break</th>
-<tr class="cmdsummary"><td>Break at a template, at a location in a stylesheet or xml file loaded by xsldbg, or at the current node. 
+<tr class="cmdsummary"><td>Break at a template, at a location in a stylesheet or xml file loaded by xsldbg, or at the current node.
 New for xsldbg 3.1.4: When in gdb compatabilty mode orpaned breakpoints can be set at a specific file and line number and be resolved to an active later on.</td></tr>
 <tr class="cmdtr"><td class="cmdtd">
 <p>Shortcut name: b</p>
-<p>xsldbg will try to guess the complete URL given a 
+<p>xsldbg will try to guess the complete URL given a
 <table class="list"><tr>
 <td width="10"></td>
 <td><table class="listbody">
@@ -223,11 +223,11 @@ Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </p>
 <p>This command will match a partial or complete QNAME template and or mode name provided. Eg "template" will match any QNAME with a local part of "template"
 </p>
-<p>Any name spaces in the provided QNAME will be expanded as specified 
+<p>Any name spaces in the provided QNAME will be expanded as specified
 by the names spaces defined in the XSL SOURCE file. eg "xsl:test1"  will be expanded to "http://www.w3.org/199/XSL/Transform:test1"
 </p>
-<p>A requested breakpoint may need to be resolved to its associated URL and line number. This is done automaticly after 
-the first template has been seen by xsldbg. Breakpoints are re-validated shortly after the start of each run. 
+<p>A requested breakpoint may need to be resolved to its associated URL and line number. This is done automaticly after
+the first template has been seen by xsldbg. Breakpoints are re-validated shortly after the start of each run.
 </p>
 <p>Automatic breakpoint validation is used when gdb mode is enabled - the default behaviour of xsldbg</p>
 </td></tr>
@@ -696,7 +696,7 @@ This command has the same effect of entering the commands "step" and then "up"</
 <p>All output files are stored in, value of the "searchresultspath" option if set, or the same directory as the provided stylesheet. searchresults.xml is normally transformed by  search.xsl, but will be transformed using searchhtml.xsl if the "prefrehtml" option is set.
 </p>
 <p>When the search command is issued a xml file (searchresults.xml) will be created. You can then process this file with your own stylesheet to present data in a other ways. If "preferhtml" option is not set
-then searchresult.txt is printed to display. 
+then searchresult.txt is printed to display.
 </p>
 <p>Depending on the amount of data collected it might take a while to complete this command.
 </p>
@@ -962,7 +962,8 @@ then searchresult.txt is printed to display.
 <td width="10"></td>
 <td><table class="listbody">
 <tr><td>templates    </td></tr>
-<tr><td>templates &lt;TEMPLATE&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Print details of template named &lt;TEMPLATE&gt; if it can be found)</i>    </td></tr>
+<tr><td>templates &lt;TEMPLATE&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Print details of templates matching &lt;TEMPLATE&gt; if it can be found)</i>    </td></tr>
+<tr><td>templates -q [&lt;TEMPLATE&gt;]&nbsp;&nbsp;&nbsp;&nbsp;<i>(Print brief details of templates. If &lt;TEMPLATE&gt; argument is provided look for templates matching &lt;TEMPLATE&gt;)</i>    </td></tr>
 </table></td>
 </tr>
 </table></tr>

@@ -1272,15 +1272,15 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 {
                     int allFiles = 1, verbose = 1;
 
-                    if (xmlStrLen(arg) && (xmlStrCmp(arg, "this") == 0)) {
-                        allFiles = 0;
+                    if (xmlStrLen(arg) && (xmlStrCmp(arg, "-q") == 0)) {
+                        verbose = 0;
+                        arg[0] = 0; // zero length
                     }
 
                     /* be verbose when printing template names */
                     /* if args is not empty then print names this stylesheet */
                     cmdResult =
-                        xslDbgShellPrintTemplateNames(styleCtxt, ctxt, arg,
-                                                      verbose, allFiles);
+                        xslDbgShellPrintTemplateNames(styleCtxt, ctxt, arg, verbose);
                     break;
                 }
 

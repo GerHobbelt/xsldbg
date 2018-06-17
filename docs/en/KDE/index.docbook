@@ -50,17 +50,17 @@ Add an expression to be watched. See showwatch for display watch values
 Print the base for this node
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>base</entry></row></tbody></tgroup></table>
 </section><section id="break_cmd"><title id="break_cmd.title">Break</title>
-Break at a template, at a location in a stylesheet or xml file loaded by xsldbg, or at the current node. 
+Break at a template, at a location in a stylesheet or xml file loaded by xsldbg, or at the current node.
 New for xsldbg 3.1.4: When in gdb compatabilty mode orpaned breakpoints can be set at a specific file and line number and be resolved to an active later on.
-<para>Shortcut name: b</para><para>xsldbg will try to guess the complete URL given a 
+<para>Shortcut name: b</para><para>xsldbg will try to guess the complete URL given a
 <informaltable><tgroup cols="1"><tbody><row/><row/><row/></tbody></tgroup></informaltable>
 Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
 </para><para> break -l xsldoc.xsl 26
 </para><para>This command will match a partial or complete QNAME template and or mode name provided. Eg "template" will match any QNAME with a local part of "template"
-</para><para>Any name spaces in the provided QNAME will be expanded as specified 
+</para><para>Any name spaces in the provided QNAME will be expanded as specified
 by the names spaces defined in the XSL SOURCE file. eg "xsl:test1"  will be expanded to "http://www.w3.org/199/XSL/Transform:test1"
-</para><para>A requested breakpoint may need to be resolved to its associated URL and line number. This is done automaticly after 
-the first template has been seen by xsldbg. Breakpoints are re-validated shortly after the start of each run. 
+</para><para>A requested breakpoint may need to be resolved to its associated URL and line number. This is done automaticly after
+the first template has been seen by xsldbg. Breakpoints are re-validated shortly after the start of each run.
 </para><para>Automatic breakpoint validation is used when gdb mode is enabled - the default behaviour of xsldbg</para>
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>break -l &lt;FILENAME&gt; &lt;LINENO&gt;<markup><emphasis>(To set breakpoint at specified file, line number)</emphasis></markup></entry></row><row><entry>break -l &lt;URI&gt; &lt;LINENO&gt;<markup><emphasis>(To set breakpoint at specified URI, line number)</emphasis></markup></entry></row><row><entry>break &lt;TEMPLATE_NAME&gt;<markup><emphasis>(To break at named or matched template.)</emphasis></markup></entry></row><row><entry>break &lt;TEMPLATE_NAME&gt; &lt;MODE_NAME&gt;<markup><emphasis>(To break at named template with given mode.)</emphasis></markup></entry></row><row><entry>break "" &lt;MODE_NAME&gt;<markup><emphasis>(To break at any template that has a given mode name)</emphasis></markup></entry></row><row><entry>break *<markup><emphasis>(To break at any template found.)</emphasis></markup></entry></row><row><entry>break \*<markup><emphasis>(To break at the "*" template. Other name that include '*' will not be treated specialy.)</emphasis></markup></entry></row><row><entry>break <markup><emphasis>(To break point at current node. Yes that includes xml data nodes!)</emphasis></markup></entry></row></tbody></tgroup></table>
 </section><section id="bye_cmd"><title id="bye_cmd.title">Bye</title>
@@ -173,7 +173,7 @@ Save the xsldbg's options and user preferences to disk
 Search a dataBase of all information gathered from stylesheets loaded
 <para>All output files are stored in, value of the "searchresultspath" option if set, or the same directory as the provided stylesheet. searchresults.xml is normally transformed by  search.xsl, but will be transformed using searchhtml.xsl if the "prefrehtml" option is set.
 </para><para>When the search command is issued a xml file (searchresults.xml) will be created. You can then process this file with your own stylesheet to present data in a other ways. If "preferhtml" option is not set
-then searchresult.txt is printed to display. 
+then searchresult.txt is printed to display.
 </para><para>Depending on the amount of data collected it might take a while to complete this command.
 </para>
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>search &lt;XPATH&gt;<markup><emphasis>(See what xpath can be used see search.dtd. The deafault &lt;XPATH&gt; is '//search/*' )</emphasis></markup></entry></row><row><entry>search -sort &lt;XPATH&gt;<markup><emphasis>(Tell search.xsl to sort the result before outputing it)</emphasis></markup></entry></row></tbody></tgroup></table>
@@ -226,7 +226,7 @@ Print the value that a system file maps via the current catalog
 </section><section id="templates_cmd"><title id="templates_cmd.title">Templates</title>
 Print a list of available templates. Search for a template
 <para>Shortcut name: t</para>
-<table label="of usage"><tgroup cols="1"><tbody><row><entry>templates</entry></row><row><entry>templates &lt;TEMPLATE&gt;<markup><emphasis>(Print details of template named &lt;TEMPLATE&gt; if it can be found)</emphasis></markup></entry></row></tbody></tgroup></table>
+<table label="of usage"><tgroup cols="1"><tbody><row><entry>templates</entry></row><row><entry>templates &lt;TEMPLATE&gt;<markup><emphasis>(Print details of templates matching &lt;TEMPLATE&gt; if it can be found)</emphasis></markup></entry></row><row><entry>templates -q [&lt;TEMPLATE&gt;]<markup><emphasis>(Print brief details of templates. If &lt;TEMPLATE&gt; argument is provided look for templates matching &lt;TEMPLATE&gt;)</emphasis></markup></entry></row></tbody></tgroup></table>
 </section><section id="trace_cmd"><title id="trace_cmd.title">Trace</title>
 Trace one execution of the stylesheet
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>trace</entry></row></tbody></tgroup></table>

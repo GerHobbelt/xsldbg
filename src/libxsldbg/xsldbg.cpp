@@ -125,15 +125,6 @@ void xsldbgFree(void);
 
 
 /**
- * Pint out list of template names
- *
- * @param style : valid as parsed my xsldbg
- * @param doc :    "    "   "     "    "
- */
-void printTemplates(xsltStylesheetPtr style, xmlDocPtr doc);
-
-
-/**
  * Recover from a signal(SIGINT), exit if needed
  *
  * @param value : not used
@@ -1025,18 +1016,6 @@ xmlDocPtr xsldbgLoadXmlTemporary(const xmlChar * path)
         endTimer(QString("Parsing document %1").arg(xsldbgUrl(path)));
     }
     return doc;
-}
-
-void printTemplates(xsltStylesheetPtr style, xmlDocPtr doc)
-{
-    xsltTransformContextPtr ctxt = xsltNewTransformContext(style, doc);
-
-    if (ctxt) {
-        /* don't be verbose when printing out template names */
-        xslDbgShellPrintTemplateNames(ctxt, NULL, NULL, 0, 0);
-    } else {
-        xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
-    }
 }
 
 #ifdef WIN32
