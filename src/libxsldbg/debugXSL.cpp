@@ -1347,7 +1347,7 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     printCount = 0;     /* printCount will get updated by
                                          * xslDbgShellPrintBreakPoint */
 
-                    walkBreakPoints((xmlHashScanner)
+                    _walkPrintBreakPoints((xmlHashScanner)
                                     xslDbgShellPrintBreakPoint, NULL);
                     if (printCount == 0)
                         xsldbgGenericErrorFunc(QObject::tr("\nNo breakpoints are set for the file.\n\n"));

@@ -637,15 +637,77 @@ xmlXPathObjectPtr findNodesByQuery(const xmlChar * query)
     return list;
 }
 
-
-
-void walkBreakPoints(xmlHashScanner walkFunc, void *data)
+/**
+ * compareBreakPoints:
+ * @data1:		the pointer to first Breakpoint
+ * @data2:		the pointer to first Breakpoint
+ *
+ * Compares the namespaces by breakpoint id.
+ *
+ * Returns -1 if data1 < data2, 0 if data1 == data2 or 1 if data1 > data2.
+ */
+static int compareBreakPoints(const void *data1, const void *data2)
 {
-    int lineNo;
-    xmlHashTablePtr hashTable;
+    Q_CHECK_PTR(data1);
+    Q_CHECK_PTR(data2);
+
+    breakPointPtr breakpoint1 = (breakPointPtr)data1;
+    breakPointPtr breakpoint2 = (breakPointPtr)data2;
+
+    return breakpoint1->id - breakpoint2->id;
+}
+
+static void _addBreakPoint(void *payload, void *data, xmlChar * name)
+{
+    Q_CHECK_PTR(payload);
+    Q_CHECK_PTR(data);
+    Q_UNUSED(name);
+
+    xmlListAppend((xmlListPtr)data, (breakPointPtr)payload);
+}
+
+static int	_breakPointListWalker(const void * data, const void * user)
+{
+    Q_CHECK_PTR(data);
+    Q_CHECK_PTR(user);
+    breakPointPtr breakpoint = (breakPointPtr)data;
+    xmlHashScanner walkFunc = (xmlHashScanner)user;
+    walkFunc(breakpoint, NULL, NULL);
+    return 1;
+}
+
+void _walkPrintBreakPoints(xmlHashScanner walkFunc, void *data)
+{
+    Q_UNUSED(data);
 
     if (!walkFunc)
         return;
+
+    int lineNo;
+    xmlHashTablePtr hashTable;
+    xmlListPtr breakPointList = xmlListCreate(NULL, compareBreakPoints);
+
+    for (lineNo = 0; lineNo < breakPointLinesCount(); lineNo++) {
+        hashTable = breakPointGetLineNoHash(lineNo);
+        if (hashTable) {
+            xmlHashScan(hashTable, _addBreakPoint, breakPointList);
+        }
+    }
+
+    xmlListSort(breakPointList);
+    xmlListWalk(breakPointList, _breakPointListWalker, (void *)walkFunc);
+    xmlListDelete(breakPointList);
+}
+
+void walkBreakPoints(xmlHashScanner walkFunc, void *data)
+{
+    Q_UNUSED(data);
+
+    if (!walkFunc)
+        return;
+
+    int lineNo;
+    xmlHashTablePtr hashTable;
 
     for (lineNo = 0; lineNo < breakPointLinesCount(); lineNo++) {
         hashTable = breakPointGetLineNoHash(lineNo);

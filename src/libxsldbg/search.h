@@ -303,6 +303,12 @@ xmlXPathObjectPtr findNodesByQuery(const xmlChar * query);
  */
 void walkBreakPoints(xmlHashScanner walkFunc, void *data);
 
+/**
+ * @brief _walkPrintBreakPoints walk through breakpoints sorted by ID calling @a walkfunc in sorted order
+ * @param walkFunc
+ * @param data
+ */
+void _walkPrintBreakPoints(xmlHashScanner walkFunc, void *data);
 
 /**
  * Walks through all templates found in @p style calling walkFunc for each.
