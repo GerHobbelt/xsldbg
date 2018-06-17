@@ -25,16 +25,6 @@ require "xsldbgmatch.pl";
     
     if (xsldbgmatch::breakpointMatch( 
              "",  
-               "14",
-                 $testName) == 0){
-       $failedTestCount = $failedTestCount + 1;
-       $result = 0;
-    }
-  
-    $testCount = $testCount + 1;
-    
-    if (xsldbgmatch::breakpointMatch( 
-             "",  
                "16",
                  $testName) == 0){
        $failedTestCount = $failedTestCount + 1;

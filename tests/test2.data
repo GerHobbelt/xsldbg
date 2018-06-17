@@ -20,6 +20,7 @@ break /</test>
 </result>
 </cmd>
 <cmd>
+
 <test>break -l</test>
 <result>
 <row>
@@ -28,6 +29,7 @@ break /</test>
 </result>
 </cmd>
 <cmd>
+
 <test>break -l test2.xsl</test>
 <result>
 <row>
@@ -36,6 +38,7 @@ break /</test>
 </result>
 </cmd>
 <cmd>
+
 <test>break -l test2.xsl a23</test>
 <result>
 <row>
@@ -44,6 +47,7 @@ break /</test>
 </result>
 </cmd>
 <cmd>
+
 <test>break BAD_TEMPLATENAME</test>
 <result>
 <row>
@@ -52,33 +56,80 @@ break /</test>
 </result>
 </cmd>
 <cmd>
+
 <test>break /
 break /</test>
 <result>
-<row> <!-- breakkpoint exist so we should get a warning message -->
-<matchtext>Warning: Breakpoint exits for file \"test2.xsl\" at line 18</matchtext>
+<row> <!-- breakpoint exist so we should get a warning message -->
+<matchtext>Warning: Breakpoint exits for file \"test2.xsl\" at line 19</matchtext>
 </row>
 </result>
 </cmd>
 <cmd>
-<test>break -l test2.xsl 18</test>
+
+<test>break -l test2.xsl 19</test>
 <result>
-<row> <!-- breakkpoint exist so we should get a warning message -->
-<matchtext>Warning: Breakpoint exits for file \"test2.xsl\" at line 18</matchtext>
+<row> <!-- breakpoint exist so we should get a warning message -->
+<matchtext>Warning: Breakpoint exits for file \"test2.xsl\" at line 19</matchtext>
 </row>
 </result>
 </cmd>
-
-
 <cmd>
 <test>showbreak</test>
 <result>
 <row>
-<breakpointlist file="test2.xsl" line="18" />
+<breakpointlist file="test2.xsl" line="19" />
+</row>
+<row>
+<matchtext>breakpoints present</matchtext>
 </row>
 </result>
 </cmd>
 
+<!-- Break on callable template names
+Note that break points list is not deterministic -->
+<cmd>
+<test>d *
+break include_top
+showbreak</test>
+<result>
+<row>
+<breakpointlist file="test_include_top.xsl" line="11" />
+</row>
+<row>
+<matchtext>Total of 1 breakpoints present</matchtext>
+</row>
+</result>
+</cmd>
+<cmd>
+<test>d *
+break head
+showbreak</test>
+<result>
+<row>
+<breakpointlist file="test2.xsl" line="126" />
+</row>
+<row>
+<breakpointlist file="test_import.xsl" line="11" />
+</row>
+<row>
+<matchtext>Total of 2 breakpoints present</matchtext>
+</row>
+</result>
+</cmd>
+<cmd>
+<test>d *
+break call-template1
+showbreak</test>
+<result>
+<row>
+<breakpointlist file="test2.xsl" line="84" />
+</row>
+<row>
+<matchtext>Total of 1 breakpoints present</matchtext>
+</row>
+</result>
+</cmd>
 
 
 <!-- test enable/disable comamds -->
@@ -123,7 +174,10 @@ enable /
 showbreak</test>
 <result>
 <row>
-<breakpointlist state="disabled" file="test2.xsl" line="18"/>
+<breakpointlist state="disabled" file="test2.xsl" line="19"/>
+</row>
+<row>
+<matchtext>breakpoints present</matchtext>
 </row>
 </result>
 </cmd>
@@ -134,7 +188,10 @@ showbreak</test>
 showbreak</test>
 <result>
 <row>
-<breakpointlist state="enabled" file="test2.xsl" line="18"/>
+<breakpointlist state="enabled" file="test2.xsl" line="19"/>
+</row>
+<row>
+<matchtext>breakpoints present</matchtext>
 </row>
 </result>
 </cmd>
@@ -146,27 +203,30 @@ showbreak</test>
 showbreak</test>
 <result>
 <row>
-<breakpointlist state="disabled" file="test2.xsl" line="18"/>
+<breakpointlist state="disabled" file="test2.xsl" line="19"/>
+</row>
+<row>
+<matchtext>breakpoints present</matchtext>
 </row>
 </result>
 </cmd>
 
 <cmd>
-<test>break -l test2.xsl 18</test>
+<test>break -l test2.xsl 19</test>
 <result>
 <row> <!-- breakkpoint exist so we should get an error message -->
-<matchtext>Error: Failed to add breakpoint for file \"test2.xsl\" at line 18</matchtext>
-</row>>
+<matchtext>Error: Failed to add breakpoint for file \"test2.xsl\" at line 19</matchtext>
+</row>
 </result>
 </cmd>
 
-<!-- xsldbg will be stpped at test2.xsl 18 so try setting breakpoint
+<!-- xsldbg will be stpped at test2.xsl 19 so try setting breakpoint
      using current node -->
 <cmd>
 <test>break</test>
 <result>
 <row> <!-- breakkpoint exist so we should get an error message -->
-<matchtext>Error: Failed to add breakpoint for file \"test2.xsl\" at line 18</matchtext>
+<matchtext>Error: Failed to add breakpoint for file \"test2.xsl\" at line 19</matchtext>
 </row>
 </result>
 </cmd>
@@ -180,7 +240,10 @@ break</test>
 <test>showbreak</test>
 <result>
 <row>
-<breakpointlist file="test2.xsl" line="18" />
+<breakpointlist file="test2.xsl" line="19" />
+</row>
+<row>
+<matchtext>breakpoints present</matchtext>
 </row>
 </result>
 </cmd>
@@ -231,7 +294,7 @@ showbreak</test>
 </cmd>
 <cmd>
 <test>break /
-delete -l test2.xsl 18
+delete -l test2.xsl 19
 showbreak</test>
 <result>
 <row>
@@ -260,6 +323,17 @@ showbreak</test>
 </result>
 </cmd>
 
+<cmd>
+<test>break *
+showbreak</test>
+<result>
+<row>
+<matchtext>Total of 14 breakpoints present.</matchtext>
+</row>
+</result>
+</cmd>
+
+<!-- check that we can set break points on include template -->
 
 <cmd>
 <test>quit</test>

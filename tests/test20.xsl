@@ -1,17 +1,14 @@
 <?xml version="1.0" ?>
 <!-- 
-     File : test_import.xsl     
+     File : test20.xsl
      Author: Keith Isdale <keithisdale@gmail.com>
-     Description: stylesheet for import testing by test "test2"
+     Description: stylesheet for test "test20"
      Copyright Reserved Under GPL     
 -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
 
-  <xsl:template match="head">
-        <importedHead>
-        <xsl:apply-templates/>
-        </importedHead>
-  </xsl:template>
+  <!-- test recursive xsl:import and xsl:include -->
+  <xsl:include href="test2.xsl"/>
 
 </xsl:stylesheet>

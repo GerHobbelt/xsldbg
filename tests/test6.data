@@ -15,12 +15,6 @@
 <test>trace</test>
 <result>
 <row>
-<breakpoint line="20"/> <!-- xsldbg restarting with tracing on -->
-</row>
-<row>
-<breakpoint line="20"/> 
-</row>
-<row>
 <breakpoint line="20"/> 
 </row>
 <row>

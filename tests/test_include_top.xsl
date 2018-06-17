@@ -8,8 +8,15 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
 
-  <xsl:template match="import_top">
-        <xsl:apply-templates/>
+  <xsl:template name="include_top">
+        <xsl:apply-templates select="result/top"/>
   </xsl:template>
+
+<xsl:template match="top">
+  <top>
+  <xsl:value-of select="@name" />
+  </top>
+</xsl:template>
+
 
 </xsl:stylesheet>

@@ -52,7 +52,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Entity SystemID:\"notemessage1.xml\" URI:\"file:/usr/share/doc/packages/xsldbg/en/notemessage1.xml\"", 
+             "Entity SystemID:\"notemessage1.xml\" URI:\"file:/usr/share/doc/packages/qt5/xsldbg/en/notemessage1.xml\"", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -61,7 +61,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Entity PublicID:\"-//xsldbg//tests notemessage2 XML V1.0//EN\" SystemID:\"notemessage2.xml\" URI:\"file:/usr/share/doc/packages/xsldbg/en/notemessage2.xml\"", 
+             "Entity PublicID:\"-//xsldbg//tests notemessage2 XML V1.0//EN\" SystemID:\"notemessage2.xml\" URI:\"file:/usr/share/doc/packages/qt5/xsldbg/en/notemessage2.xml\"", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -70,7 +70,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Entity SystemID:\"note3.xml\" URI:\"file:/usr/share/doc/packages/xsldbg/en/note3.xml\"", 
+             "Entity SystemID:\"note3.xml\" URI:\"file:/usr/share/doc/packages/qt5/xsldbg/en/note3.xml\"", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;

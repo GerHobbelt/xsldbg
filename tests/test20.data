@@ -1,0 +1,481 @@
+<?xml version="1.0"?>
+<!DOCTYPE testcmd SYSTEM "testcmd.dtd">
+<!-- 
+     File : test1.data     
+     Author: Keith Isdale <keithisdale@gmail.com>
+     Description: xml data that decribes what to do for "test1"
+     Copyright Reserved Under GPL     
+-->
+<testcmd>
+  <cmd>
+    <test>trace</test>
+    <result>
+    <row>
+        <breakpointlist file="test15.xsl" line="19" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="19" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="22" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="124" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="124" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="125" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="126" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="130" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="131" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="26" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="82" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="82" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="82" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="28" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="95" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="95" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="96" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="32" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="33" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="34" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="82" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="82" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="82" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="40" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="41" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="42" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="99" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="99" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="102" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="102" />
+    </row> Message here
+    <row>
+        <breakpointlist file="test15.xsl" line="103" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="105" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="47" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="87" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="89" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="87" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="50" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="108" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="110" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="108" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="113" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="113" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="115" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="115" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="116" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="53" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="54" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="54" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="82" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="82" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="82" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="57" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="60" />
+    </row>
+    <row>
+        <breakpointlist file="test_import.xsl" line="11" />
+    </row>
+    <row>
+        <breakpointlist file="test_import.xsl" line="11" />
+    </row>
+    <row>
+        <breakpointlist file="test_import.xsl" line="12" />
+    </row>
+    <row>
+        <breakpointlist file="test_import.xsl" line="13" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="63" />
+    </row> runtime error: file test15.xsl line 63 element call-template The called template 'import_top' was not found.
+    <row>
+        <breakpointlist file="test15.xsl" line="66" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="108" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="110" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="108" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="113" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="113" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="115" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="115" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="116" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="69" />
+    </row>
+    <row>
+        <breakpointlist file="test_include_top.xsl" line="15" />
+    </row>
+    <row>
+        <breakpointlist file="test_include_top.xsl" line="15" />
+    </row>
+    <row>
+        <breakpointlist file="test_include_top.xsl" line="16" />
+    </row>
+    <row>
+        <breakpointlist file="test_include_top.xsl" line="17" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="72" />
+    </row>
+    <row>
+        <breakpointlist file="test_import.xsl" line="11" />
+    </row>
+    <row>
+        <breakpointlist file="test_import.xsl" line="11" />
+    </row>
+    <row>
+        <breakpointlist file="test_import.xsl" line="12" />
+    </row>
+    <row>
+        <breakpointlist file="test_import.xsl" line="13" />
+    </row> Error: Transformation did not complete writing to file ../results/test15.output Finished stylesheet Changed to directory /home/keithisdale/Documents/qxsldbg/xsldbg_submodule/tests/. Starting stylesheet compilation error: file test15.xsl line 126 element foo-of xsltStylePreCompute: unknown xsl:foo-of Setting stylesheet base path to test15.xsl.
+    <row>
+        <breakpointlist file="test15.xsl" line="19" />
+    </row> (xsldbg) xsl:template >
+    <row>
+        <breakpointlist file="test15.xsl" line="19" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="22" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="124" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="124" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="125" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="126" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="130" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="131" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="26" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="82" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="82" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="82" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="28" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="95" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="95" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="96" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="32" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="33" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="34" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="82" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="82" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="82" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="40" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="41" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="42" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="99" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="99" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="102" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="102" />
+    </row> Message here
+    <row>
+        <breakpointlist file="test15.xsl" line="103" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="105" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="47" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="87" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="89" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="87" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="50" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="108" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="110" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="108" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="113" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="113" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="115" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="115" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="116" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="53" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="54" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="54" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="82" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="82" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="82" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="57" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="60" />
+    </row>
+    <row>
+        <breakpointlist file="test_import.xsl" line="11" />
+    </row>
+    <row>
+        <breakpointlist file="test_import.xsl" line="11" />
+    </row>
+    <row>
+        <breakpointlist file="test_import.xsl" line="12" />
+    </row>
+    <row>
+        <breakpointlist file="test_import.xsl" line="13" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="63" />
+    </row> runtime error: file test15.xsl line 63 element call-template The called template 'import_top' was not found.
+    <row>
+        <breakpointlist file="test15.xsl" line="66" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="108" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="110" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="108" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="113" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="113" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="115" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="115" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="116" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="69" />
+    </row>
+    <row>
+        <breakpointlist file="test_include_top.xsl" line="15" />
+    </row>
+    <row>
+        <breakpointlist file="test_include_top.xsl" line="15" />
+    </row>
+    <row>
+        <breakpointlist file="test_include_top.xsl" line="16" />
+    </row>
+    <row>
+        <breakpointlist file="test_include_top.xsl" line="17" />
+    </row>
+    <row>
+        <breakpointlist file="test15.xsl" line="72" />
+    </row>
+    <row>
+        <breakpointlist file="test_import.xsl" line="11" />
+    </row>
+    <row>
+        <breakpointlist file="test_import.xsl" line="11" />
+    </row>
+    <row>
+        <breakpointlist file="test_import.xsl" line="12" />
+    </row>
+    <row>
+        <breakpointlist file="test_import.xsl" line="13" />
+    </row>
+    </result>
+  </cmd>
+
+<cmd>
+    <test>quit</test>
+  </cmd>
+</testcmd>

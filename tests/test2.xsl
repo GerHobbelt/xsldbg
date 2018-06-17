@@ -13,6 +13,7 @@
   <xsl:strip-space elements="text()"/>
   <xsl:decimal-format name="test" decimal-separator="."/>
   <xsl:output method="text"/> 
+  <xsl:include href="test_include_bot.xsl"/>
 
   <!-- Test xsl:apply-templates, xsl:call-template, xsl:apply-imports -->
   <xsl:template match="/">
@@ -53,16 +54,19 @@
           <xsl:sort select="."/>
         </xsl:apply-templates>
 
-        <xsl:apply-imports/> <!-- useless but test that we can step to it -->
+        <!-- Test ability to step into imported stylesheet -->
+        <xsl:apply-templates select="*/head" />
 
+        <!-- Test ability to step into imported template match from xsl:call-template -->
+        <xsl:call-template name="include_top" />
+
+        <!-- Test ability to step into call-template within called template -->
+        <xsl:call-template name="call-template4" />
+
+        <!-- Test ability to step into match within included XSLT -->
+        <xsl:apply-templates select="*/top" />
 
   </xsl:template>
-
-  <xsl:template match="result">
-    <xsl:param name="item" select="'default'"/>
-    <!-- ignore node content -->
-  </xsl:template>
-
 
   <xsl:template match="data">
     <!-- ignore node content -->
@@ -101,6 +105,11 @@
     <xsl:copy-of select="'copy-of Text'"/>
   </xsl:template>
 
+  <!-- call template within a called template -->
+  <xsl:template name="call-template4">
+     <xsl:call-template name="include_bot"/>
+  </xsl:template>
+
 <xsl:template name="fallback_test">
   <result xsl:version="6.1">
     <xsl:foo-of select="/Fuhrpark">
@@ -113,5 +122,12 @@
       </xsl:foo-of>
     </result>
   </xsl:template>
+
+    <xsl:template match="head">
+          <overriddenHead>
+          <xsl:apply-imports/>
+          </overriddenHead>
+    </xsl:template>
+
 
 </xsl:stylesheet>

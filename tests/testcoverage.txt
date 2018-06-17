@@ -54,13 +54,18 @@ with-param		N/A	 2
 xsldbg command	     Test number(s)
 -------------------- ----------
 addparam		4
-break			2, 10
-delete			2
+break			2, 10, 17
+continue                17
+data                    17
+delete			2, 17
 delparam		4
 disable			2
 enable			2
-showbreak		2
+run                     17
+showbreak		2, 17
 showparam		4
+source                  17
 set			10, 11
 entities                14
-trace                   2
+trace                   15,20
+walk                    15

@@ -7,10 +7,13 @@
 -->
 
 <result>
+  <top name="top"/>
+  <head name="head"/>
   <data name="fred"/>
   <data name="barney"/>
   <data name="pebbles"/>
   <extra name="wilma"/>
+  <bottom name="bottom"/>
 </result>
 
 

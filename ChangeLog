@@ -3,6 +3,7 @@ Keith Isdale 9th June 2018 <keithisdale@gmail.com>
     Fixes
         Fix walking, tracing command logic.
 	Output of templates command when multiple XSLT documents are present
+        Correct logic that guesses relative XSLT file path given to 'break' command (needed debugging http/ftp documents)
     Features
         To improve UI in qxslbg emit XsldbgDebuggerBase::completeTransform() signal when completed XSLT tranformation
         'entities' command output now in two new forms with "<ID>"values now quoted
@@ -14,6 +15,8 @@ Keith Isdale 9th June 2018 <keithisdale@gmail.com>
         Update XsldbgDebuggerBase to emit the resolved URI of entities
         Add tests for walk and trace commands
 	Add test for http:// and ftp:// XML/XSLT document paths
+	Only print "Reached template" when XSLT match or mode has changed
+	Sort breakpoints by ID
 
 Keith Isdale 23rd May 2018 <keithisdale@gmail.com>
     4.6.0

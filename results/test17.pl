@@ -14,8 +14,38 @@ require "xsldbgmatch.pl";
 
     $testCount = $testCount + 1;
     
+    if (xsldbgmatch::breakpointListMatch(
+             "",  
+               "" , 
+                 "http://localhost/xsldbg/tests/test17.xsl",  
+                   "20",
+                     $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
     if (xsldbgmatch::textMatch(
-             "Reached template: \"/\"", 
+             "Total of 1 breakpoints present", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Reached template: \"data\"", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Breakpoint for file \"http://localhost/xsldbg/tests/test17.xsl\" at line 20", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -28,13 +58,156 @@ require "xsldbgmatch.pl";
     if (xsldbgmatch::breakpointListMatch(
              "",  
                "" , 
-                 "http://localhost/xsldbg/tests/test16.xsl",  
-                   "16",
+                 "http://localhost/xsldbg/tests/test17.xsl",  
+                   "20",
                      $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
     }
   
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Total of 1 breakpoints present", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Reached template: \"data\"", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Breakpoint for file \"http://localhost/xsldbg/tests/test17.xsl\" at line 20", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+
+
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointListMatch(
+             "",  
+               "" , 
+                 "http://localhost/xsldbg/tests/test17.xsl",  
+                   "20",
+                     $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Total of 1 breakpoints present", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Reached template: \"data\"", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Breakpoint for file \"http://localhost/xsldbg/tests/test17.xsl\" at line 20", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+
+
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointListMatch(
+             "",  
+               "" , 
+                 "http://localhost/xsldbg/tests/test17.xml",  
+                   "11",
+                     $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Total of 1 breakpoints present", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Reached template: \"extra\"", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             ".xsldbg. extra .+xsldbg. xsl:template", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+
+
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointListMatch(
+             "",  
+               "" , 
+                 "http://localhost/xsldbg/tests/test17.xml",  
+                   "11",
+                     $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Total of 1 breakpoints present", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Reached template: \"extra\"", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+
+
 
 
     if ($result == 1){

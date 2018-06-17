@@ -65,7 +65,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Warning: Breakpoint exits for file \"test2.xsl\" at line 18", 
+             "Warning: Breakpoint exits for file \"test2.xsl\" at line 19", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -75,7 +75,29 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Warning: Breakpoint exits for file \"test2.xsl\" at line 18", 
+             "Warning: Breakpoint exits for file \"test2.xsl\" at line 19", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointListMatch(
+             "",  
+               "" , 
+                 "test2.xsl",  
+                   "19",
+                     $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "breakpoints present", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -89,14 +111,78 @@ require "xsldbgmatch.pl";
     if (xsldbgmatch::breakpointListMatch(
              "",  
                "" , 
-                 "test2.xsl",  
-                   "18",
+                 "test_include_top.xsl",  
+                   "11",
                      $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
     }
   
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Total of 1 breakpoints present", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
 
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointListMatch(
+             "",  
+               "" , 
+                 "test2.xsl",  
+                   "126",
+                     $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointListMatch(
+             "",  
+               "" , 
+                 "test_import.xsl",  
+                   "11",
+                     $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Total of 2 breakpoints present", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointListMatch(
+             "",  
+               "" , 
+                 "test2.xsl",  
+                   "84",
+                     $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Total of 1 breakpoints present", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
 
 
 
@@ -149,8 +235,17 @@ require "xsldbgmatch.pl";
              "",  
                "disabled" , 
                  "test2.xsl",  
-                   "18",
+                   "19",
                      $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "breakpoints present", 
+               $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
     }
@@ -164,8 +259,17 @@ require "xsldbgmatch.pl";
              "",  
                "enabled" , 
                  "test2.xsl",  
-                   "18",
+                   "19",
                      $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "breakpoints present", 
+               $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
     }
@@ -179,8 +283,17 @@ require "xsldbgmatch.pl";
              "",  
                "disabled" , 
                  "test2.xsl",  
-                   "18",
+                   "19",
                      $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "breakpoints present", 
+               $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
     }
@@ -190,7 +303,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: Failed to add breakpoint for file \"test2.xsl\" at line 18", 
+             "Error: Failed to add breakpoint for file \"test2.xsl\" at line 19", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -202,7 +315,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Error: Failed to add breakpoint for file \"test2.xsl\" at line 18", 
+             "Error: Failed to add breakpoint for file \"test2.xsl\" at line 19", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -218,8 +331,17 @@ require "xsldbgmatch.pl";
              "",  
                "" , 
                  "test2.xsl",  
-                   "18",
+                   "19",
                      $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "breakpoints present", 
+               $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
     }
@@ -306,6 +428,18 @@ require "xsldbgmatch.pl";
        $result = 0;
     }
   
+
+
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Total of 14 breakpoints present.", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+
 
 
 

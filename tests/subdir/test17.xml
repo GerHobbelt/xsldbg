@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- 
-     File : test15.xml
+     File : test17.xml
      Author: Keith Isdale <keithisdale@gmail.com>
-     Description: xml data for stylesheet for test "test15"
+     Description: xml data for stylesheet for test "test17"
      Copyright Reserved Under GPL     
 -->
 
 <result>
-  <top name="top"/>
-  <head name="head"/>
-  <data name="fred"/>
-  <data name="barney"/>
-  <data name="pebbles"/>
-  <extra name="wilma"/>
-  <bottom name="bottom"/>
+  <data/>
+  <extra/>
 </result>
 
 
