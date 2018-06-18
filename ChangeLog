@@ -7,6 +7,7 @@ Keith Isdale 9th June 2018 <keithisdale@gmail.com>
         Correct logic of output of 'templates' command with '-q' option
         Remove useless 'this' option to 'templates' command
 	Correct expanding of file names such as ~/foo.xml and /foo/bar.xml into "file:/" URI
+	Strip file:// from "output" file specifier when opening output file for writing
     Features
         To improve UI in qxslbg emit XsldbgDebuggerBase::completeTransform() signal when completed XSLT tranformation
         'entities' command output now in two new forms with "<ID>"values now quoted
@@ -22,6 +23,8 @@ Keith Isdale 9th June 2018 <keithisdale@gmail.com>
 	Sort breakpoints by ID
         Sort templates by file and line number
         The <match> option to 'templates' command will match template whose name *contains* <match>
+	Support quoted path value to 'chdir' command
+	If chdir fails then show both original and expanded directory path
 
 Keith Isdale 23rd May 2018 <keithisdale@gmail.com>
     4.6.0
