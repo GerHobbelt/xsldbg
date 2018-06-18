@@ -20,7 +20,7 @@
 /*
  * Based on file xsltproc.c
  *
- * by  Daniel Veillard 
+ * by  Daniel Veillard
  *     daniel@veillard.com
  *
  *  xsltproc.c is part of libxslt
@@ -111,7 +111,7 @@ xmlParserInputPtr xmlNoNetExternalEntityLoader(const char *URL,
 
 /**
  * Initialize xsldbg:
- * 
+ *
  * @returns 1 if able to allocate memory needed by xsldbg
  *         0 otherwise
  */
@@ -140,13 +140,13 @@ void catchSigInt(int value);
 void   catchSigTerm(int value);
 
 /**
- * Handles print output from xsldbg and passes it to the application if 
+ * Handles print output from xsldbg and passes it to the application if
  *  running as a thread otherwise send to stderr
  *
  * @param ctx:  Is Valid
  * @param msg:  Is valid
  * ...:  other parameters to use
- * 
+ *
  */
 void   xsldbgGenericErrorFunc(void *ctx, const char *msg, ...);
 
@@ -156,9 +156,9 @@ static xmlEntityPtr xsldbgGetEntity( void * user_data, const xmlChar * name)
 {
     xmlEntityPtr ent = NULL;
     if (oldGetEntity){
-	ent =  (oldGetEntity)(user_data, name);
-	if (ent)
-	    filesEntityRef(ent, ent->children, ent->last);
+        ent =  (oldGetEntity)(user_data, name);
+        if (ent)
+            filesEntityRef(ent, ent->children, ent->last);
     }
     return ent;
 }
@@ -223,7 +223,7 @@ static void xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
             paramArray[nbparams].append(item.m_name.toUtf8().constData());
             paramArray[nbparams + 1].append(item.m_value.toString().toUtf8().constData());
             params[nbparams] = paramArray[nbparams].constData();
-            params[nbparams + 1] = paramArray[nbparams +1].constData(); 
+            params[nbparams + 1] = paramArray[nbparams +1].constData();
             nbparams += 2;
         }
     }
@@ -235,13 +235,16 @@ static void xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
             startTimer();
         xmlXIncludeProcess(doc);
         if (optionsGetIntOption(OPTIONS_TIMING)) {
-	    /* Display the time taken to do XInclude processing */
+            /* Display the time taken to do XInclude processing */
             endTimer(QObject::tr("XInclude processing %1.").arg(optionsGetStringOption(OPTIONS_DATA_FILE_NAME)));
         }
     }
 #endif
+    QUrl outputUrl(optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME));
+    QByteArray outFile(outputUrl.toLocalFile().toUtf8().constData());
+
     if (optionsGetIntOption(OPTIONS_TIMING) ||
-        optionsGetIntOption(OPTIONS_PROFILING))
+            optionsGetIntOption(OPTIONS_PROFILING))
         startTimer();
     if ((optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME).isEmpty())
             || optionsGetIntOption(OPTIONS_SHELL)) {
@@ -262,19 +265,19 @@ static void xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
                      || (filesTempFileName(1).isEmpty()))
                 res = xsltProfileStylesheet(cur, doc, params, stderr);
             else {
-                /* We now have to output to using notify using 
+                /* We now have to output to using notify using
                  * temp file #1 */
                 FILE *tempFile = fopen(filesTempFileName(1), "w");
 
                 if (tempFile != NULL) {
                     res =
-                        xsltProfileStylesheet(cur, doc, params, tempFile);
+                            xsltProfileStylesheet(cur, doc, params, tempFile);
                     fclose(tempFile);
                     /* send the data to application */
                     notifyXsldbgApp(XSLDBG_MSG_FILEOUT,
                                     filesTempFileName(1));
                 } else {
-		     xsldbgGenericErrorFunc(QObject::tr("Error: Unable to write temporary results to %1.\n").arg(filesTempFileName(1).constData()));
+                    xsldbgGenericErrorFunc(QObject::tr("Error: Unable to write temporary results to %1.\n").arg(filesTempFileName(1).constData()));
                     res = xsltProfileStylesheet(cur, doc, params, stderr);
                 }
             }
@@ -283,16 +286,16 @@ static void xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
         }
         if (optionsGetIntOption(OPTIONS_PROFILING)) {
             if (optionsGetIntOption(OPTIONS_REPEAT))
-		/* Display how long it took to apply stylesheet */
+                /* Display how long it took to apply stylesheet */
                 endTimer(QObject::tr("Applying stylesheet %1 times").arg(optionsGetIntOption(OPTIONS_REPEAT)));
             else
-		/* Display how long it took to apply stylesheet */
+                /* Display how long it took to apply stylesheet */
                 endTimer(QObject::tr("Applying stylesheet"));
         }
         if (res == NULL) {
 #ifdef WITH_XSLDBG_DEBUG_PROCESS
             xsltGenericError(xsltGenericErrorContext, "Error: Transformation did not complete writing to file %s\n",
-                             optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME).toUtf8().constData());
+                             outFile.constData());
 #endif
             return;
         }
@@ -302,71 +305,69 @@ static void xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
         }
 #ifdef LIBXML_DEBUG_ENABLED
         if (optionsGetIntOption(OPTIONS_DEBUG)) {
-	    if (xslDebugStatus != DEBUG_RUN_RESTART){
-        if (terminalIO != NULL)
-		    xmlDebugDumpDocument(terminalIO, res);
-        else if ((optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME).isEmpty())
-                || (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)
-                || (filesTempFileName(1).isEmpty()))
-		    xmlDebugDumpDocument(stdout, res);
-        else {
-		    FILE *tempFile = fopen(filesTempFileName(1), "w");
+            if (xslDebugStatus != DEBUG_RUN_RESTART){
+                if (terminalIO != NULL)
+                    xmlDebugDumpDocument(terminalIO, res);
+                else if ((optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME).isEmpty())
+                         || (getThreadStatus() != XSLDBG_MSG_THREAD_RUN)
+                         || (filesTempFileName(1).isEmpty()))
+                    xmlDebugDumpDocument(stdout, res);
+                else {
+                    FILE *tempFile = fopen(filesTempFileName(1), "w");
 
-            if (tempFile) {
-			bytesWritten = 0; // flag that we have writen at least zero bytes
-			xmlDebugDumpDocument(tempFile, res);
-			fclose(tempFile);
-			/* send the data to application */
-			notifyXsldbgApp(XSLDBG_MSG_FILEOUT,
-				filesTempFileName(1));
-		    } else {
-             xsldbgGenericErrorFunc(QObject::tr("Error: Unable to write temporary results to %1.\n").arg(filesTempFileName(1).constData()));
-			xmlDebugDumpDocument(stdout, res);
+                    if (tempFile) {
+                        bytesWritten = 0; // flag that we have writen at least zero bytes
+                        xmlDebugDumpDocument(tempFile, res);
+                        fclose(tempFile);
+                        /* send the data to application */
+                        notifyXsldbgApp(XSLDBG_MSG_FILEOUT,
+                                        filesTempFileName(1));
+                    } else {
+                        xsldbgGenericErrorFunc(QObject::tr("Error: Unable to write temporary results to %1.\n").arg(filesTempFileName(1).constData()));
+                        xmlDebugDumpDocument(stdout, res);
+                    }
+
+                }
             }
-
-		}
-	    }
         } else {
 #endif
-	    if (xslDebugStatus != DEBUG_RUN_RESTART){
-		if (cur->methodURI == NULL) {
-		    if (optionsGetIntOption(OPTIONS_TIMING))
-			startTimer();
-		    if (xslDebugStatus != DEBUG_QUIT) {
-            if (terminalIO != NULL)
-			    bytesWritten = xsltSaveResultToFile(terminalIO, res, cur);
-            else if (optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME).isEmpty())
-			    bytesWritten = xsltSaveResultToFile(stdout, res, cur);
-            else{
-                            QByteArray outFile(optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME).toUtf8().constData());
-                bytesWritten =
-                                xsltSaveResultToFilename(outFile.constData(), res, cur, 0);
-		        }
-		    }
-		    if (optionsGetIntOption(OPTIONS_TIMING))
-			/* Indicate how long it took to save to file */
-            endTimer(QObject::tr("Saving result"));
-		} else {
-		    if (xmlStrEqual(cur->method, (const xmlChar *) "xhtml")) {
-			xsldbgGenericErrorFunc(QObject::tr("Warning: Generating non-standard output XHTML.\n"));
-			if (optionsGetIntOption(OPTIONS_TIMING))
-			    startTimer();
-			if (terminalIO != NULL){
-                bytesWritten = xsltSaveResultToFile(terminalIO, res, cur);
-                        }else if (optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME).isEmpty()){
-			    bytesWritten = xsltSaveResultToFile(stdout, res, cur);
-                        }else{
-                            QByteArray outFile(optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME).toUtf8().constData());
-			    bytesWritten = xsltSaveResultToFilename(outFile.constData(), res, cur, 0);
+            if (xslDebugStatus != DEBUG_RUN_RESTART){
+                if (cur->methodURI == NULL) {
+                    if (optionsGetIntOption(OPTIONS_TIMING))
+                        startTimer();
+                    if (xslDebugStatus != DEBUG_QUIT) {
+                        if (terminalIO != NULL)
+                            bytesWritten = xsltSaveResultToFile(terminalIO, res, cur);
+                        else if (optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME).isEmpty())
+                            bytesWritten = xsltSaveResultToFile(stdout, res, cur);
+                        else{
+                            bytesWritten =
+                                    xsltSaveResultToFilename(outFile.constData(), res, cur, 0);
                         }
-			if (optionsGetIntOption(OPTIONS_TIMING))
-			    /* Indicate how long it took to save to file */
-			    endTimer(QObject::tr("Saving result"));
-		    } else {
-			xsldbgGenericErrorFunc(QObject::tr("Warning: Unsupported, non-standard output method %1.\n").arg(xsldbgText(cur->method)));
-		    }
-		}
-	    }
+                    }
+                    if (optionsGetIntOption(OPTIONS_TIMING))
+                        /* Indicate how long it took to save to file */
+                        endTimer(QObject::tr("Saving result"));
+                } else {
+                    if (xmlStrEqual(cur->method, (const xmlChar *) "xhtml")) {
+                        xsldbgGenericErrorFunc(QObject::tr("Warning: Generating non-standard output XHTML.\n"));
+                        if (optionsGetIntOption(OPTIONS_TIMING))
+                            startTimer();
+                        if (terminalIO != NULL){
+                            bytesWritten = xsltSaveResultToFile(terminalIO, res, cur);
+                        }else if (optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME).isEmpty()){
+                            bytesWritten = xsltSaveResultToFile(stdout, res, cur);
+                        }else{
+                            bytesWritten = xsltSaveResultToFilename(outFile.constData(), res, cur, 0);
+                        }
+                        if (optionsGetIntOption(OPTIONS_TIMING))
+                            /* Indicate how long it took to save to file */
+                            endTimer(QObject::tr("Saving result"));
+                    } else {
+                        xsldbgGenericErrorFunc(QObject::tr("Warning: Unsupported, non-standard output method %1.\n").arg(xsldbgText(cur->method)));
+                    }
+                }
+            }
 #ifdef LIBXML_DEBUG_ENABLED
         }
 #endif
@@ -375,18 +376,17 @@ static void xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
     } else {
         xsltTransformContextPtr userCtxt = xsltNewTransformContext(cur, doc);
         if (userCtxt){
-            QByteArray outFile(optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME).toUtf8().constData());
             bytesWritten = xsltRunStylesheetUser(cur, doc, params, outFile.constData(),
-                    NULL, NULL, NULL, userCtxt);
-        if (optionsGetIntOption(OPTIONS_TIMING))
-            endTimer(QObject::tr("Running stylesheet and saving result"));
-        xsltFreeTransformContext(userCtxt);
+                                                 NULL, NULL, NULL, userCtxt);
+            if (optionsGetIntOption(OPTIONS_TIMING))
+                endTimer(QObject::tr("Running stylesheet and saving result"));
+            xsltFreeTransformContext(userCtxt);
         }else{
-	    xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
+            xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
         }
     }
     if (((xslDebugStatus != DEBUG_RUN_RESTART) && (xslDebugStatus != DEBUG_QUIT)) && (bytesWritten == -1))
-	xsldbgGenericErrorFunc(QObject::tr("Error: Unable to save results of transformation to file %1.\n").arg(optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME))); 
+        xsldbgGenericErrorFunc(QObject::tr("Error: Unable to save results of transformation to file %1.\n").arg(outFile.constData()));
 
 }
 
@@ -403,12 +403,12 @@ usage(const char *name)
      * or --<option> <para>: <description> */
     xsltGenericError(xsltGenericErrorContext,
                      "      --output file or -o file: Save to a given file. " \
-		     "See output command documentatation\n");
+                     "See output command documentatation\n");
     xsltGenericError(xsltGenericErrorContext,
                      "      --version or -V : Show the version of libxml and libxslt used\n");
     xsltGenericError(xsltGenericErrorContext,
-		     "For documentation on the folowing \"flags\" " \
-		     "see the documentation of the setoption command\n");
+                     "For documentation on the folowing \"flags\" " \
+                     "see the documentation of the setoption command\n");
     xsltGenericError(xsltGenericErrorContext,
                      "      --verbose or -v : Show logs of what's happening\n");
     xsltGenericError(xsltGenericErrorContext,
@@ -461,9 +461,9 @@ usage(const char *name)
     xsltGenericError(xsltGenericErrorContext,
                      "      --preferhtml : Use html output when generating search reports.\n"
                      "                     See search command\n");
-  xsltGenericError(xsltGenericErrorContext,
-					 "      --stdout : Print all error messages to stdout\n" \
-					 "                 normally error messages go to stderr\n");
+    xsltGenericError(xsltGenericErrorContext,
+                     "      --stdout : Print all error messages to stdout\n" \
+                     "                 normally error messages go to stderr\n");
     xsltGenericError(xsltGenericErrorContext,
                      "      --cd <PATH> : Change to specfied working directory\n");
 
@@ -498,7 +498,7 @@ int xsldbgMain(int argc, char **argv)
 
     if (!xsldbgInit()) {
         qWarning("Init failed");
-	   xsldbgGenericErrorFunc(QObject::tr("Fatal error: Aborting debugger due to an unrecoverable error.\n"));
+        xsldbgGenericErrorFunc(QObject::tr("Fatal error: Aborting debugger due to an unrecoverable error.\n"));
         xsldbgFree();
         xsltCleanupGlobals();
         xmlCleanupParser();
@@ -508,216 +508,216 @@ int xsldbgMain(int argc, char **argv)
 
 
     if (argc >1){
-	// Do a quick scan to see if -*autoloadconfig is supplied
-	for (i = 1; i < argc; i++) {
-	    if ((argv[i][0] == '-') && (argv[i][1] == '-'))
-		argv[i]++;          /* treat --<OPTION_NAME> as -<OPTION_NAME> */
+        // Do a quick scan to see if -*autoloadconfig is supplied
+        for (i = 1; i < argc; i++) {
+            if ((argv[i][0] == '-') && (argv[i][1] == '-'))
+                argv[i]++;          /* treat --<OPTION_NAME> as -<OPTION_NAME> */
 
-	    if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-noautoloadconfig")) 
-		optionSetAutoConfig(false);
-	    else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-autoloadconfig")) 
-		optionSetAutoConfig(true);
-	}
+            if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-noautoloadconfig"))
+                optionSetAutoConfig(false);
+            else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-autoloadconfig"))
+                optionSetAutoConfig(true);
+        }
     }
     if (optionsAutoConfig()){
-	xmlChar *profile=0;
-	xsldbgReadConfig(profile);
+        xmlChar *profile=0;
+        xsldbgReadConfig(profile);
     }
     if (argc >1){
-	for (i = 1; i < argc; i++) {
-	    if (!result)
-		break;
+        for (i = 1; i < argc; i++) {
+            if (!result)
+                break;
 
-	    if (argv[i][0] != '-') {
-		expandedName = filesExpandName(argv[i]);
-		if (expandedName.isEmpty()) {
+            if (argv[i][0] != '-') {
+                expandedName = filesExpandName(argv[i]);
+                if (expandedName.isEmpty()) {
                     xsldbgGenericErrorFunc(QObject::tr("Error: Unable to determine expanded file name for %1\n").arg(argv[i]));
-		    result = 0;
-		    break;
-		}
-		switch (noFilesFound) {
-		    case 0:
-			optionsSetStringOption(OPTIONS_SOURCE_FILE_NAME, expandedName);
-			noFilesFound++;
-			break;
-		    case 1:
-			optionsSetStringOption(OPTIONS_DATA_FILE_NAME, expandedName);
-			noFilesFound++;
-			break;
+                    result = 0;
+                    break;
+                }
+                switch (noFilesFound) {
+                case 0:
+                    optionsSetStringOption(OPTIONS_SOURCE_FILE_NAME, expandedName);
+                    noFilesFound++;
+                    break;
+                case 1:
+                    optionsSetStringOption(OPTIONS_DATA_FILE_NAME, expandedName);
+                    noFilesFound++;
+                    break;
 
-		    default:
-			xsldbgGenericErrorFunc(QObject::tr("Error: Too many file names supplied via command line looking at option '%1'.\n").arg(argv[i]));
-			result = 0;
-		}
-		continue;
-	    }
+                default:
+                    xsldbgGenericErrorFunc(QObject::tr("Error: Too many file names supplied via command line looking at option '%1'.\n").arg(argv[i]));
+                    result = 0;
+                }
+                continue;
+            }
 
 #ifdef LIBXML_DEBUG_ENABLED
-	    if (!xmlStrCmp(argv[i], "-debug")) {
-		    if (result) {
-			    result = optionsSetIntOption(OPTIONS_DEBUG, 1);
-			    argv[i] = NULL;
-		    }
-	    } else
+            if (!xmlStrCmp(argv[i], "-debug")) {
+                if (result) {
+                    result = optionsSetIntOption(OPTIONS_DEBUG, 1);
+                    argv[i] = NULL;
+                }
+            } else
 #endif
-		    if ((!xmlStrCmp(argv[i], "-v")) || (!xmlStrCmp(argv[i], "-verbose"))) {
-			    xsltSetGenericDebugFunc(stderr, NULL);
-		    } else if ((xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-o")) ||
-				    (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-output"))) {
-			    argv[i] = NULL;
-			    i++;
+                if ((!xmlStrCmp(argv[i], "-v")) || (!xmlStrCmp(argv[i], "-verbose"))) {
+                    xsltSetGenericDebugFunc(stderr, NULL);
+                } else if ((xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-o")) ||
+                           (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-output"))) {
+                    argv[i] = NULL;
+                    i++;
 #if defined(WIN32) || defined (__CYGWIN__)
-			    output = xmlCanonicPath((xmlChar*)argv[i]);
-				if (output){
-					result = xslDbgShellOutput(output);
-					xmlFree(output);
-				}
-				else
+                    output = xmlCanonicPath((xmlChar*)argv[i]);
+                    if (output){
+                        result = xslDbgShellOutput(output);
+                        xmlFree(output);
+                    }
+                    else
 #endif
-				    result = xslDbgShellOutput((xmlChar*)argv[i]);
-			    argv[i] = NULL;
-		    } else if ((xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-V")) ||
-				    (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-version"))) {
-			    xsltGenericError(xsltGenericErrorContext,
-                        " xsldbg created by Keith Isdale <keithisdale@gmail.com\n");
-			    xsltGenericError(xsltGenericErrorContext,
-					    " Version %s, Date created %s\n", XSLDBG_VERSION,
-					    TIMESTAMP);
-			    xsltGenericError(xsltGenericErrorContext,
-					    "Using libxml %s, libxslt %s and libexslt %s\n",
-					    xmlParserVersion, xsltEngineVersion,
-					    exsltLibraryVersion);
-			    xsltGenericError(xsltGenericErrorContext,
-					    "xsldbg was compiled against libxml %d, libxslt %d and libexslt %d\n",
-					    LIBXML_VERSION, LIBXSLT_VERSION,
-					    LIBEXSLT_VERSION);
-			    xsltGenericError(xsltGenericErrorContext,
-					    "libxslt %d was compiled against libxml %d\n",
-					    xsltLibxsltVersion, xsltLibxmlVersion);
-			    xsltGenericError(xsltGenericErrorContext,
-					    "libexslt %d was compiled against libxml %d\n",
-					    exsltLibexsltVersion, exsltLibxmlVersion);
-			    argv[i] = NULL;
-		    } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-norman")) {
-			    if (result) {
-				    result = optionsSetIntOption(OPTIONS_PROFILING, 1);
-				    argv[i] = NULL;
-			    }
-		    } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-nonet")) {
-			    xmlSetExternalEntityLoader(xmlNoNetExternalEntityLoader);
-		    } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-param")) {
-			    argv[i] = NULL;
-			    i++;
-			     // support name:value as well
-			    QRegExp reg("^(\\w+|[_]+):(.+)");
-			    if ((argv[i][0] == '-') || (i >= argc)){
-				xsltGenericError(xsltGenericErrorContext,
-						"Missing value to -param option");
-				return 1;
-			    }
-			    if (reg.exactMatch(argv[i]) && (reg.capturedTexts().count() == 3)){
-				optionDataModel()->addParameter(reg.capturedTexts()[1], reg.capturedTexts()[2]);
-				argv[i] = NULL;
-			    }else{ 
-				if ((i + 1 < argc) && (argv[i +1][0] != '-')){ 
-				    optionDataModel()->addParameter(argv[i], argv[i + 1]);
-				    argv[i] = NULL;
-				    argv[i+1] = NULL;
-				    i++;
-				}else{
-				    xsltGenericError(xsltGenericErrorContext,
-						    "Missing value to -param option");
-				    return 1;
-				}
-			    }
-			    //##TODO check if too many parameters were added
-			    /*
-			    if (arrayListCount(optionsGetParamItemList()) >= 32) {
-				    xsltGenericError(xsltGenericErrorContext,
-						    "Too many params\n");
-				    return (1);
-			    }
-			    */
-		    } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-maxdepth")) {
-			    int value;
+                        result = xslDbgShellOutput((xmlChar*)argv[i]);
+                    argv[i] = NULL;
+                } else if ((xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-V")) ||
+                           (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-version"))) {
+                    xsltGenericError(xsltGenericErrorContext,
+                                     " xsldbg created by Keith Isdale <keithisdale@gmail.com\n");
+                    xsltGenericError(xsltGenericErrorContext,
+                                     " Version %s, Date created %s\n", XSLDBG_VERSION,
+                                     TIMESTAMP);
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "Using libxml %s, libxslt %s and libexslt %s\n",
+                                     xmlParserVersion, xsltEngineVersion,
+                                     exsltLibraryVersion);
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "xsldbg was compiled against libxml %d, libxslt %d and libexslt %d\n",
+                                     LIBXML_VERSION, LIBXSLT_VERSION,
+                                     LIBEXSLT_VERSION);
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "libxslt %d was compiled against libxml %d\n",
+                                     xsltLibxsltVersion, xsltLibxmlVersion);
+                    xsltGenericError(xsltGenericErrorContext,
+                                     "libexslt %d was compiled against libxml %d\n",
+                                     exsltLibexsltVersion, exsltLibxmlVersion);
+                    argv[i] = NULL;
+                } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-norman")) {
+                    if (result) {
+                        result = optionsSetIntOption(OPTIONS_PROFILING, 1);
+                        argv[i] = NULL;
+                    }
+                } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-nonet")) {
+                    xmlSetExternalEntityLoader(xmlNoNetExternalEntityLoader);
+                } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-param")) {
+                    argv[i] = NULL;
+                    i++;
+                    // support name:value as well
+                    QRegExp reg("^(\\w+|[_]+):(.+)");
+                    if ((argv[i][0] == '-') || (i >= argc)){
+                        xsltGenericError(xsltGenericErrorContext,
+                                         "Missing value to -param option");
+                        return 1;
+                    }
+                    if (reg.exactMatch(argv[i]) && (reg.capturedTexts().count() == 3)){
+                        optionDataModel()->addParameter(reg.capturedTexts()[1], reg.capturedTexts()[2]);
+                        argv[i] = NULL;
+                    }else{
+                        if ((i + 1 < argc) && (argv[i +1][0] != '-')){
+                            optionDataModel()->addParameter(argv[i], argv[i + 1]);
+                            argv[i] = NULL;
+                            argv[i+1] = NULL;
+                            i++;
+                        }else{
+                            xsltGenericError(xsltGenericErrorContext,
+                                             "Missing value to -param option");
+                            return 1;
+                        }
+                    }
+                    //##TODO check if too many parameters were added
+                    /*
+                if (arrayListCount(optionsGetParamItemList()) >= 32) {
+                    xsltGenericError(xsltGenericErrorContext,
+                            "Too many params\n");
+                    return (1);
+                }
+                */
+                } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-maxdepth")) {
+                    int value;
 
-			    argv[i] = NULL;
-			    i++;
-			    if (sscanf(argv[i], "%d", &value) == 1) {
-				    if (value > 0)
-					    xsltMaxDepth = value;
-			    }
-			    argv[i] = NULL;
+                    argv[i] = NULL;
+                    i++;
+                    if (sscanf(argv[i], "%d", &value) == 1) {
+                        if (value > 0)
+                            xsltMaxDepth = value;
+                    }
+                    argv[i] = NULL;
 
-		    } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-repeat")) {
-			    if (optionsGetIntOption(OPTIONS_REPEAT) == 0)
-				    optionsSetIntOption(OPTIONS_REPEAT, 20);
-			    else
-				    optionsSetIntOption(OPTIONS_REPEAT, 100);
-				argv[i] = NULL;
-		    } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-cd")) {
-			    argv[i] = NULL;
-			    if (i + 1 < argc) {
-				    i++;
-				    result = changeDir(argv[i]);
-				    argv[i] = NULL;
-			    } else {
-				    xsltGenericError(xsltGenericErrorContext,
-						    "Missing path name after -cd option\n");
-			    }
+                } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-repeat")) {
+                    if (optionsGetIntOption(OPTIONS_REPEAT) == 0)
+                        optionsSetIntOption(OPTIONS_REPEAT, 20);
+                    else
+                        optionsSetIntOption(OPTIONS_REPEAT, 100);
+                    argv[i] = NULL;
+                } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-cd")) {
+                    argv[i] = NULL;
+                    if (i + 1 < argc) {
+                        i++;
+                        result = changeDir(argv[i]);
+                        argv[i] = NULL;
+                    } else {
+                        xsltGenericError(xsltGenericErrorContext,
+                                         "Missing path name after -cd option\n");
+                    }
 
-		    } else {
-			    /* From here we're only dealing with integer options */
-			    /* ignore any non-user option */
-			    if (result && (argv[i][2] != '*') ) {
-					// allow the user to turn off an option by going --no<IntOptionName>
-					bool disableOption = false;
-					if ((argv[i][1] == 'n') && (argv[i][2]=='o')){
-						disableOption = true;
-						argv[i]+=2;
-					}
-				    int optID = optionsGetOptionID((argv[i]+1));
+                } else {
+                    /* From here we're only dealing with integer options */
+                    /* ignore any non-user option */
+                    if (result && (argv[i][2] != '*') ) {
+                        // allow the user to turn off an option by going --no<IntOptionName>
+                        bool disableOption = false;
+                        if ((argv[i][1] == 'n') && (argv[i][2]=='o')){
+                            disableOption = true;
+                            argv[i]+=2;
+                        }
+                        int optID = optionsGetOptionID((argv[i]+1));
 
-				    /* the user might have entered a string option so reject it if so */
-				    if ((optID >= OPTIONS_FIRST_INT_OPTIONID)
-						    && (optID <= OPTIONS_LAST_INT_OPTIONID)) {
-						if (!disableOption)
-							result = optionsSetIntOption(OptionTypeEnum(optID), optionsGetIntOption(OptionTypeEnum(optID)) + 1);
-						else
-						    result = optionsSetIntOption(OptionTypeEnum(optID), 0);
-					    argv[i] = NULL;
-				    } else {
-					    xsltGenericError(xsltGenericErrorContext,
-							    "Error: Unknown option %s, or unknown "
-							    " integer option. See setoption commmand in "
-							    "xsldbg documentation for full description of "
-							    "integer and string options\n",
-							    argv[i]);
-					    result = 0;
-				    }
-			    }
-		    }  	
-	    }
+                        /* the user might have entered a string option so reject it if so */
+                        if ((optID >= OPTIONS_FIRST_INT_OPTIONID)
+                                && (optID <= OPTIONS_LAST_INT_OPTIONID)) {
+                            if (!disableOption)
+                                result = optionsSetIntOption(OptionTypeEnum(optID), optionsGetIntOption(OptionTypeEnum(optID)) + 1);
+                            else
+                                result = optionsSetIntOption(OptionTypeEnum(optID), 0);
+                            argv[i] = NULL;
+                        } else {
+                            xsltGenericError(xsltGenericErrorContext,
+                                             "Error: Unknown option %s, or unknown "
+                                             " integer option. See setoption commmand in "
+                                             "xsldbg documentation for full description of "
+                                             "integer and string options\n",
+                                             argv[i]);
+                            result = 0;
+                        }
+                    }
+                }
+        }
 
 
 
-	if (!result) {
-	    usage(argv[0]);
-	    xsldbgFree();
-	    return (1);
-	}
+        if (!result) {
+            usage(argv[0]);
+            xsldbgFree();
+            return (1);
+        }
 
         // No extra arguments go straight to the shell
         if (argc <= 1)
             result = optionsSetIntOption(OPTIONS_SHELL, 1);
     }else {
         // nothing to do here as caller of xsldbgMain must setup the options required
-        // go straight to the shell 
+        // go straight to the shell
         result = optionsSetIntOption(OPTIONS_SHELL, 1);
     }
-   
+
     if (getThreadStatus() != XSLDBG_MSG_THREAD_NOTUSED){
-	result = optionsSetIntOption(OPTIONS_SHELL, 1);
+        result = optionsSetIntOption(OPTIONS_SHELL, 1);
     }
     /* copy the volitile options over to xsldbg */
     optionsCopyVolitleOptions();
@@ -733,21 +733,21 @@ int xsldbgMain(int argc, char **argv)
     }
 
     if (optionsGetIntOption(OPTIONS_VALID))
-	xmlLoadExtDtdDefaultValue = XML_DETECT_IDS | XML_COMPLETE_ATTRS;
+        xmlLoadExtDtdDefaultValue = XML_DETECT_IDS | XML_COMPLETE_ATTRS;
     else
-	xmlLoadExtDtdDefaultValue = 0;
+        xmlLoadExtDtdDefaultValue = 0;
 
 
     debugGotControl(0);
     while (xslDebugStatus != DEBUG_QUIT) {
-	xsldbgReachedFirstTemplate = false;
-	/* don't force xsldbg to show command prompt */
-	showPrompt = 0;
-	cur = NULL;
-	doc = NULL;
-	arrayListEmpty(filesEntityList());
-	/* copy the volitile options over to xsldbg */
-	optionsCopyVolitleOptions();
+        xsldbgReachedFirstTemplate = false;
+        /* don't force xsldbg to show command prompt */
+        showPrompt = 0;
+        cur = NULL;
+        doc = NULL;
+        arrayListEmpty(filesEntityList());
+        /* copy the volitile options over to xsldbg */
+        optionsCopyVolitleOptions();
 
         // apply the chosen working directory to this session
         changeDir(optionsGetStringOption(OPTIONS_CWD));
@@ -755,154 +755,154 @@ int xsldbgMain(int argc, char **argv)
         // use xinclude and net entity loader selection
         xsltSetXIncludeDefault(optionsGetIntOption(OPTIONS_XINCLUDE));
         /* enable/disable the no net entity loader as required */
-        if (optionsGetIntOption(OPTIONS_NET)) 
+        if (optionsGetIntOption(OPTIONS_NET))
             xmlSetExternalEntityLoader(xmlNoNetExternalEntityLoader);
         else
             xmlSetExternalEntityLoader(xsldbgDefaultEntLoader);
 
-	/* choose where error messages/xsldbg output get sent to */
-	if (optionsGetIntOption(OPTIONS_STDOUT))
-	    errorFile = stdout;
-	else
-	    errorFile = stderr;
+        /* choose where error messages/xsldbg output get sent to */
+        if (optionsGetIntOption(OPTIONS_STDOUT))
+            errorFile = stdout;
+        else
+            errorFile = stderr;
 
         /* enable/disable the no net entity loader as required */
-        if (optionsGetIntOption(OPTIONS_NET)) 
+        if (optionsGetIntOption(OPTIONS_NET))
             xmlSetExternalEntityLoader(xmlNoNetExternalEntityLoader);
         else
             xmlSetExternalEntityLoader(xsldbgDefaultEntLoader);
 
-	filesLoadCatalogs();
+        filesLoadCatalogs();
 
-	if (optionsGetIntOption(OPTIONS_SHELL)) {
-	    debugGotControl(0);
+        if (optionsGetIntOption(OPTIONS_SHELL)) {
+            debugGotControl(0);
 
-	    xsldbgGenericErrorFunc(QObject::tr("\nStarting stylesheet\n\n"));
-	    if (optionsGetIntOption(OPTIONS_TRACE) == TRACE_OFF)
-		xslDebugStatus = DEBUG_STOP;    /* stop as soon as possible */
-	}
+            xsldbgGenericErrorFunc(QObject::tr("\nStarting stylesheet\n\n"));
+            if (optionsGetIntOption(OPTIONS_TRACE) == TRACE_OFF)
+                xslDebugStatus = DEBUG_STOP;    /* stop as soon as possible */
+        }
 
-	if (optionsGetStringOption(OPTIONS_SOURCE_FILE_NAME).isEmpty() ||
-		optionsGetStringOption(OPTIONS_DATA_FILE_NAME).isEmpty()) {
-	    /* at least on file name has not been set */
-	    /*goto a xsldbg command prompt */
-	    showPrompt = 1;
-	    if (optionsGetStringOption(OPTIONS_SOURCE_FILE_NAME).isEmpty())
-		xsldbgGenericErrorFunc(QObject::tr("Error: No XSLT source file supplied.\n"));
+        if (optionsGetStringOption(OPTIONS_SOURCE_FILE_NAME).isEmpty() ||
+                optionsGetStringOption(OPTIONS_DATA_FILE_NAME).isEmpty()) {
+            /* at least on file name has not been set */
+            /*goto a xsldbg command prompt */
+            showPrompt = 1;
+            if (optionsGetStringOption(OPTIONS_SOURCE_FILE_NAME).isEmpty())
+                xsldbgGenericErrorFunc(QObject::tr("Error: No XSLT source file supplied.\n"));
 
-	    if (optionsGetStringOption(OPTIONS_DATA_FILE_NAME).isEmpty()) {
-		xsldbgGenericErrorFunc(QObject::tr("Error: No XML data file supplied.\n"));
-	    }
+            if (optionsGetStringOption(OPTIONS_DATA_FILE_NAME).isEmpty()) {
+                xsldbgGenericErrorFunc(QObject::tr("Error: No XML data file supplied.\n"));
+            }
 
-	} else {
-	    filesLoadXmlFile(NULL, FILES_SOURCEFILE_TYPE);
-	    cur = filesGetStylesheet();
-	    if ((cur == NULL) || (cur->errors != 0)) {
-		/*goto a xsldbg command prompt */
-		showPrompt = 1;
-		if (xslDebugStatus == DEBUG_NONE) {
-		    xslDebugStatus = DEBUG_QUIT;        /* panic !! */
-		    result = 0;
-		}
-	    }
-	}
+        } else {
+            filesLoadXmlFile(NULL, FILES_SOURCEFILE_TYPE);
+            cur = filesGetStylesheet();
+            if ((cur == NULL) || (cur->errors != 0)) {
+                /*goto a xsldbg command prompt */
+                showPrompt = 1;
+                if (xslDebugStatus == DEBUG_NONE) {
+                    xslDebugStatus = DEBUG_QUIT;        /* panic !! */
+                    result = 0;
+                }
+            }
+        }
 
-	if (showPrompt == 0) {
-	    filesLoadXmlFile(NULL, FILES_XMLFILE_TYPE);
-	    doc = filesGetMainDoc();
-	    if (doc == NULL) {
-		if (xslDebugStatus == DEBUG_NONE) {
-		    xslDebugStatus = DEBUG_QUIT;        /* panic !! */
-		    result = 0;
-		} else {
-		    /*goto a xsldbg command prompt */
-		    showPrompt = 1;
-		}
-	    } else {
-		if (xslDebugStatus != DEBUG_QUIT) {
-		    xsltProcess(doc, cur);
-		    result = 1;
-		}
-	    }
+        if (showPrompt == 0) {
+            filesLoadXmlFile(NULL, FILES_XMLFILE_TYPE);
+            doc = filesGetMainDoc();
+            if (doc == NULL) {
+                if (xslDebugStatus == DEBUG_NONE) {
+                    xslDebugStatus = DEBUG_QUIT;        /* panic !! */
+                    result = 0;
+                } else {
+                    /*goto a xsldbg command prompt */
+                    showPrompt = 1;
+                }
+            } else {
+                if (xslDebugStatus != DEBUG_QUIT) {
+                    xsltProcess(doc, cur);
+                    result = 1;
+                }
+            }
 
-	    if (optionsGetIntOption(OPTIONS_SHELL) && (showPrompt == 0)) {
-		if ((xslDebugStatus != DEBUG_QUIT)
-			&& !debugGotControl(-1)) {
-		    xsldbgGenericErrorFunc(QObject::tr("\nDebugger never received control.\n"));
-		    /*goto a xsldbg command prompt */
-		    showPrompt = 1;
-		    xslDebugStatus = DEBUG_STOP;
-            notifyXsldbgApp(XSLDBG_MSG_COMPLETED_TRANSFORMATION, NULL);
-		} else {
-		    xsldbgGenericErrorFunc(QObject::tr("\nFinished stylesheet\n\n"));
-            bool walking = optionsGetIntOption(OPTIONS_WALK_SPEED) != WALKSPEED_STOP;
-            bool tracing = optionsGetIntOption(OPTIONS_TRACE) != TRACE_OFF;
-            optionsSetIntOption(OPTIONS_WALK_SPEED, WALKSPEED_STOP);
-            optionsSetIntOption(OPTIONS_TRACE, TRACE_OFF);
-            notifyXsldbgApp(XSLDBG_MSG_COMPLETED_TRANSFORMATION, NULL);
-            if (!(walking || tracing) && !optionsGetIntOption(OPTIONS_AUTORESTART) && (xslDebugStatus != DEBUG_RUN_RESTART)){
-			/* pass control to user they won't be able to do much
-			   other than add breakpoints, quit, run, continue */
-			debugXSLBreak((xmlNodePtr) cur->doc, (xmlNodePtr) doc,
-				NULL, NULL);
-		    }
-		}
-	    } else {
-		/* request to execute stylesheet only  so we're done */
-		xslDebugStatus = DEBUG_QUIT;
-	    }
-	} else {
-	    /* Some sort of problem loading source file has occurred. Quit? */
-	    if (xslDebugStatus == DEBUG_NONE) {
-		xslDebugStatus = DEBUG_QUIT;    /* Panic!! */
-		result = 0;
-	    } else {
-		/*goto a xsldbg command prompt */
-		showPrompt = 1;
-	    }
-	}
+            if (optionsGetIntOption(OPTIONS_SHELL) && (showPrompt == 0)) {
+                if ((xslDebugStatus != DEBUG_QUIT)
+                        && !debugGotControl(-1)) {
+                    xsldbgGenericErrorFunc(QObject::tr("\nDebugger never received control.\n"));
+                    /*goto a xsldbg command prompt */
+                    showPrompt = 1;
+                    xslDebugStatus = DEBUG_STOP;
+                    notifyXsldbgApp(XSLDBG_MSG_COMPLETED_TRANSFORMATION, NULL);
+                } else {
+                    xsldbgGenericErrorFunc(QObject::tr("\nFinished stylesheet\n\n"));
+                    bool walking = optionsGetIntOption(OPTIONS_WALK_SPEED) != WALKSPEED_STOP;
+                    bool tracing = optionsGetIntOption(OPTIONS_TRACE) != TRACE_OFF;
+                    optionsSetIntOption(OPTIONS_WALK_SPEED, WALKSPEED_STOP);
+                    optionsSetIntOption(OPTIONS_TRACE, TRACE_OFF);
+                    notifyXsldbgApp(XSLDBG_MSG_COMPLETED_TRANSFORMATION, NULL);
+                    if (!(walking || tracing) && !optionsGetIntOption(OPTIONS_AUTORESTART) && (xslDebugStatus != DEBUG_RUN_RESTART)){
+                        /* pass control to user they won't be able to do much
+               other than add breakpoints, quit, run, continue */
+                        debugXSLBreak((xmlNodePtr) cur->doc, (xmlNodePtr) doc,
+                                      NULL, NULL);
+                    }
+                }
+            } else {
+                /* request to execute stylesheet only  so we're done */
+                xslDebugStatus = DEBUG_QUIT;
+            }
+        } else {
+            /* Some sort of problem loading source file has occurred. Quit? */
+            if (xslDebugStatus == DEBUG_NONE) {
+                xslDebugStatus = DEBUG_QUIT;    /* Panic!! */
+                result = 0;
+            } else {
+                /*goto a xsldbg command prompt */
+                showPrompt = 1;
+            }
+        }
 
-	if (showPrompt && optionsGetIntOption(OPTIONS_SHELL)) {
-	    xmlDocPtr tempDoc = xmlNewDoc((xmlChar *) "1.0");
-	    xmlNodePtr tempNode =
-		xmlNewNode(NULL, (xmlChar *) "xsldbg_default_node");
-	    if (!tempDoc || !tempNode) {
-		xsldbgFree();
-		return (1);
-	    }
-	    xmlAddChild((xmlNodePtr) tempDoc, tempNode);
+        if (showPrompt && optionsGetIntOption(OPTIONS_SHELL)) {
+            xmlDocPtr tempDoc = xmlNewDoc((xmlChar *) "1.0");
+            xmlNodePtr tempNode =
+                    xmlNewNode(NULL, (xmlChar *) "xsldbg_default_node");
+            if (!tempDoc || !tempNode) {
+                xsldbgFree();
+                return (1);
+            }
+            xmlAddChild((xmlNodePtr) tempDoc, tempNode);
 
-	    xsldbgGenericErrorFunc(QObject::tr("Going to the command shell; not all xsldbg commands will work as not all needed have been loaded.\n"));
-	    xslDebugStatus = DEBUG_STOP;
-	    if ((cur == NULL) && (doc == NULL)) {
-		/*no doc's loaded */
-		debugXSLBreak(tempNode, tempNode, NULL, NULL);
-	    } else if ((cur != NULL) && (doc == NULL)) {
-		/* stylesheet is loaded */
-		debugXSLBreak((xmlNodePtr) cur->doc, tempNode, NULL, NULL);
-	    } else if ((cur == NULL) && (doc != NULL)) {
-		/* xml doc is loaded */
-		debugXSLBreak(tempNode, (xmlNodePtr) doc, NULL, NULL);
-	    } else {
-		/* unexpected problem, both docs are loaded */
-		debugXSLBreak((xmlNodePtr) cur->doc, (xmlNodePtr) doc,
-			NULL, NULL);
-	    }
-	    xmlFreeDoc(tempDoc);
-	} else if (showPrompt && !optionsGetIntOption(OPTIONS_SHELL)) {
-	    xslDebugStatus = DEBUG_QUIT;
-	    result = 0;         /* panic */
-	}
+            xsldbgGenericErrorFunc(QObject::tr("Going to the command shell; not all xsldbg commands will work as not all needed have been loaded.\n"));
+            xslDebugStatus = DEBUG_STOP;
+            if ((cur == NULL) && (doc == NULL)) {
+                /*no doc's loaded */
+                debugXSLBreak(tempNode, tempNode, NULL, NULL);
+            } else if ((cur != NULL) && (doc == NULL)) {
+                /* stylesheet is loaded */
+                debugXSLBreak((xmlNodePtr) cur->doc, tempNode, NULL, NULL);
+            } else if ((cur == NULL) && (doc != NULL)) {
+                /* xml doc is loaded */
+                debugXSLBreak(tempNode, (xmlNodePtr) doc, NULL, NULL);
+            } else {
+                /* unexpected problem, both docs are loaded */
+                debugXSLBreak((xmlNodePtr) cur->doc, (xmlNodePtr) doc,
+                              NULL, NULL);
+            }
+            xmlFreeDoc(tempDoc);
+        } else if (showPrompt && !optionsGetIntOption(OPTIONS_SHELL)) {
+            xslDebugStatus = DEBUG_QUIT;
+            result = 0;         /* panic */
+        }
 
-	if (optionsGetIntOption(OPTIONS_SHELL)) {
-	    /* force a refesh of both stlesheet and xml data */
-	    filesFreeXmlFile(FILES_SOURCEFILE_TYPE);
-	    filesFreeXmlFile(FILES_XMLFILE_TYPE);
-	}
+        if (optionsGetIntOption(OPTIONS_SHELL)) {
+            /* force a refesh of both stlesheet and xml data */
+            filesFreeXmlFile(FILES_SOURCEFILE_TYPE);
+            filesFreeXmlFile(FILES_XMLFILE_TYPE);
+        }
     }
 
     if (!result) {
-	xsldbgGenericErrorFunc(QObject::tr("Fatal error: Aborting debugger due to an unrecoverable error.\n"));
+        xsldbgGenericErrorFunc(QObject::tr("Fatal error: Aborting debugger due to an unrecoverable error.\n"));
     }
     xsldbgFree();
     xsltCleanupGlobals();
@@ -1012,7 +1012,7 @@ xmlDocPtr xsldbgLoadXmlTemporary(const xmlChar * path)
     }
 
     if (optionsGetIntOption(OPTIONS_TIMING)
-        && (xslDebugStatus != DEBUG_QUIT)) {
+            && (xslDebugStatus != DEBUG_QUIT)) {
         endTimer(QString("Parsing document %1").arg(xsldbgUrl(path)));
     }
     return doc;
@@ -1026,21 +1026,21 @@ handler_routine(DWORD dwCtrlType)
 {
 
     switch (dwCtrlType) {
-        case CTRL_C_EVENT:
-        case CTRL_BREAK_EVENT:
-        case CTRL_CLOSE_EVENT:
-            catchSigInt(SIGINT);
-            break;
+    case CTRL_C_EVENT:
+    case CTRL_BREAK_EVENT:
+    case CTRL_CLOSE_EVENT:
+        catchSigInt(SIGINT);
+        break;
 
-        case CTRL_LOGOFF_EVENT:
-        case CTRL_SHUTDOWN_EVENT:
-            xsldbgFree();
-            exit(1);
-            break;
+    case CTRL_LOGOFF_EVENT:
+    case CTRL_SHUTDOWN_EVENT:
+        xsldbgFree();
+        exit(1);
+        break;
 
-        default:
-            printf("Error: Unknown control event\n");
-            break;
+    default:
+        printf("Error: Unknown control event\n");
+        break;
     }
 
     return (true);
@@ -1053,30 +1053,30 @@ handler_routine(DWORD dwCtrlType)
 void xsldbgStructErrorHandler(void * userData, xmlErrorPtr error)
 {
     if (error && error->message && (error->level >= 0) && (error->level <= 4)){
-	if (getThreadStatus() != XSLDBG_MSG_THREAD_RUN){
-	    static const char *msgPrefix[4 + 1] = {"", "warning :", "error:", "fatal:"};
-	    if (error->file)
-		xsltGenericError(xsltGenericErrorContext, "%s%s in file \"%s\" line %d", msgPrefix[error->level], error->message, error->file, error->line);
-	    else
-		xsltGenericError(xsltGenericErrorContext, "%s%s", msgPrefix[error->level], error->message);
+        if (getThreadStatus() != XSLDBG_MSG_THREAD_RUN){
+            static const char *msgPrefix[4 + 1] = {"", "warning :", "error:", "fatal:"};
+            if (error->file)
+                xsltGenericError(xsltGenericErrorContext, "%s%s in file \"%s\" line %d", msgPrefix[error->level], error->message, error->file, error->line);
+            else
+                xsltGenericError(xsltGenericErrorContext, "%s%s", msgPrefix[error->level], error->message);
 
-	}else{
-	    xsltGenericError(xsltGenericErrorContext,"Struct error handler");
-	    notifyXsldbgApp(XSLDBG_MSG_ERROR_MESSAGE, error);
-	}
+        }else{
+            xsltGenericError(xsltGenericErrorContext,"Struct error handler");
+            notifyXsldbgApp(XSLDBG_MSG_ERROR_MESSAGE, error);
+        }
     }
 }
 
 void xsldbgSAXErrorHandler(void * ctx, const char * msg, ...)
 {
     if (ctx)
-	xsldbgStructErrorHandler(0, ((xmlParserCtxtPtr)ctx)->lastError);
+        xsldbgStructErrorHandler(0, ((xmlParserCtxtPtr)ctx)->lastError);
 }
 
 void xsldbgSAXWarningHandler(void * ctx, const char * msg, ...)
 {
     if (ctx)
-	xsldbgStructErrorHandler(0, ((xmlParserCtxtPtr)ctx)->lastError);
+        xsldbgStructErrorHandler(0, ((xmlParserCtxtPtr)ctx)->lastError);
 }
 
 #endif
@@ -1152,14 +1152,14 @@ int xsldbgInit()
             return result;
         }
 
-	
+
 
         /* set up the parser */
         xmlInitParser();
 #if 0
 #if LIBXML_VERSION >= 20600
-     xmlSetGenericErrorFunc(NULL,  NULL);
-     xmlSetStructuredErrorFunc(NULL , (xmlStructuredErrorFunc)xsldbgStructErrorHandler);
+        xmlSetGenericErrorFunc(NULL,  NULL);
+        xmlSetStructuredErrorFunc(NULL , (xmlStructuredErrorFunc)xsldbgStructErrorHandler);
 #else
         xmlSetGenericErrorFunc(0, xsldbgGenericErrorFunc);
         xsltSetGenericErrorFunc(0, xsldbgGenericErrorFunc);
@@ -1169,22 +1169,22 @@ int xsldbgInit()
         xsltSetGenericErrorFunc(0, xsldbgGenericErrorFunc);
 #endif
 
-    /*
+        /*
      * * Replace entities with their content.
      */
-    xmlSubstituteEntitiesDefault(1);
+        xmlSubstituteEntitiesDefault(1);
 
-    /*
+        /*
      * * Register the EXSLT extensions and the test module
      */
-    exsltRegisterAll();
-    xsltRegisterTestModule();
+        exsltRegisterAll();
+        xsltRegisterTestModule();
 
-	/*
-	 * disable CDATA from being built in the document tree
-	 */
-	xmlDefaultSAXHandlerInit();
-	xmlDefaultSAXHandler.cdataBlock = NULL;
+        /*
+     * disable CDATA from being built in the document tree
+     */
+        xmlDefaultSAXHandlerInit();
+        xmlDefaultSAXHandler.cdataBlock = NULL;
 
         if (getThreadStatus() != XSLDBG_MSG_THREAD_NOTUSED) {
             initialized = 1;
@@ -1225,7 +1225,7 @@ void xsldbgFree()
     /*  rl_free_line_state ();
       rl_cleanup_after_signal(); */
 #   ifdef HAVE_HISTORY
-       clear_history();
+    clear_history();
 #   endif    
 #endif
 
