@@ -151,19 +151,13 @@ QString filesExpandName(const QString fileName, bool addFilePrefix)
     if (!fileName.isEmpty()) {
         if ((fileName[0] == '~') && getenv("HOME")) {
             if (addFilePrefix)
-                result = "file://";
+                result = "file:/";
             result += getenv("HOME");
             result += fileName.mid(1);
-        } else if ((fileName == "file:/") || (fileName[0] == '/' && addFilePrefix) ){
-            /* ensure that URI only has one leading slash */
-            int sourceIndex;
-            result = "file:///";
-
-            if (fileName[0] == '/')
-                sourceIndex=0;
-            else 
-                sourceIndex=6;
-
+        } else if (fileName[0] == '/' && addFilePrefix ){
+            /* ensure that URI only has two leading slashes */
+            int sourceIndex = 0;
+            result = "file://";
             while ((sourceIndex < fileName.count()) && fileName[sourceIndex] == '/')
                 sourceIndex++;
             result += fileName.mid(sourceIndex);

@@ -6,6 +6,7 @@ Keith Isdale 9th June 2018 <keithisdale@gmail.com>
         Correct logic that guesses relative XSLT file path given to 'break' command (needed debugging http/ftp documents)
         Correct logic of output of 'templates' command with '-q' option
         Remove useless 'this' option to 'templates' command
+	Correct expanding of file names such as ~/foo.xml and /foo/bar.xml into "file:/" URI
     Features
         To improve UI in qxslbg emit XsldbgDebuggerBase::completeTransform() signal when completed XSLT tranformation
         'entities' command output now in two new forms with "<ID>"values now quoted
