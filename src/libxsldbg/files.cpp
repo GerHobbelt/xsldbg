@@ -443,6 +443,7 @@ int changeDir(QString path)
     int result = 0;
     QString expandedName;
 
+    path = path.trimmed();
 
     if (!path.isEmpty()) {
         // expand the path but do not add the "file:// prefix"
@@ -456,7 +457,7 @@ int changeDir(QString path)
     }
 
     if (expandedName.isEmpty()){
-        xsldbgGenericErrorFunc(QObject::tr("Error: Unable to change to directory %1.\n").arg(path));
+        xsldbgGenericErrorFunc(QObject::tr("Error: Unable to change to directory %1 which was expanded to %2.\n").arg(path).arg(expandedName));
         return result;
     }
 
@@ -471,7 +472,10 @@ int changeDir(QString path)
         result = 1;
     }
     if (!result) {
-        xsldbgGenericErrorFunc(QObject::tr("Error: Unable to change to directory %1.\n").arg(path));
+        if (path != expandedName)
+            xsldbgGenericErrorFunc(QObject::tr("Error: Unable to change to directory \"%1\" which was expanded to \"%2\".\n").arg(path).arg(expandedName));
+        else
+            xsldbgGenericErrorFunc(QObject::tr("Error: Unable to change to directory \"%1\".\n").arg(path));
     } else {
 
 	if (xslDebugStatus != DEBUG_NONE)

@@ -31,10 +31,11 @@
 int xslDbgShellChangeWd(xmlChar * path)
 {
     int result = 0;
+    xmlChar *opts[2];
 
-    if (xmlStrLen(path)) {
+    if (xmlStrLen(path) && splitString(path, 1, opts)) {
         /* call function in files.c to do the work */
-        result = changeDir(xsldbgText(path));
+        result = changeDir(xsldbgText(opts[0]));
     } else
         xsldbgGenericErrorFunc(QObject::tr("Error: Missing arguments for the command %1.\n").arg(QString("chdir")));
     return result;

@@ -84,7 +84,7 @@ continue</test>
 </test>
 <result>
 <row>
-<matchtext>Unable to change to directory.*~foo.</matchtext>
+<matchtext>Unable to change to directory.*~foo.*which was expanded to.*foo</matchtext>
 </row>
 </result>
 </cmd>

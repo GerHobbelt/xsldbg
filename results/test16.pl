@@ -96,7 +96,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Unable to change to directory.*~foo.", 
+             "Unable to change to directory.*~foo.*which was expanded to.*foo", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
