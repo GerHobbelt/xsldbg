@@ -60,6 +60,60 @@ continue</test>
 </cmd>
 
 <cmd>
+<test>chdir ~/temp/xsldbg_tests
+</test>
+<result>
+<row>
+<matchtext>Changed to directory.*temp.xsldbg_tests</matchtext>
+</row>
+</result>
+</cmd>
+
+<cmd>
+<test>chdir foo
+</test>
+<result>
+<row>
+<matchtext>Unable to change to directory .~foo.</matchtext>
+</row>
+</result>
+</cmd>
+
+<cmd>
+<test>chdir ~foo
+</test>
+<result>
+<row>
+<matchtext>Unable to change to directory.*~foo.</matchtext>
+</row>
+</result>
+</cmd>
+
+<cmd>
+<test>chdir "~foo"
+</test>
+<result>
+<row>
+<matchtext>Unable to change to directory.*~foo.</matchtext>
+</row>
+</result>
+</cmd>
+
+<!-- check we can actually run script from current location -->
+<cmd>
+<test>chdir "~/temp/xsldbg_tests"
+source test16.xsl
+data test16.xml
+run
+</test>
+<result>
+<row>
+<matchtext>Reached template: \"/\"</matchtext>
+</row>
+</result>
+</cmd>
+
+<cmd>
 <test>
 <!-- Clear current working directory before exiting -->
 setoption cwd ""

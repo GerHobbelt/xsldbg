@@ -11,6 +11,19 @@ run
 break /
 continue
 show break
+chdir ~/temp/xsldbg_tests
+
+chdir foo
+
+chdir ~foo
+
+chdir "~foo"
+
+chdir "~/temp/xsldbg_tests"
+source test16.xsl
+data test16.xml
+run
+
 
 
 setoption cwd ""

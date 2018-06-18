@@ -71,6 +71,62 @@ require "xsldbgmatch.pl";
   
 
 
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Changed to directory.*temp.xsldbg_tests", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+
+
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Unable to change to directory .~foo.", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+
+
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Unable to change to directory.*~foo.", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+
+
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Unable to change to directory.*~foo.", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+
+
+
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Reached template: \"/\"", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+
+
 
 
     if ($result == 1){
