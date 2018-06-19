@@ -1079,7 +1079,9 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
     if (showWatchesActive){
       xslDbgShellShowWatches(styleCtxt, ctxt, 0);
-      xsldbgGenericErrorFunc("\n");
+      if (getThreadStatus() != XSLDBG_MSG_THREAD_RUN) {
+        xsldbgGenericErrorFunc("\n");
+      }
     }
 
     while (!exitShell && (xslDebugStatus != DEBUG_QUIT)) {
