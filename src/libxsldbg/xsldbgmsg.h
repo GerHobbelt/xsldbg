@@ -75,7 +75,8 @@ typedef enum {
     XSLDBG_MSG_INTOPTION_CHANGE,        /* 23* Response to options command */
     XSLDBG_MSG_STRINGOPTION_CHANGE,     /* 24* Response to options command */
     XSLDBG_MSG_ERROR_MESSAGE,	/* 25:  Entercepted error message from libxml2 */
-    XSLDBG_MSG_COMPLETED_TRANSFORMATION    /* 26:  Completed XSLT exexcution */
+    XSLDBG_MSG_COMPLETED_TRANSFORMATION,    /* 26:  Completed XSLT exexcution */
+    XSLDBG_MSG_FIRST_LINE_REACHED    /* 27:  Reached first break point after starting */
 } XsldbgMessageEnum;
 
 

@@ -277,6 +277,9 @@ XsldbgEventData *XsldbgEvent::createEventData(XsldbgMessageEnum type, const void
     case XSLDBG_MSG_COMPLETED_TRANSFORMATION:    /* 26:  Completed XSLT exexcution */
         break;
 
+    case XSLDBG_MSG_FIRST_LINE_REACHED:    /* 27:  Reached first break point after starting */
+        break;
+
     default:
         qDebug("Unhandled type in createEventData %d", type);
 
@@ -440,6 +443,10 @@ void XsldbgEvent::emitMessage(XsldbgEventData *eventData)
 
     case XSLDBG_MSG_COMPLETED_TRANSFORMATION:    /* 26:  Completed XSLT exexcution */
         emit debugger->completedTransform();
+        break;
+
+    case XSLDBG_MSG_FIRST_LINE_REACHED:    /* 27:  Reached first break point after starting */
+        emit debugger->reachedFirstLine();
         break;
 
     default:

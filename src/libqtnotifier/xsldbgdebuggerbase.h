@@ -78,6 +78,9 @@ signals: // Signals
    /** line number and/or file name changed */
    void lineNoChanged(QString fileName, int lineNumber, bool /* breakpoint */);
 
+   /** emitted when first line is reached after starting**/
+   void reachedFirstLine();
+
    /** Show a message in debugger window */
    void showMessage(QString /* msg*/);
 

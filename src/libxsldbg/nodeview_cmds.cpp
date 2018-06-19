@@ -415,7 +415,7 @@ int xslDbgShellPrintVariable(xsltTransformContextPtr styleCtxt, xmlChar * arg,
     }
 
     if (!styleCtxt) {
-        if (!(!xsldbgReachedFirstTemplate && silenceCtxtErrors))
+        if (!xsldbgReachedFirstTemplate && !silenceCtxtErrors)
             xsldbgGenericErrorFunc(QObject::tr("Error: Debugger has no files loaded or libxslt has not reached a template.\nTry reloading files or taking more steps.\n"));
         return result;
     }
