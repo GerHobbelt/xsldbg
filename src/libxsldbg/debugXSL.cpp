@@ -1474,7 +1474,8 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     cmdResult = xslDbgShellPrintVariable(styleCtxt, arg,
                                                          DEBUG_GLOBAL_VAR);
                 else {
-                    xsldbgGenericErrorFunc(QObject::tr("Error: Need to use the run command first.\n"));
+                    if (xmlStrcmp(arg, (const xmlChar *)"-q") != 0)
+                        xsldbgGenericErrorFunc(QObject::tr("Error: Need to use the run command first.\n"));
                     cmdResult = 0;
                 }
                 break;
@@ -1496,7 +1497,8 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                             xslDbgShellPrintVariable(styleCtxt, arg,
                                                      DEBUG_LOCAL_VAR);
                 else {
-                    xsldbgGenericErrorFunc(QObject::tr("Error: Need to use the run command first.\n"));
+                    if (xmlStrcmp(arg, (const xmlChar *)"-q") != 0)
+                        xsldbgGenericErrorFunc(QObject::tr("Error: Need to use the run command first.\n"));
                     cmdResult = 0;
                 }
                 break;

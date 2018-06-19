@@ -24,6 +24,7 @@
 #include "callstack.h"
 #include "files.h"
 #include "options.h"
+#include "xsldbgmsg.h"
 
 #include <libxslt/xsltutils.h>  /* need for breakpoint callback support */
 
@@ -83,8 +84,12 @@ int debugGotControl(int reached)
     static int hasReached;
     int result = hasReached;
 
-    if (reached != -1)
+    if (reached != -1) {
+        if (hasReached == 0 && reached == 1) { // is this the first time xsldbg got control?
+            notifyXsldbgApp(XSLDBG_MSG_FIRST_LINE_REACHED, NULL);
+        }
         hasReached = reached;
+    }
     return result;
 }
 
