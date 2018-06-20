@@ -53,13 +53,16 @@ int xslDbgEntities(const xmlChar *arg)
                 entInfo = (entityInfoPtr) arrayListGet(filesEntityList(),
                                                        entityIndex);
                 if (entInfo){
-                    // always attempt to resolve file entities with their URI
                     if (entInfo->ResolvedURI && xmlStrlen(entInfo->ResolvedURI) == 0) {
+                      xmlFree(entInfo->ResolvedURI); // no entity resolved, clear value and try again
+                      entInfo->ResolvedURI = NULL;
+                    }
+                    if (!entInfo->ResolvedURI) { // attempt to resolve file entities with their URI
                         if (entInfo->PublicID && xmlStrlen(entInfo->PublicID)
                                 && entInfo->SystemID && xmlStrlen(entInfo->SystemID)) {
                             entInfo->ResolvedURI = xmlCatalogResolvePublic(entInfo->PublicID);
                         } else if (entInfo->SystemID && xmlStrlen(entInfo->SystemID)) {
-                            if (!xmlStrnCmp(arg, "file:/", 6) || !xmlStrnCmp(arg, "ftp:/", 5) || !xmlStrnCmp(arg, "http://", 6)) {
+                            if (!xmlStrnCmp(entInfo->SystemID, "file:/", 6) || !xmlStrnCmp(entInfo->SystemID, "ftp:/", 5) || !xmlStrnCmp(entInfo->SystemID, "http:/", 6)) {
                                 entInfo->ResolvedURI = xmlStrdup(entInfo->SystemID);
                             } else {
                                 entInfo->ResolvedURI = xmlCatalogResolveSystem(entInfo->SystemID);
@@ -95,11 +98,15 @@ int xslDbgEntities(const xmlChar *arg)
                     } else {
                         QString resolveURI;
                         if (entInfo->ResolvedURI && xmlStrlen(entInfo->ResolvedURI) == 0) {
+                          xmlFree(entInfo->ResolvedURI); // no entity resolved, clear value and try again
+                          entInfo->ResolvedURI = NULL;
+                        }
+                        if (!entInfo->ResolvedURI) { // attempt to resolve file entities with their URI
                             if (entInfo->PublicID && xmlStrlen(entInfo->PublicID)
-                                        && entInfo->SystemID && xmlStrlen(entInfo->SystemID)) {
+                                    && entInfo->SystemID && xmlStrlen(entInfo->SystemID)) {
                                 entInfo->ResolvedURI = xmlCatalogResolvePublic(entInfo->PublicID);
                             } else if (entInfo->SystemID && xmlStrlen(entInfo->SystemID)) {
-                                if (!xmlStrnCmp(arg, "file:/", 6) || !xmlStrnCmp(arg, "ftp:/", 5) || !xmlStrnCmp(arg, "http:/", 6)) {
+                                if (!xmlStrnCmp(entInfo->SystemID, "file:/", 6) || !xmlStrnCmp(entInfo->SystemID, "ftp:/", 5) || !xmlStrnCmp(entInfo->SystemID, "http:/", 6)) {
                                     entInfo->ResolvedURI = xmlStrdup(entInfo->SystemID);
                                 } else {
                                     entInfo->ResolvedURI = xmlCatalogResolveSystem(entInfo->SystemID);
