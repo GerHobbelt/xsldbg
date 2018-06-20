@@ -135,19 +135,19 @@
   <!-- This is a global variable -->
  <xsl:template match="variable[@templname or @templmatch]">
       <xsl:text> Local variable </xsl:text>
-      <xsl:text>name =&quot;</xsl:text>
+      <xsl:text>name=&quot;</xsl:text>
       <xsl:value-of select="@name"/>
       <xsl:text>&quot;</xsl:text>
       <xsl:text> select=&quot;</xsl:text>
       <xsl:value-of select="@name"/>
       <xsl:text>&quot;</xsl:text>
       <xsl:if test="@templname">
-      <xsl:text> templateName =&quot;</xsl:text>
+      <xsl:text> templateName=&quot;</xsl:text>
       <xsl:value-of select="@templname"/>
       <xsl:text>&quot;</xsl:text>
       </xsl:if>
      <xsl:if test="@templmatch">
-      <xsl:text> templateMatch =&quot;</xsl:text>
+      <xsl:text> templateMatch=&quot;</xsl:text>
       <xsl:value-of select="@templmatch"/>
       <xsl:text>&quot;</xsl:text>
       </xsl:if>
