@@ -19,6 +19,8 @@ if [ ! -d /srv/www/htdocs/xsldbg/tests/subdir ]; then
 fi
 cp -u test2.xml subdir/*  /srv/www/htdocs/xsldbg/tests/subdir/
 
+cp -u note*.xml /usr/share/doc/packages/qt5/xsldbg/en/
+
 
 
 # update all test data to suite the test*.data files
