@@ -104,7 +104,7 @@ QString filesSearchFileName(FilesSearchFileNameEnum fileType)
             break;
     }
 
-    result = baseDir + name;
+    result = baseDir + PATHCHAR + name;
 
     return result;
 }

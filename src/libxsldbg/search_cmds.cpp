@@ -62,14 +62,14 @@ int xslDbgShellSearch(xsltTransformContextPtr styleCtxt,
         /* yep do sorting as well */
         if (snprintf
             ((char *) buff, DEBUG_BUFFER_SIZE,
-             "--param dosort 1 --param query \"%s\"",
+             "--noshell --param dosort 1 --param query \"%s\"",
              &arg[sortOptionLen])) {
             result = result && searchQuery(NULL, NULL, buff);
         }
     } else {
         if (snprintf
             ((char *) buff, DEBUG_BUFFER_SIZE,
-             "--param dosort 0 --param query \"%s\"", arg)) {
+             "--noshell --param dosort 0 --param query \"%s\"", arg)) {
             result = result && searchQuery(NULL, NULL, buff);
         }
     }

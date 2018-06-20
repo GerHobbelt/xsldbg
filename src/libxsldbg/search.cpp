@@ -25,6 +25,7 @@
 #include "breakpoint.h"
 #include "options.h"
 #include "files.h"
+#include <QUrl>
 #ifdef __riscos
 
 /* Include for filename conversions */
@@ -326,6 +327,9 @@ int searchSave(const xmlChar * fileName)
     else
         searchInput = xsldbgText(fileName);
 
+    QUrl inputUrl(searchInput);
+    searchInput = inputUrl.toLocalFile();
+
     if (xmlSaveFormatFile(searchInput.toUtf8().constData(), searchDataBase, 1) != -1){
         result = 1;
     }else{
@@ -365,6 +369,9 @@ int searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
         searchOutput = filesSearchFileName(FILES_SEARCHRESULT);
     else
         searchOutput = xsldbgText(outputFile);
+
+    QUrl outputUrl(searchOutput);
+    searchOutput = outputUrl.toLocalFile();
 
     if (!query || (xmlStrlen(query) == 0))
         query = (xmlChar *) "--param query //search/*";
