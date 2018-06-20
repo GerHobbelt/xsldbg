@@ -42,9 +42,9 @@
 
   <!-- Display the details of where the item where included in XSL source -->
   <xsl:template name="fileDetails">
-    <xsl:text> file </xsl:text>
+    <xsl:text> file &quot;</xsl:text>
     <xsl:value-of select="@url"/>
-     <xsl:text> : line </xsl:text>   
+     <xsl:text>&quot; : line </xsl:text>
     <xsl:value-of select="@line"/>
      <xsl:text>
 </xsl:text>  
@@ -96,10 +96,10 @@
              in parent -->
         <xsl:choose>
           <xsl:when test="name()='import'">
-            <xsl:text> imported from </xsl:text>
+            <xsl:text> imported from</xsl:text>
           </xsl:when>
           <xsl:otherwise>
-          <xsl:text> included from </xsl:text>
+          <xsl:text> included from</xsl:text>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:call-template name="fileDetails" />
