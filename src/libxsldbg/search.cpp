@@ -406,7 +406,11 @@ int searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
             result = filesMoreFile((const xmlChar*)searchOutput.toUtf8().constData(), NULL);
         }
 
-        xsldbgGenericErrorFunc(QObject::tr("Information: Transformed %1 using %2 and saved to %3.\n").arg(searchInput).arg(searchXSL).arg(searchOutput));
+        if (result) {
+            xsldbgGenericErrorFunc(QObject::tr("Information: Transformed search results %1 using %2 and saved to %3.\n").arg(searchInput).arg(searchXSL).arg(searchOutput));
+        } else {
+            xsldbgGenericErrorFunc(QObject::tr("Error: Failed to transform search results %1 using %2.\n").arg(searchInput).arg(searchXSL));
+        }
     } else {
         xsldbgGenericErrorFunc(QObject::tr("Error: Invalid arguments to command %1.\n").arg(QString("search")));
     }
