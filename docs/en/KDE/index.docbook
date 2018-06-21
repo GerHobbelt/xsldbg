@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE book
   PUBLIC "-//KDE//DTD DocBook XML V4.5-Based Variant V1.1//EN" "dtd/kdedbx45.dtd">
-<book><bookinfo><title>Xsldbg '4.6.1'</title><subtitle>Command and usage documentation</subtitle><authorgroup><author><firstname>Keith</firstname><surname>Isdale</surname><affiliation><address><email>keithisdale@gmail.com</email></address></affiliation></author></authorgroup><copyright><year>2003</year><holder>Keith Isdale</holder></copyright><legalnotice>&FDLNotice;</legalnotice><date>24/05/2003</date><releaseinfo>'4.6.1'</releaseinfo><abstract><para>
+<book><bookinfo><title>Xsldbg '4.7.0'</title><subtitle>Command and usage documentation</subtitle><authorgroup><author><firstname>Keith</firstname><surname>Isdale</surname><affiliation><address><email>keithisdale@gmail.com</email></address></affiliation></author></authorgroup><copyright><year>2003</year><holder>Keith Isdale</holder></copyright><legalnotice>&FDLNotice;</legalnotice><date>24/05/2003</date><releaseinfo>'4.7.0'</releaseinfo><abstract><para>
 xsldbg is a tool intended to help understand stylesheets. 
 What makes it different to other stylesheet debuggers is the ability 
 to search for items of interest and trace stylesheet execution. You can
@@ -171,12 +171,12 @@ Save the xsldbg's options and user preferences to disk
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>save</entry></row></tbody></tgroup></table>
 </section><section id="search_cmd"><title id="search_cmd.title">Search</title>
 Search a dataBase of all information gathered from stylesheets loaded
-<para>All output files are stored in, value of the "searchresultspath" option if set, or the same directory as the provided stylesheet. searchresults.xml is normally transformed by  search.xsl, but will be transformed using searchhtml.xsl if the "prefrehtml" option is set.
+<para>All output files are stored in, value of the "searchresultspath" option if set, or the same directory as the provided stylesheet. searchresults.xml is normally transformed by  search.xsl, but will be transformed using searchhtml.xsl if the "preferhtml" option is set.
 </para><para>When the search command is issued a xml file (searchresults.xml) will be created. You can then process this file with your own stylesheet to present data in a other ways. If "preferhtml" option is not set
 then searchresult.txt is printed to display.
 </para><para>Depending on the amount of data collected it might take a while to complete this command.
 </para>
-<table label="of usage"><tgroup cols="1"><tbody><row><entry>search &lt;XPATH&gt;<markup><emphasis>(See what xpath can be used see search.dtd. The deafault &lt;XPATH&gt; is '//search/*' )</emphasis></markup></entry></row><row><entry>search -sort &lt;XPATH&gt;<markup><emphasis>(Tell search.xsl to sort the result before outputing it)</emphasis></markup></entry></row></tbody></tgroup></table>
+<table label="of usage"><tgroup cols="1"><tbody><row><entry>search &lt;XPATH&gt;<markup><emphasis>(See what xpath can be used see search.dtd in documention install path such as /usr/share/doc/packages/qt5/xsldbg/en/ .  An example &lt;XPATH&gt; is '//search/variable' , the default &lt;XPATH&gt; is '//search/*' )</emphasis></markup></entry></row><row><entry>search -sort &lt;XPATH&gt;<markup><emphasis>(Tell search.xsl to sort the result before outputing it)</emphasis></markup></entry></row></tbody></tgroup></table>
 </section><section id="set_cmd"><title id="set_cmd.title">Set</title>
 Set the value of a variable
 <table label="of usage"><tgroup cols="1"><tbody><row><entry>set &lt;VARIABLE_NAME&gt; &lt;XPATH&gt;</entry></row></tbody></tgroup></table>

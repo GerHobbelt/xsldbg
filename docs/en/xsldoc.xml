@@ -5,9 +5,11 @@
      Author: Keith Isdale <keithisdale@gmail.com>
      Description: Xml Data to be processed generate help text and other 
                   documentation
-     Copyright Reserved Under GPL     
+     Copyright Reserved Under GPL
+
+    Note: When this document is updated also update doc_version
 -->
-<xsldoc>
+<xsldoc doc_version="1.0">
 <overview>
 <header>xsldbg help</header>
 <body>
@@ -1018,7 +1020,7 @@ the first template has been seen by xsldbg. Breakpoints are re-validated shortly
 <cmd name="search" title="Search">
 <summary>Search a dataBase of all information gathered from stylesheets loaded</summary>
 <body>
-<para>All output files are stored in, value of the &quot;searchresultspath&quot; option if set, or the same directory as the provided stylesheet. searchresults.xml is normally transformed by  search.xsl, but will be transformed using searchhtml.xsl if the &quot;prefrehtml&quot; option is set.
+<para>All output files are stored in, value of the &quot;searchresultspath&quot; option if set, or the same directory as the provided stylesheet. searchresults.xml is normally transformed by  search.xsl, but will be transformed using searchhtml.xsl if the &quot;preferhtml&quot; option is set.
 </para>
 <para>When the search command is issued a xml file (searchresults.xml) will be created. You can then process this file with your own stylesheet to present data in a other ways. If &quot;preferhtml&quot; option is not set
 then searchresult.txt is printed to display.
@@ -1028,7 +1030,7 @@ then searchresult.txt is printed to display.
 </body>
 <usage>
 <li>
-<text>search &lt;XPATH&gt;</text><comment>(See what xpath can be used see search.dtd. The deafault &lt;XPATH&gt; is '//search/*' )</comment>
+<text>search &lt;XPATH&gt;</text><comment>(See what xpath can be used see search.dtd in documention install path such as /usr/share/doc/packages/qt5/xsldbg/en/ .  An example &lt;XPATH&gt; is '//search/variable' , the default &lt;XPATH&gt; is '//search/*' )</comment>
 </li>
 <li>
 <text>search -sort &lt;XPATH&gt;</text><comment>(Tell search.xsl to sort the result before outputing it)</comment>

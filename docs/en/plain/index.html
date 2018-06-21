@@ -37,11 +37,11 @@ A:link, A:visited, A:active { text-decoration: underline }
 
 --></style>
 <title>
-           xsldbg 4.6.1 documentation
+           xsldbg 4.7.0 documentation
          </title>
 </head>
 <body bgcolor="#8b7765" text="#000000" link="#000000" vlink="#000000"><table class="listbody"><tr><td>
-<h1 class="cmdth">xsldbg 4.6.1</h1>
+<h1 class="cmdth">xsldbg 4.7.0</h1>
 <h2 class="cmdth">Overview</h2>
 <h3>xsldbg help</h3>
 
@@ -693,7 +693,7 @@ This command has the same effect of entering the commands "step" and then "up"</
 <th class="cmdth">Search</th>
 <tr class="cmdsummary"><td>Search a dataBase of all information gathered from stylesheets loaded</td></tr>
 <tr class="cmdtr"><td class="cmdtd">
-<p>All output files are stored in, value of the "searchresultspath" option if set, or the same directory as the provided stylesheet. searchresults.xml is normally transformed by  search.xsl, but will be transformed using searchhtml.xsl if the "prefrehtml" option is set.
+<p>All output files are stored in, value of the "searchresultspath" option if set, or the same directory as the provided stylesheet. searchresults.xml is normally transformed by  search.xsl, but will be transformed using searchhtml.xsl if the "preferhtml" option is set.
 </p>
 <p>When the search command is issued a xml file (searchresults.xml) will be created. You can then process this file with your own stylesheet to present data in a other ways. If "preferhtml" option is not set
 then searchresult.txt is printed to display.
@@ -706,7 +706,7 @@ then searchresult.txt is printed to display.
 <tr>
 <td width="10"></td>
 <td><table class="listbody">
-<tr><td>search &lt;XPATH&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(See what xpath can be used see search.dtd. The deafault &lt;XPATH&gt; is '//search/*' )</i>    </td></tr>
+<tr><td>search &lt;XPATH&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(See what xpath can be used see search.dtd in documention install path such as /usr/share/doc/packages/qt5/xsldbg/en/ .  An example &lt;XPATH&gt; is '//search/variable' , the default &lt;XPATH&gt; is '//search/*' )</i>    </td></tr>
 <tr><td>search -sort &lt;XPATH&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Tell search.xsl to sort the result before outputing it)</i>    </td></tr>
 </table></td>
 </tr>
