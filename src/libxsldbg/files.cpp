@@ -1037,10 +1037,13 @@ QString filesSearchResultsPath()
 {
     QString result;
 
-    if (!optionsGetStringOption(OPTIONS_SEARCH_RESULTS_PATH).isEmpty())
+    if (!optionsGetStringOption(OPTIONS_SEARCH_RESULTS_PATH).isEmpty()) {
         result = optionsGetStringOption(OPTIONS_SEARCH_RESULTS_PATH);
-    else
-        result = stylePath();
+   }
+
+    if (result.isEmpty()) {
+        result = QDir::homePath();
+    }
 
     return result;
 }

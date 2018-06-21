@@ -327,8 +327,11 @@ int searchSave(const xmlChar * fileName)
     else
         searchInput = xsldbgText(fileName);
 
-    QUrl inputUrl(searchInput);
-    searchInput = inputUrl.toLocalFile();
+    if (searchInput.indexOf(":/") != -1) {
+        //try to convert URI to local path
+        QUrl inputUrl(searchInput);
+        searchInput = inputUrl.toLocalFile();
+    }
 
     if (xmlSaveFormatFile(searchInput.toUtf8().constData(), searchDataBase, 1) != -1){
         result = 1;
@@ -370,8 +373,11 @@ int searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
     else
         searchOutput = xsldbgText(outputFile);
 
-    QUrl outputUrl(searchOutput);
-    searchOutput = outputUrl.toLocalFile();
+    if (searchOutput.indexOf(":/") != -1) {
+        //try to convert URI to local path
+        QUrl outputUrl(searchOutput);
+        searchOutput = outputUrl.toLocalFile();
+    }
 
     if (!query || (xmlStrlen(query) == 0))
         query = (xmlChar *) "--param query //search/*";

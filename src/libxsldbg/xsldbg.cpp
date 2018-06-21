@@ -240,8 +240,15 @@ static void xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
         }
     }
 #endif
-    QUrl outputUrl(optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME));
-    QByteArray outFile(outputUrl.toLocalFile().toUtf8().constData());
+    QString outFileName(optionsGetStringOption(OPTIONS_OUTPUT_FILE_NAME));
+    QByteArray outFile;
+    if (outFileName.indexOf(":/") != -1) {
+        //try to convert URI to local path
+        QUrl outputUrl(outFileName);
+        outFile = outputUrl.toLocalFile().toUtf8().constData();
+    } else {
+        outFile = outFileName.toUtf8().constData();
+    }
 
     if (optionsGetIntOption(OPTIONS_TIMING) ||
             optionsGetIntOption(OPTIONS_PROFILING))

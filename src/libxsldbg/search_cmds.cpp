@@ -34,10 +34,10 @@ int xslDbgShellSearch(xsltTransformContextPtr styleCtxt,
 {
     int result = 0;
     xmlChar buff[DEBUG_BUFFER_SIZE];
-    const xmlChar *sortOption = (xmlChar *) "-sort ";
+    const xmlChar *sortOption = (xmlChar *) "-sort";
     int sortOptionLen = xmlStrLen(sortOption);
 
-    if (optionsGetStringOption(OPTIONS_DOCS_PATH) == NULL) {
+    if (optionsGetStringOption(OPTIONS_DOCS_PATH).isEmpty()) {
         xsldbgGenericErrorFunc(i18n("Error: No path to documentation; aborting searching.\n"));
 #ifdef USE_DOCS_MACRO
 	xsldbgGenericErrorFunc(i18n("Error: Error in value of USE_DOCS_MACRO; look at Makefile.am.\n"));
@@ -60,10 +60,17 @@ int xslDbgShellSearch(xsltTransformContextPtr styleCtxt,
     strncpy((char *) buff, (char *) arg, sortOptionLen);
     if (xmlStrEqual(buff, sortOption)) {
         /* yep do sorting as well */
+        int argCharIndex = sortOptionLen;
+        if (xmlStrLen(&arg[argCharIndex]) == 0) {
+            // handle case where no query value is provided
+            arg = (xmlChar *) "//search/*";
+            argCharIndex = 0;
+        }
+
         if (snprintf
             ((char *) buff, DEBUG_BUFFER_SIZE,
              "--noshell --param dosort 1 --param query \"%s\"",
-             &arg[sortOptionLen])) {
+             &arg[argCharIndex])) {
             result = result && searchQuery(NULL, NULL, buff);
         }
     } else {

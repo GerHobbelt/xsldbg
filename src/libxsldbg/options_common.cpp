@@ -21,6 +21,7 @@
 #include <QStringList>
 #include <QFileInfo>
 #include <QCoreApplication>
+#include <QDebug>
 
 static XsldbgSettingsModel *settingsModel = NULL;
 // the model that will apply after the run command
@@ -106,9 +107,14 @@ QString langLookupDir( const QString &fname )
     search.append(QCoreApplication::applicationDirPath() + "/../docs/en");
 
 #ifdef DOCS_PATH
+    qWarning() << "Adding docs path of " << DOCS_PATH;
     search.append(DOCS_PATH);
 #endif
     QString docsEnv = getenv("DOCS_PATH");
+#ifdef USE_DOCS_MACRO
+    if (docsEnv.isEmpty())
+        docsEnv = getenv(XSLDBG_DOCS_DIR_VARIABLE);
+#endif
     if (!docsEnv.isEmpty()){
 	search.append(docsEnv);
 	search.append(docsEnv + "/docs/en");
