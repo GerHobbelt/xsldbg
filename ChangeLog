@@ -1,5 +1,5 @@
-Keith Isdale 9th June 2018 <keithisdale@gmail.com>
-    4.6.1
+Keith Isdale 30th July 2018 <keithisdale@gmail.com>
+    4.7.0
     Fixes
         Fix walking, tracing command logic.
 	Output of templates command when multiple XSLT documents are present
@@ -8,6 +8,10 @@ Keith Isdale 9th June 2018 <keithisdale@gmail.com>
         Remove useless 'this' option to 'templates' command
 	Correct expanding of file names such as ~/foo.xml and /foo/bar.xml into "file:/" URI
 	Strip file:// from "output" file specifier when opening output file for writing
+        Fix formatting of 'search' command output files
+        Fix path of 'search' command input/output files
+        Fix -sort option to 'search' command
+        Fix logic in entity URI resolution
     Features
         To improve UI in qxslbg emit XsldbgDebuggerBase::completeTransform() signal when completed XSLT tranformation
         'entities' command output now in two new forms with "<ID>"values now quoted
@@ -25,6 +29,8 @@ Keith Isdale 9th June 2018 <keithisdale@gmail.com>
         The <match> option to 'templates' command will match template whose name *contains* <match>
 	Support quoted path value to 'chdir' command
 	If chdir fails then show both original and expanded directory path
+        Improve 'search' command help, move doc_version to xsldoc.xml
+
 
 Keith Isdale 23rd May 2018 <keithisdale@gmail.com>
     4.6.0
