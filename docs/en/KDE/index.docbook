@@ -33,8 +33,8 @@ Nornmally support for http:// and ftp:// XML document paths enabled in libxml2. 
 </para>
 <para>Several commands take more that one argument. Some arguments can be 
  sourrounded by quotes to complex argument to be proceesed as one 
-  argument. eg break quot;* | @quot; would allow you to se a breakpoint on the 
-  template with the name quot;* | @quot;</para>
+  argument. eg break "* | @" would allow you to se a breakpoint on the
+  template with the name "* | @"</para>
 <section><title>Legend :</title><informaltable><tgroup cols="1"><tbody><row/><row/><row/><row/><row/><row/><row/><row/><row/><row/><row/><row/><row/><row/><row/><row/><row/><row/><row/><row/><row/><row/></tbody></tgroup></informaltable></section>
 
 

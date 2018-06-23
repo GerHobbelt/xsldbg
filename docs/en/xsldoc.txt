@@ -17,7 +17,7 @@ Note that the libxml2 library used support the following path types for XSLT/XML
             ftp://[user[:password]@]host[:port]/path 
  
 Nornmally support for http:// and ftp:// XML document paths enabled in libxml2. When specifier http:// or ftp:// document paths ensure that host maps to IPv4 or IPv6 address used by related server. For example instead of localhost you may need to use the IPv4 address 127.0.0.1 
-Several commands take more that one argument. Some arguments can be sourrounded by quotes to complex argument to be proceesed as one argument. eg break quot;* | @quot; would allow you to se a breakpoint on the template with the name quot;* | @quot; 
+Several commands take more that one argument. Some arguments can be sourrounded by quotes to complex argument to be proceesed as one argument. eg break "* | @" would allow you to se a breakpoint on the template with the name "* | @" 
  
             TEMPLATE_NAME : A valid template name contains only ASCI character codes 0x00 to 0x7F. And can be a fully qualified name ie "xsl:templateName". 
             FILENAME : A valid file name local to the system of the user. It can have a "~" prefix on *nix and CYGWIN platforms. Or environment variables under RISC OS 
