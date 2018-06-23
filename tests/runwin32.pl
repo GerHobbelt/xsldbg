@@ -9,7 +9,7 @@ my $testResult = 0;
 for ($index = 0; $index <= $#tests; $index++)
   {
     $test = $tests[$index];
-    system "$xsldbg --shell --stdout $test.xsl $test.xml < ..\\results\\$test.script > ..\\results\\$test.log";
+    system "$xsldbg --shell --noautoloadconfig --stdout $test.xsl $test.xml < ..\\results\\$test.script > ..\\results\\$test.log";
     print "Test $test ";
     if (system ("perl -I ..\\tests ..\\results\\$test.pl > ..\\results\\$test.results < ..\\results\\$test.log") == 0){
       print "succeeded\n";

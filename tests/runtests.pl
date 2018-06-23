@@ -14,7 +14,7 @@ for ($index = 0; $index <= $#tests; $index++)
   {
     $test = $tests[$index];
     print "Test $test ";    
-    system "$xsldbg --shell --stdout --output ../results/$test.output $test.xsl $test.xml < ../results/$test.script > ../results/$test.log";
+    system "$xsldbg --shell --noautoloadconfig --stdout --output ../results/$test.output $test.xsl $test.xml < ../results/$test.script > ../results/$test.log";
     if ($? == 0) {
         system ("perl ../results/$test.pl > ../results/$test.results < ../results/$test.log");
         if ($? == 0){
@@ -29,7 +29,7 @@ for ($index = 0; $index <= $#tests; $index++)
 
 $test = "test16"; # change directory tests
 print "Test $test ";
-system "$xsldbg --shell --stdout --cd .. --output results/$test.output tests/$test.xsl tests/$test.xml < ../results/$test.script > ../results/$test.log";
+system "$xsldbg --shell --noautoloadconfig --stdout --cd .. --output results/$test.output tests/$test.xsl tests/$test.xml < ../results/$test.script > ../results/$test.log";
 if ($? == 0) {
     # system ("perl ../results/$test.pl > ../results/$test.results < ../results/$test.log");
     if ($? == 0){
@@ -46,7 +46,7 @@ for ($index = 0; $index <= $#tests; $index++)
   {
     $test = $tests[$index];
     print "Test $test ";
-    system "$xsldbg --shell --stdout --output results/$test.output http://localhost/xsldbg/tests/$test.xsl http://localhost/xsldbg/tests/$test.xml < ../results/$test.script > ../results/$test.log";
+    system "$xsldbg --shell --noautoloadconfig --stdout --output results/$test.output http://localhost/xsldbg/tests/$test.xsl http://localhost/xsldbg/tests/$test.xml < ../results/$test.script > ../results/$test.log";
     if ($? == 0) {
         system ("perl ../results/$test.pl > ../results/$test.results < ../results/$test.log");
         if ($? == 0){
@@ -64,7 +64,7 @@ for ($index = 0; $index <= $#tests; $index++)
   {
     $test = $tests[$index];
     print "Test $test ";
-    system "$xsldbg --shell --stdout --output results/$test.output ftp://xsldbg:xsldbg\@127.0.0.1/home/xsldbg/xsldbg_tests/$test.xsl ftp://xsldbg:xsldbg\@127.0.0.1/home/xsldbg/xsldbg_tests/$test.xml < ../results/$test.script > ../results/$test.log";
+    system "$xsldbg --shell --noautoloadconfig --stdout --output results/$test.output ftp://xsldbg:xsldbg\@127.0.0.1/home/xsldbg/xsldbg_tests/$test.xsl ftp://xsldbg:xsldbg\@127.0.0.1/home/xsldbg/xsldbg_tests/$test.xml < ../results/$test.script > ../results/$test.log";
     if ($? == 0) {
         system ("perl ../results/$test.pl > ../results/$test.results < ../results/$test.log");
         if ($? == 0){

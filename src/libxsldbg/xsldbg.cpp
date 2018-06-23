@@ -458,7 +458,9 @@ usage(const char *name)
     xsltGenericError(xsltGenericErrorContext,
                      "      --profile or --norman : dump profiling informations \n");
     xsltGenericError(xsltGenericErrorContext,
-                     "      --shell : Always go to the xsldbg prompt, to start debugging\n");
+                     "      --shell|--noshell : Always|never go to the xsldbg prompt, to start debugging\n");
+    xsltGenericError(xsltGenericErrorContext,
+                     "      --noautoloadconfig : Disable automatic loading of last save xsldbg settings\n");
     xsltGenericError(xsltGenericErrorContext,
                      "      --gdb : Run in gdb mode printing out more information\n");
     xsltGenericError(xsltGenericErrorContext,

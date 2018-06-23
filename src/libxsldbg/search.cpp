@@ -388,7 +388,7 @@ int searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
     if (!searchInput.isEmpty() && !searchXSL.isEmpty() && !searchOutput.isEmpty()) {
         if (optionsGetIntOption(OPTIONS_CATALOGS) == 0)
             snprintf((char *) searchBuffer, sizeof(searchBuffer),
-                     "%s -o %s %s %s %s", XSLDBG_BIN,
+                     "%s --noautoloadconfig -o %s %s %s %s", XSLDBG_BIN,
                      searchOutput.toUtf8().constData(),
                      query,
                      searchXSL.toUtf8().constData(),
@@ -396,7 +396,7 @@ int searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
         else
             /* assume that we are to use catalogs as well in our query */
             snprintf((char *) searchBuffer, sizeof(searchBuffer),
-                     "%s --catalogs -o %s %s %s %s", XSLDBG_BIN,
+                     "%s --noautoloadconfig --catalogs -o %s %s %s %s", XSLDBG_BIN,
                      searchOutput.toUtf8().constData(),
                      query,
                      searchXSL.toUtf8().constData(),

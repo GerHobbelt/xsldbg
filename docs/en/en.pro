@@ -40,7 +40,7 @@ unix{
     xsldoctxt2.files = $$PWD/xsldoc.txt
     xsldoctxt2.depends = $$PWD/xsldoc.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd install_extradocs
     xsldoctxt2.path = $$DOCS_ROOT/en
-    xsldoctxt2.commands = ../../src/xsldbg -noshell -param alldocs:\"\'1\'\" --param xsldbg_version:\"\'$${XSLDBG_VERSION}\'\" --output $$PWD/xsldoc.txt $$PWD/xsldoc.xsl $$PWD/xsldoc.xml
+    xsldoctxt2.commands = ../../src/xsldbg --noautoloadconfig --noshell --param alldocs:\"\'1\'\" --param xsldbg_version:\"\'$${XSLDBG_VERSION}\'\" --output $$PWD/xsldoc.txt $$PWD/xsldoc.xsl $$PWD/xsldoc.xml
 
     INSTALLS+=xsldoctxt2
     
@@ -52,7 +52,7 @@ unix{
     xsldoctxtplain2.files = $$PWD/plain/index.html
     xsldoctxtplain2.depends = $$PWD/plain/xsldoc2html.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd install_extradocs
     xsldoctxtplain2.path = $$DOCS_ROOT/en/html
-    xsldoctxtplain2.commands = ../../src/xsldbg --noshell --param alldocs:\"\'1\'\" --param xsldbg_version:\"\'$${XSLDBG_VERSION}\'\" --output $$PWD/plain/index.html $$PWD/plain/xsldoc2html.xsl $$PWD/xsldoc.xml
+    xsldoctxtplain2.commands = ../../src/xsldbg --noautoloadconfig --noshell --param alldocs:\"\'1\'\" --param xsldbg_version:\"\'$${XSLDBG_VERSION}\'\" --output $$PWD/plain/index.html $$PWD/plain/xsldoc2html.xsl $$PWD/xsldoc.xml
     
     INSTALLS+=xsldoctxtplain2
     
