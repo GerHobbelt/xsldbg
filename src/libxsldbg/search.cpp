@@ -25,6 +25,8 @@
 #include "breakpoint.h"
 #include "options.h"
 #include "files.h"
+#include "xsldbgmsg.h"
+#include "xsldbgthread.h"       /* for getThreadStatus */
 #include <QUrl>
 #ifdef __riscos
 
@@ -401,9 +403,14 @@ int searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
                      searchInput.toUtf8().constData());
         result = xslDbgShellExecute(searchBuffer, 1);
 
-        if (result && (optionsGetIntOption(OPTIONS_PREFER_HTML) == 0)) {
-            /* try printing out the file */
-            result = filesMoreFile((const xmlChar*)searchOutput.toUtf8().constData(), NULL);
+        if (result && getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
+            QByteArray fileName(searchOutput.toUtf8().constData());
+            notifyXsldbgApp(XSLDBG_MSG_FILEOUT, fileName);
+        } else {
+            if (result && optionsGetIntOption(OPTIONS_PREFER_HTML) == 0) {
+                /* try printing out the file */
+                result = filesMoreFile((const xmlChar*)searchOutput.toUtf8().constData(), NULL);
+            }
         }
 
         if (result) {
