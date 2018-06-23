@@ -107,7 +107,7 @@ QString langLookupDir( const QString &fname )
     search.append(QCoreApplication::applicationDirPath() + "/../docs/en");
 
 #ifdef DOCS_PATH
-    qWarning() << "Adding docs path of " << DOCS_PATH;
+    //qDebug() << "Adding docs path of " << DOCS_PATH;
     search.append(DOCS_PATH);
 #endif
     QString docsEnv = getenv("DOCS_PATH");
