@@ -31,10 +31,16 @@ library and compliler flags, otherwise:
   $LIBXSLT_PREFIX must be set to the location of libxslt
   $ICONV_PREFIX must be set to the location of iconv
 
-For unix run for (*nix):
-  qmake
-  make
-  make install # may require sudo and it will update the System's XML catalog to include xsldbg's DTDs.
+For *nix
+    run for (*nix):
+        qmake
+        make
+        make install # may require sudo and it will update the System's XML catalog to include xsldbg's DTDs.
+
+    Set environment variable $INSTALL_PREFIX to change the default locations
+    * documentation is installed to /usr/share/doc/packages/xsldbg or ${INSTALL_PREFIX}/doc/packages/xsldbg
+    * application is installed to /usr/bin or ${INSTALL_PREFIX}/bin
+
 
 The provided xsldbg.spec can be used to create a RPM. Usage example
    rpmbuild -tb xsldbg-4.6.1.tar.gz

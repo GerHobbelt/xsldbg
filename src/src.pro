@@ -1,9 +1,9 @@
 include(src_common.pri)
 include(../xsldbg.pri)
 
-TARGET = xsldbg
-target.path = $$[QT_INSTALL_BINS]
 TEMPLATE = app
+TARGET = xsldbg
+target.path = $$BIN_DIR
 CONFIG	+= console
 CONFIG-=app_bundle
 INSTALLS += target
