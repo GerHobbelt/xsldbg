@@ -3,7 +3,7 @@ CONFIG += qt
 QT *=core
 
 # enable readline and history support if possible
-unix {
+unix:!xsldbg_GUI{
     system("$$QMAKE_CC -lreadline configtests/readlinetest.c -o configtests/readlinetest > /dev/null 2>&1") {
         message(Enabling readline support)
         DEFINES+=HAVE_READLINE
