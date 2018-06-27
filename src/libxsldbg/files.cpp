@@ -444,6 +444,9 @@ int changeDir(QString path)
     QString expandedName;
 
     path = path.trimmed();
+    if (path.indexOf("file:/") != -1) {
+        path = path.replace("file:/", "");
+    }
 
     if (!path.isEmpty()) {
         // expand the path but do not add the "file:// prefix"
