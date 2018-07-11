@@ -37,10 +37,12 @@ For *nix
         make
         make install # may require sudo and it will update the System's XML catalog to include xsldbg's DTDs.
 
-    Set environment variable $INSTALL_PREFIX to change the default locations
-    * documentation is installed to /usr/share/doc/packages/xsldbg or ${INSTALL_PREFIX}/doc/packages/xsldbg
-    * application is installed to /usr/bin or ${INSTALL_PREFIX}/bin
+By default on *nix xsldbg installation prefix is "/usr" or "\\xsldbg" under Windows
+* documentation is installed to /usr/share/doc/packages/xsldbg or ${INSTALL_PREFIX}/doc/packages/xsldbg
+* application is installed to /usr/bin or ${INSTALL_PREFIX}/bin
 
+To change the installation prefix run qmake like
+  qmake INSTALL_PREFIX="/some/path"
 
 The provided xsldbg.spec can be used to create a RPM. Usage example
    rpmbuild -tb xsldbg-4.6.1.tar.gz

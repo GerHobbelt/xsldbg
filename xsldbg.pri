@@ -2,10 +2,9 @@ XSLDBG_VERSION="4.7.0"
 DEFINES+=XSLDBG_VERSION=\\\"$$XSLDBG_VERSION\\\"
 
 !xsldbg_GUI {
-    INSTALL_PREFIX=$$(INSTALL_PREFIX)
     # Documentation is now installed via ../docs/en/en.pro
     unix {
-            isEmpty(INSTALL_PREFIX)|equals(INSTALL_PREFIX, "") {
+            isEmpty(INSTALL_PREFIX) {
                 DOCS_ROOT="/usr/share/doc/packages/xsldbg"
                 BIN_DIR="/usr/bin"
             } else {
@@ -18,7 +17,7 @@ DEFINES+=XSLDBG_VERSION=\\\"$$XSLDBG_VERSION\\\"
     }
 
     win32{
-        isEmpty(INSTALL_PREFIX)|equals(INSTALL_PREFIX, "") {
+        isEmpty(INSTALL_PREFIX) {
             DOCS_ROOT="\\xsldbg\\docs"
             BIN_DIR="\\xsldbg\\bin"
         } else {
