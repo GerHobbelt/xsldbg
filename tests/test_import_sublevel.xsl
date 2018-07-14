@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!--
-     File : test_import.xsl
+     File : test_import_sublevel.xsl
      Author: Keith Isdale <keithisdale@gmail.com>
      Description: stylesheet for import testing by test "test2"
      Copyright Reserved Under GPL
@@ -8,13 +8,10 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
 
-<xsl:import href="test_import_sublevel.xsl"/>
-<xsl:include href="test_include_bot_sublevel.xsl"/>
-
-  <xsl:template match="head">
-        <importedHead>
+  <xsl:template match="head_sublevel">
+        <importedHead_sublevel>
         <xsl:apply-templates/>
-        </importedHead>
+        </importedHead_sublevel>
   </xsl:template>
 
 </xsl:stylesheet>

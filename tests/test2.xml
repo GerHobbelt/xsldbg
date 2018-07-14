@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- 
-     File : test2.xml     
+<!--
+     File : test2.xml
      Author: Keith Isdale <keithisdale@gmail.com>
      Description: xml data for stylesheet for test "test2"
-     Copyright Reserved Under GPL     
+     Copyright Reserved Under GPL
 -->
 
 <result>
   <top name="top"/>
   <head name="head"/>
+  <head_sublevel name="head_level">
+    <top name="top2"/>
+  </head_sublevel>
   <data name="fred"/>
   <data name="barney"/>
   <data name="pebbles"/>
   <extra name="wilma"/>
   <bottom name="bottom"/>
+  <bottom_sublevel name="bottom_sublevel">
+    <bottom name="bottom2"/>
+  </bottom_sublevel>
 </result>
 
 
