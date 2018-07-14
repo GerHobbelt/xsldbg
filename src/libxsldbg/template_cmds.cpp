@@ -55,7 +55,7 @@ void   xslDbgShellPrintStylesheetsHelper2(void *payload, void *data, xmlChar * n
 
 
 /**
- * This display the templates in the same order as they are in the 
+ * This display the templates in the same order as they are in the
  *   stylesheet. If verbose is 1 then print more information
  *   For each template found @templateCount is increased
  *   For each printed template @printCount is increased
@@ -71,7 +71,7 @@ void printTemplateHelper(xsltTemplatePtr templ, int verbose,
                          int *templateCount, int *count,
                          xmlChar * templateName);
 
-/* ------------------------------------- 
+/* -------------------------------------
     End private functions
 ---------------------------------------*/
 
@@ -80,7 +80,7 @@ void printTemplateHelper(xsltTemplatePtr templ, int verbose,
 void printTemplateHelper(xsltTemplatePtr templ, int verbose,
                     int *templateCount, int *count, xmlChar * templateName, xmlListPtr templateList)
 {
-      if (!templ) 
+      if (!templ)
         return;
 
       xmlChar *name, *defaultUrl = (xmlChar *) "<n/a>";
@@ -296,12 +296,17 @@ void xslDbgShellPrintStylesheetsHelper(void *payload,
     xsltStylesheetPtr style = (xsltStylesheetPtr) payload;
 
     if (style && style->doc && style->doc->URL) {
-        if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN)
+        if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
             notifyListQueue(payload);
-        else
-	    /* display the URL of stylesheet  */
-	    xsldbgGenericErrorFunc(QObject::tr(" Stylesheet %1\n").arg(xsldbgUrl(style->doc->URL)));
-        printCounter++;
+        } else {
+            /* display the URL of stylesheet  */
+            if (style->parent && style->parent->doc) {
+                xsldbgGenericErrorFunc(QObject::tr(" Stylesheet \"%1\" with parent \"%2\"\n").arg(xsldbgUrl(style->doc->URL)).arg(xsldbgUrl(style->parent->doc->URL)));
+            } else {
+                xsldbgGenericErrorFunc(QObject::tr(" Stylesheet \"%1\"\n").arg(xsldbgUrl(style->doc->URL)));
+            }
+            printCounter++;
+        }
     }
 }
 
@@ -315,12 +320,17 @@ void xslDbgShellPrintStylesheetsHelper2(void *payload,
     xmlNodePtr node = (xmlNodePtr) payload;
 
     if (node && node->doc && node->doc->URL) {
-        if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN)
+        if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN){
             notifyListQueue(payload);
-        else
-	    /* display the URL of stylesheet  */
-	     xsldbgGenericErrorFunc(QObject::tr(" Stylesheet %1\n").arg(xsldbgUrl(node->doc->URL)));
-        printCounter++;
+        }else {
+            /* display the URL of stylesheet  */
+            if (node->parent && node->parent->doc) {
+                xsldbgGenericErrorFunc(QObject::tr(" Stylesheet \"%1\" with parent \"%2\"\n").arg(xsldbgUrl(node->doc->URL)).arg(xsldbgUrl(node->parent->doc->URL)));
+            } else {
+                xsldbgGenericErrorFunc(QObject::tr(" Stylesheet \"%1\"\n").arg(xsldbgUrl(node->doc->URL)));
+            }
+            printCounter++;
+        }
     }
 }
 
@@ -344,7 +354,7 @@ int xslDbgShellPrintStyleSheets(xmlChar * arg)
         walkIncludes((xmlHashScanner) xslDbgShellPrintStylesheetsHelper2,
                      NULL, filesGetStylesheet());
         if (printCounter != 0)
-	    xsldbgGenericErrorFunc(QObject::tr("\tTotal of %1 XSLT stylesheets found.").arg(printCounter) + QString("\n"));
+        xsldbgGenericErrorFunc(QObject::tr("\tTotal of %1 XSLT stylesheets found.").arg(printCounter) + QString("\n"));
         else
             /* strange but possible */
             xsldbgGenericErrorFunc(QObject::tr("\tNo XSLT stylesheets found.\n"));
