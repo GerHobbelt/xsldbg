@@ -163,7 +163,7 @@ static xmlEntityPtr xsldbgGetEntity( void * user_data, const xmlChar * name)
     return ent;
 }
 
-/* ------------------------------------- 
+/* -------------------------------------
    End private functions
    ---------------------------------------*/
 
@@ -208,6 +208,10 @@ static void xsltProcess(xmlDocPtr doc, xsltStylesheetPtr cur)
     int bytesWritten = -1;
     int nbparams = 0;
     QByteArray paramArray[(MAXPARAM_COUNT +1) *2];
+
+    //Clear the call stack
+    callStackFree();
+    callStackInit();
 
     Q_ASSERT(optionDataModel());
     /* Copy the parameters across for libxslt */
@@ -492,7 +496,7 @@ int xsldbgMain(int argc, char **argv)
 
     /* the xml document we're processing */
     xmlDocPtr doc;
-    
+
     errorFile = stderr;
 
 #ifdef __riscos
@@ -730,7 +734,7 @@ int xsldbgMain(int argc, char **argv)
     }
     /* copy the volitile options over to xsldbg */
     optionsCopyVolitleOptions();
-    
+
     /*
      * shell interraction
      */
@@ -1172,7 +1176,7 @@ int xsldbgInit()
 #else
         xmlSetGenericErrorFunc(0, xsldbgGenericErrorFunc);
         xsltSetGenericErrorFunc(0, xsldbgGenericErrorFunc);
-#endif    
+#endif
 #else
         xmlSetGenericErrorFunc(0, xsldbgGenericErrorFunc);
         xsltSetGenericErrorFunc(0, xsldbgGenericErrorFunc);
@@ -1235,7 +1239,7 @@ void xsldbgFree()
       rl_cleanup_after_signal(); */
 #   ifdef HAVE_HISTORY
     clear_history();
-#   endif    
+#   endif
 #endif
 
 }

@@ -12,6 +12,7 @@ Keith Isdale 30th July 2018 <keithisdale@gmail.com>
         Fix path of 'search' command input/output files
         Fix -sort option to 'search' command
         Fix logic in entity URI resolution
+	Fix logic for clearing callstack when starting run
     Features
         To improve UI in qxslbg emit XsldbgDebuggerBase::completeTransform() signal when completed XSLT tranformation
         'entities' command output now in two new forms with "<ID>"values now quoted
