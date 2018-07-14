@@ -55,7 +55,7 @@ static xmlChar searchBuffer[BUFFER_SIZE];
  -------------------------------------------*/
 
 /**
- * We are walking through stylesheets looking for a match 
+ * We are walking through stylesheets looking for a match
  *
  * @param payload: valid xsltStylesheetPtr
  * @param data: valid searchInfoPtr
@@ -92,7 +92,7 @@ void localVarHelper(void **payload, void *data,
                  xmlChar * name);
 
 
-/* ------------------------------------- 
+/* -------------------------------------
     End private functions
     ---------------------------------------*/
 
@@ -855,6 +855,14 @@ void walkLocals(xmlHashScanner walkFunc, void *data, xsltStylesheetPtr style)
 }
 
 
+void walkDocumentIncludes(xmlHashScanner walkFunc, void *data, xsltDocumentPtr document)
+{
+    while (document) {
+        (*walkFunc) ((xmlNodePtr) document->doc, data, NULL);
+        walkDocumentIncludes(walkFunc, data, document->includes);
+        document = document->next;
+    }
+}
 
 void walkIncludes(xmlHashScanner walkFunc, void *data, xsltStylesheetPtr style)
 {
@@ -866,10 +874,8 @@ void walkIncludes(xmlHashScanner walkFunc, void *data, xsltStylesheetPtr style)
     while (style) {
         document = style->docList;
         /* look at included documents */
-        while (document) {
-            (*walkFunc) ((xmlNodePtr) document->doc, data, NULL);
-            document = document->next;
-        }
+        walkDocumentIncludes(walkFunc, data, document);
+
         /* try next stylesheet */
         if (style->next)
             style = style->next;
@@ -1030,8 +1036,8 @@ xmlNodePtr searchTemplateNode(xmlNodePtr templNode)
             }
         } else
             result = 0;
-	if (!result) {
-	    xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
+    if (!result) {
+        xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
         }
     }
     return node;
