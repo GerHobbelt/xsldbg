@@ -15,7 +15,6 @@ extradocs.files = $$PWD/*.xsl \
 extradocs.path= $$DOCS_ROOT/en/
 
 INSTALLS += extradocs
-DIST += docs
 
 unix{
     message(doc root $$DOCS_ROOT)
@@ -43,19 +42,19 @@ unix{
     xsldoctxt2.commands = ../../src/xsldbg --noautoloadconfig --noshell --param alldocs:\"\'1\'\" --param xsldbg_version:\"\'$${XSLDBG_VERSION}\'\" --output $$PWD/xsldoc.txt $$PWD/xsldoc.xsl $$PWD/xsldoc.xml
 
     INSTALLS+=xsldoctxt2
-    
+
     # generate the HTML documentation
     xsldoctxtplain.target = .buildfile2
     xsldoctxtplain.commands = touch $$xsldoctxtplain.target
     xsldoctxtplain.depends = xsldoctxtplain2
-    
+
     xsldoctxtplain2.files = $$PWD/plain/index.html
     xsldoctxtplain2.depends = $$PWD/plain/xsldoc2html.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd install_extradocs
     xsldoctxtplain2.path = $$DOCS_ROOT/en/html
     xsldoctxtplain2.commands = ../../src/xsldbg --noautoloadconfig --noshell --param alldocs:\"\'1\'\" --param xsldbg_version:\"\'$${XSLDBG_VERSION}\'\" --output $$PWD/plain/index.html $$PWD/plain/xsldoc2html.xsl $$PWD/xsldoc.xml
-    
+
     INSTALLS+=xsldoctxtplain2
-    
+
     #generate KDE docbook if saxon tool is present
     SAXON=$$system(saxon -t 2>&1)
     contains(SAXON, SAXON){
@@ -64,27 +63,27 @@ unix{
         xsldocKDEdocs.target = .buildfile3
         xsldocKDEdocs.commands = touch $$xsldocKDEdocs.target
         xsldocKDEdocs.depends = xsldocKDEdocs2 install_extradocs xmldocCatalog
-        
-        xsldocKDEdocs2.files = $$PWD/KDE/index.docbook 
+
+        xsldocKDEdocs2.files = $$PWD/KDE/index.docbook
         xsldocKDEdocs2.depends = $$PWD/KDE/xsldoc2kde.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd
         xsldocKDEdocs2.path = $$DOCS_ROOT/en/KDE
-        xsldocKDEdocs2.commands = saxon -o $$PWD/KDE/index.docbook $$PWD/xsldoc.xml $$PWD/KDE/xsldoc2kde.xsl alldocs=\"\'1\'\" xsldbg_version=\"\'$${XSLDBG_VERSION}\'\" 
-        
+        xsldocKDEdocs2.commands = saxon -o $$PWD/KDE/index.docbook $$PWD/xsldoc.xml $$PWD/KDE/xsldoc2kde.xsl alldocs=\"\'1\'\" xsldbg_version=\"\'$${XSLDBG_VERSION}\'\"
+
         INSTALLS+=xsldocKDEdocs2
-        
+
         # generate the docbook documentation for Gnome
         xsldocGnomedocs.target = .buildfile4
         xsldocGnomedocs.commands = touch $$xsldocGnomedocs.target
         xsldocGnomedocs.depends = xsldocGnomedocs2 install_extradocs xmldocCatalog
-        
-        xsldocGnomedocs2.files = $$PWD/GNOME/gnome.docbook 
+
+        xsldocGnomedocs2.files = $$PWD/GNOME/gnome.docbook
         xsldocGnomedocs2.depends = $$PWD/GNOME/xsldoc2gnome.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd
         xsldocGnomedocs2.path = $$DOCS_ROOT/en/GNOME
-        xsldocGnomedocs2.commands = saxon -o $$PWD/GNOME/gnome.docbook $$PWD/xsldoc.xml $$PWD/GNOME/xsldoc2gnome.xsl alldocs=\"\'1\'\" xsldbg_version=\"\'$${XSLDBG_VERSION}\'\" 
-        
+        xsldocGnomedocs2.commands = saxon -o $$PWD/GNOME/gnome.docbook $$PWD/xsldoc.xml $$PWD/GNOME/xsldoc2gnome.xsl alldocs=\"\'1\'\" xsldbg_version=\"\'$${XSLDBG_VERSION}\'\"
+
         INSTALLS+=xsldocGnomedocs2
-        
+
     }else {
        message(Did not find saxon, skipping generation of docbook documentation)
-    }    
+    }
 }
