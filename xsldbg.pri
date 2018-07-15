@@ -28,15 +28,3 @@ DEFINES+=XSLDBG_VERSION=\\\"$$XSLDBG_VERSION\\\"
         DEFINES+= USE_DOCS_MACRO
     }
 }
-
-DISTFILES += \
-    $$PWD/tests/*.xml \
-    $$PWD/tests/*.dtd \
-    $$PWD/tests/*.data \
-    $$PWD/tests/*.txt \
-    $$PWD/tests/*.pl \
-    $$PWD/tests/*.xml \
-    $$PWD/tests/*.xsl
-
-
-

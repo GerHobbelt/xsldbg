@@ -1,4 +1,7 @@
 TEMPLATE = subdirs
-SUBDIRS = src docs
+SUBDIRS = src docs tests
 
-DISTFILES += ChangeLog README xsldbg.spec
+DISTFILES +=\
+     ChangeLog \
+     README \
+     xsldbg.spec
