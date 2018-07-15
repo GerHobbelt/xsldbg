@@ -26,7 +26,7 @@
  * See Copyright for the status of this software.
  *
  * Daniel Veillard <daniel@veillard.com>
- * 
+ *
  * Permission obtained to modify the LGPL'd code and extend to include breakpoints, inspections of
  * stylesheet source, xml data, stylesheet variables
  */
@@ -85,7 +85,7 @@ extern FILE *terminalIO;
 
 int xsldbgStop = 0;
 int xsldbgValidateBreakpoints = BREAKPOINTS_NEED_VALIDATION;
-int xsldbgHasLineNumberFix;  
+int xsldbgHasLineNumberFix;
 bool xsldbgReachedFirstTemplate = false;
 
 /* valid commands of xslDbgShell */
@@ -167,7 +167,7 @@ const char *commandNames[] = {
 
     /*variable value change */
     "set",
-    
+
     /* language change */
     "lang",
 
@@ -373,7 +373,7 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc,
         xmlShellReadlineFunc input,
         FILE * output, xsltTransformContextPtr styleCtxt);
 
-/* ------------------------------------- 
+/* -------------------------------------
     End private functions
 ---------------------------------------*/
 
@@ -533,83 +533,83 @@ int xslDbgPrintCallStack(const xmlChar * arg)
             }
             notifyListSend();
         } else {
-	    xmlChar *nameTemp, *modeTemp; 
+        xmlChar *nameTemp, *modeTemp;
             for (depth = callStackGetDepth(); depth >= 1; depth--) {
                 callPointItem = callStackGet(depth);
-		nameTemp = NULL;
-		modeTemp = NULL;
+        nameTemp = NULL;
+        modeTemp = NULL;
                 if (callPointItem && callPointItem->info) {
                     if (depth == callStackGetDepth()) {
                         xmlChar *curUrl = xsldbgUrl();
                         long curLine = xsldbgLineNo();
                         /* if possible list the current location */
                         if (rootCopy && (rootCopy->match || rootCopy->name)
-                            && curUrl) {			    
-			    xmlChar *rootNameTemp, *rootModeTemp;
-			    rootNameTemp = fullQName(rootCopy->nameURI, rootCopy->name);
-			    rootModeTemp = fullQName(rootCopy->modeURI, rootCopy->mode);
-			    if (rootNameTemp && rootModeTemp){
-			      if (rootCopy->match)
-			        /* display information about the current XSLT template */
+                            && curUrl) {
+                xmlChar *rootNameTemp, *rootModeTemp;
+                rootNameTemp = fullQName(rootCopy->nameURI, rootCopy->name);
+                rootModeTemp = fullQName(rootCopy->modeURI, rootCopy->mode);
+                if (rootNameTemp && rootModeTemp){
+                  if (rootCopy->match)
+                    /* display information about the current XSLT template */
                                 xsldbgGenericErrorFunc(QObject::tr("#%1 template: \"%2\" mode: \"%3\"").arg(depth).arg(xsldbgText(rootCopy->match)).arg(xsldbgText(rootModeTemp)));
-			      else
-			        /* display information about the current XSLT template */
+                  else
+                    /* display information about the current XSLT template */
                                 xsldbgGenericErrorFunc(QObject::tr("#%1 template: \"%2\" mode: \"%3\"").arg(depth).arg(xsldbgText(rootNameTemp)).arg(xsldbgText(rootModeTemp)));
-			      /* display where we are in the source/document file */	
-			      xsldbgGenericErrorFunc(QObject::tr(" in file \"%1\" at line %2\n").arg(xsldbgUrl(curUrl)).arg(curLine));
-			    }else{
-			      xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
-			      result = 0;
-			    }
-			    if (rootNameTemp){
-			      xmlFree(rootNameTemp);
-			      rootNameTemp = NULL;
-			    }
-			    if (rootModeTemp){
-			      xmlFree(rootModeTemp);
-			      rootModeTemp = NULL;
-			    }
+                  /* display where we are in the source/document file */
+                  xsldbgGenericErrorFunc(QObject::tr(" in file \"%1\" at line %2\n").arg(xsldbgUrl(curUrl)).arg(curLine));
+                }else{
+                  xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
+                  result = 0;
+                }
+                if (rootNameTemp){
+                  xmlFree(rootNameTemp);
+                  rootNameTemp = NULL;
+                }
+                if (rootModeTemp){
+                  xmlFree(rootModeTemp);
+                  rootModeTemp = NULL;
+                }
                         } else if (curUrl) {
-			    /* display information about the current XSLT template */
+                /* display information about the current XSLT template */
                             xsldbgGenericErrorFunc(QObject::tr("#%1 template: \"LIBXSLT_DEFAULT\" mode: \"\"").arg(depth));
-			    /* display where we are in the source/document file */	
+                /* display where we are in the source/document file */
                             xsldbgGenericErrorFunc(QObject::tr(" in file \"%1\" at line %2\n").arg(xsldbgUrl(curUrl)).arg(curLine));
                         }
                         if (curUrl)
                             xmlFree(curUrl);
 
                     }
-		    nameTemp = fullQName(callPointItem->info->templateURI,
-					 callPointItem->info->templateName);
-		    modeTemp = fullQName(callPointItem->info->modeURI,
-					 callPointItem->info->modeName);
-		    if (nameTemp && modeTemp){
-		      /* display information about the current XSLT template */
-		      xsldbgGenericErrorFunc(QObject::tr("#%1 template: \"%2\" mode: \"%3\"").arg(depth - 1).arg(xsldbgText(nameTemp)).arg(xsldbgText(modeTemp)));
-		      if (callPointItem->info->url)
-			/* display where we are in the source/document file */	
+            nameTemp = fullQName(callPointItem->info->templateURI,
+                     callPointItem->info->templateName);
+            modeTemp = fullQName(callPointItem->info->modeURI,
+                     callPointItem->info->modeName);
+            if (nameTemp && modeTemp){
+              /* display information about the current XSLT template */
+              xsldbgGenericErrorFunc(QObject::tr("#%1 template: \"%2\" mode: \"%3\"").arg(depth - 1).arg(xsldbgText(nameTemp)).arg(xsldbgText(modeTemp)));
+              if (callPointItem->info->url)
+            /* display where we are in the source/document file */
                         xsldbgGenericErrorFunc(QObject::tr(" in file \"%1\" at line %2\n").arg(xsldbgUrl(callPointItem->info->url)).arg(callPointItem->lineNo));
-		      else
+              else
                         xsldbgGenericErrorFunc("\n");
-		    }else{
-		      xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
-		      result = 0;
-		    }
-		    if (nameTemp){ 
-		      xmlFree(nameTemp);
-		      nameTemp = NULL;
-		    }
-		    if(modeTemp){
-		      xmlFree(modeTemp);
-		      modeTemp = NULL;
-		    }
-		    
+            }else{
+              xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
+              result = 0;
+            }
+            if (nameTemp){
+              xmlFree(nameTemp);
+              nameTemp = NULL;
+            }
+            if(modeTemp){
+              xmlFree(modeTemp);
+              modeTemp = NULL;
+            }
+
                 } else {
 #ifdef WITH_XSLDBG_DEBUG_PROCESS
                     xsltGenericError(xsltGenericErrorContext,
                                      "Error: Call stack item not found at depth %d : xslDbgPrintCallStack\n", depth);
 #endif
-		    result = 0;
+            result = 0;
                     break;
                 }
             }
@@ -623,24 +623,24 @@ int xslDbgPrintCallStack(const xmlChar * arg)
 
 
         if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
-            /* should never happen but just in case, when running as a 
+            /* should never happen but just in case, when running as a
              * thread always provide NO params to the where command */
 #ifdef WITH_XSLDBG_DEBUG_PROCESS
             xsltGenericError(xsltGenericErrorContext,
                              "Error: Notification of a frame not supported\n");
 #endif
-	    result = 0;
+        result = 0;
             return result;
         }
 
         if (templateDepth >= 0) {
             callPointItem = callStackGet(templateDepth + 1);
             if (callPointItem && callPointItem->info) {
-		/* display information about the current XSLT template */
+        /* display information about the current XSLT template */
                 xsldbgGenericErrorFunc(QObject::tr("#%1 template: \"%2\"").arg(templateDepth).arg(xsldbgText(callPointItem->info->templateName)));
                 /* should alays be present but .. */
                 if (callPointItem->info->url)
-		    /* display where we are in the source/document file */	
+            /* display where we are in the source/document file */
                     xsldbgGenericErrorFunc(QObject::tr(" in file \"%1\" at line %2\n").arg(xsldbgUrl(callPointItem->info->url)).arg(callPointItem->lineNo));
                 else
                     xsldbgGenericErrorFunc("\n");
@@ -649,7 +649,7 @@ int xslDbgPrintCallStack(const xmlChar * arg)
                 xsltGenericError(xsltGenericErrorContext,
                                  "Error: Call stack item not found at templateDepth %d : xslDbgPrintCallStack\n", depth);
 #endif
-		result = 0;
+        result = 0;
             }
         }
     }
@@ -825,7 +825,7 @@ void debugXSLBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
     rootCopy = root;
 
     if (ctxt && templ && root && !xsldbgReachedFirstTemplate)
-	xsldbgReachedFirstTemplate = true;
+    xsldbgReachedFirstTemplate = true;
 
     if (templ == NULL) {
         tempDoc = xmlNewDoc((xmlChar *) "1.0");
@@ -857,9 +857,9 @@ void debugXSLBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
     }
     if (root) {
         xmlChar *nameTemp = NULL, *modeTemp = NULL;
-	nameTemp = fullQName(root->nameURI, root->name);
-	modeTemp = fullQName(root->modeURI, root->mode);
-	if (!nextCommandActive){
+    nameTemp = fullQName(root->nameURI, root->name);
+    modeTemp = fullQName(root->modeURI, root->mode);
+    if (!nextCommandActive){
         QString currentMatch, currentMode;
 
         if (root->match) {
@@ -869,13 +869,13 @@ void debugXSLBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
             currentMatch = xsldbgText(nameTemp);
             currentMode = xsldbgText(modeTemp);
         }
-	  /* we only want messages if we are not
-	    in the process of completing the next command */
-	  if (terminalIO == NULL) {
+      /* we only want messages if we are not
+        in the process of completing the next command */
+      if (terminalIO == NULL) {
             // only show "Reached template" where something has match or mode is different
             if ((currentMatch != lastMatch) || (currentMode != lastMode))
                 xsldbgGenericErrorFunc(QObject::tr("Reached template: \"%1\" mode: \"%2\"\n").arg(currentMatch).arg(currentMode));
-	  } else {
+      } else {
             if ((xslDebugStatus == DEBUG_TRACE) ||
                 (xslDebugStatus == DEBUG_WALK)) {
                 // only show "Reached template" where something has match or mode is different
@@ -884,14 +884,14 @@ void debugXSLBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
                     fprintf(terminalIO, "%s", message.toUtf8().constData());
                 }
             }
-	  }
+      }
       lastMatch = currentMatch;
       lastMode = currentMode;
-	}
-	if (nameTemp)
-	  xmlFree(nameTemp);
-	if (modeTemp)
-	  xmlFree(modeTemp);
+    }
+    if (nameTemp)
+      xmlFree(nameTemp);
+    if (modeTemp)
+      xmlFree(modeTemp);
     }
 
     shellPrompt(templ, node, (xmlChar *) "index.xsl",
@@ -911,7 +911,7 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
     xmlChar *cmdline = NULL, *cur;
     int nbargs = 0;
     int loadedFiles = 0;
-    int commandId = -1;         /* stores what was the last 
+    int commandId = -1;         /* stores what was the last
                                  * command id entered  by user */
     xmlChar command[DEBUG_BUFFER_SIZE]; /* holds the command user entered */
     xmlChar arg[DEBUG_BUFFER_SIZE];     /* holds any extra arguments to
@@ -925,7 +925,7 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
     xmlChar *baseUri = NULL;    /* for used for included xml entities */
     const xmlChar *breakUri;
 
-    /* for convenience keep track of which node was last 
+    /* for convenience keep track of which node was last
      * selected of source and doc */
     xmlNodePtr lastSourceNode, lastDocNode;
 
@@ -935,42 +935,42 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
     if (source == NULL){
 #ifdef WITH_XSLDBG_DEBUG_PROCESS
-	xsltGenericError(xsltGenericErrorContext,
-			 "Error: Source NULL in shellPrompt\n");
+    xsltGenericError(xsltGenericErrorContext,
+             "Error: Source NULL in shellPrompt\n");
 #endif
         return;
     }
     if (doc == NULL){
 #ifdef WITH_XSLDBG_DEBUG_PROCESS
-	xsltGenericError(xsltGenericErrorContext,
-			 "Error: doc NULL in shellPrompt\n");
+    xsltGenericError(xsltGenericErrorContext,
+             "Error: doc NULL in shellPrompt\n");
 #endif
         return;
     }
     if (filename == NULL){
 #ifdef WITH_XSLDBG_DEBUG_PROCESS
-	xsltGenericError(xsltGenericErrorContext,
-			 "Error: fileName NULL in shellPrompt\n");
+    xsltGenericError(xsltGenericErrorContext,
+             "Error: fileName NULL in shellPrompt\n");
 #endif
         return;
     }
     if (input == NULL){
 #ifdef WITH_XSLDBG_DEBUG_PROCESS
-	xsltGenericError(xsltGenericErrorContext,
-			 "Error: Input function NULL in shellPrompt\n");
+    xsltGenericError(xsltGenericErrorContext,
+             "Error: Input function NULL in shellPrompt\n");
 #endif
         return;
     }
     if (output == NULL){
 #ifdef WITH_XSLDBG_DEBUG_PROCESS
-	xsltGenericError(xsltGenericErrorContext,
-			 "Error: Output NULL in shellPrompt\n");
+    xsltGenericError(xsltGenericErrorContext,
+             "Error: Output NULL in shellPrompt\n");
 #endif
         return;
     }
     ctxt = (xmlShellCtxtPtr) xmlMalloc(sizeof(xmlShellCtxt));
     if (ctxt == NULL){
-	xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
+    xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
         return;
     }
 
@@ -997,9 +997,9 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
     if (xsldbgStop == 1){
         xslDebugStatus = DEBUG_STOP;
-	optionsSetIntOption(OPTIONS_TRACE,  TRACE_OFF);
+    optionsSetIntOption(OPTIONS_TRACE,  TRACE_OFF);
         optionsSetIntOption(OPTIONS_WALK_SPEED, WALKSPEED_STOP);
-	xsldbgStop = 0;
+    xsldbgStop = 0;
     }
 
     /* let any listener know that we got to a new line */
@@ -1011,11 +1011,11 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
     }
 
 
-    /* If using a thread and the thread is running then we don't need to 
+    /* If using a thread and the thread is running then we don't need to
      * send this as the application will see the XSLDBG_MSG_LINE_CHANGED message */
     if ((getThreadStatus() == XSLDBG_MSG_THREAD_NOTUSED) ||
         (xslDebugStatus == DEBUG_TRACE)) {
-	QString messageTxt;
+    QString messageTxt;
         if (!nextCommandActive && ctxt->node && ctxt->node && ctxt->node->doc
             && ctxt->node->doc->URL) {
             if (!showSource) {
@@ -1028,7 +1028,7 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 breakUri = ctxt->node->doc->URL;
 
             if (xmlGetLineNo(ctxt->node) != -1)
-		messageTxt = QObject::tr("Breakpoint for file \"%1\" at line %2.\n").arg(xsldbgUrl(breakUri)).arg(xmlGetLineNo(ctxt->node));
+        messageTxt = QObject::tr("Breakpoint for file \"%1\" at line %2.\n").arg(xsldbgUrl(breakUri)).arg(xmlGetLineNo(ctxt->node));
             else
                 messageTxt = QObject::tr("Breakpoint at text node in file \"%1\".\n").arg(xsldbgUrl(breakUri));
             if (baseUri != NULL) {
@@ -1040,32 +1040,32 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                  (xslDebugStatus == DEBUG_WALK)) && (terminalIO != NULL))
                 fprintf(terminalIO, "%s", messageTxt.toUtf8().constData());
             else
-		xsldbgGenericErrorFunc(messageTxt);
+        xsldbgGenericErrorFunc(messageTxt);
 
         }
     }
-    if ((showWatchesActive && (xslDebugStatus == DEBUG_TRACE)) || 
-	(xslDebugStatus == DEBUG_WALK)){
+    if ((showWatchesActive && (xslDebugStatus == DEBUG_TRACE)) ||
+    (xslDebugStatus == DEBUG_WALK)){
       ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
       if (ctxt->pctxt) {
-	xslDbgShellShowWatches(styleCtxt, ctxt, 0);
-	xsldbgGenericErrorFunc("\n");
-	xmlXPathFreeContext(ctxt->pctxt);
-	ctxt->pctxt = NULL;
+    xslDbgShellShowWatches(styleCtxt, ctxt, 0);
+    xsldbgGenericErrorFunc("\n");
+    xmlXPathFreeContext(ctxt->pctxt);
+    ctxt->pctxt = NULL;
       }
     }
 
     if (xslDebugStatus == DEBUG_TRACE) {
-	if (ctxt->filename)
-	  xmlFree(ctxt->filename);
+    if (ctxt->filename)
+      xmlFree(ctxt->filename);
         xmlFree(ctxt);
         return; /* All done. Trace next instruction/node */
-    } 
+    }
     if (xslDebugStatus == DEBUG_WALK) {
         if (xslDbgWalkContinue()) {
-	  if (ctxt->filename)
-	    xmlFree(ctxt->filename);
-	  xmlFree(ctxt);
+      if (ctxt->filename)
+        xmlFree(ctxt->filename);
+      xmlFree(ctxt);
             return; /* All done. Walk to next instruction/node */
         }
     }
@@ -1073,7 +1073,7 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
     ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
     if (ctxt->pctxt == NULL) {
         xmlFree(ctxt);
-	xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
+    xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
         return;
     }
 
@@ -1106,12 +1106,12 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
             /*
              * Get a new command line
              */
-	    if (nextCommandActive && (xslDebugStatus == DEBUG_STEP))
-	      /* we are processing the "next command" do the next 
-	         part of the command which is the up command */
-	      cmdline = xmlStrdup((xmlChar*)"up");
-	    else
-	      cmdline = (xmlChar *) ctxt->input((char *) prompt);
+        if (nextCommandActive && (xslDebugStatus == DEBUG_STEP))
+          /* we are processing the "next command" do the next
+             part of the command which is the up command */
+          cmdline = xmlStrdup((xmlChar*)"up");
+        else
+          cmdline = (xmlChar *) ctxt->input((char *) prompt);
             if (cmdline && (optionsGetIntOption(OPTIONS_UTF8_INPUT) == 0)) {
                 /* we are getting encoded characters from the command line
                  * so decode them into UTF-8 */
@@ -1129,20 +1129,20 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
         } else {
             /* don't need a prompt for running as when running as a thread */
             xmlStrCpy(messageBuffer, "");
-	    if (nextCommandActive && (xslDebugStatus == DEBUG_STEP))
-	      /* we are processing the "next command" do the next 
-	         part of the command which is the up command */
-	      cmdline = xmlStrdup((xmlChar*)"up");
-	    else
-	      cmdline = (xmlChar *) ctxt->input((char *) messageBuffer);
+        if (nextCommandActive && (xslDebugStatus == DEBUG_STEP))
+          /* we are processing the "next command" do the next
+             part of the command which is the up command */
+          cmdline = xmlStrdup((xmlChar*)"up");
+        else
+          cmdline = (xmlChar *) ctxt->input((char *) messageBuffer);
         }
 
         if (cmdline == NULL)
             break;
 
-	/* don't allow next command to be active more than at one breakpoint */
-	if (nextCommandActive)
-	  nextCommandActive = 0;
+    /* don't allow next command to be active more than at one breakpoint */
+    if (nextCommandActive)
+      nextCommandActive = 0;
 
         notifyXsldbgApp(XSLDBG_MSG_PROCESSING_INPUT, NULL);
 
@@ -1198,8 +1198,8 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 /* --- Help related commands --- */
             case DEBUG_HELP_CMD:
                 cmdResult = helpTop(arg);
-		if (!cmdResult)
-		    xsldbgGenericErrorFunc(QObject::tr("Unable to print local help. Online help can be found at http://xsldbg.sourceforge.net/docs/index.html.\n"));	    
+        if (!cmdResult)
+            xsldbgGenericErrorFunc(QObject::tr("Unable to print local help. Online help can be found at http://xsldbg.sourceforge.net/docs/index.html.\n"));
                 break;
 
 
@@ -1213,14 +1213,14 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 cmdResult = 1;
                 break;
 
-	   case DEBUG_NEXT_CMD:
+       case DEBUG_NEXT_CMD:
                 xslDebugStatus = DEBUG_STEP;
                 exitShell++;
                 cmdResult = 1;
-	        /* Do the next part of this command
-		   which is the up command */
-		nextCommandActive = 1;
-	     break;
+            /* Do the next part of this command
+           which is the up command */
+        nextCommandActive = 1;
+         break;
 
             case DEBUG_STEP_CMD:
                 xslDebugStatus = DEBUG_STEP;
@@ -1294,7 +1294,7 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     if (!xmlShellPwd(ctxt, (char *) dir, ctxt->node, NULL)){
                         xsldbgGenericErrorFunc((const char*)dir);
                         xsldbgGenericErrorFunc("\n");
-		    }
+            }
                 }
                 cmdResult = 1;
 
@@ -1319,14 +1319,14 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         cmdResult = xslDbgShellBreak(arg, NULL, styleCtxt);
                 } else {
                     /* select current node to break at */
-		    xmlChar buff[100];
-		    xmlChar *tempBaseName = filesGetBaseUri(ctxt->node);		    
-		    if (tempBaseName){
-		      snprintf((char *) buff, sizeof(buff), "-l %s %ld",
-			       tempBaseName,
-			       xmlGetLineNo(ctxt->node));
-		      xmlFree(tempBaseName);
-		    }
+            xmlChar buff[100];
+            xmlChar *tempBaseName = filesGetBaseUri(ctxt->node);
+            if (tempBaseName){
+              snprintf((char *) buff, sizeof(buff), "-l %s %ld",
+                   tempBaseName,
+                   xmlGetLineNo(ctxt->node));
+              xmlFree(tempBaseName);
+            }
                     if (styleCtxt)
                         cmdResult =
                             xslDbgShellBreak(buff, styleCtxt->style,
@@ -1360,18 +1360,18 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 break;
 
             case DEBUG_DELETE_CMD:
-	      if (xmlStrLen(arg))
+          if (xmlStrLen(arg))
                     cmdResult = xslDbgShellDelete((xmlChar *) arg);
                 else {
                     breakPointPtr breakPtr = NULL;
-		    xmlChar* tempBaseName = filesGetBaseUri(ctxt->node);
+            xmlChar* tempBaseName = filesGetBaseUri(ctxt->node);
 
                     if (tempBaseName){
                         breakPtr =
                             breakPointGet(tempBaseName,
-					  xmlGetLineNo(ctxt->node));
-			xmlFree(tempBaseName);
-		    }
+                      xmlGetLineNo(ctxt->node));
+            xmlFree(tempBaseName);
+            }
                     if (!breakPtr || !breakPointDelete(breakPtr)) {
                         xsldbgGenericErrorFunc(QObject::tr("Error: Unable to delete breakpoint.\n"));
                         cmdResult = 0;
@@ -1385,14 +1385,14 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         xslDbgShellEnable(arg, XSL_TOGGLE_BREAKPOINT);
                 else {
                     breakPointPtr breakPtr = NULL;
-		    xmlChar * tempBaseName = filesGetBaseUri(ctxt->node);
+            xmlChar * tempBaseName = filesGetBaseUri(ctxt->node);
 
-		    if (tempBaseName){
+            if (tempBaseName){
                         breakPtr =
                             breakPointGet(tempBaseName,
-					  xmlGetLineNo(ctxt->node));
-		      xmlFree(tempBaseName);
-		    }
+                      xmlGetLineNo(ctxt->node));
+              xmlFree(tempBaseName);
+            }
                     if (!breakPtr ||
                         (!breakPointEnable(breakPtr, !(breakPtr->flags & BREAKPOINT_ENABLED)))) {
                         xsldbgGenericErrorFunc(QObject::tr("Error: Unable to enable/disable breakpoint.\n"));
@@ -1402,18 +1402,18 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 break;
 
             case DEBUG_DISABLE_CMD:
-	      if (xmlStrLen(arg))
+          if (xmlStrLen(arg))
                     cmdResult = xslDbgShellEnable(arg, 0);
                 else {
                     breakPointPtr breakPtr = NULL;
-		    xmlChar *tempBaseName = filesGetBaseUri(ctxt->node);
-		      
-		    if (tempBaseName){
+            xmlChar *tempBaseName = filesGetBaseUri(ctxt->node);
+
+            if (tempBaseName){
                         breakPtr =
-			  breakPointGet(tempBaseName,
+              breakPointGet(tempBaseName,
                                           xmlGetLineNo(ctxt->node));
-		      xmlFree(tempBaseName);
-		    }
+              xmlFree(tempBaseName);
+            }
                     if (!breakPtr || !breakPointEnable(breakPtr, 0)) {
                         xsldbgGenericErrorFunc(QObject::tr("Error: Unable to enable/disable breakpoint.\n"));
                         cmdResult = 0;
@@ -1444,19 +1444,19 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
             case DEBUG_PWD_CMD:
                 if (!xmlShellPwd(ctxt, (char *) dir, ctxt->node, NULL)) {
-		  xmlChar* tempBaseName = filesGetBaseUri(ctxt->node);
-		  if(tempBaseName){
-		    xsldbgGenericErrorFunc("\n");
-		    xsldbgGenericErrorFunc((char*)dir);
-		    xsldbgGenericErrorFunc(QObject::tr(" in file \"%1\" at line %2").arg(xsldbgUrl(tempBaseName)).arg(xmlGetLineNo(ctxt->node)));
-		    xmlFree(tempBaseName);
-		    cmdResult = 1;
-		  }
+          xmlChar* tempBaseName = filesGetBaseUri(ctxt->node);
+          if(tempBaseName){
+            xsldbgGenericErrorFunc("\n");
+            xsldbgGenericErrorFunc((char*)dir);
+            xsldbgGenericErrorFunc(QObject::tr(" in file \"%1\" at line %2").arg(xsldbgUrl(tempBaseName)).arg(xmlGetLineNo(ctxt->node)));
+            xmlFree(tempBaseName);
+            cmdResult = 1;
+          }
                 }
-		if (cmdResult)
-		  xsldbgGenericErrorFunc("\n");
-		else
-		  xsldbgGenericErrorFunc(QObject::tr("Error: Unable to print working directory.\n"));		  
+        if (cmdResult)
+          xsldbgGenericErrorFunc("\n");
+        else
+          xsldbgGenericErrorFunc(QObject::tr("Error: Unable to print working directory.\n"));
                 break;
 
             case DEBUG_DUMP_CMD:
@@ -1484,7 +1484,7 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
             case DEBUG_LOCALS_CMD:
                 if (loadedFiles == 0)
-                    /* if gdb compatibility mode is enable print the globals then 
+                    /* if gdb compatibility mode is enable print the globals then
                      * the locals */
                     if (optionsGetIntOption(OPTIONS_GDB) == 1) {
                         cmdResult =
@@ -1506,19 +1506,19 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 break;
 
 
-                /* It's difficult to put the following commands into 
+                /* It's difficult to put the following commands into
                  * a separe file so they stay here! */
                 /* --- Node selection related commands --- */
             case DEBUG_SOURCE_CMD:
                 cmdResult = 1;  /* only one case where this will command fail */
-		xsldbgValidateBreakpoints = BREAKPOINTS_NEED_VALIDATION;
+        xsldbgValidateBreakpoints = BREAKPOINTS_NEED_VALIDATION;
                 if (xmlStrLen(arg) == 0) {
                     if (ctxt->doc == doc->doc)
                         lastDocNode = ctxt->node;
                     ctxt->doc = source->doc;
                     ctxt->node = lastSourceNode;
-		    if (ctxt->pctxt)
-		      xmlXPathFreeContext(ctxt->pctxt);
+            if (ctxt->pctxt)
+              xmlXPathFreeContext(ctxt->pctxt);
                     ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
                     showSource = 1;
                     xsldbgUpdateFileDetails((xmlNodePtr) ctxt->node);
@@ -1532,13 +1532,13 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         break;
                 } else {
                     /* load new stylesheet file, actual loading happens later */
-                    QString expandedName = filesExpandName(xsldbgText(arg));
+                    QString expandedName = filesExpandName(xsldbgText(arg), true);
 
                     if (!expandedName.isEmpty()) {
                         xsldbgGenericErrorFunc(QObject::tr("Load of source deferred. Use the run command.\n"));
 
                         optionsSetStringOption(OPTIONS_SOURCE_FILE_NAME, expandedName);
-			notifyXsldbgApp(XSLDBG_MSG_FILE_CHANGED, 0L);
+            notifyXsldbgApp(XSLDBG_MSG_FILE_CHANGED, 0L);
                         loadedFiles = 1;
                         cmdResult = 1;
                     } else {
@@ -1549,14 +1549,14 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
             case DEBUG_DATA_CMD:
                 cmdResult = 1;  /* only one case where this will command fail */
-		xsldbgValidateBreakpoints = BREAKPOINTS_NEED_VALIDATION;
+        xsldbgValidateBreakpoints = BREAKPOINTS_NEED_VALIDATION;
                 if (xmlStrLen(arg) == 0) {
                     if (ctxt->doc == source->doc)
                         lastSourceNode = ctxt->node;
                     ctxt->doc = doc->doc;
                     ctxt->node = lastDocNode;
-		    if (ctxt->pctxt)
-		      xmlXPathFreeContext(ctxt->pctxt);
+            if (ctxt->pctxt)
+              xmlXPathFreeContext(ctxt->pctxt);
                     ctxt->pctxt = xmlXPathNewContext(ctxt->doc);
                     showSource = 0;
                     xsldbgUpdateFileDetails((xmlNodePtr) ctxt->node);
@@ -1570,14 +1570,14 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                         break;
                 } else {
                     /* load new xml file actual loading hapens later */
-                    QString expandedName = filesExpandName(xsldbgText(arg));
+                    QString expandedName = filesExpandName(xsldbgText(arg), true);
 
                     if (!expandedName.isEmpty()) {
                         xsldbgGenericErrorFunc(QObject::tr("Load of data file deferred. Use the run command.\n"));
 
                         optionsSetStringOption(OPTIONS_DATA_FILE_NAME,
                                                expandedName);
-			notifyXsldbgApp(XSLDBG_MSG_FILE_CHANGED, 0L);
+            notifyXsldbgApp(XSLDBG_MSG_FILE_CHANGED, 0L);
                         loadedFiles = 1;
                         cmdResult = 1;
                     } else {
@@ -1587,8 +1587,8 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 break;
 
             case DEBUG_OUTPUT_CMD:
-	      /* set the output file name to use */
-	      cmdResult = xslDbgShellOutput(arg);
+          /* set the output file name to use */
+          cmdResult = xslDbgShellOutput(arg);
                 break;
 
             case DEBUG_CD_CMD:
@@ -1619,29 +1619,29 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 break;
 
             case DEBUG_SYSTEM_CMD:
-	      /* strip off a single argument. I need to do it this
-	         way because I've already public this API */
-	      {
-		xmlChar *systemID;
-		if (splitString(arg, 1, &systemID) == 1){
-		  cmdResult = xslDbgSystem(systemID);
-		}else{
-		  xsldbgGenericErrorFunc(QObject::tr("Error: Invalid arguments for the command %1.\n").arg(QString("system")));
-		}
-	       }
+          /* strip off a single argument. I need to do it this
+             way because I've already public this API */
+          {
+        xmlChar *systemID;
+        if (splitString(arg, 1, &systemID) == 1){
+          cmdResult = xslDbgSystem(systemID);
+        }else{
+          xsldbgGenericErrorFunc(QObject::tr("Error: Invalid arguments for the command %1.\n").arg(QString("system")));
+        }
+           }
                 break;
 
             case DEBUG_PUBLIC_CMD:
-	      /* strip off a single argument. I need to do it this
-	         way because I've already public this API */
-	      {
-		xmlChar *publicID;
-		if (splitString(arg, 1, &publicID) == 1){
-		  cmdResult = xslDbgPublic(publicID);
-		}else{
-		  xsldbgGenericErrorFunc(QObject::tr("Error: Invalid arguments for the command %1.\n").arg(QString("public")));
-		}
-	       }
+          /* strip off a single argument. I need to do it this
+             way because I've already public this API */
+          {
+        xmlChar *publicID;
+        if (splitString(arg, 1, &publicID) == 1){
+          cmdResult = xslDbgPublic(publicID);
+        }else{
+          xsldbgGenericErrorFunc(QObject::tr("Error: Invalid arguments for the command %1.\n").arg(QString("public")));
+        }
+           }
                 break;
 
             case DEBUG_ENCODING_CMD:
@@ -1718,9 +1718,9 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 /* misc commands */
             case DEBUG_TTY_CMD:
                 if (openTerminal(arg)) {
-		  /* gdb does to say anything after redirecting its 
-		     output */
-		  if (optionsGetIntOption(OPTIONS_GDB) < 2)
+          /* gdb does to say anything after redirecting its
+             output */
+          if (optionsGetIntOption(OPTIONS_GDB) < 2)
                     xsldbgGenericErrorFunc(QObject::tr("Opening terminal %1.\n").arg(xsldbgText(arg)));
                     cmdResult = 1;
                 } else
@@ -1728,23 +1728,23 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 break;
 
 
-		/* language selection for messages */
-	    case DEBUG_LANG_CMD:
+        /* language selection for messages */
+        case DEBUG_LANG_CMD:
 #ifdef LOCALE_PREFIX
-		if (xmlStrlen(arg) > 0){
-		    setlocale(LC_MESSAGES, (char*)arg);
-		    textdomain("kdewebdev/xsldsbg");
-		    bindtextdomain("kdewebdev/xsldbg", LOCALE_PREFIX);
-		    cmdResult = 1;
-		}else{
-		    xsldbgGenericErrorFunc(QObject::tr("Error: Missing arguments for the command %1.\n").arg(QString("lang")));
-		    cmdResult = 0;
-		}
+        if (xmlStrlen(arg) > 0){
+            setlocale(LC_MESSAGES, (char*)arg);
+            textdomain("kdewebdev/xsldsbg");
+            bindtextdomain("kdewebdev/xsldbg", LOCALE_PREFIX);
+            cmdResult = 1;
+        }else{
+            xsldbgGenericErrorFunc(QObject::tr("Error: Missing arguments for the command %1.\n").arg(QString("lang")));
+            cmdResult = 0;
+        }
 #else
-	        xsldbgGenericErrorFunc(QObject::tr("Warning: The %1 command is disabled\n").arg(QString("lang")));
-		cmdResult = 1;
+            xsldbgGenericErrorFunc(QObject::tr("Warning: The %1 command is disabled\n").arg(QString("lang")));
+        cmdResult = 1;
 #endif
-		break;
+        break;
 
                 /* tracing related commands */
             case DEBUG_TRACE_CMD:
@@ -1764,32 +1764,32 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                     cmdResult = 0;
                 break;
 
-	   case DEBUG_ADDWATCH_CMD:
-	     cmdResult = xslDbgShellAddWatch(arg);
-	   break;
+       case DEBUG_ADDWATCH_CMD:
+         cmdResult = xslDbgShellAddWatch(arg);
+       break;
 
-	   case DEBUG_DELWATCH_CMD:
-	     cmdResult = xslDbgShellDeleteWatch(arg);	     
+       case DEBUG_DELWATCH_CMD:
+         cmdResult = xslDbgShellDeleteWatch(arg);
            break;
 
-	   case DEBUG_SHOWWATCH_CMD:
-	     trimString(arg);
-	     switch (arg[0]){
-	     case '\0':
-	       cmdResult = xslDbgShellShowWatches(styleCtxt, ctxt, 1);
-	       break;
+       case DEBUG_SHOWWATCH_CMD:
+         trimString(arg);
+         switch (arg[0]){
+         case '\0':
+           cmdResult = xslDbgShellShowWatches(styleCtxt, ctxt, 1);
+           break;
 
-	     case '0':
-	     case '1':
+         case '0':
+         case '1':
                showWatchesActive = arg[0] - '0';
-	       cmdResult = 1;
-	       break;
-
-	     default:
-	        xsldbgGenericErrorFunc(QObject::tr("Error: Invalid arguments for the command %1.\n").arg(QString("showmatch"))); 
-	     }
+           cmdResult = 1;
            break;
- 
+
+         default:
+            xsldbgGenericErrorFunc(QObject::tr("Error: Invalid arguments for the command %1.\n").arg(QString("showmatch")));
+         }
+           break;
+
 
                 /* search related commands */
             case DEBUG_SEARCH_CMD:
@@ -1824,9 +1824,9 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
         /* KDbg likes to get the marker after every command so here it is */
         if ((optionsGetIntOption(OPTIONS_GDB) >1) && optionsGetIntOption(OPTIONS_VERBOSE) && !nextCommandActive
-	     && (commandId != DEBUG_STEPUP_CMD - DEBUG_HELP_CMD)) {
-            if (ctxt->node && ctxt->node && 
-		ctxt->node->doc && ctxt->node->doc->URL) {
+         && (commandId != DEBUG_STEPUP_CMD - DEBUG_HELP_CMD)) {
+            if (ctxt->node && ctxt->node &&
+        ctxt->node->doc && ctxt->node->doc->URL) {
 
                 if (xmlGetLineNo(ctxt->node) != -1)
                     xsldbgGenericErrorFunc(QObject::tr("Breakpoint for file \"%1\" at line %2.\n").arg(xsldbgUrl(ctxt->node->doc->URL), xmlGetLineNo(ctxt->node)));

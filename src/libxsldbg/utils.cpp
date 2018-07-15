@@ -135,10 +135,10 @@ xmlChar * fullQName(const xmlChar* nameURI, const xmlChar * name)
       result = xmlStrdup(name);
     }else{
       result = (xmlChar*) xmlMalloc(sizeof(char) * (
-			  xmlStrLen(name) +
-			  xmlStrLen(nameURI) + 3));
+              xmlStrLen(name) +
+              xmlStrLen(nameURI) + 3));
       if (result)
-	sprintf((char*)result, "%s:%s",  (char*)nameURI, (char*)name);
+    sprintf((char*)result, "%s:%s",  (char*)nameURI, (char*)name);
     }
   }
   return result;
@@ -151,16 +151,24 @@ QString filesExpandName(const QString fileName, bool addFilePrefix)
     if (!fileName.isEmpty()) {
         if ((fileName[0] == '~') && getenv("HOME")) {
             if (addFilePrefix)
-                result = "file:/";
+                result = "file://";
             result += getenv("HOME");
             result += fileName.mid(1);
-        } else if (fileName[0] == '/' && addFilePrefix ){
-            /* ensure that URI only has two leading slashes */
+        } else if (addFilePrefix  && fileName[0] == '/'){
+            /* ensure that URI has three leading slashes */
             int sourceIndex = 0;
-            result = "file://";
+            result = "file:///";
             while ((sourceIndex < fileName.count()) && fileName[sourceIndex] == '/')
                 sourceIndex++;
             result += fileName.mid(sourceIndex);
+        }else if (addFilePrefix && ((fileName.left(6) == "file:/") && (fileName.indexOf("file:///") == -1))) {
+            /* ensure that URI has three leading slashes */
+            result = "file:///";
+            int index = 6;
+            while (fileName[index] == '/') {
+                index++;
+            }
+            result += fileName.mid(index);
         }else{
             /* return a copy only */
             result = fileName;
@@ -175,7 +183,7 @@ QString fixLocalPaths(const QString & file)
     QString result = file;
 
     if (file.left(6) == "file:/")
-        result = filesExpandName(file);
+        result = filesExpandName(file, true);
 
     return result;
 }

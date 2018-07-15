@@ -30,6 +30,36 @@
 
 static char buffer[500];
 
+static xmlChar *fixResolveFilePath(xmlChar * name) {
+    if (name && (xmlStrstr(name, (const xmlChar*)"file:/") != NULL) && (xmlStrstr(name, (const xmlChar*)"file:///") == NULL)) {
+        xmlChar *fixedName = (xmlChar *)xmlMalloc((xmlStrlen(name) + 10) * sizeof(xmlChar));
+        xmlStrCpy(fixedName, (const xmlChar*)"file:///");
+        int index = 6;
+        while (name[index] == '/') {
+            index++;
+        }
+        xmlStrcat(fixedName, &name[index]);
+        xmlFree(name);
+        name = fixedName;
+    }
+
+    return name;
+}
+
+static QString fixResolveFilePath(const QString & name) {
+    QString result = name;
+    if ((name.left(6) == "file:/") && (name.indexOf("file:///") == -1)) {
+        result = "file:///";
+        int index = 6;
+        while (name[index] == '/') {
+            index++;
+        }
+        result += name.mid(index);
+    }
+
+    return result;
+}
+
 int xslDbgEntities(const xmlChar *arg)
 {
     int result = 0;
@@ -57,15 +87,17 @@ int xslDbgEntities(const xmlChar *arg)
                       xmlFree(entInfo->ResolvedURI); // no entity resolved, clear value and try again
                       entInfo->ResolvedURI = NULL;
                     }
+                    if (entInfo->SystemID)
+                        entInfo->SystemID = fixResolveFilePath(entInfo->SystemID);
                     if (!entInfo->ResolvedURI) { // attempt to resolve file entities with their URI
                         if (entInfo->PublicID && xmlStrlen(entInfo->PublicID)
                                 && entInfo->SystemID && xmlStrlen(entInfo->SystemID)) {
-                            entInfo->ResolvedURI = xmlCatalogResolvePublic(entInfo->PublicID);
+                            entInfo->ResolvedURI = fixResolveFilePath(xmlCatalogResolvePublic(entInfo->PublicID));
                         } else if (entInfo->SystemID && xmlStrlen(entInfo->SystemID)) {
                             if (!xmlStrnCmp(entInfo->SystemID, "file:/", 6) || !xmlStrnCmp(entInfo->SystemID, "ftp:/", 5) || !xmlStrnCmp(entInfo->SystemID, "http:/", 6)) {
-                                entInfo->ResolvedURI = xmlStrdup(entInfo->SystemID);
+                                entInfo->ResolvedURI = fixResolveFilePath(xmlStrdup(entInfo->SystemID));
                             } else {
-                                entInfo->ResolvedURI = xmlCatalogResolveSystem(entInfo->SystemID);
+                                entInfo->ResolvedURI = fixResolveFilePath(xmlCatalogResolveSystem(entInfo->SystemID));
                             }
                         }
                     }
@@ -82,12 +114,12 @@ int xslDbgEntities(const xmlChar *arg)
                 entInfo = (entityInfoPtr) arrayListGet(filesEntityList(),
                                                        entityIndex);
                 if (entInfo) {
-		    /* display identifier of an XML entity */
+            /* display identifier of an XML entity */
                     QString publicID, systemID;
                     if (entInfo->PublicID)
                         publicID = xsldbgText(entInfo->PublicID);
                     if (entInfo->SystemID)
-                        systemID = xsldbgText(entInfo->SystemID);
+                        systemID = fixResolveFilePath(xsldbgText(entInfo->SystemID));
 
                     if (!resolveURIOption) {
                         if (!publicID.isEmpty() && !systemID.isEmpty()) {
@@ -104,12 +136,12 @@ int xslDbgEntities(const xmlChar *arg)
                         if (!entInfo->ResolvedURI) { // attempt to resolve file entities with their URI
                             if (entInfo->PublicID && xmlStrlen(entInfo->PublicID)
                                     && entInfo->SystemID && xmlStrlen(entInfo->SystemID)) {
-                                entInfo->ResolvedURI = xmlCatalogResolvePublic(entInfo->PublicID);
+                                entInfo->ResolvedURI = fixResolveFilePath(xmlCatalogResolvePublic(entInfo->PublicID));
                             } else if (entInfo->SystemID && xmlStrlen(entInfo->SystemID)) {
                                 if (!xmlStrnCmp(entInfo->SystemID, "file:/", 6) || !xmlStrnCmp(entInfo->SystemID, "ftp:/", 5) || !xmlStrnCmp(entInfo->SystemID, "http:/", 6)) {
-                                    entInfo->ResolvedURI = xmlStrdup(entInfo->SystemID);
+                                    entInfo->ResolvedURI = fixResolveFilePath(xmlStrdup(entInfo->SystemID));
                                 } else {
-                                    entInfo->ResolvedURI = xmlCatalogResolveSystem(entInfo->SystemID);
+                                    entInfo->ResolvedURI = fixResolveFilePath(xmlCatalogResolveSystem(entInfo->SystemID));
                                 }
                             }
                         }
@@ -126,7 +158,7 @@ int xslDbgEntities(const xmlChar *arg)
             if (arrayListCount(filesEntityList()) == 0) {
                 xsldbgGenericErrorFunc(QObject::tr("No external General Parsed entities present.\n"));
             } else {
-		xsldbgGenericErrorFunc(QObject::tr("\tTotal of %1 entity found.").arg(arrayListCount(filesEntityList())) + QString("\n"));
+        xsldbgGenericErrorFunc(QObject::tr("\tTotal of %1 entity found.").arg(arrayListCount(filesEntityList())) + QString("\n"));
             }
 
             result = 1;
@@ -134,7 +166,6 @@ int xslDbgEntities(const xmlChar *arg)
     }
     return result;
 }
-
 
 int xslDbgSystem(const xmlChar * arg)
 {
@@ -149,7 +180,7 @@ int xslDbgSystem(const xmlChar * arg)
         return result;
     }
 
-    name = xmlCatalogResolveSystem(arg);
+    name = fixResolveFilePath(xmlCatalogResolveSystem(arg));
     if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
         if (name) {
             notifyXsldbgApp(XSLDBG_MSG_RESOLVE_CHANGE, name);
@@ -186,7 +217,7 @@ int xslDbgPublic(const xmlChar * arg)
         return result;
     }
 
-    name = xmlCatalogResolvePublic(arg);
+    name = fixResolveFilePath(xmlCatalogResolvePublic(arg));
     if (getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
         if (name) {
             notifyXsldbgApp(XSLDBG_MSG_RESOLVE_CHANGE, name);
@@ -194,7 +225,7 @@ int xslDbgPublic(const xmlChar * arg)
             xmlFree(name);
         } else {
             notifyXsldbgApp(XSLDBG_MSG_RESOLVE_CHANGE, "");
-	    xsldbgGenericErrorFunc(QObject::tr("PublicID \"%1\" was not found in current catalog.\n").arg(xsldbgText(arg)));
+        xsldbgGenericErrorFunc(QObject::tr("PublicID \"%1\" was not found in current catalog.\n").arg(xsldbgText(arg)));
         }
     } else {
         if (name) {
@@ -202,7 +233,7 @@ int xslDbgPublic(const xmlChar * arg)
             xmlFree(name);
             result = 1;
         } else {
-	    xsldbgGenericErrorFunc(QObject::tr("PublicID \"%1\" was not found in current catalog.\n").arg(xsldbgText(arg)));
+        xsldbgGenericErrorFunc(QObject::tr("PublicID \"%1\" was not found in current catalog.\n").arg(xsldbgText(arg)));
         }
         xsltGenericError(xsltGenericErrorContext, "%s", buffer);
     }
@@ -242,34 +273,34 @@ int xslDbgShellOutput(const xmlChar *arg)
       /* convert URI to local file name */
       xmlChar *outputFileName = filesURItoFileName(arg);
       if (outputFileName){
-	optionsSetStringOption(OPTIONS_OUTPUT_FILE_NAME, xsldbgText(outputFileName));
-	notifyXsldbgApp(XSLDBG_MSG_FILE_CHANGED, 0L);
-	xmlFree(outputFileName);
-	result = 1;
+    optionsSetStringOption(OPTIONS_OUTPUT_FILE_NAME, xsldbgText(outputFileName));
+    notifyXsldbgApp(XSLDBG_MSG_FILE_CHANGED, 0L);
+    xmlFree(outputFileName);
+    result = 1;
       }
     } else if (xmlStrEqual(arg, (xmlChar*)"-")) {
       optionsSetStringOption(OPTIONS_OUTPUT_FILE_NAME,
-			     NULL);
+                 NULL);
       notifyXsldbgApp(XSLDBG_MSG_FILE_CHANGED, 0L);
       result = 1;
     } else if (!xmlStrnCmp(arg, "ftp://", 6) || !xmlStrnCmp(arg, "http://", 7)){
-	xsldbgGenericErrorFunc(QObject::tr("Error: Invalid arguments for the command %1.\n").arg(QString("output")));
-	return 0;
+    xsldbgGenericErrorFunc(QObject::tr("Error: Invalid arguments for the command %1.\n").arg(QString("output")));
+    return 0;
     } else {
       /* assume that we were provided a local file name
-       * that may need expanding 
+       * that may need expanding
        */
       QString expandedName = filesExpandName(xsldbgText(arg));
-     
+
       // The output file must not be the same as our SOURCE or DATA file
       if (!expandedName.isEmpty() &&
-	(optionsGetStringOption(OPTIONS_SOURCE_FILE_NAME) !=  expandedName) &&
-	(optionsGetStringOption(OPTIONS_DATA_FILE_NAME) != expandedName) ){
-	   optionsSetStringOption(OPTIONS_OUTPUT_FILE_NAME, expandedName);
-	   notifyXsldbgApp(XSLDBG_MSG_FILE_CHANGED, 0L);
-	   result = 1;
+    (optionsGetStringOption(OPTIONS_SOURCE_FILE_NAME) !=  expandedName) &&
+    (optionsGetStringOption(OPTIONS_DATA_FILE_NAME) != expandedName) ){
+       optionsSetStringOption(OPTIONS_OUTPUT_FILE_NAME, expandedName);
+       notifyXsldbgApp(XSLDBG_MSG_FILE_CHANGED, 0L);
+       result = 1;
       }else{
-	   xsldbgGenericErrorFunc(QObject::tr("Error: Invalid arguments for the command %1.\n").arg(QString("output")));
+       xsldbgGenericErrorFunc(QObject::tr("Error: Invalid arguments for the command %1.\n").arg(QString("output")));
       }
     }
    } else {
