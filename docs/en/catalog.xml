@@ -5,7 +5,7 @@
 <public publicId="-//xsldbg//DTD search XML V1.1//EN" uri="search_v1_1.dtd"/>
 <public publicId="-//xsldbg//DTD xsldoc XML V1.0//EN" uri="xsldoc.dtd"/>
 <public publicId="-//xsldbg//DTD config XML V1.0//EN" uri="config.dtd"/>
-<system systemId="notemessage1.xml" uri="notemessage1.xml"/>
-<public publicId="-//xsldbg//tests notemessage2 XML V1.0//EN" uri="notemessage2.xml"/>
-<system systemId="note3.xml" uri="note3.xml"/>
+<system systemId="notemessage1.xml" uri="tests/notemessage1.xml"/>
+<public publicId="-//xsldbg//tests notemessage2 XML V1.0//EN" uri="tests/notemessage2.xml"/>
+<system systemId="note3.xml" uri="tests/note3.xml"/>
 </catalog>
