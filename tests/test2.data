@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <!DOCTYPE testcmd SYSTEM "testcmd.dtd">
-<!-- 
-     File : test2.data     
+<!--
+     File : test2.data
      Author: Keith Isdale <keithisdale@gmail.com>
      Description: xml data that decribes what to do for "test2"
-     Copyright Reserved Under GPL     
+     Copyright Reserved Under GPL
 -->
  <!-- Test apply templates and  call template instructions
       Test break and showbreak commands  -->
@@ -107,10 +107,10 @@ break head
 showbreak</test>
 <result>
 <row>
-<breakpointlist file="test2.xsl" line="126" />
+<breakpointlist file="test2.xsl" line="129" />
 </row>
 <row>
-<breakpointlist file="test_import.xsl" line="11" />
+<breakpointlist file="test_import.xsl" line="13" />
 </row>
 <row>
 <matchtext>Total of 2 breakpoints present</matchtext>
@@ -123,7 +123,7 @@ break call-template1
 showbreak</test>
 <result>
 <row>
-<breakpointlist file="test2.xsl" line="84" />
+<breakpointlist file="test2.xsl" line="87" />
 </row>
 <row>
 <matchtext>Total of 1 breakpoints present</matchtext>
@@ -328,7 +328,7 @@ showbreak</test>
 showbreak</test>
 <result>
 <row>
-<matchtext>Total of 14 breakpoints present.</matchtext>
+<matchtext>Total of 17 breakpoints present.</matchtext>
 </row>
 </result>
 </cmd>

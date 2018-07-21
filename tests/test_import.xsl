@@ -8,8 +8,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
 
-<xsl:import href="test_import_sublevel.xsl"/>
-<xsl:include href="test_include_bot_sublevel.xsl"/>
+  <xsl:import href="test_import_sublevel.xsl"/>
 
   <xsl:template match="head">
         <importedHead>

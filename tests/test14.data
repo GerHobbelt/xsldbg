@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <!DOCTYPE testcmd SYSTEM "testcmd.dtd">
-<!-- 
+<!--
      File : test14.data
      Author: Keith Isdale <keithisdale@gmail.com>
      Description: xml data that decribes what to do for "test14"
-     Copyright Reserved Under GPL     
+     Copyright Reserved Under GPL
 -->
 <testcmd>
   <cmd>
@@ -29,13 +29,13 @@
     <test>ent -r</test>
     <result>
       <row>
-        <matchtext>Entity SystemID:\"notemessage1.xml\" URI:\"file:/usr/share/doc/packages/qt5/xsldbg/en/notemessage1.xml\"</matchtext>
+        <matchtext>Entity SystemID:\"notemessage1.xml\" URI:\"file:///usr/share/doc/packages/xsldbg/en/notemessage1.xml\"</matchtext>
       </row>
       <row>
-        <matchtext>Entity PublicID:\"-//xsldbg//tests notemessage2 XML V1.0//EN\" SystemID:\"notemessage2.xml\" URI:\"file:/usr/share/doc/packages/qt5/xsldbg/en/notemessage2.xml\"</matchtext>
+        <matchtext>Entity PublicID:\"-//xsldbg//tests notemessage2 XML V1.0//EN\" SystemID:\"notemessage2.xml\" URI:\"file:///usr/share/doc/packages/xsldbg/en/notemessage2.xml\"</matchtext>
       </row>
       <row>
-        <matchtext>Entity SystemID:\"note3.xml\" URI:\"file:/usr/share/doc/packages/qt5/xsldbg/en/note3.xml\"</matchtext>
+        <matchtext>Entity SystemID:\"note3.xml\" URI:\"file:///usr/share/doc/packages/xsldbg/en/note3.xml\"</matchtext>
       </row>
       <row>
         <matchtext>Total of 3 entity found</matchtext>

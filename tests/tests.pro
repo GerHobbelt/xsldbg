@@ -5,12 +5,13 @@ TEMPLATE = subdirs
 testdocuments.files =\
      $$files(*.x*l) \
      $$files(*.dtd) \
-     $$files(*.pl)
+     $$files(*.pl) \
+    $$files(*.data)
 
 testdocuments.path = $$DOCS_ROOT/en/tests
 INSTALLS += testdocuments
 
 testsubdocuments.files =\
      $$files(subdir\*.x*l)
-testdocuments.path = $$DOCS_ROOT/en/tests/subdir
+testsubdocuments.path = $$DOCS_ROOT/en/tests/subdir
 INSTALLS += testsubdocuments

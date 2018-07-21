@@ -134,7 +134,7 @@ require "xsldbgmatch.pl";
              "",  
                "" , 
                  "test2.xsl",  
-                   "126",
+                   "129",
                      $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -146,7 +146,7 @@ require "xsldbgmatch.pl";
              "",  
                "" , 
                  "test_import.xsl",  
-                   "11",
+                   "13",
                      $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -168,7 +168,7 @@ require "xsldbgmatch.pl";
              "",  
                "" , 
                  "test2.xsl",  
-                   "84",
+                   "87",
                      $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -433,7 +433,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Total of 14 breakpoints present.", 
+             "Total of 17 breakpoints present.", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
