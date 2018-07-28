@@ -6,10 +6,10 @@ extradocs.files = $$PWD/*.xsl \
              $$PWD/*.xml \
              $$PWD/*.docbook \
              $$PWD/*.dtd \
-             $$PWD/*.txt \
              $$PWD/CATALOG \
              $$PWD/catalog.xml \
-             $$PWD/xsldoc.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.txt
+             $$PWD/xsldoc.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.txt \
+             $$PWD/../../COPYING
 
 
 extradocs.path= $$DOCS_ROOT/en/
