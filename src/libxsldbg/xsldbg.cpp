@@ -416,14 +416,14 @@ usage(const char *name)
                      "      --output file or -o file: Save to a given file. " \
                      "See output command documentatation\n");
     xsltGenericError(xsltGenericErrorContext,
-                     "      --version or -V : Show the version of libxml and libxslt used\n");
+                     "      --version or -V : Show the version of xsldbg, libxml2, libxslt and libexslt used\n");
     xsltGenericError(xsltGenericErrorContext,
                      "For documentation on the folowing \"flags\" " \
                      "see the documentation of the setoption command\n");
     xsltGenericError(xsltGenericErrorContext,
-                     "      --verbose or -v : Show logs of what's happening\n");
+                     "      --verbose or -v : Show logs of what is happening\n");
     xsltGenericError(xsltGenericErrorContext,
-                     "      --timing: Display the time used\n");
+                     "      --timing: Display the time taken for XSLT transformation\n");
     xsltGenericError(xsltGenericErrorContext,
                      "      --repeat : Run the transformation 20 times\n");
     xsltGenericError(xsltGenericErrorContext,
@@ -592,7 +592,7 @@ int xsldbgMain(int argc, char **argv)
                 } else if ((xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-V")) ||
                            (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-version"))) {
                     xsltGenericError(xsltGenericErrorContext,
-                                     " xsldbg created by Keith Isdale <keithisdale@gmail.com\n");
+                                     " xsldbg created by Keith Isdale <keithisdale@gmail.com>\n");
                     xsltGenericError(xsltGenericErrorContext,
                                      " Version %s, Date created %s\n", XSLDBG_VERSION,
                                      TIMESTAMP);
@@ -601,16 +601,17 @@ int xsldbgMain(int argc, char **argv)
                                      xmlParserVersion, xsltEngineVersion,
                                      exsltLibraryVersion);
                     xsltGenericError(xsltGenericErrorContext,
-                                     "xsldbg was compiled against libxml %d, libxslt %d and libexslt %d\n",
+                                     "xsldbg was compiled against libxml2 %d, libxslt %d and libexslt %d\n",
                                      LIBXML_VERSION, LIBXSLT_VERSION,
                                      LIBEXSLT_VERSION);
                     xsltGenericError(xsltGenericErrorContext,
-                                     "libxslt %d was compiled against libxml %d\n",
+                                     "libxslt %d was compiled against libxml2 %d\n",
                                      xsltLibxsltVersion, xsltLibxmlVersion);
                     xsltGenericError(xsltGenericErrorContext,
                                      "libexslt %d was compiled against libxml %d\n",
                                      exsltLibexsltVersion, exsltLibxmlVersion);
                     argv[i] = NULL;
+                    exit(0); //exit after showing version information
                 } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-norman")) {
                     if (result) {
                         result = optionsSetIntOption(OPTIONS_PROFILING, 1);
