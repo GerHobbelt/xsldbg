@@ -591,24 +591,19 @@ int xsldbgMain(int argc, char **argv)
                     argv[i] = NULL;
                 } else if ((xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-V")) ||
                            (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-version"))) {
-                    xsltGenericError(xsltGenericErrorContext,
-                                     " xsldbg created by Keith Isdale <keithisdale@gmail.com>\n");
-                    xsltGenericError(xsltGenericErrorContext,
-                                     " Version %s, Date created %s\n", XSLDBG_VERSION,
+                    //regular printf is use so that STDOUT is used
+                    printf(" xsldbg created by Keith Isdale <keithisdale@gmail.com>\n");
+                    printf(" Version %s, Date created %s\n", XSLDBG_VERSION,
                                      TIMESTAMP);
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "Using libxml %s, libxslt %s and libexslt %s\n",
+                    printf("Using libxml %s, libxslt %s and libexslt %s\n",
                                      xmlParserVersion, xsltEngineVersion,
                                      exsltLibraryVersion);
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "xsldbg was compiled against libxml2 %d, libxslt %d and libexslt %d\n",
+                    printf("xsldbg was compiled against libxml2 %d, libxslt %d and libexslt %d\n",
                                      LIBXML_VERSION, LIBXSLT_VERSION,
                                      LIBEXSLT_VERSION);
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "libxslt %d was compiled against libxml2 %d\n",
+                    printf("libxslt %d was compiled against libxml2 %d\n",
                                      xsltLibxsltVersion, xsltLibxmlVersion);
-                    xsltGenericError(xsltGenericErrorContext,
-                                     "libexslt %d was compiled against libxml %d\n",
+                    printf("libexslt %d was compiled against libxml %d\n",
                                      exsltLibexsltVersion, exsltLibxmlVersion);
                     argv[i] = NULL;
                     exit(0); //exit after showing version information
