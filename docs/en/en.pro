@@ -84,6 +84,6 @@ unix{
         INSTALLS+=xsldocGnomedocs2
 
     }else {
-       message(Did not find saxon, skipping generation of docbook documentation)
+       message(Did not find saxon skipping generation of docbook documentation)
     }
 }
