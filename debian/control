@@ -1,0 +1,17 @@
+source: xsldbg
+Section: base
+Priority: optional
+Maintainer: Keith Isdale <keithisdale@gmail.com>
+Build-Depends: debhelper (>= 9), qt5-qmake, g++, make, qt5-qmake, libxml2-dev, libxslt1-dev, qtbase5-dev, qtbase5-dev-tools
+Standards-Version: 3.9.6
+Homepage: http://xsldbg.sourceforge.net/
+
+Package: xsldbg
+Architecture: i386
+Depends: libqt5core5a, libxml2, libxslt1.1, ${misc:Depends}, ${shlibs:Depends}
+Description: XSLT debugging/execution at console like gdb
+ xsldbg is a text based tool to debug stylesheets (the eXtensible Stylesheet Language) and has commands   similar to the Unix/Linux debugger gdb. 
+ It has three major modes of execution of stylesheets.
+   o Run the whole stylesheet
+   o Step to the next XSLT instruction
+   o Continue until next break point is found, or the stylesheet has restarted

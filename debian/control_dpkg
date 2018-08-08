@@ -1,0 +1,13 @@
+Package: xsldbg
+Version:4.7.0-1
+Priority: optional
+Section: development
+Architecture: all
+Depends: build-essential, libc6, libqt5core5, libxml2, libxslt2
+Maintainer: Keith Isdale <keithisdale@gmail.com>
+Description: A XSLT debugging/execution tool at console like gdb
+ xsldbg is a text based tool to debug stylesheets (the eXtensible Stylesheet Language) and has commands   similar to the Unix/Linux debugger gdb. 
+ It has three major modes of execution of stylesheets.
+   o Run the whole stylesheet
+   o Step to the next XSLT instruction
+   o Continue until next break point is found, or the stylesheet has restarted
