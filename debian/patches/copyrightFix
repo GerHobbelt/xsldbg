@@ -1,0 +1,16 @@
+Description: Do not install COPYING file per Debian policies
+Forwarded: not-needed
+Author: Keith Isdale <keithisdale@gmail.com>
+--- a/docs/en/en.pro
++++ b/docs/en/en.pro
+@@ -8,9 +8,7 @@
+              $$PWD/*.dtd \
+              $$PWD/CATALOG \
+              $$PWD/catalog.xml \
+-             $$PWD/xsldoc.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.txt \
+-             $$PWD/../../COPYING
+-
++             $$PWD/xsldoc.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.txt
+ 
+ extradocs.path= $$DOCS_ROOT/en/
+ 

@@ -2,7 +2,7 @@
 export QT_SELECT := qt5
 
 %:
-	dh $@
+	dh $@ --with quilt
 
 override_dh_compress:
 	dh_compress -X.data -X.xsl -Xxsldoc -X.pl -X.docbook
