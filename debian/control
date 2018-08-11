@@ -7,7 +7,7 @@ Standards-Version: 3.9.6
 Homepage: http://xsldbg.sourceforge.net/
 
 Package: xsldbg
-Architecture: i386
+Architecture: any
 Depends: libqt5core5a, libxml2, libxslt1.1, ${misc:Depends}, ${shlibs:Depends}
 Description: XSLT debugging/execution at console like gdb
  xsldbg is a text based tool to debug stylesheets (the eXtensible Stylesheet Language) and has commands   similar to the Unix/Linux debugger gdb. 
