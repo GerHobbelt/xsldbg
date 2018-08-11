@@ -15,8 +15,8 @@ git clone . $TMPDIR/xsldbg-$VERSION
 
 cd $TMPDIR
 
-tar czf xsldbg-$VERSION.tar.gz --exclude .git --exclude xsldbg_submodule.pro --exclude-from=$SOURCEDIR/.gitignore xsldbg-$VERSION
+tar czf xsldbg-$VERSION.tar.gz --exclude .git --exclude xsldbg_submodule.pro --exclude debian --exclude-from=$SOURCEDIR/.gitignore xsldbg-$VERSION
 echo created $PWD/xsldbg-$VERSION.tar.gz
 
-zip -r -l --exclude .git --exclude .gitignore --exclude .gitmodules --exclude xsldbg_submodule.pro --exclude \*.git/\* -x@$SOURCEDIR/.gitignore xsldbg-$VERSION.zip xsldbg-$VERSION
+zip -r -l --exclude .git --exclude .gitignore --exclude .gitmodules --exclude xsldbg_submodule.pro --exclude debian --exclude \*.git/\* -x@$SOURCEDIR/.gitignore xsldbg-$VERSION.zip xsldbg-$VERSION
 echo created $PWD/xsldbg-$VERSION.zip
