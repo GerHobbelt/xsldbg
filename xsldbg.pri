@@ -7,9 +7,11 @@ DEFINES+=XSLDBG_VERSION=\\\"$$XSLDBG_VERSION\\\"
             isEmpty(INSTALL_PREFIX) {
                 DOCS_ROOT="/usr/share/doc/packages/xsldbg"
                 BIN_DIR="/usr/bin"
+                MAN_DIR="/usr/share/man/man1"
             } else {
-                DOCS_ROOT="$${INSTALL_PREFIX}/doc/packages/xsldbg"
+                DOCS_ROOT="$${INSTALL_PREFIX}/share/doc/packages/xsldbg"
                 BIN_DIR="$${INSTALL_PREFIX}/bin"
+                MAN_DIR="$${INSTALL_PREFIX}/share/man/man1"
                 message(xsldbg install prefix is '$${INSTALL_PREFIX}')
             }
             DEFINES+= DOCS_PATH="\"\\\"$$DOCS_ROOT/en\\\"\""

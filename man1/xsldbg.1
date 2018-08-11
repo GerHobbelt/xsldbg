@@ -1,0 +1,212 @@
+.\" generated with Ronn/v0.7.3
+.\" http://github.com/rtomayko/ronn/tree/0.7.3
+.
+.TH "XSLDBG" "1" "2018-08-11" "" ""
+.
+.SH "NAME"
+\fBxsldbg\fR \- XSLT debugging/execution at console like gdb
+.
+.SH "SYNOPSIS"
+\fBxsldbg\fR [options] \-\-shell \fIXSLScript\fR \fIxmlDocument\fR
+.
+.P
+\fBxsldbg\fR [options] \-\-noshell \fIXSLScript\fR \fIxmlDocument\fR
+.
+.P
+\fBxsldbg\fR [\fB\-\-version\fR]
+.
+.SH "DESCRIPTION"
+xsldbg is a text based tool to debug stylesheets (the eXtensible Stylesheet Language) and has commands similar to the Unix/Linux debugger gdb\.
+.
+.P
+xsldbg has three major modes of execution of stylesheets:
+.
+.IP "1." 4
+Run the whole stylesheet
+.
+.IP "2." 4
+Step to the next XSLT instruction
+.
+.IP "3." 4
+Continue until next break point is found, or the stylesheet has restarted
+.
+.IP "" 0
+.
+.P
+Note that xmlcatalog tool can be used to update current XML catalog used to find general parsed entities specified in XML document\.
+.
+.SH "OPTIONS"
+.
+.TP
+\-\-output file,\-o file
+Save to a given file\. See output command documentatation
+.
+.TP
+\-\-version,\-V
+Show the version of xsldbg, libxml2, libxslt and libexslt used
+.
+.TP
+\-\-verbose,\-v
+Show logs of what is happening
+.
+.TP
+\-\-timing
+Display the time taken for XSLT transformation
+.
+.TP
+\-\-repeat
+Run the transformation 20 times
+.
+.TP
+\-\-debug
+Dump the tree of the result instead
+.
+.TP
+\-\-novalid
+Skip the DTD loading phase
+.
+.TP
+\-\-noout
+Do not dump the result
+.
+.TP
+\-\-maxdepth \fIval\fR
+Increase the maximum depth
+.
+.TP
+\-\-html
+The input document is(are) an HTML file(s)
+.
+.TP
+\-\-param \fIname\fR \fIvalue\fR
+Pass a (parameter,value) pair, note that string values must be quoted like "\'string\'"
+.
+.TP
+\-\-param \fIname\fR:\fIvalue\fR
+Pass a (parameter,value) pair, note that string values must be quoted like "\'string\'"
+.
+.TP
+\-\-nonet
+Refuse to fetch DTDs or entities over network
+.
+.TP
+\-\-catalogs
+Use the catalogs from $SGML_CATALOG_FILES
+.
+.TP
+\-\-xinclude
+do XInclude processing on document intput
+.
+.TP
+\-\-profile,\-\-norman
+dump profiling informations
+.
+.TP
+\-\-shell|\-\-noshell
+Always|never go to the xsldbg prompt, to start debugging
+.
+.TP
+\-\-noautoloadconfig
+Disable automatic loading of last save xsldbg settings
+.
+.TP
+\-\-gdb
+Run in gdb mode printing out more information
+.
+.TP
+\-\-autoencode
+Detect and use encodings in the stylesheet
+.
+.TP
+\-\-utf8input
+Treat command line input as encoded in UTF\-8
+.
+.TP
+\-\-preferhtml
+Use html output when generating search reports\. See \'search\' command when running shell
+.
+.TP
+\-\-stdout
+Print all error messages to stdout, normally error messages go to stderr
+.
+.TP
+\-\-cd \fIPATH\fR
+Change to specfied working directory before loading XSL/XML files
+.
+.SH "EXAMPLES"
+To start debugging of applying the script test1\.xsl to test1\.xml:
+.
+.P
+xsldbg \-\-shell test1\.xsl test1\.xml
+.
+.P
+To start debugging files stored in other directory called ~/mytests:
+.
+.P
+xsldbg \-\-cd ~/mytests \-\-shell test1\.xsl test1\.xml
+.
+.P
+An example session follows:
+.
+.IP "1." 4
+set breakpoint at \'/\' and line 19
+.
+.IP "2." 4
+print values in current XSL/XML file
+.
+.IP "3." 4
+print value of XSL variable
+.
+.IP "4." 4
+print the backtrace of XSLT script execution\.
+.
+.IP "5." 4
+quit xsldbg session
+.
+.IP "" 0
+.
+.IP "" 4
+.
+.nf
+
+<$> xsldbg \-\-shell test5\.xsl test5\.xml
+<$> break /
+<$> break \-l test5\.xml 18
+<$> continue
+<$> cat \.
+<$> data
+<$> cat \.
+<$> source
+<$> continue
+<$> cat $barney
+<$> where
+<$> quit
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Note that as shown in above example line numbers used by the XSLT engine start from \fIzero\fR( 0 ) so enter line number one less than shown in typical text editor\.
+.
+.SH "FILES"
+.
+.TP
+\fI~/\.config/xsldbg/xsldbg\.conf\fR
+Per\-user xsldbg configuration file\.
+.
+.TP
+\fI/usr/share/doc/packages/xsldbg/en/html/index\.html\fR
+English documentation in HTML format\.
+.
+.SH "ENVIRONMENT"
+If no options are passed to xsldbg then the last used options will be applied\.
+.
+.SH "BUGS"
+See Source forge issues: https://sourceforge\.net/p/xsldbg/_list/tickets
+.
+.SH "AUTHOR"
+Keith Isdale \fIkeithisdale@gmail\.com\fR
+.
+.SH "SEE ALSO"
+\fBxmlcatalog(1)\fR

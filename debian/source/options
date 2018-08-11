@@ -1,1 +1,1 @@
---diff-ignore="(.git|.*.bat|.*.zip|xsldbg.spec|xsldbg_submodule.pro)"
+--diff-ignore="(.git|.*.bat|.*.zip|xsldbg.spec|xsldbg_submodule.pro|result.txt)"

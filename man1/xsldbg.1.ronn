@@ -1,0 +1,197 @@
+% xsldbg(1) Version 4.7.0 | xsldbg(1)
+
+NAME
+----
+
+**xsldbg** - XSLT debugging/execution at console like gdb
+
+SYNOPSIS
+--------
+
+**xsldbg** \[options] --shell _XSLScript_ _xmlDocument_
+
+**xsldbg** \[options] --noshell _XSLScript_ _xmlDocument_
+
+**xsldbg** \[**--version**]
+
+DESCRIPTION
+-----------
+
+xsldbg is a text based tool to debug stylesheets (the eXtensible Stylesheet
+ Language) and has commands similar to the Unix/Linux debugger gdb. 
+
+xsldbg has three major modes of execution of stylesheets:
+
+1. Run the whole stylesheet
+2. Step to the next XSLT instruction
+3. Continue until next break point is found, or the stylesheet has restarted
+
+Note that xmlcatalog tool can be used to update current XML catalog used to
+find general parsed entities specified in XML document.
+
+OPTIONS
+-------
+--output file,-o file
+
+: Save to a given file. See output command documentatation
+
+--version,-V
+
+: Show the version of xsldbg, libxml2, libxslt and libexslt used
+
+--verbose,-v
+
+: Show logs of what is happening
+
+--timing
+
+: Display the time taken for XSLT transformation
+
+--repeat
+
+: Run the transformation 20 times
+
+--debug
+
+: Dump the tree of the result instead
+
+--novalid
+
+: Skip the DTD loading phase
+
+--noout
+
+: Do not dump the result
+
+--maxdepth _val_
+
+: Increase the maximum depth
+
+--html
+
+: The input document is(are) an HTML file(s)
+
+--param _name_ _value_
+
+: Pass a (parameter,value) pair, note that string values must be quoted like "'string'"
+
+--param _name_:_value_
+
+: Pass a (parameter,value) pair, note that string values must be quoted like "'string'"
+
+--nonet
+
+: Refuse to fetch DTDs or entities over network
+
+--catalogs
+
+: Use the catalogs from $SGML_CATALOG_FILES
+
+--xinclude
+
+: do XInclude processing on document intput
+
+--profile,--norman
+
+: dump profiling informations 
+
+--shell|--noshell
+
+: Always|never go to the xsldbg prompt, to start debugging
+
+--noautoloadconfig
+: Disable automatic loading of last save xsldbg settings
+
+--gdb
+
+: Run in gdb mode printing out more information
+
+--autoencode
+
+: Detect and use encodings in the stylesheet
+
+--utf8input
+
+: Treat command line input as encoded in UTF-8
+
+--preferhtml
+
+: Use html output when generating search reports. See 'search' command when running shell
+
+--stdout
+
+: Print all error messages to stdout, normally error messages go to stderr
+
+--cd _PATH_
+
+: Change to specfied working directory before loading XSL/XML files
+
+EXAMPLES
+--------
+To start debugging of applying the script test1.xsl to test1.xml:
+
+xsldbg --shell test1.xsl test1.xml
+
+To start debugging files stored in other directory called ~/mytests:
+
+xsldbg --cd ~/mytests  --shell test1.xsl test1.xml
+
+An example session follows:
+
+1. set breakpoint at '/' and line 19
+2. print values in current
+XSL/XML file
+3. print value of XSL variable
+4. print the backtrace of XSLT script execution.
+5. quit xsldbg session
+
+```
+<$> xsldbg --shell test5.xsl test5.xml
+<$> break /
+<$> break -l test5.xml 18
+<$> continue
+<$> cat .
+<$> data
+<$> cat .
+<$> source
+<$> continue
+<$> cat $barney
+<$> where
+<$> quit
+```
+
+Note that as shown in above example line numbers used by the XSLT engine start from *zero*( 0 ) so enter line
+number one less than shown in typical text editor.
+
+
+FILES
+-----
+
+*~/.config/xsldbg/xsldbg.conf*
+
+:   Per-user xsldbg configuration file.
+
+*/usr/share/doc/packages/xsldbg/en/html/index.html*
+
+:   English documentation in HTML format.
+
+
+ENVIRONMENT
+-----------
+
+If no options are passed to xsldbg then the last used options will be applied.
+
+BUGS
+----
+
+See Source forge issues: https://sourceforge.net/p/xsldbg/_list/tickets
+
+AUTHOR
+------
+
+Keith Isdale <keithisdale@gmail.com>
+
+SEE ALSO
+--------
+
+**xmlcatalog(1)**
