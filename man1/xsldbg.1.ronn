@@ -143,6 +143,7 @@ An example session follows:
 XSL/XML file
 3. print value of XSL variable
 4. print the backtrace of XSLT script execution.
+5. show inbuilt 'help'
 5. quit xsldbg session
 
 ```
@@ -157,6 +158,7 @@ XSL/XML file
 <$> continue
 <$> cat $barney
 <$> where
+<$> help
 <$> quit
 ```
 
@@ -193,5 +195,7 @@ Keith Isdale <keithisdale@gmail.com>
 
 SEE ALSO
 --------
+
+See the 'help' command build into xsldbg.
 
 **xmlcatalog(1)**

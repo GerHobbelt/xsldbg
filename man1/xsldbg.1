@@ -1,7 +1,7 @@
 .\" generated with Ronn/v0.7.3
 .\" http://github.com/rtomayko/ronn/tree/0.7.3
 .
-.TH "XSLDBG" "1" "2018-08-11" "" ""
+.TH "XSLDBG" "1" "2018-08-12" "" ""
 .
 .SH "NAME"
 \fBxsldbg\fR \- XSLT debugging/execution at console like gdb
@@ -161,6 +161,9 @@ print value of XSL variable
 print the backtrace of XSLT script execution\.
 .
 .IP "5." 4
+show inbuilt \'help\'
+.
+.IP "6." 4
 quit xsldbg session
 .
 .IP "" 0
@@ -180,6 +183,7 @@ quit xsldbg session
 <$> continue
 <$> cat $barney
 <$> where
+<$> help
 <$> quit
 .
 .fi
@@ -209,4 +213,7 @@ See Source forge issues: https://sourceforge\.net/p/xsldbg/_list/tickets
 Keith Isdale \fIkeithisdale@gmail\.com\fR
 .
 .SH "SEE ALSO"
+See the \'help\' command build into xsldbg\.
+.
+.P
 \fBxmlcatalog(1)\fR
