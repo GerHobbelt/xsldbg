@@ -3,3 +3,6 @@ export QT_SELECT := qt5
 
 %:
 	dh $@
+
+override_dh_compress:
+	dh_compress -X.data -X.xsl -Xxsldoc -X.pl -X.docbook
