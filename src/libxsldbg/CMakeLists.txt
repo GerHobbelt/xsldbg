@@ -42,4 +42,7 @@ set (libxsldbg_win_src
     options_win32.cpp 
 )
 
+include_directories( ${LIBXML2_INCLUDE_DIR} )
+include_directories( ${LIBXSLT_INCLUDE_DIR} )
+
 add_library(xsldbg STATIC ${libxsldbg_src} ${libxsldbg_unix_src})
