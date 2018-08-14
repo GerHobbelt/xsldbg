@@ -97,7 +97,6 @@ int debugGotControl(int reached)
 void debugHandleDebugger(xmlNodePtr cur, xmlNodePtr node,
                     xsltTemplatePtr templ, xsltTransformContextPtr ctxt)
 {
-
     if (!cur && !node) {
         xsldbgGenericErrorFunc(i18n("Error: XSLT source and XML data are empty. Cannot enter the debugger.\n"));
     } else {

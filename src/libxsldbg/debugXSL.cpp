@@ -824,8 +824,10 @@ void debugXSLBreak(xmlNodePtr templ, xmlNodePtr node, xsltTemplatePtr root,
     xmlNodePtr tempNode = NULL;
     rootCopy = root;
 
-    if (ctxt && templ && root && !xsldbgReachedFirstTemplate)
-    xsldbgReachedFirstTemplate = true;
+    if (ctxt && templ && root && !xsldbgReachedFirstTemplate) {
+      xsldbgReachedFirstTemplate = true;
+      notifyXsldbgApp(XSLDBG_MSG_FIRST_TEMPLATE_REACHED, NULL);
+    }
 
     if (templ == NULL) {
         tempDoc = xmlNewDoc((xmlChar *) "1.0");

@@ -81,6 +81,9 @@ signals: // Signals
    /** emitted when first line is reached after starting**/
    void reachedFirstLine();
 
+   /** emitted when first template is reached after starting**/
+   void reachedFirstTemplate();
+   
    /** Show a message in debugger window */
    void showMessage(QString /* msg*/);
 
