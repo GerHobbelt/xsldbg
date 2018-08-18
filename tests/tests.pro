@@ -9,10 +9,10 @@ testdocuments.files =\
     $$files(*.data) \
     $$files(*.txt)
 
-testdocuments.path = $$DOCS_ROOT/en/tests
+testdocuments.path = $$DOCS_ROOT/tests
 INSTALLS += testdocuments
 
 testsubdocuments.files =\
      $$files(subdir\*.x*l)
-testsubdocuments.path = $$DOCS_ROOT/en/tests/subdir
+testsubdocuments.path = $$DOCS_ROOT/tests/subdir
 INSTALLS += testsubdocuments
