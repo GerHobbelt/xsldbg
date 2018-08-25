@@ -1015,8 +1015,8 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
     /* If using a thread and the thread is running then we don't need to
      * send this as the application will see the XSLDBG_MSG_LINE_CHANGED message */
-    if ((getThreadStatus() == XSLDBG_MSG_THREAD_NOTUSED) ||
-        (xslDebugStatus == DEBUG_TRACE)) {
+    if ((getThreadStatus() == XSLDBG_MSG_THREAD_NOTUSED) &&
+        (xslDebugStatus == DEBUG_TRACE || optionsGetIntOption(OPTIONS_VERBOSE))) {
     QString messageTxt;
         if (!nextCommandActive && ctxt->node && ctxt->node && ctxt->node->doc
             && ctxt->node->doc->URL) {

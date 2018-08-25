@@ -573,7 +573,9 @@ int xsldbgMain(int argc, char **argv)
                 }
             } else
 #endif
+                optionsSetIntOption(OPTIONS_VERBOSE, 0);
                 if ((!xmlStrCmp(argv[i], "-v")) || (!xmlStrCmp(argv[i], "-verbose"))) {
+                    optionsSetIntOption(OPTIONS_VERBOSE, 1);
                     xsltSetGenericDebugFunc(stderr, NULL);
                 } else if ((xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-o")) ||
                            (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-output"))) {
