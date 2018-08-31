@@ -1018,19 +1018,12 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
     if ((getThreadStatus() == XSLDBG_MSG_THREAD_NOTUSED) &&
         (xslDebugStatus == DEBUG_TRACE || optionsGetIntOption(OPTIONS_VERBOSE))) {
     QString messageTxt;
-        if (!nextCommandActive && ctxt->node && ctxt->node && ctxt->node->doc
-            && ctxt->node->doc->URL) {
-            if (!showSource) {
-                baseUri = filesGetBaseUri(ctxt->node);
-                if (baseUri != NULL)
-                    breakUri = baseUri;
-                else
-                    breakUri = ctxt->node->doc->URL;
-            } else
-                breakUri = ctxt->node->doc->URL;
+        if (!nextCommandActive) {
+            int tmpLineNo = xsldbgLineNo();
+            breakUri = xsldbgUrl();
 
-            if (xmlGetLineNo(ctxt->node) != -1)
-        messageTxt = QObject::tr("Breakpoint for file \"%1\" at line %2.\n").arg(xsldbgUrl(breakUri)).arg(xmlGetLineNo(ctxt->node));
+            if (tmpLineNo != -1)
+        messageTxt = QObject::tr("Breakpoint for file \"%1\" at line %2.\n").arg(xsldbgUrl(breakUri)).arg(tmpLineNo);
             else
                 messageTxt = QObject::tr("Breakpoint at text node in file \"%1\".\n").arg(xsldbgUrl(breakUri));
             if (baseUri != NULL) {
@@ -1825,16 +1818,16 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
         }
 
         /* KDbg likes to get the marker after every command so here it is */
-        if ((optionsGetIntOption(OPTIONS_GDB) >1) && optionsGetIntOption(OPTIONS_VERBOSE) && !nextCommandActive
+        if (((optionsGetIntOption(OPTIONS_GDB) >0) || optionsGetIntOption(OPTIONS_VERBOSE) >0 ) && !nextCommandActive
          && (commandId != DEBUG_STEPUP_CMD - DEBUG_HELP_CMD)) {
-            if (ctxt->node && ctxt->node &&
-        ctxt->node->doc && ctxt->node->doc->URL) {
+            int tmpLineNo = xsldbgLineNo();
+            xmlChar * breakUri = xsldbgUrl();
 
-                if (xmlGetLineNo(ctxt->node) != -1)
-                    xsldbgGenericErrorFunc(QObject::tr("Breakpoint for file \"%1\" at line %2.\n").arg(xsldbgUrl(ctxt->node->doc->URL), xmlGetLineNo(ctxt->node)));
-                else
-                    xsldbgGenericErrorFunc(QObject::tr("Breakpoint at text node in file \"%1\".\n").arg(xsldbgUrl(ctxt->node->doc->URL)));
-            }
+            if (tmpLineNo != -1)
+                xsldbgGenericErrorFunc(QObject::tr("Breakpoint for file \"%1\" at line %2.\n").arg(xsldbgUrl(breakUri)).arg(tmpLineNo));
+            else
+                xsldbgGenericErrorFunc(QObject::tr("Breakpoint at text node in file \"%1\".\n").arg(xsldbgUrl(breakUri)));
+            xmlFree(breakUri);
         }
 
         /* notify any listeners of that the command failed */

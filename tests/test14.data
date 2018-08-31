@@ -29,13 +29,13 @@
     <test>ent -r</test>
     <result>
       <row>
-        <matchtext>Entity SystemID:\"notemessage1.xml\" URI:\"file:///usr/share/doc/packages/xsldbg/en/notemessage1.xml\"</matchtext>
+        <matchtext>Entity SystemID:\"notemessage1.xml\" URI:\"file:///usr/share/doc/packages/xsldbg/en/tests/notemessage1.xml\"</matchtext>
       </row>
       <row>
-        <matchtext>Entity PublicID:\"-//xsldbg//tests notemessage2 XML V1.0//EN\" SystemID:\"notemessage2.xml\" URI:\"file:///usr/share/doc/packages/xsldbg/en/notemessage2.xml\"</matchtext>
+        <matchtext>Entity PublicID:\"-//xsldbg//tests notemessage2 XML V1.0//EN\" SystemID:\"notemessage2.xml\" URI:\"file:///usr/share/doc/packages/xsldbg/en/tests/notemessage2.xml\"</matchtext>
       </row>
       <row>
-        <matchtext>Entity SystemID:\"note3.xml\" URI:\"file:///usr/share/doc/packages/xsldbg/en/note3.xml\"</matchtext>
+        <matchtext>Entity SystemID:\"note3.xml\" URI:\"file:///usr/share/doc/packages/xsldbg/en/tests/note3.xml\"</matchtext>
       </row>
       <row>
         <matchtext>Total of 3 entity found</matchtext>
@@ -43,6 +43,78 @@
     </result>
   </cmd>
   <cmd>
+    <test>break -l notemessage1.xml 8
+break -l notemessage2.xml 8
+break -l note3.xml 10
+showbreak
+    </test>
+    <result>
+        <row>
+            <breakpointlist file="notemessage1.xml" line="8" />
+        </row>
+        <row>
+            <breakpointlist file="notemessage2.xml" line="8" />
+        </row>
+        <row>
+            <breakpointlist file="note3.xml" line="10" />
+        </row>
+        <row>
+        <matchtext>Total of 3 breakpoints present</matchtext>
+        </row>
+   </result>
+  </cmd>
+
+<cmd>
+  <test>data
+disable 1
+disable 2
+disable 3
+enable 1
+run
+continue
+step
+  </test>
+  <result>
+      <row>
+          <matchtext>Breakpoint for file .notemessage1.xml. at line 8</matchtext>
+      </row>
+</result>
+</cmd>
+
+<cmd>
+  <test>data
+disable 1
+disable 2
+disable 3
+enable 2
+run
+continue
+step
+  </test>
+  <result>
+      <row>
+          <matchtext>Breakpoint for file .notemessage2.xml. at line 8</matchtext>
+      </row>
+</result>
+</cmd>
+<cmd>
+  <test>data
+disable 1
+disable 2
+disable 3
+enable 3
+run
+continue
+step
+  </test>
+  <result>
+      <row>
+          <matchtext>Breakpoint for file .note3.xml. at line 10</matchtext>
+      </row>
+</result>
+</cmd>
+
+<cmd>
     <test>quit</test>
   </cmd>
 </testcmd>

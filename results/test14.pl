@@ -52,7 +52,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Entity SystemID:\"notemessage1.xml\" URI:\"file:///usr/share/doc/packages/xsldbg/en/notemessage1.xml\"", 
+             "Entity SystemID:\"notemessage1.xml\" URI:\"file:///usr/share/doc/packages/xsldbg/en/tests/notemessage1.xml\"", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -61,7 +61,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Entity PublicID:\"-//xsldbg//tests notemessage2 XML V1.0//EN\" SystemID:\"notemessage2.xml\" URI:\"file:///usr/share/doc/packages/xsldbg/en/notemessage2.xml\"", 
+             "Entity PublicID:\"-//xsldbg//tests notemessage2 XML V1.0//EN\" SystemID:\"notemessage2.xml\" URI:\"file:///usr/share/doc/packages/xsldbg/en/tests/notemessage2.xml\"", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -70,7 +70,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Entity SystemID:\"note3.xml\" URI:\"file:///usr/share/doc/packages/xsldbg/en/note3.xml\"", 
+             "Entity SystemID:\"note3.xml\" URI:\"file:///usr/share/doc/packages/xsldbg/en/tests/note3.xml\"", 
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -86,6 +86,85 @@ require "xsldbgmatch.pl";
     }
   
   
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointListMatch(
+             "",  
+               "" , 
+                 "notemessage1.xml",  
+                   "8",
+                     $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointListMatch(
+             "",  
+               "" , 
+                 "notemessage2.xml",  
+                   "8",
+                     $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointListMatch(
+             "",  
+               "" , 
+                 "note3.xml",  
+                   "10",
+                     $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Total of 3 breakpoints present", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+
+
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Breakpoint for file .notemessage1.xml. at line 8", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+
+
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Breakpoint for file .notemessage2.xml. at line 8", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::textMatch(
+             "Breakpoint for file .note3.xml. at line 10", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+
+
 
     if ($result == 1){
       if ($failedTestCount != 0){

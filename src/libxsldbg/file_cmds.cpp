@@ -30,7 +30,7 @@
 
 static char buffer[500];
 
-static xmlChar *fixResolveFilePath(xmlChar * name) {
+xmlChar *fixResolveFilePath(xmlChar * name) {
     if (name && (xmlStrstr(name, (const xmlChar*)"file:/") != NULL) && (xmlStrstr(name, (const xmlChar*)"file:///") == NULL)) {
         xmlChar *fixedName = (xmlChar *)xmlMalloc((xmlStrlen(name) + 10) * sizeof(xmlChar));
         xmlStrCpy(fixedName, (const xmlChar*)"file:///");

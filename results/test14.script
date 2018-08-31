@@ -1,3 +1,35 @@
 entities
 ent -r
+break -l notemessage1.xml 8
+break -l notemessage2.xml 8
+break -l note3.xml 10
+showbreak
+    
+data
+disable 1
+disable 2
+disable 3
+enable 1
+run
+continue
+step
+  
+data
+disable 1
+disable 2
+disable 3
+enable 2
+run
+continue
+step
+  
+data
+disable 1
+disable 2
+disable 3
+enable 3
+run
+continue
+step
+  
 quit

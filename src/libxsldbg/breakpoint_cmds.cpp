@@ -375,7 +375,7 @@ int xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
 	int argCount;
 	int found;	
         xsltTemplatePtr templ;
-	if (orphanedBreakPoint || !ctxt){
+	if (orphanedBreakPoint){
 	    /* Add an orphaned template breakpoint we will need to call this function later to 
 		activate the breakpoint */
 		result =
@@ -413,7 +413,7 @@ int xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
 	    }
 
 	    name = xmlSplitQName2(opts[0], &nameURI);
-	    if (name == NULL){
+            if ((name == NULL) || (ctxt == NULL)){
 	      name = xmlStrdup(opts[0]);
 	    }else{
 	      if (nameURI){
@@ -435,7 +435,7 @@ int xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
 	     ignoreTemplateNames = 1;
 	    }else{
 	      name = xmlSplitQName2(opts[0], &nameURI);
-	      if (name == NULL)
+              if ((name == NULL) || (ctxt == NULL))
                 name = xmlStrdup(opts[0]);
 	      if (nameURI){
 		/* get the real URI for this namespace */
@@ -449,7 +449,7 @@ int xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
             mode = xmlSplitQName2(opts[1], &modeURI);
             if (mode == NULL)
                 mode = xmlStrdup(opts[1]);
-	    if (modeURI){
+            if (modeURI && (ctxt != NULL)){
 	      /* get the real URI for this namespace */
 	      const xmlChar *temp = xmlXPathNsLookup(ctxt->xpathCtxt, modeURI);
 	      if (temp)
