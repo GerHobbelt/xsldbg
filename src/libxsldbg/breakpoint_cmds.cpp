@@ -35,7 +35,7 @@ extern int breakPointCounter;
 
 /* we need to have a fake URL and line number for orphaned template breakpoints */
 int orphanedTemplateLineNo = 1;
-const xmlChar *orphanedTemplateURL= (xmlChar*)"http://xsldbg.sourceforge.net/default.xsl"; 
+const xmlChar *orphanedTemplateURL= (xmlChar*)"http://xsldbg.sourceforge.net/default.xsl";
 /* ---------------------------------------------------
    Private function declarations for breakpoint_cmds.c
  ----------------------------------------------------*/
@@ -45,7 +45,7 @@ int validateSource(xmlChar ** url, long *lineNo);
 int validateData(xmlChar ** url, long *lineNo);
 
 
-/* ------------------------------------- 
+/* -------------------------------------
     End private functions
 ---------------------------------------*/
 
@@ -84,18 +84,18 @@ int xslDbgShellFrameBreak(xmlChar * arg, int stepup)
     if (xmlStrLen(arg) > 0) {
         if (!sscanf((char *) arg, "%d", &noOfFrames)) {
             xsldbgGenericErrorFunc(QObject::tr("Error: Unable to parse %1 as a number of frames.\n").arg((char*)arg));
-	    noOfFrames = -1;
+            noOfFrames = -1;
         }
     } else {
         noOfFrames = 0;
     }
 
     if (noOfFrames >0){
-	if (stepup) {
-	    result = callStackStepup(callStackGetDepth() - noOfFrames);
-	} else {
-	    result = callStackStepdown(callStackGetDepth() + noOfFrames);
-	}
+        if (stepup) {
+            result = callStackStepup(callStackGetDepth() - noOfFrames);
+        } else {
+            result = callStackStepdown(callStackGetDepth() + noOfFrames);
+        }
     }
 
     if (!result)
@@ -112,7 +112,7 @@ int validateSource(xmlChar ** url, long *lineNo)
     nodeSearchDataPtr searchData = NULL;
 
     if (!filesGetStylesheet()) {
-	xsldbgGenericErrorFunc(QObject::tr("Error: Stylesheet is not valid or file is not loaded.\n"));
+        xsldbgGenericErrorFunc(QObject::tr("Error: Stylesheet is not valid or file is not loaded.\n"));
         return result;
     }
 
@@ -139,10 +139,10 @@ int validateSource(xmlChar ** url, long *lineNo)
             /* searchData->url will be freed by searchFreeInfo */
             if (searchData->absoluteNameMatch)
                 searchData->url = (xmlChar *)
-                    xmlMemStrdup((char *) searchData->absoluteNameMatch);
+                        xmlMemStrdup((char *) searchData->absoluteNameMatch);
             else
                 searchData->url = (xmlChar *)
-                    xmlMemStrdup((char *) searchData->guessedNameMatch);
+                        xmlMemStrdup((char *) searchData->guessedNameMatch);
 
             if (lineNo != NULL) {
                 /* now to check the line number */
@@ -165,20 +165,20 @@ int validateSource(xmlChar ** url, long *lineNo)
                 /* we've been asked just to check the file name */
                 if (*url)
                     xmlFree(*url);
-		if (searchData->absoluteNameMatch)
-		    *url = (xmlChar *)
-			xmlMemStrdup((char *) searchData->absoluteNameMatch);
-		else
-		    *url = (xmlChar *)
-			xmlMemStrdup((char *) searchData->guessedNameMatch);
+                if (searchData->absoluteNameMatch)
+                    *url = (xmlChar *)
+                        xmlMemStrdup((char *) searchData->absoluteNameMatch);
+                else
+                    *url = (xmlChar *)
+                        xmlMemStrdup((char *) searchData->guessedNameMatch);
                 result = 1;
             }
         } else{
             xsldbgGenericErrorFunc(QObject::tr("Error: Unable to find a stylesheet file whose name contains %1.\n").arg(xsldbgUrl(*url)));
-	    if (lineNo){
-	      xsldbgGenericErrorFunc(QObject::tr("Warning: Breakpoint for file \"%1\" at line %2 does not seem to be valid.\n").arg(xsldbgUrl(*url)).arg(*lineNo));
-	    }
-	}
+            if (lineNo){
+                xsldbgGenericErrorFunc(QObject::tr("Warning: Breakpoint for file \"%1\" at line %2 does not seem to be valid.\n").arg(xsldbgUrl(*url)).arg(*lineNo));
+            }
+        }
     }
 
     if (searchInf)
@@ -197,12 +197,11 @@ int validateData(xmlChar ** url, long *lineNo)
     int result = 0;
     searchInfoPtr searchInf;
     nodeSearchDataPtr searchData = NULL;
-    char *lastSlash;
 
     if (!filesGetMainDoc()) {
-       if (!optionsGetIntOption(OPTIONS_GDB)){
-           xsldbgGenericErrorFunc(QObject::tr("Error: Data file is invalid. Try the run command first.\n"));
-       }
+        if (!optionsGetIntOption(OPTIONS_GDB)){
+            xsldbgGenericErrorFunc(QObject::tr("Error: Data file is invalid. Try the run command first.\n"));
+        }
         return result;
     }
 
@@ -216,8 +215,8 @@ int validateData(xmlChar ** url, long *lineNo)
 
     searchInf = searchNewInfo(SEARCH_NODE);
     if (searchInf && searchInf->data && filesGetMainDoc()) {
-        /* Try to verify that the line number is valid. 
-	   First try an absolute name match */
+        /* Try to verify that the line number is valid.
+       First try an absolute name match */
         searchData = (nodeSearchDataPtr) searchInf->data;
         if (lineNo != NULL)
             searchData->lineNo = *lineNo;
@@ -227,42 +226,17 @@ int validateData(xmlChar ** url, long *lineNo)
         walkChildNodes((xmlHashScanner) scanForNode, searchInf,
                        (xmlNodePtr) filesGetMainDoc());
 
-        /* Next try to guess file name by adding the prefix of main document 
-	   if no luck so far */
         if (!searchInf->found) {
-	  /* Find the last separator of the documents URL */
-	  lastSlash = xmlStrrChr(filesGetMainDoc()->URL, URISEPARATORCHAR);
-	  if (!lastSlash)
-	    lastSlash = xmlStrrChr(filesGetMainDoc()->URL, PATHCHAR);
-	  
-	  if (lastSlash) {
-	    lastSlash++;
-	    xmlStrnCpy(buff, filesGetMainDoc()->URL,
-		       lastSlash - (char *) filesGetMainDoc()->URL);
-	    buff[lastSlash - (char *) filesGetMainDoc()->URL] = '\0';
-	    xmlStrCat(buff, *url);
-	  } else
-	    xmlStrCpy(buff, "");
-	  if (xmlStrLen(buff) > 0) {
-	    if (searchData->url)
-	      xmlFree(searchData->url);
-	    searchData->url = (xmlChar *) xmlMemStrdup((char *) buff);
-	    walkChildNodes((xmlHashScanner) scanForNode, searchInf,
-			   (xmlNodePtr) filesGetMainDoc());
-	  }
-        }
-
-        if (!searchInf->found) {
-	  if (lineNo){
-             xsldbgGenericErrorFunc(QObject::tr("Warning: Breakpoint for file \"%1\" at line %2 does not seem to be valid.\n").arg(xsldbgUrl(*url)).arg(*lineNo));
-	  } else{
-             xsldbgGenericErrorFunc(QObject::tr("Error: Unable to find a data file whose name contains %1.\n").arg(xsldbgUrl(*url)));
-	  }
+            if (lineNo){
+                xsldbgGenericErrorFunc(QObject::tr("Warning: Breakpoint for file \"%1\" at line %2 does not seem to be valid.\n").arg(xsldbgUrl(*url)).arg(*lineNo));
+            } else{
+                xsldbgGenericErrorFunc(QObject::tr("Error: Unable to find a data file whose name contains %1.\n").arg(xsldbgUrl(*url)));
+            }
             result = 1;
         } else {
             if (*url)
                 xmlFree(*url);
-            *url = xmlStrdup(searchData->url);
+            *url = filesGetBaseUri(searchData->node);
             result = 1;
         }
     }
@@ -277,7 +251,7 @@ int validateData(xmlChar ** url, long *lineNo)
 
 
 int xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
-                 xsltTransformContextPtr ctxt)
+                     xsltTransformContextPtr ctxt)
 {
     int result = 0;
     long lineNo = -1;
@@ -291,13 +265,13 @@ int xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
         style = filesGetStylesheet();
     }
     if (!style || !filesGetMainDoc()) {
-       if (!optionsGetIntOption(OPTIONS_GDB)){
-	    xsldbgGenericErrorFunc(QObject::tr("Error: Debugger has no files loaded. Try reloading files.\n"));
-	    xsldbgGenericErrorFunc(QString("Error: %1\n").arg(QObject::tr(errorPrompt)));
-	    return result;
-	}else{
-	    orphanedBreakPoint = 1;
-	}
+        if (!optionsGetIntOption(OPTIONS_GDB)){
+            xsldbgGenericErrorFunc(QObject::tr("Error: Debugger has no files loaded. Try reloading files.\n"));
+            xsldbgGenericErrorFunc(QString("Error: %1\n").arg(QObject::tr(errorPrompt)));
+            return result;
+        }else{
+            orphanedBreakPoint = 1;
+        }
     }
 
     if (!arg) {
@@ -313,48 +287,48 @@ int xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
 
         if ((xmlStrLen(arg) > 1) && (arg[1] == 'l')) {
             if (splitString(&arg[2], 2, opts) == 2) {
-                if ((xmlStrlen(opts[1]) == 0) || 
-		       !sscanf((char *) opts[1], "%ld", &lineNo)) {
+                if ((xmlStrlen(opts[1]) == 0) ||
+                        !sscanf((char *) opts[1], "%ld", &lineNo)) {
                     xsldbgGenericErrorFunc(QObject::tr("Error: Unable to parse %1 as a line number.\n").arg((char*)opts[1]));
-		    xsldbgGenericErrorFunc(QString("Error: %1\n").arg(QObject::tr(errorPrompt)));
+                    xsldbgGenericErrorFunc(QString("Error: %1\n").arg(QObject::tr(errorPrompt)));
                     return result;
                 } else {
-                    /* try to guess whether we are looking for source or data 
+                    /* try to guess whether we are looking for source or data
                      * break point
                      */
                     trimString(opts[0]);
                     url = xmlStrdup((const xmlChar*)filesExpandName(xsldbgText(opts[0])).toUtf8().constData());
                     if (url) {
-			if (!orphanedBreakPoint){
-			    if (filesIsSourceFile(url)) {
-				if (validateSource(&url, &lineNo))
-				    result =
-					breakPointAdd(url, lineNo, NULL, NULL,
-						DEBUG_BREAK_SOURCE);
-			    } else {
-				if (validateData(&url, &lineNo))
-				    result =
-					breakPointAdd(url, lineNo, NULL, NULL,
-						DEBUG_BREAK_DATA);
-			    }
-			}else{
-			    if (filesIsSourceFile(url)) {
-				result =
-				    breakPointAdd(url, lineNo, NULL, NULL,
-					    DEBUG_BREAK_SOURCE);
-			    }else{
-				result =
-				    breakPointAdd(url, lineNo, NULL, NULL,
-					    DEBUG_BREAK_DATA);
-			    }
-			    breakPtr = breakPointGet(url, lineNo);
-			    if (breakPtr){
-				breakPtr->flags |= BREAKPOINT_ORPHANED;
-			    }else{
-				xsldbgGenericErrorFunc(QObject::tr("Error: Unable to find the added breakpoint."));
-			    }
-			}
-		    }
+                        if (!orphanedBreakPoint){
+                            if (filesIsSourceFile(url)) {
+                                if (validateSource(&url, &lineNo))
+                                    result =
+                                            breakPointAdd(url, lineNo, NULL, NULL,
+                                                          DEBUG_BREAK_SOURCE);
+                            } else {
+                                if (validateData(&url, &lineNo))
+                                    result =
+                                            breakPointAdd(url, lineNo, NULL, NULL,
+                                                          DEBUG_BREAK_DATA);
+                            }
+                        }else{
+                            if (filesIsSourceFile(url)) {
+                                result =
+                                        breakPointAdd(url, lineNo, NULL, NULL,
+                                                      DEBUG_BREAK_SOURCE);
+                            }else{
+                                result =
+                                        breakPointAdd(url, lineNo, NULL, NULL,
+                                                      DEBUG_BREAK_DATA);
+                            }
+                            breakPtr = breakPointGet(url, lineNo);
+                            if (breakPtr){
+                                breakPtr->flags |= BREAKPOINT_ORPHANED;
+                            }else{
+                                xsldbgGenericErrorFunc(QObject::tr("Error: Unable to find the added breakpoint."));
+                            }
+                        }
+                    }
                 }
             } else
                 xsldbgGenericErrorFunc(QObject::tr("Error: Invalid arguments to command %1.\n").arg(QString("break")));
@@ -363,192 +337,192 @@ int xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
         /* add breakpoint at specified template names */
         xmlChar *opts[2];
         xmlChar *name = NULL, *nameURI = NULL, *mode = NULL, *modeURI = NULL;
-	xmlChar *templateName = NULL, *modeName = NULL;
-	xmlChar *tempUrl = NULL; /* we must use a non-const xmlChar *
-				   and we are not making a copy
-				   of orginal value so this must not be 
-				   freed */ 
+        xmlChar *templateName = NULL, *modeName = NULL;
+        xmlChar *tempUrl = NULL; /* we must use a non-const xmlChar *
+                   and we are not making a copy
+                   of orginal value so this must not be
+                   freed */
         xmlChar *defaultUrl = (xmlChar *) "<n/a>";
         int newBreakPoints = 0, validatedBreakPoints = 0;
-	int allTemplates = 0;
-	int ignoreTemplateNames = 0;
-	int argCount;
-	int found;	
+        int allTemplates = 0;
+        int ignoreTemplateNames = 0;
+        int argCount;
+        int found;
         xsltTemplatePtr templ;
-	if (orphanedBreakPoint){
-	    /* Add an orphaned template breakpoint we will need to call this function later to 
-		activate the breakpoint */
-		result =
-		    breakPointAdd(orphanedTemplateURL, orphanedTemplateLineNo, arg, NULL,
-			    DEBUG_BREAK_SOURCE);
-	    breakPtr = breakPointGet(orphanedTemplateURL, orphanedTemplateLineNo++);
-	    if (breakPtr){
-		breakPtr->flags |= BREAKPOINT_ORPHANED;
-	    }else{
+        if (orphanedBreakPoint){
+            /* Add an orphaned template breakpoint we will need to call this function later to
+        activate the breakpoint */
+            result =
+                    breakPointAdd(orphanedTemplateURL, orphanedTemplateLineNo, arg, NULL,
+                                  DEBUG_BREAK_SOURCE);
+            breakPtr = breakPointGet(orphanedTemplateURL, orphanedTemplateLineNo++);
+            if (breakPtr){
+                breakPtr->flags |= BREAKPOINT_ORPHANED;
+            }else{
 #ifdef WITH_XSLDBG_DEBUG_BREAKPOINTS
-		xsltGenericError(xsltGenericErrorContext,
-			"Error: Unable to find added breakpoint");
+                xsltGenericError(xsltGenericErrorContext,
+                                 "Error: Unable to find added breakpoint");
 #endif
-	    }
-	    return result;
-	}
+            }
+            return result;
+        }
 
-	argCount = splitString(arg, 2, opts);
-	if ((argCount == 2) && (xmlStrLen(opts[1]) == 0))
-	    argCount = 1;
+        argCount = splitString(arg, 2, opts);
+        if ((argCount == 2) && (xmlStrLen(opts[1]) == 0))
+            argCount = 1;
 
-	switch (argCount){
-	case 0:
-	  allTemplates = 1;
-	  break;
-	  
-	case 1:
-	  if (xmlStrEqual(opts[0], (xmlChar*)"*")){
-	    allTemplates = 1;	    
-	  }else{
+        switch (argCount){
+        case 0:
+            allTemplates = 1;
+            break;
 
-	    if (xmlStrEqual(opts[0], (xmlChar*)"\\*")){
-	      opts[0][0] = '*';
-	      opts[0][1] = '\0';
-	    }
+        case 1:
+            if (xmlStrEqual(opts[0], (xmlChar*)"*")){
+                allTemplates = 1;
+            }else{
 
-	    name = xmlSplitQName2(opts[0], &nameURI);
-            if ((name == NULL) || (ctxt == NULL)){
-	      name = xmlStrdup(opts[0]);
-	    }else{
-	      if (nameURI){
-		/* get the real URI for this namespace */
-		const xmlChar *temp = xmlXPathNsLookup(ctxt->xpathCtxt, nameURI);
-		if (temp)
-		  xmlFree(nameURI);
-		nameURI = xmlStrdup(temp);
-	      }
-	      
-	    }
-	  }
-	break;
+                if (xmlStrEqual(opts[0], (xmlChar*)"\\*")){
+                    opts[0][0] = '*';
+                    opts[0][1] = '\0';
+                }
 
-	case 2:
-	   if (xmlStrLen(opts[0]) == 0){
-	     /* we don't care about the template name ie we are trying to match
-	        templates with a given mode */
-	     ignoreTemplateNames = 1;
-	    }else{
-	      name = xmlSplitQName2(opts[0], &nameURI);
-              if ((name == NULL) || (ctxt == NULL))
-                name = xmlStrdup(opts[0]);
-	      if (nameURI){
-		/* get the real URI for this namespace */
-		const xmlChar *temp = xmlXPathNsLookup(ctxt->xpathCtxt, 
-						       nameURI);
-		if (temp)
-		  xmlFree(nameURI);
-		nameURI = xmlStrdup(temp);
-	    }
-	    }
+                name = xmlSplitQName2(opts[0], &nameURI);
+                if ((name == NULL) || (ctxt == NULL)){
+                    name = xmlStrdup(opts[0]);
+                }else{
+                    if (nameURI){
+                        /* get the real URI for this namespace */
+                        const xmlChar *temp = xmlXPathNsLookup(ctxt->xpathCtxt, nameURI);
+                        if (temp)
+                            xmlFree(nameURI);
+                        nameURI = xmlStrdup(temp);
+                    }
+
+                }
+            }
+            break;
+
+        case 2:
+            if (xmlStrLen(opts[0]) == 0){
+                /* we don't care about the template name ie we are trying to match
+            templates with a given mode */
+                ignoreTemplateNames = 1;
+            }else{
+                name = xmlSplitQName2(opts[0], &nameURI);
+                if ((name == NULL) || (ctxt == NULL))
+                    name = xmlStrdup(opts[0]);
+                if (nameURI){
+                    /* get the real URI for this namespace */
+                    const xmlChar *temp = xmlXPathNsLookup(ctxt->xpathCtxt,
+                                                           nameURI);
+                    if (temp)
+                        xmlFree(nameURI);
+                    nameURI = xmlStrdup(temp);
+                }
+            }
             mode = xmlSplitQName2(opts[1], &modeURI);
             if (mode == NULL)
                 mode = xmlStrdup(opts[1]);
             if (modeURI && (ctxt != NULL)){
-	      /* get the real URI for this namespace */
-	      const xmlChar *temp = xmlXPathNsLookup(ctxt->xpathCtxt, modeURI);
-	      if (temp)
-		xmlFree(modeURI);
-	      modeURI = xmlStrdup(temp);
-	    }
-	  break;
+                /* get the real URI for this namespace */
+                const xmlChar *temp = xmlXPathNsLookup(ctxt->xpathCtxt, modeURI);
+                if (temp)
+                    xmlFree(modeURI);
+                modeURI = xmlStrdup(temp);
+            }
+            break;
 
-	default:	  
-	  xsldbgGenericErrorFunc(QObject::tr("Error: Invalid arguments for command %1.\n").arg(QString("break")));
-	  return 0;
-	}
+        default:
+            xsldbgGenericErrorFunc(QObject::tr("Error: Invalid arguments for command %1.\n").arg(QString("break")));
+            return 0;
+        }
 
         while (style) {
             templ = style->templates;
             while (templ) {
-	        found = 0;
+                found = 0;
                 if (templ->elem && templ->elem->doc
-                    && templ->elem->doc->URL) {
+                        && templ->elem->doc->URL) {
                     tempUrl = (xmlChar *) templ->elem->doc->URL;
                 } else {
                     tempUrl = defaultUrl;
                 }
 
-		if (templ->match)
-		    templateName = xmlStrdup(templ->match);
-		else
-	            templateName = fullQName(templ->nameURI, templ->name);
-		    
-		if (allTemplates)
-		  found = 1;
-		else {
-		  if (ignoreTemplateNames){
-		      if (!mode || (xmlStrEqual(templ->mode, mode) && 
-				    (!modeURI || xmlStrEqual(templ->modeURI, 
-							     modeURI))))
-			found = 1;
-		  } else if (templ->match){
-		    if ((xmlStrEqual(templ->match, name) &&
-			 (!modeURI || xmlStrEqual(templ->modeURI, 
-						  modeURI)) &&
-			 (!mode || xmlStrEqual(templ->mode, 
-						  mode))))
-			found = 1;		     
-		  }else{
-			if(xmlStrEqual(templ->name, name) && 
-			   (!nameURI || xmlStrEqual(templ->nameURI, nameURI))) 
-			  found = 1;
-		  }
-	        }
-                if (found) {
-		    int templateLineNo = xmlGetLineNo(templ->elem);
-		    breakPointPtr searchPtr = breakPointGet(tempUrl, templateLineNo);
+                if (templ->match)
+                    templateName = xmlStrdup(templ->match);
+                else
+                    templateName = fullQName(templ->nameURI, templ->name);
 
-		    if (templ->mode)
-		       modeName = 
-			 fullQName(templ->modeURI, templ->mode);
-		    
-		    
-		    if (!searchPtr){
-			if (breakPointAdd(tempUrl, templateLineNo,
-					   templateName, modeName, 
-						 DEBUG_BREAK_SOURCE)){
-			    newBreakPoints++;
-			}	
-		    }else{
-			
-			if ((templateLineNo != searchPtr->lineNo ) || !xmlStrEqual(tempUrl, searchPtr->url)){
-			    int lastId = searchPtr->id;
-			    int lastCounter = breakPointCounter;
-			    /* we have a new location for breakpoint */
-			    if (breakPointDelete(searchPtr)){
-				if (breakPointAdd(tempUrl, templateLineNo, templateName, modeName,DEBUG_BREAK_SOURCE)){ 
-				    searchPtr = breakPointGet(tempUrl, templateLineNo);
-				    if (searchPtr){
-					searchPtr->id = lastId;
-					result = 1;
-					breakPointCounter = lastCounter;
-					xsldbgGenericErrorFunc(QObject::tr("Information: Breakpoint validation has caused breakpoint %1 to be re-created.\n").arg(searchPtr->id));
-					validatedBreakPoints++;
-				    }
-				}
-			    }
-			}else{
-			    if (xsldbgValidateBreakpoints != BREAKPOINTS_BEING_VALIDATED){
-				xsldbgGenericErrorFunc(QObject::tr("Warning: Breakpoint exits for file \"%1\" at line %2.\n").arg(xsldbgUrl(tempUrl)).arg(templateLineNo));
-			    }
-			    validatedBreakPoints++;
-			}
-		    }
-		}
-		if (templateName){
-		  xmlFree(templateName);
-		  templateName = NULL;
-		}
-		if (modeName){
-		  xmlFree(modeName);
-		  modeName = NULL;
-		}
+                if (allTemplates)
+                    found = 1;
+                else {
+                    if (ignoreTemplateNames){
+                        if (!mode || (xmlStrEqual(templ->mode, mode) &&
+                                      (!modeURI || xmlStrEqual(templ->modeURI,
+                                                               modeURI))))
+                            found = 1;
+                    } else if (templ->match){
+                        if ((xmlStrEqual(templ->match, name) &&
+                             (!modeURI || xmlStrEqual(templ->modeURI,
+                                                      modeURI)) &&
+                             (!mode || xmlStrEqual(templ->mode,
+                                                   mode))))
+                            found = 1;
+                    }else{
+                        if(xmlStrEqual(templ->name, name) &&
+                                (!nameURI || xmlStrEqual(templ->nameURI, nameURI)))
+                            found = 1;
+                    }
+                }
+                if (found) {
+                    int templateLineNo = xmlGetLineNo(templ->elem);
+                    breakPointPtr searchPtr = breakPointGet(tempUrl, templateLineNo);
+
+                    if (templ->mode)
+                        modeName =
+                                fullQName(templ->modeURI, templ->mode);
+
+
+                    if (!searchPtr){
+                        if (breakPointAdd(tempUrl, templateLineNo,
+                                          templateName, modeName,
+                                          DEBUG_BREAK_SOURCE)){
+                            newBreakPoints++;
+                        }
+                    }else{
+
+                        if ((templateLineNo != searchPtr->lineNo ) || !xmlStrEqual(tempUrl, searchPtr->url)){
+                            int lastId = searchPtr->id;
+                            int lastCounter = breakPointCounter;
+                            /* we have a new location for breakpoint */
+                            if (breakPointDelete(searchPtr)){
+                                if (breakPointAdd(tempUrl, templateLineNo, templateName, modeName,DEBUG_BREAK_SOURCE)){
+                                    searchPtr = breakPointGet(tempUrl, templateLineNo);
+                                    if (searchPtr){
+                                        searchPtr->id = lastId;
+                                        result = 1;
+                                        breakPointCounter = lastCounter;
+                                        xsldbgGenericErrorFunc(QObject::tr("Information: Breakpoint validation has caused breakpoint %1 to be re-created.\n").arg(searchPtr->id));
+                                        validatedBreakPoints++;
+                                    }
+                                }
+                            }
+                        }else{
+                            if (xsldbgValidateBreakpoints != BREAKPOINTS_BEING_VALIDATED){
+                                xsldbgGenericErrorFunc(QObject::tr("Warning: Breakpoint exits for file \"%1\" at line %2.\n").arg(xsldbgUrl(tempUrl)).arg(templateLineNo));
+                            }
+                            validatedBreakPoints++;
+                        }
+                    }
+                }
+                if (templateName){
+                    xmlFree(templateName);
+                    templateName = NULL;
+                }
+                if (modeName){
+                    xmlFree(modeName);
+                    modeName = NULL;
+                }
                 templ = templ->next;
             }
             if (style->next)
@@ -562,23 +536,23 @@ int xslDbgShellBreak(xmlChar * arg, xsltStylesheetPtr style,
             url = NULL;         /* flag that we've printed partial error message about the problem url */
         } else {
             result = 1;
-	    if (newBreakPoints){
-		xsldbgGenericErrorFunc(QObject::tr("Information: Added %1 new breakpoints.").arg(newBreakPoints) + QString("\n"));
-	    }
+            if (newBreakPoints){
+                xsldbgGenericErrorFunc(QObject::tr("Information: Added %1 new breakpoints.").arg(newBreakPoints) + QString("\n"));
+            }
         }
 
         if (name)
-	  xmlFree(name);
-	if (nameURI)
-	  xmlFree(nameURI);
-	if (mode)
-	  xmlFree(mode);
-	if (modeURI)
-	  xmlFree(modeURI);
+            xmlFree(name);
+        if (nameURI)
+            xmlFree(nameURI);
+        if (mode)
+            xmlFree(mode);
+        if (modeURI)
+            xmlFree(modeURI);
         if (defaultUrl && !xmlStrEqual((xmlChar*)"<n/a>", defaultUrl))
             xmlFree(defaultUrl);
-	if (tempUrl)
-	  url = xmlStrdup(tempUrl);
+        if (tempUrl)
+            url = xmlStrdup(tempUrl);
     }  /* end add template breakpoints */
 
     if (!result) {
@@ -606,7 +580,7 @@ int xslDbgShellDelete(xmlChar * arg)
         xsltGenericError(xsltGenericErrorContext,
                          "Error: NULL argument provided\n");
 #endif
-	xsldbgGenericErrorFunc(QString("Error: %1\n").arg(QObject::tr(errorPrompt)));
+        xsldbgGenericErrorFunc(QString("Error: %1\n").arg(QObject::tr(errorPrompt)));
         return result;
     }
 
@@ -616,7 +590,7 @@ int xslDbgShellDelete(xmlChar * arg)
         if ((xmlStrLen(arg) > 1) && (arg[1] == 'l')) {
             if (splitString(&arg[2], 2, opts) == 2) {
                 if ((xmlStrlen(opts[1]) == 0) ||
-		    !sscanf((char *) opts[1], "%ld", &lineNo)) {
+                        !sscanf((char *) opts[1], "%ld", &lineNo)) {
                     xsldbgGenericErrorFunc(QObject::tr("Error: Unable to parse %1 as a line number.\n").arg((char*)opts[1]));
                 } else {
                     trimString(opts[0]);
@@ -631,13 +605,13 @@ int xslDbgShellDelete(xmlChar * arg)
                             xsldbgGenericErrorFunc(QObject::tr("Error: Breakpoint does not exist for file \"%1\" at line %2.\n").arg(xsldbgUrl(url)).arg(lineNo));
                         }else{
                             result = 1;
-			}
+                        }
                         xmlFree(url);
                     }
                 }
             } else{
-		xsldbgGenericErrorFunc(QObject::tr("Error: Invalid arguments for command %1.\n").arg(QString("delete")));
-	    }
+                xsldbgGenericErrorFunc(QObject::tr("Error: Invalid arguments for command %1.\n").arg(QString("delete")));
+            }
         }
     } else if (xmlStrEqual((xmlChar*)"*", arg)) {
         result = 1;
@@ -663,16 +637,16 @@ int xslDbgShellDelete(xmlChar * arg)
             }
         } else{
             xsldbgGenericErrorFunc(QObject::tr("Error: Breakpoint at template \"%1\" does not exist.\n").arg(xsldbgText(arg)));
-	}
+        }
     }
-    if (!result) 
-	xsldbgGenericErrorFunc(QString("Error: %1\n").arg(QObject::tr(errorPrompt)));
+    if (!result)
+        xsldbgGenericErrorFunc(QString("Error: %1\n").arg(QObject::tr(errorPrompt)));
     return result;
 }
 
 
 void xslDbgShellEnableBreakPoint(void *payload, void *data,
-                            xmlChar * name)
+                                 xmlChar * name)
 {
     Q_UNUSED(name);
     if (payload && data) {
@@ -691,7 +665,7 @@ int xslDbgShellEnable(xmlChar * arg, int enableType)
 
     if (!filesGetStylesheet() || !filesGetMainDoc()) {
         xsldbgGenericErrorFunc(QObject::tr("Error: Debugger has no files loaded. Try reloading files.\n"));
-	xsldbgGenericErrorFunc(QString("Error: %1\n").arg(QObject::tr(errorPrompt)));
+        xsldbgGenericErrorFunc(QString("Error: %1\n").arg(QObject::tr(errorPrompt)));
         return result;
     }
 
@@ -700,7 +674,7 @@ int xslDbgShellEnable(xmlChar * arg, int enableType)
         xsltGenericError(xsltGenericErrorContext,
                          "Error: NULL argument provided\n");
 #endif
-	xsldbgGenericErrorFunc(QString("Error: %1\n").arg(QObject::tr(errorPrompt)));
+        xsldbgGenericErrorFunc(QString("Error: %1\n").arg(QObject::tr(errorPrompt)));
         return result;
     }
 
@@ -710,7 +684,7 @@ int xslDbgShellEnable(xmlChar * arg, int enableType)
         if ((xmlStrLen(arg) > 1) && (arg[1] == 'l')) {
             if (splitString(&arg[2], 2, opts) == 2) {
                 if ((xmlStrlen(opts[1]) == 0) ||
-		    !sscanf((char *) opts[1], "%ld", &lineNo)) {
+                        !sscanf((char *) opts[1], "%ld", &lineNo)) {
                     xsldbgGenericErrorFunc(QObject::tr("Error: Unable to parse %1 as a line number.\n").arg((char*)opts[1]));
                 } else {
                     trimString(opts[0]);
@@ -725,7 +699,7 @@ int xslDbgShellEnable(xmlChar * arg, int enableType)
                             result = breakPointEnable(breakPtr, enableType);
                         }else{
                             xsldbgGenericErrorFunc(QObject::tr("Error: Breakpoint does not exist for file \"%1\" at line %2.\n").arg(xsldbgUrl(url)).arg(lineNo));
-			}
+                        }
                         xmlFree(url);
                     }
                 }
@@ -757,13 +731,13 @@ int xslDbgShellEnable(xmlChar * arg, int enableType)
     }
 
     if (!result)
-	xsldbgGenericErrorFunc(QString("Error: %1\n").arg(QObject::tr(errorPrompt)));
+        xsldbgGenericErrorFunc(QString("Error: %1\n").arg(QObject::tr(errorPrompt)));
     return result;
 }
 
 
 void xslDbgShellPrintBreakPoint(void *payload, void *data,
-                           xmlChar * name)
+                                xmlChar * name)
 {
     Q_UNUSED(data);
     Q_UNUSED(name);
@@ -781,7 +755,7 @@ void xslDbgShellPrintBreakPoint(void *payload, void *data,
 }
 
 
-/* Validiate a breakpoint at a given URL and line number  
+/* Validiate a breakpoint at a given URL and line number
     breakPtr and copy must be valid
 */
 static int validateBreakPoint(breakPointPtr breakPtr, breakPointPtr copy)
@@ -790,48 +764,48 @@ static int validateBreakPoint(breakPointPtr breakPtr, breakPointPtr copy)
     int result = 0;
     if (!breakPtr || !copy){
 #ifdef WITH_XSLDBG_DEBUG_BREAKPOINTS
-	xsltGenericError(xsltGenericErrorContext,
-		"Warning: NULL arguments passed to validateBreakPoint\n");
+        xsltGenericError(xsltGenericErrorContext,
+                         "Warning: NULL arguments passed to validateBreakPoint\n");
 #endif
-	return result;
+        return result;
     }
 
     if (filesIsSourceFile(breakPtr->url)) {
-	result = validateSource(&copy->url, &copy->lineNo);
+        result = validateSource(&copy->url, &copy->lineNo);
     } else {
-	result = validateData(&copy->url, &copy->lineNo);
+        result = validateData(&copy->url, &copy->lineNo);
     }
     if (result)
-	breakPtr->flags &= BREAKPOINT_ALLFLAGS ^ BREAKPOINT_ORPHANED;
-    else 
-	breakPtr->flags |= BREAKPOINT_ORPHANED;
+        breakPtr->flags &= BREAKPOINT_ALLFLAGS ^ BREAKPOINT_ORPHANED;
+    else
+        breakPtr->flags |= BREAKPOINT_ORPHANED;
 
     if ( breakPtr->flags & BREAKPOINT_ORPHANED){
-	xsldbgGenericErrorFunc(QString("Warning: Breakpoint %1 is orphaned. Result: %2. Old flags: %3. New flags: %4.\n").arg(breakPtr->id).arg(result).arg(copy->flags).arg(breakPtr->flags));
+        xsldbgGenericErrorFunc(QString("Warning: Breakpoint %1 is orphaned. Result: %2. Old flags: %3. New flags: %4.\n").arg(breakPtr->id).arg(result).arg(copy->flags).arg(breakPtr->flags));
     }
 
-    if (!(breakPtr->flags & BREAKPOINT_ORPHANED) && ((copy->lineNo != breakPtr->lineNo ) || 
-		(xmlStrlen(copy->url) != xmlStrlen(breakPtr->url)) || xmlStrCmp(copy->url, breakPtr->url))){
-	/* we have a new location for breakpoint */
-	int lastCounter = breakPointCounter;
-	copy->templateName = xmlStrdup(breakPtr->templateName);
-	copy->modeName = xmlStrdup(breakPtr->modeName);
-	if (breakPointDelete(breakPtr) && !breakPointGet(copy->url, copy->lineNo)){
-	    if (breakPointAdd(copy->url, copy->lineNo, NULL, NULL, copy->type)){	    
-		breakPtr = breakPointGet(copy->url, copy->lineNo);
-		if (breakPtr){
-		    breakPtr->id = copy->id;
-		    breakPtr->flags = copy->flags;
-		    breakPointCounter = lastCounter; /* compensate for breakPointAdd which always 
-							increments the breakPoint counter */
-		    result = 1;
-		    xsldbgGenericErrorFunc(QObject::tr("Information: Breakpoint validation has caused breakpoint %1 to be re-created.\n").arg(breakPtr->id));
-		}
-	    }
-	    if (!result){
-		xsldbgGenericErrorFunc(QObject::tr("Warning: Validation of breakpoint %1 failed.\n").arg(copy->id));
-	    }
-	}
+    if (!(breakPtr->flags & BREAKPOINT_ORPHANED) && ((copy->lineNo != breakPtr->lineNo ) ||
+                                                     (xmlStrlen(copy->url) != xmlStrlen(breakPtr->url)) || xmlStrCmp(copy->url, breakPtr->url))){
+        /* we have a new location for breakpoint */
+        int lastCounter = breakPointCounter;
+        copy->templateName = xmlStrdup(breakPtr->templateName);
+        copy->modeName = xmlStrdup(breakPtr->modeName);
+        if (breakPointDelete(breakPtr) && !breakPointGet(copy->url, copy->lineNo)){
+            if (breakPointAdd(copy->url, copy->lineNo, NULL, NULL, copy->type)){
+                breakPtr = breakPointGet(copy->url, copy->lineNo);
+                if (breakPtr){
+                    breakPtr->id = copy->id;
+                    breakPtr->flags = copy->flags;
+                    breakPointCounter = lastCounter; /* compensate for breakPointAdd which always
+                            increments the breakPoint counter */
+                    result = 1;
+                    xsldbgGenericErrorFunc(QObject::tr("Information: Breakpoint validation has caused breakpoint %1 to be re-created.\n").arg(breakPtr->id));
+                }
+            }
+            if (!result){
+                xsldbgGenericErrorFunc(QObject::tr("Warning: Validation of breakpoint %1 failed.\n").arg(copy->id));
+            }
+        }
     }
 
     return result;
@@ -843,30 +817,30 @@ static int validateTemplateBreakPoint(breakPointPtr breakPtr, breakPointPtr copy
     int result = 0;
     if (!breakPtr || !copy || !ctxt){
 #ifdef WITH_XSLDBG_DEBUG_BREAKPOINTS
-	xsltGenericError(xsltGenericErrorContext,
-		"Warning: NULL arguments passed to validateTemplateBreakPoint\n");
+        xsltGenericError(xsltGenericErrorContext,
+                         "Warning: NULL arguments passed to validateTemplateBreakPoint\n");
 #endif
-	return result;
+        return result;
     }
 
     copy->templateName = xmlStrdup(breakPtr->templateName);
     if ((xmlStrlen(copy->templateName) == 0) || xmlStrEqual(copy->templateName, (xmlChar*)"*")){
-	if (xmlStrEqual(breakPtr->url, orphanedTemplateURL))
-	    breakPointDelete(breakPtr);
-	if ( xslDbgShellBreak(copy->templateName, NULL, ctxt)){
-	    result = 1;
-	    xsldbgGenericErrorFunc(QObject::tr("Information: Breakpoint validation has caused one or more breakpoints to be re-created.\n"));
-	}
+        if (xmlStrEqual(breakPtr->url, orphanedTemplateURL))
+            breakPointDelete(breakPtr);
+        if ( xslDbgShellBreak(copy->templateName, NULL, ctxt)){
+            result = 1;
+            xsldbgGenericErrorFunc(QObject::tr("Information: Breakpoint validation has caused one or more breakpoints to be re-created.\n"));
+        }
     }else{
-	if (xmlStrEqual(breakPtr->url, orphanedTemplateURL))
-	    breakPointDelete(breakPtr);
-	if (xslDbgShellBreak(copy->templateName, NULL, ctxt)){
-	    result = 1;
-	}
+        if (xmlStrEqual(breakPtr->url, orphanedTemplateURL))
+            breakPointDelete(breakPtr);
+        if (xslDbgShellBreak(copy->templateName, NULL, ctxt)){
+            result = 1;
+        }
     }
     xmlFree(copy->templateName);
     if (!result){
-	xsldbgGenericErrorFunc(QObject::tr("Warning: Validation of breakpoint %1 failed.\n").arg(copy->id));
+        xsldbgGenericErrorFunc(QObject::tr("Warning: Validation of breakpoint %1 failed.\n").arg(copy->id));
     }
     return result;
 }
@@ -881,30 +855,30 @@ static int validateTemplateBreakPoint(breakPointPtr breakPtr, breakPointPtr copy
 
  */
 void xslDbgShellValidateBreakPoint(void *payload, void *data,
-	xmlChar * name)
+                                   xmlChar * name)
 {
     Q_UNUSED(name);
-    int result = 0; 
+    int result = 0;
     if (payload){
-	breakPointPtr breakPtr = (breakPointPtr) payload;
+        breakPointPtr breakPtr = (breakPointPtr) payload;
 
-	breakPoint copy; /* create a copy of the breakpoint */
-	copy.lineNo = breakPtr->lineNo;
-	copy.url = xmlStrdup(breakPtr->url);
-	copy.flags = breakPtr->flags;
-	copy.type = breakPtr->type;
-	copy.id = breakPtr->id;
-	if (copy.url){
-	    if (breakPtr->templateName){
-		/* template name is used to contain the rules to add template breakpoint */
-		result = validateTemplateBreakPoint(breakPtr, &copy, (xsltTransformContextPtr)data);    
-	    }else{
-		result = validateBreakPoint(breakPtr, &copy);
-	    }
-	}else{
-	   xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
-	}
+        breakPoint copy; /* create a copy of the breakpoint */
+        copy.lineNo = breakPtr->lineNo;
+        copy.url = xmlStrdup(breakPtr->url);
+        copy.flags = breakPtr->flags;
+        copy.type = breakPtr->type;
+        copy.id = breakPtr->id;
+        if (copy.url){
+            if (breakPtr->templateName){
+                /* template name is used to contain the rules to add template breakpoint */
+                result = validateTemplateBreakPoint(breakPtr, &copy, (xsltTransformContextPtr)data);
+            }else{
+                result = validateBreakPoint(breakPtr, &copy);
+            }
+        }else{
+            xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
+        }
 
-	xmlFree(copy.url);
+        xmlFree(copy.url);
     }
 }

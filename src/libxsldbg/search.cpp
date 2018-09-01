@@ -63,7 +63,7 @@ static xmlChar searchBuffer[BUFFER_SIZE];
  *
  */
 void findNodeByLineNoHelper(void *payload, void *data,
-                         xmlChar * name);
+                            xmlChar * name);
 
 /**
  * Helper to find the global variables. We are given control via
@@ -76,7 +76,7 @@ void findNodeByLineNoHelper(void *payload, void *data,
  *
  */
 void globalVarHelper(void **payload, void *data,
-                  xmlChar * name);
+                     xmlChar * name);
 
 /**
  * Helper to find the local variables. We are given control via walkTemplates
@@ -89,7 +89,7 @@ void globalVarHelper(void **payload, void *data,
  *
  */
 void localVarHelper(void **payload, void *data,
-                 xmlChar * name);
+                    xmlChar * name);
 
 
 /* -------------------------------------
@@ -125,71 +125,71 @@ searchInfoPtr searchNewInfo(SearchEnum type)
     int searchType = type;
 
     switch (searchType) {
-        case SEARCH_BREAKPOINT:
-            result = (searchInfoPtr) xmlMalloc(sizeof(searchInfo));
-            if (result) {
-                breakPointSearchDataPtr searchData;
+    case SEARCH_BREAKPOINT:
+        result = (searchInfoPtr) xmlMalloc(sizeof(searchInfo));
+        if (result) {
+            breakPointSearchDataPtr searchData;
 
-                result->type = SEARCH_BREAKPOINT;
-                searchData = (breakPointSearchDataPtr)
+            result->type = SEARCH_BREAKPOINT;
+            searchData = (breakPointSearchDataPtr)
                     xmlMalloc(sizeof(breakPointSearchData));
-                if (searchData) {
-                    searchData->id = -1;
-                    searchData->templateName = NULL;
-                    searchData->breakPtr = NULL;
-                    result->data = searchData;
-                } else {
-                    xmlFree(result);
-                    result = NULL;
-                }
+            if (searchData) {
+                searchData->id = -1;
+                searchData->templateName = NULL;
+                searchData->breakPtr = NULL;
+                result->data = searchData;
+            } else {
+                xmlFree(result);
+                result = NULL;
             }
-            break;
+        }
+        break;
 
-        case SEARCH_NODE:
-            result = (searchInfoPtr) xmlMalloc(sizeof(searchInfo));
-            if (result) {
-                nodeSearchDataPtr searchData;
+    case SEARCH_NODE:
+        result = (searchInfoPtr) xmlMalloc(sizeof(searchInfo));
+        if (result) {
+            nodeSearchDataPtr searchData;
 
-                result->type = SEARCH_NODE;
-                searchData =
+            result->type = SEARCH_NODE;
+            searchData =
                     (nodeSearchDataPtr) xmlMalloc(sizeof(nodeSearchData));
-                if (searchData) {
-                    searchData->node = NULL;
-                    searchData->lineNo = -1;
-                    searchData->url = NULL;
-                    searchData->nameInput = NULL;
-                    searchData->guessedNameMatch = NULL;
-                    searchData->absoluteNameMatch = NULL;
-                    result->data = searchData;
-                } else {
-                    xmlFree(result);
-                    result = NULL;
-                }
+            if (searchData) {
+                searchData->node = NULL;
+                searchData->lineNo = -1;
+                searchData->url = NULL;
+                searchData->nameInput = NULL;
+                searchData->guessedNameMatch = NULL;
+                searchData->absoluteNameMatch = NULL;
+                result->data = searchData;
+            } else {
+                xmlFree(result);
+                result = NULL;
             }
-            break;
+        }
+        break;
 
-        case SEARCH_XSL:
-            break;
+    case SEARCH_XSL:
+        break;
 
-        case SEARCH_VARIABLE:
-            result = (searchInfoPtr) xmlMalloc(sizeof(searchInfo));
-            if (result) {
-                variableSearchDataPtr searchData;
+    case SEARCH_VARIABLE:
+        result = (searchInfoPtr) xmlMalloc(sizeof(searchInfo));
+        if (result) {
+            variableSearchDataPtr searchData;
 
-                result->type = SEARCH_VARIABLE;
-                searchData = (variableSearchDataPtr)
+            result->type = SEARCH_VARIABLE;
+            searchData = (variableSearchDataPtr)
                     xmlMalloc(sizeof(variableSearchData));
-                if (searchData) {
-                    searchData->name = NULL;
-                    searchData->nameURI = NULL;
-                    searchData->select = NULL;
-                    result->data = searchData;
-                } else {
-                    xmlFree(result);
-                    result = NULL;
-                }
+            if (searchData) {
+                searchData->name = NULL;
+                searchData->nameURI = NULL;
+                searchData->select = NULL;
+                result->data = searchData;
+            } else {
+                xmlFree(result);
+                result = NULL;
             }
-            break;
+        }
+        break;
 
     }
     if (result) {
@@ -205,55 +205,55 @@ void searchFreeInfo(searchInfoPtr info)
     if (info) {
         if (info->data) {
             switch (info->type) {
-                case SEARCH_BREAKPOINT:
-                    {
-                        breakPointSearchDataPtr searchData =
-                            (breakPointSearchDataPtr) info->data;
+            case SEARCH_BREAKPOINT:
+            {
+                breakPointSearchDataPtr searchData =
+                        (breakPointSearchDataPtr) info->data;
 
-                        if (searchData->templateName)
-                            xmlFree(searchData->templateName);
-                    }
-                    break;
+                if (searchData->templateName)
+                    xmlFree(searchData->templateName);
+            }
+                break;
 
-                case SEARCH_NODE:
-                    {
-                        nodeSearchDataPtr searchData =
-                            (nodeSearchDataPtr) info->data;
+            case SEARCH_NODE:
+            {
+                nodeSearchDataPtr searchData =
+                        (nodeSearchDataPtr) info->data;
 
-                        if (searchData->url)
-                            xmlFree(searchData->url);
+                if (searchData->url)
+                    xmlFree(searchData->url);
 
-                        if (searchData->nameInput)
-                            xmlFree(searchData->nameInput);
+                if (searchData->nameInput)
+                    xmlFree(searchData->nameInput);
 
-                        if (searchData->guessedNameMatch)
-                            xmlFree(searchData->guessedNameMatch);
+                if (searchData->guessedNameMatch)
+                    xmlFree(searchData->guessedNameMatch);
 
-                        if (searchData->absoluteNameMatch)
-                            xmlFree(searchData->absoluteNameMatch);
+                if (searchData->absoluteNameMatch)
+                    xmlFree(searchData->absoluteNameMatch);
 
-                        /* we never free searchData->node as we did not create it! */
-                    }
-                    break;
+                /* we never free searchData->node as we did not create it! */
+            }
+                break;
 
-                case SEARCH_XSL:
-                    break;
+            case SEARCH_XSL:
+                break;
 
-                case SEARCH_VARIABLE:
-                    {
-                        variableSearchDataPtr searchData =
-                            (variableSearchDataPtr) info->data;
+            case SEARCH_VARIABLE:
+            {
+                variableSearchDataPtr searchData =
+                        (variableSearchDataPtr) info->data;
 
-                        if (searchData->name)
-                            xmlFree(searchData->name);
+                if (searchData->name)
+                    xmlFree(searchData->name);
 
-                        if (searchData->nameURI)
-                            xmlFree(searchData->nameURI);
+                if (searchData->nameURI)
+                    xmlFree(searchData->nameURI);
 
-                        if (searchData->select)
-                            xmlFree(searchData->select);
-                    }
-                    break;
+                if (searchData->select)
+                    xmlFree(searchData->select);
+            }
+                break;
 
             }
             xmlFree(info->data);
@@ -285,7 +285,7 @@ int searchEmpty(void)
     if (searchRootNode() == NULL) {
 #ifdef WITH_XSLDBG_DEBUG_PROCESS
         xsltGenericError(xsltGenericErrorContext,
-                        "Error: Unable to clear old search results, memory error?\n");
+                         "Error: Unable to clear old search results, memory error?\n");
 #endif
     }
 
@@ -310,7 +310,7 @@ int searchAdd(xmlNodePtr node)
     int result = 0;
 
     if (node && searchDataBaseRoot
-        && xmlAddChild(searchDataBaseRoot, node)) {
+            && xmlAddChild(searchDataBaseRoot, node)) {
         result = 1;
     }
 
@@ -347,7 +347,7 @@ int searchSave(const xmlChar * fileName)
 
 
 int searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
-            const xmlChar * query)
+                const xmlChar * query)
 {
     int result = 0;
 
@@ -427,7 +427,7 @@ int searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
 
 
 void scanForBreakPoint(void *payload, void *data,
-                  xmlChar * name)
+                       xmlChar * name)
 {
     Q_UNUSED(name);
     breakPointPtr breakPtr = (breakPointPtr) payload;
@@ -436,7 +436,7 @@ void scanForBreakPoint(void *payload, void *data,
     int found = 0;
 
     if (!payload || !searchInf || !searchInf->data
-        || (searchInf->type != SEARCH_BREAKPOINT) || searchInf->found)
+            || (searchInf->type != SEARCH_BREAKPOINT) || searchInf->found)
         return;
 
     searchData = (breakPointSearchDataPtr) searchInf->data;
@@ -463,10 +463,11 @@ void scanForNode(void *payload, void *data, xmlChar * name)
     nodeSearchDataPtr searchData = NULL;
     xmlNodePtr node = (xmlNodePtr) payload;
     xmlChar *baseUri = NULL;
+    xmlChar * lastSlash = NULL;
     int match = 1;
 
     if (!node || !node->doc || !node->doc->URL ||
-        !searchInf || (searchInf->type != SEARCH_NODE))
+            !searchInf || (searchInf->type != SEARCH_NODE))
         return;
 
     searchData = (nodeSearchDataPtr) searchInf->data;
@@ -474,13 +475,48 @@ void scanForNode(void *payload, void *data, xmlChar * name)
     if (searchData->lineNo >= 0)
         match = searchData->lineNo == xmlGetLineNo(node);
 
-    if (searchData->url)
-        baseUri = filesGetBaseUri(node);
-    if (baseUri) {
-        match = match && (xmlStrCmp(searchData->url, baseUri) == 0);
-        xmlFree(baseUri);
-    } else {
-        match = match && (xmlStrcmp(searchData->url, node->doc->URL) == 0);
+    if (match) {
+        if (searchData->url)
+            baseUri = filesGetBaseUri(node);
+        if (baseUri) {
+            xmlChar *lastSlashBaseURI = NULL;
+            match = (xmlStrCmp(searchData->url, baseUri) == 0);
+            if (!match) {
+               lastSlashBaseURI = (xmlChar*)xmlStrrChr(baseUri, URISEPARATORCHAR);
+               if (!lastSlashBaseURI)
+                   lastSlashBaseURI = (xmlChar*)xmlStrrChr(baseUri, PATHCHAR);
+                if (lastSlashBaseURI) {
+                    lastSlashBaseURI++;
+                    match = (xmlStrCmp(searchData->url, lastSlashBaseURI) == 0);
+                } else {
+                    lastSlashBaseURI = baseUri;
+                }
+            }
+            if (!match) {
+               lastSlash = (xmlChar*)xmlStrrChr(searchData->url, URISEPARATORCHAR);
+               if (!lastSlash)
+                   lastSlash = (xmlChar*)xmlStrrChr(searchData->url, PATHCHAR);
+                if (lastSlash) {
+                    lastSlash++;
+                    match = (xmlStrCmp(lastSlash, lastSlashBaseURI) == 0);
+                } else {
+                    lastSlash = searchData->url;
+                }
+            }
+
+            xmlFree(baseUri);
+        } else {
+            match = match && (xmlStrcmp(searchData->url, node->doc->URL) == 0);
+            if (!match) {
+               lastSlash = (xmlChar*)xmlStrrChr(node->doc->URL, URISEPARATORCHAR);
+               if (!lastSlash)
+                   lastSlash = (xmlChar*)xmlStrrChr(node->doc->URL, PATHCHAR);
+                if (lastSlash) {
+                    lastSlash++;
+                    match = (xmlStrCmp(searchData->url, lastSlash) == 0);
+                }
+            }
+        }
     }
 
     if (match) {
@@ -492,7 +528,7 @@ void scanForNode(void *payload, void *data, xmlChar * name)
 
 
 void findNodeByLineNoHelper(void *payload, void *data,
-                       xmlChar * name)
+                            xmlChar * name)
 {
     Q_UNUSED(name);
     xsltStylesheetPtr style = (xsltStylesheetPtr) payload;
@@ -511,7 +547,7 @@ void findNodeByLineNoHelper(void *payload, void *data,
 
 
 xmlNodePtr findNodeByLineNo(xsltTransformContextPtr ctxt,
-                 const xmlChar * url, long lineNumber)
+                            const xmlChar * url, long lineNumber)
 {
     xmlNodePtr result = NULL;
     searchInfoPtr searchInf = searchNewInfo(SEARCH_NODE);
@@ -764,7 +800,7 @@ void walkTemplates(xmlHashScanner walkFunc, void *data, xsltStylesheetPtr style)
 
 
 void walkStylesheets(xmlHashScanner walkFunc, void *data,
-                xsltStylesheetPtr style)
+                     xsltStylesheetPtr style)
 {
     xsltStylesheetPtr next;
 
@@ -786,7 +822,7 @@ void walkStylesheets(xmlHashScanner walkFunc, void *data,
 xmlHashScanner globalWalkFunc = NULL;
 
 void globalVarHelper(void **payload, void *data,
-                xmlChar * name)
+                     xmlChar * name)
 {
     Q_UNUSED(data);
     Q_UNUSED(name);
@@ -805,7 +841,7 @@ void globalVarHelper(void **payload, void *data,
 
 
 void walkGlobals(xmlHashScanner walkFunc, void *data,
-            xsltStylesheetPtr style)
+                 xsltStylesheetPtr style)
 {
     Q_UNUSED(data);
     if (!walkFunc || !style)
@@ -821,7 +857,7 @@ void walkGlobals(xmlHashScanner walkFunc, void *data,
 xmlHashScanner localWalkFunc = NULL;
 
 void localVarHelper(void **payload, void *data,
-               xmlChar * name)
+                    xmlChar * name)
 {
     Q_UNUSED(data);
     Q_UNUSED(name);
@@ -833,7 +869,7 @@ void localVarHelper(void **payload, void *data,
 
         while (node) {
             if (IS_XSLT_NAME(node, "param")
-                || IS_XSLT_NAME(node, "variable")) {
+                    || IS_XSLT_NAME(node, "variable")) {
                 (*localWalkFunc) (node, data, NULL);
                 node = node->next;
             } else
@@ -886,7 +922,7 @@ void walkIncludes(xmlHashScanner walkFunc, void *data, xsltStylesheetPtr style)
 
 
 void walkIncludeInst(xmlHashScanner walkFunc, void *data,
-                xsltStylesheetPtr style)
+                     xsltStylesheetPtr style)
 {
     xmlNodePtr node = NULL, styleChild = NULL;
 
@@ -900,7 +936,7 @@ void walkIncludeInst(xmlHashScanner walkFunc, void *data,
             while (node) {
                 /* not need but just in case :) */
                 if (IS_XSLT_NAME(node, "stylesheet")
-                    || IS_XSLT_NAME(node, "transform")) {
+                        || IS_XSLT_NAME(node, "transform")) {
                     styleChild = node->children;        /* get the topmost elements */
                     break;
                 } else
@@ -953,35 +989,35 @@ xmlNodePtr searchBreakPointNode(breakPointPtr breakPtr)
         if (node) {
             /* if unable to create any property failed then result will be equal to 0 */
             result = result
-                && (xmlNewProp(node, (xmlChar *) "url", breakPtr->url) !=
+                    && (xmlNewProp(node, (xmlChar *) "url", breakPtr->url) !=
                     NULL);
             sprintf((char *) searchBuffer, "%ld", breakPtr->lineNo);
             result = result
-                &&
-                (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) searchBuffer)
-                 != NULL);
+                    &&
+                    (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) searchBuffer)
+                     != NULL);
             if (breakPtr->templateName) {
                 result = result
-                    &&
-                    (xmlNewProp
-                     (node, (xmlChar *) "template",
-                      breakPtr->templateName) != NULL);
+                        &&
+                        (xmlNewProp
+                         (node, (xmlChar *) "template",
+                          breakPtr->templateName) != NULL);
             }
             sprintf((char *) searchBuffer, "%d", breakPtr->flags & BREAKPOINT_ENABLED);
             result = result
-                &&
-                (xmlNewProp
-                 (node, (xmlChar *) "enabled", (xmlChar *) searchBuffer)
-                 != NULL);
+                    &&
+                    (xmlNewProp
+                     (node, (xmlChar *) "enabled", (xmlChar *) searchBuffer)
+                     != NULL);
             sprintf((char *) searchBuffer, "%d", breakPtr->type);
             result = result
-                &&
-                (xmlNewProp(node, (xmlChar *) "type", (xmlChar *) searchBuffer)
-                 != NULL);
+                    &&
+                    (xmlNewProp(node, (xmlChar *) "type", (xmlChar *) searchBuffer)
+                     != NULL);
             sprintf((char *) searchBuffer, "%d", breakPtr->id);
             result = result
-                && (xmlNewProp(node, (xmlChar *) "id", (xmlChar *) searchBuffer)
-                    != NULL);
+                    && (xmlNewProp(node, (xmlChar *) "id", (xmlChar *) searchBuffer)
+                        != NULL);
         } else
             result = 0;
         if (!result) {
@@ -1005,29 +1041,29 @@ xmlNodePtr searchTemplateNode(xmlNodePtr templNode)
             value = xmlGetProp(templNode, (xmlChar *) "match");
             if (value) {
                 result = result
-                    && (xmlNewProp(node, (xmlChar *) "match", value) !=
+                        && (xmlNewProp(node, (xmlChar *) "match", value) !=
                         NULL);
                 xmlFree(value);
             }
             value = xmlGetProp(templNode, (xmlChar *) "name");
             if (value) {
                 result = result
-                    && (xmlNewProp(node, (xmlChar *) "name", value) !=
+                        && (xmlNewProp(node, (xmlChar *) "name", value) !=
                         NULL);
                 xmlFree(value);
             }
             if (templNode->doc) {
                 result = result
-                    &&
-                    (xmlNewProp
-                     (node, (xmlChar *) "url",
-                      templNode->doc->URL) != NULL);
+                        &&
+                        (xmlNewProp
+                         (node, (xmlChar *) "url",
+                          templNode->doc->URL) != NULL);
             }
             sprintf((char *) searchBuffer, "%ld", xmlGetLineNo(templNode));
             result = result
-                &&
-                (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) searchBuffer)
-                 != NULL);
+                    &&
+                    (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) searchBuffer)
+                     != NULL);
             if (result) {
                 xmlNodePtr textNode = searchCommentNode(templNode);
 
@@ -1036,8 +1072,8 @@ xmlNodePtr searchTemplateNode(xmlNodePtr templNode)
             }
         } else
             result = 0;
-    if (!result) {
-        xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
+        if (!result) {
+            xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
         }
     }
     return node;
@@ -1056,24 +1092,24 @@ xmlNodePtr searchGlobalNode(xmlNodePtr variable)
             /* if unable to create any property failed then result will be equal to 0 */
             if (variable->doc) {
                 result = result &&
-                    (xmlNewProp(node, (xmlChar *) "url",
-                                variable->doc->URL) != NULL);
+                        (xmlNewProp(node, (xmlChar *) "url",
+                                    variable->doc->URL) != NULL);
                 sprintf((char *) searchBuffer, "%ld", xmlGetLineNo(variable));
                 result = result
-                    && (xmlNewProp(node, (xmlChar *) "line",
-                                   (xmlChar *) searchBuffer) != NULL);
+                        && (xmlNewProp(node, (xmlChar *) "line",
+                                       (xmlChar *) searchBuffer) != NULL);
             }
             value = xmlGetProp(variable, (xmlChar *) "name");
             if (value) {
                 result = result
-                    && (xmlNewProp(node, (xmlChar *) "name", value) !=
+                        && (xmlNewProp(node, (xmlChar *) "name", value) !=
                         NULL);
                 xmlFree(value);
             }
             value = xmlGetProp(variable, (xmlChar *) "select");
             if (value) {
                 result = result
-                    && (xmlNewProp(node, (xmlChar *) "select", value) !=
+                        && (xmlNewProp(node, (xmlChar *) "select", value) !=
                         NULL);
                 xmlFree(value);
             }
@@ -1110,17 +1146,17 @@ xmlNodePtr searchLocalNode(xmlNodePtr variable)
                 value = xmlGetProp(parent, (xmlChar *) "name");
                 if (value) {
                     result = result
-                        &&
-                        (xmlNewProp(node, (xmlChar *) "templname", value)
-                         != NULL);
+                            &&
+                            (xmlNewProp(node, (xmlChar *) "templname", value)
+                             != NULL);
                     xmlFree(value);
                 }
                 value = xmlGetProp(parent, (xmlChar *) "match");
                 if (value) {
                     result = result
-                        &&
-                        (xmlNewProp(node, (xmlChar *) "templmatch", value)
-                         != NULL);
+                            &&
+                            (xmlNewProp(node, (xmlChar *) "templmatch", value)
+                             != NULL);
                     xmlFree(value);
                 }
             }
@@ -1148,16 +1184,16 @@ xmlNodePtr searchSourceNode(xsltStylesheetPtr style)
             /* if unable to create any property failed then result will be equal to 0 */
             if (style->doc) {
                 result = result &&
-                    (xmlNewProp(node, (xmlChar *) "href", style->doc->URL)
-                     != NULL);
+                        (xmlNewProp(node, (xmlChar *) "href", style->doc->URL)
+                         != NULL);
                 if (style->parent && style->parent->doc) {
                     result = result &&
-                        (xmlNewProp(node, (xmlChar *) "parent",
-                                    style->parent->doc->URL) != NULL);
+                            (xmlNewProp(node, (xmlChar *) "parent",
+                                        style->parent->doc->URL) != NULL);
                 }
                 if (result) {
                     xmlNodePtr textNode =
-                        searchCommentNode((xmlNodePtr) style->doc);
+                            searchCommentNode((xmlNodePtr) style->doc);
                     if (textNode && !xmlAddChild(node, textNode))
                         result = 0;
                 }
@@ -1186,18 +1222,18 @@ xmlNodePtr searchIncludeNode(xmlNodePtr include)
                 value = xmlGetProp(include, (xmlChar *) "href");
                 if (value) {
                     result = result
-                        && (xmlNewProp(node, (xmlChar *) "href", value) !=
+                            && (xmlNewProp(node, (xmlChar *) "href", value) !=
                             NULL);
                     xmlFree(value);
                 }
                 if (include->parent && include->parent->doc) {
                     result = result &&
-                        (xmlNewProp(node, (xmlChar *) "url",
-                                    include->parent->doc->URL) != NULL);
+                            (xmlNewProp(node, (xmlChar *) "url",
+                                        include->parent->doc->URL) != NULL);
                     sprintf((char *) searchBuffer, "%ld", xmlGetLineNo(include));
                     result = result
-                        && (xmlNewProp(node, (xmlChar *) "line",
-                                       (xmlChar *) searchBuffer) != NULL);
+                            && (xmlNewProp(node, (xmlChar *) "line",
+                                           (xmlChar *) searchBuffer) != NULL);
                 }
                 if (result) {
                     xmlNodePtr textNode = searchCommentNode(include);
@@ -1227,20 +1263,20 @@ xmlNodePtr searchCallStackNode(callPointPtr callStackItem)
             /* if unable to create any property failed then result will be equal to 0 */
             if (callStackItem->info && callStackItem->info->url)
                 result = result
-                    &&
-                    (xmlNewProp
-                     (node, (xmlChar *) "url", callStackItem->info->url)
-                     != NULL);
+                        &&
+                        (xmlNewProp
+                         (node, (xmlChar *) "url", callStackItem->info->url)
+                         != NULL);
             sprintf((char *) searchBuffer, "%ld", callStackItem->lineNo);
             result = result
-                &&
-                (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) searchBuffer)
-                 != NULL);
+                    &&
+                    (xmlNewProp(node, (xmlChar *) "line", (xmlChar *) searchBuffer)
+                     != NULL);
             if (callStackItem->info && callStackItem->info->templateName) {
                 result = result &&
-                    (xmlNewProp
-                     (node, (xmlChar *) "template",
-                      callStackItem->info->templateName) != NULL);
+                        (xmlNewProp
+                         (node, (xmlChar *) "template",
+                          callStackItem->info->templateName) != NULL);
             }
         } else
             result = 0;
