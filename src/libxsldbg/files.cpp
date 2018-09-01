@@ -31,6 +31,7 @@
 #include "utils.h"
 #include "options.h"
 #include <QDir>
+#include <QDebug>
 
 #ifndef WIN32
 #include <unistd.h>
@@ -154,53 +155,53 @@ int openTerminal(xmlChar * device)
 
 
     switch (device[0]) {
-        case '\0':
-        case '0':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':
-            /* look like we are supposed to close the terminal
+    case '\0':
+    case '0':
+    case '3':
+    case '4':
+    case '5':
+    case '6':
+    case '7':
+    case '8':
+    case '9':
+        /* look like we are supposed to close the terminal
              * but we've already done that
              */
-            break;
+        break;
 
-        case '1':
-            if (termName) {
-                terminalIO = fopen((char *) termName, "w");
-                if (terminalIO != NULL) {
-                    xmlFree(termName);
-                    termName = xmlMemStrdup((char *) device);
-                    result = 1;
-                } else {
-                    xsldbgGenericErrorFunc(QObject::tr("Error: Unable to open terminal %1.\n").arg(xsldbgText(termName)));
-                }
-            } else {
-                xsldbgGenericErrorFunc(QObject::tr("Error: Did not previously open terminal.\n"));
-            }
-            break;
-
-        case '2':
-#ifdef WITH_XSLDBG_DEBUG_PROCESS
-            xsltGenericError(xsltGenericErrorContext,
-                             "Warning: Terminal level 2 not implemented\n");
-#endif
-            break;
-
-
-        default:
-            terminalIO = fopen((char *) device, "w");
+    case '1':
+        if (termName) {
+            terminalIO = fopen((char *) termName, "w");
             if (terminalIO != NULL) {
-                if (termName)
-                    xmlFree(termName);
+                xmlFree(termName);
                 termName = xmlMemStrdup((char *) device);
                 result = 1;
             } else {
-                xsldbgGenericErrorFunc(QObject::tr("Error: Unable to open terminal %1.\n").arg(xsldbgText(device)));
+                xsldbgGenericErrorFunc(QObject::tr("Error: Unable to open terminal %1.\n").arg(xsldbgText(termName)));
             }
+        } else {
+            xsldbgGenericErrorFunc(QObject::tr("Error: Did not previously open terminal.\n"));
+        }
+        break;
+
+    case '2':
+#ifdef WITH_XSLDBG_DEBUG_PROCESS
+        xsltGenericError(xsltGenericErrorContext,
+                         "Warning: Terminal level 2 not implemented\n");
+#endif
+        break;
+
+
+    default:
+        terminalIO = fopen((char *) device, "w");
+        if (terminalIO != NULL) {
+            if (termName)
+                xmlFree(termName);
+            termName = xmlMemStrdup((char *) device);
+            result = 1;
+        } else {
+            xsldbgGenericErrorFunc(QObject::tr("Error: Unable to open terminal %1.\n").arg(xsldbgText(device)));
+        }
 
     }
 
@@ -209,7 +210,7 @@ int openTerminal(xmlChar * device)
 
 
 void guessStylesheetHelper(void *payload, void *data,
-                      xmlChar * name)
+                           xmlChar * name)
 {
     Q_UNUSED(name);
     xsltStylesheetPtr style = (xsltStylesheetPtr) payload;
@@ -217,7 +218,7 @@ void guessStylesheetHelper(void *payload, void *data,
     nodeSearchDataPtr searchData = NULL;
 
     if (!style || !style->doc || !searchCriteria || !searchCriteria->data
-        || (searchCriteria->type != SEARCH_NODE))
+            || (searchCriteria->type != SEARCH_NODE))
         return;
 
     searchData = (nodeSearchDataPtr) searchCriteria->data;
@@ -227,7 +228,7 @@ void guessStylesheetHelper(void *payload, void *data,
         if (xmlStrCmp(style->doc->URL, searchData->nameInput) == 0) {
             /* absolute path match great! */
             searchData->absoluteNameMatch =
-                (xmlChar *) xmlMemStrdup((char *) style->doc->URL);
+                    (xmlChar *) xmlMemStrdup((char *) style->doc->URL);
             searchData->node = (xmlNodePtr) style->doc;
             searchCriteria->found = 1;
             return;
@@ -242,7 +243,7 @@ void guessStylesheetHelper(void *payload, void *data,
             QChar lastChar = stylePath().at(stylePath().length() - 1);
 
             if (stylePath().indexOf(':') != -1) { // if URI then always use forward slash
-                pathSeparator = '/';
+                pathSeparator = URISEPARATORCHAR;
             }
             xmlStrCpy(filesBuffer, stylePath().toUtf8().constData());
             if (lastChar != pathSeparator) { //ensure that there is a final path separator present
@@ -254,12 +255,11 @@ void guessStylesheetHelper(void *payload, void *data,
         if (xmlStrCmp(style->doc->URL, filesBuffer) == 0) {
             /* guessed right! */
             searchData->guessedNameMatch =
-                (xmlChar *) xmlMemStrdup((char *) filesBuffer);
+                    (xmlChar *) xmlMemStrdup((char *) filesBuffer);
             searchData->node = (xmlNodePtr) style->doc;
             searchCriteria->found = 1;
             return;
         }
-
         if (!workingPath().isEmpty()) {
             /* try relative to working directory */
             QChar pathSeparator = QDir::separator();
@@ -275,40 +275,44 @@ void guessStylesheetHelper(void *payload, void *data,
         if (xmlStrCmp(style->doc->URL, filesBuffer) == 0) {
             /* guessed right! */
             searchData->guessedNameMatch =
-                (xmlChar *) xmlMemStrdup((char *) filesBuffer);
+                    (xmlChar *) xmlMemStrdup((char *) filesBuffer);
             searchData->node = (xmlNodePtr) style->doc;
             searchCriteria->found = 1;
             return;
         }
 
-
-        /* Find the last separator of the stylsheet's URL */
-        xmlChar pathSeparator = URISEPARATORCHAR;
+        /* Find the last separator of the document's URL */
+        xmlChar pathSeparator = PATHCHAR;
 
         if (xmlStrChr(style->doc->URL, ':') != 0) { // if URI then always use forward slash
-            pathSeparator = '/';
+            pathSeparator = URISEPARATORCHAR;
         }
 
-        xmlChar* lastSlash = (xmlChar*)xmlStrChr(style->doc->URL, pathSeparator);
-        if (lastSlash) {
-            xmlStrnCpy(filesBuffer, style->doc->URL, lastSlash - style->doc->URL);
-            xmlStrCat(filesBuffer, " "); //quick and dirty to append a char
-            filesBuffer[xmlStrlen(filesBuffer) - 1] = pathSeparator;
-            xmlStrCat(filesBuffer, searchData->nameInput);
-          if (xmlStrCmp(style->doc->URL, filesBuffer) == 0) {
-                /* guessed right! */
-                searchData->guessedNameMatch =
-                      (xmlChar *) xmlMemStrdup((char *) filesBuffer);
-                searchData->node = (xmlNodePtr) style->doc;
-                searchCriteria->found = 1;
-            }
-         }
+        xmlChar* lastSlash = (xmlChar*)xmlStrrChr(style->doc->URL, pathSeparator);
+        xmlChar* lastSlashSearch = (xmlChar*)xmlStrrChr(filesBuffer, pathSeparator);
+        if (!lastSlashSearch) {
+            lastSlashSearch = filesBuffer;
+        } else {
+            lastSlashSearch++;
+        }
+        if (!lastSlash) {
+            lastSlash = (xmlChar*)style->doc->URL;
+        } else {
+            lastSlash++;
+        }
+        if (xmlStrCmp(lastSlash, lastSlashSearch) == 0) {
+            /* guessed right! */
+            searchData->guessedNameMatch =
+                    (xmlChar *) xmlStrdup(style->doc->URL);
+            searchData->node = (xmlNodePtr) style->doc;
+            searchCriteria->found = 1;
+        }
     }
 }
 
 
 void guessStylesheetHelper2(void *payload, void *data,
-                       xmlChar * name)
+                            xmlChar * name)
 {
     Q_UNUSED(name);
     xmlNodePtr node = (xmlNodePtr) payload;
@@ -316,7 +320,7 @@ void guessStylesheetHelper2(void *payload, void *data,
     nodeSearchDataPtr searchData = NULL;
 
     if (!node || !node->doc || !searchCriteria || !searchCriteria->data ||
-        (searchCriteria->type != SEARCH_NODE))
+            (searchCriteria->type != SEARCH_NODE))
         return;
 
     searchData = (nodeSearchDataPtr) searchCriteria->data;
@@ -326,7 +330,7 @@ void guessStylesheetHelper2(void *payload, void *data,
         if (xmlStrCmp(node->doc->URL, searchData->nameInput) == 0) {
             /* absolute path match great! */
             searchData->absoluteNameMatch =
-                (xmlChar *) xmlMemStrdup((char *) node->doc->URL);
+                    (xmlChar *) xmlMemStrdup((char *) node->doc->URL);
             searchData->node = node;
             searchCriteria->found = 1;
             return;
@@ -341,7 +345,7 @@ void guessStylesheetHelper2(void *payload, void *data,
             QChar lastChar = stylePath().at(stylePath().length() - 1);
 
             if (stylePath().indexOf(':') != -1) { // if URI then always use forward slash
-                pathSeparator = '/';
+                pathSeparator = URISEPARATORCHAR;
             }
             xmlStrCpy(filesBuffer, stylePath().toUtf8().constData());
             if (lastChar != pathSeparator) { //ensure that there is a final path separator present
@@ -353,7 +357,7 @@ void guessStylesheetHelper2(void *payload, void *data,
         if (xmlStrCmp(node->doc->URL, filesBuffer) == 0) {
             /* guessed right! */
             searchData->guessedNameMatch =
-                (xmlChar *) xmlMemStrdup((char *) filesBuffer);
+                    (xmlChar *) xmlMemStrdup((char *) filesBuffer);
             searchData->node = node;
             searchCriteria->found = 1;
             return;
@@ -369,11 +373,12 @@ void guessStylesheetHelper2(void *payload, void *data,
                 QString pathSeparatorString(pathSeparator);
                 xmlStrCat(filesBuffer, pathSeparatorString.toUtf8().constData());
             }
-            xmlStrCat(filesBuffer, searchData->nameInput);        }
+            xmlStrCat(filesBuffer, searchData->nameInput);
+        }
         if (xmlStrCmp(node->doc->URL, filesBuffer) == 0) {
             /* guessed right! */
             searchData->guessedNameMatch =
-                (xmlChar *) xmlMemStrdup((char *) filesBuffer);
+                    (xmlChar *) xmlMemStrdup((char *) filesBuffer);
             searchData->node = node;
             searchCriteria->found = 1;
             return;
@@ -381,26 +386,31 @@ void guessStylesheetHelper2(void *payload, void *data,
 
 
         /* Find the last separator of the document's URL */
-        xmlChar pathSeparator = URISEPARATORCHAR;
+        xmlChar pathSeparator = PATHCHAR;
 
         if (xmlStrChr(node->doc->URL, ':') != 0) { // if URI then always use forward slash
-            pathSeparator = '/';
+            pathSeparator = URISEPARATORCHAR;
         }
 
-        xmlChar* lastSlash = (xmlChar*)xmlStrChr(node->doc->URL, pathSeparator);
-        if (lastSlash) {
-            xmlStrnCpy(filesBuffer, node->doc->URL, lastSlash - node->doc->URL);
-            xmlStrCat(filesBuffer, " "); //quick and dirty to append a char
-            filesBuffer[xmlStrlen(filesBuffer) - 1] = pathSeparator;
-            xmlStrCat(filesBuffer, searchData->nameInput);
-          if (xmlStrCmp(node->doc->URL, filesBuffer) == 0) {
-                /* guessed right! */
-                searchData->guessedNameMatch =
-                      (xmlChar *) xmlMemStrdup((char *) filesBuffer);
-                searchData->node = node;
-                searchCriteria->found = 1;
-            }
-         }
+        xmlChar* lastSlash = (xmlChar*)xmlStrrChr(node->doc->URL, pathSeparator);
+        xmlChar* lastSlashSearch = (xmlChar*)xmlStrrChr(filesBuffer, pathSeparator);
+        if (!lastSlashSearch) {
+            lastSlashSearch = filesBuffer;
+        } else {
+            lastSlashSearch++;
+        }
+        if (!lastSlash) {
+            lastSlash = (xmlChar*)node->doc->URL;
+        } else {
+            lastSlash++;
+        }
+        if (xmlStrCmp(lastSlash, lastSlashSearch) == 0) {
+            /* guessed right! */
+            searchData->guessedNameMatch =
+                    (xmlChar *) xmlStrdup(node->doc->URL);
+            searchData->node = node;
+            searchCriteria->found = 1;
+        }
     }
 }
 
@@ -481,8 +491,8 @@ int changeDir(QString path)
             xsldbgGenericErrorFunc(QObject::tr("Error: Unable to change to directory \"%1\".\n").arg(path));
     } else {
 
-    if (xslDebugStatus != DEBUG_NONE)
-        xsldbgGenericErrorFunc(QObject::tr("Changed to directory %1.\n").arg(workingDirPath));
+        if (xslDebugStatus != DEBUG_NONE)
+            xsldbgGenericErrorFunc(QObject::tr("Changed to directory %1.\n").arg(workingDirPath));
     }
     return result;
 }
@@ -496,58 +506,58 @@ int filesLoadXmlFile(const xmlChar * path, FileTypeEnum fileType)
         return result;
 
     switch (fileType) {
-        case FILES_XMLFILE_TYPE:
-            if (path && xmlStrLen(path)) {
+    case FILES_XMLFILE_TYPE:
+        if (path && xmlStrLen(path)) {
+            if (optionsGetIntOption(OPTIONS_SHELL)) {
+                xsldbgGenericErrorFunc(QObject::tr("Setting XML Data file name to %1.\n").arg(xsldbgText(path)));
+            }
+            optionsSetStringOption(OPTIONS_DATA_FILE_NAME, xsldbgText(path));
+        }
+        topDocument = xsldbgLoadXmlData();
+        if (topDocument)
+            result = 1;
+        break;
+
+    case FILES_SOURCEFILE_TYPE:
+        if (path && xmlStrLen(path)) {
+            if (optionsGetIntOption(OPTIONS_SHELL)) {
+                xsldbgGenericErrorFunc(QObject::tr("Setting stylesheet file name to %1.\n").arg(xsldbgText(path)));
+            }
+            optionsSetStringOption(OPTIONS_SOURCE_FILE_NAME, xsldbgText(path));
+        }
+        topStylesheet = xsldbgLoadStylesheet();
+        if (topStylesheet && topStylesheet->doc) {
+            /* look for last slash (or baskslash) of URL */
+            QString docUrl = xsldbgText(topStylesheet->doc->URL);
+            int lastSlash = docUrl.lastIndexOf(PATHCHAR);
+
+            result = 1;
+            if (!docUrl.isEmpty() && lastSlash) {
+                stylePathName = docUrl.mid(0, lastSlash);
                 if (optionsGetIntOption(OPTIONS_SHELL)) {
-                    xsldbgGenericErrorFunc(QObject::tr("Setting XML Data file name to %1.\n").arg(xsldbgText(path)));
+                    xsldbgGenericErrorFunc(QObject::tr("Setting stylesheet base path to %1.\n").arg(stylePathName));
                 }
-                optionsSetStringOption(OPTIONS_DATA_FILE_NAME, xsldbgText(path));
+            } else {
+                /* ie for *nix this becomes "./" */
+                stylePathName = '.';
+                stylePathName = PATHCHAR;
             }
-            topDocument = xsldbgLoadXmlData();
-            if (topDocument)
-                result = 1;
+
+            /* try to find encoding for this stylesheet */
+            if (optionsGetIntOption(OPTIONS_AUTOENCODE))
+                filesSetEncoding((char *) topStylesheet->encoding);
+        }
+        break;
+
+    case FILES_TEMPORARYFILE_TYPE:
+        if (!path || !xmlStrLen(path)) {
+            xsldbgGenericErrorFunc(QObject::tr("Missing file name.\n"));
             break;
-
-        case FILES_SOURCEFILE_TYPE:
-            if (path && xmlStrLen(path)) {
-                if (optionsGetIntOption(OPTIONS_SHELL)) {
-                    xsldbgGenericErrorFunc(QObject::tr("Setting stylesheet file name to %1.\n").arg(xsldbgText(path)));
-                }
-                optionsSetStringOption(OPTIONS_SOURCE_FILE_NAME, xsldbgText(path));
-            }
-            topStylesheet = xsldbgLoadStylesheet();
-            if (topStylesheet && topStylesheet->doc) {
-                /* look for last slash (or baskslash) of URL */
-                QString docUrl = xsldbgText(topStylesheet->doc->URL);
-                int lastSlash = docUrl.lastIndexOf(PATHCHAR);
-
-                result = 1;
-                if (!docUrl.isEmpty() && lastSlash) {
-                    stylePathName = docUrl.mid(0, lastSlash);
-                    if (optionsGetIntOption(OPTIONS_SHELL)) {
-                        xsldbgGenericErrorFunc(QObject::tr("Setting stylesheet base path to %1.\n").arg(stylePathName));
-                    }
-                } else {
-                    /* ie for *nix this becomes "./" */
-                    stylePathName = '.';
-                    stylePathName = PATHCHAR;
-                }
-
-                /* try to find encoding for this stylesheet */
-                if (optionsGetIntOption(OPTIONS_AUTOENCODE))
-                    filesSetEncoding((char *) topStylesheet->encoding);
-            }
-            break;
-
-        case FILES_TEMPORARYFILE_TYPE:
-            if (!path || !xmlStrLen(path)) {
-                xsldbgGenericErrorFunc(QObject::tr("Missing file name.\n"));
-                break;
-            }
-            topDocument = xsldbgLoadXmlTemporary(path);
-            if (tempDocument)
-                result = 1;
-            break;
+        }
+        topDocument = xsldbgLoadXmlTemporary(path);
+        if (tempDocument)
+            result = 1;
+        break;
     }
     return result;
 }
@@ -558,26 +568,26 @@ int filesFreeXmlFile(FileTypeEnum fileType)
     int result = 0, type = fileType;
 
     switch (type) {
-        case FILES_XMLFILE_TYPE:
-            if (topDocument)
-                xmlFreeDoc(topDocument);
-            topDocument = NULL;
-            result = 1;
-            break;
+    case FILES_XMLFILE_TYPE:
+        if (topDocument)
+            xmlFreeDoc(topDocument);
+        topDocument = NULL;
+        result = 1;
+        break;
 
-        case FILES_SOURCEFILE_TYPE:
-            if (topStylesheet)
-                xsltFreeStylesheet(topStylesheet);
-            topStylesheet = NULL;
-            result = 1;
-            break;
+    case FILES_SOURCEFILE_TYPE:
+        if (topStylesheet)
+            xsltFreeStylesheet(topStylesheet);
+        topStylesheet = NULL;
+        result = 1;
+        break;
 
-        case FILES_TEMPORARYFILE_TYPE:
-            if (tempDocument)
-                xmlFreeDoc(tempDocument);
-            tempDocument = NULL;
-            result = 1;
-            break;
+    case FILES_TEMPORARYFILE_TYPE:
+        if (tempDocument)
+            xmlFreeDoc(tempDocument);
+        tempDocument = NULL;
+        result = 1;
+        break;
     }
     return result;
 }
@@ -644,7 +654,7 @@ int filesInit(void)
     /* check the result so far and lastly perform platform specific
      * initialization */
     if (entityNameList && encodeInBuff && encodeOutBuff &&
-        filesPlatformInit())
+            filesPlatformInit())
         result = 1;
     return result;
 }
@@ -703,8 +713,8 @@ void filesFree(void)
 int filesIsSourceFile(xmlChar * fileName)
 {
     return strstr((char *) fileName, ".xsl") ||
-        strstr((char *) fileName, ".Xsl") ||
-        strstr((char *) fileName, ".XSL");
+            strstr((char *) fileName, ".Xsl") ||
+            strstr((char *) fileName, ".XSL");
 }
 
 
@@ -758,7 +768,7 @@ void filesAddEntityName(const xmlChar * SystemID, const xmlChar * PublicID)
     for (entityIndex = 0;
          entityIndex < arrayListCount(filesEntityList()); entityIndex++) {
         tempItem =
-            (entityInfoPtr) arrayListGet(filesEntityList(), entityIndex);
+                (entityInfoPtr) arrayListGet(filesEntityList(), entityIndex);
         if (tempItem && xmlStrEqual(SystemID, tempItem->SystemID)) {
             /* name aready exits so don't add it */
             return;
@@ -776,7 +786,7 @@ void filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode, xmlNodePtr lastNode)
 {
     xmlNodePtr node = firstNode;
     if (!firstNode || !ent || !ent->SystemID ||
-         (ent->etype != XML_EXTERNAL_GENERAL_PARSED_ENTITY) )
+            (ent->etype != XML_EXTERNAL_GENERAL_PARSED_ENTITY) )
         return;
 
     xmlChar *fixedURI = 0;
@@ -865,35 +875,35 @@ int filesLoadCatalogs(void)
 
     xmlCatalogCleanup();
     if (optionsGetIntOption(OPTIONS_CATALOGS)) {
-      if (optionsGetStringOption(OPTIONS_CATALOG_NAMES).isEmpty()) {
-    /* use the SGML catalog */
+        if (optionsGetStringOption(OPTIONS_CATALOG_NAMES).isEmpty()) {
+            /* use the SGML catalog */
 #ifdef __riscos
-    catalogs = getenv("SGML$CatalogFiles");
+            catalogs = getenv("SGML$CatalogFiles");
 #else
-    catalogs = getenv("SGML_CATALOG_FILES");
+            catalogs = getenv("SGML_CATALOG_FILES");
 #endif
-    if (catalogs == NULL) {
+            if (catalogs == NULL) {
 #ifdef __riscos
-      xsldbgGenericErrorFunc("Warning: Environment variable SGML$CatalogFiles is not set.\n");
+                xsldbgGenericErrorFunc("Warning: Environment variable SGML$CatalogFiles is not set.\n");
 #else
-      xsldbgGenericErrorFunc("Warning: Environment variabe SGML_CATALOG_FILES FILES not set.\n");
+                xsldbgGenericErrorFunc("Warning: Environment variabe SGML_CATALOG_FILES FILES not set.\n");
 #endif
-    } else
-      /* copy the current catalog name(s) for user to see */
-      optionsSetStringOption(OPTIONS_CATALOG_NAMES, catalogs);
-      } else
-    /* Use the current catalog settings from users*/
-    catalogs = optionsGetStringOption(OPTIONS_CATALOG_NAMES);
+            } else
+                /* copy the current catalog name(s) for user to see */
+                optionsSetStringOption(OPTIONS_CATALOG_NAMES, catalogs);
+        } else
+            /* Use the current catalog settings from users*/
+            catalogs = optionsGetStringOption(OPTIONS_CATALOG_NAMES);
 
-      result = 1;
+        result = 1;
     }
 
     if (!catalogs.isEmpty()){
-      /* Load the new cataog selection */
-      xmlLoadCatalogs(catalogs.toUtf8().constData());
+        /* Load the new cataog selection */
+        xmlLoadCatalogs(catalogs.toUtf8().constData());
     }else{
-      /* Use default catalogs */
-      xmlInitializeCatalog();
+        /* Use default catalogs */
+        xmlInitializeCatalog();
     }
     return result;
 }
@@ -916,7 +926,7 @@ xmlChar * filesEncode(const xmlChar * text)
     xmlBufferCat(encodeInBuff, text);
 
     if (xmlCharEncOutFunc(stdoutEncoding, encodeOutBuff, encodeInBuff)
-        >= 0) {
+            >= 0) {
         result = xmlStrdup(xmlBufferContent(encodeOutBuff));
     } else {
         xsldbgGenericErrorFunc(QObject::tr("Encoding of text failed.\n"));
@@ -942,7 +952,7 @@ xmlChar * filesDecode(const xmlChar * text)
     xmlBufferCat(encodeInBuff, text);
 
     if (xmlCharEncInFunc(stdoutEncoding, encodeOutBuff, encodeInBuff)
-        >= 0) {
+            >= 0) {
         result = xmlStrdup(xmlBufferContent(encodeOutBuff));
     } else {
         xsldbgGenericErrorFunc(QObject::tr("Encoding of text failed.\n"));
@@ -959,13 +969,13 @@ int filesSetEncoding(const char *encoding)
     if (encoding) {
         /* don't switch encoding unless we've found a valid encoding */
         xmlCharEncodingHandlerPtr tempEncoding =
-            xmlFindCharEncodingHandler(encoding);
+                xmlFindCharEncodingHandler(encoding);
         if (tempEncoding) {
             filesSetEncoding(NULL);     /* re-use code to close encoding */
             stdoutEncoding = tempEncoding;
             result =
-                (xmlCharEncOutFunc(stdoutEncoding, encodeOutBuff, NULL)
-                 >= 0);
+                    (xmlCharEncOutFunc(stdoutEncoding, encodeOutBuff, NULL)
+                     >= 0);
             if (!result) {
                 xmlCharEncCloseFunc(stdoutEncoding);
                 stdoutEncoding = NULL;
@@ -1052,7 +1062,7 @@ QString filesSearchResultsPath()
 
     if (!optionsGetStringOption(OPTIONS_SEARCH_RESULTS_PATH).isEmpty()) {
         result = optionsGetStringOption(OPTIONS_SEARCH_RESULTS_PATH);
-   }
+    }
 
     if (result.isEmpty()) {
         result = QDir::homePath();
@@ -1064,63 +1074,63 @@ QString filesSearchResultsPath()
 
 xmlChar *filesURItoFileName(const xmlChar* uri)
 {
-  xmlChar *result = NULL;
-  xmlChar *unescapedFileName = NULL;
-  const xmlChar* tempName = NULL;
+    xmlChar *result = NULL;
+    xmlChar *unescapedFileName = NULL;
+    const xmlChar* tempName = NULL;
 
-  if (uri){
-    if (!xmlStrnCmp(uri, "file://localhost", 16 )){
-      tempName = uri + 16;
-    }else{
+    if (uri){
+        if (!xmlStrnCmp(uri, "file://localhost", 16 )){
+            tempName = uri + 16;
+        }else{
 #if defined(WIN32) && ! defined(CYGWIN)
-      if (!xmlStrnCmp(uri, "file:///", 8))
-    tempName = uri + 8;
+            if (!xmlStrnCmp(uri, "file:///", 8))
+                tempName = uri + 8;
 #else
-      if (!xmlStrnCmp(uri, "file:/", 6))
-    tempName = uri + 5; //  we need the leading '/'*/
-        while (tempName[0] == '/' && tempName[1] == '/' )
-            tempName++;
+            if (!xmlStrnCmp(uri, "file:/", 6))
+                tempName = uri + 5; //  we need the leading '/'*/
+            while (tempName[0] == '/' && tempName[1] == '/' )
+                tempName++;
 #endif
-    }
+        }
 
-    /* If we've found something check to see if the file name
+        /* If we've found something check to see if the file name
        found is to be valid */
-    if (tempName)
-      result = (xmlChar*) xmlStrdup(tempName);
-      unescapedFileName =  (xmlChar*) xmlStrdup(tempName);
-      if (result && unescapedFileName){
-    if (PATHCHAR != URISEPARATORCHAR){
-      /* Must convert path separators first */
-      xmlChar *probe = result;
-      while(*probe != '\0'){
-        if (*probe == (xmlChar)URISEPARATORCHAR)
-          *probe = (xmlChar)PATHCHAR;
-        probe++;
-      }
-    }
-    /* Now unescape the file name in result so far
+        if (tempName)
+            result = (xmlChar*) xmlStrdup(tempName);
+        unescapedFileName =  (xmlChar*) xmlStrdup(tempName);
+        if (result && unescapedFileName){
+            if (PATHCHAR != URISEPARATORCHAR){
+                /* Must convert path separators first */
+                xmlChar *probe = result;
+                while(*probe != '\0'){
+                    if (*probe == (xmlChar)URISEPARATORCHAR)
+                        *probe = (xmlChar)PATHCHAR;
+                    probe++;
+                }
+            }
+            /* Now unescape the file name in result so far
     * NB: An unescaped name takes less memory that an escaped name
     */
-    xmlURIUnescapeString((char*)result, -1,  (char*)unescapedFileName);
-    xmlFree(result);
-    /* success we've got an local unescaped file name */
-    result = unescapedFileName;
-      }else{
-        xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
-    if (result){
-      xmlFree(result);
-    }
-    if (unescapedFileName) /* not needed, here for completeness */
-      xmlFree(unescapedFileName);
+            xmlURIUnescapeString((char*)result, -1,  (char*)unescapedFileName);
+            xmlFree(result);
+            /* success we've got an local unescaped file name */
+            result = unescapedFileName;
+        }else{
+            xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
+            if (result){
+                xmlFree(result);
+            }
+            if (unescapedFileName) /* not needed, here for completeness */
+                xmlFree(unescapedFileName);
 
-    result = NULL;
-      }
+            result = NULL;
+        }
     }else{
         xsldbgGenericErrorFunc(QObject::tr("Error: Unable to convert %1 to local file name.\n").arg(xsldbgText(uri)));
     }
 
 
-  return result;
+    return result;
 }
 
 
