@@ -192,8 +192,8 @@ void XsldbgSettingsModel::init()
     boolValue = false ;
     updateSetting(OPTIONS_AUTORESTART, boolValue);
 
-    /* start up with gdb mode turned on */
-    intValue = 1;
+    /* start up with gdb mode turned off */
+    intValue = 0;
     updateSetting(OPTIONS_GDB, intValue);
 
     /* start up with output mode turned on */
@@ -283,9 +283,9 @@ QVariant XsldbgSettingsModel::data(const QModelIndex & index, int role) const
 
                 case Qt::DisplayRole:
                 case Qt::EditRole:
-                if (index.column() == 0) 
+                if (index.column() == 0)
                     result = it->m_name;
-                else if (index.column() == 1) 
+                else if (index.column() == 1)
                     result = it->m_value;
                 break;
             }
@@ -421,7 +421,7 @@ QStringList XsldbgSettingsModel::settingsList(SettingsType settingType, SortType
     QStringList result;
     if (sortType == SortNone || sortType == SortByName){
         for (XsldbgSettingDataConstIterator it = d_ptr->settingData.constBegin(); it != d_ptr->settingData.constEnd(); it++) {
-            if (it->m_type & settingType) 
+            if (it->m_type & settingType)
                 result.append(it->m_name);
         }
         if (sortType == SortByName)
@@ -524,7 +524,7 @@ bool XsldbgSettingsModel::saveSettings (QSettings & configSettings ) const
 {
     bool result = true;
     //qDebug() << "XsldbgSettingsModel::saveSettings:" << configSettings.fileName();
-    // remove any old parameters 
+    // remove any old parameters
     QStringList settingsList = configSettings.allKeys();
     QString setting;
     foreach (setting, settingsList){
@@ -568,7 +568,7 @@ bool XsldbgSettingsModel::loadSettings (const QSettings & configSettings )
             if (findSetting(setting.mid(optionPrefixLen), optionType,  item)) {
                 //qDebug() << "XsldbgSettingsModel::loadSettings:" << item.m_id << value;
                 updateSetting(item.m_id, value);
-	    }
+        }
         }else if (setting.startsWith(paramPrefix)){
             addParameter(setting.mid(paramPrefixLen), value);
         }
