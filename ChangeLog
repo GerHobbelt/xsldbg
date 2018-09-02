@@ -34,6 +34,7 @@ Keith Isdale 30th July 2018 <keithisdale@gmail.com>
 	If chdir fails then show both original and expanded directory path
         Improve 'search' command help, move doc_version to xsldoc.xml
 	Improve 'stylesheets' command via also showing parent stylesheet if one applies
+	Move README to README.md and apply markdown formatting
 
 
 Keith Isdale 23rd May 2018 <keithisdale@gmail.com>

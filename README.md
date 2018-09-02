@@ -1,3 +1,28 @@
+Overview
+========
+xsldbg is debugger for XSLT scripts using API hooks kindly added libxslt libraries.
+
+Features include
+* run to a location in XSLT/XML file
+** step
+** stepup
+** stepdown
+** next
+** continue
+** run 
+* set breakpoints on XSLT/XML files
+* view XSLT/XML data
+** view and possible set XSLT variables
+** view and set XSLT parameter variables feed to XSLT tranformation
+** view result of XPath expressions
+** watch result of XPath expressions
+** list templates in use
+** list stylesheets in use
+** list general parsed entities in use 
+
+
+Installation of dependancies
+============================
 This package requiries
 * Qt5.x development libraries/headers to be present
 * libexslt, libxslt and libxml2 libraries/headers to be present.
@@ -6,6 +31,7 @@ As example install prerequisites on OpenSuse Linux for Qt5 build of xsldbg
 * sudo zypper install rpmbuild patterns-openSUSE-devel_qt5 patterns-openSUSE-devel_basis patterns-openSUSE-devel_C_C++ libxslt-devel libxml2-devel libxslt libxml2
 
 Documentation
+=============
 * To regenerate docbook documentation saxon version 6 must be in path. See docs/en/en.pro
 * docs/en/website/index.html includes a quick tutorial about using xsldbg
 * docs/en/website/index.html and docs/en/plain/index.html for latest information 
@@ -23,6 +49,8 @@ Note that the libxml2 library used support the following path types for XSLT/XML
 When specifier http:// or ftp:// document paths ensure that host maps to IPv4 or IPv6 address used by related server. For
   example instead of localhost you may need to use the IPv4 address 127.0.0.1
 
+Compilation
+===========
 This package can be built on *nix and Windows.
 
 If found tools xslt-config and xml2-config will be used to set
@@ -71,6 +99,8 @@ For WIN32 user you will need to set several environment variables
   You must ensure that %LIBXML_PREFIX%\lib, %LIBXSLT_PREFIX%\lib, %ICONV_PREFIX%\lib has been added to your %PATH% before starting qxsldbg.exe. Unless you yave copied the dll's found in these directories into you qxsldbg the \qxsldbg
   It is recommended that you install qxsldbg into c:\qxsldbg
 
+Creating distribution package
+=============================
 To create dist packages in *nix the following must be present, see the makedist.sh script
 * tar
 * bzip2

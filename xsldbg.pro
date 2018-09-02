@@ -5,6 +5,6 @@ unix:SUBDIRS+=man1
 
 DISTFILES +=\
      ChangeLog \
-     README \
+     README.md \
      COPYING \
      xsldbg.spec
