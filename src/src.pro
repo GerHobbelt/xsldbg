@@ -8,6 +8,12 @@ CONFIG	+= console
 CONFIG-=app_bundle
 INSTALLS += target
 
+unix {
+    Desktop_entries.path = $$DESKTOP_DIR
+    Desktop_entries.files = xsldbg.desktop
+    INSTALLS += Desktop_entries
+}
+
 DISTFILES += \
     ../xsldbg.pri \
     src_common.pri

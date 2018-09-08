@@ -7,10 +7,14 @@ DEFINES+=XSLDBG_VERSION=\\\"$$XSLDBG_VERSION\\\"
             isEmpty(INSTALL_PREFIX) {
                 DOCS_ROOT="/usr/share/doc/packages/xsldbg"
                 BIN_DIR="/usr/bin"
+                DESKTOP_DIR="/usr/share/applications"
+                ICON_DIR="/usr/share/icons"
                 MAN_DIR="/usr/share/man/man1"
             } else {
                 DOCS_ROOT="$${INSTALL_PREFIX}/share/doc/packages/xsldbg"
                 BIN_DIR="$${INSTALL_PREFIX}/bin"
+                DESKTOP_DIR="$${INSTALL_PREFIX}/applications"
+                ICON_DIR="$${INSTALL_PREFIX}/icons"
                 MAN_DIR="$${INSTALL_PREFIX}/share/man/man1"
                 message(xsldbg install prefix is '$${INSTALL_PREFIX}')
             }

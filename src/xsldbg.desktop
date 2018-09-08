@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Exec=xsldbg
+Icon=xsldbg_source.png
+X-DocPath=xsldbg/en/index.html
+Terminal=true
+Name=xsldbg
+GenericName=XSLT debugger
+Comment=xsldbg is a console application to debug XSLT scripts
+Categories=Development;Debugger;

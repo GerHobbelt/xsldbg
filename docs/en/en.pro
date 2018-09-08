@@ -66,7 +66,7 @@ unix{
 
         xsldocKDEdocs2.files = $$PWD/KDE/index.docbook
         xsldocKDEdocs2.depends = $$PWD/KDE/xsldoc2kde.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd
-        xsldocKDEdocs2.path = $$DOCS_ROOT/en/KDE
+        xsldocKDEdocs2.path = $$DOCS_ROOT/en
         xsldocKDEdocs2.commands = saxon -o $$PWD/KDE/index.docbook $$PWD/xsldoc.xml $$PWD/KDE/xsldoc2kde.xsl alldocs=\"\'1\'\" xsldbg_version=\"\'$${XSLDBG_VERSION}\'\"
 
         INSTALLS+=xsldocKDEdocs2
