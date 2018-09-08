@@ -5,8 +5,6 @@ TEMPLATE = subdirs
 testdocuments.files =\
      $$files(*.x*l) \
      $$files(*.dtd) \
-     $$files(*.pl) \
-    $$files(*.data) \
     $$files(*.txt)
 
 testdocuments.path = $$DOCS_ROOT/tests
