@@ -45,11 +45,13 @@ As example install prerequisites on
 
 Documentation
 =============
+* xsldbg man page
 * docs/en/website/index.html includes a quick tutorial about using xsldbg
 * docs/en/website/index.html and docs/en/plain/index.html for latest information
 * to add docbook DTD support to catalog on Linux use command like:
 > sudo  xmlcatalog -v --add nextCatalog '' "file:///usr/share/xml/docbook/schema/dtd/4.5/catalog.xml" /etc/xml/catalog
 * to regenerate docbook documentation saxon version 6 must be in path. See docs/en/en.pro
+
 
 
 Note that the libxml2 library used supports the following path types for XSLT/XML documents

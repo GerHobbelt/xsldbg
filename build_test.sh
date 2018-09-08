@@ -17,9 +17,10 @@ if [ -z "$PRODUCT" ]; then
 fi
 
 TMPDIR=~/tmp-${PRODUCT}
-if [ ! -d "$TMPDIR" ];then
-    mkdir -p "$TMPDIR"
+if [ -d "$TMPDIR" ];then
+    rm -rf $TMPDIR
 fi
+mkdir -p "$TMPDIR"
 
 if [ -z "$PACKAGE_URL" ];then
   PACKAGE_URL=$2
@@ -65,7 +66,7 @@ if [ -e /usr/bin/rpmbuild ]; then
     else
         CUSTOM_SPEC_FILE=${PRODUCT}_${DISTRO}.custom_spec
         tar xzf ~/rpmbuild/SOURCES/${PRODUCT}-${VERSION}.tar.gz --wildcards  "${PRODUCT}-*/${CUSTOM_SPEC_FILE}"
-        rpmbuild -bb ${PRODUCT}-*/${CUSTOM_SPEC_FILE}
+        rpmbuild --clean -bb ${PRODUCT}-*/${CUSTOM_SPEC_FILE}
     fi
 elif [ -e "/usr/bin/qtchooser" ]; then
     echo "build using qtchooser"

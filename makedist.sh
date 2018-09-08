@@ -7,7 +7,7 @@ BASIC_SPEC_FILE=xsldbg.spec
 
 # Apply current qxsldbg version to spec file and build test script
 sed -i "s/\(define version [0-9].[0-9].[0-9]\)/define version ${VERSION}/" ${BASIC_SPEC_FILE}
-sed -i "s/VERSION=[0-9].[0-9].[0-9]/VERSION=${VERSION}/" rpmbuild_test.sh
+sed -i "s/VERSION=[0-9].[0-9].[0-9]/VERSION=${VERSION}/" build_test.sh
 
 # update the SUSE spec file
 SUSE_SPEC_FILE=xsldbg_suse.custom_spec
