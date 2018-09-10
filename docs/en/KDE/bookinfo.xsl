@@ -39,22 +39,22 @@
       <date>2018-09-10</date>
       <releaseinfo><xsl:value-of select="$xsldbg_version"/></releaseinfo>
       <abstract>
-        <para>
-xsldbg is a tool intended to help understand stylesheets.
-What makes it different to other stylesheet debuggers is the ability
-to search for items of interest and trace stylesheet execution.
-	</para>
-	<para>
-A good deal of effort has been put into</para>
-<itemizedlist>
-    <listitem>creating a <ulink url="http://www.xemacs.org/">XEmacs</ulink> front end
-    called <ulink url="https://sourceforge.net/projects/xsldbg/files/xsldbg-mode/">xsldbg-mode</ulink>.
-    </listitem>
-    <listitem>creating a Qt5 front end  called <ulink url="https://sourceforge.net/projects/xsldbg/files/qxsldbg/">qxsldbg</ulink>.
-    </listitem>
-    <listitem>creating a kate plugin(KF5/Qt5) called <ulink url="https://sourceforge.net/projects/xsldbg/files/kxsldbg/">kxsldbg</ulink>.
-    </listitem>
-</itemizedlist>
+        <para>xsldbg is a tool intended to help understand stylesheets.
+            What makes it different to other stylesheet debuggers is the ability
+            to search for items of interest and trace stylesheet execution.
+        </para>
+        <para>A good deal of effort has been put into
+            <itemizedlist>
+                <listitem><para>creating a <ulink url="http://www.xemacs.org/">XEmacs</ulink> front end called
+                            <ulink url="https://sourceforge.net/projects/xsldbg/files/xsldbg-mode/">xsldbg-mode</ulink>.</para>
+                </listitem>
+                <listitem><para>creating a Qt5 front end  called
+                            <ulink url="https://sourceforge.net/projects/xsldbg/files/qxsldbg/">qxsldbg</ulink>.</para>
+                </listitem>
+                <listitem><para>creating a kate plugin(KF5/Qt5) called
+                            <ulink url="https://sourceforge.net/projects/xsldbg/files/kxsldbg/">kxsldbg</ulink>.</para>
+                </listitem>
+        </itemizedlist></para>
       </abstract>
       <keywordset>
         <keyword>debugger</keyword>
