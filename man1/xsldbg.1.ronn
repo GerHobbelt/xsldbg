@@ -177,6 +177,10 @@ FILES
 
 :   English documentation in HTML format.
 
+* khelpcenter 
+: to see help in khelpcentre run: khelpcenter help:/xsldbg
+
+
 
 ENVIRONMENT
 -----------
