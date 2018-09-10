@@ -18,7 +18,7 @@ DESCRIPTION
 -----------
 
 xsldbg is a text based tool to debug stylesheets (the eXtensible Stylesheet
- Language) and has commands similar to the Unix/Linux debugger gdb. 
+ Language) and has commands similar to the Unix/Linux debugger gdb.
 
 xsldbg has three major modes of execution of stylesheets:
 
@@ -93,7 +93,7 @@ OPTIONS
 
 --profile,--norman
 
-: dump profiling informations 
+: dump profiling informations
 
 --shell|--noshell
 
@@ -177,10 +177,6 @@ FILES
 
 :   English documentation in HTML format.
 
-* khelpcenter*
-: to see help in khelpcentre run: khelpcenter help:/xsldbg
-
-
 
 ENVIRONMENT
 -----------
@@ -201,5 +197,7 @@ SEE ALSO
 --------
 
 See the 'help' command build into xsldbg.
+
+See help in khelpcentre run: khelpcenter help:/xsldbg
 
 **xmlcatalog(1)**
