@@ -2,7 +2,7 @@ TEMPLATE=subdirs
 
 unix {
     # install desktop file related icons
-    include($$PWD/../src/qxsldbg.pri)
+    include($$PWD/../xsldbg.pri)
 
     22x22icons.path=$$ICON_DIR/hicolor/22x22/apps
     22x22icons.files=$$files($$PWD/22x22/*.png)

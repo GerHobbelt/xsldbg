@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
-<!-- 
-  File : xsldoc2gnome.xsl 
+<!--
+  File : xsldoc2gnome.xsl
   Purpose :Convert xsldoc.xml to GNOME style xmlDocbook
   Author : Keith Isdale <keithisdale@gmail.com>
 -->
@@ -12,10 +12,10 @@
     doctype-system="http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" indent="yes"/>
 
   <!--
-GNOME docs template state this as its preable of 
+GNOME docs template state this as its preable of
 <!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
     "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd" [
-<!ENTITY version "1.4.0"> 
+<!ENTITY version "1.4.0">
 <!ENTITY date "4/20/2001">
 ]>
 
@@ -36,7 +36,7 @@ This is achieved useing $xsldbg_version and $xsldbg_date
 
   <xsl:template match="/xsldoc">
     <xsl:call-template name="article_header"/>
-  <article id="index" lang="en"> 
+  <article id="index" lang="en">
   <xsl:call-template name="article_info"/>
   <xsl:comment>please do not change the id; for translations, change lang to </xsl:comment>
   <xsl:comment>appropriate code </xsl:comment>
@@ -61,12 +61,12 @@ This is achieved useing $xsldbg_version and $xsldbg_date
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
- 
+
 
  <xsl:template match="body">
     <xsl:apply-templates select="*"/>
   </xsl:template>
-  
+
 
   <xsl:template match="title">
     <xsl:value-of select="''"/>
@@ -79,7 +79,7 @@ This is achieved useing $xsldbg_version and $xsldbg_date
   <xsl:template match="list">
     <informaltable>
       <tgroup cols="1">
-      <tbody>  
+      <tbody>
       <xsl:for-each select ="li">
        <row>
          <entry><xsl:apply-templates /></entry>
@@ -93,11 +93,11 @@ This is achieved useing $xsldbg_version and $xsldbg_date
 
 
   <xsl:template match="usage">
-    <table label="of usage">      
+    <table label="of usage">
       <tgroup cols="1">
-      <tbody>  
+      <tbody>
       <xsl:for-each select ="li">
-       <row>         
+       <row>
        <entry><xsl:apply-templates /></entry>
        </row>
        </xsl:for-each>
@@ -109,12 +109,9 @@ This is achieved useing $xsldbg_version and $xsldbg_date
 
 
   <xsl:template match="comment">
-    <markup>
         <emphasis>
             <xsl:value-of select="."/>
         </emphasis>
-    </markup>
-
   </xsl:template>
 
   <xsl:template match="summary">

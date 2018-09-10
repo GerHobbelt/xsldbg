@@ -43,10 +43,10 @@ A:link, A:visited, A:active { text-decoration: underline }
 <body bgcolor="#8b7765" text="#000000" link="#000000" vlink="#000000"><table class="listbody"><tr><td>
 <h1 class="cmdth">xsldbg 4.7.0</h1>
 <h2 class="cmdth">Overview</h2>
-<h3>xsldbg help</h3>
 
-<p> xsldbg is a text based tool to debug stylesheets (the eXtensible Stylesheet Language) and has 
-commands similar to the Unix/Linux debugger gdb. It has three major modes of execution of stylesheets.
+<h3></h3>
+<p>xsldbg is a text based tool to debug stylesheets (the eXtensible Stylesheet Language) and has
+    commands similar to the Unix/Linux debugger gdb. It has three major modes of execution of stylesheets.</p>
 <table class="list"><tr>
 <td width="10"></td>
 <td><table class="listbody">
@@ -55,18 +55,28 @@ commands similar to the Unix/Linux debugger gdb. It has three major modes of exe
 <tr><td>Continue until next break point is found, or stylesheet has restarted    </td></tr>
 </table></td>
 </tr></table>
-</p>
-<h3>xsldbg command line</h3>
-On systems with readline library available you can use the back/forward
-keys to navigate the history of entered commands.
-On all systems the last entered command can be repeated by just pressing
-the &lt;ENTER&gt; key. 
 
+
+
+<h3></h3>
+<p>On systems with readline library available you can</p>
+<table class="list"><tr>
+<td width="10"></td>
+<td><table class="listbody">
+<tr><td>use the back/forward keys to navigate the history of entered commands    </td></tr>
+<tr><td>use &lt;tab&gt; key to automatically complete values names such as file names when adding breakpoints    </td></tr>
+</table></td>
+</tr></table>
+<p>On all systems the last entered command can be repeated by just pressing
+the &lt;ENTER&gt; key.
+</p>
+<p></p>
 <p>
-If your operating system supports it file names will be expanded. 
+If your operating system supports it file names will be expanded.
 </p>
 <p>
 Note that the libxml2 library used support the following path types for XSLT/XML documents
+</p>
 <table class="list"><tr>
 <td width="10"></td>
 <td><table class="listbody">
@@ -76,16 +86,19 @@ Note that the libxml2 library used support the following path types for XSLT/XML
 <tr><td>ftp://[user[:password]@]host[:port]/path    </td></tr>
 </table></td>
 </tr></table>
-</p>
 <p>
-Nornmally support for http:// and ftp:// XML document paths enabled in libxml2. When specifier http:// or ftp:// document paths ensure that host maps to IPv4 or IPv6 address used by related server. For
+Normally support for http:// and ftp:// XML document paths enabled in libxml2. When specifier http:// or ftp:// document paths ensure that host maps to IPv4 or IPv6 address used by related server. For
   example instead of localhost you may need to use the IPv4 address 127.0.0.1
 </p>
-<p>Several commands take more that one argument. Some arguments can be 
- sourrounded by quotes to complex argument to be proceesed as one 
-  argument. eg break "* | @" would allow you to se a breakpoint on the
+<p>Several commands take more that one argument. Some arguments can be
+ surrounded by quotes to complex argument to be proceesed as one
+  argument. eg break "* | @" would allow you to use a breakpoint on the
   template with the name "* | @"</p>
-<h3>Legend :</h3>
+
+
+
+<h3></h3>
+<p>The following shows the legend of terms use in this manual and there meaning</p>
 <table class="list"><tr>
 <td width="10"></td>
 <td><table class="listbody">
@@ -105,10 +118,10 @@ Nornmally support for http:// and ftp:// XML document paths enabled in libxml2. 
 <tr><td>PARAM_ID : a valid parameter number as indicated by showparam command    </td></tr>
 <tr><td>PATH : A path to change working directory to On some operating systems a "~" prefix will be replaced by your home directory path    </td></tr>
 <tr><td>TEXT : Free form text &nbsp;&nbsp;&nbsp;&nbsp;<i>(no restrictions)</i>    </td></tr>
-<tr><td>COMMAND : A valid command for the xsdbg    </td></tr>
+<tr><td>COMMAND : A valid command for the xsldbg    </td></tr>
 <tr><td>QNAME : A valid variable/parameter name    </td></tr>
 <tr><td>SOURCE : The stylesheet being/to be executed. See &lt;FILENAME&gt; and &lt;URI&gt;    </td></tr>
-<tr><td>DATA : The xml data(document) being/to be processed by the stylesheet. See &lt;FILENAME&gt; and &lt;URI&gt;    </td></tr>
+<tr><td>DATA : The XML data(document) being/to be processed by the stylesheet. See &lt;FILENAME&gt; and &lt;URI&gt;    </td></tr>
 <tr><td>DEVICE_PATH : Is a valid terminal on the operating system    </td></tr>
 <tr><td>TTY_LEVEL : Is a valid level of input/output to use    </td></tr>
 </table></td>
@@ -116,13 +129,14 @@ Nornmally support for http:// and ftp:// XML document paths enabled in libxml2. 
 
 
 
-<h3>Within xsldbg these commands are available:</h3>
+
+<h3></h3>
 <table class="list"><tr>
 <td width="10"></td>
 <td><table class="listbody">
 <tr><td>Help related :<a href="#help">help</a>    </td></tr>
 <tr><td>Running related : {<a href="#bye">bye</a>|<a href="#exit">exit</a>|
-<a href="#quit">quit</a>}, <a href="#step">step</a>, 
+<a href="#quit">quit</a>}, <a href="#step">step</a>,
 <a href="#stepup">stepup</a>, <a href="#stepdown">stepdown</a>,
 <a href="#next">next</a>,
 <a href="#continue">continue</a>, <a href="#run">run</a>,
@@ -130,34 +144,33 @@ Nornmally support for http:// and ftp:// XML document paths enabled in libxml2. 
 <a href="#options">options</a>    </td></tr>
 <tr><td>Libxslt parameter related : <a href="#addparam">addparam</a>,
 <a href="#delparam">delparam</a>,<a href="#showparam">showparam</a>,
-<a href="#output">output</a>, <a href="#setoption">setoption</a>, 
+<a href="#output">output</a>, <a href="#setoption">setoption</a>,
 <a href="#options">options</a>    </td></tr>
 <tr><td>Template related : <a href="#templates">templates</a>,
 <a href="#where">where</a>, <a href="#frame">frame</a>    </td></tr>
-<tr><td>Break point related : <a href="#break">break</a>, 
-<a href="#showbreak">showbreak</a>,<a href="#delete">delete</a>, 
+<tr><td>Break point related : <a href="#break">break</a>,
+<a href="#showbreak">showbreak</a>,<a href="#delete">delete</a>,
 <a href="#enable">enable</a>    </td></tr>
 <tr><td>Expression viewing(xpath) : <a href="#cat">cat</a>    </td></tr>
-<tr><td>Node viewing : <a href="#ls">ls</a>, <a href="#dir">dir</a>, 
+<tr><td>Node viewing : <a href="#ls">ls</a>, <a href="#dir">dir</a>,
 	<a href="#du">du</a>, <a href="#cat">cat</a>, <a href="#pwd">pwd</a>, <a href="#addwatch">addwatch</a>, <a href="#showwatch">showwatch</a>, <a href="#delwatch">delwatch</a>    </td></tr>
-<tr><td>Variable viewing : <a href="#globals">globals</a>, 
-<a href="#locals">locals</a>, 
+<tr><td>Variable viewing : <a href="#globals">globals</a>,
+<a href="#locals">locals</a>,
 <a href="#cat">cat</a>    </td></tr>
 <tr><td>Variable setting: <a href="#set">set</a>    </td></tr>
-<tr><td>Node selection : <a href="#source">source</a>, 
+<tr><td>Node selection : <a href="#source">source</a>,
 <a href="#data">data</a>, <a href="#cd">cd</a>    </td></tr>
 <tr><td>Searching :<a href="#search">search</a>    </td></tr>
 <tr><td>Operating system related :<a href="#chdir">chdir</a>,
 <a href="#shell">shell</a>,<a href="#tty">tty</a>    </td></tr>
-<tr><td>File related : <a href="#output">output</a>, 
-<a href="#entities">entities</a>, <a href="#system">system</a>, 
+<tr><td>File related : <a href="#output">output</a>,
+<a href="#entities">entities</a>, <a href="#system">system</a>,
 <a href="#public">public</a>    </td></tr>
-<tr><td>Disabled file commands: <a href="#validate">validate</a>, 
-<a href="#load">load</a>, <a href="#save">save</a>, 
+<tr><td>Disabled file commands: <a href="#validate">validate</a>,
+<a href="#load">load</a>, <a href="#save">save</a>,
 <a href="#write">write</a>, <a href="#free">free</a>    </td></tr>
 </table></td>
 </tr></table>
-
 
 
 
@@ -204,11 +217,11 @@ Nornmally support for http:// and ftp:// XML document paths enabled in libxml2. 
 </table>
 <br><br><a name="break"></a><table width="100%" class="cmd">
 <th class="cmdth">Break</th>
-<tr class="cmdsummary"><td>Break at a template, at a location in a stylesheet or xml file loaded by xsldbg, or at the current node.
+<tr class="cmdsummary"><td>Break at a template, at a location in a stylesheet or XML file loaded by xsldbg, or at the current node.
 New for xsldbg 3.1.4: When in gdb compatabilty mode orpaned breakpoints can be set at a specific file and line number and be resolved to an active later on.</td></tr>
 <tr class="cmdtr"><td class="cmdtd">
 <p>Shortcut name: b</p>
-<p>xsldbg will try to guess the complete URL given a
+<p>xsldbg will try to guess the complete URL given a</p>
 <table class="list"><tr>
 <td width="10"></td>
 <td><table class="listbody">
@@ -217,10 +230,7 @@ New for xsldbg 3.1.4: When in gdb compatabilty mode orpaned breakpoints can be s
 <tr><td>a file name relative to the current working directory of xsldbg    </td></tr>
 </table></td>
 </tr></table>
-Ie if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this
-</p>
-<p> break -l xsldoc.xsl 26
-</p>
+<p>As example if you have loaded a stylesheet file of ../en/xsldoc.xsl you can do this:break -l xsldoc.xsl 26</p>
 <p>This command will match a partial or complete QNAME template and or mode name provided. Eg "template" will match any QNAME with a local part of "template"
 </p>
 <p>Any name spaces in the provided QNAME will be expanded as specified
@@ -229,7 +239,7 @@ by the names spaces defined in the XSL SOURCE file. eg "xsl:test1"  will be expa
 <p>A requested breakpoint may need to be resolved to its associated URL and line number. This is done automaticly after
 the first template has been seen by xsldbg. Breakpoints are re-validated shortly after the start of each run.
 </p>
-<p>Automatic breakpoint validation is used when gdb mode is enabled - the default behaviour of xsldbg</p>
+<p>Automatic breakpoint validation is used when gdb mode is enabled - the default behavior of xsldbg</p>
 </td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>
@@ -242,8 +252,8 @@ the first template has been seen by xsldbg. Breakpoints are re-validated shortly
 <tr><td>break &lt;TEMPLATE_NAME&gt; &lt;MODE_NAME&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(To break at named template with given mode.)</i>    </td></tr>
 <tr><td>break "" &lt;MODE_NAME&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(To break at any template that has a given mode name)</i>    </td></tr>
 <tr><td>break *&nbsp;&nbsp;&nbsp;&nbsp;<i>(To break at any template found.)</i>    </td></tr>
-<tr><td>break \*&nbsp;&nbsp;&nbsp;&nbsp;<i>(To break at the "*" template. Other name that include '*' will not be treated specialy.)</i>    </td></tr>
-<tr><td>break &nbsp;&nbsp;&nbsp;&nbsp;<i>(To break point at current node. Yes that includes xml data nodes!)</i>    </td></tr>
+<tr><td>break \*&nbsp;&nbsp;&nbsp;&nbsp;<i>(To break at the "*" template. Other name that include '*' will not be treated specially.)</i>    </td></tr>
+<tr><td>break &nbsp;&nbsp;&nbsp;&nbsp;<i>(To break point at current node. Yes that includes XML data nodes!)</i>    </td></tr>
 </table></td>
 </tr>
 </table></tr>
@@ -282,8 +292,8 @@ the first template has been seen by xsldbg. Breakpoints are re-validated shortly
 <td width="10"></td>
 <td><table class="listbody">
 <tr><td>cd &lt;XPATH&gt;    </td></tr>
-<tr><td>cd -t&lt;TEMPLATE_NAME&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(To changes current SOURCE node to a be xsl template with name &lt;NAME&gt;, but does execute source command)</i>    </td></tr>
-<tr><td>cd -s&lt;XPATH&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(An absolute xPath to node within stylesheet)</i>    </td></tr>
+<tr><td>cd -t &lt;TEMPLATE_NAME&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(To changes current SOURCE node to a be xsl template with name &lt;NAME&gt;, but does execute source command)</i>    </td></tr>
+<tr><td>cd -s &lt;XPATH&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(An absolute xPath to node within stylesheet)</i>    </td></tr>
 <tr><td>cd   &lt;SHORTCUT&gt; &lt;XPATH&gt;    </td></tr>
 <tr><td>     Where SHORTCUT can be either    </td></tr>
 <tr><td>
@@ -327,14 +337,14 @@ the first template has been seen by xsldbg. Breakpoints are re-validated shortly
 </table>
 <br><br><a name="data"></a><table width="100%" class="cmd">
 <th class="cmdth">Data</th>
-<tr class="cmdsummary"><td>Switch to displaying the current node in xml data. Or change xml data used</td></tr>
+<tr class="cmdsummary"><td>Switch to displaying the current node in XML data. Or change XML data used</td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>
 <tr>
 <td width="10"></td>
 <td><table class="listbody">
 <tr><td>data&nbsp;&nbsp;&nbsp;&nbsp;<i>(Switch to the current document node.)</i>    </td></tr>
-<tr><td>data &lt;DATA&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(To change to a new xml data file.  A leading "~" is replaced by the $HOME environment variable value. Will need to use "run" command to process it)</i>    </td></tr>
+<tr><td>data &lt;DATA&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(To change to a new XML data file.  A leading "~" is replaced by the $HOME environment variable value. Will need to use "run" command to process it)</i>    </td></tr>
 </table></td>
 </tr>
 </table></tr>
@@ -352,8 +362,8 @@ the first template has been seen by xsldbg. Breakpoints are re-validated shortly
 <td><table class="listbody">
 <tr><td>delete&nbsp;&nbsp;&nbsp;&nbsp;<i>(To delete breakpoint at current node)</i>    </td></tr>
 <tr><td>delete   &lt;BREAKPOINT_ID&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(To delete breakpoint at specified break point number)</i>    </td></tr>
-<tr><td>delete -l &lt;FILENAME&gt; &lt;LINENO&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Delete at specifed file, line number)</i>    </td></tr>
-<tr><td>delete -l &lt;URI&gt; &lt;LINENO&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Delete at specifed URI, line number)</i>    </td></tr>
+<tr><td>delete -l &lt;FILENAME&gt; &lt;LINENO&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Delete at specified file, line number)</i>    </td></tr>
+<tr><td>delete -l &lt;URI&gt; &lt;LINENO&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Delete at specified URI, line number)</i>    </td></tr>
 <tr><td>delete &lt;TEMMPLATENAME&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(To delete break point at named template.)</i>    </td></tr>
 <tr><td>delete *&nbsp;&nbsp;&nbsp;&nbsp;<i>(To delete all break points.)</i>    </td></tr>
 </table></td>
@@ -412,8 +422,8 @@ the first template has been seen by xsldbg. Breakpoints are re-validated shortly
 <td><table class="listbody">
 <tr><td>disable&nbsp;&nbsp;&nbsp;&nbsp;<i>(To disable breakpoint at current node)</i>    </td></tr>
 <tr><td>disable   &lt;BREAKPOINT_ID&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(To disable breakpoint at specified break point number</i>    </td></tr>
-<tr><td>disable -l &lt;FILENAME&gt; &lt;LINENO&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Disable breakpoint at specifed file, line number)</i>    </td></tr>
-<tr><td>disable -l &lt;URI&gt; &lt;LINENO&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Disable breakpoint at specifed URI, line number)</i>    </td></tr>
+<tr><td>disable -l &lt;FILENAME&gt; &lt;LINENO&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Disable breakpoint at specified file, line number)</i>    </td></tr>
+<tr><td>disable -l &lt;URI&gt; &lt;LINENO&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Disable breakpoint at specified URI, line number)</i>    </td></tr>
 </table></td>
 </tr>
 </table></tr>
@@ -453,8 +463,8 @@ the first template has been seen by xsldbg. Breakpoints are re-validated shortly
 <td><table class="listbody">
 <tr><td>enable&nbsp;&nbsp;&nbsp;&nbsp;<i>(To enable/disable breakpoint at current node)</i>    </td></tr>
 <tr><td>enable   &lt;BREAKPOINT_ID&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(To enable/disable breakpoint at specified break point number</i>    </td></tr>
-<tr><td>enable -l &lt;FILENAME&gt; &lt;LINENO&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Enable/disable breakpoint at specifed file, line number)</i>    </td></tr>
-<tr><td>enable -l &lt;URI&gt; &lt;LINENO&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Enable/disable breakpoint at specifed URI, line number)</i>    </td></tr>
+<tr><td>enable -l &lt;FILENAME&gt; &lt;LINENO&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Enable/disable breakpoint at specified file, line number)</i>    </td></tr>
+<tr><td>enable -l &lt;URI&gt; &lt;LINENO&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Enable/disable breakpoint at specified URI, line number)</i>    </td></tr>
 </table></td>
 </tr>
 </table></tr>
@@ -520,8 +530,8 @@ the first template has been seen by xsldbg. Breakpoints are re-validated shortly
 <tr>
 <td width="10"></td>
 <td><table class="listbody">
-<tr><td>globals&nbsp;&nbsp;&nbsp;&nbsp;<i>(Print list of all globaly available variables)</i>    </td></tr>
-<tr><td>globals -f&nbsp;&nbsp;&nbsp;&nbsp;<i>(Print list of all globaly available variables and thier values)</i>    </td></tr>
+<tr><td>globals&nbsp;&nbsp;&nbsp;&nbsp;<i>(Print list of all globally available variables)</i>    </td></tr>
+<tr><td>globals -f&nbsp;&nbsp;&nbsp;&nbsp;<i>(Print list of all globally available variables and their values)</i>    </td></tr>
 <tr><td>globals &lt;QNAME&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Print the value of variable specified)</i>    </td></tr>
 </table></td>
 </tr>
@@ -529,7 +539,7 @@ the first template has been seen by xsldbg. Breakpoints are re-validated shortly
 </table>
 <br><br><a name="help"></a><table width="100%" class="cmd">
 <th class="cmdth">Help</th>
-<tr class="cmdsummary"><td>Display help on command or overiew</td></tr>
+<tr class="cmdsummary"><td>Display help on command or overview</td></tr>
 <tr class="cmdtr"><td class="cmdtd">
 <p>Shortcut name: h</p>
 </td></tr>
@@ -564,7 +574,7 @@ the first template has been seen by xsldbg. Breakpoints are re-validated shortly
 <td width="10"></td>
 <td><table class="listbody">
 <tr><td>locals&nbsp;&nbsp;&nbsp;&nbsp;<i>(Print list of all locally available variables)</i>    </td></tr>
-<tr><td>locals -f&nbsp;&nbsp;&nbsp;&nbsp;<i>(Print list of all locally available variables and thier values)</i>    </td></tr>
+<tr><td>locals -f&nbsp;&nbsp;&nbsp;&nbsp;<i>(Print list of all locally available variables and their values)</i>    </td></tr>
 <tr><td>locals &lt;QNAME&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Print the value of variable specified)</i>    </td></tr>
 </table></td>
 </tr>
@@ -619,7 +629,7 @@ This command has the same effect of entering the commands "step" and then "up"</
 <td width="10"></td>
 <td><table class="listbody">
 <tr><td>output &lt;FILENAME&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(A local file name. Which can have a "~" prefix on *nix and CYGWIN platforms. Or environment variables under RISC OS)</i>    </td></tr>
-<tr><td>output &lt;URI&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(The &lt;URI&gt; must only use the "file://" protocol. This is then converted to a file name suitable for the operating system)</i>    </td></tr>
+<tr><td>output &lt;URI&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(The &lt;URI&gt; must only use the "file:///" protocol. This is then converted to a file name suitable for the operating system)</i>    </td></tr>
 <tr><td>output -&nbsp;&nbsp;&nbsp;&nbsp;<i>( Send to standard output. Must only be used when using xsldbg's command line prompt )</i>    </td></tr>
 </table></td>
 </tr>
@@ -695,7 +705,7 @@ This command has the same effect of entering the commands "step" and then "up"</
 <tr class="cmdtr"><td class="cmdtd">
 <p>All output files are stored in, value of the "searchresultspath" option if set, or the same directory as the provided stylesheet. searchresults.xml is normally transformed by  search.xsl, but will be transformed using searchhtml.xsl if the "preferhtml" option is set.
 </p>
-<p>When the search command is issued a xml file (searchresults.xml) will be created. You can then process this file with your own stylesheet to present data in a other ways. If "preferhtml" option is not set
+<p>When the search command is issued a XML file (searchresults.xml) will be created. You can then process this file with your own stylesheet to present data in a other ways. If "preferhtml" option is not set
 then searchresult.txt is printed to display.
 </p>
 <p>Depending on the amount of data collected it might take a while to complete this command.
@@ -706,20 +716,23 @@ then searchresult.txt is printed to display.
 <tr>
 <td width="10"></td>
 <td><table class="listbody">
-<tr><td>search &lt;XPATH&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(See what xpath can be used see search.dtd in documention install path such as /usr/share/doc/packages/qt5/xsldbg/en/ .  An example &lt;XPATH&gt; is '//search/variable' , the default &lt;XPATH&gt; is '//search/*' )</i>    </td></tr>
-<tr><td>search -sort &lt;XPATH&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Tell search.xsl to sort the result before outputing it)</i>    </td></tr>
+<tr><td>search &lt;XPATH&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(See what xpath can be used see search.dtd in documentation install path such as /usr/share/doc/packages/qt5/xsldbg/en/ .  An example &lt;XPATH&gt; is '//search/variable' , the default &lt;XPATH&gt; is '//search/*' )</i>    </td></tr>
+<tr><td>search -sort &lt;XPATH&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Tell search.xsl to sort the result before saving it)</i>    </td></tr>
 </table></td>
 </tr>
 </table></tr>
 </table>
 <br><br><a name="set"></a><table width="100%" class="cmd">
 <th class="cmdth">Set</th>
-<tr class="cmdsummary"><td>Set the value of a variable</td></tr>
+<tr class="cmdsummary"><td>Set the value of an already defined XSLT variable</td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>
 <tr>
 <td width="10"></td>
-<td><table class="listbody"><tr><td>set &lt;VARIABLE_NAME&gt; &lt;XPATH&gt;    </td></tr></table></td>
+<td><table class="listbody">
+<tr><td>set &lt;VARIABLE_NAME&gt; &lt;XPATH&gt;    </td></tr>
+<tr><td>See also the following commands:<a href="#globals">globals</a>,<a href="#locals">locals</a>    </td></tr>
+</table></td>
 </tr>
 </table></tr>
 </table>
@@ -727,15 +740,19 @@ then searchresult.txt is printed to display.
 <th class="cmdth">Setoption</th>
 <tr class="cmdsummary"><td>Set an option for execution of stylesheet</td></tr>
 <tr class="cmdtr"><td class="cmdtd">
-<p>You will need to use run command to active changes</p>
+<p>*Note* The 'run' command must be used to apply and make new setting active</p>
 </td></tr>
 <tr class="cmdtr"><table class="usage" width="100%">
 <th class="cmdth">Usage</th>
 <tr>
 <td width="10"></td>
 <td><table class="listbody">
+<tr><td>Integer Options    </td></tr>
+<tr><td>===============    </td></tr>
 <tr><td>setoption &lt;OPTION_NAME&gt;  &lt;INTEGER_VALUE&gt;    </td></tr>
-<tr><td>  Where &lt;OPTION_NAME&gt; can be either    </td></tr>
+<tr><td>Where &lt;INTEGER_VALUE&gt; is *true* if it is *NOT* equal to zero    </td></tr>
+<tr><td>Where &lt;INTEGER_VALUE&gt; is *false* if it *IS* equal to zero    </td></tr>
+<tr><td>  Where integer &lt;OPTION_NAME&gt; can be either    </td></tr>
 <tr><td>
 <table class="list"><tr>
 <td width="10"></td>
@@ -744,20 +761,20 @@ then searchresult.txt is printed to display.
 <tr><td>catalogs&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true use the catalogs from $SGML_CATALOG_FILES or SGML$CatalogFiles for risc operating system</i>    </td></tr>
 <tr><td>html&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true the input document is an HTML file)</i>    </td></tr>
 <tr><td>docbook&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true the input document is SGML docbook)</i>    </td></tr>
-<tr><td>xinclude&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true do XInclude processing on document intput)</i>    </td></tr>
+<tr><td>xinclude&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true do XInclude processing on document input)</i>    </td></tr>
 <tr><td>preferhtml&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true the prefer html output for search results. : See search command)</i>    </td></tr>
 <tr><td>autoencode&nbsp;&nbsp;&nbsp;&nbsp;<i>(Try to use the encoding from the stylesheet)</i>    </td></tr>
 <tr><td>utf8input&nbsp;&nbsp;&nbsp;&nbsp;<i>(All input from user is in UTF-8.This is normaly used when xsldbg is running as a thread)</i>    </td></tr>
-<tr><td>gdb&nbsp;&nbsp;&nbsp;&nbsp;<i>(Run in gdb compatability mode)</i><table class="list"><tr>
+<tr><td>gdb&nbsp;&nbsp;&nbsp;&nbsp;<i>(Run in gdb compatibility mode)</i><table class="list"><tr>
 <td width="10"></td>
 <td><table class="listbody"><tr><td>For a value of 1 this means
-<table class="list"><tr>
+                    <table class="list"><tr>
 <td width="10"></td>
 <td><table class="listbody">
-<tr><td>Print lots more messages. Increase the frequency of printing "Breapoint at ..."    </td></tr>
-<tr><td>At most GDB_LINES_TO_PRINT lines will be printed when evalating expressions, followed by a "...". See options.h to change this value, the default is three lines of text    </td></tr>
+<tr><td>Print lots more messages. Increase the frequency of printing "Breakpoint at ..."    </td></tr>
+<tr><td>At most GDB_LINES_TO_PRINT lines will be printed when evaluating expressions, followed by a "...". See options.h to change this value, the default is three lines of text    </td></tr>
 <tr><td>Both local and globals will be printed when the "locals" command is issued     </td></tr>
-<tr><td>When printing expresssions with cat/print. The evaluated value will be prefixed by "= "  &lt; EXPRESSION &gt;    </td></tr>
+<tr><td>When printing expressions with cat/print. The evaluated value will be prefixed by "= "  &lt; EXPRESSION &gt;    </td></tr>
 </table></td>
 </tr></table>    </td></tr></table></td>
 </tr></table>    </td></tr>
@@ -769,12 +786,12 @@ then searchresult.txt is printed to display.
 <tr><td>noout&nbsp;&nbsp;&nbsp;&nbsp;<i>(If &lt;INTEGER_VALUE&gt; is true do not dump the result)</i>    </td></tr>
 </table></td>
 </tr></table>    </td></tr>
-<tr><td> And where value is true if it is NOT equal to zero    </td></tr>
-<tr><td> And where value is false if it IS equal to zero    </td></tr>
-<tr><td>stdout&nbsp;&nbsp;&nbsp;&nbsp;<i>Print all error messages to stdout. Normally error messages go to stderr.</i>    </td></tr>
+<tr><td>stdout&nbsp;&nbsp;&nbsp;&nbsp;<i>(Print all error messages to stdout. Normally error messages go to stderr.)</i>    </td></tr>
 <tr><td>setoption &lt;OPTION_NAME&gt; "&lt;STRING_VALUE&gt;"&nbsp;&nbsp;&nbsp;&nbsp;<i>(Must not contain double quotation marks in &lt;STRING_VALUE&gt;)</i>    </td></tr>
+<tr><td>String Options    </td></tr>
+<tr><td>===============    </td></tr>
 <tr><td>setoption &lt;OPTION_NAME&gt; &lt;STRING_VALUE&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>(Must not contain any spaces, nor double quotation marks in &lt;STRING_VALUE&gt;)</i>    </td></tr>
-<tr><td>  Where &lt;OPTION_NAME&gt; can be either    </td></tr>
+<tr><td>  Where string &lt;OPTION_NAME&gt; can be either    </td></tr>
 <tr><td>
 <table class="list"><tr>
 <td width="10"></td>
@@ -785,7 +802,7 @@ then searchresult.txt is printed to display.
 <tr><td>docspath&nbsp;&nbsp;&nbsp;&nbsp;<i>(Path to use when looking for documentation)</i>    </td></tr>
 <tr><td>catalognames&nbsp;&nbsp;&nbsp;&nbsp;<i>(The names of the catalogs to use when the catalogs option is set. Value will be lost if set before setting catalogs option)</i>    </td></tr>
 <tr><td>encoding&nbsp;&nbsp;&nbsp;&nbsp;<i>(What encoding to use for standard output)</i>    </td></tr>
-<tr><td>searchresultspath&nbsp;&nbsp;&nbsp;&nbsp;<i>What path is to be used when storing the results of searching. If this is not set then xsldbg will use the path of the stylesheet</i>    </td></tr>
+<tr><td>searchresultspath&nbsp;&nbsp;&nbsp;&nbsp;<i>(What path is to be used when storing the results of searching. If this is not set then xsldbg will use the path of the stylesheet)</i>    </td></tr>
 </table></td>
 </tr></table>    </td></tr>
 </table></td>
@@ -813,9 +830,9 @@ then searchresult.txt is printed to display.
 <table class="list"><tr>
 <td width="10"></td>
 <td><table class="listbody">
-<tr><td> Breakpoint 3 enabled for template :"*" in file test1.xsl : line 105    </td></tr>
-<tr><td> Breakpoint 2 enabled for template :"* testMode" in file test1.xsl : line 109    </td></tr>
-<tr><td> Breakpoint 1 enabled for template :"* http://www.w3.org/1999/XSL/Transform:testMode" in file test1.xsl : line 113    </td></tr>
+<tr><td> Breakpoint 1 enabled for template: "*" mode : "" in file "test1.xsl" at line 101    </td></tr>
+<tr><td> Breakpoint 2 enabled for template: "*" mode : "testMode" in file "test1.xsl" at line 105    </td></tr>
+<tr><td> Breakpoint 3 enabled for template: "*" mode : "http://www.w3.org/1999/XSL/Transform:testMode" in file "test1.xsl" at line 105    </td></tr>
 <tr><td>    </td></tr>
 <tr><td>  Total of 3 breakpoints present    </td></tr>
 </table></td>
@@ -852,7 +869,7 @@ then searchresult.txt is printed to display.
 <tr>
 <td width="10"></td>
 <td><table class="listbody">
-<tr><td>showwatch&nbsp;&nbsp;&nbsp;&nbsp;<i>(Show the currently selected watches and thier values)</i>    </td></tr>
+<tr><td>showwatch&nbsp;&nbsp;&nbsp;&nbsp;<i>(Show the currently selected watches and their values)</i>    </td></tr>
 <tr><td>showwatch 1&nbsp;&nbsp;&nbsp;&nbsp;<i>(Enable the automatic printing of watch expressions. This is used by default.)</i>    </td></tr>
 <tr><td>showwatch 0&nbsp;&nbsp;&nbsp;&nbsp;<i>(Disable the automatic printing of watch expressions.)</i>    </td></tr>
 </table></td>

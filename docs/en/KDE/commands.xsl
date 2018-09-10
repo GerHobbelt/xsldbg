@@ -4,10 +4,15 @@
   <xsl:template name="command_chapter">
     <chapter id="command_chapter">
       <title>Command summary</title>
-        <xsl:apply-templates select="cmd">
+      <para>For overview of the available commands see:
+          <link linkend="command_summary">xsldbg command overview</link>
+      </para>
+
+      <xsl:apply-templates select="cmd">
           <xsl:sort select="@name"/>
         </xsl:apply-templates>
     </chapter>
+
   </xsl:template>
 
   <xsl:template match="cmd">
@@ -16,7 +21,7 @@
         <xsl:value-of select="concat(@name, '_cmd')"/>
       </xsl:attribute>
       <title id="{@name}_cmd.title"><xsl:value-of select="@title"/></title>
-      <xsl:apply-templates />
+      <xsl:apply-templates/>
     </xsl:element>
   </xsl:template>
 
