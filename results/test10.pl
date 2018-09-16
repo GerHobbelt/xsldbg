@@ -14,6 +14,46 @@ require "xsldbgmatch.pl";
 
     $testCount = $testCount + 1;
     
+    if (xsldbgmatch::breakpointMatch( 
+             "test10.xsl",  
+               "13",
+                 $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointMatch( 
+             "test10.xsl",  
+               "13",
+                 $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointMatch( 
+             "test10.xsl",  
+               "13",
+                 $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
+    if (xsldbgmatch::breakpointMatch( 
+             "test10.xsl",  
+               "13",
+                 $testName) == 0){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
     if (xsldbgmatch::breakpointListMatch(
              "",  
                "" , 
@@ -24,7 +64,6 @@ require "xsldbgmatch.pl";
        $result = 0;
     }
   
-
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::breakpointListMatch(
@@ -37,7 +76,6 @@ require "xsldbgmatch.pl";
        $result = 0;
     }
   
-
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::breakpointListMatch(
@@ -50,7 +88,6 @@ require "xsldbgmatch.pl";
        $result = 0;
     }
   
-
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::breakpointListMatch(
@@ -68,6 +105,15 @@ require "xsldbgmatch.pl";
 
     $testCount = $testCount + 1;
     
+    if (xsldbgmatch::textMatch(
+             "Starting stylesheet", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
     if (xsldbgmatch::breakpointMatch( 
              "test2.xml",  
                "9",
@@ -81,6 +127,15 @@ require "xsldbgmatch.pl";
 
     $testCount = $testCount + 1;
     
+    if (xsldbgmatch::textMatch(
+             "Starting stylesheet", 
+               $testName) == 0 ){
+       $failedTestCount = $failedTestCount + 1;
+       $result = 0;
+    }
+  
+    $testCount = $testCount + 1;
+    
     if (xsldbgmatch::breakpointMatch( 
              "test10.xsl",  
                "13",
@@ -89,6 +144,9 @@ require "xsldbgmatch.pl";
        $result = 0;
     }
   
+
+
+
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::breakpointMatch( 
@@ -99,9 +157,6 @@ require "xsldbgmatch.pl";
        $result = 0;
     }
   
-
-
-
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(

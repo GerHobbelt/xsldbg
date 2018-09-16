@@ -1,23 +1,28 @@
+cat 'test 1'
 break data
-show break
+showbreak
 continue
+continue
+cat 'test 2'
 delete *
 break -l "test17.xsl" 20
 showbreak
 run
 continue
+cat 'test 3'
 delete *
 break -l "http://localhost/xsldbg/tests/test17.xsl" 20
 showbreak
 run
 continue
+cat 'test 4'
 delete *
 break -l test17.xml 11
-showbreak
 run
+showbreak
 continue
 data
-source
+cat 'test 5'
 delete *
 break -l "http://localhost/xsldbg/tests/test17.xml" 11
 showbreak

@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <!DOCTYPE testcmd SYSTEM "testcmd.dtd">
-<!-- 
+<!--
      File : test17.data
      Author: Keith Isdale <keithisdale@gmail.com>
      Description: xml data that decribes what to do for "test17"
-     Copyright Reserved Under GPL     
+     Copyright Reserved Under GPL
 -->
 
   <!-- Test simple breakpoint http source/XML -->
@@ -12,18 +12,20 @@
 <testcmd>
 
 <cmd>
-<test>break data
-show break
+<test>cat 'test 1'
+break data
+showbreak
+continue
 continue</test>
 <result>
+<row>
+<matchtext>Starting stylesheet</matchtext>
+</row>
 <row>
 <breakpointlist file="http://localhost/xsldbg/tests/test17.xsl" line="20" />
 </row>
 <row>
 <matchtext>Total of 1 breakpoints present</matchtext>
-</row>
-<row>
-<matchtext>Reached template: \"data\"</matchtext>
 </row>
 <row>
 <matchtext>Breakpoint for file \"http://localhost/xsldbg/tests/test17.xsl\" at line 20</matchtext>
@@ -32,7 +34,8 @@ continue</test>
 </cmd>
 
 <cmd>
-<test>delete *
+<test>cat 'test 2'
+delete *
 break -l "test17.xsl" 20
 showbreak
 run
@@ -45,21 +48,22 @@ continue</test>
 <matchtext>Total of 1 breakpoints present</matchtext>
 </row>
 <row>
-<matchtext>Reached template: \"data\"</matchtext>
-</row>
-<row>
 <matchtext>Breakpoint for file \"http://localhost/xsldbg/tests/test17.xsl\" at line 20</matchtext>
 </row>
 </result>
 </cmd>
 
 <cmd> <!--  Set breakpoint on full URI for XSLT script -->
-<test>delete *
+<test>cat 'test 3'
+delete *
 break -l "http://localhost/xsldbg/tests/test17.xsl" 20
 showbreak
 run
 continue</test>
 <result>
+<row>
+<matchtext>Starting stylesheet</matchtext>
+</row>
 <row>
 <breakpointlist file="http://localhost/xsldbg/tests/test17.xsl" line="20" />
 </row>
@@ -76,14 +80,17 @@ continue</test>
 </cmd>
 
 <cmd> <!-- set breakpoint on XML data -->
-<test>delete *
+<test>cat 'test 4'
+delete *
 break -l test17.xml 11
-showbreak
 run
+showbreak
 continue
-data
-source</test>
+data</test>
 <result>
+<row>
+<matchtext>Starting stylesheet</matchtext>
+</row>
 <row>
 <breakpointlist file="http://localhost/xsldbg/tests/test17.xml" line="11" />
 </row>
@@ -93,14 +100,12 @@ source</test>
 <row>
 <matchtext>Reached template: \"extra\"</matchtext>
 </row>
-<row>
-<matchtext>.xsldbg. extra .+xsldbg. xsl:template</matchtext>
-</row>
 </result>
 </cmd>
 
 <cmd> <!-- set breakpoint on full URI for XML data -->
-<test>delete *
+<test>cat 'test 5'
+delete *
 break -l "http://localhost/xsldbg/tests/test17.xml" 11
 showbreak
 run

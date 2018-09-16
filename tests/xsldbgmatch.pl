@@ -48,7 +48,7 @@ sub breakpointMatch{
     my $errorText = "";
     while (<STDIN>) {
 	#printf "breakpointMatch is looking at $_";
-	if ($_ =~ /^Breakpoint for file \"([^ ]*)\" at line ([0-9]*)/) {
+	if ($_ =~ /Breakpoint for file \"([^ ]*)\" at line ([0-9]*)/) {
 	    if (($fileName ne "") && ($fileName ne $1 )) {
 		$errorText .= "file bad expected \"$fileName\" found \"$1\"\n";
 		$result = 0;
@@ -165,9 +165,9 @@ sub textMatch{
     my $firstLine = $_;
     my $errorText = "";
     while (<STDIN>) {
-	if ($_ =~ /.*($textValue).*/){
+	if ($_ =~ /$textValue/){
 	    $result = 1;
-	    print "Text match \n  text \"$textValue\"\n";
+	    print "Text match \n text \"$textValue\" in $_\n";
 	    return $result;
 	}else{
 	    printf "looking at : $_\n";

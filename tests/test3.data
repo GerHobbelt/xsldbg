@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <!DOCTYPE testcmd SYSTEM "testcmd.dtd">
-<!-- 
-     File : test3.data     
+<!--
+     File : test3.data
      Author: Keith Isdale <keithisdale@gmail.com>
      Description: xml data that decribes what to do for "test3"
-     Copyright Reserved Under GPL     
+     Copyright Reserved Under GPL
 -->
 
   <!-- Test xsl:choose and xsl:if -->
@@ -13,6 +13,9 @@
 <cmd>
 <test>trace</test>
 <result>
+<row>
+<breakpoint line="15"/>
+</row>
 <row>
 <breakpoint line="15"/>
 </row>
@@ -27,7 +30,7 @@
 </row>
 
 <!-- Result for test -->
-<!-- Test basic usage of xsl:choose -->   
+<!-- Test basic usage of xsl:choose -->
 <row>
 <breakpoint line="23"/>
 </row>
@@ -40,7 +43,7 @@
 
 
 <!-- Result for test -->
-<!-- Test xsl:otherwise child in xsl:choose --> 
+<!-- Test xsl:otherwise child in xsl:choose -->
 <row>
 <breakpoint line="30"/>
 </row>
@@ -65,7 +68,7 @@
 <row>
 <breakpoint line="43"/>
 </row>
-<!-- Ignore any more occurances of 
+<!-- Ignore any more occurances of
        <row>
        <breakpoint line="43"/>
        </row>

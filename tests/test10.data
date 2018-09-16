@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE testcmd SYSTEM "testcmd.dtd">
-<!-- 
-     File : test10.data     
+<!--
+     File : test10.data
      Author: Keith Isdale <keithisdale@gmail.com>
      Description: xml data that describes what to do for "test10"
-       Test the ability to set break points at XML file entities 
-       and changing variables 
-     Copyright Reserved Under GPL     
+       Test the ability to set break points at XML file entities
+       and changing variables
+     Copyright Reserved Under GPL
 -->
 <testcmd>
 <!-- Check if we can set the break points at xml entities -->
@@ -18,44 +18,44 @@ break -l test4.xml 9
 showbreak</test>
 <result>
 <row>
+<breakpoint file="test10.xsl" line="13"/>
+</row>
+<row>
+<breakpoint file="test10.xsl" line="13"/>
+</row>
+<row>
+<breakpoint file="test10.xsl" line="13"/>
+</row>
+<row>
+<breakpoint file="test10.xsl" line="13"/>
+</row>
+<row>
 <breakpointlist file="test1.xml" line="8" />
 </row>
-</result>
-</cmd>
-<cmd>
-<test>showbreak</test>
-<result>
 <row>
 <breakpointlist file="test2.xml" line="9" />
 </row>
-</result>
-</cmd>
-<cmd>
-<test>showbreak</test>
-<result>
 <row>
 <breakpointlist file="test3.xml" line="9" />
 </row>
-</result>
-</cmd>
-<cmd>
-<test>showbreak</test>
-<result>
 <row>
 <breakpointlist file="test4.xml" line="9" />
 </row>
 </result>
 </cmd>
 
-<!-- See if we XML breakpoints are reachable by xsldbg. 
+<!-- See if we XML breakpoints are reachable by xsldbg.
 Try to stop at text2.xml line 9-->
 <cmd>
 <test>delete *
-break -l test2.xml 9
 data
+break -l test2.xml 9
 run
 continue</test>
 <result>
+<row>
+<matchtext>Starting stylesheet</matchtext>
+</row>
 <row>
 <breakpoint file="test2.xml" line="9"/>
 </row>
@@ -71,8 +71,10 @@ run
 continue</test>
 <result>
 <row>
+<matchtext>Starting stylesheet</matchtext>
+</row>
+<row>
 <breakpoint file="test10.xsl" line="13"/> <!-- First debugable line reached-->
-<breakpoint file="test10.xsl" line="24"/>
 </row>
 </result>
 </cmd>
@@ -80,9 +82,13 @@ continue</test>
 <!-- First set $item to a string value -->
 <cmd>
 <test>cat $item
+cat $item
 set item 5678
 cat $item</test>
 <result>
+<row>
+    <breakpoint file="test10.xsl" line="24"/>
+</row>
 <row>
 <matchtext>1234</matchtext>
 </row>
