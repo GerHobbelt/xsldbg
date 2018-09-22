@@ -164,7 +164,7 @@ struct templateListInfo {
     int templatesMatching;
 };
 
-static int _templateListPrinter(const void *data, const void *user)
+static int _templateListPrinter(const void *data, void *user)
 {
     Q_CHECK_PTR(data);
     Q_CHECK_PTR(user);

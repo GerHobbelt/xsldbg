@@ -186,7 +186,7 @@ breakPointPtr breakPointItemNew(void)
 }
 
 
-void breakPointItemFree(void *payload, xmlChar * name)
+void breakPointItemFree(void *payload, const xmlChar *name)
 {
     Q_UNUSED(name);
     if (payload) {

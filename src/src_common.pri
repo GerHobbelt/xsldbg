@@ -1,6 +1,8 @@
-CONFIG	+= warn_on thread
+CONFIG += warn_on thread
 CONFIG += qt
-QT *=core
+CONFIG += console
+CONFIG -= app_bundle
+QT = core
 
 # enable readline and history support if possible
 unix:!xsldbg_GUI{
@@ -51,24 +53,30 @@ win32 {
    CONFIG+=console
   }
 
-!equals(USED_XSLT_CONFIG,true){
-    TEMP_LIBXSLT_PREFIX=$$(LIBXSLT_PREFIX)
-    # try to guess the LIBS and INCLUDE paths needed to be added
-    isEmpty(TEMP_LIBXSLT_PREFIX) {
-         message(warning \$LIBXSLT_PREFIX environment variable not set)
-         message($$(LIBXSLT_PREFIX))
+!equals(USED_XSLT_CONFIG,true){    
+    isEmpty(LIBXSLT_PREFIX) {
+        LIBXSLT_PREFIX=$$getenv(LIBXSLT_PREFIX)
+    }
+    message(Information: Try to determine the LIBS and INCLUDE paths needed to be added for libxslt)
+    isEmpty(LIBXSLT_PREFIX) {
+         message(Warning: \$LIBXSLT_PREFIX environment variable not set may not find libxslt)
+         LIBS+=-llibexslt -llibxslt
     } else {
+        INCLUDEPATH *= $${LIBXSLT_PREFIX}/include
+
         unix{
-           INCLUDEPATH += $$(LIBXSLT_PREFIX)/include
-           LIBS+=-L$$(LIBXSLT_PREFIX)/lib -lxslt
+           LIBS*=-L$${LIBXSLT_PREFIX}/lib
+           LIBS+=-lxslt
         } else {
-           exists($$(LIBXSLT_PREFIX)/win32/bin.msvc){
-              LIBS+=-L$$(LIBXSLT_PREFIX)/win32/bin.msvc
+           XSLTLIB=$${LIBXSLT_PREFIX}/lib/libxslt.lib
+           EXSLTLIB=$${LIBXSLT_PREFIX}/lib/libexslt.lib
+           exists($$XSLTLIB){
+              LIBS+=$$EXSLTLIB $$XSLTLIB
            } else {
-              message(probably will not find libxslt libraries)
-              LIBS+=-L$$(LIBXSLT_PREFIX)/lib/
+              message(Warning: Probably will not find libxslt libraries in '$${LIBXSLT_PREFIX}/lib')
+              LIBS*+=-L$${LIBXSLT_PREFIX}/lib
+              LIBS+=-llibexslt -llibxslt
            }
-           LIBS+=-llibexslt -llibxslt
         }
     }
 } else {
@@ -76,37 +84,53 @@ win32 {
 }
 
 !equals(USED_XML2_CONFIG,true){
-    TEMP_LIBXML_PREFIX=$$(LIBXML_PREFIX)
     isEmpty(TEMP_LIBXML_PREFIX) {
-         message(warning \$LIBXML_PREFIX environment variable not set)
+        LIBXML_PREFIX = $$getenv(LIBXML_PREFIX)
+    }
+    message(Information: Try to determine the LIBS and INCLUDE paths needed to be added for libxml2)
+    isEmpty(LIBXML_PREFIX) {
+        message(Warning: \$LIBXML_PREFIX environment variable not set probably will not find libxml2 or its header files)
+        LIBS+=-llibxml2
     } else {
-        INCLUDEPATH += $$(LIBXML_PREFIX)/include/libxml2
-        INCLUDEPATH += $$(LIBXML_PREFIX)/include
+        INCLUDEPATH *= $${LIBXML_PREFIX}/include/libxml2
+        INCLUDEPATH *= $${LIBXML_PREFIX}/include
         unix {
-            LIBS+=-L$$(LIBXML_PREFIX)/lib -lxml2 -lz -lm
+            LIBS*=-L$${LIBXML_PREFIX}/lib
+            LIBS+=-lxml2 -lz -lm
         } else {
-           exists($$(LIBXML_PREFIX)/win32/bin.msvc){
-              LIBS+=-L$$(LIBXML_PREFIX)/win32/bin.msvc
+           XMLLIB=$${LIBXML_PREFIX}/lib/libxml2.lib
+           exists($$XMLLIB){
+              LIBS+=$$XMLLIB
            } else {
               message(Probably will not find libxml libraries)
-              LIBS+=-L$$(LIBXML_PREFIX)/lib/
+              LIBS*=-L$${LIBXML_PREFIX}/lib
+              LIBS+=-llibxml2
            }
-           LIBS+=-llibxml2
        }
-    }
-    TEMP_ICONV_PREFIX=$$(ICONV_PREFIX)
-    isEmpty(TEMP_ICONV_PREFIX) {
-           message(warning \$ICONV_PREFIX environment variable not set)
-    } else {
-                exists($$(ICONV_PREFIX)/include/iconv.h){
-                        INCLUDEPATH += $$(ICONV_PREFIX)/include
-                    LIBS+=$$(ICONV_PREFIX)/lib/iconv.lib
-                }else {
-                        error(Did not found iconv.h in \$ICONV_PREFIX, ie $$(ICONV_PREFIX)/include)
-                }
     }
 } else {
     message(xml2-config was found it will be used to set correct LIBS and INCLUDE for libxml2)
+}
+
+isEmpty(ICONV_PREFIX) {
+    ICONV_PREFIX = $$getenv(ICONV_PREFIX)
+}
+isEmpty(ICONV_PREFIX) {
+    message(Warning \$ICONV_PREFIX environment variable not set may not find iconv or its header files)
+} else {
+    message(Information: Try to determine the LIBS and INCLUDE paths needed to be added for iconv)
+    INCLUDEPATH *= $${ICONV_PREFIX}/include
+    unix {
+        LIBS+=-liconv
+    }else {
+        ICONVLIB=$${ICONV_PREFIX}/lib/iconv.lib
+        exists($$ICONVLIB) {
+            LIBS+=$$ICONVLIB
+        } else {
+            LIBS+=-L$${ICONV_PREFIX}/lib
+            LIBS+=-liconv
+        }
+    }
 }
 
 INCLUDEPATH += ..
@@ -120,6 +144,7 @@ win32:DEFINES+=WIN32 _WINDOWS _MBCS _REENTRANT
 !xsldbg_GUI {
     SOURCES	=  main.cpp simpleio.cpp
 }
+
 
 HEADERS += \
     libxsldbg/breakpoint.h \
@@ -176,7 +201,6 @@ win32:SOURCES += \
     libxsldbg/options_win32.cpp
 
 SOURCES+=libxsldbg/xsldbgthread.cpp
-
 
 
 

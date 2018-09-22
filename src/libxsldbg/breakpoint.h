@@ -220,7 +220,7 @@ breakPointPtr breakPointItemNew(void);
  * @param name not used
  *
  */
-void breakPointItemFree(void *payload, xmlChar * name);
+void breakPointItemFree(void *payload, const xmlChar *name);
 
 
 /**

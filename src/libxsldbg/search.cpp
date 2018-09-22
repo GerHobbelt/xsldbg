@@ -717,7 +717,7 @@ static int compareBreakPoints(const void *data1, const void *data2)
     return breakpoint1->id - breakpoint2->id;
 }
 
-static void _addBreakPoint(void *payload, void *data, xmlChar * name)
+static void _addBreakPoint(void *payload, void *data, const xmlChar * name)
 {
     Q_CHECK_PTR(payload);
     Q_CHECK_PTR(data);
@@ -726,7 +726,7 @@ static void _addBreakPoint(void *payload, void *data, xmlChar * name)
     xmlListAppend((xmlListPtr)data, (breakPointPtr)payload);
 }
 
-static int	_breakPointListWalker(const void * data, const void * user)
+static int	_breakPointListWalker(const void * data, void * user)
 {
     Q_CHECK_PTR(data);
     Q_CHECK_PTR(user);

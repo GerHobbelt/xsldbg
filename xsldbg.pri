@@ -26,11 +26,11 @@ DEFINES+=XSLDBG_VERSION=\\\"$$XSLDBG_VERSION\\\"
 
     win32{
         isEmpty(INSTALL_PREFIX) {
-            DOCS_ROOT="\\xsldbg\\docs"
+            DOCS_ROOT="\\\\xsldbg\\\\docs"
             BIN_DIR="\\xsldbg\\bin"
         } else {
-            DOCS_ROOT="$${INSTALL_PREFIX}\\docs"
-            BIN_DIR=$${INSTALL_PREFIX}\bin
+            DOCS_ROOT="$${INSTALL_PREFIX}\\\\docs"
+            BIN_DIR=$${INSTALL_PREFIX}\\\bin
         }
         DEFINES+= DOCS_PATH="\"\\\"$${DOCS_ROOT}\\\\en\\\"\""
         DEFINES+= USE_DOCS_MACRO
