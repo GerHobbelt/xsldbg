@@ -1,5 +1,12 @@
-xsldbg (4.7.0-1) UNRELEASED; urgency=low
+xsldbg (4.7.1-1ubuntu2) bionic; urgency=low
+
+  * Handle --nonet option correctly
+  * Handle libxml2 API change in bugzilla 784861
+
+ -- Keith Isdale <keithisdale@gmail.com>  Sun, 23 Sep 2018 09:19:53 +1000
+
+xsldbg (4.7.0-1ubuntu2) bionic; urgency=low
 
   * Initial Release.
 
- -- Keith Isdale <keithisdale@gmail.com>  Sat, 11 Aug 2018 22:43:40 +1000
+ -- Keith Isdale <keithisdale@gmail.com>  Sun, 23 Sep 2018 08:56:52 +1000
