@@ -13,7 +13,15 @@ if [ -z "$PRODUCT" ]; then
   PRODUCT=$1
 fi
 if [ -z "$PRODUCT" ]; then
-  PRODUCT="xsldbg"
+  if [ -e "xsldbg.pro" ];then
+     PRODUCT="xsldbg"
+  fi
+  if [ -e "qxsldbg.pro" ];then
+     PRODUCT="qxsldbg"
+  fi
+  if [ -e "CMakeLists.txt" ];then
+     PRODUCT="kxsldbg"
+  fi
 fi
 
 TMPDIR=~/tmp-${PRODUCT}
@@ -33,7 +41,7 @@ if [ -z "$VERSION" ]; then
   VERSION=$3
 fi
 if [ -z "$VERSION" ]; then
-  VERSION=4.7.0
+  VERSION=4.7.1
 fi
 
 if [ -z "$MAKE_JOBS" ];then
