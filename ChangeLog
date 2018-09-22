@@ -2,6 +2,7 @@ Keith Isdale 22nd September 2018 <keithisdale@gmail.com>
     4.7.1
     Fixes
     	Correct logic for --nonet option and entity loading
+	Correct build errors for on MinGW32
 Keith Isdale 30th July 2018 <keithisdale@gmail.com>
     4.7.0
     Fixes

@@ -934,7 +934,7 @@ xsltStylesheetPtr xsldbgLoadStylesheet()
     if (optionsGetIntOption(OPTIONS_TIMING))
         endTimer(QObject::tr("Parsing stylesheet %1").arg(sourceFile.constData()));
     if (style == NULL) {
-        xsldbgGenericErrorFunc(QObject::tr("Error: Cannot parse file %1.\n").arg(xsldbgUrl(sourceFile)));
+        xsldbgGenericErrorFunc(QObject::tr("\nError: Cannot parse file %1.\n").arg(xsldbgUrl(sourceFile)));
         cur = NULL;
         if (!optionsGetIntOption(OPTIONS_SHELL)) {
             xsldbgGenericErrorFunc(QObject::tr("Fatal error: Aborting debugger due to an unrecoverable error.\n"));
