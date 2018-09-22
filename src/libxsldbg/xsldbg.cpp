@@ -614,8 +614,6 @@ int xsldbgMain(int argc, char **argv)
                         result = optionsSetIntOption(OPTIONS_PROFILING, 1);
                         argv[i] = NULL;
                     }
-                } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-nonet")) {
-                    xmlSetExternalEntityLoader(xmlNoNetExternalEntityLoader);
                 } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-param")) {
                     argv[i] = NULL;
                     i++;
@@ -766,10 +764,11 @@ int xsldbgMain(int argc, char **argv)
         // use xinclude and net entity loader selection
         xsltSetXIncludeDefault(optionsGetIntOption(OPTIONS_XINCLUDE));
         /* enable/disable the no net entity loader as required */
-        if (optionsGetIntOption(OPTIONS_NET))
+        if (optionsGetIntOption(OPTIONS_NET) == 0) {
             xmlSetExternalEntityLoader(xmlNoNetExternalEntityLoader);
-        else
+        }else {
             xmlSetExternalEntityLoader(xsldbgDefaultEntLoader);
+        }
 
         /* choose where error messages/xsldbg output get sent to */
         if (optionsGetIntOption(OPTIONS_STDOUT))
@@ -778,10 +777,11 @@ int xsldbgMain(int argc, char **argv)
             errorFile = stderr;
 
         /* enable/disable the no net entity loader as required */
-        if (optionsGetIntOption(OPTIONS_NET))
+        if (optionsGetIntOption(OPTIONS_NET) == 0){
             xmlSetExternalEntityLoader(xmlNoNetExternalEntityLoader);
-        else
+        }else {
             xmlSetExternalEntityLoader(xsldbgDefaultEntLoader);
+        }
 
         filesLoadCatalogs();
 
