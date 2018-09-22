@@ -44,7 +44,7 @@ int lineNoItemAdd(xmlHashTablePtr breakPointHash, breakPointPtr breakPtr);
 -----------------------------------------------------------*/
 
 
-/* This is our major structure, it is a list of hash tables. Each 
+/* This is our major structure, it is a list of hash tables. Each
  hash table has breakpoints with the same line number. A line
  number is used as an index into this list to get the right hash table.
  Then it is just a matter of a simple hash table lookup  */
@@ -53,7 +53,7 @@ arrayListPtr breakList;
 /* keep track of what break point id we're up to*/
 int breakPointCounter = 0;
 
-/* What is the current breakpoint is only valid up to the start of 
+/* What is the current breakpoint is only valid up to the start of
  xsldbg command prompt. ie don't use it after deletion of breakpoints */
 breakPointPtr activeBreakPointItem = NULL;
 
@@ -94,11 +94,11 @@ int lineNoItemDelete(xmlHashTablePtr breakPointHash, breakPointPtr breakPtr)
         if (xmlHashRemoveEntry(breakPointHash, breakPtr->url,
                                breakPointItemFree) == 0){
             result = 1;
-	}else{
+    }else{
 #ifdef WITH_XSLDBG_DEBUG_BREAKPOINTS
     xsltGenericError(xsltGenericErrorContext,"lineNoItemDelete failed");
 #endif
-	}
+    }
 
     }else {
 #ifdef WITH_XSLDBG_DEBUG_BREAKPOINTS
@@ -141,7 +141,7 @@ int breakPointInit(void)
     breakList = arrayListNew(100, lineNoItemFree);
     if (breakList) {
         /*
-         * We don't need to do any thing else, as it is done when we add the 
+         * We don't need to do any thing else, as it is done when we add the
          *    breakPoints
          */
         result = 1;
@@ -177,7 +177,7 @@ breakPointPtr breakPointItemNew(void)
         breakPtr->url = NULL;
         breakPtr->lineNo = -1;
         breakPtr->templateName = NULL;
-	breakPtr->modeName = NULL;
+    breakPtr->modeName = NULL;
         breakPtr->flags = BREAKPOINT_ENABLED;
         breakPtr->id = ++breakPointCounter;
         breakPtr->type = DEBUG_BREAK_SOURCE;
@@ -185,8 +185,11 @@ breakPointPtr breakPointItemNew(void)
     return breakPtr;
 }
 
-
+#if LIBXML_VERSION > 20904
 void breakPointItemFree(void *payload, const xmlChar *name)
+#else
+void breakPointItemFree(void *payload, xmlChar *name)
+#endif
 {
     Q_UNUSED(name);
     if (payload) {
@@ -196,8 +199,8 @@ void breakPointItemFree(void *payload, const xmlChar *name)
             xmlFree(breakPtr->url);
         if (breakPtr->templateName)
             xmlFree(breakPtr->templateName);
-	if (breakPtr->modeName)
-	  xmlFree(breakPtr->modeName);
+    if (breakPtr->modeName)
+      xmlFree(breakPtr->modeName);
         xmlFree(breakPtr);
     }
 }
@@ -222,9 +225,9 @@ void breakPointSetActiveBreakPoint(breakPointPtr breakPtr)
 
 
 int breakPointAdd(const xmlChar * url, long lineNumber,
-              const xmlChar * templateName, 
-	      const xmlChar * modeName,
-	      BreakPointTypeEnum type)
+              const xmlChar * templateName,
+          const xmlChar * modeName,
+          BreakPointTypeEnum type)
 {
     int result = 0, breakPointType = type;
     xmlHashTablePtr breakPointHash = NULL;     /* hash of breakPoints */
@@ -265,11 +268,11 @@ int breakPointAdd(const xmlChar * url, long lineNumber,
                 xmlStrdup( templateName);
         else
             breakPtr->templateName = NULL;
-	if (modeName)
-	    breakPtr->modeName = 
-	      xmlStrdup(modeName);
-	else
-	  breakPtr->modeName = NULL;
+    if (modeName)
+        breakPtr->modeName =
+          xmlStrdup(modeName);
+    else
+      breakPtr->modeName = NULL;
         breakPtr->type = BreakPointTypeEnum(breakPointType);
 
         /* add new breakPoint to the right hash table */
@@ -337,8 +340,8 @@ int breakPointAdd(const xmlChar * url, long lineNumber,
 #endif
     }
 
-    if (result && (optionsGetIntOption(OPTIONS_GDB) > 1) && 
-	    (xsldbgValidateBreakpoints != BREAKPOINTS_BEING_VALIDATED)){
+    if (result && (optionsGetIntOption(OPTIONS_GDB) > 1) &&
+        (xsldbgValidateBreakpoints != BREAKPOINTS_BEING_VALIDATED)){
       breakPointPrint(breakPtr);
       xsldbgGenericErrorFunc("\n");
     }
@@ -372,17 +375,17 @@ int breakPointEnable(breakPointPtr breakPtr, int enable)
     int result = 0;
 
     if (breakPtr) {
-	int enableFlag = 1;
+    int enableFlag = 1;
         if (enable != XSL_TOGGLE_BREAKPOINT){
-	    enableFlag = enable;
+        enableFlag = enable;
         }else {
-	    if (breakPtr->flags & BREAKPOINT_ENABLED)
-		enableFlag = 0;
+        if (breakPtr->flags & BREAKPOINT_ENABLED)
+        enableFlag = 0;
         }
-	if (enableFlag)
-	    breakPtr->flags |= BREAKPOINT_ENABLED;
-	else
-	    breakPtr->flags = breakPtr->flags & (BREAKPOINT_ALLFLAGS ^ BREAKPOINT_ENABLED);
+    if (enableFlag)
+        breakPtr->flags |= BREAKPOINT_ENABLED;
+    else
+        breakPtr->flags = breakPtr->flags & (BREAKPOINT_ALLFLAGS ^ BREAKPOINT_ENABLED);
         result = 1;
     }
     return result;
@@ -425,9 +428,9 @@ int breakPointPrint(breakPointPtr breakPtr)
 {
     int result = 0;
     const char *breakStatusText[2] = {
-	I18N_NOOP("disabled"),
-	I18N_NOOP("enabled")
-	};
+    I18N_NOOP("disabled"),
+    I18N_NOOP("enabled")
+    };
     const char *breakTemplate="";
     const char *breakMode = "";
     const char *breakStatus;
@@ -437,17 +440,17 @@ int breakPointPrint(breakPointPtr breakPtr)
         return result;
 
     if (breakPtr->templateName){
-	 if (breakPtr->modeName)
-	     breakMode = (const char*)breakPtr->modeName;
-	breakTemplate = (const char*)breakPtr->templateName;
+     if (breakPtr->modeName)
+         breakMode = (const char*)breakPtr->modeName;
+    breakTemplate = (const char*)breakPtr->templateName;
     }
-    
+
 
     breakStatus = breakStatusText[breakPtr->flags & BREAKPOINT_ENABLED];
     if (breakPtr->url)
-	xsldbgGenericErrorFunc(QObject::tr("Breakpoint %1 %2 for template: \"%3\" mode: \"%4\" in file \"%5\" at line %6").arg(breakPtr->id).arg(breakStatus).arg(xsldbgText(breakTemplate)).arg(xsldbgText(breakMode)).arg(xsldbgUrl(breakPtr->url)).arg(breakPtr->lineNo));
+    xsldbgGenericErrorFunc(QObject::tr("Breakpoint %1 %2 for template: \"%3\" mode: \"%4\" in file \"%5\" at line %6").arg(breakPtr->id).arg(breakStatus).arg(xsldbgText(breakTemplate)).arg(xsldbgText(breakMode)).arg(xsldbgUrl(breakPtr->url)).arg(breakPtr->lineNo));
     else
-	xsldbgGenericErrorFunc(QObject::tr("Breakpoint %1 %2 for template: \"%3\" mode: \"%4\"").arg(breakPtr->id).arg(breakStatus).arg(xsldbgText(breakTemplate)).arg(xsldbgText(breakMode)));
+    xsldbgGenericErrorFunc(QObject::tr("Breakpoint %1 %2 for template: \"%3\" mode: \"%4\"").arg(breakPtr->id).arg(breakStatus).arg(xsldbgText(breakTemplate)).arg(xsldbgText(breakMode)));
     return ++result;
 }
 

@@ -220,7 +220,11 @@ breakPointPtr breakPointItemNew(void);
  * @param name not used
  *
  */
-void breakPointItemFree(void *payload, const xmlChar *name);
+#if LIBXML_VERSION > 20904
+   void breakPointItemFree(void *payload, const xmlChar *name);
+#else
+   void breakPointItemFree(void *payload, xmlChar *name);
+#endif
 
 
 /**

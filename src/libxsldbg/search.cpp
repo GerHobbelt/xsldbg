@@ -717,7 +717,11 @@ static int compareBreakPoints(const void *data1, const void *data2)
     return breakpoint1->id - breakpoint2->id;
 }
 
+#if LIBXML_VERSION > 20904
 static void _addBreakPoint(void *payload, void *data, const xmlChar * name)
+#else
+static void _addBreakPoint(void *payload, void *data, xmlChar * name)
+#endif
 {
     Q_CHECK_PTR(payload);
     Q_CHECK_PTR(data);
@@ -726,7 +730,11 @@ static void _addBreakPoint(void *payload, void *data, const xmlChar * name)
     xmlListAppend((xmlListPtr)data, (breakPointPtr)payload);
 }
 
+#if LIBXML_VERSION > 20904
 static int	_breakPointListWalker(const void * data, void * user)
+#else
+static int	_breakPointListWalker(const void * data, const void * user)
+#endif
 {
     Q_CHECK_PTR(data);
     Q_CHECK_PTR(user);

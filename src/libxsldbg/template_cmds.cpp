@@ -164,7 +164,11 @@ struct templateListInfo {
     int templatesMatching;
 };
 
+#if LIBXML_VERSION > 20904
 static int _templateListPrinter(const void *data, void *user)
+#else
+static int _templateListPrinter(const void *data, const void *user)
+#endif
 {
     Q_CHECK_PTR(data);
     Q_CHECK_PTR(user);
