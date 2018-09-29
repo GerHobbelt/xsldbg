@@ -9,7 +9,7 @@
 
     Note: When this document is updated also update doc_version
 -->
-<xsldoc doc_version="1.1">
+<xsldoc doc_version="1.2">
 <overview>
 <body id="description_summary">
 <title title="xsldbg Description"/>
@@ -117,7 +117,7 @@ Normally support for http:// and ftp:// XML document paths enabled in libxml2. W
 <li>Expression viewing(xpath) : <link href="cat">cat</link></li>
 
 <li>Node viewing : <link href="ls">ls</link>, <link href="dir">dir</link>,
-	<link href="du">du</link>, <link href="cat">cat</link>, <link href="pwd">pwd</link>, <link href="addwatch">addwatch</link>, <link href="showwatch">showwatch</link>, <link href="delwatch">delwatch</link></li>
+        <link href="du">du</link>, <link href="cat">cat</link>, <link href="pwd">pwd</link>, <link href="addwatch">addwatch</link>, <link href="showwatch">showwatch</link>, <link href="delwatch">delwatch</link></li>
 
 <li>Variable viewing : <link href="globals">globals</link>,
 <link href="locals">locals</link>,
@@ -137,7 +137,7 @@ Normally support for http:// and ftp:// XML document paths enabled in libxml2. W
 <link href="shell">shell</link>,<link href="tty">tty</link>
 </li>
 
-<li>File related : <link href="output">output</link>,
+<li>File related : <link href="list">list</link>,<link href="output">output</link>,
 <link href="entities">entities</link>, <link href="system">system</link>,
 <link href="public">public</link>
 </li>
@@ -464,7 +464,7 @@ This command has the same effect of entering the commands &quot;step&quot; and t
     </li>
     <li>
         <text>encoding</text>
-        <comment>(What encoding to use for standard output)</comment>
+        <comment>(What encoding to use for standard output, see also '--autoencode' command line argument)</comment>
     </li>
     <li>
         <text>searchresultspath</text>
@@ -979,6 +979,26 @@ the first template has been seen by xsldbg. Breakpoints are re-validated shortly
 <li>
 <text>free</text>
 </li>
+</usage>
+</cmd>
+
+<cmd name="list" shortcut="list" title="List XSL/XML source file">
+<summary>List the text in local XSL/XML source file in current output encoding</summary>
+<usage>
+<li><text>list</text>
+<comment>List the next 10 lines in current file</comment>
+</li>
+<li>
+<text>list &lt;startLine&gt;</text>
+<comment>List the file content starting from line &lt;startLine&gt;</comment>
+</li>
+<li>
+<text>list &lt;startLine&gt; &lt;endLine&gt;</text>
+<comment>List the file content starting from line &lt;startLine&gt; to &lt;startLine&gt;</comment>
+</li>
+<body>
+<para>Note: See 'encoding' command to override automatically detected output encoding.</para>
+</body>
 </usage>
 </cmd>
 

@@ -35,6 +35,7 @@
 #include "xsldbg.h"
 #include <QCoreApplication>
 #include <QDateTime>
+#include <QDebug>
 #include <QUrl>
 #include <QStringList>
 #include "debug.h"

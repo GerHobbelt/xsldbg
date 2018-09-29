@@ -24,7 +24,7 @@
  *
  * Daniel Veillard <daniel@veillard.com>
  *
- * Permission abtained to modify the LGPL'd code and extend to include 
+ * Permission abtained to modify the LGPL'd code and extend to include
  *   break points, inspections of stylesheet source, xml data, stylesheet
  *    variables   Keith Isdale <keithisdale@gmail.com>
  */
@@ -48,16 +48,16 @@
 /* how may items have been printed */
     extern int printCount;
 
-  /* used to indicated that xsldbg should stop tracing/walking 
+  /* used to indicated that xsldbg should stop tracing/walking
      value : 1 stop tracing at start of next cycle
-     value : 0 normal operation 
+     value : 0 normal operation
   */
 
   extern int xsldbgStop;
   extern int xsldbgValidateBreakpoints;
-  /* Some versions of libxml/libxslt need a different type of 
-	line numbers handling */
-  extern int xsldbgHasLineNumberFix;  
+  /* Some versions of libxml/libxslt need a different type of
+    line numbers handling */
+  extern int xsldbgHasLineNumberFix;
   extern bool xsldbgReachedFirstTemplate;
 
     /****************************************************************
@@ -86,7 +86,7 @@
                        xsltTemplatePtr root, xsltTransformContextPtr ctxt);
 
 
-/** 
+/**
  * Get the last template node found, if any
  *
  * @returns the last template node found, if any
@@ -145,11 +145,11 @@
  * Enable/disable break points via use of scan of break points
  *
  * @param payload Is valid xslBreakPointPtr
- * @param data Enable type, a pointer to an integer 
- *         for a value of 
+ * @param data Enable type, a pointer to an integer
+ *         for a value of
  *              @li   1 enable break point
  *              @li   0 disable break point
- *              @li   -1 toggle enabling of break point 
+ *              @li   -1 toggle enabling of break point
  * @param name Not used
  */
     void xslDbgShellEnableBreakPoint(void *payload, void *data, xmlChar * name);
@@ -169,7 +169,7 @@
 
 
 /**
- * Print data given by scan of break points 
+ * Print data given by scan of break points
  *
  * @param payload Is valid xslBreakPointPtr
  * @param data Not used
@@ -210,14 +210,14 @@
 
 
 
-/** 
- * Print out the list of template names found that match critieria   
+/**
+ * Print out the list of template names found that match critieria
  *
- * @param styleCtxt Is valid 
+ * @param styleCtxt Is valid
  * @param ctxt Not used
  * @param arg Not used
  * @param verbose If 1 then print extra messages about templates found,
- *            otherwise print normal messages only 
+ *            otherwise print normal messages only
  * @returns 1 on success,
  *          0 otherwise
  */
@@ -243,14 +243,14 @@
  *
  * @param ctxt The current shell context
  * @param arg What xpath to display  and in UTF-8
- * @param dir If 1 print in dir mode, 
+ * @param dir If 1 print in dir mode,
  *        otherwise ls mode
  */
     int xslDbgShellPrintList(xmlShellCtxtPtr ctxt, xmlChar * arg, int dir);
 
 
 
-/** 
+/**
  * Print the result of an xpath expression. This can include variables
  *        if styleCtxt is not NULL
  *
@@ -273,7 +273,7 @@
  *          0 otherwise
 
  *
- * @param styleCtxt The current stylesheet context 
+ * @param styleCtxt The current stylesheet context
  * @param arg The name of variable to look for '$' prefix is optional and in UTF-8
  * @param type Is valid VariableTypeEnum
  */
@@ -290,12 +290,12 @@
 
 /**
  * xslDbgShellOutput:
- * @arg : Is valid, either a local file name which will be expanded 
+ * @arg : Is valid, either a local file name which will be expanded
  *        if needed, or a "file://" protocol URI
  *
  * Set the output file name to use
  *
- * Returns 1 on success, 
+ * Returns 1 on success,
  *         0 otherwise
  */
   int xslDbgShellOutput(const xmlChar *arg);
@@ -303,7 +303,7 @@
 
 
 /**
- * Print list of entites found 
+ * Print list of entites found
  * @param arg extra arguments such as "-r" to show resolved URI for enitities found
  *
  * @returns 1 on success,
@@ -312,12 +312,22 @@
     int xslDbgEntities(const xmlChar *arg);
 
 
+/**
+ * Print the current source being debugged to console
+ * @brief xslDbgList
+ * @param arg: [startLine] | startLine [endLine]
+ *
+ * @returns 1 on success,
+ *          0 otherwise
+ */
+int xslDbgList(xmlChar *arg);
+
 
 /**
  * Print what a system file @p arg maps to via the current xml catalog
  *
  * @param arg Is valid in UTF-8
- * 
+ *
  * @returns 1 on success,
  *          0 otherwise
  */
@@ -329,7 +339,7 @@
  * Print what a public ID @p arg maps to via the current xml catalog
  *
  * @param arg Is valid PublicID in UTF-8
- * 
+ *
  * @returns 1 on success,
  *          0 otherwise
  */
@@ -359,7 +369,7 @@
  * @returns 1 if able to change xsldbg working direcorty to @p path
  *          0 otherwise
  *
- * @param path Operating system path(directory) to change to and in UTF-8 
+ * @param path Operating system path(directory) to change to and in UTF-8
  */
     int xslDbgShellChangeWd(xmlChar * path);
 
@@ -369,7 +379,7 @@
  * @returns 1 if able to execute command @p name,
  *          0 otherwise
  *
- * @param name The name of command string to be executed 
+ * @param name The name of command string to be executed
  *            by operating system shell
  * @param verbose If 1 then print extra debugging messages,
  *            normal messages otherwise
@@ -387,7 +397,7 @@
     *  ------------------------------------------- */
 
 
-/* 
+/*
  * Add a parameter to be sent to libxslt later on
  *
  * @returns 1 on success,
@@ -424,21 +434,21 @@
 
 
     /* -----------------------------------------
-     * 
+     *
      * Option related commands
-     * 
+     *
      * Implemented in option_cmds.c
-     * 
+     *
      * ------------------------------------------- */
 
 /**
- * Set the value of an option 
+ * Set the value of an option
  *
  * @returns 1 on success,
  *          0 otherwise
  *
  * @param arg is valid, and in format   <NAME> <VALUE>
- * 
+ *
  */
     int xslDbgShellSetOption(xmlChar * arg);
 
@@ -454,7 +464,7 @@
 
 /**
   * xsldbgReadConfig :
-  * 
+  *
   * Reads the current configuration/options to disk
   */
     int xsldbgReadConfig(xmlChar *arg);
@@ -462,7 +472,7 @@
 
 /**
   * xsldbgWriteCnfig :
-  * 
+  *
   * writes the current configuration/options to disk
   */
     int xsldbgWriteConfig(xmlChar *arg);
@@ -481,8 +491,8 @@
  * Returns 1 on success,
  *         0 otherwise
  */
-    int xslDbgShellShowWatches(xsltTransformContextPtr styleCtxt, 
-			       xmlShellCtxtPtr ctx,int showWarnings);
+    int xslDbgShellShowWatches(xsltTransformContextPtr styleCtxt,
+                   xmlShellCtxtPtr ctx,int showWarnings);
 
 
 /**
@@ -492,7 +502,7 @@
  * Add expression to list of expressions to watch value of
  *
  * Returns 1 on success,
- *         0 otherwise   
+ *         0 otherwise
  */
     int xslDbgShellAddWatch(xmlChar* arg);
 
@@ -510,11 +520,11 @@
 
 
     /* -----------------------------------------
-     * 
+     *
      * Tracing, walking related commands
-     * 
+     *
      * Implemented in shell.c
-     * 
+     *
      * ------------------------------------------- */
 
 
@@ -543,15 +553,15 @@
 
 
     /* -----------------------------------------
-     * 
+     *
      * Seach related commands
-     * 
+     *
      * Implemented in search_cmds.c
      * ------------------------------------------- */
 
 
 /**
- * @returns 1 if able to run query with @p arg, 
+ * @returns 1 if able to run query with @p arg,
  *          0 otherwise
  *
  * @param styleCtxt Is valid
@@ -573,9 +583,9 @@
  * Change the value of a global or local variable
  *
  * @param styleCtxt Is valid
- * @param arg Is valid must be in the format of 
+ * @param arg Is valid must be in the format of
  *         <VARIABLE_NAME> <XPATH>
- * 
+ *
  * @returns 1 on success,
  *          0 otherwise
  */

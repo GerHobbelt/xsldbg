@@ -103,7 +103,10 @@ typedef enum {                  /* id's for commands of xslDbgShell */
     DEBUG_READCONFIG_CMD,
 
     /*write config to settings */
-    DEBUG_WRITECONFIG_CMD
+    DEBUG_WRITECONFIG_CMD,
+
+    /* file list command */
+    DEBUG_LIST_CMD
 
      /* NULL */
 

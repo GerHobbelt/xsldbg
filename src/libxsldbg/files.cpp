@@ -32,6 +32,11 @@
 #include "options.h"
 #include <QDir>
 #include <QDebug>
+#include <QMap>
+#include <QFile>
+#include <QTextCodec>
+#include <QTextStream>
+#include <QUrl>
 
 #ifndef WIN32
 #include <unistd.h>
@@ -1159,4 +1164,57 @@ xmlChar * xsldbgUrl(void)
         return (xmlChar *) xmlMemStrdup((char *) currentUrl);
     else
         return NULL;
+}
+
+QMap<QString, QStringList> _fileData;
+
+void filesDataClear()
+{
+    _fileData.clear();
+}
+
+QStringList filesDataReadFile(const QString uri)
+{
+    QStringList result;
+    QString filePath = uri;
+    if (filePath.contains("file:/")) {
+        QUrl url(uri);
+        filePath = url.path();
+    }
+
+    if (!_fileData.contains(filePath)) {
+        QFile fileIn(filePath);
+        if (fileIn.open(QIODevice::ReadOnly)) {
+            QTextStream ts(&fileIn);
+            QString firstLine = ts.readLine(255);
+            //qWarning() << "First Line read:" << firstLine;
+            QString regExText("^(<.xml[^?]+encoding\\s*=\\s*\")([^\"]+)(.*)$");
+            QRegExp encodingName(regExText);
+            QString readEncoding;
+            if (encodingName.exactMatch(firstLine) && encodingName.captureCount() == 3) {
+                //qWarning() << encodingName.capturedTexts() << encodingName.captureCount();
+                readEncoding = encodingName.cap(2);
+                QByteArray encName = readEncoding.toLocal8Bit();
+                if (QTextCodec::availableCodecs().contains(encName)){
+                    ts.setCodec(encName);
+                    //qWarning() << "Current codec:" << ts.codec()->name() << "requested" << encName;
+                } else {
+                    qWarning() << "Did not find requested TextCodec" << encName;
+                    qWarning() << "Available codecs are" << QTextCodec::availableCodecs();
+                }
+            }else {
+                qWarning() << "No match for " << encodingName.pattern() << "in" << firstLine;
+            }
+            ts.seek(0); // return to start of file
+
+            QStringList readData = ts.readAll().split('\n');
+            _fileData[filePath] = readData;
+            fileIn.close();
+            result = _fileData[filePath];
+        }
+    } else {
+        result = _fileData[filePath];
+    }
+
+    return result;
 }

@@ -310,3 +310,91 @@ int xslDbgShellOutput(const xmlChar *arg)
   return result;
 }
 
+int xslDbgList(xmlChar *arg)
+{
+    int result = 0;
+    int lineStart = xsldbgLineNo();
+    int lineEnd = lineStart;
+    int defaultLineCount = 10; // how many lines to print by default
+    bool autoList = false;
+    xmlChar *currentURI = xsldbgUrl();
+    static const char *errorPrompt = I18N_NOOP("Failed to list file.");
+
+    if (!currentURI) {
+        xsltGenericError(xsltGenericErrorContext, "Error: No XSL/XML file currently loaded\n");
+        return result;
+    }
+
+    if (arg[0] == '+') {
+        autoList = true;
+        defaultLineCount = 1;
+    }
+
+    if ((xmlStrstr(currentURI, (const xmlChar*)":/") != NULL) && (xmlStrstr(currentURI, (const xmlChar*)"file:/") == NULL)) {
+        if (!autoList) {
+            xsltGenericError(xsltGenericErrorContext, "Error: Can only list local files, saw uri: %s\n", currentURI);
+        }
+        return result;
+    }
+
+    if (!autoList) {
+        xmlChar *parameters = arg;
+        xmlChar *opts[2];
+        if (arg[0] == '-' && arg[1] == 'l') {
+            parameters = &arg[2];
+        }
+
+        if (splitString(parameters, 2, opts) == 2) {
+            if ((xmlStrlen(opts[0]) == 0) || !sscanf((char *) opts[0], "%d", &lineStart)) {
+                xsldbgGenericErrorFunc(QObject::tr("Error: Unable to parse %1 as a line number.\n").arg((char*)opts[0]));
+                xsldbgGenericErrorFunc(QString("Error: %1\n").arg(QObject::tr(errorPrompt)));
+                return result;
+            }
+            if ((xmlStrlen(opts[1]) == 0) || !sscanf((char *) opts[1], "%d", &lineEnd)) {
+                xsldbgGenericErrorFunc(QObject::tr("Error: Unable to parse %1 as a line number.\n").arg((char*)opts[1]));
+                xsldbgGenericErrorFunc(QString("Error: %1\n").arg(QObject::tr(errorPrompt)));
+                return result;
+            }
+        } else if(splitString(parameters, 1, opts) == 1) {
+            if ((xmlStrlen(opts[0]) == 0) || !sscanf((char *) opts[0], "%d", &lineStart)) {
+                xsldbgGenericErrorFunc(QObject::tr("Error: Unable to parse %1 as a line number.\n").arg((char*)opts[0]));
+                xsldbgGenericErrorFunc(QString("Error: %1\n").arg(QObject::tr(errorPrompt)));
+                return result;
+            }
+            lineEnd = -1;
+        } else {
+            lineEnd = -1;
+        }
+    }
+    if (lineStart < 0) { // if documents is not load properly show first line
+        lineStart = 0;
+    }
+
+
+    QStringList lineText = filesDataReadFile(xsldbgText(currentURI));
+    if (lineEnd < 0) {
+        lineEnd = qMin(lineText.count() - 1, lineStart + defaultLineCount);
+    }
+
+    if ((lineStart < 0) || (lineStart > lineText.count())) {
+        xsltGenericError(xsltGenericErrorContext, "Error: list command 'lineStart' parameter %d not within range of lines read:%d in %s\n", lineStart, lineText.count(), currentURI);
+        return result;
+    }
+
+    if (lineEnd > lineText.count()) {
+        xsltGenericError(xsltGenericErrorContext, "Error: list command 'lineEnd' parameter %d greater than lines read:%d in %s\n", lineEnd, lineText.count(), currentURI);
+        return result;
+    }
+
+
+
+    int lineNo = lineStart;
+    while (lineNo <= lineEnd) {
+        xsldbgGenericErrorFunc(QString("%1 %2\n").arg(lineNo).arg(lineText[lineNo]));
+        lineNo++;
+    }
+    result = true;
+
+    xmlFree(currentURI);
+    return result;
+}

@@ -37,11 +37,11 @@ A:link, A:visited, A:active { text-decoration: underline }
 
 --></style>
 <title>
-           xsldbg 4.7.0 documentation
+           xsldbg 4.8.0 documentation
          </title>
 </head>
 <body bgcolor="#8b7765" text="#000000" link="#000000" vlink="#000000"><table class="listbody"><tr><td>
-<h1 class="cmdth">xsldbg 4.7.0</h1>
+<h1 class="cmdth">xsldbg 4.8.0</h1>
 <h2 class="cmdth">Overview</h2>
 
 <h3></h3>
@@ -153,7 +153,7 @@ Normally support for http:// and ftp:// XML document paths enabled in libxml2. W
 <a href="#enable">enable</a>    </td></tr>
 <tr><td>Expression viewing(xpath) : <a href="#cat">cat</a>    </td></tr>
 <tr><td>Node viewing : <a href="#ls">ls</a>, <a href="#dir">dir</a>,
-	<a href="#du">du</a>, <a href="#cat">cat</a>, <a href="#pwd">pwd</a>, <a href="#addwatch">addwatch</a>, <a href="#showwatch">showwatch</a>, <a href="#delwatch">delwatch</a>    </td></tr>
+        <a href="#du">du</a>, <a href="#cat">cat</a>, <a href="#pwd">pwd</a>, <a href="#addwatch">addwatch</a>, <a href="#showwatch">showwatch</a>, <a href="#delwatch">delwatch</a>    </td></tr>
 <tr><td>Variable viewing : <a href="#globals">globals</a>,
 <a href="#locals">locals</a>,
 <a href="#cat">cat</a>    </td></tr>
@@ -163,7 +163,7 @@ Normally support for http:// and ftp:// XML document paths enabled in libxml2. W
 <tr><td>Searching :<a href="#search">search</a>    </td></tr>
 <tr><td>Operating system related :<a href="#chdir">chdir</a>,
 <a href="#shell">shell</a>,<a href="#tty">tty</a>    </td></tr>
-<tr><td>File related : <a href="#output">output</a>,
+<tr><td>File related : <a href="#list">list</a>,<a href="#output">output</a>,
 <a href="#entities">entities</a>, <a href="#system">system</a>,
 <a href="#public">public</a>    </td></tr>
 <tr><td>Disabled file commands: <a href="#validate">validate</a>,
@@ -554,6 +554,21 @@ the first template has been seen by xsldbg. Breakpoints are re-validated shortly
 </tr>
 </table></tr>
 </table>
+<br><br><a name="list"></a><table width="100%" class="cmd">
+<th class="cmdth">List XSL/XML source file</th>
+<tr class="cmdsummary"><td>List the text in local XSL/XML source file in current output encoding</td></tr>
+<tr class="cmdtr"><table class="usage" width="100%">
+<th class="cmdth">Usage</th>
+<tr>
+<td width="10"></td>
+<td><table class="listbody">
+<tr><td>list&nbsp;&nbsp;&nbsp;&nbsp;<i>List the next 10 lines in current file</i>    </td></tr>
+<tr><td>list &lt;startLine&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>List the file content starting from line &lt;startLine&gt;</i>    </td></tr>
+<tr><td>list &lt;startLine&gt; &lt;endLine&gt;&nbsp;&nbsp;&nbsp;&nbsp;<i>List the file content starting from line &lt;startLine&gt; to &lt;startLine&gt;</i>    </td></tr>
+</table></td>
+</tr>
+</table></tr>
+</table>
 <br><br><a name="load"></a><table width="100%" class="cmd">
 <th class="cmdth">Load</th>
 <tr class="cmdsummary"><td>Load the xsldbg's options and user preferences from disk</td></tr>
@@ -801,7 +816,7 @@ then searchresult.txt is printed to display.
 <tr><td>output&nbsp;&nbsp;&nbsp;&nbsp;<i>(Output file's SystemID )</i>    </td></tr>
 <tr><td>docspath&nbsp;&nbsp;&nbsp;&nbsp;<i>(Path to use when looking for documentation)</i>    </td></tr>
 <tr><td>catalognames&nbsp;&nbsp;&nbsp;&nbsp;<i>(The names of the catalogs to use when the catalogs option is set. Value will be lost if set before setting catalogs option)</i>    </td></tr>
-<tr><td>encoding&nbsp;&nbsp;&nbsp;&nbsp;<i>(What encoding to use for standard output)</i>    </td></tr>
+<tr><td>encoding&nbsp;&nbsp;&nbsp;&nbsp;<i>(What encoding to use for standard output, see also '--autoencode' command line argument)</i>    </td></tr>
 <tr><td>searchresultspath&nbsp;&nbsp;&nbsp;&nbsp;<i>(What path is to be used when storing the results of searching. If this is not set then xsldbg will use the path of the stylesheet)</i>    </td></tr>
 </table></td>
 </tr></table>    </td></tr>

@@ -1,4 +1,4 @@
-         xsldbg version 4.7.0 
+         xsldbg version 4.8.0 
          ==================== 
  
 xsldbg is a text based tool to debug stylesheets (the eXtensible Stylesheet Language) and has commands similar to the Unix/Linux debugger gdb. It has three major modes of execution of stylesheets. 
@@ -57,7 +57,7 @@ The following shows the legend of terms use in this manual and there meaning
           Node selection :source,data,cd 
           Searching :search 
           Operating system related :chdir,shell,tty 
-          File related :output,entities,system,public 
+          File related :list,output,entities,system,public 
           Disabled file commands:validate,load,save,write,free 
 - - - - - - - - - - - - - - - - - - - - 
 
@@ -295,6 +295,15 @@ Usage:
         help <COMMAND>   (Show help about a command) 
 - - - - - - - - - - - - - - - - - - - - 
 
+Command : List XSL/XML source file
+Summary : List the text in local XSL/XML source file in current output encoding 
+Usage: 
+ 
+        list   List the next 10 lines in current file 
+        list <startLine>   List the file content starting from line <startLine> 
+        list <startLine> <endLine>   List the file content starting from line <startLine> to <startLine> 
+- - - - - - - - - - - - - - - - - - - - 
+
 Command : Load
 Summary : Load the xsldbg's options and user preferences from disk 
 Usage: 
@@ -455,7 +464,7 @@ Usage:
             output   (Output file's SystemID ) 
             docspath   (Path to use when looking for documentation) 
             catalognames   (The names of the catalogs to use when the catalogs option is set. Value will be lost if set before setting catalogs option) 
-            encoding   (What encoding to use for standard output) 
+            encoding   (What encoding to use for standard output, see also '--autoencode' command line argument) 
             searchresultspath   (What path is to be used when storing the results of searching. If this is not set then xsldbg will use the path of the stylesheet) 
  
 - - - - - - - - - - - - - - - - - - - - 
@@ -618,4 +627,4 @@ Usage:
  
         write 
  
-Help document version 1.1 
+Help document version 1.2 

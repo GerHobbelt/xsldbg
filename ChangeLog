@@ -1,24 +1,32 @@
-Keith Isdale 22nd September 2018 <keithisdale@gmail.com> 
+Keith Isdale 22nd September 2018 <keithisdale@gmail.com>
+    4.8.0
+    Features
+        Added 'list' command
+        * If debugging local file then print current XSL/XML file line after each 'step'
+        * If debugging non-local file do nothing
+        * Make use of current 'encoding' for list command output, see '--autoencode' command line parameter
+
+Keith Isdale 22nd September 2018 <keithisdale@gmail.com>
     4.7.1
     Fixes
-    	Correct logic for --nonet option and entity loading
-	Correct build errors for on MinGW32
+        Correct logic for --nonet option and entity loading
+        Correct build errors for on MinGW32
 Keith Isdale 30th July 2018 <keithisdale@gmail.com>
     4.7.0
     Fixes
         Fix walking, tracing command logic.
-	Output of templates command when multiple XSLT documents are present
+        Output of templates command when multiple XSLT documents are present
         Correct logic that guesses relative XSLT file path given to 'break' command (needed debugging http/ftp documents)
         Correct logic of output of 'templates' command with '-q' option
         Remove useless 'this' option to 'templates' command
-	Correct expanding of file names such as ~/foo.xml and /foo/bar.xml into "file:/" URI
-	Strip file:// from "output" file specifier when opening output file for writing
+        Correct expanding of file names such as ~/foo.xml and /foo/bar.xml into "file:/" URI
+        Strip file:// from "output" file specifier when opening output file for writing
         Fix formatting of 'search' command output files
         Fix path of 'search' command input/output files
         Fix -sort option to 'search' command
         Fix logic in entity URI resolution
-	Fix logic for clearing callstack when starting run
-	Fix logic for determining included stylesheets for 'stylesheets' command
+        Fix logic for clearing callstack when starting run
+        Fix logic for determining included stylesheets for 'stylesheets' command
         Fix logic for adding breakpoints on general parsed XML entities
     Features
         To improve UI in qxslbg emit XsldbgDebuggerBase::completeTransform() signal when completed XSLT tranformation
@@ -30,16 +38,16 @@ Keith Isdale 30th July 2018 <keithisdale@gmail.com>
             Enties SystemID:"<ID>" URI:"<URI>"
         Update XsldbgDebuggerBase to emit the resolved URI of entities
         Add tests for walk and trace commands
-	Add test for http:// and ftp:// XML/XSLT document paths
-	Only print "Reached template" when XSLT match or mode has changed
-	Sort breakpoints by ID
+        Add test for http:// and ftp:// XML/XSLT document paths
+        Only print "Reached template" when XSLT match or mode has changed
+        Sort breakpoints by ID
         Sort templates by file and line number
         The <match> option to 'templates' command will match template whose name *contains* <match>
-	Support quoted path value to 'chdir' command
-	If chdir fails then show both original and expanded directory path
+        Support quoted path value to 'chdir' command
+        If chdir fails then show both original and expanded directory path
         Improve 'search' command help, move doc_version to xsldoc.xml
-	Improve 'stylesheets' command via also showing parent stylesheet if one applies
-	Move README to README.md and apply markdown formatting
+        Improve 'stylesheets' command via also showing parent stylesheet if one applies
+        Move README to README.md and apply markdown formatting
 
 
 Keith Isdale 23rd May 2018 <keithisdale@gmail.com>
@@ -58,18 +66,18 @@ Keith Isdale 21st April 2018 <keithisdale@gmail.com>
 
 Keith Isdale 15th April 2018 <keithisdale@gmail.com>
   Version 4.5.0
-  Migrate xsldbg to sourceforge git repository 
+  Migrate xsldbg to sourceforge git repository
   Remove all autoconf and automake related files
   Correct logic for determining libxml2 paths (still uses xml2-config and xslt-config)
-  Support Qt4 and Qt5 builds of xsldbg  
+  Support Qt4 and Qt5 builds of xsldbg
   Fix creation of docbook and documentation - see README for important details
   Update README documentation for thing such as build dependencies in OpenSUSE
   Update personal email address in files to keithisdale@gmail.com
   Fix logic for creating xmlCatog in *nix
   Remove execution permission for files that do net need it
   Improve xslt parameter removal better
-  Warn if unable to fully write xsl transformation result output 
-  
+  Warn if unable to fully write xsl transformation result output
+
 Keith Isdale 28th Sept 2009 <keithisdale@gmail.com>
   Version 4.4.1
   Backport changes from KDE repository
@@ -77,42 +85,42 @@ Keith Isdale 28th Sept 2009 <keithisdale@gmail.com>
   Fix bug in filesTempFile() which can lead to help not showing for unix
      o	return QByteArray of file name encoded with QFile::encodeName()
   Fix bug in autoloading of last used session (autoloadconfig)
-    o ensure that the old settings are loaded first then apply the new options provided on 
+    o ensure that the old settings are loaded first then apply the new options provided on
        command line
 
 
 Keith Isdale 1st Jan 2004 <keithisdale@gmail.com>
   Vesion 3.1.8
   Disable DocBook SGML parsing as it is depreciated by libxml-2.6.x : see xsldbg.h IN_LIBXML
-  Sort the printing of breakpoints in order of breakpoint ID. 
+  Sort the printing of breakpoints in order of breakpoint ID.
     o Sorting can be disabled by defining XSLDBG_NO_SORTING.
-    o required adding arrayListSet function 
+    o required adding arrayListSet function
     o required updating tests to take sorted breakpoints into account
-    o sorting has not been used when running xsldbg as a thread to avoid side effects on qxsldbg and kxsldgb.  
+    o sorting has not been used when running xsldbg as a thread to avoid side effects on qxsldbg and kxsldgb.
 
 Keith Isdale 30 Nov 2003 <keithisdale@gmail.com>
-  Update SAX usage to handle libxml-2.6.0: Usage of libxml-2.6.3 or the libxml module from GNOME cvs is 
-	required to avoid segfaults due encoding problems in libxml
+  Update SAX usage to handle libxml-2.6.0: Usage of libxml-2.6.3 or the libxml module from GNOME cvs is
+        required to avoid segfaults due encoding problems in libxml
   Set encoding as UTF-8 in XML files used in automated tests
- 
+
 Keith Isdale 26 July 2003 <keithisdale@gmail.com>
   Detect the lixbml version at run time rather than compile time, so that can use different
     XML entity handling code to suit the installed libxml
 
 Keith Isdale 19 July 2003 <keithisdale@gmail.com>
   Vesion 3.1.7
-  Remove old method of finding line numbers from XML documents as it causes conflicts  
-  Fix bug in "run' behavior, 
-    o if the user issues the "run" command then always restart stylesheet and stop at the first valid LIBXSLT command. 
+  Remove old method of finding line numbers from XML documents as it causes conflicts
+  Fix bug in "run' behavior,
+    o if the user issues the "run" command then always restart stylesheet and stop at the first valid LIBXSLT command.
     o don't output result of processing XSLT script (user should use continue,then run if they want that)
   Remove extra "newlines" in test specifications which could give misleading test results
   Use of libxslt version >= 1.0.31, or < 1.0.29 is recomended, as version  1.0.29 - 1.0.30 have a bug that cause xsldbg to fail
   Win32 specific compiler fixes to suit changes made to libxml2.dll
-     updated src/Makefile.msvc to make it more useful	
- 
+     updated src/Makefile.msvc to make it more useful
+
 Keith Isdale 05-17 July 2003 <keithisdale@gmail.com>
   Version 3.1.6
-  Mac OS X fixes 
+  Mac OS X fixes
     o if needed use glibtoolize not libtoolize
     o don't use -rpath in Makefile.am's
   Fix cause of crash with newer versions of libxml/libxslt when the -o command line argument is specified
@@ -122,29 +130,29 @@ Keith Isdale 29 June 2003 <keithisdale@gmail.com>
   Version 3.1.5
   Fix bug that can cause the warning message not to display when adding a existing template breakpoint
     - change test2 to suit
-  xsldbg implementation note : no warning will be given for adding an existing template if xsldbg has 
-	not yet reached the point where it can determine the templates that exist in the XSLT script.
-	This is because xsldbg assigns a fake XSLT script URL to the template breakpoint in this scenario
-	and then resolves the breakpoint to the requested location when possible.
+  xsldbg implementation note : no warning will be given for adding an existing template if xsldbg has
+        not yet reached the point where it can determine the templates that exist in the XSLT script.
+        This is because xsldbg assigns a fake XSLT script URL to the template breakpoint in this scenario
+        and then resolves the breakpoint to the requested location when possible.
   change semantics of gdb option
-	o gdb option has a value of 1 by default
-        o when --gdb is passed on the command the value of the "gdb option" is increased to flag 
-	    that xsldbg should print out the extra information needed by kdbg 
+        o gdb option has a value of 1 by default
+        o when --gdb is passed on the command the value of the "gdb option" is increased to flag
+            that xsldbg should print out the extra information needed by kdbg
   Documentation bug fixes
 
 Keith Isdale 22 June 2003 <keithisdale@gmail.com>
    Rename xsldbg.suse.8.1.spec to xsldbg.suse.8.0.spec
-   Convert xsldbg.spec to be a GCC 3.2, i386, spec file 
+   Convert xsldbg.spec to be a GCC 3.2, i386, spec file
    Minor code clean up get rid of some warnings
    Fix Ctrl-C handler so that at most two Ctrl-C's are required to abort xsldbg
    Enable gdb mode by default, and print extra GDB messages needed for KDbg when verbose mode is set :
-	xsldbg --verbose --gdb ... 
+        xsldbg --verbose --gdb ...
     Otherwise it the extra messages are annoying
     Fix crash bug when adding a template breakpoint
     Started support for orphaned template breakpoints
 
 Keith Isdale 15 June 2003 <keithisdale@gmail.com>
-   Fixed the specification for test2. All xsldbg automatic tests now pass  
+   Fixed the specification for test2. All xsldbg automatic tests now pass
    Update spec files to new vesion
    Updated configure.in, Makefile.am, spec files to make use of explicit specification of KDE, Qt and GMOME dir's (handy during RPM builds)
    Fixed KDE help centre docs to now they are found in help:/xsldbg/index.html.
@@ -153,30 +161,30 @@ Keith Isdale 15 June 2003 <keithisdale@gmail.com>
 Keith Isdale 1st,9th,14,15 June 2003 <keithisdale@gmail.com>
   Version 3.1.4
   Completed implementation to support orphaned breakpoints for KDbg 1.9.0, and when in xsldbg is running in gdb compatbility mode
-  This means that you can set a breakpoint at a line number for a file that has not been loaded yet 
+  This means that you can set a breakpoint at a line number for a file that has not been loaded yet
     and xsldbg will activate the breakpoint when it can. An example xsldbg session is:
-	$ xsldbg --shell --gdb
-	<xsldbgprompt> b -l xsldoc.xsl 31
-	<xsldbgprompt> source ../docs/en/xsldoc.xsl
-	<xsldbgprompt> data ../docs/en/xsldoc.xml
-	<xsldbgprompt> run
-	...
-	<xsldbgprompt> continue
-	Breakpoint at file ../docs/en/xsldoc.xsl : line 31
-    	<xsldbgprompt>
+        $ xsldbg --shell --gdb
+        <xsldbgprompt> b -l xsldoc.xsl 31
+        <xsldbgprompt> source ../docs/en/xsldoc.xsl
+        <xsldbgprompt> data ../docs/en/xsldoc.xml
+        <xsldbgprompt> run
+        ...
+        <xsldbgprompt> continue
+        Breakpoint at file ../docs/en/xsldoc.xsl : line 31
+        <xsldbgprompt>
    Fixed the specification for and test10
 
 
 Keith Isdale 31st May 2003 <keithisdale@gmail.com>
   Version 3.1.3
   Implement suggestion made by Hannes
-	- add "autorestart" option to xsldbg. When this boolean option is 
-		set don't automaticly restart the stylesheet when debugging it 
-		and the end is reached : disabled by default
-  KDbg related bug fix: Add \032\032 to the Finished styesheet message so that KDbg knows when 
-	    xsldbg has finished runing stylsheet
+        - add "autorestart" option to xsldbg. When this boolean option is
+                set don't automaticly restart the stylesheet when debugging it
+                and the end is reached : disabled by default
+  KDbg related bug fix: Add \032\032 to the Finished styesheet message so that KDbg knows when
+            xsldbg has finished runing stylsheet
 
-		
+
 
 Keith Isdale 22nd May 2003 <keithisdale@gmail.com>
   Minor documentation updates.
@@ -186,193 +194,193 @@ Keith Isdale 22nd May 2003 <keithisdale@gmail.com>
 
 Keith Isdale 22nd May 2003 <keithisdale@gmail.com>
   Version 3.1.2
-  When gdb mode is enabled print out the details of the breakpoint- required for KDbg 1.9.0 
+  When gdb mode is enabled print out the details of the breakpoint- required for KDbg 1.9.0
 
 Keith Isdale 25th March 2003 <keithisdale@gmail.com>
    Update configure.in to support newer versions of auto* by getting rid of acconfig.h and friends
- 		
+
 Keith Isdale 9th March 2003 <keithisdale@gmail.com>
-  Be more descriptive about QTDIR and KDEDIR   
-  
+  Be more descriptive about QTDIR and KDEDIR
+
 Keith Isdale 16th  Feb 2003 <keithisdale@gmail.com>
-  Update web site address for the download of Igor's Win32 binaries 
-  Fix compile errors under certain configurations 
+  Update web site address for the download of Igor's Win32 binaries
+  Fix compile errors under certain configurations
 
 Keith Isdale 7th  Dec 2002 <keithisdale@gmail.com>
    Created "pro" files to aid creation of xsldbg under win32
-   See README for more information  
+   See README for more information
    Version 3.1.1
 
 Keith Isdale 14th Sepg 2002 <keithisdale@gmail.com>
-  Requires/strongly recommend using libxslt-1.0.20 to avoid bug in libxslt that causes segfaults in xsldbg	
+  Requires/strongly recommend using libxslt-1.0.20 to avoid bug in libxslt that causes segfaults in xsldbg
 
 Keith Isdale 21 Aug 2002 <keithisdale@gmail.com>
-  Received feedback from Igor, applied patch to fix win32 specific 
-	 problem  (use strnicmp not strncasecmp)
+  Received feedback from Igor, applied patch to fix win32 specific
+         problem  (use strnicmp not strncasecmp)
   Retagged cvs. Started on full release
-	
-	
+
+
 Keith Isdale 11 Aug 2002 <keithisdale@gmail.com>
    Version 3.1.0
    Fixed segfault in printing xPaths when in running xsldbg as a thread
-	
+
 Keith Isdale 10 Aug 2002 <keithisdale@gmail.com>
    Fixed typo in when using RUNTEST10 in configure.in
-   Fixed ordering of tests in "test10" so that it passes (was ordered by file name)	   
-	
+   Fixed ordering of tests in "test10" so that it passes (was ordered by file name)
+
 Keith Isdale 4 Aug 2002 <keithisdale@gmail.com>
       Version 3.0.9
-       Fixed handling of stopping xsldbg when tracing or walking 
-	 and running xsldbg as a thread
+       Fixed handling of stopping xsldbg when tracing or walking
+         and running xsldbg as a thread
        Fixed generation of file name when stoped at an external entity and
-	  running xsldbg as a thread
-       Fixed the check of xmlSetEntityReferenceFunc in libxml2 so that 
-		if it is not present skip test 10 
-	
-	
+          running xsldbg as a thread
+       Fixed the check of xmlSetEntityReferenceFunc in libxml2 so that
+                if it is not present skip test 10
+
+
 Keith Isdale 31 July 2002 <keithisdale@gmail.com>
-	Version 3.0.8
-	Fixed bugs found by Robert JACOLIN, in
-	    xsldbg.h check for either WITH_XSLT_DEBUGGER or WITH_DEBUGGER
-	    documentation generation for KDE and GNOME2 try to install 
-		the docbook files if possible so that only need to
-	     to use the configure flags 
-		--enable-kde-docs=yes
-	     or 
-		--enable-gnome-docs=yes
-	     if you care about html versions of this style of documenation
-     
-	Bug watch!! if using autoconf version 2.5.X you may need to supply the 
-	    aditional argument of 
-	        --target=NONE 
-	    to configure so that it will complete sucessfully.
-	
-	Bug watch!! I've updated Makefile.cvs to remove extra files that should
-	    be built on each platorm. You may need to edit this if your build 
-	    system does replace them correctly. 
-	
-	
+        Version 3.0.8
+        Fixed bugs found by Robert JACOLIN, in
+            xsldbg.h check for either WITH_XSLT_DEBUGGER or WITH_DEBUGGER
+            documentation generation for KDE and GNOME2 try to install
+                the docbook files if possible so that only need to
+             to use the configure flags
+                --enable-kde-docs=yes
+             or
+                --enable-gnome-docs=yes
+             if you care about html versions of this style of documenation
+
+        Bug watch!! if using autoconf version 2.5.X you may need to supply the
+            aditional argument of
+                --target=NONE
+            to configure so that it will complete sucessfully.
+
+        Bug watch!! I've updated Makefile.cvs to remove extra files that should
+            be built on each platorm. You may need to edit this if your build
+            system does replace them correctly.
+
+
 Keith Isdale 31 July 2002 <keithisdale@gmail.com>
-	Version 3.0.7
-	Added commands "addwatch", "showwatch" and "delwatch"
-		to support watching of expressions
-	
-Keith Isdale 30 July 2002 <keithisdale@gmail.com>	
-	Version 3.0.6
-	Fix memory leaks as detected by valgrind
-	Fixed printing of intermidate location when executing a "next"
-	  command
-	Enabled repeating of last command with <ENTER> when in gdb mode
-	
-Keith Isdale 29 July 2002 <keithisdale@gmail.com>	
-	Version 3.0.5
-	Added "next" command 
-	   o after email from Hannes I had the idea of how a "next" command
-	       might work; and make xsldbg easier to use
-	Updated xsldoc.xml to suit "next" command
-	Fix the output of tty command when in gdb mode
-	
-	
-Keith Isdale 28 July 2002 <keithisdale@gmail.com>	
-	Version 3.0.4
-	Fixed output of cat command so that expressions that
-	  result in an string have surrounding single quotes
-	Fixed a segfault when using enable command that would occur 
-		if an invalid line nunber was provided
-	Fixed output of break command when errors occur on setting a template that already exist
-	When setting break point appended mode name to the name of template 
-		at which breakpoint occured. This is slight improvement it is
-		hard to make sense to be made of breakpoints at very complex 
-		templates ig 
-		<xsl:template match="* | @" mode="modeName" />
-	Added support for mode names in breakpoints and updated
-		"show" command to suit
-	
-	
-Keith Isdale 26 July 2002 <keithisdale@gmail.com>	
-	Version 3.0.3
-	Fixed typos so that "Error :" to become "Error:"
-	Fixed poutput of templates command when running xsldbg as a thread
-	
+        Version 3.0.7
+        Added commands "addwatch", "showwatch" and "delwatch"
+                to support watching of expressions
+
+Keith Isdale 30 July 2002 <keithisdale@gmail.com>
+        Version 3.0.6
+        Fix memory leaks as detected by valgrind
+        Fixed printing of intermidate location when executing a "next"
+          command
+        Enabled repeating of last command with <ENTER> when in gdb mode
+
+Keith Isdale 29 July 2002 <keithisdale@gmail.com>
+        Version 3.0.5
+        Added "next" command
+           o after email from Hannes I had the idea of how a "next" command
+               might work; and make xsldbg easier to use
+        Updated xsldoc.xml to suit "next" command
+        Fix the output of tty command when in gdb mode
+
+
+Keith Isdale 28 July 2002 <keithisdale@gmail.com>
+        Version 3.0.4
+        Fixed output of cat command so that expressions that
+          result in an string have surrounding single quotes
+        Fixed a segfault when using enable command that would occur
+                if an invalid line nunber was provided
+        Fixed output of break command when errors occur on setting a template that already exist
+        When setting break point appended mode name to the name of template
+                at which breakpoint occured. This is slight improvement it is
+                hard to make sense to be made of breakpoints at very complex
+                templates ig
+                <xsl:template match="* | @" mode="modeName" />
+        Added support for mode names in breakpoints and updated
+                "show" command to suit
+
+
+Keith Isdale 26 July 2002 <keithisdale@gmail.com>
+        Version 3.0.3
+        Fixed typos so that "Error :" to become "Error:"
+        Fixed poutput of templates command when running xsldbg as a thread
+
 Keith Isdale 26 July 2002 <keithisdale@gmail.com>
         Version 3.0.2
-	Changed break command so that if "" is provided as an
-	      template name then we are matching only a mode name.  eg.
-			break "" modeName
-  	      would set breakpoint on templates that have a mode of "modeName"
-		
-	
-		
-	
-Keith Isdale 25 July 2002 <keithisdale@gmail.com>
-	Version 3.0.1
-	Added support for templates with a mode
-	Break compatability with previous versions due to problems with 
-	   templates and modeswith a QName and mode ie
-		name ="xsl:template" mode = "xsl:mode"
-	Update documentaion to be able to create GNOME2 style appplication 
-	   documentation : See /docs/en/GNOME/gnome.docbook
-	Update KDE style documentation
-	Replace !xmlStrCmp with xmlStrEqual 
-	Changed break command to 
-		o Take two arguments a <TEMPLATE_NAME> <MODE_NAME>
-		o Become aware of QName properties for first or second argument 
-			eg 
-			break xsl:templateName xsl:modeName
-		o Only 
-			break *
-		  will cause breakpoints to be set on all templates
-		o To set a breakpoint on the "*" template use
-		        break \*
-		   Other arguments that have a "*" will not be specialy treated 
-		o If <TEMPLATE_NAME> or <MODE_NAME> does not have a non-local part of
-			their QName then a match will be made on all items with the same 
-	                local name. eg
-			    break h1 
-		  	will match on any template with 
-			    o a template name of "h1" 
-			    o a match that has "h1" in as its local name
-	Modified tests to suit changes
-			
-	
-	
-Keith Isdale 13th July 2002 <keithisdale@gmail.com>
-      	Version 2.2.3
-	Fixed printing of values for xpath expressions
-	Try to guess the location of docbook xsl when provided a docbook prefix
-	
-Keith Isdale 7th July 2002 <keithisdale@gmail.com>
-	Version 2.2.2
-	Fixed addparam command to update parameter value if it
-	   already has been added
-	Fixed typos in error messages
-	Removed WITH_DEBUGGER macro from acconfig.h
-	
-Keith Isdale 26th June 2002 <keithisdale@gmail.com>
-	Added "-f" option to globals and locals command that when used ot 
-	  will  print out the values as well as variable names.
-	Fixed globals and locals command to print fully qualified 
-	  variable names eg "xsl:myvar"
-	
-Keith Isdale 21st April 2002 <keithisdale@gmail.com>
-  Version 2.1.9 
-  Win32 specific udates:
-	o  Added win32/Makefile.msvc, a  make file for building under MSVC 
-	    from command line. This is an experimental method,  
-	    file kindly provided by Igor. You need to edit this file
-	    to suit your installation
-	o  Fixed bug reported by Igor that caused xsldbg to crash 
+        Changed break command so that if "" is provided as an
+              template name then we are matching only a mode name.  eg.
+                        break "" modeName
+              would set breakpoint on templates that have a mode of "modeName"
 
-	
+
+
+
+Keith Isdale 25 July 2002 <keithisdale@gmail.com>
+        Version 3.0.1
+        Added support for templates with a mode
+        Break compatability with previous versions due to problems with
+           templates and modeswith a QName and mode ie
+                name ="xsl:template" mode = "xsl:mode"
+        Update documentaion to be able to create GNOME2 style appplication
+           documentation : See /docs/en/GNOME/gnome.docbook
+        Update KDE style documentation
+        Replace !xmlStrCmp with xmlStrEqual
+        Changed break command to
+                o Take two arguments a <TEMPLATE_NAME> <MODE_NAME>
+                o Become aware of QName properties for first or second argument
+                        eg
+                        break xsl:templateName xsl:modeName
+                o Only
+                        break *
+                  will cause breakpoints to be set on all templates
+                o To set a breakpoint on the "*" template use
+                        break \*
+                   Other arguments that have a "*" will not be specialy treated
+                o If <TEMPLATE_NAME> or <MODE_NAME> does not have a non-local part of
+                        their QName then a match will be made on all items with the same
+                        local name. eg
+                            break h1
+                        will match on any template with
+                            o a template name of "h1"
+                            o a match that has "h1" in as its local name
+        Modified tests to suit changes
+
+
+
+Keith Isdale 13th July 2002 <keithisdale@gmail.com>
+        Version 2.2.3
+        Fixed printing of values for xpath expressions
+        Try to guess the location of docbook xsl when provided a docbook prefix
+
+Keith Isdale 7th July 2002 <keithisdale@gmail.com>
+        Version 2.2.2
+        Fixed addparam command to update parameter value if it
+           already has been added
+        Fixed typos in error messages
+        Removed WITH_DEBUGGER macro from acconfig.h
+
+Keith Isdale 26th June 2002 <keithisdale@gmail.com>
+        Added "-f" option to globals and locals command that when used ot
+          will  print out the values as well as variable names.
+        Fixed globals and locals command to print fully qualified
+          variable names eg "xsl:myvar"
+
+Keith Isdale 21st April 2002 <keithisdale@gmail.com>
+  Version 2.1.9
+  Win32 specific udates:
+        o  Added win32/Makefile.msvc, a  make file for building under MSVC
+            from command line. This is an experimental method,
+            file kindly provided by Igor. You need to edit this file
+            to suit your installation
+        o  Fixed bug reported by Igor that caused xsldbg to crash
+
+
 Keith Isdale 07th April 2002 <keithisdale@gmail.com>
   Version 2.1.8
-  Merge changes due to qxsldbg for WIN32 
-  Added win32/dsp_6_0 for building xsldbg under VC6.0 with 
-	support for qxsldbg
+  Merge changes due to qxsldbg for WIN32
+  Added win32/dsp_6_0 for building xsldbg under VC6.0 with
+        support for qxsldbg
   Moved tempory results output to %TEMP% directory under WIN32
   Fixed display of profiling output under qxsldg
-  
-	
+
+
 Keith Isdale 05th April 2002 <keithisdale@gmail.com>
  Version 2.1.7
  Changes needed by qtxsldbg under WIN32
@@ -382,519 +390,519 @@ Keith Isdale 05th April 2002 <keithisdale@gmail.com>
   cvs add to src/libxsldbg
      qnotifer2.h xsldbgevent.h xsldbgdebuggerbase.h
   cvs remove from src/libqtnotifier
-     qnotifer2.h xsldbgevent.h xsldbgdebuggerbase.h	
-	
+     qnotifer2.h xsldbgevent.h xsldbgdebuggerbase.h
+
 Keith Isdale 30th March 2002 <keithisdale@gmail.com>
-  Version 2.1.6 	
-  Fixed bug: Enable command may crash if file name provided 
-	is not found. ( breakpoint_cmds.c )
+  Version 2.1.6
+  Fixed bug: Enable command may crash if file name provided
+        is not found. ( breakpoint_cmds.c )
   Fixed bug: Warning message unclear when unable to find breakpoint
-	when executing enable command ( breakpoint_cmds.c ) 
-  Fixed bug: "break *" command incorrectly freeing of memory ( breakpoint_cmds.c )	
+        when executing enable command ( breakpoint_cmds.c )
+  Fixed bug: "break *" command incorrectly freeing of memory ( breakpoint_cmds.c )
   Updated Makefile.cvs to suit cygwin
 
- Tested xsldbg under the new GUI front end. qxsldbg . 
-	qxsldbg can run under cygwin/QT2/QT3. 
+ Tested xsldbg under the new GUI front end. qxsldbg .
+        qxsldbg can run under cygwin/QT2/QT3.
 
- 		
-	
+
+
 Keith Isdale 1st/2nd/3rd Feb 2002 <keithisdale@gmail.com>
    Version 2.1.5
    Changes needed to get xsldbg work under Cygwin
-	Seems to require development versions of autoconf and automake
-   	Moved definition of SOURCES in src/libqtnotifier/Makefile.am
-   	Merged two definitions of EXTRA_DIST in docs/en/KDE/Makefile.am
-	The files missing and ltmain.sh install-sh must be updated by
-		your Cygwin installation
+        Seems to require development versions of autoconf and automake
+        Moved definition of SOURCES in src/libqtnotifier/Makefile.am
+        Merged two definitions of EXTRA_DIST in docs/en/KDE/Makefile.am
+        The files missing and ltmain.sh install-sh must be updated by
+                your Cygwin installation
 
-	Seems to require installation prefix of /usr NOT /usr/local
-		configuration may take a while
-	Avoided the creation of static version of xsldbgtest by 
-	      using on -static libtool option when Cygwin is not used.
-	      Achieved using a XSLDBG_STATIC_FLAGS macro in configure.in
-		,src/Makefile.am  and tests/Makefile.am
-	Avoided the use of readline when running tests (when --stdout
-		option is used)
+        Seems to require installation prefix of /usr NOT /usr/local
+                configuration may take a while
+        Avoided the creation of static version of xsldbgtest by
+              using on -static libtool option when Cygwin is not used.
+              Achieved using a XSLDBG_STATIC_FLAGS macro in configure.in
+                ,src/Makefile.am  and tests/Makefile.am
+        Avoided the use of readline when running tests (when --stdout
+                option is used)
    All current tests pass
-	
-   Fixed detection of failed storage of the search dataBase. Print error
-	message if there was a problem
-	
-   Removed dead files 
-	xsldbgconf.h*
 
-	
+   Fixed detection of failed storage of the search dataBase. Print error
+        message if there was a problem
+
+   Removed dead files
+        xsldbgconf.h*
+
+
 Keith Isdale 24rd Feb 2002 <keithisdale@gmail.com>
    Version 2.1.4
    Created perl script to run most of the tests in tests directory
-	This should be able to be reused/modified for platforms other than *nix
+        This should be able to be reused/modified for platforms other than *nix
    Added stdout option so that all mesages are can be chosen to be sent to stdout
-	This is needed to run WIN3232 tests. 
-	Updated xsldoc.xsl, options.c, options.h to suit
-   
+        This is needed to run WIN3232 tests.
+        Updated xsldoc.xsl, options.c, options.h to suit
+
    Created tests/runwin32.pl
    Most tests can now be run under WIN32 using perl and tests/runwin32.pl. But this
-	requires Perl-5.6 or greater. At the moment the MSVC project files don't 
-	build the test "executables"
+        requires Perl-5.6 or greater. At the moment the MSVC project files don't
+        build the test "executables"
    Added further details to tests in tests/*
 
-	
+
 Keith Isdale 23rd Feb 2002 <keithisdale@gmail.com>
    Version 2.1.3
    Added support for output file to be specified as "file://" protocol URI
-	Created filesURItoFileName (files.c) and xslDbgShellOutput (file_cmds.c)
+        Created filesURItoFileName (files.c) and xslDbgShellOutput (file_cmds.c)
    Moved declaration of file related commands to debugXSL.h
    Added padantic configure option (configure.in) to choose padantic compiler options
    Converted the remainding strcmp calls to xmlStrCmp
    Stripped any double quotes given to system and public command. Otherwise
-	it confusing as to why a entry is not found if quotes are supplied
+        it confusing as to why a entry is not found if quotes are supplied
    Simplify filesLoadCatalogs (files.c), updated files effected (xsldbg.c and  file_cmds.c)
    Updated docs/en/xsldoc.xml to suit changes
-	
-Keith Isdale 22th Feb 2002 <keithisdale@gmail.com>	
-   Version 2.1.2		
+
+Keith Isdale 22th Feb 2002 <keithisdale@gmail.com>
+   Version 2.1.2
    Applied patches by Justin
    Added searchresultspath option (OPTIONS_SEARCH_RESULTS_PATH), see setoption command
-	This is now used by the search command. See search command
-	Added function filesSearchResultsPath (files.c) to return value of 
-	  path to be used for the results of searching. This is because 
-	  the user may have the XSLT files stored outside thier "home" directory
-   Updated "search" command in xsldoc.xml to 
-   Fix guessing of stylesheet name and XML file name when URI's are used 
-   Added tests to test2 to test the guessing of stylesheet and XML file names 
-   Fixed filesEntityRef (files.c), set xsldbg:uri for all child nodes of entity when 
-	entity has only a root node.
-	
+        This is now used by the search command. See search command
+        Added function filesSearchResultsPath (files.c) to return value of
+          path to be used for the results of searching. This is because
+          the user may have the XSLT files stored outside thier "home" directory
+   Updated "search" command in xsldoc.xml to
+   Fix guessing of stylesheet name and XML file name when URI's are used
+   Added tests to test2 to test the guessing of stylesheet and XML file names
+   Fixed filesEntityRef (files.c), set xsldbg:uri for all child nodes of entity when
+        entity has only a root node.
+
 !Todo!
  cvs add tests/subdir tests/subdir/Makefile.am tests/subdir/test14.xsl tests/subdir/test14.xml tests/test13.xsl tests/test13.xml
-	
-Keith Isdale 20th Feb 2002 <keithisdale@gmail.com>	
-  Version 2.1.1		
+
+Keith Isdale 20th Feb 2002 <keithisdale@gmail.com>
+  Version 2.1.1
   Found the WIN32 requires output to be flushed before any input
-	o added fflush to xslDbgWalkContinue (debugXSL.c) 
-	o dded fflush to xslDbgShellReadline (simpleio.c)
-  Updated docs/en/website with some screen shots of xsldbg running in 
-	XEmacs and Quata+ and a running example for each.
+        o added fflush to xslDbgWalkContinue (debugXSL.c)
+        o dded fflush to xslDbgShellReadline (simpleio.c)
+  Updated docs/en/website with some screen shots of xsldbg running in
+        XEmacs and Quata+ and a running example for each.
   Added filesMoreFile (files.c) to print a file thus removing the dependancy
-	on the "more" command
+        on the "more" command
   Changed files_unix.c to use temporary files in the "/tmp/" directory. This
-	is to avoid having more temp files than needed
-	o modfied tempNames, filesPlatformInit, filesPlatformFree to suit 
-	o fixed typo in files.c and make use of filesPlatormFree
+        is to avoid having more temp files than needed
+        o modfied tempNames, filesPlatformInit, filesPlatformFree to suit
+        o fixed typo in files.c and make use of filesPlatormFree
   Changed searchQuery (search.c) to make use of filesMoreFile function (files.c)
-	This means that the output will be correct when encoding other than UTF-8
-	is used
+        This means that the output will be correct when encoding other than UTF-8
+        is used
   Found memory allocation of several strings to be wrong causing random seg faults
-	increased memory alocation to allow for the '\0' termination
-  Updated help_win32.c and help_unix.c to make use of filesMoreFile function (files.c)	
+        increased memory alocation to allow for the '\0' termination
+  Updated help_win32.c and help_unix.c to make use of filesMoreFile function (files.c)
   Add more error messages to shellPrompt (debugXSL.c)
   Found xsldbg aborts when doc is unable to be parsed. Set xsldbg to stop
-	
+
   Justin: Send a patch if you want to change help_riscos.c to make use of filesMoreFle
- 
+
   cvs add docs/en/website/*.png
-	
-	
+
+
 Keith Isdale 19th Feb 2002 <keithisdale@gmail.com>
    Version 2.1.0
    Added missing line feeds to some error messages
    Found that win32's chdir fails if candidate path has trailing \\
-	In changeDir strip off extra PATHCHARS (files.c)
+        In changeDir strip off extra PATHCHARS (files.c)
 
-	
+
 Keith Isdale 18 Feb 2002 <keithisdale@gmail.com>
   Version 2.0.9
-  Changes requested to suit upcomming KDbg release 
+  Changes requested to suit upcomming KDbg release
      o Disabled the echoing enter commands in gdb mode
-     o When printing expressions add "= " then <EXPRESSION> followed 
-	by what <EXPRESSION> evaluates to
+     o When printing expressions add "= " then <EXPRESSION> followed
+        by what <EXPRESSION> evaluates to
      o print current location as well for "where" command
-     o disable printing of "Reached template ..." to terminal until 
-	trace or walk command are being used
+     o disable printing of "Reached template ..." to terminal until
+        trace or walk command are being used
   Tried to make steup command more accurate. This is very tricky to
-	get right :-) 
+        get right :-)
   Created Makefile.am's to create win32 distribution
   Added target dist_win32 to create distribution for WIN32 users of xsldbg
   Added #include of xsldbgthread.h in param_cmds.c to remove a warning
   Found and fixed bug in file name expansion ie converting "~" to <USERS_HOME_DIR>
-	o created platform dependant function filesExpandName in files.h
-	o updated xsldbg.c and debugXSL.c to make use of filesExpandName
-	o updated files_unix.c, files_win32.c and files_riscos.c with 
-	   suitable version of filesExpandName
- File name expansion now works on 
-	command line parameters of 
-  	  o --cd <PATH>,  <STYLESHEET> ,<XML_DATA_FILE> <OUTPUTFILE>
-	xsldbg commands of 
-  	  o source, data and output
+        o created platform dependant function filesExpandName in files.h
+        o updated xsldbg.c and debugXSL.c to make use of filesExpandName
+        o updated files_unix.c, files_win32.c and files_riscos.c with
+           suitable version of filesExpandName
+ File name expansion now works on
+        command line parameters of
+          o --cd <PATH>,  <STYLESHEET> ,<XML_DATA_FILE> <OUTPUTFILE>
+        xsldbg commands of
+          o source, data and output
  Updated docs/en/xsldoc.xml to suit these changes
  On my local system created win32_distcheck.sh to quickly setup links to
-	check/compile a xsldbg zip release under WIN32 (Won't be distributed)
+        check/compile a xsldbg zip release under WIN32 (Won't be distributed)
 
  cvs add win32/Makefile.am win32/dsp/Makefile.am
-	
+
 Keith Isdale 17 Feb 2002 <keithisdale@gmail.com>
   Version 2.0.8
   Bug fixes suggested by Hannes
-	o  Applied patches to fix the order of values in 
-	   xsldbg_LDADD and xsldbgtest_LDADD for src/Makefile.am
-	   listTest_LDADD searchTest_LDADD for tests/Makefile.am	
-        o  Reversed the order of printing "frame stack" now prints the 
-	   newest item at top of list
-	
-  Bug fixes 
-	o added missing checks on several function's preconditions. Mainly missed checking
-	   if pointer arguments were NULL
-	o made several error messages consistant with rest of project
-	o function xslDbgShellDelete -l option not deleting breakpoint
-	
-  Extended automatic command line tests to cover
-	o add, delete, enable and  disable commands
-	o adddparam, deleteparam and showparam commands
-	
-  xsldbg commands covered by command line tests now listed
-	   in tests/testcoverage.txt
+        o  Applied patches to fix the order of values in
+           xsldbg_LDADD and xsldbgtest_LDADD for src/Makefile.am
+           listTest_LDADD searchTest_LDADD for tests/Makefile.am
+        o  Reversed the order of printing "frame stack" now prints the
+           newest item at top of list
 
-  Moved functions xsldbgLineNo, xsldbgUrl, and xsldbgUpdateFileDetails to 
-	files module to allow memory used by these functions to be 
-	freed properly
-	
-	
-	
+  Bug fixes
+        o added missing checks on several function's preconditions. Mainly missed checking
+           if pointer arguments were NULL
+        o made several error messages consistant with rest of project
+        o function xslDbgShellDelete -l option not deleting breakpoint
+
+  Extended automatic command line tests to cover
+        o add, delete, enable and  disable commands
+        o adddparam, deleteparam and showparam commands
+
+  xsldbg commands covered by command line tests now listed
+           in tests/testcoverage.txt
+
+  Moved functions xsldbgLineNo, xsldbgUrl, and xsldbgUpdateFileDetails to
+        files module to allow memory used by these functions to be
+        freed properly
+
+
+
 Keith Isdale 15 Feb 2002 <keithisdale@gmail.com>
   Version 2.0.7
   Advised by Hannes that the Makefile.am's were broken :-(
-  Read libtool docs again. 
+  Read libtool docs again.
   Added static target, src/xsldbgtest, to do testing with -rpath specified and
-	static library used
+        static library used
   Removed XSLDBG_EXPORTS from configure.in and all Makefile.am's
-  Changed $(XSLDBG) in all Makefile.am's to be make use of src/xsldbgtest 
+  Changed $(XSLDBG) in all Makefile.am's to be make use of src/xsldbgtest
   Fixed broken include specification in test/Makefile.am
-  Clean build, 
-	o threading enabled/disabled, 
-	o GNOME docs enabled/disabled
-	o KDE docs enabled/disabled
+  Clean build,
+        o threading enabled/disabled,
+        o GNOME docs enabled/disabled
+        o KDE docs enabled/disabled
   Disabled normal breakpoint messaged been sent to terminal unless user is
-	tracing or walking through stylesheet
-	 
-	
+        tracing or walking through stylesheet
+
+
 Keith Isdale 12 Feb 2002 <keithisdale@gmail.com>
   Version 2.0.6
   Depreciated breakPointSetActiveBreakPoint and breakPointGetActiveBreakPoint
-	They now do nothing, removes bug in printing current location and when gdb
-	mode is enabled
-	
+        They now do nothing, removes bug in printing current location and when gdb
+        mode is enabled
+
 Keith Isdale 10 Feb 2002 <keithisdale@gmail.com>
-  Version 2.0.5	
+  Version 2.0.5
   Copied Igor's MSVC project files to win32\dsp\
-	As normal user may need to change paths for location of 
-	  includes, libraries and dll's to suit your installation.
-	xsldbg is now mainly a library but at this time can only be 
-	built as a static library. Requires the def files for
-	export definitions to be able to be built as a dll.
-	TODO! Create script to autogenerate def file using sgml files 
-	   created by GNOME documentation tool
-  Test build under MSVC 5.0 - OK. Executable file size will be smaller than previous 
-	releases ( about 100Kb )
+        As normal user may need to change paths for location of
+          includes, libraries and dll's to suit your installation.
+        xsldbg is now mainly a library but at this time can only be
+        built as a static library. Requires the def files for
+        export definitions to be able to be built as a dll.
+        TODO! Create script to autogenerate def file using sgml files
+           created by GNOME documentation tool
+  Test build under MSVC 5.0 - OK. Executable file size will be smaller than previous
+        releases ( about 100Kb )
   Found and fixes bug in "search" command. Abort if no stylesheet has been loaded
-	before doing search
-	Found "more" command in WIN32 refuses to accept file name of .\searchresult.txt
-	  Added this problem to limitations. WIN32 users may need to use 
-		"shell type .\searchresult.txt" instead
-	TODO! Look at replacing more command.      
+        before doing search
+        Found "more" command in WIN32 refuses to accept file name of .\searchresult.txt
+          Added this problem to limitations. WIN32 users may need to use
+                "shell type .\searchresult.txt" instead
+        TODO! Look at replacing more command.
   Update docs/en/website/index.html and docs/en/website/win32_install.html
   Created config_riscos.h.in to automate riscos configuration creation
-  Created win32/dsp/.cvsignore 
-  Updated docs/en/search.xsl and docs/en/searchhtml.xsl.  
+  Created win32/dsp/.cvsignore
+  Updated docs/en/search.xsl and docs/en/searchhtml.xsl.
   Removed dead files : xsldbg.kdevprj  and xsldbg.kdevses
   Updated win32/dsp/createcatalog.bat
 
- cvs add config_riscos.h.in, win32/dsp/.cvsignore win32/dsp/xsldbg.dsp 
-	 win32/dsp/xsldbg.dsw win32/dsp/libxsldbg.dsp
+ cvs add config_riscos.h.in, win32/dsp/.cvsignore win32/dsp/xsldbg.dsp
+         win32/dsp/xsldbg.dsw win32/dsp/libxsldbg.dsp
  cvs remove xsldbg.kdevprj  and xsldbg.kdevses
-	
+
 Keith Isdale 9 Feb 2002 <keithisdale@gmail.com>
   Version 2.0.4
   Tidy the files docs/en/*.dtd
-  Put better comments in docs/en///*.xsl to suit xsltdoc.xsl by Fabrice Desr  
+  Put better comments in docs/en///*.xsl to suit xsltdoc.xsl by Fabrice Desr 
   Simplified processing of optional aurguments to xsldbg
-	added new API optionsGetOptionID and optionsGetOptionName to options.[ch]
-	updated xsldbg.c and option_cmds.c to make use of these functions
+        added new API optionsGetOptionID and optionsGetOptionName to options.[ch]
+        updated xsldbg.c and option_cmds.c to make use of these functions
   Updated usage function in xsldbg.c to describe newly addded options
   Fixed typo in docs/en/catalog.xml (changed comfig to config)
-  Added reference to XML/XSL documentation tool by Fabrice Desr  
+  Added reference to XML/XSL documentation tool by Fabrice Desr 
   Sent email to Waldo about xsldbg's notification system
   Fixed definition of TIMESTAMP in xsldbgwin32config.h.in to use __DATE__
   Updated version number of risc os port
   Compile with pedantic options
-	Fixed several instances of warnings about signedness
-	Remove warning by replacing index with optionsIndex in optionsSavetoFile (options.c) 
-	Replace printCount with printTemplateCount in xslDbgShellPrintTemplateNames (template_cmds.c)
-	Added #include "debugXSL.h" to option_cmds.c
-	cast optionsConfigFileName as a (char*) in optionsLoad (options_*.c)
-  Created search_v1_1.dtd, based on search.dtd. 
-	Added variable element definition to search_v1_1.dtd
-	Added optional comment to all elements in search_v1_1.dtd
-	Updated Makefile.am, docs/en/catalog.xml, docs/en/CATALOG
-	Updated DTD declaration for search dataBase to use new DTD in searchEmpty (search.c)
-	Updated searchAdd to add comment node (search.c)
+        Fixed several instances of warnings about signedness
+        Remove warning by replacing index with optionsIndex in optionsSavetoFile (options.c)
+        Replace printCount with printTemplateCount in xslDbgShellPrintTemplateNames (template_cmds.c)
+        Added #include "debugXSL.h" to option_cmds.c
+        cast optionsConfigFileName as a (char*) in optionsLoad (options_*.c)
+  Created search_v1_1.dtd, based on search.dtd.
+        Added variable element definition to search_v1_1.dtd
+        Added optional comment to all elements in search_v1_1.dtd
+        Updated Makefile.am, docs/en/catalog.xml, docs/en/CATALOG
+        Updated DTD declaration for search dataBase to use new DTD in searchEmpty (search.c)
+        Updated searchAdd to add comment node (search.c)
 
  cvs add search_v1_1.dtd
-	
+
 Keith Isdale 7 Feb 2002 <keithisdale@gmail.com>
  Version 2.0.3
  Added OPTONS_UTF8_INPUT, Made decoding input optional which allows a program
-	to send UTF-8 to xsldbg. Added "utf8input" to list of known options
+        to send UTF-8 to xsldbg. Added "utf8input" to list of known options
  Simplified functions optionsSetIntOption. functions optionsGetIntOption
  Fixed cause of compile warning when linking (programs don't require version info)
  Fixed notification of globals and locals (missed sending an empty list when there
-		are no variables present)
+                are no variables present)
  Changed notification of stylesheets to make use of notify list (a bit faster)
  Added to meaning of gdb mode, limit the number of lines to print when
-	evaluating expressions. Prints a most GDB_LINES_TO_PRINT lines
-	then prints "..." This is to suit KDbg
- cvs remove dead config files xsldbwing* 
+        evaluating expressions. Prints a most GDB_LINES_TO_PRINT lines
+        then prints "..." This is to suit KDbg
+ cvs remove dead config files xsldbwing*
  cvs add xsldbgwin32config.h and xsldbgwin32config.h.in
-	
+
 Keith Isdale 6 Feb 2002 <keithisdale@gmail.com>
   Version 2.0.2
   Fixed includes for libqtnotifier  (missed moc file)
   Fixed Makefile.am for libqtnotifier (missed generation of moc file)
   Fixed notification to send an "empty" XsldbgEventData at start of list
   Fixed introduced bug (caused by wholesale replacement of result++ with result =1)
-	in callStackGetDepth.
+        in callStackGetDepth.
   Notification system is now in a stable and is beta quality. Quanta+ plugin
-	should now also be beta. Notification system is now easier to maintain
-	and understand.
-	
-	
+        should now also be beta. Notification system is now easier to maintain
+        and understand.
+
+
 Keith Isdale 5 Feb 2002 <keithisdale@gmail.com>
   Fixed printing of local and globals to have a space before them
-	ie " Local <VARIABLE_NAME>"
+        ie " Local <VARIABLE_NAME>"
   Fixed set command to be consistant with "setoption" command
-	Fixed error messages for "set" command top be consistant with
-	other error messages
+        Fixed error messages for "set" command top be consistant with
+        other error messages
  Updated xsldoc.xml to include definition of "set" command
  Fixed usage of --gdb option. Added optionsCopyVolitleOption before
-	testing for presence of that option
+        testing for presence of that option
  Changed output of "cat" command when running xsldbg normaly to
-	print only the value of XPath. Ie removed XX is a XX <XPath>.
-	This is to make it easier to use in KDbg
+        print only the value of XPath. Ie removed XX is a XX <XPath>.
+        This is to make it easier to use in KDbg
  Fixed tests/searchTest.c to make use of new header files
  Fixed set command to properly calculate the result of a node set and
-	assign it to a variable. Updated test11.xsl to check this change -OK.
+        assign it to a variable. Updated test11.xsl to check this change -OK.
  Fixed the usage of version info to create properly versioned libraries
  Changed added to meaning of gdb mode, when locals command is issued
-	both local and global variables will be printed (for KDbg)
+        both local and global variables will be printed (for KDbg)
  Updated xsldbgwin32config.h via xsldbgwin32config.h.in and running ./config.status
-	
-	
+
+
 Keith Isdale 2 Feb 2002 <keithisdale@gmail.com>
   Created win32 project file for MSVC  (still broken)
   Added src/libxsldbg/xsldbgwin32config.h.in
-	src/xsldbgwin32* is to be removed from cvs
+        src/xsldbgwin32* is to be removed from cvs
   Move lookupName to utils.[ch]
   Fixed missing return statement in xslDbgShellSetOption
   Added missing #include <string.h> to options_*.c
   Fixed typo of #include "stdlib.h" to #include <stdlib.h>
-  Made first argument in findTemplateNode to be non const 
-	
+  Made first argument in findTemplateNode to be non const
+
 Keith Isdale 1 Feb 2002 <keithisdale@gmail.com>
-  Version 2.0.1		
-  Continue source code clean up 	
-	Fixed the name of structure ParameterItem to be parameterItem
-	Fixed the name of structures xslCallPoint* to be callPoint*
+  Version 2.0.1
+  Continue source code clean up
+        Fixed the name of structure ParameterItem to be parameterItem
+        Fixed the name of structures xslCallPoint* to be callPoint*
   Split option commands off into option_cmds.c
-	updated them to allow notify messages to application
-	updated debugXSL.h to include functions xslDbgShellOptions 
-		and xslDbgShellSetOption
-	moved optionsNames listed in debugXSL.c to option_cmds.c
+        updated them to allow notify messages to application
+        updated debugXSL.h to include functions xslDbgShellOptions
+                and xslDbgShellSetOption
+        moved optionsNames listed in debugXSL.c to option_cmds.c
   Rebuilt notification system I now imediately create a instance of
-	XsldbgEvent. Then fill in the list of XsldbgEventData elements 
-	 appropriate attributes for the message. 
-	This means that the application does not know
- 	about how xsldbg is implemented. All they see is the notification 
-	messages. This is also a far easier method to maintain as previous
-	method was very difficult to understand.
+        XsldbgEvent. Then fill in the list of XsldbgEventData elements
+         appropriate attributes for the message.
+        This means that the application does not know
+        about how xsldbg is implemented. All they see is the notification
+        messages. This is also a far easier method to maintain as previous
+        method was very difficult to understand.
   Added support to save and load configuration using
-	 "save"  and "load" commands
+         "save"  and "load" commands
   Created docs/en/config.dtd
   Updated docs/en/catalogs.xml and docs/en/CATALOG to contain config.dtd
 
  Applied patches suggested by Justin
- Copied optionsLoad, optionsSave from options_unix.c to 
-		options_win32.c and options_riscos.c
+ Copied optionsLoad, optionsSave from options_unix.c to
+                options_win32.c and options_riscos.c
 
-  Updated cvs 
-	o added docs/en/config.dtd, utils.[ch] arraylist.c debug.[ch]
-		help_*.c options_*.c files_*.c option_cmds.c
-	o removed src/libxsldbg/dbg*.c
-	
+  Updated cvs
+        o added docs/en/config.dtd, utils.[ch] arraylist.c debug.[ch]
+                help_*.c options_*.c files_*.c option_cmds.c
+        o removed src/libxsldbg/dbg*.c
+
 Keith Isdale 31 Jan 2002 <keithisdale@gmail.com>
   Version 2.0.0
   Synchronize function declaration documentation in header and implementation files
-  Rename "module level" functions to follow the form of 
-	<MODULE_NAME><FUNCTION_DESCRIPTION> 
-	This caused major binary incompatabilies which has lead to version 2.0.0
+  Rename "module level" functions to follow the form of
+        <MODULE_NAME><FUNCTION_DESCRIPTION>
+        This caused major binary incompatabilies which has lead to version 2.0.0
         Removed irelavant functions isOptionEnabled and enableOption; and use
-	      optionsGetIntOption optionsSetIntOption instead
-	renamed files dbg*.c to be <MODULE_NAME>.c
-	created utils.[ch] and put all generally useful things in there
-	Fixed the name of structure "ArrayList" to be arrayList
-	Fixed the name of structure xslBreakPoint to be breakPoint
-	Removed private "lineNo" functions from breakpoint.h 
-  Changed required version of libxslt to 1.0.10 
+              optionsGetIntOption optionsSetIntOption instead
+        renamed files dbg*.c to be <MODULE_NAME>.c
+        created utils.[ch] and put all generally useful things in there
+        Fixed the name of structure "ArrayList" to be arrayList
+        Fixed the name of structure xslBreakPoint to be breakPoint
+        Removed private "lineNo" functions from breakpoint.h
+  Changed required version of libxslt to 1.0.10
   Replaced "result++" with "result = 1" to give better meaning. If result++
-	is being used as a counter replace it with another name eg wordCounter
-	
-	
-	
+        is being used as a counter replace it with another name eg wordCounter
+
+
+
 Keith Isdale 29 Jan 2002 <keithisdale@gmail.com>
-   Added platform specific interface optionsConfigFileName to 
-	options.h
-   Added optionsRead and optionsNode functions to read/save options	
+   Added platform specific interface optionsConfigFileName to
+        options.h
+   Added optionsRead and optionsNode functions to read/save options
    Created options_unix.c, options_win32.c, options_riscos.c to provide
-	platform specific implementation to the options.h interfaces
+        platform specific implementation to the options.h interfaces
    Created help_unix.c, help_win32.c, help_riscos.c to provide
-	platform specific implementation to the help.h interfaces
+        platform specific implementation to the help.h interfaces
    Created files_unix.c, files_win32.c, files_riscos.c to provide
-	platform specific implementation to the files.h interfaces	
+        platform specific implementation to the files.h interfaces
    Commited new files to cvs
-   Fixed response to cd command when use xsldbg as a thread	
-	
+   Fixed response to cd command when use xsldbg as a thread
+
 Keith Isdale 28 Jan 2002 <keithisdale@gmail.com>
    Version 1.0.2
    Added support for encoding output to standard output ( encoding command )
    Added auto detection of encodinge ( autoencode option )
    Fixed result of locals and globals command to be consistant with
-	rest of project	
+        rest of project
    Fixed formatting of several error messages
    Fixed disable command to always disable the breakpoint
-	
+
 Keith Isdale 27 Jan 2002 <keithisdale@gmail.com>
    Version 1.0.1
-   Added suport for quoted values to splitstring function in debugXSL.c so you now 
-	can do something like
-	  break "header | title"
+   Added suport for quoted values to splitstring function in debugXSL.c so you now
+        can do something like
+          break "header | title"
    Added options command to print out option values
    Updates xsldoc.xml to suit
-   Merged in changes suggested by Justin to suit risc os   
-	
+   Merged in changes suggested by Justin to suit risc os
+
 Keith Isdale 24 Jan 2002 <keithisdale@gmail.com>
    Version 1.0.0
    Changed default "data" file name for  searchQuery to searchresults.xml
-	Set the "base path" for temporary and output files to current stylesheet path
-	Set default "output" file name for searchQuery to searchresults.html
-	Changed API for searchQuery to accept output file name
-	Justin to check the risc_os related code
-	
+        Set the "base path" for temporary and output files to current stylesheet path
+        Set default "output" file name for searchQuery to searchresults.html
+        Changed API for searchQuery to accept output file name
+        Justin to check the risc_os related code
+
    Disabled excessive messages that occur when running as thread
-   Forward output when tracing to terminalIO or message window	
+   Forward output when tracing to terminalIO or message window
    Fixed usaged of readline in simpleio.c
-	
+
 Keith Isdale 23 Jan 2002 <keithisdale@gmail.com>
-   Changed meaning of data for XSLDBG_MSG_FILEOUT message to mean 
-	a file name
+   Changed meaning of data for XSLDBG_MSG_FILEOUT message to mean
+        a file name
         Removed filesCreateTempFile function, added filesTempFileName function
-	
+
 Keith Isdale 22 Jan 2002 <keithisdale@gmail.com>
    Version 0.9.9
    Fix bugs thread notifiation
-   Changed xsldbg.c so profile and debug output can go to the 
-	target document
-	
+   Changed xsldbg.c so profile and debug output can go to the
+        target document
+
 Keith Isdale 21 Jan 2002 <keithisdale@gmail.com>
   Fixed bugs in using --catalogs and --xinclude options
   Added a means to notify app of a list of message increasing
-	its speed because of low transaction rate to application
-	Converted as many of the notification transactions to use
-	this list notification method.
-	Effective tranaction rate to application is now acceptable 
+        its speed because of low transaction rate to application
+        Converted as many of the notification transactions to use
+        this list notification method.
+        Effective tranaction rate to application is now acceptable
   Fixed usage of filesGetBaseUri in debugXSL.c and bugs in
-	filesGetBaseUri
-	
-		
+        filesGetBaseUri
+
+
 Keith Isdale 20 Jan 2002 <keithisdale@gmail.com>
   Fixed the use of an array for integer options
-  Added setoption command and updated main logic in debugXSL.c to suit, 
-	as well as  updated cmds.h and xmldoc.xml, added a 
-	copyVolitileOptions function to options.c to support this in
-	a safe way
+  Added setoption command and updated main logic in debugXSL.c to suit,
+        as well as  updated cmds.h and xmldoc.xml, added a
+        copyVolitileOptions function to options.c to support this in
+        a safe way
   Fixed bug in displaying the correct time take when profiling
 
-	
-	
+
+
 Keith Isdale 19 Jan 2002 <keithisdale@gmail.com>
-  Added entities command to print out list of external entites 
-	included in document
+  Added entities command to print out list of external entites
+        included in document
  Added system and public command to show what system file and public ID
-	maps to via the current xml catalog
-	
+        maps to via the current xml catalog
+
 Keith Isdale 18 Jan 2002 <keithisdale@gmail.com>
   Fix bugs in validData and validSource to validiate if
-	stylesheet, document has been loaded
-	
+        stylesheet, document has been loaded
+
 Keith Isdale 17 Jan 2002 <keithisdale@gmail.com>
   Added support for notifying of result of local/global variables,
- 	  stylesheets and templates 
+          stylesheets and templates
   Redirected error output from libxml to as a text message notification
-	to application	when running as xsldbg a thread
-	
+        to application	when running as xsldbg a thread
+
 Keith Isdale 13 Jan 2002 <keithisdale@gmail.com>
-  Started work on redirecting stdout to the application when running as 
-	thread
-	
-	
+  Started work on redirecting stdout to the application when running as
+        thread
+
+
 Keith Isdale 12 Jan 2002 <keithisdale@gmail.com>
   Second attempt at fixing included xml file bug
   Stripped out garbage relating to other method tried
-  Added functions filesSetBaseUri,  filesGetBaseUri and modified 
-	debugXSL.c, filles.[ch] to suit
-  Added a namespace for xsldbg in files.h (XSLDBG_XML_NAMESPACE)	
-  Fixed bugs in gnome/gnome-xml/tree.c 	
-	
-	
+  Added functions filesSetBaseUri,  filesGetBaseUri and modified
+        debugXSL.c, filles.[ch] to suit
+  Added a namespace for xsldbg in files.h (XSLDBG_XML_NAMESPACE)
+  Fixed bugs in gnome/gnome-xml/tree.c
+
+
 Keith Isdale 6 Jan 2002 <keithisdale@gmail.com>
    VERSION 0.9.8
    Made a patch for libxml to fix problems with debugging xml included files
    Added support functions for src/libxsldbg/files.c
    Fixed bug in changeDir ( /src/libxslt/files.c ) to make use "~" shortcut
-	
+
 Keith Isdale 6 Jan 2002 <keithisdale@gmail.com>
    Fixed the guessing of file names when using break, delete, enable commands
 
 Keith Isdale 5 Jan 2002 <keithisdale@gmail.com>
   Added XSLDBG_MSG_PARAMETER_CHANGED message to notifier, modified
-	param_cmds to make use of it. A notify message is sent when all parameters
-	are deleted and when a parameter is added, or when "showparam"  command is 
-	used
- 		
+        param_cmds to make use of it. A notify message is sent when all parameters
+        are deleted and when a parameter is added, or when "showparam"  command is
+        used
+
 Keith Isdale 3 Jan 2002 <keithisdale@gmail.com>
   Added XsldbgCommandStateEnum to xsldbgmsg.h, changed xsldbgErrorMsg to use these values
   Added messageFileName to xsldbgErrorMsg to be used for larger messages
   Added messageBuffer to debugXSL.c use for small nofify messages
 
-	
-	
+
+
 Keith Isdale 2 Jan 2002 <keithisdale@gmail.com>
-  Added output command, updated xsldoc.xml, cmds.h, debugXSL.c to suit 
-  Fix bug in templates command 
-	- added a print of new line before printing templates
-  Fixed implementation of set command to use transform context not 
-	stylesheet context
+  Added output command, updated xsldoc.xml, cmds.h, debugXSL.c to suit
+  Fix bug in templates command
+        - added a print of new line before printing templates
+  Fixed implementation of set command to use transform context not
+        stylesheet context
   Fixed splitString to properly count the number of strings found
-  Fixed test/seachTest.c to use varaibles named "info" instead of 
-	"searchInf" which was causing errors
-	
+  Fixed test/seachTest.c to use varaibles named "info" instead of
+        "searchInf" which was causing errors
+
 Keith Isdale 30 Dec 2001 <keithisdale@gmail.com>
   Added src/libxsldbg/variable_cmds.c	to handle setting variable values
-  Added "set" to list of commands, added DEBUG_SET_CMD to list of command ID's 
+  Added "set" to list of commands, added DEBUG_SET_CMD to list of command ID's
   Added variableSearchData to xslsearch.h and updated searchNewInfo, searchFreeInfo
-	 to suit
+         to suit
   Modified libxslt to enable this to work
-	
-	
+
+
 Keith Isdale 27 Dec 2001 <keithisdale@gmail.com>
-	Added cmds.h and moves command id declarations to cmds.h
+        Added cmds.h and moves command id declarations to cmds.h
      To be added to cvs
   Updated all top "command functions" to return a 1 if successful, 0 otherwise
     Added basic notification of command results when using xsldbg as thread.
@@ -906,494 +914,494 @@ Keith Isdale 27 Dec 2001 <keithisdale@gmail.com>
 
 Keith Isdale 22 Dec 2001 <keithisdale@gmail.com>
   Second attempt at a mechanism for a thread of xsldbg via a KPart
-	created src/libqtnotifier/*
-	moved xsldbgnotifier as /src/libqcnotifier/qtnotifier.cpp
-	depreciated libxsldbg/xsldbgnotifier.* but this may be needed
-	  by other applications
-   Notification events now being received by the KPart. 
-	Now to fix the details of notification messages
-	
+        created src/libqtnotifier/*
+        moved xsldbgnotifier as /src/libqcnotifier/qtnotifier.cpp
+        depreciated libxsldbg/xsldbgnotifier.* but this may be needed
+          by other applications
+   Notification events now being received by the KPart.
+        Now to fix the details of notification messages
+
 Keith Isdale 21 Dec 2001 <keithisdale@gmail.com>
    Converted most of xsldbg to be a library in src/libxsldbg/*
-      	added src/main.c to allow a command line acess to xsldbg
-   Added xsldbg thread support 
-        src/libxsldbg/xsldbgthread.* 
-	src/libxsldbg/xsldbgmsg.h
-	src/libxsldbg/xsldbgnotifier.*
-   Update all Makefile.am's and configure.in 		
-	
+        added src/main.c to allow a command line acess to xsldbg
+   Added xsldbg thread support
+        src/libxsldbg/xsldbgthread.*
+        src/libxsldbg/xsldbgmsg.h
+        src/libxsldbg/xsldbgnotifier.*
+   Update all Makefile.am's and configure.in
+
 Keith Isdale 20 Dec 2001 <keithisdale@gmail.com>
    Version 0.9.6
    Sent email with thr modified libxml/xslt WIN32 project files
    Removed win32/dsp/libxml2_new_files, win32/dsp/libxslt_new_files
-	from cvs
-	
+        from cvs
+
 Keith Isdale 19 Dec 2001 <keithisdale@gmail.com>
    Fixed configure.in to enable/disable xsldbg helpsystem
    Created email about problems with xmlcatalog for WIN32
-   Small updates to docs/en/website/win32_install.html	
-	
+   Small updates to docs/en/website/win32_install.html
+
 Keith Isdale 18 Dec 2001 <keithisdale@gmail.com>
   Version 0.9.5
-  First try at a win32 build, does not use dll's because not 
-	all exports required are in libxslt.def and libxmldef.src
+  First try at a win32 build, does not use dll's because not
+        all exports required are in libxslt.def and libxmldef.src
   Had to create a xmlcatlog.dsp and made it use static libs
-  Made WIN32 specific SIGNIT and SIGTERM handling in see xslInit : xsldbg.c   	
+  Made WIN32 specific SIGNIT and SIGTERM handling in see xslInit : xsldbg.c
   Fixed bug that the xmlInit() return value was being ignored
- 	
+
 Keith Isdale 17 Dec 2001 <keithisdale@gmail.com>
   Version 0.9.4
   Replaced config_risc_os.h with file suppled by Justin
   Added highlighting to tutorial in docs/en/website/index.html
-  Added Justin's name to AUTHORS file, he'll add a complete notice 
-	 to his risc os port
+  Added Justin's name to AUTHORS file, he'll add a complete notice
+         to his risc os port
   Created skeleton installation docs for WIN32 and risc os
-	docs/en/website/(risc_os.install.html, win32_install.html)
-	to be added to cvs later
-	
+        docs/en/website/(risc_os.install.html, win32_install.html)
+        to be added to cvs later
+
 Keith Isdale 16 Dec 2001 <keithisdale@gmail.com>
   Version 0.9.3
   Applied a small set of patches my Justin
-	
+
 Keith Isdale 15 Dec 2001 <keithisdale@gmail.com>
   version 0.9.2
-  Applied patches for risc os from Justin, 
-	mainly risc os specific, but does include some typos he found and missing casts
-	added the definition of  XSLDBG_DOCS_DIR_VARIABLE to options.[ch] to handle different names 
-	   for docs's path environment variable
-	added USE_DOCS_MACRO to configure.in to simplify selection of docs path	
-  Added AC_DEFINE(XSLDBG_BIN, ... ) to configure.in to handle Justins request for being able to change it		
-  Fixed helpTop and xslDbgShellSearch to give correct message if unable to find documentation 
-  Fixed searchEmpty to used the correct DTD 
+  Applied patches for risc os from Justin,
+        mainly risc os specific, but does include some typos he found and missing casts
+        added the definition of  XSLDBG_DOCS_DIR_VARIABLE to options.[ch] to handle different names
+           for docs's path environment variable
+        added USE_DOCS_MACRO to configure.in to simplify selection of docs path
+  Added AC_DEFINE(XSLDBG_BIN, ... ) to configure.in to handle Justins request for being able to change it
+  Fixed helpTop and xslDbgShellSearch to give correct message if unable to find documentation
+  Fixed searchEmpty to used the correct DTD
   Added the ability to update the default xmlcatalog see docs/en/Makefile.am
   Changed AC_ARG_WITH(helpsystem ... to AC_ARG_ENABLE(helpsystem in configure.in (to makes more sense)
   Fix xsltProcess so that the results of transformation are NOT printed if quit is requested
-	
-	
+
+
 Keith Isdale 14 Dec 2001 <keithisdale@gmail.com>
  version 0.9.1
   Fixed GNOME docs again!
   Synchronized function comments in header and source (mainly GNOME doc comments)
-	Gnome API docs now look Ok, horay!!
+        Gnome API docs now look Ok, horay!!
   Copied xslbreakpoint_2.h to xslbreakpoint.h
-	remove xslbreakpoint_2.h in cvs later(done!)
-	
-	
+        remove xslbreakpoint_2.h in cvs later(done!)
+
+
 Keith Isdale 13 Dec 2001 <keithisdale@gmail.com>
    added DOCBOOK_PREFIX and DOCBOOK_VERSION to configure.in to be used by docs/en/GNOME/Makefile.am
    fix bug in catchSigInt, control-c tryies to start debugger shell when debugging is disabled
-	 change DEBUG_RUN to DEBUG_NONE	
+         change DEBUG_RUN to DEBUG_NONE
    updated GNOME docs now usable but problems with "&underGPL;" not being found ??
-   added TIMESTAMP to AC_SUBST's  and used in docs/en/GNOME/Makefile.am 
+   added TIMESTAMP to AC_SUBST's  and used in docs/en/GNOME/Makefile.am
    added docs/en/GNOME/authors.xsl
-	
+
 Keith Isdale 12 Dec 2001 <keithisdale@gmail.com>
-   Fixed docs/en/xsldoc.xsl to make use of $alldocs not $alldoc 
+   Fixed docs/en/xsldoc.xsl to make use of $alldocs not $alldoc
    Clarified the meaning of tty command in docs/en/xsldoc.xml, yet to fix this
-	in src/files.c
-   Fixed typos in docs/en/xmldoc.xml 
-	
+        in src/files.c
+   Fixed typos in docs/en/xmldoc.xml
+
 Keith Isdale 11 Dec 2001 <keithisdale@gmail.com>
   version 0.9.1
   I was told of a show stopper name clashes between xsldbg and libxslt
-	also found xsldbg did not run at all well with libxslt-1.0.9
+        also found xsldbg did not run at all well with libxslt-1.0.9
   Found cause sent patch to xslt@gnome.org
-	removed xsl prefix on ALL functions outside of debugXSL.[ch]
+        removed xsl prefix on ALL functions outside of debugXSL.[ch]
   cvs added new files
-	src/*.h
-	docs/en/GNOME/*.xsl
-	docs/en/KDE/apidocs/*.html
-  Still not beta quality yet :-(  
-	
-	
-	
-	
+        src/*.h
+        docs/en/GNOME/*.xsl
+        docs/en/KDE/apidocs/*.html
+  Still not beta quality yet :-(
+
+
+
+
 Keith Isdale 10 Dec 2001 <keithisdale@gmail.com>
-  Version 0.9.0 
+  Version 0.9.0
   Extended xsldoc.dtd so that a "cmd" has a shortcut. Then changed xsldoc.xsl
-	to search on @name or @shortcut
+        to search on @name or @shortcut
   Added a sgml catalog file docs/en/CATALOG
   Updated docs/en/Makefile.am to validate xsldoc.xml
-  Created emails to Daniel, Justin, Igor about xsldbg's status 
-	awaiting reply
-  Fixed xslSearchInit to make use of xslSearchEmpty and 
-	add a doctype to the search dataBase
+  Created emails to Daniel, Justin, Igor about xsldbg's status
+        awaiting reply
+  Fixed xslSearchInit to make use of xslSearchEmpty and
+        add a doctype to the search dataBase
   Make printCount a global variable in debugXSL.c, updated debugXSL.h
   Disable redirection of stdin to terminalIO.
-	Now only the resulting document is written to terminalIO
-	It is planed to also write all output during walk and trace 
-	  to the terminal
+        Now only the resulting document is written to terminalIO
+        It is planed to also write all output during walk and trace
+          to the terminal
   Changed required libxslt version to 1.0.9
-  	
-	
+
+
 Keith Isdale 8/9 Dec 2001 <keithisdale@gmail.com>
    Version 0.8.9
    Fixed problem with GNOME documentation building
    Created gnome style documentation
-   Merged KDE style and GNOME style API documentation into 
-	normal *.h files
+   Merged KDE style and GNOME style API documentation into
+        normal *.h files
    Created new file xslbreakpoint_2.h to temporarily hold the API
-	docs for the breakpoint related functions
+        docs for the breakpoint related functions
    Created xslcallpoint.h merged KDE and GNOME call stack related
-	API docs into it
+        API docs into it
    Created xslsearch.h merged KDE and GNOME searching related API
-	docs into it	
-   Updated docs/en/GNOME/Makefile.am , docs/en/KDE/Makefile.am 
-	to suit new files
+        docs into it
+   Updated docs/en/GNOME/Makefile.am , docs/en/KDE/Makefile.am
+        to suit new files
    Fixed bug with xsldbg.c setting OPTIONS_TRACE = TRACE_OFF,
-   Fixed logic of starting xslDebugStatus again!! 
+   Fixed logic of starting xslDebugStatus again!!
    Changed configure.in to enable GNOME __or__ KDE style docs to be build
-	a one time
+        a one time
    Added more entries to FAQ in the website documentation
    Fixed the website docs it had used "cont" as the short cut to continue
-	instead of "c"
-   Fixed xsldoc.dtd mixed content must have #pcdata first 
-	and the errors that showed up in xsldoc.xml as a result
+        instead of "c"
+   Fixed xsldoc.dtd mixed content must have #pcdata first
+        and the errors that showed up in xsldoc.xml as a result
    Fixed xsldoc.xml as result of fixes to xsldoc.dtd (as shown up by xmllnt)
-	o made short cut descriptions consistant
-	o fixed minor spelling errors.
-	    			
-	
-		
+        o made short cut descriptions consistant
+        o fixed minor spelling errors.
+
+
+
 Keith Isdale 7 Dec 2001 <keithisdale@gmail.com>
   Created KDE style API documentation headers in docs/en/KDE/src
-	updated Makefile.am to suit. Will need to merge these with 
-	the main source after the first beta :-(
-  Gave up on GNOME documentation for the moment. Too many difficult 
-	errors being generated by gtkdoc-mktmpl and gtkdoc-mkhtml
-  Updated configure.in to abort if GNOME docs are have been requested 
-	as they don't work.
+        updated Makefile.am to suit. Will need to merge these with
+        the main source after the first beta :-(
+  Gave up on GNOME documentation for the moment. Too many difficult
+        errors being generated by gtkdoc-mktmpl and gtkdoc-mkhtml
+  Updated configure.in to abort if GNOME docs are have been requested
+        as they don't work.
   Added a "very-clean" target to commonly "clean"ed directories
-  Checked xsldbg works with new version of libxslt without patches. Yes!!	
-	Found libxslt that it didn't roll over to new version number. Arg!!
+  Checked xsldbg works with new version of libxslt without patches. Yes!!
+        Found libxslt that it didn't roll over to new version number. Arg!!
   Fixed "cd" command whose "-t" option was not changing to template
-	node when it was found
-  Fixed xsldbg2kde.xsl/commands.xsl to generate links to commands 
-  Fixed xsldbg2kde.xsl to gererate comments properly ie four spaces and 
-	an emphasis
+        node when it was found
+  Fixed xsldbg2kde.xsl/commands.xsl to generate links to commands
+  Fixed xsldbg2kde.xsl to gererate comments properly ie four spaces and
+        an emphasis
   Fixed dbgsearch.c and search.dtd to generate import and includes properly
   Fixed logic in xsldbg.c if option DEBUG_SHELL is set then alway
-	start stylesheet in with a xslDebugStatus of DEBUG_STOP
+        start stylesheet in with a xslDebugStatus of DEBUG_STOP
   Version 0.8.8
-	
-	
+
+
 Keith Isdale 6 Dec 2001 <keithisdale@gmail.com>
-Fixed inconsitancies in src/*.h	
-    o ensure that enums are declared that same way, made use of 
-	enums rather that using int's and have a unique range of values
-	(where possible). 
+Fixed inconsitancies in src/*.h
+    o ensure that enums are declared that same way, made use of
+        enums rather that using int's and have a unique range of values
+        (where possible).
     o ensure that enums values are accesed via a temporary int variable. This
- 	is to ensure there are no compiler problems. I've previous experienced
-	problems where you can't do a switch on a enum value.
+        is to ensure there are no compiler problems. I've previous experienced
+        problems where you can't do a switch on a enum value.
     o	Added enum types of
-	  BreakPointTypeEnum, FileTypeEnum, WalkSpeedEnum, 
-	  OptionTypeEnum, TraceModeEnum, CommandsEnum
+          BreakPointTypeEnum, FileTypeEnum, WalkSpeedEnum,
+          OptionTypeEnum, TraceModeEnum, CommandsEnum
     o ensure that all references to "break point[s]" use the same spelling
     o ensure that each include file has the preamble needed for when
-	a c++ compiler is used
-    o fix spelling errors of the word sucessful 	
+        a c++ compiler is used
+    o fix spelling errors of the word sucessful
     o fix spelling of "Return :" to "Returns :"
     o ensure that the return values are aligned vertically
-    o added #define for	URISEPARATORCHAR to xsldbg.h which is to be 
-	used by files.h when guessing what the stylesheet name is 
-    o fixed guessStylesheetHelper* to use the URISEPARATORCHAR if 
-	needed 
-    o fixed the spelling of guessStyleSheetHelper* to 
-	 guessStylesheetHelper*
-   o fixed spelling of top_doc, temp_doc and top_style in files to 
-	be consistant with rest of project. They now are 
-		topDocument, tempDocument,topStylesheet
+    o added #define for	URISEPARATORCHAR to xsldbg.h which is to be
+        used by files.h when guessing what the stylesheet name is
+    o fixed guessStylesheetHelper* to use the URISEPARATORCHAR if
+        needed
+    o fixed the spelling of guessStyleSheetHelper* to
+         guessStylesheetHelper*
+   o fixed spelling of top_doc, temp_doc and top_style in files to
+        be consistant with rest of project. They now are
+                topDocument, tempDocument,topStylesheet
    o fixed spelling of getTemporarDoc to getTemporaryDoc
    o fixed logic of xsldbg.c so that when debugging stylesheets
-	we start up in a xslDebugStatus of DEBUG_STOP
+        we start up in a xslDebugStatus of DEBUG_STOP
    o fixed spelling of xsldbgSleep to xslDbgSleep
    o ensure all functions have a fully described declaration
-	near the start of most *.c files is the declations of
-	its private functions
-		
-	
-	
+        near the start of most *.c files is the declations of
+        its private functions
+
+
+
 Keith Isdale 5 Dec 2001 <keithisdale@gmail.com>
 Updated docs/en/website/index.html
 Fixed configure.in to generated GNOME docs if asked
-Updated docs/en/GNOME/Makefile.am to try generate gtkdoc style docs but it is 
-	still broken
-	
-	
+Updated docs/en/GNOME/Makefile.am to try generate gtkdoc style docs but it is
+        still broken
+
+
 Keith Isdale 4 Dec 2001 <keithisdale@gmail.com>
- Fixed configure.in and all Makefile.am's so that they setup and 
+ Fixed configure.in and all Makefile.am's so that they setup and
    use LIBXSLT_PREFIX, LIBXML_PREFIX. and that all executions
-   of xsldbg use these libraries at theses locations 
-	
- Compiled with pandantic compiler settings and find errors reported	
- Fixed listTest.c and searchTest.c so that only minor warnings are 	
+   of xsldbg use these libraries at theses locations
+
+ Compiled with pandantic compiler settings and find errors reported
+ Fixed listTest.c and searchTest.c so that only minor warnings are
    generated upon thier compilation
  Fixed minor issues mostly to do with casts to (char*) or (xmlChar*)
-   	
+
  Fix docs/en/Makefile.am so that xsldoc.txt is generated
- Commit to cvs	
- Fix ChangeLog so that is is consistant	
-	
-	
+ Commit to cvs
+ Fix ChangeLog so that is is consistant
 
-	
+
+
+
  *************************************
- Keith Isdale 4 Dec 2001 <keithisdale@gmail.com>	
- Feature freeze active 	
+ Keith Isdale 4 Dec 2001 <keithisdale@gmail.com>
+ Feature freeze active
      o no new features are to be added
-     o bug and documentation updates only until after beta release 	
- *************************************	
+     o bug and documentation updates only until after beta release
+ *************************************
 
- 	
+
 
  Keith Isdale 3 Dec 2001 <keithisdale@gmail.com>
- Version 0.8.5		
+ Version 0.8.5
  Added validation of file:line number for stylesheet breakpoints
    It now generates a warning if a stylsheeet breakPoint appears to be invalid
  Added validation of file:line number for xml data
    It tries to will try appending the prefix of topmost xml data file
-     to url if an absolute match has not been made 	
+     to url if an absolute match has not been made
    It now generates a warning if a xml data breakPoint appears to be invalid
- Re-organised xmlDbgShellBreak and broke it up using new functions 
-	addSourceBreakPoint and addDataBreakPoint (see breakpoint_cmds.c)		
+ Re-organised xmlDbgShellBreak and broke it up using new functions
+        addSourceBreakPoint and addDataBreakPoint (see breakpoint_cmds.c)
  re-organised searching to make it consistant accross project
-	got rid of FileSearchPtr structure ..
+        got rid of FileSearchPtr structure ..
  Added walkIncludeInst which is now used instead of walkIncluded when adding
     xsl:includes to search dataBase
- Added walkIncludes to walk though all included stylesheets 	
+ Added walkIncludes to walk though all included stylesheets
 
-	
 
-	
+
+
  Keith Isdale 1 Dec 2001 <keithisdale@gmail.com>
- Version 0.8.4	
+ Version 0.8.4
  Added	--with-libxslt-prefix to configure.in
- Changed source and data commands so that they clear any breakpoints present 	
+ Changed source and data commands so that they clear any breakpoints present
  Changed xsldbg.c so that it when running a stylesheet you get output
  Fixed transform.c (double entry to text nodes)
-	variables.c (no entry to variable node)
-     Sent diff to xslt@gnome.org	
+        variables.c (no entry to variable node)
+     Sent diff to xslt@gnome.org
  Remove any depndance on old breakpoint API file in libxslt
-   now fully using callbackmechanism	
+   now fully using callbackmechanism
 
 
-	
+
  Keith Isdale 30 Nov 2001 <keithisdale@gmail.com>
- Version 0.8.3	
+ Version 0.8.3
  Applied fixes as suggested by Justin
  Fixed configure.in, acconfig.h, breakpointInternals.h so that
-   debugging is disable when asked , awful hack but it works	
+   debugging is disable when asked , awful hack but it works
 
-	
-	
+
+
  Keith Isdale 29 Nov 2001 <keithisdale@gmail.com>
- Change help so that is can either display static text file or respond to 
+ Change help so that is can either display static text file or respond to
    queries, added docs/en/xsldoc.txt
-   Removed #include "config.h" from*.c files and replace with 
-	#include "xsldbg.h", and change xsldbg.h to have
-	    #include "config" or equivalent. This is to suit risc os
+   Removed #include "config.h" from*.c files and replace with
+        #include "xsldbg.h", and change xsldbg.h to have
+            #include "config" or equivalent. This is to suit risc os
        config_risc.h for risc os as supplied by Justin Fletcher
  Updated tests to suit patch for variables and double debugging of
-   text nodes	
+   text nodes
 
-	
-	
+
+
  Keith Isdale 28 Nov 2001 <keithisdale@gmail.com>
- Applied patches by Justin Fletcher to suit risc os	
+ Applied patches by Justin Fletcher to suit risc os
 
-	
-	
+
+
  Keith Isdale 27 Nov 2001 <keithisdale@gmail.com>
- Converted all functions to work under libxslt-1.0.7	
- Added OPTIONS_DOCS_PATH to options.[ch] and set help.c and dbgsearch.c 
-	to use this new option 	
+ Converted all functions to work under libxslt-1.0.7
+ Added OPTIONS_DOCS_PATH to options.[ch] and set help.c and dbgsearch.c
+        to use this new option
  Changed all printing to use  xsltGenericError(xsltGenericErrorContext, ..)
- Fixed logic for printing out preamble and change of source|data|directory  messages	
+ Fixed logic for printing out preamble and change of source|data|directory  messages
  Updated the guess of full stylesheet name to include partial match in file name
-    see guessStylesheetNameHelper, in files.c	
+    see guessStylesheetNameHelper, in files.c
 
-	
-	 	
+
+
  Keith Isdale 26 Nov 2001 <keithisdale@gmail.com>
  Fixed errors, and inconsistancies in xsldoc.xml
    Changes needed for the xsldbg mode for kdbg
-          Changed templates command to accept a template name to look for 
+          Changed templates command to accept a template name to look for
           Added --gdb option to command line so xsldbg print marker after each command is entered
               Added OPTIIONS_GDB to options.h
               Added gdbMode to options.c and updated isOptionEnabled and enableOption functions
-          Added a tty command to send i/o to a terminal device	
+          Added a tty command to send i/o to a terminal device
  Added stylesheet command to print out a list of stylesheets loaded
 
 
-	
+
  Keith Isdale 25 Nov 2001 <keithisdale@gmail.com>
    Changes needed for the xsldbg mode for kdbg
-         Added prefix of #<frame_no> to output where of command	
-         Added frame command 
-         Added XSLDBG <version> to prelude of xsldbg	
+         Added prefix of #<frame_no> to output where of command
+         Added frame command
+         Added XSLDBG <version> to prelude of xsldbg
 
 
-	
+
  Keith Isdale 21 Nov 2001 <keithisdale@gmail.com>
  Version 0.7.9
  Changed searching
      removed xslWalkVariables, searchVariableNode
      added xslWalkGlobals, xslWalkLocals, searchGlobalNode, searchLocalNode
      implemented searching for callstack entries
-     updated breakpoints.h breakpointInternals.h to suit	
-     Revised the format generated by docs/en/search.xsl 	
+     updated breakpoints.h breakpointInternals.h to suit
+     Revised the format generated by docs/en/search.xsl
      Any further changes will be as needed by Igor (ed note : didn't happen that way)
     and getting xsldbg working in win32 environments
 
-	
 
-	
+
+
  Fixed xslHandleDebugger (transform.c of libxslt) to handle DEBUG_WALK status
-    properly, 
- Fixed logic of walk function so it does not restart the stylesheet 
-	
-	
+    properly,
+ Fixed logic of walk function so it does not restart the stylesheet
+
+
  Keith Isdale 20 Nov 2001 <keithisdale@gmail.com>
  moved as many of the xsldbg commands from debugXSL.c that were possible
   into files of related commands and placed their declaratons into debugXSL.h
-   Added files 
+   Added files
       breakpoint_cmds.c, nodeview_cms.c, trace_cmds.c param_cmds.c
         search_cmds.c, os_cmds.c, template_cmds.c
-   Updated src/Makefile.am to suit 	
+   Updated src/Makefile.am to suit
  Fixed bug in logic in the main function xsldbg.c
-     If unexpected events occur it now aborts after printing 
-      a message	
+     If unexpected events occur it now aborts after printing
+      a message
 
 
-	
+
  Keith Isdale 20 Nov 2001 <keithisdale@gmail.com>
  Added file breakpoint/breakpointInternals.h to libxslt
-   Put all the declarations of potential useful internal breakpoint functions 
+   Put all the declarations of potential useful internal breakpoint functions
    in 	breakpointInternals.h
- Added to the breakpoint API (breakpoint/breakpointInternals.h) the internal search 
-	functions of :
-  	     searchInit, searchFree, searchDoc, seachRootNode, 
-	    searchBreakPointNode,  searchTemplateNode, searchCallStackNode
- Added to the breakpoint API (breakpoint/breakpoint.h)the public search 
-	functions of :
-   	 xslSeachEmpty, xslSearchSave, xslSeachAdd, xslFindNodesByQuery
+ Added to the breakpoint API (breakpoint/breakpointInternals.h) the internal search
+        functions of :
+             searchInit, searchFree, searchDoc, seachRootNode,
+            searchBreakPointNode,  searchTemplateNode, searchCallStackNode
+ Added to the breakpoint API (breakpoint/breakpoint.h)the public search
+        functions of :
+         xslSeachEmpty, xslSearchSave, xslSeachAdd, xslFindNodesByQuery
  Changed Makefile.am in the root dir of libxslt so
      that the breakpoint API is only built if needed.
      Removed the usage of the WITH_DEBUGGER #defines in
-	breakpoint directory.
+        breakpoint directory.
  Fix many errors detected by even more pandatic compiler settings
  Added macros :
-	    xmlStrLen, xmlStrCat, xmlStrCpy
+            xmlStrLen, xmlStrCat, xmlStrCpy
    to xsldbg.h to handle (xmlChar*) input instead of (char*)
      They still end up calling  the standard string functions
- Removed the "root" command line parameter instead xsldbg automatically 
-	stops and first xsl node found after stepping into stylesheet
+ Removed the "root" command line parameter instead xsldbg automatically
+        stops and first xsl node found after stepping into stylesheet
  Fixed errors in logic for recovering when files can't be loaded
-       in xsldbg.c main	
-	
+       in xsldbg.c main
 
-	
+
+
  Keith Isdale 19 Nov 2001 <keithisdale@gmail.com>
  Added automatic replacement of '~' for $HOME environment variable value
          when using source and data commands
  Added xslEmptyBreakPoint to breakpoint API
- Did a trial run of importing breakpoint API implementation into 
+ Did a trial run of importing breakpoint API implementation into
     libxslt. Made small changes to header imports.
-    Fixed xslHandleDebugger so it doesn't crash if its preconditions 
-       are not met	
+    Fixed xslHandleDebugger so it doesn't crash if its preconditions
+       are not met
    Ported new xsltproc code into xsldbg.c
-   Added xslDebugBreak to dbgmain.c 	
+   Added xslDebugBreak to dbgmain.c
    Fix many minor errors detected by setting pandantic compiler flags
  Changed source and data commands so that a "run" is required after
       changing files, this makes if much simpler and more reliable
  Added test8 to run xsldbg on docbook.xsl
  Cleaned up breakpoint API source
 
-	
-	
+
+
  Keith Isdale 18 Nov 2001 <keithisdale@gmail.com>
- Implemented  new breakpoint API changed 
-	in libxslt breakpoint/dbgbreakpoint.c
-	in libxslt breakpoint/breakpoint.h	
+ Implemented  new breakpoint API changed
+        in libxslt breakpoint/dbgbreakpoint.c
+        in libxslt breakpoint/breakpoint.h
  Fixed crash when using arraylist
 
-	
-	
+
+
  Keith Isdale 17 Nov 2001 <keithisdale@gmail.com>
  Add libxslt parameter commands ie addparam, delparam, showparam
  Added shell, chdir commands
  Added trace, walk commands
  Added catch of SIGINT to xsldbg.c to stop execution upon receiving SIGINT
- Fixed help.c to pass right parameters when looking for commmand provided 
-	if provided	
+ Fixed help.c to pass right parameters when looking for commmand provided
+        if provided
  Upated xsldoc.xml
- Fixed libxslt/attributes.c so that xsl:attribute, and xsl:attribute-set works	
- Added test 5, 6, 7 all libxst intructions able to be stepped into are now covered	
+ Fixed libxslt/attributes.c so that xsl:attribute, and xsl:attribute-set works
+ Added test 5, 6, 7 all libxst intructions able to be stepped into are now covered
 
-	
+
  Keith Isdale 11 Nov 2001 <keithisdale@gmail.com>
  Separated parameter storage from xsldbg.c and put into options.[ch]
- Added files.[ch] 
-	 handles file interaction. But still uses xsldbg.c to do
-        actual file parsing and loading	
- Added options.[ch] 
-        handles storage and retrieval of xsldbg options such as stylesheet 
-	 file name 
+ Added files.[ch]
+         handles file interaction. But still uses xsldbg.c to do
+        actual file parsing and loading
+ Added options.[ch]
+        handles storage and retrieval of xsldbg options such as stylesheet
+         file name
  Added	implementation for array list via arraylist.h, dbgarraylist.c
  Added tests for array list
  Added support for an unlimited number of libxslt parameters. But still
-       use the hard limit of 8 parameters  for the moment	
+       use the hard limit of 8 parameters  for the moment
  Added the ability to choose xml and stylesheet file from xsldbg prompt
  Made debugging default, if no parameters are given to xsldbg than it
-      goes straight to xsldbg command prompt	
+      goes straight to xsldbg command prompt
 
 
-	
+
  Keith Isdale 10 Nov 2001 <keithisdale@gmail.com>
  Reverted to orginal name for XSL_DEBUGGER definition
 
-	
+
  Keith Isdale 9 Nov 2001 <keithisdale@gmail.com>
  Checked cvs -ok
  taged repository to rel-0-6-5
 
-	
+
  Keith Isdale 8 Nov 2001 <keithisdale@gmail.com>
  Fixed typos in cvs log messages to spell Daniel's name correctly
  taged repository to rel-0-6-4
 
  Keith Isdale 7 Nov 2001 <keithisdale@gmail.com>
- Version 0.6.5 	
+ Version 0.6.5
  Applied Daniel's patch see
-	http://mail.gnome.org/archives/xslt/2001-November/msg00015.html
+        http://mail.gnome.org/archives/xslt/2001-November/msg00015.html
  Added patch_history directory and stored Daniel's patch in it
  Added problem_analysis directory to keep record of analysies performed
 
-	
+
  Keith Isdale  6 Nov 2001 <keithisdale@gmail.com>
-	fix of stray '/' in line 54 , found by Justin Fletcher  in help.c
-	
+        fix of stray '/' in line 54 , found by Justin Fletcher  in help.c
+
  Keith Isdale 3 Nov 2001 <keithisdale@gmail.com>
- Version 0.6.4	
- Ported xsldbg to use  xmlNoNetExternalEntityLoader in libxml 
-	(xsldbg.c is a rehash of /xsltproc/xsltproc.c in libxslt)
-	
+ Version 0.6.4
+ Ported xsldbg to use  xmlNoNetExternalEntityLoader in libxml
+        (xsldbg.c is a rehash of /xsltproc/xsltproc.c in libxslt)
+
  Split breakpoint API into several small files of cohesive functions
-	
- Change libxslt to supply blank implementation of breakpoint API which I 
+
+ Change libxslt to supply blank implementation of breakpoint API which I
    then override in xsldbg (see files src/dbg*.c)
    files affected in libxslt are
- 	/configure.in, /Makefile.am, /breakpoints/*.[ch]  	
+        /configure.in, /Makefile.am, /breakpoints/*.[ch]
 
-	Adapt /configure.in to abort if debugger support not built into libxslt
+        Adapt /configure.in to abort if debugger support not built into libxslt
 
-	
+
  Keith Isdale 1 Nov 2001 <keithisdale@gmail.com>
- Version 0.6.3	
+ Version 0.6.3
  Changed xslDbgPrintTemplateNames so that the order of printing templates so
-	it matches the order it is in file 
+        it matches the order it is in file
 
  Added tests directory and build a framework for automated testing
-	see results directory for the intermediate outputs of testing
- Added function xslDebugGotControl to breakpoint API (see /breakpoint/dbgmain.c)	
+        see results directory for the intermediate outputs of testing
+ Added function xslDebugGotControl to breakpoint API (see /breakpoint/dbgmain.c)
 

@@ -41,7 +41,7 @@ if [ -z "$VERSION" ]; then
   VERSION=$3
 fi
 if [ -z "$VERSION" ]; then
-  VERSION=4.7.1
+  VERSION=4.8.0
 fi
 
 if [ -z "$MAKE_JOBS" ];then

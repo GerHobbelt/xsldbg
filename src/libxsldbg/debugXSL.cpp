@@ -177,6 +177,9 @@ const char *commandNames[] = {
     /* read settings */
     "writeconfig",
 
+    /* file list command */
+    "list",
+
     NULL                        /* Indicate the end of list */
 };
 
@@ -269,6 +272,9 @@ const char *shortCommandNames[] = {
 
     /* read settings */
     "writeconfig",
+
+    /* file list command */
+    "list",
 
     NULL                        /* Indicate the end of list */
 };
@@ -1081,6 +1087,7 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
     while (!exitShell && (xslDebugStatus != DEBUG_QUIT)) {
         if (getThreadStatus() != XSLDBG_MSG_THREAD_RUN) {
+            xslDbgList((xmlChar*)"+"); // print the current line being debugged
             if (ctxt->node == (xmlNodePtr) ctxt->doc)
                 snprintf((char *) prompt, DEBUG_BUFFER_SIZE - 1,
                          "(xsldbg) %s > ", "/");
@@ -1812,6 +1819,12 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
                 if (xsldbgWriteConfig(arg))
                     cmdResult = 1;
                 break;
+
+            case DEBUG_LIST_CMD:
+                if (xslDbgList(arg))
+                    cmdResult = 1;
+                break;
+
             default:
                 xsldbgGenericErrorFunc(QObject::tr("Error: Unknown command %1. Try help.\n").arg(xsldbgText(command)));
                 cmdResult = 0;
@@ -1840,6 +1853,11 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
 
         xmlFree(cmdline);
         cmdline = NULL;
+
+        if (xslDebugStatus == DEBUG_RUN_RESTART) {
+            // clear the file cache before restarting
+            filesDataClear();
+        }
     }
 
     xmlXPathFreeContext(ctxt->pctxt);

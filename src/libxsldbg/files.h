@@ -20,6 +20,7 @@
 #include "search.h"
 #include "arraylist.h"
 #include <QString>
+#include <QStringList>
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>             /* need chdir function */
@@ -38,7 +39,7 @@ struct _entityInfo {
 };
 
 
-/* how many lines do we print before pausing when 
+/* how many lines do we print before pausing when
  * performing "more" on a UTF-8 file. See function filesMoreFile */
 #define FILES_NO_LINES 20
 
@@ -78,10 +79,10 @@ arrayListPtr filesEntityList(void);
 /**
  * Set the base uri for this node. Function is used when xml file
  *    has external entities in its DTD
- * 
+ *
  * @param node Is valid and has a doc parent
  * @param uri Is Valid
- * 
+ *
  * @returns 1 if successful,
  *          0 otherwise
  */
@@ -89,11 +90,11 @@ int filesSetBaseUri(xmlNodePtr node, const xmlChar * uri);
 
 
 /**
- * Get a copy of the base uri for this node. Function is most useful 
+ * Get a copy of the base uri for this node. Function is most useful
  *  used when xml file  has external entities in its DTD
- * 
+ *
  * @param node : Is valid and has a doc parent
- * 
+ *
  * @returns The a copy of the base uri for this node,
  *          NULL otherwise
  */
@@ -103,7 +104,7 @@ xmlChar *filesGetBaseUri(xmlNodePtr node);
 /**
  * Return the name of tempfile requested.
  * @param fleNumber : Number of temp file required
- *     where @p fileNumber is 
+ *     where @p fileNumber is
  *      0 : file name used by cat command
  *      1 : file name used by profiling output
  *
@@ -116,11 +117,11 @@ QByteArray filesTempFileName(int fileNumber);
 
 
 /**
- * Load the catalogs specified by OPTIONS_CATALOG_NAMES if 
+ * Load the catalogs specified by OPTIONS_CATALOG_NAMES if
  *      OPTIONS_CATALOGS is enabled
  *
  * @returns 1 if successful
- *          0 otherwise   
+ *          0 otherwise
  */
 int filesLoadCatalogs(void);
 
@@ -128,7 +129,7 @@ int filesLoadCatalogs(void);
 /**
  * Return  A  string of converted @text
  *
- * @param text Is valid, text to translate from UTF-8, 
+ * @param text Is valid, text to translate from UTF-8,
  *
  * Returns  A  string of converted @text, may be NULL
  */
@@ -138,7 +139,7 @@ xmlChar *filesEncode(const xmlChar * text);
 /**
  * Return  A  string of converted @text
  *
- * @param test Is valid, text to translate from current encoding to UTF-8, 
+ * @param test Is valid, text to translate from current encoding to UTF-8,
  *
  * Returns  A  string of converted @text, may be NULL
  */
@@ -146,7 +147,7 @@ xmlChar *filesDecode(const xmlChar * text);
 
 
 /**
- * Opens encoding for all standard output to @p encoding. If  @p encoding 
+ * Opens encoding for all standard output to @p encoding. If  @p encoding
  *        is NULL then close current encoding and use UTF-8 as output encoding
  *
  * @param encoding Is a valid encoding supported by the iconv library or NULL
@@ -205,9 +206,9 @@ QString workingPath(void);
 
 
 /**
- * Change working directory to path 
+ * Change working directory to path
  *
- * @param path The operating system path(directory) to adopt as 
+ * @param path The operating system path(directory) to adopt as
  *         new working directory
  *
  * @returns 1 on success,
@@ -217,10 +218,10 @@ int changeDir(QString path);
 
 
 /**
- * Load specified file type, freeing any memory previously used 
+ * Load specified file type, freeing any memory previously used
  *
  * @returns 1 on success,
- *         0 otherwise 
+ *         0 otherwise
  *
  * @param path The xml file to load
  * @param fileType A valid FileTypeEnum
@@ -229,7 +230,7 @@ int filesLoadXmlFile(const xmlChar * path, FileTypeEnum fileType);
 
 
 /**
- * Free memory associated with the xml file 
+ * Free memory associated with the xml file
  *
  * @returns 1 on success,
  *         0 otherwise
@@ -240,7 +241,7 @@ int filesFreeXmlFile(FileTypeEnum fileType);
 
 
 /**
- * Return the topmost stylesheet 
+ * Return the topmost stylesheet
  *
  * @returns Non-null on success,
  *         NULL otherwise
@@ -291,7 +292,7 @@ void filesFree(void);
 
 
 /**
- * Test if filename could be  a stylesheet 
+ * Test if filename could be  a stylesheet
  *
  * @returns True if @name has the ".xsl" extension
  *
@@ -302,9 +303,9 @@ int filesIsSourceFile(xmlChar * fileName);
 
 /**
  * Do a "more" like print of file specified by @fileName OR
- *   @file. If both are provided @file will be used. The content 
- *   of file chosen must be in UTF-8, and will be  printed in 
- *   the current encoding selected. The function will pause output 
+ *   @file. If both are provided @file will be used. The content
+ *   of file chosen must be in UTF-8, and will be  printed in
+ *   the current encoding selected. The function will pause output
  *   after FILES_NO_LINES lines have been printed waiting for
  *   user to enter "q" to quit or any other text to continue.
  *
@@ -336,7 +337,7 @@ QString filesSearchResultsPath(void);
  *        that is suitable to be used with the fopen function.
  *        May be NULL, if out of memory, @uri does not use the
  *        "file://" prefix, or unable to convert to a valid file name
- *    
+ *
  * @param uri A valid URI that uses the "file://" prefix
  *
  */
@@ -344,7 +345,7 @@ xmlChar *filesURItoFileName(const xmlChar* uri);
 
 
 /**
- * Update the URL and  line number that we stoped at 
+ * Update the URL and  line number that we stoped at
  *
  * @param node A valid node
  */
@@ -352,7 +353,7 @@ void xsldbgUpdateFileDetails(xmlNodePtr node);
 
 
 /**
- * What line number are we at 
+ * What line number are we at
  *
  * @returns The current line number of xsldbg, may be -1
  */
@@ -362,7 +363,7 @@ int xsldbgLineNo(void);
 /**
  * What URL did we stop at
  *
- * @returns A NEW copy of URL stopped at. Caller must free memory for URL,   
+ * @returns A NEW copy of URL stopped at. Caller must free memory for URL,
  *         may be NULL
  */
 xmlChar *xsldbgUrl(void);
@@ -380,7 +381,7 @@ xmlChar *xsldbgUrl(void);
  *  This is a platform specific interface
  *
  * @returns 1 if successful
- *          0 otherwise  
+ *          0 otherwise
  */
 int filesPlatformInit(void);
 
@@ -404,4 +405,6 @@ void filesPlatformFree(void);
  */
 QString filesSearchFileName(FilesSearchFileNameEnum fileType);
 
+void filesDataClear();
+QStringList filesDataReadFile(const QString uri);
 #endif
