@@ -1063,6 +1063,7 @@ void shellPrompt(xmlNodePtr source, xmlNodePtr doc, xmlChar * filename,
         return; /* All done. Trace next instruction/node */
     }
     if (xslDebugStatus == DEBUG_WALK) {
+        xslDbgList((xmlChar*)"+"); // print the current line being debugged
         if (xslDbgWalkContinue()) {
       if (ctxt->filename)
         xmlFree(ctxt->filename);
