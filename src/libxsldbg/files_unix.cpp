@@ -22,6 +22,7 @@
 #include "utils.h"
 #include "options.h"
 #include <QDir>
+#include <QDebug>
 
 #define XSLDBG_NUM_TEMP_FILES 2
 static QByteArray tempNames[XSLDBG_NUM_TEMP_FILES];

@@ -1075,6 +1075,27 @@ then searchresult.txt is printed to display.
 <li>
 <text>search -sort &lt;XPATH&gt;</text><comment>(Tell search.xsl to sort the result before saving it)</comment>
 </li>
+<li><text>Examples of &lt;XPATH&gt; values are:</text></li>
+<li><text>//search/*</text></li>
+<li><text>//search/breakpoint</text></li>
+<li><text>//search/breakpoint/[contains(@url,'foo')]</text></li>
+<li><text>//search/callstack</text></li>
+<li><text>//search/callstack/[contains(@template,'foo')]</text></li>
+<li><text>//search/callstack/[contains(@url,'foo')]</text></li>
+<li><text>//search/import</text></li>
+<li><text>//search/import/[contains(@url,'foo')]</text></li>
+<li><text>//search/include</text></li>
+<li><text>//search/include/[contains(@url,'foo')]</text></li>
+<li><text>//search/include/[contains(@href,'foo')]</text></li>
+<li><text>//search/source</text></li>
+<li><text>//search/source/[contains(@href, 'foo')]</text></li>
+<li><text>//search/variable</text></li>
+<li><text>//search/variable/[contains(@name,'a')]</text></li>
+<li><text>//search/variable/[contains(@templname,'a')]</text></li>
+<li><text>//search/variable/[contains(@url,'a')]</text></li>
+<li><text>//search/template</text></li>
+<li><text>//search/template/[contains(@url,'foo')]</text></li>
+<li><text>//search/template/[contains(@match,'foo')]</text></li>
 </usage>
 </cmd>
 

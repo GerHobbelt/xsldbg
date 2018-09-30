@@ -87,6 +87,7 @@
 #include <libexslt/exsltconfig.h>
 
 #include <QFile>
+#include <QVariant>
 
 #ifdef __riscos
 
@@ -537,6 +538,15 @@ int xsldbgMain(int argc, char **argv)
         xmlChar *profile=0;
         xsldbgReadConfig(profile);
     }
+
+    if (optionDataModel()) {
+        /* always setup the docs path */
+        QVariant docsPath(QVariant::String);
+        docsPath = langLookupDir("xsldoc.xml");
+        optionDataModel()->updateSetting(OPTIONS_DOCS_PATH, docsPath);
+    }
+
+
     if (argc >1){
         for (i = 1; i < argc; i++) {
             if (!result)

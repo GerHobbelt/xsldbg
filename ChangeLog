@@ -1,5 +1,7 @@
 Keith Isdale 22nd September 2018 <keithisdale@gmail.com>
     4.8.0
+    Fixes
+        * search command for Win32 try harder for find/create search results
     Features
         Added 'list' command
         * If debugging local file then print current XSL/XML file line after each 'step'

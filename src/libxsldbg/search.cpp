@@ -27,6 +27,9 @@
 #include "files.h"
 #include "xsldbgmsg.h"
 #include "xsldbgthread.h"       /* for getThreadStatus */
+#include <QCoreApplication>
+#include <QDebug>
+#include <QFile>
 #include <QUrl>
 #ifdef __riscos
 
@@ -320,27 +323,34 @@ int searchAdd(xmlNodePtr node)
 
 int searchSave(const xmlChar * fileName)
 {
-
     int result = 0;
     QString searchInput;
 
-    if (fileName == NULL)
+    if (fileName == NULL) {
         searchInput = filesSearchFileName(FILES_SEARCHINPUT);
-    else
+    } else {
         searchInput = xsldbgText(fileName);
+    }
 
     if (searchInput.indexOf(":/") != -1) {
         //try to convert URI to local path
         QUrl inputUrl(searchInput);
         searchInput = inputUrl.toLocalFile();
+#ifdef Q_OS_WIN32
+        // for Win32 always return paths with '\'
+        searchInput = searchInput.replace("/", "\\");
+#endif
     }
 
-    if (xmlSaveFormatFile(searchInput.toUtf8().constData(), searchDataBase, 1) != -1){
+    if (searchInput.isEmpty()) {
+        xsldbgGenericErrorFunc(QObject::tr("Error: Unable to determine file to save search Database. Try setting the \"searchresultspath\" option to a writable path.\n"));
         result = 1;
-    }else{
-        xsldbgGenericErrorFunc(QObject::tr("Error: Unable to write search Database to file %1. Try setting the \"searchresultspath\" option to a writable path.\n").arg(searchInput));
+    } else {
+        if (xmlSaveFormatFile(searchInput.toLocal8Bit().constData(), searchDataBase, 1) == -1){
+            xsldbgGenericErrorFunc(QObject::tr("Error: Unable to write search Database to file %1. Try setting the \"searchresultspath\" option to a writable path.\n").arg(searchInput));
+            result = 1;
+        }
     }
-
 
     return result;
 }
@@ -380,36 +390,56 @@ int searchQuery(const xmlChar * tempFile, const xmlChar * outputFile,
         QUrl outputUrl(searchOutput);
         searchOutput = outputUrl.toLocalFile();
     }
-
+#ifdef Q_OS_WIN32
+    searchOutput = searchOutput.replace("/", "\\");
+#endif
     if (!query || (xmlStrlen(query) == 0))
         query = (xmlChar *) "--param query //search/*";
+
+    QString xsldbg_bin = QCoreApplication::applicationDirPath() + PATHCHAR + XSLDBG_BIN;
+#ifdef Q_OS_WIN32
+    xsldbg_bin = xsldbg_bin.replace("/", "\\");
+#endif
+
+    // copy the search dtd to results directory
+    QString srcDtd = optionsGetStringOption(OPTIONS_DOCS_PATH) + PATHCHAR + "search_v1_1.dtd";
+    QString destDtd = filesSearchResultsPath() + PATHCHAR + "search_v1_1.dtd";
+#ifdef Q_OS_WIN32
+    // must use forward slashes to QFile paths
+    srcDtd = srcDtd.replace("\\", "/");
+    destDtd = destDtd.replace("\\", "/");
+#endif
+    if (!QFile::exists(destDtd)) {
+        QFile::copy(srcDtd, destDtd);
+    }
 
     /* see configure.in for the definition of XSLDBG_BIN, the name of our binary */
     if (!searchInput.isEmpty() && !searchXSL.isEmpty() && !searchOutput.isEmpty()) {
         if (optionsGetIntOption(OPTIONS_CATALOGS) == 0)
             snprintf((char *) searchBuffer, sizeof(searchBuffer),
-                     "%s --noautoloadconfig -o %s %s %s %s", XSLDBG_BIN,
-                     searchOutput.toUtf8().constData(),
+                     "%s --noautoloadconfig -o %s %s %s %s", xsldbg_bin.toLocal8Bit().constData(),
+                     searchOutput.toLocal8Bit().constData(),
                      query,
-                     searchXSL.toUtf8().constData(),
-                     searchInput.toUtf8().constData());
+                     searchXSL.toLocal8Bit().constData(),
+                     searchInput.toLocal8Bit().constData());
         else
             /* assume that we are to use catalogs as well in our query */
             snprintf((char *) searchBuffer, sizeof(searchBuffer),
-                     "%s --noautoloadconfig --catalogs -o %s %s %s %s", XSLDBG_BIN,
-                     searchOutput.toUtf8().constData(),
+                     "%s --noautoloadconfig --catalogs -o %s %s %s %s", xsldbg_bin.toLocal8Bit().constData(),
+                     searchOutput.toLocal8Bit().constData(),
                      query,
-                     searchXSL.toUtf8().constData(),
-                     searchInput.toUtf8().constData());
+                     searchXSL.toLocal8Bit().constData(),
+                     searchInput.toLocal8Bit().constData());
+
         result = xslDbgShellExecute(searchBuffer, 1);
 
         if (result && getThreadStatus() == XSLDBG_MSG_THREAD_RUN) {
-            QByteArray fileName(searchOutput.toUtf8().constData());
+            QByteArray fileName(searchOutput.toLocal8Bit().constData());
             notifyXsldbgApp(XSLDBG_MSG_FILEOUT, fileName);
         } else {
             if (result && optionsGetIntOption(OPTIONS_PREFER_HTML) == 0) {
                 /* try printing out the file */
-                result = filesMoreFile((const xmlChar*)searchOutput.toUtf8().constData(), NULL);
+                result = filesMoreFile((const xmlChar*)searchOutput.toLocal8Bit().constData(), NULL);
             }
         }
 

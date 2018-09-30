@@ -46,10 +46,10 @@ const char *optionNames[] = {
     "preferhtml",               /* Prefer html output for search results */
     "autoencode",               /* Try to use the encoding from the stylesheet */
     "utf8input",                /* All input from "user" will be in UTF-8 */
-    "stdout",                   /* Print all error messages to  stdout, 
-				 * normally error messages go to stderr */
-    "autorestart",		/* When finishing the debug of a XSLT script 
-				   automatically restart at the beginning */
+    "stdout",                   /* Print all error messages to  stdout,
+                     * normally error messages go to stderr */
+    "autorestart",		/* When finishing the debug of a XSLT script
+                       automatically restart at the beginning */
     "catalogs",                 /* do we use catalogs in SGML_CATALOG_FILES */
     "autoloadconfig",           /* automatically load configuration */
     "verbose",                  /* Be verbose with messages */
@@ -74,8 +74,8 @@ QString optionsGetOptionName(OptionTypeEnum ID)
 {
     QString result;
     if ( (ID >= OPTIONS_FIRST_OPTIONID) && (ID <= OPTIONS_LAST_OPTIONID)){
-	/* An option ID is always valid at the moment */
-	result = optionNames[ID - OPTIONS_FIRST_OPTIONID];
+        /* An option ID is always valid at the moment */
+        result = optionNames[ID - OPTIONS_FIRST_OPTIONID];
     }
 
     return result;
@@ -116,33 +116,39 @@ QString langLookupDir( const QString &fname )
         docsEnv = getenv(XSLDBG_DOCS_DIR_VARIABLE);
 #endif
     if (!docsEnv.isEmpty()){
-	search.append(docsEnv);
-	search.append(docsEnv + "/docs/en");
+        search.append(docsEnv);
+        search.append(docsEnv + "/docs/en");
     }
- 
+
     // also look in each of the KDEDIR path
     docsEnv = getenv("KDEDIR");
     if (!docsEnv.isEmpty()){
-	search.append(docsEnv);
-	search.append(docsEnv + "/docs/en");
+        search.append(docsEnv);
+        search.append(docsEnv + "/docs/en");
     }
 
-	// lastly try in QTDIR
+    // lastly try in QTDIR
     docsEnv = getenv("QTDIR");
     if (!docsEnv.isEmpty()){
-	search.append(docsEnv);
-	search.append(docsEnv + "/docs/en");
+        search.append(docsEnv);
+        search.append(docsEnv + "/docs/en");
     }
 
 
     // try to locate the file
-	QStringList::Iterator it;
+    QStringList::Iterator it;
     for (it = search.begin(); it != search.end(); ++it)
-    {	
-	QString baseDir = (*it);
-	QFileInfo info(baseDir + '/' + fname);
-	if (info.exists() && info.isFile() && info.isReadable())
-	  return baseDir;
+    {
+        QString baseDir = (*it);
+        QFileInfo info(baseDir + '/' + fname);
+        if (info.exists() && info.isFile() && info.isReadable()) {
+#ifdef Q_OS_WIN32
+            // for Win32 always return paths with '\'
+            return baseDir.replace("/", "\\");
+#else
+            return baseDir;
+#endif
+        }
     }
 
     return QString();

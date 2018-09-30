@@ -460,7 +460,8 @@ int changeDir(QString path)
 
     path = path.trimmed();
     if (path.indexOf("file:/") != -1) {
-        path = path.replace("file:/", "");
+        QUrl url(path);
+        path = url.toLocalFile();
     }
 
     if (!path.isEmpty()) {
@@ -486,6 +487,9 @@ int changeDir(QString path)
         newDir = QDir::currentPath();
         /* must have path char at end of path name */
         workingDirPath = newDir + PATHCHAR;
+#ifdef Q_OS_WIN32
+        workingDirPath = workingDirPath.replace("/", "\\");
+#endif
         optionsSetStringOption(OPTIONS_CWD, workingDirPath);
         result = 1;
     }
@@ -1073,6 +1077,11 @@ QString filesSearchResultsPath()
         result = QDir::homePath();
     }
 
+#ifdef Q_OS_WIN32
+    // for Win32 always return paths with '\'
+    result = result.replace("/", "\\");
+#endif
+
     return result;
 }
 
@@ -1080,60 +1089,22 @@ QString filesSearchResultsPath()
 xmlChar *filesURItoFileName(const xmlChar* uri)
 {
     xmlChar *result = NULL;
-    xmlChar *unescapedFileName = NULL;
-    const xmlChar* tempName = NULL;
 
     if (uri){
-        if (!xmlStrnCmp(uri, "file://localhost", 16 )){
-            tempName = uri + 16;
-        }else{
-#if defined(WIN32) && ! defined(CYGWIN)
-            if (!xmlStrnCmp(uri, "file:///", 8))
-                tempName = uri + 8;
+        if (xmlStrnCmp(uri, "file:/", 6 )){
+            QUrl URL((const char*)uri);
+            QString localPath;
+#ifdef Q_OS_WIN32
+            // must return path using correct file separator
+            localPath = URL.toLocalFile().replace("/", "\\");
 #else
-            if (!xmlStrnCmp(uri, "file:/", 6))
-                tempName = uri + 5; //  we need the leading '/'*/
-            while (tempName[0] == '/' && tempName[1] == '/' )
-                tempName++;
+            localPath = URL.toLocalFile();
 #endif
-        }
-
-        /* If we've found something check to see if the file name
-       found is to be valid */
-        if (tempName)
-            result = (xmlChar*) xmlStrdup(tempName);
-        unescapedFileName =  (xmlChar*) xmlStrdup(tempName);
-        if (result && unescapedFileName){
-            if (PATHCHAR != URISEPARATORCHAR){
-                /* Must convert path separators first */
-                xmlChar *probe = result;
-                while(*probe != '\0'){
-                    if (*probe == (xmlChar)URISEPARATORCHAR)
-                        *probe = (xmlChar)PATHCHAR;
-                    probe++;
-                }
-            }
-            /* Now unescape the file name in result so far
-    * NB: An unescaped name takes less memory that an escaped name
-    */
-            xmlURIUnescapeString((char*)result, -1,  (char*)unescapedFileName);
-            xmlFree(result);
-            /* success we've got an local unescaped file name */
-            result = unescapedFileName;
+            result = (xmlChar*) xmlStrdup((xmlChar*)localPath.toLocal8Bit().constData());
         }else{
-            xsldbgGenericErrorFunc(QObject::tr("Error: Out of memory.\n"));
-            if (result){
-                xmlFree(result);
-            }
-            if (unescapedFileName) /* not needed, here for completeness */
-                xmlFree(unescapedFileName);
-
-            result = NULL;
+            result = (xmlChar*) xmlStrdup(uri);
         }
-    }else{
-        xsldbgGenericErrorFunc(QObject::tr("Error: Unable to convert %1 to local file name.\n").arg(xsldbgText(uri)));
     }
-
 
     return result;
 }

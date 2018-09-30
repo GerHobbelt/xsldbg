@@ -21,6 +21,7 @@
 #include "debugXSL.h"
 #include "options.h"
 #include "search.h"
+#include <QDebug>
 
 /* -----------------------------------------
 
@@ -53,6 +54,10 @@ int xslDbgShellSearch(xsltTransformContextPtr styleCtxt,
     }
 
     result = updateSearchData(styleCtxt, style, NULL, DEBUG_ANY_VAR);
+    if (result) {
+        return result;
+    }
+
     trimString(arg);
     if (xmlStrLen(arg) == 0) {
         arg = (xmlChar *) "//search/*";
@@ -71,13 +76,13 @@ int xslDbgShellSearch(xsltTransformContextPtr styleCtxt,
             ((char *) buff, DEBUG_BUFFER_SIZE,
              "--noshell --noautoloadconfig --param dosort 1 --param query \"%s\"",
              &arg[argCharIndex])) {
-            result = result && searchQuery(NULL, NULL, buff);
+            result = searchQuery(NULL, NULL, buff);
         }
     } else {
         if (snprintf
             ((char *) buff, DEBUG_BUFFER_SIZE,
              "--noshell --noautoloadconfig --param dosort 0 --param query \"%s\"", arg)) {
-            result = result && searchQuery(NULL, NULL, buff);
+            result = searchQuery(NULL, NULL, buff);
         }
     }
     return result;

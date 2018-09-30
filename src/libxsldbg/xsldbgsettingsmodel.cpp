@@ -574,11 +574,6 @@ bool XsldbgSettingsModel::loadSettings (const QSettings & configSettings )
         }
     }
 
-    /* setup the docs path */
-    QVariant docsPath(QVariant::String);
-    docsPath = langLookupDir("xsldoc.xml");
-    updateSetting(OPTIONS_DOCS_PATH, docsPath);
-
     return result;
 }
 
