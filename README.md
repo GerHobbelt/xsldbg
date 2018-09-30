@@ -45,9 +45,9 @@ As example install prerequisites on
 
 Documentation
 =============
-* xsldbg man page
-* docs/en/website/index.html includes a quick tutorial about using xsldbg
-* docs/en/website/index.html and docs/en/plain/index.html for latest information
+* xsldbg man page (for *nix users)
+* docs/en/plain/index.html for the xsldbg manual
+* docs/en/website/index.html for latest infomation and a quick tutorial about using xsldbg
 * to add docbook DTD support to catalog on Linux use command like:
 > sudo  xmlcatalog -v --add nextCatalog '' "file:///usr/share/xml/docbook/schema/dtd/4.5/catalog.xml" /etc/xml/catalog
 * to regenerate docbook documentation saxon version 6 must be in path. See docs/en/en.pro
@@ -63,6 +63,28 @@ Note that the libxml2 library used supports the following path types for XSLT/XM
 
 When specifing 'http://' or 'ftp://' document paths ensure that host maps to IPv4 or IPv6 address used by related server. For
   example instead of localhost you may need to use the IPv4 address 127.0.0.1
+
+
+License
+=======
+xsldbg is under the GPL2+ see 'COPYING' file for license text or https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
+main author of xsldbg is Keith Isdale <keithisdale@gmail.com>
+
+The following libraries are used by xsldbg
+* Qt5
+    * Author of Qt5, see: https://www.qt.io/
+    * License used is 'LGPL', see https://www.gnu.org/licenses/lgpl-3.0.en.html
+* libxml2, libxslt and libexslt
+    * Author for libxml related libraries, see: http://xmlsoft.org/index.html
+    * License of libxml related libraries is 'MIT', see: https://opensource.org/licenses/mit-license.html
+* iconv
+    * Author of lib iconv, see: https://www.gnu.org/software/libiconv/
+    * License of lib iconv is 'LGPL', see https://www.gnu.org/licenses/lgpl-3.0.en.html
+
+Prebuilt win32 application uses MinGW32
+* Author of MinGW32, see: http://www.mingw.org/
+* License of MinGW32 runtime is public domain, see: http://www.mingw.org/license
+
 
 Create rpm using rpmbuild
 =========================

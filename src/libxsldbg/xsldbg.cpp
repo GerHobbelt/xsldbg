@@ -596,8 +596,14 @@ int xsldbgMain(int argc, char **argv)
                            (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-version"))) {
                     //regular printf is use so that STDOUT is used
                     printf(" xsldbg created by Keith Isdale <keithisdale@gmail.com>\n");
-                    printf(" Version %s, Date created %s\n", XSLDBG_VERSION,
+                    printf("   Version %s, Date created %s\n", XSLDBG_VERSION,
                                      TIMESTAMP);
+                    printf("   License for xsldbg: GPL2+, see https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html\n");
+                    printf("   Website for xsldbg: https://sourceforge.net/projects/xsldbg/\n");
+                    printf("   Online manual for xsldbg: http://xsldbg.sourceforge.net/docs/xsldbg/manual/\n\n");
+                    printf("Uses library Qt5 %s; Core\n", QT_VERSION_STR);
+                    printf("   Author of Qt5, see: https://www.qt.io/\n");
+                    printf("   License used is 'LGPL', see https://www.gnu.org/licenses/lgpl-3.0.en.html\n\n");
                     printf("Using libxml %s, libxslt %s and libexslt %s\n",
                                      xmlParserVersion, xsltEngineVersion,
                                      exsltLibraryVersion);
@@ -608,6 +614,12 @@ int xsldbgMain(int argc, char **argv)
                                      xsltLibxsltVersion, xsltLibxmlVersion);
                     printf("libexslt %d was compiled against libxml %d\n",
                                      exsltLibexsltVersion, exsltLibxmlVersion);
+                    printf("   Author for libxml related libraries, see: http://xmlsoft.org/index.html\n");
+                    printf("   License of libxml related libraries is 'MIT', see: https://opensource.org/licenses/mit-license.html\n\n");
+                    printf("Prebuilt win32 application uses MinGW32\n");
+                    printf("   Author of MinGW32, see: http://www.mingw.org/\n");
+                    printf("   License of MinGW32 runtime is public domain, see: http://www.mingw.org/license\n");
+
                     argv[i] = NULL;
                     exit(0); //exit after showing version information
                 } else if (xmlStrEqual((xmlChar*)argv[i], (xmlChar*)"-norman")) {
