@@ -1,38 +1,38 @@
 XSLDBG_VERSION="4.8.0"
 DEFINES+=XSLDBG_VERSION=\\\"$$XSLDBG_VERSION\\\"
 
+isEmpty(INSTALL_PREFIX) {
+    INSTALL_PREFIX = $$getenv(INSTALL_PREFIX)
+}
+
 !xsldbg_GUI {
     # Documentation is now installed via ../docs/en/en.pro
     unix {
             isEmpty(INSTALL_PREFIX) {
-                DOCS_ROOT="/usr/share/doc/packages/xsldbg"
-                KDEDOCS_ROOT="/usr/share/doc/HTML"
-                BIN_DIR="/usr/bin"
-                DESKTOP_DIR="/usr/share/applications"
-                ICON_DIR="/usr/share/icons"
-                MAN_DIR="/usr/share/man/man1"
-            } else {
-                DOCS_ROOT="$${INSTALL_PREFIX}/share/doc/packages/xsldbg"
-                KDEDOCS_ROOT="$${INSTALL_PREFIX}/share/doc/HTML"
-                BIN_DIR="$${INSTALL_PREFIX}/bin"
-                DESKTOP_DIR="$${INSTALL_PREFIX}/applications"
-                ICON_DIR="$${INSTALL_PREFIX}/icons"
-                MAN_DIR="$${INSTALL_PREFIX}/share/man/man1"
-                message(xsldbg install prefix is '$${INSTALL_PREFIX}')
+                INSTALL_PREFIX="/usr"
             }
-            DEFINES+= DOCS_PATH="\"\\\"$$DOCS_ROOT/en\\\"\""
+            DOCS_ROOT="$${INSTALL_PREFIX}/share/doc/packages/xsldbg"
+            KDEDOCS_ROOT="$${INSTALL_PREFIX}/share/doc/HTML"
+            BIN_DIR="$${INSTALL_PREFIX}/bin"
+            DESKTOP_DIR="$${INSTALL_PREFIX}/applications"
+            ICON_DIR="$${INSTALL_PREFIX}/icons"
+            MAN_DIR="$${INSTALL_PREFIX}/share/man/man1"
+            message(xsldbg install prefix is '$${INSTALL_PREFIX}')
+            DEFINES+= DOCS_PATH=\\\"$$DOCS_ROOT/en\\\"
             DEFINES+= USE_DOCS_MACRO
     }
 
     win32{
         isEmpty(INSTALL_PREFIX) {
-            DOCS_ROOT="\\\\xsldbg\\\\docs"
-            BIN_DIR="\\xsldbg\\bin"
-        } else {
-            DOCS_ROOT="$${INSTALL_PREFIX}\\\\docs"
-            BIN_DIR=$${INSTALL_PREFIX}\\\bin
+            INSTALL_PREFIX="c:\\xsldbg"
         }
-        DEFINES+= DOCS_PATH="\"\\\"$${DOCS_ROOT}\\\\en\\\"\""
+        DOCS_ROOT="$${INSTALL_PREFIX}\\docs"
+        BIN_DIR="$${INSTALL_PREFIX}\\bin"
+        DOCS_PATH="$${DOCS_ROOT}\\en"
+        DOCS_PATH=$$replace(DOCS_PATH,$$re_escape("\\"),$$re_escape("\\\\"))
+        message(xsldbg install prefix is '$${INSTALL_PREFIX}')
+        message(xsldbg docs path is '$${DOCS_PATH}')
+        DEFINES+= DOCS_PATH=\\\"$${DOCS_PATH}\\\"
         DEFINES+= USE_DOCS_MACRO
     }
 }
