@@ -10,6 +10,9 @@ my $xsldbg = "xsldbg";
 my $test = "";
 my $testResult = 0;
 
+print "Note:Test 'test7' may fail due differences in text node proccessing in libxml2 versions\n";
+
+
 for ($index = 0; $index <= $#tests; $index++)
   {
     $test = $tests[$index];
@@ -40,6 +43,7 @@ if ($? == 0) {
     }
 }
 
+print "Note: The following 'http' tests will fail if the http server is not setup to suit xsldbg testing\n";
 # http source debugging test
 @tests = qw (test17 test18);
 for ($index = 0; $index <= $#tests; $index++)
@@ -58,7 +62,8 @@ for ($index = 0; $index <= $#tests; $index++)
     }
 }
 
-# http source debugging test
+print "Note: The following 'ftp' tests will fail if the ftp server is not setup to suit xsldbg testing\n";
+# ftp source debugging test
 @tests = qw (test19);
 for ($index = 0; $index <= $#tests; $index++)
   {
