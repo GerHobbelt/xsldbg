@@ -27,6 +27,7 @@
 #include "options.h"
 #include "utils.h"
 #include "xsldbgthread.h"
+#include <QDebug>
 
 static char buffer[500];
 
@@ -34,11 +35,11 @@ xmlChar *fixResolveFilePath(xmlChar * name) {
     if (name && (xmlStrstr(name, (const xmlChar*)"file:/") != NULL) && (xmlStrstr(name, (const xmlChar*)"file:///") == NULL)) {
         xmlChar *fixedName = (xmlChar *)xmlMalloc((xmlStrlen(name) + 10) * sizeof(xmlChar));
         xmlStrCpy(fixedName, (const xmlChar*)"file:///");
-        int index = 6;
+        int index = 5;
         while (name[index] == '/') {
             index++;
         }
-        xmlStrcat(fixedName, &name[index]);
+        fixedName = xmlStrcat(fixedName, &name[index]);
         xmlFree(name);
         name = fixedName;
     }
@@ -46,11 +47,11 @@ xmlChar *fixResolveFilePath(xmlChar * name) {
     return name;
 }
 
-static QString fixResolveFilePath(const QString & name) {
+QString fixResolveFilePath(const QString & name) {
     QString result = name;
     if ((name.left(6) == "file:/") && (name.indexOf("file:///") == -1)) {
         result = "file:///";
-        int index = 6;
+        int index = 5;
         while (name[index] == '/') {
             index++;
         }

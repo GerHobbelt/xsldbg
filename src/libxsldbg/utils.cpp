@@ -18,10 +18,11 @@
 
 
 #include "utils.h"
+#include "files.h"
 
 #include <libxml/parser.h>
 #include <libxml/parserInternals.h>
-
+#include <QDebug>
 int trimString(xmlChar * text)
 {
     int result = 0;
@@ -161,19 +162,14 @@ QString filesExpandName(const QString fileName, bool addFilePrefix)
             while ((sourceIndex < fileName.count()) && fileName[sourceIndex] == '/')
                 sourceIndex++;
             result += fileName.mid(sourceIndex);
-        }else if (addFilePrefix && ((fileName.left(6) == "file:/") && (fileName.indexOf("file:///") == -1))) {
-            /* ensure that URI has three leading slashes */
-            result = "file:///";
-            int index = 6;
-            while (fileName[index] == '/') {
-                index++;
-            }
-            result += fileName.mid(index);
+        }else if (addFilePrefix) {
+            result = fixResolveFilePath(fileName);
         }else{
             /* return a copy only */
             result = fileName;
         }
     }
+
     return result;
 }
 

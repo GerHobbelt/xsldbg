@@ -228,14 +228,16 @@ void guessStylesheetHelper(void *payload, void *data,
 
     searchData = (nodeSearchDataPtr) searchCriteria->data;
     if (searchData->nameInput && (searchData->absoluteNameMatch == NULL)) {
+        xmlChar * fixedDocURL = fixResolveFilePath(xmlStrdup(style->doc->URL));
         /* at this point we know that we have not made an absolute match
          * but we may have made a relative match */
-        if (xmlStrCmp(style->doc->URL, searchData->nameInput) == 0) {
+        if (xmlStrCmp(fixedDocURL, searchData->nameInput) == 0) {
             /* absolute path match great! */
             searchData->absoluteNameMatch =
-                    (xmlChar *) xmlMemStrdup((char *) style->doc->URL);
+                    (xmlChar *) xmlMemStrdup((char *)fixedDocURL);
             searchData->node = (xmlNodePtr) style->doc;
             searchCriteria->found = 1;
+            xmlFree(fixedDocURL);
             return;
         }
 
@@ -257,12 +259,13 @@ void guessStylesheetHelper(void *payload, void *data,
             }
             xmlStrCat(filesBuffer, searchData->nameInput);
         }
-        if (xmlStrCmp(style->doc->URL, filesBuffer) == 0) {
+        if (xmlStrCmp(fixedDocURL, filesBuffer) == 0) {
             /* guessed right! */
             searchData->guessedNameMatch =
                     (xmlChar *) xmlMemStrdup((char *) filesBuffer);
             searchData->node = (xmlNodePtr) style->doc;
             searchCriteria->found = 1;
+            xmlFree(fixedDocURL);
             return;
         }
         if (!workingPath().isEmpty()) {
@@ -277,23 +280,24 @@ void guessStylesheetHelper(void *payload, void *data,
             }
             xmlStrCat(filesBuffer, searchData->nameInput);
         }
-        if (xmlStrCmp(style->doc->URL, filesBuffer) == 0) {
+        if (xmlStrCmp(fixedDocURL, filesBuffer) == 0) {
             /* guessed right! */
             searchData->guessedNameMatch =
                     (xmlChar *) xmlMemStrdup((char *) filesBuffer);
             searchData->node = (xmlNodePtr) style->doc;
             searchCriteria->found = 1;
+            xmlFree(fixedDocURL);
             return;
         }
 
         /* Find the last separator of the document's URL */
         xmlChar pathSeparator = PATHCHAR;
 
-        if (xmlStrChr(style->doc->URL, ':') != 0) { // if URI then always use forward slash
+        if (xmlStrChr(fixedDocURL, ':') != 0) { // if URI then always use forward slash
             pathSeparator = URISEPARATORCHAR;
         }
 
-        xmlChar* lastSlash = (xmlChar*)xmlStrrChr(style->doc->URL, pathSeparator);
+        xmlChar* lastSlash = (xmlChar*)xmlStrrChr(fixedDocURL, pathSeparator);
         xmlChar* lastSlashSearch = (xmlChar*)xmlStrrChr(filesBuffer, pathSeparator);
         if (!lastSlashSearch) {
             lastSlashSearch = filesBuffer;
@@ -301,17 +305,18 @@ void guessStylesheetHelper(void *payload, void *data,
             lastSlashSearch++;
         }
         if (!lastSlash) {
-            lastSlash = (xmlChar*)style->doc->URL;
+            lastSlash = (xmlChar*)fixedDocURL;
         } else {
             lastSlash++;
         }
         if (xmlStrCmp(lastSlash, lastSlashSearch) == 0) {
             /* guessed right! */
             searchData->guessedNameMatch =
-                    (xmlChar *) xmlStrdup(style->doc->URL);
+                    (xmlChar *) xmlStrdup(fixedDocURL);
             searchData->node = (xmlNodePtr) style->doc;
             searchCriteria->found = 1;
         }
+        xmlFree(fixedDocURL);
     }
 }
 
@@ -506,7 +511,6 @@ int changeDir(QString path)
     return result;
 }
 
-
 int filesLoadXmlFile(const xmlChar * path, FileTypeEnum fileType)
 {
     int result = 0;
@@ -537,19 +541,23 @@ int filesLoadXmlFile(const xmlChar * path, FileTypeEnum fileType)
         topStylesheet = xsldbgLoadStylesheet();
         if (topStylesheet && topStylesheet->doc) {
             /* look for last slash (or baskslash) of URL */
-            QString docUrl = xsldbgText(topStylesheet->doc->URL);
-            int lastSlash = docUrl.lastIndexOf(PATHCHAR);
-
+            QString orginalDocURL = xsldbgText(topStylesheet->doc->URL);
+            QString docUrl = fixResolveFilePath(orginalDocURL);
+            int lastSlash;
+            char pathChar = URISEPARATORCHAR;
+            if (!docUrl.contains(":/")) {
+                pathChar = PATHCHAR;
+            }
+            lastSlash = docUrl.lastIndexOf(pathChar);
             result = 1;
             if (!docUrl.isEmpty() && lastSlash) {
                 stylePathName = docUrl.mid(0, lastSlash);
                 if (optionsGetIntOption(OPTIONS_SHELL)) {
-                    xsldbgGenericErrorFunc(QObject::tr("Setting stylesheet base path to %1.\n").arg(stylePathName));
+                    xsldbgGenericErrorFunc(QObject::tr("Setting stylesheet base path to'%1'.\n").arg(stylePathName));
                 }
             } else {
                 /* ie for *nix this becomes "./" */
-                stylePathName = '.';
-                stylePathName = PATHCHAR;
+                stylePathName = '.' + PATHCHAR;
             }
 
             /* try to find encoding for this stylesheet */
@@ -789,8 +797,6 @@ void filesAddEntityName(const xmlChar * SystemID, const xmlChar * PublicID)
     arrayListAdd(filesEntityList(), tempItem);
 }
 
-extern xmlChar *fixResolveFilePath(xmlChar * name);
-
 void filesEntityRef(xmlEntityPtr ent, xmlNodePtr firstNode, xmlNodePtr lastNode)
 {
     xmlNodePtr node = firstNode;
@@ -863,7 +869,7 @@ xmlChar * filesGetBaseUri(xmlNodePtr node)
     }
 
     if (!result && node->doc && node->doc->URL)
-        result = xmlStrdup(node->doc->URL);
+        result = fixResolveFilePath(xmlStrdup(node->doc->URL));
 
     return result;
 }
@@ -1150,7 +1156,7 @@ QStringList filesDataReadFile(const QString uri)
     QString filePath = uri;
     if (filePath.contains("file:/")) {
         QUrl url(uri);
-        filePath = url.path();
+        filePath = url.toLocalFile();
     }
 
     if (!_fileData.contains(filePath)) {
@@ -1174,7 +1180,9 @@ QStringList filesDataReadFile(const QString uri)
                     qWarning() << "Available codecs are" << QTextCodec::availableCodecs();
                 }
             }else {
-                qWarning() << "No match for " << encodingName.pattern() << "in" << firstLine;
+                if (optionsGetIntOption(OPTIONS_VERBOSE)) {
+                    qWarning() << "No match for encoding RegEx " << encodingName.pattern() << "in" << firstLine;
+                }
             }
             ts.seek(0); // return to start of file
 

@@ -206,6 +206,7 @@ static int _templateListPrinter(const void *data, const void *user)
                 notifyListQueue(templ);
             } else {
                 modeTemp = fullQName(templ->modeURI, templ->mode);
+
                 if (verbose)
                     xsldbgGenericErrorFunc(QObject::tr(" template: \"%1\" mode: \"%2\" in file \"%3\" at line %4\n").arg(xsldbgText(name)).arg(xsldbgText(modeTemp)).arg(xsldbgUrl(url)).arg(xmlGetLineNo(templ->elem)));
                 else

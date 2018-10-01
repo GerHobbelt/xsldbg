@@ -407,4 +407,7 @@ QString filesSearchFileName(FilesSearchFileNameEnum fileType);
 
 void filesDataClear();
 QStringList filesDataReadFile(const QString uri);
+
+xmlChar *fixResolveFilePath(xmlChar * name);
+QString fixResolveFilePath(const QString & name);
 #endif
