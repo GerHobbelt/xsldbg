@@ -16,8 +16,12 @@
 
 
 #include "xsldbgdebuggerbase.h"
+#include <libxsldbg/xsldbg.h>
+#include <libxsldbg/files.h>
 
 #include <QApplication>
+#include <QDebug>
+#include <QDir>
 #include <QStringList>
 #include <QUrl>
 
@@ -54,23 +58,15 @@ QString XsldbgDebuggerBase::fromUTF8(const xmlChar *text)
 }
 
 
-QString XsldbgDebuggerBase::fromUTF8FileName(const char *text)
-{
-  QString result;
-  if (text != 0L){
-    QUrl url(((const char*)text));
-    result = url.toString();
-  }
-  return result;
-}
-
-
 QString XsldbgDebuggerBase::fromUTF8FileName(const xmlChar *text)
 {
   QString result;
   if (text != 0L){
-    QUrl url(QString::fromUtf8((const char*)text));
-    result = url.toString();
+      result = xsldbgText(text).trimmed();
+      if (result.contains("file:")) {
+          QUrl url(fixResolveFilePath(result));
+          result = url.toString();
+      }
   }
   return result;
 }
@@ -79,4 +75,31 @@ QString XsldbgDebuggerBase::fromUTF8FileName(const xmlChar *text)
 void XsldbgDebuggerBase::queueMessage(const QString &text)
 {
     updateText += text;
+}
+
+
+// if file URI is used return local file path
+QString XsldbgDebuggerBase::fixLocalPaths(const QString & file)
+{
+    QString result = file.trimmed();
+
+    if (isLocalPath(result)){
+        if (result.contains("file:")) {
+            QUrl url(fixResolveFilePath(result));
+            result = url.toLocalFile();
+        }
+#ifdef Q_OS_WIN32
+        result = result.replace("/", "\\");
+#endif
+    }
+
+    return result;
+}
+
+
+bool XsldbgDebuggerBase::isLocalPath(const QString & file)
+{
+    return ((file.left(6) == "file:/")
+            ||!((file.contains("http:/") || file.contains("ftp:/"))
+                || file.left(1) == QDir::separator()));
 }

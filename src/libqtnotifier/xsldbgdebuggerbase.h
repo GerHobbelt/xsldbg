@@ -55,7 +55,7 @@ void setUpdateTimerID(int ID) { updateTimerID = ID;}; int getUpdateTimerID(void)
 
   /** Convert from libxslt UTF8 to a QString */	
   static QString fromUTF8(const char *text);
-  static QString fromUTF8FileName(const char *text);
+  //static QString fromUTF8FileName(const char *text);
 	
   /** Convert from libxslt UTF8 to a QString */	
   static QString fromUTF8(const xmlChar *text);
@@ -65,6 +65,10 @@ void setUpdateTimerID(int ID) { updateTimerID = ID;}; int getUpdateTimerID(void)
   QStringList commandQueue(void) {return _commandQueue ;};
   
   void queueMessage(const QString &text);
+
+  /* helper function to handle differences between URI's in Qt/KDE and libxml2 */
+  static QString fixLocalPaths(const QString & file);
+  static bool isLocalPath(const QString & file);
 
 protected:
     QString updateText;
