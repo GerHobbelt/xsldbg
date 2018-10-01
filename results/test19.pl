@@ -28,7 +28,7 @@ require "xsldbgmatch.pl";
     if (xsldbgmatch::breakpointListMatch(
              "",  
                "" , 
-                 "ftp://xsldbg:xsldbg\@127.0.0.1/home/xsldbg/xsldbg_tests/test19.xsl",  
+                 "ftp://xsldbg:xsldbg\@127.0.0.1/xsldbg/tests/test19.xsl",
                    "16",
                      $testName) == 0){
        $failedTestCount = $failedTestCount + 1;

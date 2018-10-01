@@ -11,7 +11,7 @@ run
 continue
 cat 'test 3'
 delete *
-break -l "http://localhost/xsldbg/tests/test17.xsl" 20
+break -l "http://127.0.0.1/xsldbg/tests/test17.xsl" 20
 showbreak
 run
 continue
@@ -24,7 +24,7 @@ continue
 data
 cat 'test 5'
 delete *
-break -l "http://localhost/xsldbg/tests/test17.xml" 11
+break -l "http://127.0.0.1/xsldbg/tests/test17.xml" 11
 showbreak
 run
 continue

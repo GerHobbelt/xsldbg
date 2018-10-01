@@ -26,7 +26,7 @@ require "xsldbgmatch.pl";
     if (xsldbgmatch::breakpointListMatch(
              "",  
                "" , 
-                 "http://localhost/xsldbg/tests/test17.xsl",  
+                 "http://127.0.0.1/xsldbg/tests/test17.xsl",
                    "20",
                      $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
@@ -45,7 +45,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Breakpoint for file \"http://localhost/xsldbg/tests/test17.xsl\" at line 20", 
+             "Breakpoint for file \"http://127.0.0.1/xsldbg/tests/test17.xsl\" at line 20",
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -58,7 +58,7 @@ require "xsldbgmatch.pl";
     if (xsldbgmatch::breakpointListMatch(
              "",  
                "" , 
-                 "http://localhost/xsldbg/tests/test17.xsl",  
+                 "http://127.0.0.1/xsldbg/tests/test17.xsl",
                    "20",
                      $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
@@ -77,7 +77,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Breakpoint for file \"http://localhost/xsldbg/tests/test17.xsl\" at line 20", 
+             "Breakpoint for file \"http://127.0.0.1/xsldbg/tests/test17.xsl\" at line 20",
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -99,7 +99,7 @@ require "xsldbgmatch.pl";
     if (xsldbgmatch::breakpointListMatch(
              "",  
                "" , 
-                 "http://localhost/xsldbg/tests/test17.xsl",  
+                 "http://127.0.0.1/xsldbg/tests/test17.xsl",
                    "20",
                      $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
@@ -127,7 +127,7 @@ require "xsldbgmatch.pl";
     $testCount = $testCount + 1;
     
     if (xsldbgmatch::textMatch(
-             "Breakpoint for file \"http://localhost/xsldbg/tests/test17.xsl\" at line 20", 
+             "Breakpoint for file \"http://127.0.0.1/xsldbg/tests/test17.xsl\" at line 20",
                $testName) == 0 ){
        $failedTestCount = $failedTestCount + 1;
        $result = 0;
@@ -149,7 +149,7 @@ require "xsldbgmatch.pl";
     if (xsldbgmatch::breakpointListMatch(
              "",  
                "" , 
-                 "http://localhost/xsldbg/tests/test17.xml",  
+                 "http://127.0.0.1/xsldbg/tests/test17.xml",
                    "11",
                      $testName) == 0){
        $failedTestCount = $failedTestCount + 1;
@@ -181,7 +181,7 @@ require "xsldbgmatch.pl";
     if (xsldbgmatch::breakpointListMatch(
              "",  
                "" , 
-                 "http://localhost/xsldbg/tests/test17.xml",  
+                 "http://127.0.0.1/xsldbg/tests/test17.xml",
                    "11",
                      $testName) == 0){
        $failedTestCount = $failedTestCount + 1;

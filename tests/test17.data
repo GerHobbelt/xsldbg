@@ -22,13 +22,13 @@ continue</test>
 <matchtext>Starting stylesheet</matchtext>
 </row>
 <row>
-<breakpointlist file="http://localhost/xsldbg/tests/test17.xsl" line="20" />
+<breakpointlist file="http://127.0.0.1/xsldbg/tests/test17.xsl" line="20" />
 </row>
 <row>
 <matchtext>Total of 1 breakpoints present</matchtext>
 </row>
 <row>
-<matchtext>Breakpoint for file \"http://localhost/xsldbg/tests/test17.xsl\" at line 20</matchtext>
+<matchtext>Breakpoint for file \"http://127.0.0.1/xsldbg/tests/test17.xsl\" at line 20</matchtext>
 </row>
 </result>
 </cmd>
@@ -42,13 +42,13 @@ run
 continue</test>
 <result>
 <row>
-<breakpointlist file="http://localhost/xsldbg/tests/test17.xsl" line="20" />
+<breakpointlist file="http://127.0.0.1/xsldbg/tests/test17.xsl" line="20" />
 </row>
 <row>
 <matchtext>Total of 1 breakpoints present</matchtext>
 </row>
 <row>
-<matchtext>Breakpoint for file \"http://localhost/xsldbg/tests/test17.xsl\" at line 20</matchtext>
+<matchtext>Breakpoint for file \"http://127.0.0.1/xsldbg/tests/test17.xsl\" at line 20</matchtext>
 </row>
 </result>
 </cmd>
@@ -56,7 +56,7 @@ continue</test>
 <cmd> <!--  Set breakpoint on full URI for XSLT script -->
 <test>cat 'test 3'
 delete *
-break -l "http://localhost/xsldbg/tests/test17.xsl" 20
+break -l "http://127.0.0.1/xsldbg/tests/test17.xsl" 20
 showbreak
 run
 continue</test>
@@ -65,7 +65,7 @@ continue</test>
 <matchtext>Starting stylesheet</matchtext>
 </row>
 <row>
-<breakpointlist file="http://localhost/xsldbg/tests/test17.xsl" line="20" />
+<breakpointlist file="http://127.0.0.1/xsldbg/tests/test17.xsl" line="20" />
 </row>
 <row>
 <matchtext>Total of 1 breakpoints present</matchtext>
@@ -74,7 +74,7 @@ continue</test>
 <matchtext>Reached template: \"data\"</matchtext>
 </row>
 <row>
-<matchtext>Breakpoint for file \"http://localhost/xsldbg/tests/test17.xsl\" at line 20</matchtext>
+<matchtext>Breakpoint for file \"http://127.0.0.1/xsldbg/tests/test17.xsl\" at line 20</matchtext>
 </row>
 </result>
 </cmd>
@@ -92,7 +92,7 @@ data</test>
 <matchtext>Starting stylesheet</matchtext>
 </row>
 <row>
-<breakpointlist file="http://localhost/xsldbg/tests/test17.xml" line="11" />
+<breakpointlist file="http://127.0.0.1/xsldbg/tests/test17.xml" line="11" />
 </row>
 <row>
 <matchtext>Total of 1 breakpoints present</matchtext>
@@ -106,13 +106,13 @@ data</test>
 <cmd> <!-- set breakpoint on full URI for XML data -->
 <test>cat 'test 5'
 delete *
-break -l "http://localhost/xsldbg/tests/test17.xml" 11
+break -l "http://127.0.0.1/xsldbg/tests/test17.xml" 11
 showbreak
 run
 continue</test>
 <result>
 <row>
-<breakpointlist file="http://localhost/xsldbg/tests/test17.xml" line="11" />
+<breakpointlist file="http://127.0.0.1/xsldbg/tests/test17.xml" line="11" />
 </row>
 <row>
 <matchtext>Total of 1 breakpoints present</matchtext>

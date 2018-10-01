@@ -22,7 +22,8 @@
 </cmd>
 
 <cmd>
-<test>show break</test>
+<test>show break
+quit</test>
 <result>
 <row>
 <breakpointlist file="ftp://xsldbg:xsldbg\@127.0.0.1/home/xsldbg/xsldbg_tests/test19.xsl" line="16" />
