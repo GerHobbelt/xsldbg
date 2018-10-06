@@ -46,7 +46,7 @@ As example install prerequisites on
 Documentation
 =============
 * xsldbg man page (for *nix users)
-* docs/en/plain/index.html for the xsldbg manual
+* docs/en/html/index.html for the xsldbg manual
 * docs/en/website/index.html for latest infomation and a quick tutorial about using xsldbg
 * to add docbook DTD support to catalog on Linux use command like:
 > sudo  xmlcatalog -v --add nextCatalog '' "file:///usr/share/xml/docbook/schema/dtd/4.5/catalog.xml" /etc/xml/catalog
