@@ -35,7 +35,7 @@ if [ -d $TMPDIR ]; then rm -rf $TMPDIR; fi
 mkdir $TMPDIR
 
 cd $SOURCEDIR
-git clone . $TMPDIR/xsldbg-$VERSION
+cp -r $SOURCEDIR $TMPDIR/xsldbg-$VERSION
 
 cd $TMPDIR
 

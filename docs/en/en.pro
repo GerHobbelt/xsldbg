@@ -31,7 +31,7 @@ unix{
 
     INSTALLS+=xmldocCatalog2
 
-    #generate the plain text documentation
+    #generate the html text documentation
     xsldoctxt.target = .buildfile1
     xsldoctxt.commands = touch $$xsldoctxt.target
     xsldoctxt.depends = xsldoctxt2
@@ -40,12 +40,12 @@ unix{
     xsldoctxt2.commands = ../../src/xsldbg --noautoloadconfig --noshell --param alldocs:\"\'1\'\" --param xsldbg_version:\"\'$${XSLDBG_VERSION}\'\" --output $$PWD/xsldoc.txt $$PWD/xsldoc.xsl $$PWD/xsldoc.xml
 
     # generate the HTML documentation
-    xsldoctxtplain.target = .buildfile2
-    xsldoctxtplain.commands = touch $$xsldoctxtplain.target
-    xsldoctxtplain.depends = xsldoctxtplain2
+    xsldocHtml.target = .buildfile2
+    xsldocHtml.commands = touch $$xsldocHtml.target
+    xsldocHtml.depends = xsldocHtml2
 
-    xsldoctxtplain2.depends = $$PWD/plain/xsldoc2html.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd install_extradocs
-    xsldoctxtplain2.commands = ../../src/xsldbg --noautoloadconfig --noshell --param alldocs:\"\'1\'\" --param xsldbg_version:\"\'$${XSLDBG_VERSION}\'\" --output $$PWD/plain/index.html $$PWD/plain/xsldoc2html.xsl $$PWD/xsldoc.xml
+    xsldocHtml2.depends = $$PWD/html/xsldoc2html.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd install_extradocs
+    xsldocHtml2.commands = ../../src/xsldbg --noautoloadconfig --noshell --param alldocs:\"\'1\'\" --param xsldbg_version:\"\'$${XSLDBG_VERSION}\'\" --output $$PWD/html/index.html $$PWD/html/xsldoc2html.xsl $$PWD/xsldoc.xml
 
     #generate KDE docbook if saxon tool is present
     SAXON=$$system(saxon -t 2>&1)
@@ -60,7 +60,7 @@ unix{
         xsldocKDEdocs2.depends = $$PWD/KDE/xsldoc2kde.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd
         xsldocKDEdocs2.path = $$KDEDOCS_ROOT/en/xsldbg
         xsldocKDEdocs2.commands = saxon -o $$PWD/KDE/index.docbook $$PWD/xsldoc.xml $$PWD/KDE/xsldoc2kde.xsl alldocs=\"\'1\'\" xsldbg_version=\"\'$${XSLDBG_VERSION}\'\"
-	INSTALLS+=xsldocKDEdocs2
+        INSTALLS+=xsldocKDEdocs2
 
         # generate the docbook documentation for Gnome
         xsldocGnomedocs.target = .buildfile4
@@ -72,7 +72,7 @@ unix{
         xsldocGnomedocs2.path = $$DOCS_ROOT/en/GNOME
         xsldocGnomedocs2.commands = saxon -o $$PWD/GNOME/gnome.docbook $$PWD/xsldoc.xml $$PWD/GNOME/xsldoc2gnome.xsl alldocs=\"\'1\'\" xsldbg_version=\"\'$${XSLDBG_VERSION}\'\"
 
-	# disable Gnome documentation creation for now
+        # disable Gnome documentation creation for now
         # INSTALLS+=xsldocGnomedocs2
 
     }else {
@@ -106,9 +106,9 @@ win32:xsldoctxt2.path = $$DOCS_ROOT\\en
 INSTALLS+=xsldoctxt2
 
 #install html docs
-xsldoctxtplain2.files = $$PWD/plain/index.html
-unix:xsldoctxtplain2.path = $$DOCS_ROOT/en/plain
-win32:xsldoctxtplain2.path = $$DOCS_ROOT\\en\\plain
-INSTALLS+=xsldoctxtplain2
+xsldocHtml2.files = $$PWD/html/index.html
+unix:xsldocHtml2.path = $$DOCS_ROOT/en/html
+win32:xsldocHtml2.path = $$DOCS_ROOT\\en\\html
+INSTALLS+=xsldocHtml2
 
 
