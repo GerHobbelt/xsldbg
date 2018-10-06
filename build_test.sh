@@ -1,14 +1,20 @@
 #!/bin/sh -ex
 # This script will test the xsldbg/qxsldbg building on most *nix based systems
 # 
-# Usage: build_test.sh [PRODUCT] [PACKAGE_URL] [VERSION] [MAKE_JOBS]
+# Usage: build_test.sh [norpm] [PRODUCT] [PACKAGE_URL] [VERSION] [MAKE_JOBS]
 #    
 # where 
+#	norpm disables usage of rpm
 # 	PRODUCT is defaults to "xsldbg"; POSSIBLE values "xsldbg", "qxsldbg"
 #	PACKAGE_URL defaults to "http://localhost/public" or $PACKAGE_URL if set
 #	VERSION default to "4.7.0" or $VERSION if set
 # 	MAKE_JOBS defaults to "4"
+#	
 
+if [ "$1" == "norpm" ];then
+   shift
+   NO_RPM="true"
+fi
 if [ -z "$PRODUCT" ]; then
   PRODUCT=$1
 fi
@@ -55,7 +61,7 @@ fi
 cd $TMPDIR
 wget ${PACKAGE_URL}/${PRODUCT}-${VERSION}.tar.gz
 
-if [ -e /usr/bin/rpmbuild ]; then
+if [ -z "$NO_RPM" -a -e /usr/bin/rpmbuild ]; then
     echo "Simple build test using rpmbuild asuming tar.gz copied to $TMPDIR"
     cp ${PRODUCT}-$VERSION.tar.gz ~/rpmbuild/SOURCES/
     DISTRO=""
@@ -82,12 +88,14 @@ elif [ -e "/usr/bin/qtchooser" ]; then
     cd ${PRODUCT}-${VERSION}
     qtchooser -qt=qt5 -run-tool=qmake -r ${PRODUCT}.pro
     make -j${MAKE_JOBS}
+    sudo make install
 elif [ -e "/usr/bin/qmake-qt5" ]; then
     echo "build using qmake-qt5"
     tar xzf ${PRODUCT}-${VERSION}.tar.gz
     cd ${PRODUCT}-${VERSION}
     qmake-qt5 -r ${PRODUCT}.pro
     make -j${MAKE_JOBS}
+    sudo make install
 else
     # we should not get to here
     echo "build using qmake, usumes is Qt5's qmake is in path"
@@ -95,4 +103,5 @@ else
     cd ${PRODUCT}-${VERSION}
     qmake -r ${PRODUCT}.pro
     make -j${MAKE_JOBS}
+    sudo make install
 fi
