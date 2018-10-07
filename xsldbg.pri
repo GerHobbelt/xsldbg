@@ -14,7 +14,7 @@ isEmpty(INSTALL_PREFIX) {
             DOCS_ROOT="$${INSTALL_PREFIX}/share/doc/packages/xsldbg"
             KDEDOCS_ROOT="$${INSTALL_PREFIX}/share/doc/HTML"
             BIN_DIR="$${INSTALL_PREFIX}/bin"
-            DESKTOP_DIR="$${INSTALL_PREFIX}/applications"
+            DESKTOP_DIR="$${INSTALL_PREFIX}/share/applications"
             ICON_DIR="$${INSTALL_PREFIX}/icons"
             MAN_DIR="$${INSTALL_PREFIX}/share/man/man1"
             message(xsldbg install prefix is '$${INSTALL_PREFIX}')
