@@ -1,17 +1,19 @@
-<html xmlns:v="urn:schemas-microsoft-com:vml"
-xmlns:o="urn:schemas-microsoft-com:office:office"
-xmlns:w="urn:schemas-microsoft-com:office:word"
-xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"
-xmlns="http://www.w3.org/TR/REC-html40">
-
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
 <head>
-<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
-<meta name=ProgId content=Word.Document>
-<meta name=Generator content="Microsoft Word 15">
-<meta name=Originator content="Microsoft Word 15">
-<link rel=File-List href="index_files/filelist.xml">
-<link rel=Edit-Time-Data href="index_files/editdata.mso">
-<!--[if !mso]>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+	<title>xsldbg a XSL debugger/inspector</title>
+	<meta name="generator" content="LibreOffice 6.0.4.2 (Linux)"/>
+	<meta name="created" content="00:00:00"/>
+	<meta name="changed" content="2018-10-07T10:07:01.282914852"/>
+	<meta name="Originator" content="Microsoft Word 15"/>
+	<meta name="ProgId" content="Word.Document"/>
+	<meta name="created" content="00:00:00">
+	<meta name="Originator" content="Microsoft Word 15">
+	<meta name="ProgId" content="Word.Document">
+	<meta name="created" content="00:00:00">
+	<meta name="created" content="00:00:00">
+	<!--[if !mso]>
 <style>
 v\:* {behavior:url(#default#VML);}
 o\:* {behavior:url(#default#VML);}
@@ -19,8 +21,7 @@ w\:* {behavior:url(#default#VML);}
 .shape {behavior:url(#default#VML);}
 </style>
 <![endif]-->
-<title>xsldbg a XSL debugger/inspector</title>
-<!--[if gte mso 9]><xml>
+	<!--[if gte mso 9]><xml>
  <o:DocumentProperties>
   <o:Author>Keith Isdale</o:Author>
   <o:LastAuthor>Keith Isdale</o:LastAuthor>
@@ -40,9 +41,7 @@ w\:* {behavior:url(#default#VML);}
   <o:AllowPNG/>
  </o:OfficeDocumentSettings>
 </xml><![endif]-->
-<link rel=themeData href="index_files/themedata.thmx">
-<link rel=colorSchemeMapping href="index_files/colorschememapping.xml">
-<!--[if gte mso 9]><xml>
+	<!--[if gte mso 9]><xml>
  <w:WordDocument>
   <w:SpellingState>Clean</w:SpellingState>
   <w:GrammarState>Clean</w:GrammarState>
@@ -77,7 +76,8 @@ w\:* {behavior:url(#default#VML);}
    <m:intLim m:val="subSup"/>
    <m:naryLim m:val="undOvr"/>
   </m:mathPr></w:WordDocument>
-</xml><![endif]--><!--[if gte mso 9]><xml>
+</xml><![endif]-->
+	<!--[if gte mso 9]><xml>
  <w:LatentStyles DefLockedState="false" DefUnhideWhenUsed="false"
   DefSemiHidden="false" DefQFormat="false" DefPriority="99"
   LatentStyleCount="375">
@@ -653,947 +653,7 @@ w\:* {behavior:url(#default#VML);}
    Name="Unresolved Mention"/>
  </w:LatentStyles>
 </xml><![endif]-->
-<style>
-<!--
- /* Font Definitions */
- @font-face
-	{font-family:Wingdings;
-	panose-1:5 0 0 0 0 0 0 0 0 0;
-	mso-font-charset:2;
-	mso-generic-font-family:auto;
-	mso-font-pitch:variable;
-	mso-font-signature:0 268435456 0 0 -2147483648 0;}
-@font-face
-	{font-family:"Cambria Math";
-	panose-1:2 4 5 3 5 4 6 3 2 4;
-	mso-font-charset:0;
-	mso-generic-font-family:roman;
-	mso-font-pitch:variable;
-	mso-font-signature:-536869121 1107305727 33554432 0 415 0;}
-@font-face
-	{font-family:Consolas;
-	panose-1:2 11 6 9 2 2 4 3 2 4;
-	mso-font-charset:0;
-	mso-generic-font-family:modern;
-	mso-font-pitch:fixed;
-	mso-font-signature:-536869121 64767 1 0 415 0;}
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{mso-style-unhide:no;
-	mso-style-qformat:yes;
-	mso-style-parent:"";
-	margin:0cm;
-	margin-bottom:.0001pt;
-	mso-pagination:widow-orphan;
-	font-size:12.0pt;
-	font-family:"Times New Roman",serif;
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:minor-fareast;}
-h1
-	{mso-style-priority:9;
-	mso-style-unhide:no;
-	mso-style-qformat:yes;
-	mso-style-link:"Heading 1 Char";
-	mso-margin-top-alt:auto;
-	margin-right:0cm;
-	mso-margin-bottom-alt:auto;
-	margin-left:0cm;
-	mso-pagination:widow-orphan;
-	mso-outline-level:1;
-	font-size:24.0pt;
-	font-family:"Times New Roman",serif;
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:minor-fareast;
-	font-weight:bold;}
-h2
-	{mso-style-priority:9;
-	mso-style-unhide:no;
-	mso-style-qformat:yes;
-	mso-style-link:"Heading 2 Char";
-	mso-margin-top-alt:auto;
-	margin-right:0cm;
-	mso-margin-bottom-alt:auto;
-	margin-left:0cm;
-	mso-pagination:widow-orphan;
-	mso-outline-level:2;
-	font-size:18.0pt;
-	font-family:"Times New Roman",serif;
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:minor-fareast;
-	font-weight:bold;}
-h4
-	{mso-style-priority:9;
-	mso-style-unhide:no;
-	mso-style-qformat:yes;
-	mso-style-link:"Heading 4 Char";
-	mso-margin-top-alt:auto;
-	margin-right:0cm;
-	mso-margin-bottom-alt:auto;
-	margin-left:0cm;
-	mso-pagination:widow-orphan;
-	mso-outline-level:4;
-	font-size:12.0pt;
-	font-family:"Times New Roman",serif;
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:minor-fareast;
-	font-weight:bold;}
-a:link, span.MsoHyperlink
-	{mso-style-priority:99;
-	color:blue;
-	text-decoration:underline;
-	text-underline:single;}
-a:visited, span.MsoHyperlinkFollowed
-	{mso-style-noshow:yes;
-	mso-style-priority:99;
-	color:purple;
-	text-decoration:underline;
-	text-underline:single;}
-p
-	{mso-style-priority:99;
-	mso-margin-top-alt:auto;
-	margin-right:0cm;
-	mso-margin-bottom-alt:auto;
-	margin-left:0cm;
-	mso-pagination:widow-orphan;
-	font-size:12.0pt;
-	font-family:"Times New Roman",serif;
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:minor-fareast;}
-pre
-	{mso-style-priority:99;
-	mso-style-link:"HTML Preformatted Char";
-	margin:0cm;
-	margin-bottom:.0001pt;
-	mso-pagination:widow-orphan;
-	tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt;
-	font-size:10.0pt;
-	font-family:"Courier New";
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:minor-fareast;}
-p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
-	{mso-style-priority:34;
-	mso-style-unhide:no;
-	mso-style-qformat:yes;
-	margin-top:0cm;
-	margin-right:0cm;
-	margin-bottom:0cm;
-	margin-left:36.0pt;
-	margin-bottom:.0001pt;
-	mso-add-space:auto;
-	mso-pagination:widow-orphan;
-	font-size:12.0pt;
-	font-family:"Times New Roman",serif;
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:minor-fareast;}
-p.MsoListParagraphCxSpFirst, li.MsoListParagraphCxSpFirst, div.MsoListParagraphCxSpFirst
-	{mso-style-priority:34;
-	mso-style-unhide:no;
-	mso-style-qformat:yes;
-	mso-style-type:export-only;
-	margin-top:0cm;
-	margin-right:0cm;
-	margin-bottom:0cm;
-	margin-left:36.0pt;
-	margin-bottom:.0001pt;
-	mso-add-space:auto;
-	mso-pagination:widow-orphan;
-	font-size:12.0pt;
-	font-family:"Times New Roman",serif;
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:minor-fareast;}
-p.MsoListParagraphCxSpMiddle, li.MsoListParagraphCxSpMiddle, div.MsoListParagraphCxSpMiddle
-	{mso-style-priority:34;
-	mso-style-unhide:no;
-	mso-style-qformat:yes;
-	mso-style-type:export-only;
-	margin-top:0cm;
-	margin-right:0cm;
-	margin-bottom:0cm;
-	margin-left:36.0pt;
-	margin-bottom:.0001pt;
-	mso-add-space:auto;
-	mso-pagination:widow-orphan;
-	font-size:12.0pt;
-	font-family:"Times New Roman",serif;
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:minor-fareast;}
-p.MsoListParagraphCxSpLast, li.MsoListParagraphCxSpLast, div.MsoListParagraphCxSpLast
-	{mso-style-priority:34;
-	mso-style-unhide:no;
-	mso-style-qformat:yes;
-	mso-style-type:export-only;
-	margin-top:0cm;
-	margin-right:0cm;
-	margin-bottom:0cm;
-	margin-left:36.0pt;
-	margin-bottom:.0001pt;
-	mso-add-space:auto;
-	mso-pagination:widow-orphan;
-	font-size:12.0pt;
-	font-family:"Times New Roman",serif;
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:minor-fareast;}
-p.msonormal0, li.msonormal0, div.msonormal0
-	{mso-style-name:msonormal;
-	mso-style-unhide:no;
-	mso-margin-top-alt:auto;
-	margin-right:0cm;
-	mso-margin-bottom-alt:auto;
-	margin-left:0cm;
-	mso-pagination:widow-orphan;
-	font-size:12.0pt;
-	font-family:"Times New Roman",serif;
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:minor-fareast;}
-span.Heading1Char
-	{mso-style-name:"Heading 1 Char";
-	mso-style-priority:9;
-	mso-style-unhide:no;
-	mso-style-locked:yes;
-	mso-style-link:"Heading 1";
-	mso-ansi-font-size:16.0pt;
-	mso-bidi-font-size:16.0pt;
-	font-family:"Calibri Light",sans-serif;
-	mso-ascii-font-family:"Calibri Light";
-	mso-ascii-theme-font:major-latin;
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:major-fareast;
-	mso-hansi-font-family:"Calibri Light";
-	mso-hansi-theme-font:major-latin;
-	mso-bidi-font-family:"Times New Roman";
-	mso-bidi-theme-font:major-bidi;
-	color:#2F5496;
-	mso-themecolor:accent1;
-	mso-themeshade:191;}
-span.Heading2Char
-	{mso-style-name:"Heading 2 Char";
-	mso-style-noshow:yes;
-	mso-style-priority:9;
-	mso-style-unhide:no;
-	mso-style-locked:yes;
-	mso-style-link:"Heading 2";
-	mso-ansi-font-size:13.0pt;
-	mso-bidi-font-size:13.0pt;
-	font-family:"Calibri Light",sans-serif;
-	mso-ascii-font-family:"Calibri Light";
-	mso-ascii-theme-font:major-latin;
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:major-fareast;
-	mso-hansi-font-family:"Calibri Light";
-	mso-hansi-theme-font:major-latin;
-	mso-bidi-font-family:"Times New Roman";
-	mso-bidi-theme-font:major-bidi;
-	color:#2F5496;
-	mso-themecolor:accent1;
-	mso-themeshade:191;}
-span.HTMLPreformattedChar
-	{mso-style-name:"HTML Preformatted Char";
-	mso-style-priority:99;
-	mso-style-unhide:no;
-	mso-style-locked:yes;
-	mso-style-link:"HTML Preformatted";
-	font-family:Consolas;
-	mso-ascii-font-family:Consolas;
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:minor-fareast;
-	mso-hansi-font-family:Consolas;}
-span.Heading4Char
-	{mso-style-name:"Heading 4 Char";
-	mso-style-noshow:yes;
-	mso-style-priority:9;
-	mso-style-unhide:no;
-	mso-style-locked:yes;
-	mso-style-link:"Heading 4";
-	mso-ansi-font-size:12.0pt;
-	mso-bidi-font-size:12.0pt;
-	font-family:"Calibri Light",sans-serif;
-	mso-ascii-font-family:"Calibri Light";
-	mso-ascii-theme-font:major-latin;
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:major-fareast;
-	mso-hansi-font-family:"Calibri Light";
-	mso-hansi-theme-font:major-latin;
-	mso-bidi-font-family:"Times New Roman";
-	mso-bidi-theme-font:major-bidi;
-	color:#2F5496;
-	mso-themecolor:accent1;
-	mso-themeshade:191;
-	font-style:italic;}
-span.SpellE
-	{mso-style-name:"";
-	mso-spl-e:yes;}
-span.GramE
-	{mso-style-name:"";
-	mso-gram-e:yes;}
-.MsoChpDefault
-	{mso-style-type:export-only;
-	mso-default-props:yes;
-	font-size:10.0pt;
-	mso-ansi-font-size:10.0pt;
-	mso-bidi-font-size:10.0pt;}
-@page WordSection1
-	{size:595.3pt 841.9pt;
-	margin:72.0pt 72.0pt 72.0pt 72.0pt;
-	mso-header-margin:35.4pt;
-	mso-footer-margin:35.4pt;
-	mso-paper-source:0;}
-div.WordSection1
-	{page:WordSection1;}
- /* List Definitions */
- @list l0
-	{mso-list-id:226495881;
-	mso-list-template-ids:-716643468;}
-@list l0:level1
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0B7;
-	mso-level-tab-stop:36.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Symbol;}
-@list l0:level2
-	{mso-level-number-format:bullet;
-	mso-level-text:o;
-	mso-level-tab-stop:72.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:"Courier New";
-	mso-bidi-font-family:"Times New Roman";}
-@list l0:level3
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:108.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l0:level4
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:144.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l0:level5
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:180.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l0:level6
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:216.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l0:level7
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:252.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l0:level8
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:288.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l0:level9
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:324.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l1
-	{mso-list-id:479887238;
-	mso-list-template-ids:472812702;}
-@list l1:level1
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0B7;
-	mso-level-tab-stop:36.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Symbol;}
-@list l1:level2
-	{mso-level-number-format:bullet;
-	mso-level-text:o;
-	mso-level-tab-stop:72.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:"Courier New";
-	mso-bidi-font-family:"Times New Roman";}
-@list l1:level3
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:108.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l1:level4
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:144.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l1:level5
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:180.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l1:level6
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:216.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l1:level7
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:252.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l1:level8
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:288.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l1:level9
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:324.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l2
-	{mso-list-id:489057413;
-	mso-list-template-ids:-4043804;}
-@list l2:level1
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0B7;
-	mso-level-tab-stop:36.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Symbol;}
-@list l2:level2
-	{mso-level-number-format:bullet;
-	mso-level-text:o;
-	mso-level-tab-stop:72.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:"Courier New";
-	mso-bidi-font-family:"Times New Roman";}
-@list l2:level3
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:108.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l2:level4
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:144.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l2:level5
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:180.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l2:level6
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:216.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l2:level7
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:252.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l2:level8
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:288.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l2:level9
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:324.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l3
-	{mso-list-id:654719730;
-	mso-list-template-ids:305145718;}
-@list l3:level1
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0B7;
-	mso-level-tab-stop:36.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Symbol;}
-@list l3:level2
-	{mso-level-number-format:bullet;
-	mso-level-text:o;
-	mso-level-tab-stop:72.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:"Courier New";
-	mso-bidi-font-family:"Times New Roman";}
-@list l3:level3
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:108.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l3:level4
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:144.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l3:level5
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:180.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l3:level6
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:216.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l3:level7
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:252.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l3:level8
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:288.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l3:level9
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:324.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l4
-	{mso-list-id:856848608;
-	mso-list-template-ids:-248581076;}
-@list l4:level1
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0B7;
-	mso-level-tab-stop:36.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Symbol;}
-@list l4:level2
-	{mso-level-number-format:bullet;
-	mso-level-text:o;
-	mso-level-tab-stop:72.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:"Courier New";
-	mso-bidi-font-family:"Times New Roman";}
-@list l4:level3
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:108.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l4:level4
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:144.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l4:level5
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:180.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l4:level6
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:216.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l4:level7
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:252.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l4:level8
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:288.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l4:level9
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:324.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l5
-	{mso-list-id:1183009148;
-	mso-list-template-ids:-759120668;}
-@list l5:level1
-	{mso-level-tab-stop:36.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l5:level2
-	{mso-level-tab-stop:72.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l5:level3
-	{mso-level-tab-stop:108.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l5:level4
-	{mso-level-tab-stop:144.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l5:level5
-	{mso-level-tab-stop:180.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l5:level6
-	{mso-level-tab-stop:216.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l5:level7
-	{mso-level-tab-stop:252.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l5:level8
-	{mso-level-tab-stop:288.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l5:level9
-	{mso-level-tab-stop:324.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;}
-@list l6
-	{mso-list-id:1463419860;
-	mso-list-template-ids:343155238;}
-@list l6:level1
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0B7;
-	mso-level-tab-stop:36.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Symbol;}
-@list l6:level2
-	{mso-level-number-format:bullet;
-	mso-level-text:o;
-	mso-level-tab-stop:72.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:"Courier New";
-	mso-bidi-font-family:"Times New Roman";}
-@list l6:level3
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:108.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l6:level4
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:144.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l6:level5
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:180.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l6:level6
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:216.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l6:level7
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:252.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l6:level8
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:288.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l6:level9
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:324.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l7
-	{mso-list-id:1589803743;
-	mso-list-template-ids:1164979916;}
-@list l7:level1
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0B7;
-	mso-level-tab-stop:36.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Symbol;}
-@list l7:level2
-	{mso-level-number-format:bullet;
-	mso-level-text:o;
-	mso-level-tab-stop:72.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:"Courier New";
-	mso-bidi-font-family:"Times New Roman";}
-@list l7:level3
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:108.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l7:level4
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:144.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l7:level5
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:180.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l7:level6
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:216.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l7:level7
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:252.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l7:level8
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:288.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l7:level9
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:324.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l8
-	{mso-list-id:1913000446;
-	mso-list-template-ids:-796213606;}
-@list l8:level1
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0B7;
-	mso-level-tab-stop:36.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Symbol;}
-@list l8:level2
-	{mso-level-number-format:bullet;
-	mso-level-text:o;
-	mso-level-tab-stop:72.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:"Courier New";
-	mso-bidi-font-family:"Times New Roman";}
-@list l8:level3
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:108.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l8:level4
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:144.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l8:level5
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:180.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l8:level6
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:216.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l8:level7
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:252.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l8:level8
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:288.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-@list l8:level9
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0A7;
-	mso-level-tab-stop:324.0pt;
-	mso-level-number-position:left;
-	text-indent:-18.0pt;
-	mso-ansi-font-size:10.0pt;
-	font-family:Wingdings;}
-ol
-	{margin-bottom:0cm;}
-ul
-	{margin-bottom:0cm;}
--->
-</style>
-<!--[if gte mso 10]>
+	<!--[if gte mso 10]>
 <style>
  /* Style Definitions */
  table.MsoNormalTable
@@ -1610,737 +670,606 @@ ul
 	font-size:10.0pt;
 	font-family:"Times New Roman",serif;}
 </style>
-<![endif]--><!--[if gte mso 9]><xml>
+<![endif]-->
+	<!--[if gte mso 9]><xml>
  <o:shapedefaults v:ext="edit" spidmax="1026"/>
-</xml><![endif]--><!--[if gte mso 9]><xml>
+</xml><![endif]-->
+	<!--[if gte mso 9]><xml>
  <o:shapelayout v:ext="edit">
   <o:idmap v:ext="edit" data="1"/>
  </o:shapelayout></xml><![endif]-->
+	<style type="text/css">
+		h1 { color: #000000 }
+		p { color: #000000 }
+		h2 { color: #000000 }
+		h2.cjk { font-family: "Droid Sans Fallback" }
+		h2.ctl { font-family: "Droid Sans Devanagari" }
+		pre { color: #000000 }
+		pre.cjk { font-family: "Droid Sans Fallback", monospace }
+		h3 { color: #000000 }
+		h3.western { font-family: "Albany", sans-serif }
+		h3.cjk { font-family: "Droid Sans Fallback" }
+		h3.ctl { font-family: "Droid Sans Devanagari" }
+		a:link { color: #0000ff }
+		a:visited { color: #800080 }
+	</style>
 </head>
-
-<body lang=EN-AU link=blue vlink=purple style='tab-interval:36.0pt'>
-
-<div class=WordSection1>
-
-<h1><span style='mso-fareast-font-family:"Times New Roman"'>Table of
-Contents&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span><a href="http://sourceforge.net/"><span style='mso-fareast-font-family:
-"Times New Roman";mso-no-proof:yes;text-decoration:none;text-underline:none'><img
-border=0 width=88 height=31 id="_x0000_i1025"
-src="http://sourceforge.net/sflogo.php?group_id=35673" alt="SourceForge Logo"></span></a><span
-style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h1>
-
-<ul type=disc>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l6 level1 lfo1;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'><a href="#Introduction">Introduction</a> <o:p></o:p></span></li>
- <ul type=circle>
-  <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:
-      auto;mso-list:l6 level2 lfo1;tab-stops:list 72.0pt'><span
-      style='mso-fareast-font-family:"Times New Roman"'><a href="#Todo"><span
-      class=SpellE>Todo</span></a> <o:p></o:p></span></li>
-  <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:
-      auto;mso-list:l6 level2 lfo1;tab-stops:list 72.0pt'><span
-      style='mso-fareast-font-family:"Times New Roman"'><a href="#Requirements">Requirements</a>
-      <o:p></o:p></span></li>
-  <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:
-      auto;mso-list:l6 level2 lfo1;tab-stops:list 72.0pt'><span
-      style='mso-fareast-font-family:"Times New Roman"'><a href="#Limitations">Limitations</a>
-      <o:p></o:p></span></li>
-  <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:
-      auto;mso-list:l6 level2 lfo1;tab-stops:list 72.0pt'><span
-      style='mso-fareast-font-family:"Times New Roman"'><a href="#Author">Author</a>
-      <o:p></o:p></span></li>
-  <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:
-      auto;mso-list:l6 level2 lfo1;tab-stops:list 72.0pt'><span
-      style='mso-fareast-font-family:"Times New Roman"'><a href="#Licence">Licence</a>
-      <o:p></o:p></span></li>
-  <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:
-      auto;mso-list:l6 level2 lfo1;tab-stops:list 72.0pt'><span
-      style='mso-fareast-font-family:"Times New Roman"'><a href="#Documentation"><span
-      class=SpellE>Documention</span></a> <o:p></o:p></span></li>
-  <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:
-      auto;mso-list:l6 level2 lfo1;tab-stops:list 72.0pt'><span
-      style='mso-fareast-font-family:"Times New Roman"'><a
-      href="#Screen%20shots">Screen shots</a><o:p></o:p></span></li>
-  <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:
-      auto;mso-list:l6 level2 lfo1;tab-stops:list 72.0pt'><span
-      style='mso-fareast-font-family:"Times New Roman"'><a href="#Web%20site">Web
-      site</a> <o:p></o:p></span></li>
-  <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:
-      auto;mso-list:l6 level2 lfo1;tab-stops:list 72.0pt'><span
-      style='mso-fareast-font-family:"Times New Roman"'><a href="#Email%20lists">Email
-      lists</a> <o:p></o:p></span></li>
- </ul>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l6 level1 lfo1;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'><a href="#Installation">Installation</a> <o:p></o:p></span></li>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l6 level1 lfo1;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'><a href="#Testing">Testing / running example</a><o:p></o:p></span></li>
- <ul type=circle>
-  <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:
-      auto;mso-list:l6 level2 lfo1;tab-stops:list 72.0pt'><span
-      style='mso-fareast-font-family:"Times New Roman"'><a
-      href="#xsldbg%20example%20session">Example <span class=SpellE>xsldbg</span>
-      session</a><o:p></o:p></span></li>
-  <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:
-      auto;mso-list:l6 level2 lfo1;tab-stops:list 72.0pt'><span
-      style='mso-fareast-font-family:"Times New Roman"'><a
-      href="#Quantaplus%20example">Example Quanta+ plugin session</a><o:p></o:p></span></li>
-  <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:
-      auto;mso-list:l6 level2 lfo1;tab-stops:list 72.0pt'><span
-      style='mso-fareast-font-family:"Times New Roman"'><a
-      href="#XEmacs%20example">Example <span class=SpellE>XEmacs</span> session
-      using <span class=SpellE>xsldbg</span>-mode</a><o:p></o:p></span></li>
- </ul>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l6 level1 lfo1;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'><a href="#Help%20system">Help system</a> <o:p></o:p></span></li>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l6 level1 lfo1;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'><a href="#Version%20notes">Version notes</a> <o:p></o:p></span></li>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l6 level1 lfo1;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'><a href="#FAQ">FAQ</a><o:p></o:p></span></li>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l6 level1 lfo1;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'><a href="#Feedback">Feedback</a> <o:p></o:p></span></li>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l6 level1 lfo1;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'><a href="#Download">Download</a> <o:p></o:p></span></li>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l6 level1 lfo1;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'><a href="#Completed%20TODO%27s">Completed TODO'S</a> <o:p></o:p></span></li>
+<body lang="en-AU" text="#000000" link="#0000ff" vlink="#800080" dir="ltr">
+<h1><a name="_x0000_i1025"></a>Table of Contents&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="text-decoration: none"><a href="http://sourceforge.net/">
+</a>
+<a href="http://sourceforge.net/">
+  <img src="http://sourceforge.net/sflogo.php?group_id=35673" name="Image1" alt="SourceForge Logo" align="bottom" width="88" height="31" border="0"/>
+</a>
+<a href="http://sourceforge.net/">
+</a></span>
+</h1>
+<ul type="disc">
+	<li/>
+<p style="margin-bottom: 0in"><a href="#Introduction">Introduction</a>
+		</p>
+	<ul type="circle">
+		<li/>
+<p style="margin-bottom: 0in"><a href="#Requirements">Requirements</a>
+				</p>
+		<li/>
+<p style="margin-bottom: 0in"><a href="#Author">Author</a> 
+		</p>
+		<li/>
+<p style="margin-bottom: 0in"><a href="#Licence">Licence</a> 
+		</p>
+		<li/>
+<p style="margin-bottom: 0in"><a href="#Documentation">Documention</a>
+				</p>
+		<li/>
+<p style="margin-bottom: 0in"><a href="#Screen%20shots">Screen
+		shots</a> 
+		</p>
+		<li/>
+<p style="margin-bottom: 0in"><a href="#Web%20site">Web site</a>
+				</p>
+		<li/>
+<p style="margin-bottom: 0in"><a href="#Email%20lists">Email
+		lists</a> 
+		</p>
+	</ul>
+	<li/>
+<p style="margin-bottom: 0in"><a href="#Installation">Installation</a>
+		</p>
+	<li/>
+<p style="margin-bottom: 0in"><a href="#Testing">Testing /
+	running example</a> 
+	</p>
+	<ul type="circle">
+		<li/>
+<p style="margin-bottom: 0in"><a href="#xsldbg%20example%20session">Example
+		xsldbg session</a> 
+		</p>
+		<li/>
+<p style="margin-bottom: 0in"><a href="#XEmacs%20example">Example
+		XEmacs session using xsldbg-mode</a> 
+		</p>
+	</ul>
+	<li/>
+<p style="margin-bottom: 0in"><a href="#Help%20system">Help
+	system</a> 
+	</p>
+	<li/>
+<p style="margin-bottom: 0in"><a href="#Version%20notes">Version
+	notes</a> 
+	</p>
+	<li/>
+<p style="margin-bottom: 0in"><a href="#FAQ">FAQ</a> 
+	</p>
+	<li/>
+<p style="margin-bottom: 0in"><a href="#Feedback">Feedback</a>
+		</p>
+	<li/>
+<p style="margin-bottom: 0in"><a href="#Download">Download</a>
+		</p>
+	<li/>
+<p style="margin-bottom: 0in"><a href="#Limitations">Limitations</a>
+		</p>
+	<li/>
+<p style="margin-bottom: 0in"><a href="#Todo">Todo</a> 
+	</p>
+	<li/>
+<p><a href="#Completed%20TODO%27s">Completed TODO'S</a> 
+	</p>
 </ul>
-
-<p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'><o:p>&nbsp;</o:p></span></p>
-
-<h1><a name=Introduction><span style='mso-fareast-font-family:"Times New Roman"'>Introduction</span></a><span
-style='mso-fareast-font-family:"Times New Roman"'> to <span class=SpellE>xsldbg</span>
-related tools<o:p></o:p></span></h1>
-
-<p><span class=SpellE>xsldbg</span> </p>
-
-<p style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l6 level1 lfo1;
-tab-stops:list 36.0pt'><![if !supportLists]><span style='font-size:10.0pt;
-mso-bidi-font-size:12.0pt;font-family:Symbol;mso-fareast-font-family:Symbol;
-mso-bidi-font-family:Symbol'><span style='mso-list:Ignore'>·<span
-style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]>is a text based tool to debug stylesheets and it
-is similar to the Unix/Linux debugger <span class=SpellE><span class=GramE>gdb</span></span><span
-class=GramE>.</span> It uses using the <span class=SpellE>libxslt</span>
-library by <a href="http://www.xmlsoft.org/XSLT">http://www.xmlsoft.org/XSLT</a>
-</p>
-
-<p style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l6 level1 lfo1;
-tab-stops:list 36.0pt'><![if !supportLists]><span style='font-size:10.0pt;
-mso-bidi-font-size:12.0pt;font-family:Symbol;mso-fareast-font-family:Symbol;
-mso-bidi-font-family:Symbol'><span style='mso-list:Ignore'>·<span
-style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]><span style='mso-fareast-font-family:"Times New Roman"'>is
-in a stable stage of development with functionality now frozen until the start
-of the next beta cycle. Comments about feature set provided are welcome. </span></p>
-
-<p style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l6 level1 lfo1;
-tab-stops:list 36.0pt'><![if !supportLists]><span style='font-size:10.0pt;
-mso-bidi-font-size:12.0pt;font-family:Symbol;mso-fareast-font-family:Symbol;
-mso-bidi-font-family:Symbol'><span style='mso-list:Ignore'>·<span
-style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]>has GUI front end for Qt5 called <a
-href="https://sourceforge.net/projects/xsldbg/files/qxsldbg"><span
-class=SpellE>qxsldbg</span></a></p>
-
-<p style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l6 level1 lfo1;
-tab-stops:list 36.0pt'><![if !supportLists]><span style='font-size:10.0pt;
-mso-bidi-font-size:12.0pt;font-family:Symbol;mso-fareast-font-family:Symbol;
-mso-bidi-font-family:Symbol'><span style='mso-list:Ignore'>·<span
-style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]>has GUI front end for KDE, called <a
-href="https://sourceforge.net/projects/xsldbg/files/kxsldbg"><span
-class=SpellE>kxsldbg</span></a> that supports a Kate plugin using <span
-class=SpellE>xsldbg</span></p>
-
-<p style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l6 level1 lfo1;
-tab-stops:list 36.0pt'><![if !supportLists]><span style='font-size:10.0pt;
-mso-bidi-font-size:12.0pt;font-family:Symbol;mso-fareast-font-family:Symbol;
-mso-bidi-font-family:Symbol'><span style='mso-list:Ignore'>·<span
-style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]>breakpoints can be set on XSLT script or XML
-data file</p>
-
-<p style='margin-left:36.0pt;text-indent:-18.0pt;mso-list:l6 level1 lfo1;
-tab-stops:list 36.0pt'><![if !supportLists]><span style='font-size:10.0pt;
-mso-bidi-font-size:12.0pt;font-family:Symbol;mso-fareast-font-family:Symbol;
-mso-bidi-font-family:Symbol'><span style='mso-list:Ignore'>·<span
-style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-</span></span></span><![endif]>setting breakpoint on import/included XSLT
-scripts is now supported</p>
-
-<h2><a name=Todo><span style='mso-fareast-font-family:"Times New Roman"'><o:p>&nbsp;</o:p></span></a></h2>
-
-<h2><span style='mso-bookmark:Todo'><span class=SpellE><span style='mso-fareast-font-family:
-"Times New Roman"'>Todo</span></span></span><span style='mso-bookmark:Todo'></span><span
-style='mso-fareast-font-family:"Times New Roman"'> <o:p></o:p></span></h2>
-
-<ul type=disc>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l2 level1 lfo3;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'>add the ability to list documents created by <span
-     class=SpellE><span class=GramE>xsl:document</span></span> instruction
-     (maybe?)<o:p></o:p></span></li>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l2 level1 lfo3;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'>Look at replacing execution of shell command
-     &quot;more&quot; with a function call<o:p></o:p></span></li>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l2 level1 lfo3;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'>Look at allowing <span class=SpellE>xsldbg</span> to
-     extract comments from XSL files to provided similar functionality as <span
-     class=SpellE>XSLTDoc</span> tool by Fabrice <span class=SpellE>Desré</span>.
-     <span class=GramE>At the moment</span> the <span class=SpellE>libxslt</span>
-     <span class=SpellE>preprocessor</span> strips most comments (maybe?)<o:p></o:p></span></li>
-</ul>
-
-<p><a href="#Completed%20TODO%27s"><b>See also completed TODO'S</b></a><b> <o:p></o:p></b></p>
-
 <p>&nbsp;</p>
-
-<h2><a name=Requirements><span style='mso-fareast-font-family:"Times New Roman"'>Requirements</span></a><span
-style='mso-fareast-font-family:"Times New Roman"'> <o:p></o:p></span></h2>
-
-<p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>See <a
-href="https://sourceforge.net/projects/xsldbg/files/xsldbg/">https://sourceforge.net/projects/xsldbg/files/xsldbg/</a><o:p></o:p></span></p>
-
-<h2><a name=Limitations><span style='mso-fareast-font-family:"Times New Roman"'><o:p>&nbsp;</o:p></span></a></h2>
-
-<h2><span style='mso-bookmark:Limitations'><span style='mso-fareast-font-family:
-"Times New Roman"'>Limitations</span></span><span style='mso-fareast-font-family:
-"Times New Roman"'> <o:p></o:p></span></h2>
-
-<ul type=disc>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l8 level1 lfo4;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'>The format of search results needs to be fixed<o:p></o:p></span></li>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l8 level1 lfo4;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'>The <span class=SpellE><b>stepup</b></span> command is
-     not accurate<o:p></o:p></span></li>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l8 level1 lfo4;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'>Searching can take a while with large documents i.e.
-     when debugging docbook.xsl<o:p></o:p></span></li>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l8 level1 lfo4;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'>Both the stylesheet and xml data file will be reloaded
-     each time <span class=SpellE>xsldbg</span> starts a &quot;run&quot;. It is
-     too complex to complex considering keeping track of which files are out of
-     date<o:p></o:p></span></li>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l8 level1 lfo4;tab-stops:list 36.0pt'><span class=SpellE><span
-     style='mso-fareast-font-family:"Times New Roman"'>Libxslt</span></span><span
-     style='mso-fareast-font-family:"Times New Roman"'> and consequently <span
-     class=SpellE>xsldbg</span> ca not handle NON_ASCII template matches<o:p></o:p></span></li>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l8 level1 lfo4;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'>If an environment variable is used to indicate where
-     you've installed <span class=SpellE>xsldbg's</span> documentation the variable
-     value MUST end in a path separator<br>
-     <span class=SpellE>ie</span> for win32 this is a '\'<br>
-     &nbsp;&nbsp;&nbsp;for *nix this is a '/'<o:p></o:p></span></li>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l8 level1 lfo4;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'>The SGML/XML <span class=SpellE>catalogs</span>
-     provided are to be included as a &quot;<span class=SpellE>nextCatalog</span>&quot;
-     in your <span class=SpellE>catalog</span> file. Otherwise you'll get
-     warnings about unable to find <span class=SpellE>xsldbg's</span> DTDs<o:p></o:p></span></li>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l8 level1 lfo4;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'>The new search DTD allows for each element to have a
-     comment to be extracted from the XSL source <span class=SpellE>libxslt</span>
-     currently does not support this function<o:p></o:p></span></li>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l8 level1 lfo4;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'>Under win32 the more command does not process a
-     &quot;.\&lt;FILE_NAME&gt;&quot; properly<o:p></o:p></span></li>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l8 level1 lfo4;tab-stops:list 36.0pt'><span style='mso-fareast-font-family:
-     "Times New Roman"'>When a <span class=SpellE>non ASCII</span> character
-     are used stylesheets the printing of search results does not print in the <span
-     class=SpellE>orginal</span> encoding (instead uses UTF-<span class=GramE>8
-     )</span>. This will be resolved if/when a replacement for the more command
-     is made<o:p></o:p></span></li>
+<h1><a name="Introduction"></a>Introduction to xsldbg related tools</h1>
+<p>xsldbg 
+</p>
+<ul>
+	<li/>
+<p style="margin-top: 0.04in; margin-bottom: 0.04in">is a text
+	based tool to debug stylesheets and it is similar to the Unix/Linux
+	debugger gdb. It uses using the libxslt library by
+	<a href="http://www.xmlsoft.org/XSLT">http://www.xmlsoft.org/XSLT</a>
+		</p>
+	<li/>
+<p style="margin-top: 0.04in; margin-bottom: 0.04in">is in a
+	stable stage of development with functionality now frozen until the
+	start of the next beta cycle. Comments about feature set provided
+	are welcome. 
+	</p>
+	<li/>
+<p style="margin-top: 0.04in; margin-bottom: 0.04in">has GUI
+	front end for Qt5 called <a href="https://sourceforge.net/projects/xsldbg/files/qxsldbg">qxsldbg</a></p>
+	<li/>
+<p style="margin-top: 0.04in; margin-bottom: 0.04in">has GUI
+	front end for KDE, called <a href="https://sourceforge.net/projects/xsldbg/files/kxsldbg">kxsldbg</a>
+	that supports a Kate plugin using xsldbg</p>
+	<li/>
+<p style="margin-top: 0.04in; margin-bottom: 0.04in">breakpoints
+	can be set on XSLT script or XML data file</p>
+	<li/>
+<p style="margin-top: 0.04in; margin-bottom: 0.04in">setting
+	breakpoint on import/included XSLT scripts is now supported</p>
 </ul>
+<h2 class="western"><a name="Requirements"></a>Requirements 
+</h2>
+<p>See <a href="https://sourceforge.net/projects/xsldbg/files/xsldbg/">https://sourceforge.net/projects/xsldbg/files/xsldbg/</a></p>
+<h2 class="western">Latest release</h2>
+<p>The lastest release downloads</p>
+<ul>
+	<li/>
+<p><a href="https://sourceforge.net/projects/xsldbg/files/xsldbg/xsldbg-4.7.0/">xsldbg-4.7.0</a></p>
+	<li/>
+<p><a href="https://sourceforge.net/projects/xsldbg/files/xsldbg-mode/xsldbg-mode-4.7.0/">xsldbg-mode-4.7.0</a></p>
+	<li/>
+<p><a href="https://sourceforge.net/projects/xsldbg/files/qxsldbg/qxsldbg-4.7.0/">qxsldbg-4.7.0</a></p>
+	<li/>
+<p><a href="https://sourceforge.net/projects/xsldbg/files/kxsldbg/kxsldbg-4.7.0/">kxsldbg-4.7.0</a></p>
+</ul>
+<p><br/>
+<br/>
 
-<p>&nbsp; </p>
-
-<h2><a name=Author><span style='mso-fareast-font-family:"Times New Roman"'>Author</span></a><span
-style='mso-fareast-font-family:"Times New Roman"'> <o:p></o:p></span></h2>
-
-<p>The primary author is <a href="mailto:keithisdale@gmail.com">Keith Isdale</a>
 </p>
-
-<p>The author for the <span class=SpellE>riscos</span> specific code is <a
-href="mailto:justin.fletcher@ntlworld.com">Justin Fletcher</a> </p>
-
-<p>The author some of the WIN32 code is <a
-href="http://www.fh-frankfurt.de/%7Eigor/projects/libxml/"><i>Igor <span
-class=SpellE>Zlatkovic</span></i></a> </p>
-
-<p>&nbsp;</p>
-
-<h2><a name=Licence><span style='mso-fareast-font-family:"Times New Roman"'>Licence</span></a><span
-style='mso-fareast-font-family:"Times New Roman"'> <o:p></o:p></span></h2>
-
-<p>This tool is available under the <a
-href="http://www.gnu.org/licenses/licenses.html#GPL">GPL licence</a> </p>
-
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </p>
-
-<h2><a name=Documentation><span style='mso-fareast-font-family:"Times New Roman"'>Documentation</span></a><span
-style='mso-fareast-font-family:"Times New Roman"'> <o:p></o:p></span></h2>
-
-<p>&nbsp;&nbsp;&nbsp; <a
-href="http://xsldbg.sourceforge.net/docs/xsldbg/manual/index.html"><span
-class=SpellE>xldbg</span> usage and commands</a> </p>
-
-<p><o:p>&nbsp;</o:p></p>
-
-<h2><a name="Screen%20shots"><span style='mso-fareast-font-family:"Times New Roman"'>Screen
-shots</span></a><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h2>
-
-<p><a
-href="../../../../../AppData/Roaming/Microsoft/Word/xsldbg-mode-screenshot1.png">Running
-<span class=SpellE>xsldbg</span>-mode under <span class=SpellE>XEmacs</span> in
-Linux and WIN32</a> </p>
-
-<p><a
-href="../../../../../AppData/Roaming/Microsoft/Word/qxsldbg_screenshot1.png">Running
-the <span class=SpellE>qxsldbg</span> under KDE, it will look similar under MinGW32
-or <span class=SpellE><span class=GramE>cygwin</span></span><span class=GramE>
-.</span></a> </p>
-
-<p><a
-href="../../../../../AppData/Roaming/Microsoft/Word/kxsldbg_screenshot1.png">Running
-the <span class=SpellE>kxsldbg</span> plugin in <span class=SpellE>kate</span>.</a>
+<h2 class="western"><a name="Author"></a>Author 
+</h2>
+<p style="margin-bottom: 0in">The primary author is <a href="mailto:keithisdale@gmail.com">Keith
+Isdale</a> 
 </p>
-
-<p><o:p>&nbsp;</o:p></p>
-
-<h2><a name="Web%20site"><span style='mso-fareast-font-family:"Times New Roman"'>Related
-web sites</span></a><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h2>
-
-<p>&nbsp;&nbsp;&nbsp; <a href="http://sourceforge.net/projects/xsldbg">http://xsldbg.sourceforge.net/</a>
+<p style="margin-bottom: 0in">The author for the riscos specific code
+is <a href="mailto:justin.fletcher@ntlworld.com">Justin Fletcher</a> 
 </p>
-
-<p>&nbsp;&nbsp;&nbsp; <a href="http://sourceforge.net/projects/xsldbg">http://sourceforge.net/projects/xsldbg</a>
+<p style="margin-bottom: 0in">The author some of the WIN32 code is
+<a href="http://www.fh-frankfurt.de/%7Eigor/projects/libxml/"><i>Igor
+Zlatkovic</i></a> 
 </p>
+<p style="margin-bottom: 0in"><br/>
 
-<p>&nbsp;&nbsp;&nbsp; <a
-href="http://xsldbg.sourceforge.net/docs/qxsldbg/manual/">http://xsldbg.sourceforge.net/docs/qxsldbg/manual/,
-the <span class=SpellE>xsldbg</span> manual</a> </p>
+</p>
+<h2 class="western"><a name="Licence"></a>Licence 
+</h2>
+<p>This tool is available under the <a href="http://www.gnu.org/licenses/licenses.html#GPL">GPL
+licence</a> 
+</p>
+<h2 class="western"><a name="Documentation"></a>Documentation 
+</h2>
+<p>See <a href="http://xsldbg.sourceforge.net/docs/xsldbg/manual/index.html">xsldbg
+usage and commands</a> 
+</p>
+<h2 class="western"><a name="Screen%20shots"></a>Screen shots</h2>
+<ul>
+	<li/>
+<p align="left" style="margin-bottom: 0in"><a href="xsldbg-mode-screenshot1.png">Running
+	xsldbg-mode under XEmacs in Linux and WIN32</a></p>
+	<li/>
+<p align="left" style="margin-bottom: 0in"><a href="qxsldbg_screenshot1.png">Running
+	the qxsldbg under KDE, it will look similar under MinGW32 or cygwin.</a>
+		</p>
+	<li/>
+<p align="left" style="margin-bottom: 0in"><a href="kxsldbg_screenshot1.png">Running
+	the kxsldbg plugin in kate.</a> 
+	</p>
+	<p align="left" style="margin-bottom: 0in"></p>
+</ul>
+<h2 class="western"><a name="Web%20site"></a>Related web sites</h2>
+<ul>
+	<li/>
+<p style="margin-bottom: 0in"><a href="http://sourceforge.net/projects/xsldbg">http://xsldbg.sourceforge.net/</a>
+		</p>
+	<li/>
+<p style="margin-bottom: 0in"><a href="http://sourceforge.net/projects/xsldbg">http://sourceforge.net/projects/xsldbg</a>
+		</p>
+	<li/>
+<p style="margin-bottom: 0in"><a href="http://xsldbg.sourceforge.net/docs/xsldbg/manual/">http://xsldbg.sourceforge.net/docs/xsldbg/manual/
+	,the xsldbg manual</a> 
+	</p>
+	<li/>
+<p style="margin-bottom: 0in"><a href="http://xsldbg.sourceforge.net/docs/qxsldbg/manual/">http://xsldbg.sourceforge.net/docs/qxsldbg/manual/
+	,the qxsldbg manual</a></p>
+</ul>
+<p style="margin-bottom: 0in"><br/>
 
-<p>&nbsp;&nbsp;&nbsp; <a
-href="http://xsldbg.sourceforge.net/docs/qxsldbg/manual/">http://xsldbg.sourceforge.net/docs/qxsldbg/manual,
-the <span class=SpellE>qxsldbg</span> manual</a> </p>
+</p>
+<h2 class="western"><a name="Email%20lists"></a>Email lists 
+</h2>
+<p style="margin-bottom: 0in"><a href="http://lists.sourceforge.net/lists/listinfo/xsldbg-announce">http://lists.sourceforge.net/lists/listinfo/xsldbg-announce</a></p>
+<p style="margin-bottom: 0in"><br/>
 
-<p><o:p>&nbsp;</o:p></p>
+</p>
+<h1><a name="Installation"></a>Installation 
+</h1>
+<p style="margin-bottom: 0in">For installation instructions see the
+README.md in the downloaded source package.</p>
+<h1><a name="Testing"></a>Testing / running example 
+</h1>
+<h2 class="western"><a name="xsldbg%20example%20session"></a>Example
+xsldbg session</h2>
+<p>To test / try out xsldbg</p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>cd xsldbg/docs/en</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>xsldbg --shell xsldoc.xsl xsldoc.xml</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in"><br/>
 
-<h2><a name="Email%20lists"><span style='mso-fareast-font-family:"Times New Roman"'>Email
-lists</span></a><span style='mso-fareast-font-family:"Times New Roman"'> <o:p></o:p></span></h2>
+</p>
+<p style="margin-bottom: 0in">And you should get the xsldbg prompt
+like</p>
+<p style="margin-bottom: 0in"><br/>
 
-<p>&nbsp;&nbsp; <a
-href="http://lists.sourceforge.net/lists/listinfo/xsldbg-announce">http://lists.sourceforge.net/lists/listinfo/xsldbg-announce</a>
-<span style='mso-fareast-font-family:"Times New Roman"'><br>
-<br>
-<br style='mso-special-character:line-break'>
-<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
-<![endif]><o:p></o:p></span></p>
+</p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>XSLDBG &lt;VERSION&gt;</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>Starting stylesheet</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>Breakpoint at file xsldoc.xsl : line 18</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>xsldbg) xsl:param &gt;</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in"><br/>
 
-<h1><a name=Installation><span style='mso-fareast-font-family:"Times New Roman"'>Installation</span></a><span
-style='mso-fareast-font-family:"Times New Roman"'> <o:p></o:p></span></h1>
+</p>
+<p style="margin-bottom: 0in">You can now start entering commands at
+the &quot;(xsldbg) .* &gt;&quot; prompt. In the example text in</p>
+<p style="margin-bottom: 0in"><font color="#008000"><b>green</b></font>
+has been typed by the user.</p>
+<p style="margin-bottom: 0in"><br/>
 
-<p class=MsoNormal><span style='mso-fareast-font-family:"Times New Roman"'>For
-installation instructions see the README in the downloaded source package.<o:p></o:p></span></p>
+</p>
+<p style="margin-bottom: 0in">To print help just type &quot;help&quot;;</p>
+<p style="margin-bottom: 0in">To exit xsldbg just type &quot;exit&quot;
+</p>
+<p style="margin-bottom: 0in"><br/>
 
-<h1><a name=Testing><span style='mso-fareast-font-family:"Times New Roman"'>Testing
-/ running example </span></a><span style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h1>
+</p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>Breakpoint at file xsldoc.xsl : line 18</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>(xsldbg) xsl:param &gt; <font color="#008000">templates</font></i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>template :&quot;/&quot; in file xsldoc.xsl : line 23</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>template :&quot;helpOnCommand&quot; in file xsldoc.xsl : line 49</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>template :&quot;header&quot; in file xsldoc.xsl : line 67</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>template :&quot;text()&quot; in file xsldoc.xsl : line 79</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>template :&quot;para&quot; in file xsldoc.xsl : line 83</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>template :&quot;list | usage&quot; in file xsldoc.xsl : line 89</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>template :&quot;comment&quot; in file xsldoc.xsl : line 99</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>template :&quot;cmd-summary&quot; in file xsldoc.xsl : line 103</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>template :&quot;cmd&quot; in file xsldoc.xsl : line 109</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>Total of 9 templates found</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>Total of 9 templates printed</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>(xsldbg) xsl:param &gt; <font color="#008000">break /</font></i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>Size of line list was 0 adding 24 entries</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>(xsldbg) xsl:param &gt; <font color="#008000">break header</font></i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>Size of line list was 24 adding 44 entries</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>(xsldbg) xsl:param &gt; <font color="#008000">showbreak</font></i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>Breakpoint 1 enabled for template :&quot;/&quot; in file
+xsldoc.xsl : line 23</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>Breakpoint 2 enabled for template :&quot;header&quot; in file
+xsldoc.xsl : line 67</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>Total of 2 breakPoints present</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>(xsldbg) xsl:param &gt; <font color="#008000">break -l xsldoc.xsl
+44</font></i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>(xsldbg) xsl:param &gt; <font color="#008000">showbreak</font></i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>Breakpoint 1 enabled for template :&quot;/&quot; in file
+xsldoc.xsl : line 23</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>Breakpoint 3 enabled in file xsldoc.xsl : line 44</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>Breakpoint 2 enabled for template :&quot;header&quot; in file
+xsldoc.xsl : line 67</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>Total of 3 breakPoints present</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>(xsldbg) xsl:param &gt; <font color="#008000">continue</font></i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>Reached template :&quot;/&quot;</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>Breakpoint 1 Breakpoint in file xsldoc.xsl : line 23</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>(xsldbg) xsl:template &gt; <font color="#008000">continue</font></i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>Reached template :&quot;/&quot;</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>Breakpoint 1 Breakpoint in file xsldoc.xsl : line 23</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>(xsldbg) text &gt; <font color="#008000">continue</font></i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>Reached template :&quot;header&quot;</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in; font-weight: normal">
+<i>Breakpoint 2 Breakpoint in file xsldoc.xsl : line 67</i></p>
+<p style="margin-left: 0.49in; margin-bottom: 0in"><i><span style="font-weight: normal">(xsldbg)
+xsl:template &gt; </span></i><font color="#008000"><i><span style="font-weight: normal">exit</span></i></font></p>
+<h2 class="western"><a name="XEmacs%20example"></a><font face="Courier New">Example
+XEmacs</font> <font face="Courier New">session using xsldbg-mode</font></h2>
+<p>Open an XML file into a buffer, then press &lt;META&gt;-x followed
+by entering &quot;xsldbg-buffer&quot; into the dialog xemacs
+provides. At the first prompt enter the file name of stylesheet to
+use. At the prompt for &quot;Parameters&quot; enter any extra
+parameters that you would normally provide to xsldbg via the command
+line.</p>
+<p>After xsldbg-mode initializes you will have cursor highlighting
+the first line that xsldbg can debug. Use the right mouse button, the
+toolbar icon's or enter commands directly into xsldbg's command
+prompt. The right mouse button menu can be called up on text that is
+&quot;highlighted&quot;.</p>
+<p>To set a breakpoint you can print the list of templates and then
+right mouse click on the template name listed that you want to stop
+at. Or move the cursor to where you want a breakpoint (The start of a
+node in the XSLT source or XML DATA) then click the &quot;Stop at
+selected position&quot; icon.</p>
+<p>The &quot;Stop at selected function&quot; button at the moment
+operates exactly the same as the &quot;Stop at selected position&quot;
+icon.</p>
+<h1><a name="Help%20system"></a><font face="Courier New">Help system</font>
+</h1>
+<p style="margin-bottom: 0in">xsldbg is has built help system using
+xml/xslt. To help an overview of commands type:</p>
+<p style="margin-left: 0.79in; margin-bottom: 0in"><i>help</i></p>
+<p style="margin-bottom: 0in"><br/>
 
-<h2><a name="xsldbg%20example%20session"><span style='mso-fareast-font-family:
-"Times New Roman"'>Example </span></a><span class=SpellE><span
-style='mso-bookmark:xsldbg%20example%20session'><span style='mso-fareast-font-family:
-"Times New Roman"'>xsldbg</span></span></span><span style='mso-bookmark:xsldbg%20example%20session'><span
-style='mso-fareast-font-family:"Times New Roman"'> session</span></span><span
-style='mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></h2>
+</p>
+<p style="margin-bottom: 0in">To get a more detailed information
+about a command type:</p>
+<p style="margin-left: 0.79in; margin-bottom: 0in; font-weight: normal">
+<i>help help</i></p>
+<h1><a name="Version%20notes"></a><font face="Courier New">Version
+Notes</font> 
+</h1>
+<p style="margin-bottom: 0in">See release notes associated with
+package.</p>
+<p style="margin-bottom: 0in"><br/>
 
-<pre><span style='mso-spacerun:yes'>     </span>To test / try out <span
-class=SpellE>xsldbg</span><br style='mso-special-character:line-break'>
-<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
-<![endif]></pre><pre><span style='mso-spacerun:yes'>         </span><b>cd <span
-class=SpellE>xsldbg</span>/docs/<span class=SpellE>en</span><o:p></o:p></b></pre><pre><b><o:p>&nbsp;</o:p></b></pre><pre><b><span style='mso-spacerun:yes'>         </span><span
-class=SpellE>xsldbg</span> --shell xsldoc.xsl xsldoc.xml</b></pre><pre><o:p>&nbsp;</o:p></pre><pre><o:p>&nbsp;</o:p></pre><pre><span style='mso-spacerun:yes'>      </span>And you should get the <span
-class=SpellE>xsldbg</span> prompt like</pre><pre><o:p>&nbsp;</o:p></pre><pre><o:p>&nbsp;</o:p></pre><pre><b><o:p>&nbsp;</o:p></b></pre><pre><b>XSLDBG </b>&lt;VERSION&gt;</pre><pre><b><o:p>&nbsp;</o:p></b></pre><pre><b>Starting stylesheet<o:p></o:p></b></pre><pre><b><o:p>&nbsp;</o:p></b></pre><pre><b><o:p>&nbsp;</o:p></b></pre><pre><b>Breakpoint at file <span
-class=GramE>xsldoc.xsl :</span> line 18<o:p></o:p></b></pre><pre><span
-class=SpellE><b>xsldbg</b></span><b>) <span class=SpellE><span class=GramE>xsl:param</span></span> &gt;<o:p></o:p></b></pre><pre><o:p>&nbsp;</o:p></pre><pre><o:p>&nbsp;</o:p></pre><pre>You can now start entering commands at the &quot;(<span
-class=SpellE>xsldbg</span><span class=GramE>) .</span>* &gt;&quot; prompt. In the example text in</pre><pre><b><span
-style='color:green'>green</span></b> has been typed by the user <br
-style='mso-special-character:line-break'>
-<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
-<![endif]></pre><pre><o:p>&nbsp;</o:p></pre><pre><b><o:p>&nbsp;</o:p></b></pre><pre><b><span style='mso-spacerun:yes'>      </span>Breakpoint at file <span
-class=GramE>xsldoc.xsl :</span> line 18<o:p></o:p></b></pre><pre><b>(<span
-class=SpellE>xsldbg</span>) <span class=SpellE><span class=GramE>xsl:param</span></span> &gt; <span
-style='color:green'>templates</span><o:p></o:p></b></pre><pre><b> <span
-class=GramE>template :</span>&quot;/&quot; in file xsldoc.xsl : line 23<o:p></o:p></b></pre><pre><b> <span
-class=GramE>template :</span>&quot;<span class=SpellE>helpOnCommand</span>&quot; in file xsldoc.xsl : line 49<o:p></o:p></b></pre><pre><b> <span
-class=GramE>template :</span>&quot;header&quot; in file xsldoc.xsl : line 67<o:p></o:p></b></pre><pre><b> <span
-class=GramE>template :</span>&quot;text()&quot; in file xsldoc.xsl : line 79<o:p></o:p></b></pre><pre><b> <span
-class=GramE>template :</span>&quot;para&quot; in file xsldoc.xsl : line 83<o:p></o:p></b></pre><pre><b> <span
-class=GramE>template :</span>&quot;list | usage&quot; in file xsldoc.xsl : line 89<o:p></o:p></b></pre><pre><b> <span
-class=GramE>template :</span>&quot;comment&quot; in file xsldoc.xsl : line 99<o:p></o:p></b></pre><pre><b> <span
-class=GramE>template :</span>&quot;<span class=SpellE>cmd</span>-summary&quot; in file xsldoc.xsl : line 103<o:p></o:p></b></pre><pre><b> <span
-class=GramE>template :</span>&quot;<span class=SpellE>cmd</span>&quot; in file xsldoc.xsl : line 109<o:p></o:p></b></pre><pre><b><o:p>&nbsp;</o:p></b></pre><pre><b><span style='mso-spacerun:yes'>         </span>Total of 9 templates found<o:p></o:p></b></pre><pre><b><span style='mso-spacerun:yes'>         </span>Total of 9 templates printed<o:p></o:p></b></pre><pre><b>(<span
-class=SpellE>xsldbg</span>) <span class=SpellE><span class=GramE>xsl:param</span></span> &gt; <span
-style='color:green'>break /</span><o:p></o:p></b></pre><pre><b>Size of line list was 0 adding 24 entries<o:p></o:p></b></pre><pre><b>(<span
-class=SpellE>xsldbg</span>) <span class=SpellE><span class=GramE>xsl:param</span></span> &gt; <span
-style='color:green'>break header</span><o:p></o:p></b></pre><pre><b>Size of line list was 24 adding 44 entries<o:p></o:p></b></pre><pre><b>(<span
-class=SpellE>xsldbg</span>) <span class=SpellE><span class=GramE>xsl:param</span></span> &gt; <span
-class=SpellE><span style='color:green'>showbreak</span></span><o:p></o:p></b></pre><pre><b><o:p>&nbsp;</o:p></b></pre><pre><b> Breakpoint 1 enabled for <span
-class=GramE>template :</span>&quot;/&quot; in file xsldoc.xsl : line 23<o:p></o:p></b></pre><pre><b> Breakpoint 2 enabled for <span
-class=GramE>template :</span>&quot;header&quot; in file xsldoc.xsl : line 67<o:p></o:p></b></pre><pre><b><o:p>&nbsp;</o:p></b></pre><pre><b><span style='mso-spacerun:yes'>         </span>Total of 2 <span
-class=SpellE>breakPoints</span> present<o:p></o:p></b></pre><pre><b>(<span
-class=SpellE>xsldbg</span>) <span class=SpellE><span class=GramE>xsl:param</span></span> &gt; <span
-style='color:green'>break -l xsldoc.xsl 44</span><o:p></o:p></b></pre><pre><b>(<span
-class=SpellE>xsldbg</span>) <span class=SpellE><span class=GramE>xsl:param</span></span> &gt; <span
-class=SpellE><span style='color:green'>showbreak</span></span><o:p></o:p></b></pre><pre><b><o:p>&nbsp;</o:p></b></pre><pre><b> Breakpoint 1 enabled for <span
-class=GramE>template :</span>&quot;/&quot; in file xsldoc.xsl : line 23<o:p></o:p></b></pre><pre><b> Breakpoint 3 enabled in file <span
-class=GramE>xsldoc.xsl :</span> line 44<o:p></o:p></b></pre><pre><b> Breakpoint 2 enabled for <span
-class=GramE>template :</span>&quot;header&quot; in file xsldoc.xsl : line 67<o:p></o:p></b></pre><pre><b><o:p>&nbsp;</o:p></b></pre><pre><b><span style='mso-spacerun:yes'>         </span>Total of 3 <span
-class=SpellE>breakPoints</span> present<o:p></o:p></b></pre><pre><b>(<span
-class=SpellE>xsldbg</span>) <span class=SpellE><span class=GramE>xsl:param</span></span> &gt; <span
-style='color:green'>continue</span><o:p></o:p></b></pre><pre><b><o:p>&nbsp;</o:p></b></pre><pre><b>Reached <span
-class=GramE>template :</span>&quot;/&quot;<o:p></o:p></b></pre><pre><b>Breakpoint 1 Breakpoint in file <span
-class=GramE>xsldoc.xsl :</span> line 23<o:p></o:p></b></pre><pre><b>(<span
-class=SpellE>xsldbg</span>) <span class=SpellE><span class=GramE>xsl:template</span></span> &gt; <span
-style='color:green'>continue</span><o:p></o:p></b></pre><pre><b><o:p>&nbsp;</o:p></b></pre><pre><b>Reached <span
-class=GramE>template :</span>&quot;/&quot;<o:p></o:p></b></pre><pre><b>Breakpoint 1 Breakpoint in file <span
-class=GramE>xsldoc.xsl :</span> line 23<o:p></o:p></b></pre><pre><b>(<span
-class=SpellE>xsldbg</span>) text &gt; <span style='color:green'>continue</span><o:p></o:p></b></pre><pre><b><o:p>&nbsp;</o:p></b></pre><pre><b>Reached <span
-class=GramE>template :</span>&quot;header&quot;<o:p></o:p></b></pre><pre><b>Breakpoint 2 Breakpoint in file <span
-class=GramE>xsldoc.xsl :</span> line 67<o:p></o:p></b></pre><pre><b>(<span
-class=SpellE>xsldbg</span>) <span class=SpellE><span class=GramE>xsl:template</span></span> &gt;<span
-style='color:green'>exit</span><o:p></o:p></b></pre><pre><o:p>&nbsp;</o:p></pre><pre><br
-style='mso-special-character:line-break'>
-<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
-<![endif]></pre><pre>To print help just type &quot;help&quot; </pre><pre>To exit <span
-class=SpellE>xsldbg</span> just type &quot;exit&quot; </pre><pre><o:p>&nbsp;</o:p></pre><pre><o:p>&nbsp;</o:p></pre><pre><o:p>&nbsp;</o:p></pre>
+</p>
+<h1><a name="FAQ"></a><font face="Courier New">FAQ</font> 
+</h1>
+<h3 class="western">Libxslt doesn't compile</h3>
+<p>Check <a href="https://xmlsoft.org/XSLT">https://xmlsoft.org/XSLT</a>
+and <a href="https://mail.gnome.org/archives/xslt/">https://mail.gnome.org/archives/xslt/</a>
+for current issues.</p>
+<p>Ensure that libxslt was configured with at least: 
+</p>
+<p style="margin-left: 0.79in"><i>--with-debugger=yes</i></p>
+<p style="margin-bottom: 0in"><br/>
 
-<h2 style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'><a
-name="XEmacs%20example"><span style='font-family:"Courier New"'>Example </span></a><span
-class=SpellE><span style='mso-bookmark:XEmacs%20example'><span
-style='font-family:"Courier New"'>XEmacs</span></span></span><span
-style='mso-bookmark:XEmacs%20example'><span style='font-family:"Courier New"'>
-session using <span class=SpellE>xsldbg</span>-mode</span></span></h2>
+</p>
+<h3 class="western">Where is the documentation</h3>
+<p>See the README.md in downloaded package for more information.</p>
+<h3 class="western">xsldbg compiles ok but doesn't run when used from
+command line/ does not start debugging</h3>
+<p>Make sure that you set and exported the correct LD_LIBRARY_PATH</p>
+<p>Make sure that you've configure the correct libxml and libxslt
+prefix in libxslt, and xsldbg. 
+</p>
+<p>Make sure that you have a version of libxslt that has debugging
+support enabled this is done by default un *nix but it handled
+manually under other platforms 
+</p>
+<h3 class="western">Why do I get a message about Breakpoint @ text
+node</h3>
+<p>xsldbg tries to find a line number near the current node. But
+sometimes it is unable to find a &quot;parent&quot; for the current
+node. This normally means the node is part of the document preamble,
+a comment node or text node.</p>
+<h3 class="western">Why does xsldbg restart when I reload the
+configuration</h3>
+<p style="margin-bottom: 0in">This is unavoidable because of the way
+xsldbg interrupts libxslt execution.</p>
+<h3 class="western">Why is the text/html output when searching not
+better formated</h3>
+<p>It is left up to the user to provide a stylsheet to replace
+docs/en/searchhtml.xsl and docs/en/search.xsl. Contributions of
+better XSL for search database formatting would be appreciated.</p>
+<h3 class="western">How big is this this program</h3>
+<p style="margin-bottom: 0in">At last count there was over twenty
+thousand lines of text in xsldbg, some of this is automatically
+generated. This is about the same size as the libxslt directory in
+the libxslt distribution.</p>
+<h3 class="western"><font face="Courier New">Why do I get a strange
+prompt </font>
+</h3>
+<p>If the prompt looks like:</p>
+<p><i><b>(xsldbg) xsldbg_default_node &gt;</b></i></p>
+<p><br/>
+<br/>
 
-<pre>Open an XML file into a buffer, then press &lt;META&gt;-x followed by entering</pre><pre>&quot;<span
-class=SpellE>xsldbg</span>-buffer&quot; into the dialog <span class=SpellE>xemacs</span> provides. At the first prompt enter the file name of</pre><pre>stylesheet to use. At the prompt for &quot;Parameters&quot; enter any extra parameters that</pre><pre>you would normally provide to <span
-class=SpellE>xsldbg</span> via the command line</pre>
+</p>
+<p>For some reason xsldbg could not load or use the specified
+stylesheet or xml data file.</p>
+<p>Try using the &quot;source&quot; or &quot;data&quot; commands and
+then &quot;run&quot;.</p>
+<p><br/>
+<br/>
 
-<p style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'><span
-style='font-size:10.0pt;font-family:"Courier New"'>After <span class=SpellE>xsldbg</span>-mode
-initializes you will have cursor highlighting the first line that <span
-class=SpellE>xsldbg</span> can debug. Use the right mouse button, the toolbar
-icon's or enter commands directly into <span class=SpellE>xsldbg's</span>
-command prompt. The right mouse button menu can be called up on text that is
-&quot;highlighted&quot; To set a breakpoint you can print the list of templates
-and then right mouse click on the template name listed that you want to stop
-at. Or move the cursor to where you want a breakpoint (The start of a node in
-the XSLT source or XML DATA) then click the &quot;Stop at selected position&quot;
-icon.<o:p></o:p></span></p>
+</p>
+<h1><a name="Feedback"></a>Feedback</h1>
+<p><font face="Courier New"><font size="2" style="font-size: 10pt">For
+problems with this project or web site please use the bug tracking
+system provided by <a href="http://sourceforge.net/tracker/?group_id=35673&amp;atid=415039">Source
+Forge</a></font></font></p>
+<h1><a name="Download"></a><font face="Courier New">Download</font> 
+</h1>
+<p><font face="Courier New"><font size="2" style="font-size: 10pt">See
+<a href="https://sourceforge.net/project/showfiles.php?group_id=35673">sourceforge
+file downloads</a></font></font></p>
+<h1>Limitations</h1>
+<ul>
+	<li/>
+<p>Several of the File related commands are disabled for the
+	moment.</p>
+	<li/>
+<p>When you do a â€˜<b>cat</b>â€™ on the style source the
+	output is white space stripped so it will look different to your
+	original source files. This is NOT a &quot;bug&quot;! This is the
+	default behaviour of the stylesheet processor of libxslt. This tool
+	is intended to be used by other programs which can handle formatting
+	the output. See also the â€˜<b>list</b>â€™ command.</p>
+	<li/>
+<p>The format of search results needs to be fixed 
+	</p>
+	<li/>
+<p>The â€˜<b>stepupâ€™</b> command is not accurate 
+	</p>
+	<li/>
+<p>Searching can take a while with large documents i.e. when
+	debugging docbook.xsl 
+	</p>
+	<li/>
+<p>Both the stylesheet and xml data file will be reloaded each
+	time xsldbg starts a &quot;run&quot;. It is too complex to complex
+	considering keeping track of which files are out of date 
+	</p>
+	<li/>
+<p>Libxslt and consequently xsldbg ca not handle NON_ASCII
+	template matches 
+	</p>
+	<li/>
+<p>If an environment variable is used to indicate where you've
+	installed xsldbg's documentation the variable value MUST end in a
+	path separator ie for win32 this is a '\', for *nix this is a '/' 
+	</p>
+	<li/>
+<p>The SGML/XML catalogs provided are to be included as a
+	&quot;nextCatalog&quot; in your catalog file. Otherwise you'll get
+	warnings about unable to find xsldbg's DTDs 
+	</p>
+	<li/>
+<p>The new search DTD allows for each element to have a
+	comment to be extracted from the XSL source libxslt currently does
+	not support this function 
+	</p>
+	<li/>
+<p>Under win32 the more command does not process a
+	&quot;.\&lt;FILE_NAME&gt;&quot; properly 
+	</p>
+	<li/>
+<p>When a non ASCII character are used stylesheets the
+	printing of search results does not print in the orginal encoding
+	(instead uses UTF-8 ). This will be resolved if/when a replacement
+	for the more command is made</p>
+</ul>
+<h1>Todo 
+</h1>
+<ul>
+	<li/>
+<p>add the ability to list documents created by xsl:document
+	instruction (maybe?) 
+	</p>
+	<li/>
+<p>Look at replacing execution of shell command &quot;more&quot;
+	with a function call 
+	</p>
+	<li/>
+<p>Look at allowing xsldbg to extract comments from XSL files
+	to provided similar functionality as XSLTDoc tool by Fabrice DesrÃ©.
+	At the moment the libxslt preprocessor strips most comments (maybe?)
+		</p>
+</ul>
+<h1><a name="Completed%20TODO%27s"></a><font face="Courier New">Completed
+Todo's</font> 
+</h1>
+<ul>
+	<li/>
+<p>validate the breakpoint API is complete :Done!</p>
+	<li/>
+<p>Update xsldbg when debugger support is built into libxslt.
+	Done! libxslt only contains the code needed to call xsldbg. No
+	further review by libxslt@gnome.org needed but may be done :-)</p>
+	<li/>
+<p>add the ability to validate file and line number</p>
+	<li/>
+<p>Redo configure and build scripts : Done!</p>
+	<li/>
+<p>Track down all sources of the crashes :-( : Done! 
+	</p>
+	<li/>
+<p>Complete line break points : Done!</p>
+	<li/>
+<p>Update documentation : Done! 
+	</p>
+	<li/>
+<p>Work on a patch for the xemacs module xslt-process to
+	support debugging from within xemacs : Done! (modified gdb.el)</p>
+	<li/>
+<p>Create new functions to handle lists that are implemented
+	as arrays. Done! 
+	</p>
+	<li/>
+<p>Break points to a specific line in the stylesheet are yet
+	made stable : Done! 
+	</p>
+	<li/>
+<p>The debugger suffers from crashes &quot;segmentation
+	faults&quot; which is being looked into : Fixed 
+	</p>
+	<li/>
+<p>The configure/build scripts need to be redone because they
+	expect KDE to be installed : Done! 
+	</p>
+	<li/>
+<p>Confirmed that only the basic XSL/XSLT commands work. Which
+	means that it may not stop where expected. Done!</p>
+	<li/>
+<p>Can only handle a fixed number of breakpoints. Fixed!</p>
+	<li/>
+<p>Does not handle a large number of variables/templates well.
+	Fixed!</p>
+	<li/>
+<p>Does not allow libxslt parameters to be passed at xsldbg
+	command prompt. Done! 
+	</p>
+	<li/>
+<p>Redo implemention of src/dbgbreakpoint.c to use hash tables
+	not a fixed array of breakpoints Done!Add new search functions Done!</p>
+	<li/>
+<p>Add ability to change variables Done!</p>
+	<li/>
+<p>Only simple simple XSL commands are supported as yet.:
+	Fixed!. But yet to verify that all commands work as expected</p>
+	<li/>
+<p>Allow xsldbg's configuration to be loaded/saved . Done!</p>
+</ul>
+<p><br/>
+<br/>
 
-<p style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'><span
-style='font-size:10.0pt;font-family:"Courier New"'>The &quot;Stop at selected
-function&quot; button <span class=GramE>at the moment</span> operates exactly
-the same as the &quot;Stop at selected position&quot; icon.<o:p></o:p></span></p>
-
-<pre><o:p>&nbsp;</o:p></pre><pre><o:p>&nbsp;</o:p></pre><pre><o:p>&nbsp;</o:p></pre>
-
-<h1 style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'><a
-name="Help%20system"><span style='font-family:"Courier New"'>Help system</span></a><span
-style='font-family:"Courier New"'> <o:p></o:p></span></h1>
-
-<pre><o:p>&nbsp;</o:p></pre><pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span
-class=SpellE>xsldbg</span> is has built using xml/<span class=SpellE>xslt</span>. To help an overview of commands type</pre><pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b><i>help<o:p></o:p></i></b></pre><pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; You can use &quot;help&quot; to get a more detailed information about a command <span
-class=SpellE>eg</span></pre><pre><b><i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; help <span
-class=SpellE><span class=GramE>help</span></span><o:p></o:p></i></b></pre><pre><b><i>&nbsp;<o:p></o:p></i></b></pre><pre><b><i><o:p>&nbsp;</o:p></i></b></pre>
-
-<h1 style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'><a
-name="Version%20notes"></a><span class=GramE><span style='mso-bookmark:Version%20notes'><span
-style='font-family:"Courier New"'>Version&nbsp; notes</span></span></span><span
-style='mso-bookmark:Version%20notes'></span><span style='font-family:"Courier New"'>
-<o:p></o:p></span></h1>
-
-<pre><o:p>&nbsp;</o:p></pre>
-
-<p style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'><span
-style='font-size:10.0pt;font-family:"Courier New"'>&nbsp;See release notes
-associated with package.&nbsp;</span></p>
-
-<h4 style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'><span
-style='font-family:"Courier New"'>These issues are still current</span></h4>
-
-<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'><pre>1) Several of the File related commands are disabled for the moment.</pre></blockquote>
-
-<pre><o:p>&nbsp;</o:p></pre>
-
-<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'><pre>2) When you do a cat on the style source the output is white space stripped so it will look different to</pre><pre>your original source files. This is NOT a &quot;bug&quot;! This is the default behaviour of the stylesheet processor of <span
-class=SpellE>libxslt</span>. This</pre><pre>tool is intended to be used by other programs which can handle formatting the output. </pre></blockquote>
-
-<pre><o:p>&nbsp;</o:p></pre>
-
-<h1 style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'><a
-name=FAQ><span style='font-family:"Courier New"'>FAQ</span></a><span
-style='font-family:"Courier New"'> <o:p></o:p></span></h1>
-
-<pre><o:p>&nbsp;</o:p></pre>
-
-<h2><span class=SpellE>Libxslt</span> doesn't compile</h2>
-
-<pre style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;margin-left:
-36.0pt;text-indent:-18.0pt;mso-list:l1 level1 lfo7'><![if !supportLists]><span
-style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Check http://xmlsoft.org/XSLT/ and mail.gnome.org/archives/<span
-class=SpellE>xslt</span>/ for current issues</pre><pre style='mso-margin-top-alt:
-auto;mso-margin-bottom-alt:auto;margin-left:36.0pt;text-indent:-18.0pt;
-mso-list:l1 level1 lfo7'><![if !supportLists]><span style='font-family:Symbol;
-mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol'><span
-style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Ensure that <span
-class=SpellE>libxslt</span> was configured with at least </pre><pre
-style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;margin-left:18.0pt'><span style='mso-spacerun:yes'>   </span><b>&nbsp;&nbsp;--with-debugger=yes</b></pre><pre><o:p>&nbsp;</o:p></pre>
-
-<h2>Where can I find a binary distribution for <span class=SpellE>xsldbg</span></h2>
-
-<pre>Sorry I am not able to do that <span class=GramE>at this time</span>, as I'm not sure how to make a generic</pre><pre>binary that would not come back and haunt me. :-) A submission by someone who can do this would be</pre><pre>most welcome.</pre><pre><o:p>&nbsp;</o:p></pre><pre><o:p>&nbsp;</o:p></pre>
-
-<h2 style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'><span
-style='font-family:"Courier New"'>Where's the documentation</span></h2>
-
-<pre>See the README in downloaded package for more information.</pre><pre><o:p>&nbsp;</o:p></pre>
-
-<h2><span class=SpellE>xsldbg</span> compiles ok but doesn't run when used from
-command line/ does not start debugging</h2>
-
-<pre style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;margin-left:
-36.0pt;text-indent:-18.0pt;mso-list:l0 level1 lfo8'><![if !supportLists]><span
-style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Make sure that you set and exported the correct LD_LIBRARY_PATH</pre><pre
-style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;margin-left:36.0pt;
-text-indent:-18.0pt;mso-list:l0 level1 lfo8'><![if !supportLists]><span
-style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Make sure that you've configure the correct <span
-class=SpellE>libxml</span> and <span class=SpellE>libxslt</span> prefix in <span
-class=SpellE>libxslt</span>, and <span class=SpellE>xsldbg</span>. </pre><pre
-style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;margin-left:36.0pt;
-text-indent:-18.0pt;mso-list:l0 level1 lfo8'><![if !supportLists]><span
-style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Make sure that you have a version of <span
-class=SpellE>libxslt</span> that has debugging support enabled this is done by default un *nix but it handled manually under other platforms </pre><pre><o:p>&nbsp;</o:p></pre><pre><o:p>&nbsp;</o:p></pre>
-
-<h2 style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'><span
-style='font-family:"Courier New"'>Why do I get a message about Breakpoint @
-text <span class=GramE>node</span><o:p></o:p></span></h2>
-
-<pre><o:p>&nbsp;</o:p></pre><pre><span class=SpellE>xsldbg</span> tries to find a line number near the current node. But sometimes it is</pre><pre>unable to find a &quot;parent&quot; for the current node. This normally means the node is part of</pre><pre>the document preamble, a comment node or text node.</pre><pre><o:p>&nbsp;</o:p></pre><pre><o:p>&nbsp;</o:p></pre>
-
-<h2 style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'><span
-style='font-family:"Courier New"'>Why does <span class=SpellE>xsldbg</span>
-restart when I reload the configuration<o:p></o:p></span></h2>
-
-<pre><o:p>&nbsp;</o:p></pre><pre>This is unavoidable because of the way <span
-class=SpellE>xsldbg</span> interrupts <span class=SpellE>libxslt</span> execution.</pre><pre><o:p>&nbsp;</o:p></pre><pre><o:p>&nbsp;</o:p></pre>
-
-<h2 style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'><span
-style='font-family:"Courier New"'>Why is the text/html output when searching
-not better <span class=SpellE><span class=GramE>formmated</span></span><o:p></o:p></span></h2>
-
-<pre><o:p>&nbsp;</o:p></pre><pre>It is left up to the user to provide a <span
-class=SpellE>stylsheet</span> to replace</pre><pre>docs/<span class=SpellE>en</span>/searchhtml.xsl and docs/<span
-class=SpellE>en</span>/search.xsl. Contributions of better XSL for</pre><pre>search database formatting would be appreciated</pre><pre><o:p>&nbsp;</o:p></pre><pre><o:p>&nbsp;</o:p></pre>
-
-<h2 style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'><span
-style='font-family:"Courier New"'>How big is this this <span class=GramE>program</span><o:p></o:p></span></h2>
-
-<pre><o:p>&nbsp;</o:p></pre><pre>At last count there was over twenty thousand lines of text in <span
-class=SpellE>xsldbg</span>, some of this is automatically generated. This is about the same size as the <span
-class=SpellE>libxslt</span> directory in the <span class=SpellE>libxslt</span> distribution.</pre><pre><o:p>&nbsp;</o:p></pre><pre><o:p>&nbsp;</o:p></pre>
-
-<h2 style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'><span
-style='font-family:"Courier New"'><span style='mso-spacerun:yes'> </span>Why do
-I get a strange <span class=GramE>prompt</span> <o:p></o:p></span></h2>
-
-<pre><o:p>&nbsp;</o:p></pre><pre>If the prompt looks like:<br style='mso-special-character:
-line-break'>
-<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
-<![endif]></pre><pre>&nbsp;&nbsp;&nbsp;&nbsp;<b>(<span class=SpellE>xsldbg</span>) <span
-class=SpellE>xsldbg_default_node</span> &gt;<br style='mso-special-character:
-line-break'>
-<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
-<![endif]><o:p></o:p></b></pre><pre><span style='mso-bidi-font-weight:bold'>For some reason <span
-class=SpellE>xsldbg</span> could not load or use the specified stylesheet or xml data file.</span><br
-style='mso-special-character:line-break'>
-<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
-<![endif]></pre><pre>Try using the &quot;source&quot; or &quot;data&quot; commands and then &quot;run&quot;.</pre><pre><br
-style='mso-special-character:line-break'>
-<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
-<![endif]></pre><pre><o:p>&nbsp;</o:p></pre>
-
-<h1 style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'><a
-name=Feedback><span style='font-family:"Courier New"'>Feedback</span></a><span
-style='font-family:"Courier New"'><o:p></o:p></span></h1>
-
-<p style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'><span
-style='font-size:10.0pt;font-family:"Courier New"'>For problems with this
-project or web site please use the bug tracking system provided by <a
-href="http://sourceforge.net/tracker/?group_id=35673&amp;atid=415039">Source
-Forge</a></span></p>
-
-<pre><o:p>&nbsp;</o:p></pre>
-
-<h1 style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'><a
-name=Download><span style='font-family:"Courier New"'>Download</span></a><span
-style='font-family:"Courier New"'> <o:p></o:p></span></h1>
-
-<p style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'><span
-style='font-size:10.0pt;font-family:"Courier New"'>See <a
-href="https://sourceforge.net/project/showfiles.php?group_id=35673"><span
-class=SpellE>sourceforge</span> file downloads</a> <br>
-&nbsp;<o:p></o:p></span></p>
-
-<h1 style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'><a
-name="Completed%20TODO%27s"><span style='font-family:"Courier New"'>Completed </span></a><span
-class=SpellE><span style='mso-bookmark:Completed%20TODO%27s'><span
-style='font-family:"Courier New"'>Todo's</span></span></span><span
-style='mso-bookmark:Completed%20TODO%27s'></span><span style='font-family:"Courier New"'>
-<o:p></o:p></span></h1>
-
-<pre><o:p>&nbsp;</o:p></pre><pre style='mso-margin-top-alt:auto;mso-margin-bottom-alt:
-auto;margin-left:36.0pt;text-indent:-18.0pt;mso-list:l4 level1 lfo9'><![if !supportLists]><span
-style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>validate the breakpoint API is <span
-class=GramE>complete :Done</span>!</pre><pre style='mso-margin-top-alt:auto;
-mso-margin-bottom-alt:auto;margin-left:36.0pt;text-indent:-18.0pt;mso-list:
-l4 level1 lfo9'><![if !supportLists]><span style='font-family:Symbol;
-mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol'><span
-style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Update <span
-class=SpellE>xsldbg</span> when debugger support is built into <span
-class=SpellE>libxslt</span>. Done! <span class=SpellE>libxslt</span> only contains the code needed to call <span
-class=SpellE>xsldbg</span>. No further review by libxslt@gnome.org needed but may be done :-)</pre><pre
-style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;margin-left:36.0pt;
-text-indent:-18.0pt;mso-list:l4 level1 lfo9'><![if !supportLists]><span
-style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>add the ability to validate file and line number</pre><pre
-style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;margin-left:36.0pt;
-text-indent:-18.0pt;mso-list:l4 level1 lfo9'><![if !supportLists]><span
-style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Redo configure and build <span
-class=GramE>scripts :</span> Done! </pre><pre style='mso-margin-top-alt:auto;
-mso-margin-bottom-alt:auto;margin-left:36.0pt;text-indent:-18.0pt;mso-list:
-l4 level1 lfo9'><![if !supportLists]><span style='font-family:Symbol;
-mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol'><span
-style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Track down all sources of the crashes <span
-class=GramE>:-( :</span> Done! </pre><pre style='margin-left:36.0pt'><o:p>&nbsp;</o:p></pre><pre
-style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;margin-left:36.0pt;
-text-indent:-18.0pt;mso-list:l4 level1 lfo9'><![if !supportLists]><span
-style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Complete line break <span
-class=GramE>points :</span> Done!</pre><pre style='mso-margin-top-alt:auto;
-mso-margin-bottom-alt:auto;margin-left:36.0pt;text-indent:-18.0pt;mso-list:
-l4 level1 lfo9'><![if !supportLists]><span style='font-family:Symbol;
-mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol'><span
-style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Update <span
-class=GramE>documentation :</span> Done! </pre><pre style='mso-margin-top-alt:
-auto;mso-margin-bottom-alt:auto;margin-left:36.0pt;text-indent:-18.0pt;
-mso-list:l4 level1 lfo9'><![if !supportLists]><span style='font-family:Symbol;
-mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol'><span
-style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Work on a patch for the <span
-class=SpellE>xemacs</span> module <span class=SpellE>xslt</span>-process to support debugging from within <span
-class=SpellE><span class=GramE>xemacs</span></span><span class=GramE> :</span> Done! (modified <span
-class=SpellE><span class=GramE>gdb.el</span></span>)</pre><pre
-style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;margin-left:36.0pt;
-text-indent:-18.0pt;mso-list:l4 level1 lfo9'><![if !supportLists]><span
-style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Create new functions to handle lists that are implemented as arrays. Done! </pre><pre
-style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;margin-left:36.0pt;
-text-indent:-18.0pt;mso-list:l4 level1 lfo9'><![if !supportLists]><span
-style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Break points to a specific line in the stylesheet are yet made <span
-class=GramE>stable :</span> Done! </pre><pre style='mso-margin-top-alt:auto;
-mso-margin-bottom-alt:auto;margin-left:36.0pt;text-indent:-18.0pt;mso-list:
-l4 level1 lfo9'><![if !supportLists]><span style='font-family:Symbol;
-mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol'><span
-style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>The debugger suffers from crashes &quot;segmentation faults&quot; which is being looked <span
-class=GramE>into :</span> Fixed </pre><pre style='mso-margin-top-alt:auto;
-mso-margin-bottom-alt:auto;margin-left:36.0pt;text-indent:-18.0pt;mso-list:
-l4 level1 lfo9'><![if !supportLists]><span style='font-family:Symbol;
-mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol'><span
-style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>The configure/build scripts need to be redone because they expect KDE to be <span
-class=GramE>installed :</span> Done! </pre><pre style='mso-margin-top-alt:auto;
-mso-margin-bottom-alt:auto;margin-left:36.0pt;text-indent:-18.0pt;mso-list:
-l4 level1 lfo9'><![if !supportLists]><span style='font-family:Symbol;
-mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol'><span
-style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Confirmed that only the basic XSL/XSLT commands work. Which means that it may not stop where expected. Done!</pre><pre
-style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;margin-left:36.0pt;
-text-indent:-18.0pt;mso-list:l4 level1 lfo9'><![if !supportLists]><span
-style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Can only handle a fixed number of breakpoints. Fixed!</pre><pre
-style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;margin-left:36.0pt;
-text-indent:-18.0pt;mso-list:l4 level1 lfo9'><![if !supportLists]><span
-style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Does not handle <span
-class=GramE>a large number of</span> variables/templates well. Fixed!</pre><pre
-style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;margin-left:36.0pt;
-text-indent:-18.0pt;mso-list:l4 level1 lfo9'><![if !supportLists]><span
-style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Does not allow <span
-class=SpellE>libxslt</span> parameters to be passed at <span class=SpellE>xsldbg</span> command prompt. Done! </pre><pre
-style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;margin-left:36.0pt;
-text-indent:-18.0pt;mso-list:l4 level1 lfo9'><![if !supportLists]><span
-style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Redo <span
-class=SpellE>implemention</span> of <span class=SpellE>src</span>/<span
-class=SpellE>dbgbreakpoint.c</span> to use hash tables not a fixed array of <span
-class=GramE>breakpoints&nbsp; <span class=SpellE>Done</span></span><span
-class=SpellE>!Add</span> new search functions&nbsp; Done!</pre><pre
-style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;margin-left:36.0pt;
-text-indent:-18.0pt;mso-list:l4 level1 lfo9'><![if !supportLists]><span
-style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Add ability to change <span
-class=GramE>variables&nbsp; Done</span>!</pre><pre style='mso-margin-top-alt:
-auto;mso-margin-bottom-alt:auto;margin-left:36.0pt;text-indent:-18.0pt;
-mso-list:l4 level1 lfo9'><![if !supportLists]><span style='font-family:Symbol;
-mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol'><span
-style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Only simple <span
-class=SpellE>simple</span> XSL commands are supported as yet.: <span
-class=GramE>Fixed!.</span> <span class=GramE>But yet</span> to verify that all commands work as expected</pre><pre
-style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;margin-left:36.0pt;
-text-indent:-18.0pt;mso-list:l4 level1 lfo9'><![if !supportLists]><span
-style='font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:
-Symbol'><span style='mso-list:Ignore'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><![endif]>Allow <span
-class=SpellE>xsldbg's</span> configuration to be loaded/<span class=GramE>saved .</span> Done!</pre><pre><br
-style='mso-special-character:line-break'>
-<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
-<![endif]></pre><pre><br>
-<a href="http://sourceforge.net/projects/xsldbg">http://xsldbg.sourceforge.net/</a> <span
-class=GramE>&nbsp; :</span>&nbsp; Helping understand stylesheets</pre><pre><o:p>&nbsp;</o:p></pre><pre><br
-style='mso-special-character:line-break'>
-<![if !supportLineBreakNewLine]><br style='mso-special-character:line-break'>
-<![endif]></pre>
-
-<p style='tab-stops:45.8pt 91.6pt 137.4pt 183.2pt 229.0pt 274.8pt 320.6pt 366.4pt 412.2pt 458.0pt 503.8pt 549.6pt 595.4pt 641.2pt 687.0pt 732.8pt'><span
-style='font-size:10.0pt;font-family:"Courier New"'>Last updated 23<sup>rd</sup>
-September 2018<o:p></o:p></span></p>
-
-<pre><o:p>&nbsp;</o:p></pre></div>
-
+</p>
+<pre class="western" style="margin-bottom: 0.2in"><a href="http://sourceforge.net/projects/xsldbg">http://xsldbg.sourceforge.net/</a>  : Helping understand stylesheets</pre><p>
+<font face="Courier New"><font size="2" style="font-size: 10pt">Last
+updated 6th October 2018</font></font></p>
 </body>
-
 </html>
