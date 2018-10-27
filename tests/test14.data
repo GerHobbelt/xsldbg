@@ -29,13 +29,13 @@
     <test>ent -r</test>
     <result>
       <row>
-        <matchtext>Entity SystemID:\"notemessage1.xml\" URI:\"file:///usr/share/doc/packages/xsldbg/en/tests/notemessage1.xml\"</matchtext>
+        <matchtext>Entity SystemID:\"notemessage1.xml\" URI:\"file:///usr/share/doc/xsldbg/en/tests/notemessage1.xml\"</matchtext>
       </row>
       <row>
-        <matchtext>Entity PublicID:\"-//xsldbg//tests notemessage2 XML V1.0//EN\" SystemID:\"notemessage2.xml\" URI:\"file:///usr/share/doc/packages/xsldbg/en/tests/notemessage2.xml\"</matchtext>
+        <matchtext>Entity PublicID:\"-//xsldbg//tests notemessage2 XML V1.0//EN\" SystemID:\"notemessage2.xml\" URI:\"file:///usr/share/doc/xsldbg/en/tests/notemessage2.xml\"</matchtext>
       </row>
       <row>
-        <matchtext>Entity SystemID:\"note3.xml\" URI:\"file:///usr/share/doc/packages/xsldbg/en/tests/note3.xml\"</matchtext>
+        <matchtext>Entity SystemID:\"note3.xml\" URI:\"file:///usr/share/doc/xsldbg/en/tests/note3.xml\"</matchtext>
       </row>
       <row>
         <matchtext>Total of 3 entity found</matchtext>

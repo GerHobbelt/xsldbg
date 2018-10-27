@@ -135,6 +135,9 @@ To change the installation prefix run qmake like
 
     qmake-qt5 INSTALL_PREFIX="/some/path"
 
+If full X11 environment is installed then to install xsldbg desktop menu links run qmake with addition of
+	"CONFIG+=xsldbg_shortcut"
+
 Currenty no testing has been done using version 4.7.0 on Windows(MSVC) though the following should work if Qt5 and other dependencies are setup correctly:
 
     qmake-qt5

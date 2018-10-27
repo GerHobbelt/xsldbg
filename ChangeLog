@@ -1,3 +1,10 @@
+Keith Isdale 27th October 2018 <keithisdale@gmail.com>
+	4.8.1
+	Features
+	* installation of xsldbg desktop shortcuts optional, see reference to xsldbg_shortcut in README.md 
+	* create PLD Linux spec file, see xsldbg_PLD_Linux.custom_spec
+	* under *nix install documentation in INSTALL_PREFIX/share/doc/xsldbg
+
 Keith Isdale 30th September 2018 <keithisdale@gmail.com>
     4.8.0
     Fixes

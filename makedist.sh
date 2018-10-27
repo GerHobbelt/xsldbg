@@ -25,6 +25,13 @@ CENTOS_BUILD_REQUIRES="gcc, gcc-c++, make, libxslt-devel, libxml2-devel, libxslt
 sed -i "s/^\(Requires:.*$\)/Requires: ${CENTOS_REQUIRES}/" ${CENTOS_SPEC_FILE}
 sed -i "s/^\(BuildRequires:.*$\)/BuildRequires: ${CENTOS_BUILD_REQUIRES}/" ${CENTOS_SPEC_FILE}
 
+# update the PLD_Linux spec file
+PLD_Linux_SPEC_FILE=xsldbg_PLD_Linux.custom_spec
+cp $BASIC_SPEC_FILE $PLD_Linux_SPEC_FILE
+PLD_Linux_REQUIRES="libxml2, libxslt"
+PLD_Linux_BUILD_REQUIRES="gcc, make, libxslt-devel, libxml2-devel, libxslt, libxml2, Qt5Core-devel, qt5-qmake"
+sed -i "s/^\(Requires:.*$\)/Requires: ${PLD_Linux_REQUIRES}/" ${PLD_Linux_SPEC_FILE}
+sed -i "s/^\(BuildRequires:.*$\)/BuildRequires: ${PLD_Linux_BUILD_REQUIRES}/" ${PLD_Linux_SPEC_FILE}
 
 TMPDIR=~/tmp-xsldbg
 SOURCEDIR=`dirname $(readlink -f $0)`
