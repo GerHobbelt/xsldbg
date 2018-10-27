@@ -3,6 +3,7 @@
 %define release 1
 %define prefix /usr
 %define builddir $RPM_BUILD_DIR/%{name}-%{version}
+%define fileList %{builddir}/filelist
 
 Summary: XSLT debugging/execution at console
 Name: %{name}
@@ -34,7 +35,28 @@ rm -rf %{builddir}
 %setup -q
 
 %build
-qmake-qt5
+echo "File list is %{fileList}"
+echo "%{prefix}/bin/xsldbg" > %{fileList}
+echo "%{prefix}/share/man/man1/xsldbg.1.gz" >> %{fileList}
+echo "%{prefix}/share/doc/xsldbg" >> %{fileList}
+QMAKE_EXTRAS=
+if [ -d "%{prefix}/share/icons/hicolor" ]; then
+   echo "Packaging xsldbg destktop shortcuts"
+   QMAKE_EXTRAS="CONFIG+=xsldbg_shortcut"
+   echo "%{prefix}/share/icons/hicolor/22x22/apps/xsldbg_source.png" >> %{fileList}
+   echo "%{prefix}/share/icons/hicolor/128x128/apps/xsldbg_source.png" >> %{fileList}
+   echo "%{prefix}/share/icons/hicolor/256x256/apps/xsldbg_source.png" >> %{fileList}
+   echo "%{prefix}/share/icons/hicolor/512x512/apps/xsldbg_source.png" >> %{fileList}
+   echo "%{prefix}/share/applications/xsldbg.desktop" >> %{fileList} 
+fi
+
+if [ -d "%{prefix}/share/doc/HTML/en" ]; then
+   echo "Packaging KDE style documentation"
+   QMAKE_EXTRAS="${QMAKE_EXTRAS} CONFIG+=xsdbg_kde_docs"
+   echo "%{prefix}/share/doc/HTML/en/xsldbg" >> %{fileList}
+fi
+
+qmake-qt5 ${QMAKE_EXTRAS} -r xsldbg.pro
 make
 
 %install
@@ -49,20 +71,16 @@ gzip ./%{prefix}/share/man/man1/xsldbg.1
 #sleep 60
 #touch ./%{kdeprefix}/share/doc/HTML/en/xsldbg/index.cache.bz2
 
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 rm -rf %{builddir}
 
-%files
-%{prefix}/bin/xsldbg
-%{prefix}/share/man/man1/xsldbg.1.gz
-%{prefix}/share/doc/xsldbg
+%files -f filelist
 %doc COPYING
 
 %changelog
 * Sat Oct 27 2018 Keith Isdale <keithisdale@gmail.com> - 4.8.1-1
-- Build fixes for pld-linux included moving docs to /usr/share/docs/
+- Build fixes for PLD-Linux included moving docs to /usr/share/docs/
 * Sat Sep 08 2018 Keith Isdale <keithisdale@gmail.com> - 4.7.0-1
 - Initial RPM release
 
