@@ -16,7 +16,7 @@ Vendor: Keith Isdale <keithisdale@gmail.com>
 Packager: Keith Isdale <keithisdale@gmail.com>
 Source: %{name}-%{version}.tar.gz
 URL: http://xsldbg.sourceforge.net/
-BuildRequires: libQt5Core-devel, libxslt-devel, libxml2-devel
+BuildRequires: gcc, make, libxslt-devel, libxml2-devel, libxslt, libxml2, Qt5Core-devel, qt5-qmake
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description

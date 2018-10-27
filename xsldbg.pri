@@ -1,4 +1,4 @@
-XSLDBG_VERSION="4.8.0"
+XSLDBG_VERSION="4.8.1"
 DEFINES+=XSLDBG_VERSION=\\\"$$XSLDBG_VERSION\\\"
 
 isEmpty(INSTALL_PREFIX) {
@@ -11,7 +11,7 @@ isEmpty(INSTALL_PREFIX) {
             isEmpty(INSTALL_PREFIX) {
                 INSTALL_PREFIX="/usr"
             }
-            DOCS_ROOT="$${INSTALL_PREFIX}/share/doc/packages/xsldbg"
+            DOCS_ROOT="$${INSTALL_PREFIX}/share/doc/xsldbg"
             KDEDOCS_ROOT="$${INSTALL_PREFIX}/share/doc/HTML"
             BIN_DIR="$${INSTALL_PREFIX}/bin"
             DESKTOP_DIR="$${INSTALL_PREFIX}/share/applications"

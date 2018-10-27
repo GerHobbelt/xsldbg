@@ -1,5 +1,5 @@
 %define name xsldbg
-%define version 4.8.0
+%define version 4.8.1
 %define release 1
 %define prefix /usr
 %define builddir $RPM_BUILD_DIR/%{name}-%{version}
@@ -17,8 +17,7 @@ Packager: Keith Isdale <keithisdale@gmail.com>
 Source: %{name}-%{version}.tar.gz
 URL: http://xsldbg.sourceforge.net/
 BuildRequires: gcc, gcc-c++, make, libxslt-devel, libxml2-devel, libxslt, libxml2, qt5-qtbase-devel
-Requires: qt5-qtbase >= 5.5, libxml2, libxslt
-BuildRoot: /tmp/build-%{name}-%{version}
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description
 A console tool to debug stylesheets(the eXtensible Stylesheet Language)
@@ -32,8 +31,7 @@ It has three major modes of execution of stylesheets.
 rm -rf $RPM_BUILD_ROOT
 rm -rf %{builddir}
 
-%setup
-touch `find . -type f`
+%setup -q
 
 %build
 qmake-qt5
@@ -45,13 +43,8 @@ INSTALL_ROOT=$RPM_BUILD_ROOT make install
 
 cd $RPM_BUILD_ROOT
 # compress the xsldbg manpage before file list is generated
-gzip usr/share/man/man1/xsldbg.1
+gzip ./%{prefix}/share/man/man1/xsldbg.1
 
-find . -type f | sed -e 's,^\.,\%attr(-\,root\,root) ,' \
-	-e '/\/config\//s|^|%config|' >> \
-	$RPM_BUILD_DIR/file.list.%{name}
-find . -type l | sed 's,^\.,\%attr(-\,root\,root) ,' >> \
-	$RPM_BUILD_DIR/file.list.%{name}
 #echo "Sleeping for a minute to ensure that the timestamp in index.cashe.bz2 is correct"
 #sleep 60
 #touch ./%{kdeprefix}/share/doc/HTML/en/xsldbg/index.cache.bz2
@@ -60,12 +53,16 @@ find . -type l | sed 's,^\.,\%attr(-\,root\,root) ,' >> \
 %clean
 rm -rf $RPM_BUILD_ROOT
 rm -rf %{builddir}
-rm -f $RPM_BUILD_DIR/file.list.%{name}
 
-%files -f ../file.list.%{name}
-%license COPYING
+%files
+%{prefix}/bin/xsldbg
+%{prefix}/share/man/man1/xsldbg.1.gz
+%{prefix}/share/doc/xsldbg
+%doc COPYING
 
 %changelog
+* Sat Oct 27 2018 Keith Isdale <keithisdale@gmail.com> - 4.8.1-1
+- Build fixes for pld-linux included moving docs to /usr/share/docs/
 * Sat Sep 08 2018 Keith Isdale <keithisdale@gmail.com> - 4.7.0-1
 - Initial RPM release
 
