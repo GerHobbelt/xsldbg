@@ -80,7 +80,7 @@ rm -rf %{builddir}
 
 %changelog
 * Sat Oct 27 2018 Keith Isdale <keithisdale@gmail.com> - 4.8.1-1
-- Build fixes for pld-linux included moving docs to /usr/share/docs/
+- Build fixes for PLD-Linux included moving docs to /usr/share/docs/
 * Sat Sep 08 2018 Keith Isdale <keithisdale@gmail.com> - 4.7.0-1
 - Initial RPM release
 
