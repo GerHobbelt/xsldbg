@@ -12,7 +12,7 @@ extradocs.files = $$PWD/*.xsl \
              $$PWD/../../COPYING
 
 
-extradocs.path= $$DOCS_ROOT/xsldbg/en/
+extradocs.path= $$DOCS_ROOT/en/
 
 INSTALLS += extradocs
 
@@ -25,9 +25,9 @@ unix{
     xmldocCatalog.depends = xmldocCatalog2
 
     # nasty shell script to seek to install xsldbg catalog
-    xmldocCatalog2.commands=sh $$PWD/createCatalog.sh $${DOCS_ROOT}/xsldbg/en
+    xmldocCatalog2.commands=sh $$PWD/createCatalog.sh $${DOCS_ROOT}/en
     xmldocCatalog2.files =
-    xmldocCatalog2.path = $$DOCS_ROOT/xsldbg
+    xmldocCatalog2.path = $$DOCS_ROOT
 
     INSTALLS+=xmldocCatalog2
 
@@ -69,7 +69,7 @@ unix{
 
         xsldocGnomedocs2.files = $$PWD/GNOME/gnome.docbook
         xsldocGnomedocs2.depends = $$PWD/GNOME/xsldoc2gnome.xsl $$PWD/xsldoc.xml $$PWD/xsldoc.dtd
-        xsldocGnomedocs2.path = $$DOCS_ROOT/xsldbg/en/GNOME
+        xsldocGnomedocs2.path = $$DOCS_ROOT/en/GNOME
         xsldocGnomedocs2.commands = saxon -o $$PWD/GNOME/gnome.docbook $$PWD/xsldoc.xml $$PWD/GNOME/xsldoc2gnome.xsl alldocs=\"\'1\'\" xsldbg_version=\"\'$${XSLDBG_VERSION}\'\"
 
         # disable Gnome documentation creation for now
@@ -101,13 +101,13 @@ unix{
 
 #install text docs
 xsldoctxt2.files = $$PWD/xsldoc.txt
-unix:xsldoctxt2.path = $$DOCS_ROOT/xsldbg/en
+unix:xsldoctxt2.path = $$DOCS_ROOT/en
 win32:xsldoctxt2.path = $$DOCS_ROOT\\en
 INSTALLS+=xsldoctxt2
 
 #install html docs
 xsldocHtml2.files = $$PWD/html/index.html
-unix:xsldocHtml2.path = $$DOCS_ROOT/xsldbg/en/html
+unix:xsldocHtml2.path = $$DOCS_ROOT/en/html
 win32:xsldocHtml2.path = $$DOCS_ROOT\\en\\html
 INSTALLS+=xsldocHtml2
 

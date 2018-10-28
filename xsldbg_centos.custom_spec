@@ -59,7 +59,7 @@ xsldbg KDE Docbook.
 qmake-qt5 \
 	"CONFIG+=xsldbg_shortcut" \
 	ICONS_DIR="%{_iconsdir}" \
-	DOCS_ROOT="%{_docdir}" \
+	DOCS_ROOT="%{_docdir}/xsldbg" \
 	KDEDOCS_ROOT="%{_kdedocdir}" \
 	-r xsldbg.pro
 %{__make}

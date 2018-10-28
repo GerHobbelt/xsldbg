@@ -2,12 +2,6 @@
 # Conditional build:
 %bcond_without	kde		# install KDE Docbook documentation
 
-# some macros that set for all distro, TODO make use of convensions in https://en.opensuse.org/openSUSE:Packaging_Conventions_RPM_Macros
-%define prefix /usr
-%define _iconsdir %{prefix}/share/icons
-%define _desktopdir %{prefix}/share/applications
-%define _kdedocdir %{prefix}/share/doc/HTML
-
 Summary:	XSLT stylesheets debugger
 Summary(pl.UTF-8):	Odpluskiwacz styli XSLT
 Name:		xsldbg
@@ -18,14 +12,21 @@ Group:		Development/Debuggers
 Source0:	http://downloads.sourceforge.net/xsldbg/%{name}-%{version}.tar.gz
 # Source0-md5:	e9bf58a2f81c19279ddc9d686a464902
 URL:		http://xsldbg.sourceforge.net/
-%{?with_kde:BuildRequires: kdoctools}
-BuildRequires: gcc, make, libxslt-devel, libxml2-devel, libxslt, libxml2, Qt5Core-devel, qt5-qmake
-BuildRequires: gcc, make, libxslt-devel, libxml2-devel, libxslt, libxml2, Qt5Core-devel, qt5-qmake
-BuildRequires: gcc, make, libxslt-devel, libxml2-devel, libxslt, libxml2, Qt5Core-devel, qt5-qmake
-BuildRequires: gcc, make, libxslt-devel, libxml2-devel, libxslt, libxml2, Qt5Core-devel, qt5-qmake
-BuildRequires: gcc, make, libxslt-devel, libxml2-devel, libxslt, libxml2, Qt5Core-devel, qt5-qmake
-Requires: libxml2, libxslt
-Requires: libxml2, libxslt
+BuildRequires:	Qt5Core-devel
+BuildRequires:	docbook-dtd412-xml
+BuildRequires:	docbook-dtd45-xml
+BuildRequires:	docbook-style-xsl
+%{?with_kde:BuildRequires: kf5-kdoctools}
+BuildRequires:	libstdc++-devel
+BuildRequires:	libxml2-devel
+BuildRequires:	libxslt-devel
+BuildRequires:	perl-base
+BuildRequires:	qt5-qmake
+BuildRequires:	readline-devel
+BuildRequires:	rpmbuild(macros) >= 1.596
+Requires:	desktop-file-utils
+Requires:	gtk-update-icon-cache
+Requires:	hicolor-icon-theme
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -59,7 +60,7 @@ xsldbg KDE Docbook.
 qmake-qt5 \
 	"CONFIG+=xsldbg_shortcut" \
 	ICONS_DIR="%{_iconsdir}" \
-	DOCS_ROOT="%{_docdir}" \
+	DOCS_ROOT="%{_docdir}/xsldbg" \
 	KDEDOCS_ROOT="%{_kdedocdir}" \
 	-r xsldbg.pro
 %{__make}
@@ -83,6 +84,8 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc README.md AUTHORS ChangeLog TODO
+%{_docdir}/xsldbg
+
 
 %attr(755,root,root) %{_bindir}/xsldbg
 %{_mandir}/man1/xsldbg.1*
@@ -95,12 +98,11 @@ rm -rf $RPM_BUILD_ROOT
 %files apidocs
 %defattr(644,root,root,755)
 %{_kdedocdir}/en/xsldbg/index.cache.bz2
-%{_kdedocdir}/en/xsldbg/index.docbook
 %endif
 
 %changelog
 * Sun Oct 28 2018 Keith Isdale <keithisdale@gmail.com> - 4.8.1-1
-- Replace spec file based on once created by PLD Linux contributor
+- Replace spec file based on one created by PLD Linux contributor
 - Build fixes for PLD-Linux included fixing install paths for docs and icons
 * Sat Sep 08 2018 Keith Isdale <keithisdale@gmail.com> - 4.7.0-1
 - Initial RPM release

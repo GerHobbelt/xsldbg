@@ -13,7 +13,7 @@ isEmpty(INSTALL_PREFIX) {
             }
 
             isEmpty(DOCS_ROOT) {
-                DOCS_ROOT="$${INSTALL_PREFIX}/share/doc"
+                DOCS_ROOT="$${INSTALL_PREFIX}/share/doc/xsldbg"
             }
             message(DOCS_ROOT = $${DOCS_ROOT})
 
