@@ -8,5 +8,5 @@ xsldbgPackageDocs.files = \
     $$PWD/../COPYING \
     $$PWD/../ChangeLog \
     $$PWD/../README.md
-xsldbgPackageDocs.path = $$DOCS_ROOT
+xsldbgPackageDocs.path = $$DOCS_ROOT/xsldbg
 INSTALLS += xsldbgPackageDocs
