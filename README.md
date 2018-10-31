@@ -106,6 +106,10 @@ To make used of custom .spec file for supported platforms
 where *distro* currently can be
 * suse
 * centos
+* PLD_Linux
+
+
+Note: THe PLD Linux team recommend using the RPM builds and SPEC they provide.
 
 Compilation
 ===========
