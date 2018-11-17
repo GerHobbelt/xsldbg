@@ -67,12 +67,17 @@ if [ -z "$NO_RPM" -a -e /usr/bin/rpmbuild ]; then
     DISTRO=""
     SUSEDISTRO=`uname -a | sed -n "/suse/p"`
     CENTOSDISTRO=`uname -a | sed -n "/centos/p"`
+    PLDDISTRO=`uname -a | sed -n "/pld/p"`
     if [ -n "$SUSEDISTRO" ];then
         DISTRO="suse"
     fi
 
     if [ -n "$CENTOSDISTRO" ];then
         DISTRO="centos"
+    fi
+
+    if [ -n "$PLDDISTRO" ];then
+        DISTRO="PLD_Linux"
     fi
 
     if [ -z "$DISTRO" ]; then

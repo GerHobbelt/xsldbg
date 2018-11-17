@@ -41,6 +41,9 @@ As example install prerequisites on
 
      sudo apt-get install g++ make qt5-qmake libxml2-dev libxslt1-dev
      qtbase5-dev qtbase5-dev-tools
+* PLD Linux:
+
+     sudo poldek -u gcc make Qt5Core-devel docbook-dtd412-xml libstdc++-devel libxml2-devel libxslt-devel perl-base qt5-qmake readline-devel  desktop-file-utils gtk-update-icon-cache  hicolor-icon-theme
 
 
 Documentation
@@ -103,6 +106,10 @@ To make used of custom .spec file for supported platforms
 where *distro* currently can be
 * suse
 * centos
+* PLD_Linux
+
+
+Note: THe PLD Linux team recommend using the RPM builds and SPEC they provide.
 
 Compilation
 ===========
