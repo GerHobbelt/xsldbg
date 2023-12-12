@@ -508,8 +508,9 @@ int xsldbgMain(int argc, char **argv)
 
     xmlInitMemory();
 
-
-    LIBXML_TEST_VERSION xmlLineNumbersDefault(1);
+    LIBXML_TEST_VERSION();
+	
+	xmlLineNumbersDefault(1);
 
     if (!xsldbgInit()) {
         qWarning("Init failed");
