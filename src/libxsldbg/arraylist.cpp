@@ -17,8 +17,10 @@
  ***************************************************************************/
 
 
-#include "arraylist.h"
+#include <libxml/xmlversion.h>
+#include <libxslt/xsltconfig.h>
 #include <libxslt/xsltutils.h>
+#include "arraylist.h"
 
 #ifndef NULL
 #define NULL 0
